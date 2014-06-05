@@ -1,0 +1,15 @@
+This repository contains the source files and an example case for the code
+VPLANET. To compile:
+
+gcc -o vplanet *.c -lm
+
+(Makefile to come later.) The example directory considers the tidal evolution
+of Gl 581 d. To run the code:
+
+vplanet vpl.in
+
+You can also access the onboard help with the command: 
+
+vplanet -h
+
+Have fun!

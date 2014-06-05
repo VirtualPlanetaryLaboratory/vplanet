@@ -1,0 +1,24 @@
+# Test file for Gl581
+sSystemName	gl581
+#sTideModel	T8
+sTideModel	P2
+iVerbose	5
+bOverwrite	1
+
+sUnitMass	solar
+sUnitLength	au
+sUnitTime	y
+sUnitAngle	d
+
+dSemi		0.21847
+dEcc		0.38
+
+bDoLog		1
+saBodyFiles	gl581.in d.in
+
+bDoForward	1
+bVarDt		1
+dEta		1
+dStopTime	2e8
+dOutputTime	1e5
+

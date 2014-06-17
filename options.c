@@ -876,6 +876,7 @@ void ReadInitialOptions(CONTROL *control,OPTIONS *options,FILES *files,SYSTEM *s
 
   /* First find input files */
   ReadBodyFileNames(&options[OPT_BODYFILES],control,files);
+
   /* Is iVerbose set in primary input? */
   ReadVerbose(&options[OPT_VERBOSE],&control->iVerbose,files,0);
 
@@ -886,7 +887,7 @@ void ReadInitialOptions(CONTROL *control,OPTIONS *options,FILES *files,SYSTEM *s
     ReadVerbose(&options[OPT_VERBOSE],&control->iVerbose,files,i);
   }
 
-  /* Now initialize units arrays */
+  /* Now initialize arrays */
   control->Units = malloc(files->iNumInputs*sizeof(UNITS));
 
   /* Next we must find the units and system name */
@@ -1947,23 +1948,26 @@ void InitializeControl(CONTROL *control) {
  *
  */
 
-void ReadOptions(OPTIONS *options,CONTROL *control,FNHALT *fnhalt,BODY *body,FILES *files, SYSTEM *system,OUTPUT *output,fnReadOption fnRead[]) {
+void ReadOptions(OPTIONS *options,CONTROL *control,VPLANET *vplanet,BODY **body,UPDATE **update,FILES *files, SYSTEM *system,OUTPUT *output,fnReadOption fnRead[]) {
   int iFile;
 
   /* Read options for files, units, verbosity, and system name. */
   ReadInitialOptions(control,options,files,system);
 
   /* Now that we know how many bodies there are, initialize more features */
+  *body = malloc(control->iNumBodies*sizeof(BODY));
+  *update = malloc(control->iNumBodies*sizeof(UPDATE));
+
   /* This needs to be vectorized VPL */
   InitializeControl(control);
-  InitializeHalt(&control->Halt,fnhalt,files->iNumInputs);
+  InitializeHalt(&control->Halt,vplanet,files->iNumInputs);
 
 
   /* Now read in remaining options */
-  ReadOptionsGeneral(control,options,body,system,files,fnRead);
+  ReadOptionsGeneral(control,options,*body,system,files,fnRead);
 
   /* This needs to be vectorized VPL */
-  ReadOptionsEqtide(control,options,body,system,files,fnRead);
+  ReadOptionsEqtide(control,options,*body,system,files,fnRead);
 
   /* Read in utput order -- merge into ReadGeneralOptions? */
   for (iFile=1;iFile<files->iNumInputs;iFile++)

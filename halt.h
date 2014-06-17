@@ -7,5 +7,5 @@
  *
 */
 
-int bCheckHalt(CONTROL*,FNHALT*,BODY*,UPDATE*,double);
-void InitializeHalt(HALT*,FNHALT*,int);
+int bCheckHalt(CONTROL*,VPLANET*,BODY*,UPDATE*,double);
+void InitializeHalt(HALT*,VPLANET*,int);

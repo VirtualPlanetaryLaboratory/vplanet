@@ -389,7 +389,7 @@ void InitializeUpdate(UPDATE *update) {
 
     update->iType = malloc(update->iNum*sizeof(int));
     update->pdVar = malloc(update->iNum*sizeof(double*));
-    update->dUpdate=malloc(update->iNum*sizeof(double*));
+    update->dDeriv=malloc(update->iNum*sizeof(double*));
     update->iNumEqns=malloc(update->iNum*sizeof(double));
 
 }
@@ -400,7 +400,7 @@ void InitializeUpdate(UPDATE *update) {
  *
  */
 
-void VerifyOptions(OPTIONS *options,OUTPUT *output,BODY *body,SYSTEM *system,FILES *files,CONTROL *control,fnIntegrate *fnOneStep,UPDATE *update,fnUpdateVariable ***fnUpdate) {
+void VerifyOptions(OPTIONS *options,OUTPUT *output,BODY *body,VPLANET *vplanet,SYSTEM *system,FILES *files,CONTROL *control,fnIntegrate *fnOneStep,UPDATE *update,fnUpdateVariable ***fnUpdate) {
     int i;
 
     /* Must Vectorize VPL */

@@ -36,3 +36,5 @@ double fdRadToMass_BaylessOrosz06(double);
 double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
+
+void fvBodyCopy(BODY*,BODY*,CONTROL*);

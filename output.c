@@ -793,7 +793,7 @@ void WriteLog(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,OPTIONS 
 
   /* Get derivatives */
   /* Needs to be vectorized VPL */
-  fvTidalProperties(control,body);
+  fvPropertiesEqtide(control,body);
 
   dDt=fdGetUpdateInfo(control,body,update,fnUpdate);
 

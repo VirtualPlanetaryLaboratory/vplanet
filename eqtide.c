@@ -424,6 +424,100 @@ int fiTideFile(int *iLine,int iNumFiles) {
   assert(0);
 }
 
+void InitializeCTL(UPDATE *update,BODY *body) {
+  
+  /* Body #0 updates */
+  update[0].iNum = 2;
+  InitializeUpdate(&update[0]);
+  
+  /* 0 -> Obliquity */
+  update[0].iType[0] = 1;
+  update[0].pdVar[0] = &body[0].dObliquity;
+  update[0].iNumEqns[0] = 1;
+  update[0].dDeriv[0]=malloc(update[0].iNumEqns[0]*sizeof(double));
+  
+  /* 1 -> Rotation Rate */
+  update[0].iType[1] = 1;
+  update[0].pdVar[1] = &body[0].dRotRate;
+  update[0].iNumEqns[1] = 1;
+  update[0].dDeriv[1]=malloc(update[0].iNumEqns[1]*sizeof(double));
+  
+  /* Body #1 updates */
+  update[1].iNum = 4;
+  InitializeUpdate(&update[1]);
+  
+  /* 0 -> Obliquity */
+  update[1].iType[0] = 1;
+  update[1].pdVar[0] = &body[1].dObliquity;
+  update[1].iNumEqns[0] = 1;
+  update[1].dDeriv[0]=malloc(update[1].iNumEqns[0]*sizeof(double));
+  
+  /* 1 -> Rotation Rate */
+  update[1].iType[1] = 1;
+  update[1].pdVar[1] = &body[1].dRotRate;
+  update[1].iNumEqns[1] = 1;
+  update[1].dDeriv[1]=malloc(update[1].iNumEqns[1]*sizeof(double));
+  
+  /* 2 -> Semi-major axis */
+  update[1].iType[2] = 1;
+  update[1].pdVar[2] = &body[1].dSemi;
+  update[1].iNumEqns[2] = 1;
+  update[1].dDeriv[2]=malloc(update[1].iNumEqns[2]*sizeof(double));
+  
+  /* 3 -> Eccentricity */
+  update[1].iType[3] = 1;
+  update[1].pdVar[3] = &body[1].dEcc;
+  update[1].iNumEqns[3] = 1;
+  update[1].dDeriv[3]=malloc(update[1].iNumEqns[3]*sizeof(double));
+}
+
+void InitializeCPL(UPDATE *update,BODY *body) {
+  
+  /* Body #0 updates */
+  update[0].iNum = 2;
+  InitializeUpdate(&update[0]);
+  
+  /* 0 -> Obliquity */
+  update[0].iType[0] = 1;
+  update[0].pdVar[0] = &body[0].dObliquity;
+  update[0].iNumEqns[0] = 1;
+  update[0].dDeriv[0]=malloc(update[0].iNumEqns[0]*sizeof(double));
+  
+  /* 1 -> Rotation Rate */
+  update[0].iType[1] = 1;
+  update[0].pdVar[1] = &body[0].dRotRate;
+  update[0].iNumEqns[1] = 1;
+  update[0].dDeriv[1]=malloc(update[0].iNumEqns[1]*sizeof(double));
+  
+  /* Body #1 updates */
+  update[1].iNum = 4;
+  InitializeUpdate(&update[1]);
+  
+  /* 0 -> Obliquity */
+  update[1].iType[0] = 1;
+  update[1].pdVar[0] = &body[1].dObliquity;
+  update[1].iNumEqns[0] = 1;
+  update[1].dDeriv[0]=malloc(update[1].iNumEqns[0]*sizeof(double));
+  
+  /* 1 -> Rotation Rate */
+  update[1].iType[1] = 1;
+  update[1].pdVar[1] = &body[1].dRotRate;
+  update[1].iNumEqns[1] = 1;
+  update[1].dDeriv[1]=malloc(update[1].iNumEqns[1]*sizeof(double));
+  
+  /* 2 -> Semi-Major Axis */
+  update[1].iType[2] = 1;
+  update[1].pdVar[2] = &body[1].dSemi;
+  update[1].iNumEqns[2] = 1;
+  update[1].dDeriv[2]=malloc(update[1].iNumEqns[2]*sizeof(double));
+  
+  /* 3 -> Eccentricity */
+  update[1].iType[3] = 1;
+  update[1].pdVar[3] = &body[1].dEcc;
+  update[1].iNumEqns[3] = 1;
+  update[1].dDeriv[3]=malloc(update[1].iNumEqns[3]*sizeof(double));
+}
+
 void VerifyEqtide(CONTROL *control,OUTPUT *output,FILES *files,BODY *body,OPTIONS *options,fnUpdateVariable ***fnUpdate,UPDATE *update) {
   int iBody,iTideLine,iEqn,iTideFile,iCol,iFile;
 
@@ -520,66 +614,33 @@ void VerifyEqtide(CONTROL *control,OUTPUT *output,FILES *files,BODY *body,OPTION
     /* Everything OK, assign Updates */
     
     /* Body #0 updates */
-    update[0].iNum = 2;
-    InitializeUpdate(&update[0]);
+    InitializeCTL(update,body);
 
     /* 0 -> Obliquity */
-
-    update[0].pdVar[0] = &body[0].dObliquity;
-    update[0].iNumEqns[0] = 1;
-    update[0].iType[0] = 1;
-    update[0].dUpdate[0]=malloc(update[0].iNumEqns[0]*sizeof(double));
-    update[0].pdDoblDt = &update[0].dUpdate[0][0];
+    update[0].pdDoblDt = &update[0].dDeriv[0][0];
     fnUpdate[0][0][0] = &fdCTLDobliquityDt;
     
     /* 1 -> Rotation Rate */
-
-    update[0].pdVar[1] = &body[0].dRotRate;
-    update[0].iNumEqns[1] = 1;
-    update[0].iType[1] = 1;
-    update[0].dUpdate[1]=malloc(update[0].iNumEqns[1]*sizeof(double));
-    update[0].pdDrotDt = &update[0].dUpdate[1][0];
+    update[0].pdDrotDt = &update[0].dDeriv[1][0];
     fnUpdate[0][1][0] = &fdCTLDrotrateDt;
     
-    
+
     /* Body #1 updates */
-    update[1].iNum = 4;
-    InitializeUpdate(&update[1]);
-
+    
     /* 0 -> Obliquity */
-
-    update[1].pdVar[0] = &body[1].dObliquity;
-    update[1].iNumEqns[0] = 1;
-    update[1].iType[0] = 1;
-    update[1].dUpdate[0]=malloc(update[1].iNumEqns[0]*sizeof(double));
-    update[1].pdDoblDt = &update[1].dUpdate[0][0];
+    update[1].pdDoblDt = &update[1].dDeriv[0][0];
     fnUpdate[1][0][0] = &fdCTLDobliquityDt;
     
     /* 1 -> Rotation Rate */
-
-    update[1].pdVar[1] = &body[1].dRotRate;
-    update[1].iNumEqns[1] = 1;
-    update[1].iType[1] = 1;
-    update[1].dUpdate[1]=malloc(update[1].iNumEqns[1]*sizeof(double));
-    update[1].pdDrotDt = &update[1].dUpdate[1][0];
+    update[1].pdDrotDt = &update[1].dDeriv[1][0];
     fnUpdate[1][1][0] = &fdCTLDrotrateDt;
     
     /* 2 -> Semi-major axis */
-
-    update[1].pdVar[2] = &body[1].dSemi;
-    update[1].iNumEqns[2] = 1;
-    update[1].iType[2] = 1;
-    update[1].dUpdate[2]=malloc(update[1].iNumEqns[2]*sizeof(double));
-    update[1].pdDsemiDt = &update[1].dUpdate[2][0];
+    update[1].pdDsemiDt = &update[1].dDeriv[2][0];
     fnUpdate[1][2][0] = &fdCTLDsemiDt;
     
     /* 3 -> Eccentricity */
-
-    update[1].pdVar[3] = &body[1].dEcc;
-    update[1].iNumEqns[3] = 1;
-    update[1].iType[3] = 1;
-    update[1].dUpdate[3]=malloc(update[1].iNumEqns[3]*sizeof(double));
-    update[1].pdDeccDt = &update[1].dUpdate[3][0];
+    update[1].pdDeccDt = &update[1].dDeriv[3][0];
     fnUpdate[1][3][0] = &fdCTLDeccDt;
     
   }
@@ -632,62 +693,43 @@ void VerifyEqtide(CONTROL *control,OUTPUT *output,FILES *files,BODY *body,OPTION
     /* Beware redudancy with above!! */
 
     /* Body #0 updates */
-    update[0].iNum = 2;
-    InitializeUpdate(&update[0]);
-
+    InitializeCPL(update,body);
 
     /* 0 -> Obliquity */
-
-    update[0].pdVar[0] = &body[0].dObliquity;
-    update[0].iNumEqns[0] = 1;
-    update[0].iType[0] = 1;
-    update[0].dUpdate[0]=malloc(update[0].iNumEqns[0]*sizeof(double));
-    update[0].pdDoblDt = &update[0].dUpdate[0][0];
+    update[0].pdDoblDt = &update[0].dDeriv[0][0];
     fnUpdate[0][0][0] = &fdCPLDobliquityDt;
     
     /* 1 -> Rotation Rate */
-
-    update[0].pdVar[1] = &body[0].dRotRate;
-    update[0].iNumEqns[1] = 1;
-    update[0].iType[1] = 1;
-    update[0].dUpdate[1]=malloc(update[0].iNumEqns[1]*sizeof(double));
-    update[0].pdDrotDt = &update[0].dUpdate[1][0];
+    update[0].pdDrotDt = &update[0].dDeriv[1][0];
     fnUpdate[0][1][0] = &fdCPLDrotrateDt;
     
-    
     /* Body #1 updates */
-    update[1].iNum = 4;
-    InitializeUpdate(&update[1]);
 
-    update[1].pdVar[0] = &body[1].dObliquity;
-    update[1].iNumEqns[0] = 1;
-    update[1].iType[0] = 1;
-    update[1].dUpdate[0]=malloc(update[1].iNumEqns[0]*sizeof(double));
-    update[1].pdDoblDt = &update[1].dUpdate[0][0];
+    /* 0 -> obliquity */
+    update[1].pdDoblDt = &update[1].dDeriv[0][0];
     fnUpdate[1][0][0] = &fdCPLDobliquityDt;
     
-    update[1].pdVar[1] = &body[1].dRotRate;
-    update[1].iNumEqns[1] = 1;
-    update[1].iType[1] = 1;
-    update[1].dUpdate[1]=malloc(update[1].iNumEqns[1]*sizeof(double));
-    update[1].pdDrotDt = &update[1].dUpdate[1][0];
+    /* 1 -> Rotation Rate */
+    update[1].pdDrotDt = &update[1].dDeriv[1][0];
     fnUpdate[1][1][0] = &fdCPLDrotrateDt;
     
-    update[1].pdVar[2] = &body[1].dSemi;
-    update[1].iNumEqns[2] = 1;
-    update[1].iType[2] = 1;
-    update[1].dUpdate[2]=malloc(update[1].iNumEqns[2]*sizeof(double));
-    update[1].pdDsemiDt = &update[1].dUpdate[2][0];
+    /* 2 -> Semi-Major Axis */
+    update[1].pdDsemiDt = &update[1].dDeriv[2][0];
     fnUpdate[1][2][0] = &fdCPLDsemiDt;
     
-    update[1].pdVar[3] = &body[1].dEcc;
-    update[1].iNumEqns[3] = 1;
-    update[1].iType[3] = 1;
-    update[1].dUpdate[3]=malloc(update[1].iNumEqns[3]*sizeof(double));
-    update[1].pdDeccDt = &update[1].dUpdate[3][0];
+    /* 3 -> Eccentricity */
+    update[1].pdDeccDt = &update[1].dDeriv[3][0];
     fnUpdate[1][3][0] = &fdCPLDeccDt;
   }
+}
 
+
+void InitializeVplanetEqtide(CONTROL *control,VPLANET *vplanet) {
+
+  if (control->iTideModel == CTL)
+    InitializeCTL(vplanet->tmpUpdate,vplanet->tmpBody);
+  if (control->iTideModel == CPL)
+    InitializeCPL(vplanet->tmpUpdate,vplanet->tmpBody);
 }
 
 /***************** EQTIDE Halts *****************/
@@ -739,15 +781,15 @@ int HaltSyncRot(CONTROL *control,BODY *body,UPDATE *update,int iBody) {
   return 0;
 }
 
-void InitializeHaltEqtide(HALT *halt,FNHALT *fnhalt,int iNumInputs,int *iHaltSys,int *iHaltBody) {
+void InitializeHaltEqtide(HALT *halt,VPLANET *vplanet,int iNumInputs,int *iHaltSys,int *iHaltBody) {
 
   halt->bTideLock=malloc(iNumInputs*sizeof(int));
   halt->bSync=malloc(iNumInputs*sizeof(int));
 
-  fnhalt->fnHaltSys[(*iHaltSys)++] = &HaltDblSync;
+  vplanet->fnHaltSys[(*iHaltSys)++] = &HaltDblSync;
 
-  fnhalt->fnHaltBody[(*iHaltBody)++] = &HaltTideLock;
-  fnhalt->fnHaltBody[(*iHaltBody)++] = &HaltSyncRot;
+  vplanet->fnHaltBody[(*iHaltBody)++] = &HaltTideLock;
+  vplanet->fnHaltBody[(*iHaltBody)++] = &HaltSyncRot;
 
 }
 
@@ -1448,7 +1490,7 @@ int fbTidalLock(CONTROL *control,BODY *body,int iBody) {
   return 0;
 }      
 
-void fvTidalProperties(CONTROL *control,BODY *body) {
+void fvPropertiesEqtide(CONTROL *control,BODY *body) {
   int i;
 
   body[1].dMeanMotion = fdSemiToMeanMotion(body[1].dSemi,(body[0].dMass+body[1].dMass));
@@ -1494,7 +1536,7 @@ double fdTideHeatFlux(BODY body,double dEcc,double dMeanMotion,double dSemi,int 
 void ForceBehaviorEqtide(BODY *body,CONTROL *control) {
   int iBody;
 
-  fvTidalProperties(control,body);
+  fvPropertiesEqtide(control,body);
 
   /* If small enough, set some quantities to zero */
   if (control->Integr.dMinValue > 0) {

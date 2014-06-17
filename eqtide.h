@@ -49,13 +49,14 @@ void ReadOptionsEqtide(CONTROL*,OPTIONS*,BODY*,SYSTEM*,FILES*,fnReadOption[]);
 int HaltDblSync(CONTROL*,BODY*,UPDATE*);
 int HaltTideLock(CONTROL*,BODY*,UPDATE*,int);
 int HaltSyncRot(CONTROL*,BODY*,UPDATE*,int);
-void InitializeHaltEqtide(HALT*,FNHALT*,int,int*,int*);
+void InitializeHaltEqtide(HALT*,VPLANET*,int,int*,int*);
 
 /* Verify Functions */
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
 void VerifyRotationEqtide(CONTROL*,BODY*,OPTIONS*,char[],int); 
 void VerifyEqtide(CONTROL*,OUTPUT*,FILES*,BODY*,OPTIONS*,fnUpdateVariable***,UPDATE*);
+void InitializeVplanetEqtide(CONTROL*,VPLANET*);
 
 /* Output Functinos */
 
@@ -138,7 +139,7 @@ void LogBodyEqtide(CONTROL*,OUTPUT*,BODY*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* Functions common to both CPL and CTL */
 
-void fvTidalProperties(CONTROL*,BODY*);
+void fvPropertiesEqtide(CONTROL*,BODY*);
 double fdGetUpdateInfo(CONTROL*,BODY*,UPDATE*,fnUpdateVariable***); /* Returns minimum dynamical timescale, x/(dx/dt) */
 void fvChi(BODY *);
 double fdEqRotRate(BODY,double,double,int,int);

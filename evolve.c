@@ -4,6 +4,31 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
+void InitializeVPLANET(CONTROL *control,UPDATE *update,VPLANET *vplanet) {
+  int iSubStep,iBody;
+
+  vplanet->tmpBody = malloc(control->iNumBodies*sizeof(BODY));
+  vplanet->tmpUpdate = malloc(control->iNumBodies*sizeof(UPDATE));
+
+  /* Currently this only matters for RK4 integration. This should
+     be generalized for any integration method. */
+  vplanet->dUpdate = malloc(4*sizeof(double**));
+  for (iSubStep=0;iSubStep<4;iSubStep++) {
+    vplanet->dUpdate[iSubStep] = malloc(control->iNumBodies*sizeof(double*));
+    for (iBody=0;iBody<control->iNumBodies;iBody++) 
+      vplanet->dUpdate[iSubStep][iBody]=malloc(update[iBody].iNum*sizeof(double));
+  }
+
+  /* Needs to be vectorized VPL */
+  InitializeVplanetEqtide(control,vplanet);
+}
+
+void fvPropertiesAuxiliary(CONTROL *control,BODY *body) {
+
+  /* Needs to be vectorized VPL */
+  fvPropertiesEqtide(control,body);
+}
+
 /*
  * Integration Control
  */
@@ -48,15 +73,15 @@ double fdGetUpdateInfo(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariab
 	/* XXX This looks broken -- should it also include [iEqn]? But can this be dumped?? */
 	if (update[iBody].iType[iVar] == 0) {
 	  dVarNow=*update[iBody].pdVar[iVar];
-	  update[iBody].dUpdate[iVar][0] = fnUpdate[iBody][iVar][0](body,iBody);
-	  dMinNow = fabs(dVarNow - update[iBody].dUpdate[iVar][0])/integr.dTimeStep;
+	  update[iBody].dDeriv[iVar][0] = fnUpdate[iBody][iVar][0](body,iBody);
+	  dMinNow = fabs(dVarNow - update[iBody].dDeriv[iVar][0])/integr.dTimeStep;
  	  if (dMinNow < dMin)
 	    dMin = dMinNow;
 	} else {
 	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	    update[iBody].dUpdate[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,iBody);
-	    if (update[iBody].dUpdate[iVar][iEqn] != 0) {
-	      dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].dUpdate[iVar][iEqn]);
+	    update[iBody].dDeriv[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,iBody);
+	    if (update[iBody].dDeriv[iVar][iEqn] != 0) {
+	      dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].dDeriv[iVar][iEqn]);
 	      if (dMinNow < dMin) 
 		dMin = dMinNow;
 	    }
@@ -69,7 +94,7 @@ double fdGetUpdateInfo(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariab
   return dMin;
 }
  
-void EulerStep(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
+void EulerStep(CONTROL *control,BODY *body,UPDATE *update,VPLANET *vplanet,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
   int iBody,iVar,iEqn;
   double dTimeOut;
 
@@ -86,67 +111,25 @@ void EulerStep(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariable ***fn
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNum;iVar++) {
       if (update[iBody].iType == 0) 
-	*(update[iBody].pdVar[iVar]) = update[iBody].dUpdate[iVar][0];
+	*(update[iBody].pdVar[iVar]) = update[iBody].dDeriv[iVar][0];
       else {
 	for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++)
 	  /* Update the parameter in the BODY struct! Be careful! */
-	  *(update[iBody].pdVar[iVar]) += iDir*update[iBody].dUpdate[iVar][iEqn]*(*dDt);
+	  *(update[iBody].pdVar[iVar]) += iDir*update[iBody].dDeriv[iVar][iEqn]*(*dDt);
       }
     }
   }
 }
 
-void RungeKutta4Step(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
+void RungeKutta4Step(CONTROL *control,BODY *body,UPDATE *update,VPLANET *vplanet,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
   int iBody,iVar,iEqn,iSubStep;
-  double dTimeOut,dFoo;
-  UPDATE *tmpUpdate;
-  BODY *tmpBody;
-  double ***dUpdate;
-
-  tmpUpdate=malloc(control->iNumBodies*sizeof(UPDATE));
-  tmpBody = malloc(control->iNumBodies*sizeof(BODY));
-  for (iBody=0;iBody<control->iNumBodies;iBody++) {
-    tmpBody[iBody].dMass = body[iBody].dMass;
-    tmpBody[iBody].dRadius = body[iBody].dRadius;
-    tmpBody[iBody].dRadGyra = body[iBody].dRadGyra;
-    tmpBody[iBody].dK2 = body[iBody].dK2;
-    if (control->iTideModel == CPL)
-      tmpBody[iBody].dTidalQ = body[iBody].dTidalQ;
-    if (control->iTideModel == CTL)
-      tmpBody[iBody].dTidalTau = body[iBody].dTidalTau;
-  }
-
-  dUpdate = malloc(4*sizeof(double**));
-  for (iSubStep=0;iSubStep<4;iSubStep++) {
-    dUpdate[iSubStep]=malloc(control->iNumBodies*sizeof(double*));
-    for (iBody=0;iBody<control->iNumBodies;iBody++) 
-      dUpdate[iSubStep][iBody]=malloc(update[iBody].iNum*sizeof(double));
-  }
-
-  /* Initialize temporary update structure */
-  tmpUpdate[0].iNum=update[0].iNum;
-  tmpUpdate[1].iNum=update[1].iNum;
-  for (iBody=0;iBody<control->iNumBodies;iBody++) {
-    tmpUpdate[iBody].pdVar = malloc(update[iBody].iNum*sizeof(double*));
-    tmpUpdate[iBody].dUpdate=malloc(update[iBody].iNum*sizeof(double*));
-    tmpUpdate[iBody].iType=malloc(update[iBody].iNum*sizeof(int));
-    tmpUpdate[iBody].iNumEqns=malloc(update[iBody].iNum*sizeof(int));
-    for (iVar=0;iVar<update[iBody].iNum;iVar++) {
-      tmpUpdate[iBody].dUpdate[iVar]=malloc(update[iBody].iNumEqns[iVar]*sizeof(double));
-      tmpUpdate[iBody].iType[iVar]=update[iBody].iType[iVar];
-      tmpUpdate[iBody].iNumEqns[iVar]=update[iBody].iNumEqns[iVar];
-    }
-  }
-
-  tmpUpdate[0].pdVar[0] = &tmpBody[0].dObliquity;
-  tmpUpdate[0].pdVar[1] = &tmpBody[0].dRotRate;
-  tmpUpdate[1].pdVar[0] = &tmpBody[1].dObliquity;
-  tmpUpdate[1].pdVar[1] = &tmpBody[1].dRotRate;
-  tmpUpdate[1].pdVar[2] = &tmpBody[1].dSemi;
-  tmpUpdate[1].pdVar[3] = &tmpBody[1].dEcc;
+  double dTimeOut,dFoo,dDelta;
+  
+  /* Create a copy of BODY array */
+  fvBodyCopy(body,vplanet->tmpBody,control);
 
   /* Derivatives at start */
-  *dDt = fdGetUpdateInfo(control,body,tmpUpdate,fnUpdate);
+  *dDt = fdGetUpdateInfo(control,body,vplanet->tmpUpdate,fnUpdate);
 
   /* Adjust dt? */
   if (control->Integr.bVarDt) {
@@ -158,79 +141,73 @@ void RungeKutta4Step(CONTROL *control,BODY *body,UPDATE *update,fnUpdateVariable
     
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNum;iVar++) {
-      dUpdate[0][iBody][iVar] = 0;
+      vplanet->dUpdate[0][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	dUpdate[0][iBody][iVar] += (*dDt)*iDir*tmpUpdate[iBody].dUpdate[iVar][iEqn];
+	vplanet->dUpdate[0][iBody][iVar] += (*dDt)*iDir*vplanet->tmpUpdate[iBody].dDeriv[iVar][iEqn];
       }
       /* This points to the correct parameter in tmpBody */
-      *(tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + dUpdate[0][iBody][iVar];
+      *(vplanet->tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + vplanet->dUpdate[0][iBody][iVar];
     }
   }
 
   /* First midpoint derivative */
-  fvTidalProperties(control,tmpBody);
-  dFoo = fdGetUpdateInfo(control,tmpBody,tmpUpdate,fnUpdate);
+  fvPropertiesAuxiliary(control,vplanet->tmpBody);
+  /* Don't need this timestep info, so assign output to dFoo */
+  dFoo = fdGetUpdateInfo(control,vplanet->tmpBody,vplanet->tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNum;iVar++) {
-      dUpdate[1][iBody][iVar] = 0;
+      vplanet->dUpdate[1][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	dUpdate[1][iBody][iVar] += (*dDt)*iDir*tmpUpdate[iBody].dUpdate[iVar][iEqn];
+	vplanet->dUpdate[1][iBody][iVar] += (*dDt)*iDir*vplanet->tmpUpdate[iBody].dDeriv[iVar][iEqn];
       }
-      *(tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*dUpdate[1][iBody][iVar];
+      *(vplanet->tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*vplanet->dUpdate[1][iBody][iVar];
     }
   }
 
   /* Second midpoint derivative */
-  fvTidalProperties(control,tmpBody);
-  dFoo = fdGetUpdateInfo(control,tmpBody,tmpUpdate,fnUpdate);
+  fvPropertiesAuxiliary(control,vplanet->tmpBody);
+  dFoo = fdGetUpdateInfo(control,vplanet->tmpBody,vplanet->tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNum;iVar++) {
-      dUpdate[2][iBody][iVar] = 0;
+      vplanet->dUpdate[2][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	dUpdate[2][iBody][iVar] += (*dDt)*iDir*tmpUpdate[iBody].dUpdate[iVar][iEqn];
+	vplanet->dUpdate[2][iBody][iVar] += (*dDt)*iDir*vplanet->tmpUpdate[iBody].dDeriv[iVar][iEqn];
       }
-      *(tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + dUpdate[2][iBody][iVar];
+      *(vplanet->tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + vplanet->dUpdate[2][iBody][iVar];
     }
   }
 
   /* Full step derivative */
-  fvTidalProperties(control,tmpBody);
-  dFoo = fdGetUpdateInfo(control,tmpBody,tmpUpdate,fnUpdate);
+  fvPropertiesAuxiliary(control,vplanet->tmpBody);
+  dFoo = fdGetUpdateInfo(control,vplanet->tmpBody,vplanet->tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNum;iVar++) {
-      dUpdate[3][iBody][iVar] = 0;
+      vplanet->dUpdate[3][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	dUpdate[3][iBody][iVar] += (*dDt)*iDir*tmpUpdate[iBody].dUpdate[iVar][iEqn];
+	vplanet->dUpdate[3][iBody][iVar] += (*dDt)*iDir*vplanet->tmpUpdate[iBody].dDeriv[iVar][iEqn];
       }
     }
   }
 
   /* Now do the update -- Note the pointer to the home of the actual variables!!! */
   for (iBody=0;iBody<control->iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNum;iVar++) 
-      *(update[iBody].pdVar[iVar]) += 1./6*(dUpdate[0][iBody][iVar] + 2*dUpdate[1][iBody][iVar] + 2*dUpdate[2][iBody][iVar] + dUpdate[3][iBody][iVar]);
+    for (iVar=0;iVar<update[iBody].iNum;iVar++) {
+      dDelta= 1./6*(vplanet->dUpdate[0][iBody][iVar] + 2*vplanet->dUpdate[1][iBody][iVar] + 2*vplanet->dUpdate[2][iBody][iVar] + vplanet->dUpdate[3][iBody][iVar]);
+      *(update[iBody].pdVar[iVar]) += dDelta;
+      /* Now store actual derivative */
+      update[iBody].dDeriv[iVar][0] = dDelta/(*dDt);
+    }
   }
-  
-  free(dUpdate);    
-  free(tmpBody);
-  free(tmpUpdate);
 }
-
-void fvAuxiliaryProperties(CONTROL *control,BODY *body) {
-
-  /* Needs to be vectorized VPL */
-  fvTidalProperties(control,body);
-}
-
 
 /*
  * Evoltuion Subroutine
  */
 
-void Evolve(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,FILES *files,UPDATE *update,fnUpdateVariable ***fnUpdate,FNHALT *fnhalt,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
+void Evolve(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,FILES *files,UPDATE *update,fnUpdateVariable ***fnUpdate,VPLANET *vplanet,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
  
   int i,iDir;
   double dTimeOut;
@@ -246,7 +223,7 @@ void Evolve(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,FILES *fil
 
   dTimeOut = fdNextOutput(control->Integr.dTime,control->dOutputTime);
 
-  fvAuxiliaryProperties(control,body);
+  fvPropertiesAuxiliary(control,body);
 
   /* Adjust dt? */
   if (control->Integr.bVarDt) {
@@ -275,11 +252,11 @@ void Evolve(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,FILES *fil
     ForceBehaviorEqtide(body,control);
 
     /* Take one step */
-    fnOneStep(control,body,update,fnUpdate,iDir,&dDt);
+    fnOneStep(control,body,update,vplanet,fnUpdate,iDir,&dDt);
 
     /* Halt? */
     if (control->Halt.bHalt) {
-      if (bCheckHalt(control,fnhalt,body,update,control->Integr.dTime)) {
+      if (bCheckHalt(control,vplanet,body,update,control->Integr.dTime)) {
 	/* Use dummy variable as dDt is used for the integration.
 	 * Here we just want the instantaneous derivatives.
 	 * This should make the output self-consistent.
@@ -304,7 +281,7 @@ void Evolve(CONTROL *control,BODY *body,SYSTEM *system,OUTPUT *output,FILES *fil
 
     /* Get tidal properties for next step -- first call 
        was prior to loop. */
-    fvAuxiliaryProperties(control,body);
+    fvPropertiesAuxiliary(control,body);
 
   }
 

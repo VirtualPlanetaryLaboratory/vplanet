@@ -86,22 +86,22 @@ int HaltMerge(CONTROL *control,BODY *body,UPDATE *update) {
   return 0;
 }
 
-int bCheckHalt(CONTROL *control,FNHALT *fnhalt,BODY *body,UPDATE *update,double dTime) {
-  int iBody,iHaltSys,iHaltBody;
+int bCheckHalt(CONTROL *control,VPLANET *vplanet,BODY *body,UPDATE *update,double dTime) {
+  int iBody,iHalt;
   double dMeanMotion;
 
   dMeanMotion = fdSemiToMeanMotion(body[1].dSemi,(body[0].dMass+body[1].dMass));
 
   /* Global Halts */
-  for (iHaltSys=0;iHaltSys<MODULEHALTSYSEND;iHaltSys++) {
-    if (fnhalt->fnHaltSys[iHaltSys](control,body,update))
+  for (iHalt=0;iHalt<MODULEHALTSYSEND;iHalt++) {
+    if (vplanet->fnHaltSys[iHalt](control,body,update))
       return 1;
   }
 
   /* Now check for body halts */
   for (iBody=0;iBody<2;iBody++) {
-    for (iHaltBody=0;iHaltBody<MODULEHALTBODYEND;iHaltBody++) {
-      if (fnhalt->fnHaltBody[iHaltBody](control,body,update,iBody))
+    for (iHalt=0;iHalt<MODULEHALTBODYEND;iHalt++) {
+      if (vplanet->fnHaltBody[iHalt](control,body,update,iBody))
 	return 1;
     }
   }
@@ -109,22 +109,22 @@ int bCheckHalt(CONTROL *control,FNHALT *fnhalt,BODY *body,UPDATE *update,double 
   return 0;
 }
 
-void InitializeHalt(HALT *halt,FNHALT *fnhalt,int iNumInputs) {
+void InitializeHalt(HALT *halt,VPLANET *vplanet,int iNumInputs) {
   int iHaltBody=0,iHaltSys=0;
 
   halt->dMinObl=malloc(iNumInputs*sizeof(double));
   
-  fnhalt->fnHaltSys=malloc(MODULEHALTSYSEND*sizeof(fnHaltSystem));
-  fnhalt->fnHaltBody=malloc(MODULEHALTBODYEND*sizeof(fnHaltBod));
+  vplanet->fnHaltSys=malloc(MODULEHALTSYSEND*sizeof(fnHaltSystem));
+  vplanet->fnHaltBody=malloc(MODULEHALTBODYEND*sizeof(fnHaltBod));
 
 
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMerge;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMinEcc;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMaxEcc;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltPosDeccDt;
+  vplanet->fnHaltSys[iHaltSys++] = &HaltMerge;
+  vplanet->fnHaltSys[iHaltSys++] = &HaltMinEcc;
+  vplanet->fnHaltSys[iHaltSys++] = &HaltMaxEcc;
+  vplanet->fnHaltSys[iHaltSys++] = &HaltPosDeccDt;
 
-  fnhalt->fnHaltBody[iHaltBody++] = &HaltMinObl;
+  vplanet->fnHaltBody[iHaltBody++] = &HaltMinObl;
 
   /* Needs to be vectorized VPL */
-  InitializeHaltEqtide(halt,fnhalt,iNumInputs,&iHaltSys,&iHaltBody);
+  InitializeHaltEqtide(halt,vplanet,iNumInputs,&iHaltSys,&iHaltBody);
 }

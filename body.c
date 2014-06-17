@@ -211,4 +211,23 @@ double fdRadToMass(double dMass,double iRelation) {
   return 1./0;
 }
 
+void fvBodyCopy(BODY *src,BODY *dest,CONTROL *control) {
+  int iBody;
 
+  for (iBody=0;iBody<control->iNumBodies;iBody++) {
+    dest[iBody].dMass = src[iBody].dMass;
+    dest[iBody].dRadius = src[iBody].dRadius;
+    dest[iBody].dRadGyra = src[iBody].dRadGyra;
+    dest[iBody].dK2 = src[iBody].dK2;
+    dest[iBody].dObliquity = src[iBody].dObliquity;
+    dest[iBody].dRotRate = src[iBody].dRotRate;
+    if (control->iTideModel == CPL)
+      dest[iBody].dTidalQ = src[iBody].dTidalQ;
+    if (control->iTideModel == CTL)
+      dest[iBody].dTidalTau = src[iBody].dTidalTau;
+  }
+
+  dest[1].dEcc = src[1].dEcc;
+  dest[1].dSemi = src[1].dSemi;
+  dest[1].dMeanMotion = src[1].dMeanMotion;
+}

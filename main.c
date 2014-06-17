@@ -22,11 +22,11 @@ int main(int argc,char *argv[]) {
   CONTROL control;
   UPDATE *update;
   BODY *body;
+  VPLANET vplanet;
   FILES files;
   SYSTEM system;
   fnReadOption fnRead[MODULEOPTEND];
   fnWriteOutput fnWrite[MODULEOUTEND];
-  FNHALT fnhalt;
   fnUpdateVariable ***fnUpdate; 
   fnIntegrate fnOneStep;
 
@@ -34,8 +34,6 @@ int main(int argc,char *argv[]) {
   options = malloc(MODULEOPTEND*sizeof(OPTIONS));
 
   /* These will need to be modified in VPLANET */
-  body = malloc(2*sizeof(BODY));
-  update = malloc(2*sizeof(UPDATE));
   InitializeOutput(output,fnWrite);
   InitializeOptions(options,fnRead);
 
@@ -97,13 +95,14 @@ int main(int argc,char *argv[]) {
 
   /* Read input files */
 
-  ReadOptions(options,&control,&fnhalt,body,&files,&system,output,fnRead);
+  ReadOptions(options,&control,&vplanet,&body,&update,&files,&system,output,fnRead);
   
   /* Check that user options are mutually compatible */
 
-  VerifyOptions(options,output,body,&system,&files,&control,&fnOneStep,update,fnUpdate);
+  VerifyOptions(options,output,body,&vplanet,&system,&files,&control,&fnOneStep,update,fnUpdate);
   
-  /* Everything is OK; begin simulation. */
+  /* Everything is OK; begin vplanet. */
+  InitializeVPLANET(&control,update,&vplanet);
 
   control.Integr.dTime=0;
 
@@ -115,10 +114,10 @@ int main(int argc,char *argv[]) {
       printf("Log file written.\n");
   }
 
-  /* Perform tidal evolution */
+  /* Perform evolution */
 
   if (control.Integr.bDoForward || control.Integr.bDoBackward) {
-    Evolve(&control,body,&system,output,&files,update,fnUpdate,&fnhalt,fnWrite,fnOneStep);
+    Evolve(&control,body,&system,output,&files,update,fnUpdate,&vplanet,fnWrite,fnOneStep);
 
     if (control.bLog) {
       WriteLog(&control,body,&system,output,options,&files,fnWrite,update,fnUpdate,1);

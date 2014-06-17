@@ -171,7 +171,7 @@ typedef struct {
   int iNum;
   int *iType;
   int *iNumEqns;
-  double **dUpdate;
+  double **dDeriv;
   double *dVar;
   
   double *pdDsemiDt;
@@ -296,30 +296,41 @@ typedef void (*fnWriteOutput)(CONTROL*,UNITS*,OUTPUT,BODY *,SYSTEM*,UPDATE*,int,
  * derivatives. */
 typedef double (*fnUpdateVariable)(BODY*,int);
 
-/* fnIntegrate is a pointer to a function that performs 
- * integration. */
-typedef void (*fnIntegrate)(CONTROL*,BODY*,UPDATE*,fnUpdateVariable***,int,double*);
 
 
 typedef int (*fnHaltSystem)(CONTROL*,BODY*,UPDATE*);
 typedef int (*fnHaltBod)(CONTROL*,BODY*,UPDATE*,int);
 
+
 typedef struct {
+  BODY *tmpBody;
+  UPDATE *tmpUpdate;
+  double ***dUpdate;
+
   fnHaltSystem *fnHaltSys;
   fnHaltBod *fnHaltBody;
-} FNHALT;
+} VPLANET;
+
+
+/* fnIntegrate is a pointer to a function that performs 
+ * integration. */
+typedef void (*fnIntegrate)(CONTROL*,BODY*,UPDATE*,VPLANET*,fnUpdateVariable***,int,double*);
+
+
+
+
 
 /* 
  * Major Functions 
  */
 
-void VerifyOptions(OPTIONS*,OUTPUT*,BODY*,SYSTEM*,FILES*,CONTROL*,fnIntegrate*,UPDATE*,fnUpdateVariable***); 
+void VerifyOptions(OPTIONS*,OUTPUT*,BODY*,VPLANET*,SYSTEM*,FILES*,CONTROL*,fnIntegrate*,UPDATE*,fnUpdateVariable***); 
 
-void Evolve(CONTROL*,BODY*,SYSTEM*,OUTPUT*,FILES*,UPDATE*,fnUpdateVariable***,FNHALT*,fnWriteOutput*,fnIntegrate);
+void Evolve(CONTROL*,BODY*,SYSTEM*,OUTPUT*,FILES*,UPDATE*,fnUpdateVariable***,VPLANET*,fnWriteOutput*,fnIntegrate);
 
 void WriteOutput(CONTROL*,OUTPUT*,BODY*,SYSTEM*,FILES*,fnWriteOutput*,double,double,UPDATE*);
 
-void ReadOptions(OPTIONS*,CONTROL*,FNHALT*,BODY*,FILES*,SYSTEM*,OUTPUT*,fnReadOption*);
+void ReadOptions(OPTIONS*,CONTROL*,VPLANET*,BODY**,UPDATE**,FILES*,SYSTEM*,OUTPUT*,fnReadOption*);
 
 void WriteLog(CONTROL*,BODY*,SYSTEM*,OUTPUT*,OPTIONS*,FILES*,fnWriteOutput*,UPDATE*,fnUpdateVariable***,int);
 
@@ -329,14 +340,14 @@ void InitializeOutput(OUTPUT *,fnWriteOutput[]);
 
 void InitializeUpdate(UPDATE *update);
 
-
+void InitializeVPLANET(CONTROL*,UPDATE*,VPLANET*);
 
 /* 
  * Integration Methods 
  */
-void EulerStep(CONTROL*,BODY*,UPDATE*,fnUpdateVariable***,int,double *);
+void EulerStep(CONTROL*,BODY*,UPDATE*,VPLANET*,fnUpdateVariable***,int,double *);
 
-void RungeKutta4Step(CONTROL*,BODY*,UPDATE*,fnUpdateVariable***,int,double *);
+void RungeKutta4Step(CONTROL*,BODY*,UPDATE*,VPLANET*,fnUpdateVariable***,int,double *);
 
 /* 
  * Other Header Files - These are primarily for function declarations

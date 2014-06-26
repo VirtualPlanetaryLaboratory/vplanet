@@ -7,7 +7,6 @@
  * the two models.
 */
 
-/* Testing changes */
 
 #include <stdio.h>
 #include <math.h>

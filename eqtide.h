@@ -44,7 +44,7 @@ void ReadOptionsEqtide(CONTROL*,OPTIONS*,BODY*,SYSTEM*,FILES*,fnReadOption[]);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
-#define EQTUDEHALTBODYEND      5
+#define EQTIDEHALTBODYEND      5
 
 int HaltDblSync(CONTROL*,BODY*,UPDATE*);
 int HaltTideLock(CONTROL*,BODY*,UPDATE*,int);

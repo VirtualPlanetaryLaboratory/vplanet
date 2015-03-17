@@ -11,6 +11,7 @@
 int fiSign(double);
 double fdFreqToPer(double);
 double fdTimescale(double,double);
+double fdTimescaleMulti(double,double*,int);
 double fdPerToFreq(double);
 double fdRotVel(double,double);
 double fdDPerDt(double,double);
@@ -37,4 +38,4 @@ double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
 
-void fvBodyCopy(BODY*,BODY*,CONTROL*);
+void BodyCopy(BODY*,BODY*,EVOLVE*);

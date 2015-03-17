@@ -22,6 +22,7 @@ double fdOrbKinEnergy(double,double,double);
 double fdKinEnergy(BODY*);
 double fdPotEnergy(BODY*);
 
+int bPrimary(BODY*,int);
 
 double fdOrbEnergy(BODY*,int);
 double fdTotEnergy(BODY *);

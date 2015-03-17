@@ -42,16 +42,18 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 
 double fdOrbAngMom(BODY *body) {
 
+  /* XXX Broken -- needs to include multiple bodies */
   return body[0].dMass*body[1].dMass*pow(BIGG*body[1].dSemi*(1-body[1].dEcc*body[1].dEcc)/(body[0].dMass+body[1].dMass),0.5);
 }
 
 double fdTotAngMom(BODY *body) {
   double dTot = 0;
-  int i;
+  int iBody;
 
+  /* XXX Broken -- needs to include multiple bodies */
   dTot = fdOrbAngMom(body);
-  for (i=0;i<2;i++)
-    dTot += fdRotAngMom(body[i].dRadGyra,body[i].dMass,body[i].dRadius,body[i].dRotRate);
+  for (iBody=0;iBody<2;iBody++)
+    dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
   return dTot;
 }
 
@@ -64,6 +66,7 @@ double fdOrbKinEnergy(double dMass1,double dMass2,double dSemi) {
 }
 
 double fdOrbEnergy(BODY *body,int iBody) {
+  /* XXX Broken -- needs to include multiple bodies */
   return fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi) + fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
 }
     
@@ -71,6 +74,7 @@ double fdKinEnergy(BODY *body) {
   double dKE;
   int iBody;
 
+  /* XXX Broken -- needs to include multiple bodies */
   dKE = fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
   for (iBody=0;iBody<2;iBody++) 
     dKE += fdRotKinEnergy(body[iBody].dMass,body[iBody].dRadius,body[iBody].dRadGyra,body[iBody].dRotRate);
@@ -82,6 +86,7 @@ double fdPotEnergy(BODY *body) {
   double dPE;
   int iBody;
 
+  /* XXX Broken -- needs to include multiple bodies */
   dPE = fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
   for (iBody=0;iBody<2;iBody++) 
     dPE += fdBodyPotEnergy(body[iBody]);
@@ -93,3 +98,13 @@ double fdTotEnergy(BODY *body) {
   return fdKinEnergy(body) + fdPotEnergy(body);
 }
 
+int bPrimary(BODY *body,int iBody) {
+  int iBodyPert,bPrimary=1;  /* Assume primary body to start */
+
+  for (iBodyPert=0;iBodyPert<body[iBody].iTidePerts;iBodyPert++) {
+    if (body[iBody].iaTidePerts[iBodyPert] < iBody) 
+      bPrimary=0;
+  }
+
+  return bPrimary;
+}

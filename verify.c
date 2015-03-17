@@ -13,8 +13,6 @@
 #include <string.h>
 #include <unistd.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 /*
  * Exit Calls
@@ -22,12 +20,11 @@
 
 int bFileExists(const char *filename){
   FILE *file;
-  if ((file = fopen(filename, "r")))
-    {
-        fclose(file);
-        return 1;
-    }
-    return 0;
+  if ((file = fopen(filename, "r"))) {
+    fclose(file);
+    return 1;
+  }
+  return 0;
 }
 
 void OverwriteExit(char cName[],char cFile[]) {
@@ -43,7 +40,6 @@ void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
 }
 
 void VerifyOrbitExit(char cName1[],char cName2[],char cFile1[],char cFile2[],int iLine1,int iLine2,int iVerbose) {
-
   if (iVerbose >= VERBERR)
     fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",cName1,cName2);
   fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
@@ -66,7 +62,6 @@ void TripleLineExit(char cFile[],int iLine1,int iLine2,int iLine3) {
 
 /* Do we need both these? */
 void VerifyTripleExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
-
   if (iVerbose >= VERBERR) 
     fprintf(stderr,"ERROR: Cannot set %s, %s, and %s simultaneously.\n",cName1,cName2,cName3);
   TripleLineExit(cFile,iLine1,iLine2,iLine3);
@@ -85,65 +80,53 @@ void VerifyTwoOfThreeExit(char cName1[],char cName2[],char cName3[],int iLine1,i
  *
  */
 
-void VerifyOrbit(BODY *body,OPTIONS *options,FILES files,int iVerbose) {
-  /* Tricky because these parameters can appear in any file */
-  /* But, these parameters cannot be duplicated in VPLANET, so the only 
-     problem is if they are set in different files */
-
-  int i;
+void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose) {
+  int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
-  int iSemi=-1,iMeanMotion=-1,iPeriod=-1;
 
-  /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[1] ------- !!!!!! */
+  /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
 
-  /* In options.c, these parameters were placed in body[1]. */
-  for (i=0;i<files.iNumInputs;i++) {
-    if (options[OPT_ORBSEMI].iLine[i] > -1 && options[OPT_ORBMEANMOTION].iLine[i] == -1 && options[OPT_ORBPER].iLine[i] == -1) {
-      dSemi = body[1].dSemi;
-      iSemi = i;
-    }
-    if (options[OPT_ORBSEMI].iLine[i] == -1 && options[OPT_ORBMEANMOTION].iLine[i] > -1 && options[OPT_ORBPER].iLine[i] == -1) {
-      dMeanMotion = body[1].dMeanMotion;
-      iMeanMotion = i;
-    }
-    if (options[OPT_ORBSEMI].iLine[i] == -1 && options[OPT_ORBMEANMOTION].iLine[i] == -1 && options[OPT_ORBPER].iLine[i] > -1) {
-      dPeriod = body[1].dOrbPeriod;
-      iPeriod = i;
-    }
-  }
+  if (options[OPT_ORBSEMI].iLine[iFile] > -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] == -1)
+    dSemi = body[iBody].dSemi;
+
+  if (options[OPT_ORBSEMI].iLine[iFile] == -1 && options[OPT_ORBMEANMOTION].iLine[iFile] > -1 && options[OPT_ORBPER].iLine[iFile] == -1)
+      dMeanMotion = body[iBody].dMeanMotion;
+  
+  if (options[OPT_ORBSEMI].iLine[iFile] == -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] > -1) 
+    dPeriod = body[iBody].dOrbPeriod;
 
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) 
     return;
-
+  
   /* Was anything set? */
   if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0) {
     fprintf(stderr,"ERROR: Must set one of %s, %s or %s.\n",options[OPT_ORBSEMI].cName,options[OPT_ORBMEANMOTION].cName,options[OPT_ORBPER].cName);
     exit(EXIT_INPUT);
   }
-
+  
   /* If Semi set, was anything else? */
-  if (iSemi > -1) {
-    if (iMeanMotion > -1)
-      VerifyOrbitExit(options[OPT_ORBSEMI].cName,options[OPT_ORBMEANMOTION].cName,files.Infile[iSemi].cIn,files.Infile[iMeanMotion].cIn,options[OPT_ORBSEMI].iLine[iSemi],options[OPT_ORBMEANMOTION].iLine[iMeanMotion],iVerbose);
-
-    if (iPeriod > -1)
-      VerifyOrbitExit(options[OPT_ORBSEMI].cName,options[OPT_ORBPER].cName,files.Infile[iSemi].cIn,files.Infile[iPeriod].cIn,options[OPT_ORBSEMI].iLine[iSemi],options[OPT_ORBPER].iLine[iPeriod],iVerbose);
-
+  if (dSemi > 0) {
+    if (dMeanMotion > 0)
+      VerifyOrbitExit(options[OPT_ORBSEMI].cName,options[OPT_ORBMEANMOTION].cName,files.Infile[iFile].cIn,files.Infile[iFile].cIn,options[OPT_ORBSEMI].iLine[iFile],options[OPT_ORBMEANMOTION].iLine[iFile],iVerbose);
+    
+    if (dPeriod > 0)
+      VerifyOrbitExit(options[OPT_ORBSEMI].cName,options[OPT_ORBPER].cName,files.Infile[iFile].cIn,files.Infile[iFile].cIn,options[OPT_ORBSEMI].iLine[iFile],options[OPT_ORBPER].iLine[iFile],iVerbose);
+    
   }
-
+  
   /* Were MeanMotion and OrbPeriod both set? */
-  if (iPeriod > -1 && iMeanMotion > -1)
-      VerifyOrbitExit(options[OPT_ORBMEANMOTION].cName,options[OPT_ORBPER].cName,files.Infile[iMeanMotion].cIn,files.Infile[iPeriod].cIn,options[OPT_ORBMEANMOTION].iLine[iMeanMotion],options[OPT_ORBPER].iLine[iPeriod],iVerbose);
-
+  if (dPeriod > 0 && dMeanMotion > 0)
+    VerifyOrbitExit(options[OPT_ORBMEANMOTION].cName,options[OPT_ORBPER].cName,files.Infile[iFile].cIn,files.Infile[iFile].cIn,options[OPT_ORBMEANMOTION].iLine[iFile],options[OPT_ORBPER].iLine[iFile],iVerbose);
+  
   /* Only one option set */
-
-  if (iMeanMotion > -1)
-    body[1].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
-  if (iPeriod > -1)
-    body[1].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass));
-  if (iSemi > -1)
-    body[1].dSemi = dSemi;
+  
+  if (dMeanMotion > 0)
+    body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
+  if (dPeriod > 0)
+    body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+  if (dSemi > 0)
+    body[iBody].dSemi = dSemi;
 }
 
 /*
@@ -158,12 +141,12 @@ void IntegrationWarning(char cName1[],char cName2[],char cName3[],char cFile[],i
   /* Backward file name */
 }
 
-void VerifyIntegration(FILES *files,CONTROL *control,SYSTEM *system,OPTIONS *options,BODY *body,fnIntegrate *fnOneStep) {
-  int i,iBack,iForw;
+void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnIntegrate *fnOneStep) {
+  int iFile,iBack,iForw;
   char cTmp[OPTLEN];
 
   /* Were both Forward and Backward Set? */
-  if (control->Integr.bDoBackward && control->Integr.bDoForward) {
+  if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
     fprintf(stderr,"ERROR: Both %s and %s set. Only one is allowed.\n",options[OPT_BACK].cName,options[OPT_FORW].cName);
     if (options[OPT_BACK].cFile[0] > 0)
       iBack = 0;
@@ -189,75 +172,80 @@ void VerifyIntegration(FILES *files,CONTROL *control,SYSTEM *system,OPTIONS *opt
   }
 
   /* Fix backward output file */
-  if (control->Integr.bDoBackward) {
-    for (i=1;i<3;i++) {
-      if (options[OPT_OUTFILE].iLine[i] == -1) {
-	sprintf(files->Outfile[i-1].cOut,"%s.%s.backward",system->cName,body[i-1].cName);
-	if (control->iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[i-1].cOut);
+  if (control->Evolve.bDoBackward) {
+    for (iFile=1;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_OUTFILE].iLine[iFile] == -1) {
+	sprintf(files->Outfile[iFile-1].cOut,"%s.%s.backward",system->cName,body[iFile-1].cName);
+	if (control->Io.iVerbose >= VERBINPUT) 
+	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
   }
 
   /* Fix forward output file */
-  if (control->Integr.bDoForward) {
-    for (i=1;i<3;i++) {
-      if (options[OPT_OUTFILE].iLine[i] == -1) {
-	sprintf(files->Outfile[i-1].cOut,"%s.%s.forward",system->cName,body[i-1].cName);
-	if (control->iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[i-1].cOut);
+  if (control->Evolve.bDoForward) {
+    for (iFile=1;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_OUTFILE].iLine[iFile] == -1) {
+	sprintf(files->Outfile[iFile-1].cOut,"%s.%s.forward",system->cName,body[iFile-1].cName);
+	if (control->Io.iVerbose >= VERBINPUT) 
+	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
   }
 
   /* Check for file existence */
-  for (i=0;i<2;i++) {
-    if (bFileExists(files->Outfile[i].cOut)) {
-      if (!control->bOverwrite) {
-	OverwriteExit(options[OPT_OVERWRITE].cName,files->Outfile[i].cOut);
+  for (iFile=0;iFile<files->iNumInputs-1;iFile++) {
+    if (bFileExists(files->Outfile[iFile].cOut)) {
+      if (!control->Io.bOverwrite) {
+	OverwriteExit(options[OPT_OVERWRITE].cName,files->Outfile[iFile].cOut);
       } 
-      if (control->iVerbose >= VERBINPUT) 
-	fprintf(stderr,"WARNING: %s exists.\n",files->Outfile[i].cOut);
-      unlink(files->Outfile[i].cOut);
+      if (control->Io.iVerbose >= VERBINPUT) 
+	fprintf(stderr,"WARNING: %s exists.\n",files->Outfile[iFile].cOut);
+      unlink(files->Outfile[iFile].cOut);
     }
   }
 
   /* Was DoBackward or DoForward NOT set? */
-  if (!control->Integr.bDoBackward && !control->Integr.bDoForward) {
-    for (i=0;i<3;i++) {
-      if (options[OPT_ETA].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_ETA].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_ETA].cFile[i],options[OPT_ETA].iLine[i],control->iVerbose);
+  if (!control->Evolve.bDoBackward && !control->Evolve.bDoForward) {
+    for (iFile=0;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_ETA].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_ETA].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_ETA].cFile[iFile],options[OPT_ETA].iLine[iFile],control->Io.iVerbose);
 
-      if (options[OPT_OUTPUTTIME].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_OUTPUTTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTTIME].cFile[i],options[OPT_OUTPUTTIME].iLine[i],control->iVerbose);
+      if (options[OPT_OUTPUTTIME].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_OUTPUTTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTTIME].cFile[iFile],options[OPT_OUTPUTTIME].iLine[iFile],control->Io.iVerbose);
 
-      if (options[OPT_STOPTIME].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_STOPTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_STOPTIME].cFile[i],options[OPT_STOPTIME].iLine[i],control->iVerbose);
+      if (options[OPT_STOPTIME].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_STOPTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_STOPTIME].cFile[iFile],options[OPT_STOPTIME].iLine[iFile],control->Io.iVerbose);
 
-      if (options[OPT_TIMESTEP].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_TIMESTEP].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_TIMESTEP].cFile[i],options[OPT_TIMESTEP].iLine[i],control->iVerbose);
+      if (options[OPT_TIMESTEP].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_TIMESTEP].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_TIMESTEP].cFile[iFile],options[OPT_TIMESTEP].iLine[iFile],control->Io.iVerbose);
 
-      if (options[OPT_VARDT].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_VARDT].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_VARDT].cFile[i],options[OPT_VARDT].iLine[i],control->iVerbose);
+      if (options[OPT_VARDT].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_VARDT].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_VARDT].cFile[iFile],options[OPT_VARDT].iLine[iFile],control->Io.iVerbose);
 
-      if (options[OPT_OUTPUTORDER].iLine[i] > -1) 
-	IntegrationWarning(options[OPT_OUTPUTORDER].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTORDER].cFile[i],options[OPT_OUTPUTORDER].iLine[i],control->iVerbose);
+      if (options[OPT_OUTPUTORDER].iLine[iFile] > -1) 
+	IntegrationWarning(options[OPT_OUTPUTORDER].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTORDER].cFile[iFile],options[OPT_OUTPUTORDER].iLine[iFile],control->Io.iVerbose);
     }
   }     
 
-  if (control->iOneStep == EULER)
+  if (control->Evolve.iOneStep == EULER)
     *fnOneStep = &EulerStep;
-  else if (control->iOneStep == RUNGEKUTTA)
+  else if (control->Evolve.iOneStep == RUNGEKUTTA)
     *fnOneStep = &RungeKutta4Step;
   else {
     /* Assign Default */
     strcpy(cTmp,options[OPT_INTEGRATIONMETHOD].cDefault);
-    if (memcmp(sLower(cTmp),"e",1) == 0)
+    if (control->Io.iVerbose >= VERBINPUT)
+      fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_INTEGRATIONMETHOD].cName,options[OPT_INTEGRATIONMETHOD].cDefault);
+    if (memcmp(sLower(cTmp),"e",1) == 0) {
+      control->Evolve.iOneStep = EULER;
       *fnOneStep = &EulerStep;
-    if (memcmp(sLower(cTmp),"r",1) == 0)
+    }
+    if (memcmp(sLower(cTmp),"r",1) == 0) {
+      control->Evolve.iOneStep = RUNGEKUTTA;
       *fnOneStep = &RungeKutta4Step;
+    }
   }
-
 }
 
 /*
@@ -266,7 +254,7 @@ void VerifyIntegration(FILES *files,CONTROL *control,SYSTEM *system,OPTIONS *opt
  *
  */
 
-void VerifyMassRad(CONTROL *control,BODY *body,OPTIONS *options,int iBody,char cFile[],int iVerbose) {
+void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char cFile[],int iVerbose) {
 
 
   /* !!!!!! --- Mass and Radius ARE ALWAYS UPDATED AND CORRECT --- !!!!!! */
@@ -283,7 +271,7 @@ void VerifyMassRad(CONTROL *control,BODY *body,OPTIONS *options,int iBody,char c
   }
 
   /* Were all set? */
-  if (options[OPT_MASS].iLine[iBody] >= -1 && options[OPT_RADIUS].iLine[iBody] >= -1 && options[OPT_DENSITY].iLine[iBody] >= -1) {
+  if (options[OPT_MASS].iLine[iBody] > -1 && options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) {
     VerifyTripleExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
     exit(EXIT_INPUT);
   }
@@ -291,10 +279,10 @@ void VerifyMassRad(CONTROL *control,BODY *body,OPTIONS *options,int iBody,char c
   /* Was mass set? */
   if (options[OPT_MASS].iLine[iBody] > -1) {
     /* Can only set 1 other */
-    if (options[OPT_RADIUS].iLine[iBody] >= -1 && options[OPT_MASSRAD].iLine[iBody] >= -1) 
+    if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_MASSRAD].iLine[iBody] > -1) 
       VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_MASSRAD].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],cFile,iVerbose);
 
-    if (options[OPT_RADIUS].iLine[iBody] >= -1 && options[OPT_DENSITY].iLine[iBody] >= -1) 
+    if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) 
       VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
 
     if (options[OPT_MASSRAD].iLine[iBody] >= -1 && options[OPT_DENSITY].iLine[iBody] >= -1) 
@@ -375,24 +363,18 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
-void VerifyRotation(CONTROL *control,BODY *body,OPTIONS *options,char cFile[],int iBody) {
+void VerifyRotation(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,char cFile[],int iBody) {
+  int iModule;
 
   /* !!!!!! ------ RotRate IS ALWAYS UPDATED AND CORRECT -------- !!!!!! */
 
-  VerifyRotationGeneral(body,options,iBody,control->iVerbose,cFile);
+  VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,cFile);
 
-  /* Needs to be vectorized VPL */
-  VerifyRotationEqtide(control,body,options,cFile,iBody);
+  /* Verify modules */
+  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+    module->fnVerifyRotation[iBody][iModule](body,control,options,cFile,iBody);
 }
 
-void InitializeUpdate(UPDATE *update) {
-
-    update->iType = malloc(update->iNum*sizeof(int));
-    update->pdVar = malloc(update->iNum*sizeof(double*));
-    update->dDeriv=malloc(update->iNum*sizeof(double*));
-    update->iNumEqns=malloc(update->iNum*sizeof(double));
-
-}
 
 /*
  *
@@ -400,20 +382,49 @@ void InitializeUpdate(UPDATE *update) {
  *
  */
 
-void VerifyOptions(OPTIONS *options,OUTPUT *output,BODY *body,VPLANET *vplanet,SYSTEM *system,FILES *files,CONTROL *control,fnIntegrate *fnOneStep,UPDATE *update,fnUpdateVariable ***fnUpdate) {
-    int i;
+void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
+  int iBody,iModule;
 
-    /* Must Vectorize VPL */
-    VerifyEqtide(control,output,files,body,options,fnUpdate,update);
-    VerifyOrbit(body,options,*files,control->iVerbose);
+  VerifyIntegration(body,control,files,options,system,fnOneStep);
+  InitializeControlEvolve(control,module,update);
+  InitializeUpdate(body,control,module,update,fnUpdate);
+  InitializeHalts(control,module);
+  InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
 
-    VerifyIntegration(files,control,system,options,body,fnOneStep);
-
-    for (i=0;i<control->iNumBodies;i++) {
-      /* Must verify density first: RotVel requires a radius in VerifyRotation */
-      VerifyMassRad(control,&body[i],options,i+1,files->Infile[i+1].cIn,control->iVerbose);
-      VerifyRotation(control,body,options,files->Infile[i+1].cIn,i);
-
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      // Must initialize entire body struct before verifying modules
+      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
+      module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
     }
+  }
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
+    control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
+
+    /* Must verify density first: RotVel requires a radius in VerifyRotation */
+    VerifyMassRad(&body[iBody],control,options,iBody+1,files->Infile[iBody+1].cIn,control->Io.iVerbose);
+
+    VerifyHalts(body,control,module,options,iBody);
+    /* Verify Modules */
+
+    VerifyRotation(body,control,module,options,files->Infile[iBody].cIn,iBody);
+
+    /* XXX Only module reference in file -- can this be changed? */
+    if (iBody > 0 && body[iBody].bEqtide /* || other spin/orbit modules */) {
+      VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
+    }
+
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
+    
+    /* Must allocate memory in control struct for all perturbing bodies */
+    if (control->Evolve.iOneStep == RUNGEKUTTA) {
+      InitializeUpdateBodyPerts(control,update,iBody);
+      InitializeUpdateTmpBody(body,control,module,update,iBody);
+    }
+  }
+
 }
 

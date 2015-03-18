@@ -7,6 +7,7 @@
  * the two models.
 */
 
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -490,7 +491,6 @@ int fiTideFile(int *iLine,int iNumFiles) {
 /* In the following, iBody is the current body number that is getting assigned,
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
    body number of the current perturbing body. */
-
 void InitializeOblEqtide(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iaType[update[iBody].iObl][update[iBody].iaOblEqtide[iPert]] = 1;
   update[iBody].padDoblDtEqtide[iPert] = &update[iBody].daDerivProc[update[iBody].iObl][update[iBody].iaOblEqtide[iPert]];
@@ -1090,8 +1090,6 @@ void VerifyHaltEqtide(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
     } else
     control->fnHalt[iBody][(*iHalt)++] = &HaltSyncRot;
   }
-
-
 }
 
 /************* EQTIDE Outputs ******************/
@@ -1838,7 +1836,6 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
 
 void PropertiesCPL(BODY *body,int iBody) {
   int iPert,iIndex;
-
   /* dMeanMotion claculated in PropsAuxGeneral */
 
   if (iBody == 0) {
@@ -1897,7 +1894,6 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
 
 void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
   int iOrbiter;
-
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
        change this later so the dominant perturber can lock it? */

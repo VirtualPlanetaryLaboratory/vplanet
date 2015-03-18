@@ -1,4 +1,3 @@
-
 /********************** HALT.C ***********************/
 /*
  * Rory Barnes, Wed May  7 16:19:48 PDT 2014
@@ -158,11 +157,8 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 
 /******************* Verify *************************/
 
-
 void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int iBody) {
-  int iModule,iHalt,iHalt0,iHaltNow;
-
-  iHaltNow=0;
+  int iModule,iHalt,iHalt0,iHaltNow=0;
 
   if (control->Halt[iBody].bMerge)
     control->fnHalt[iBody][iHaltNow++] = &HaltMerge;

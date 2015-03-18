@@ -1,4 +1,3 @@
-
 /******************** OPTIONS.C *********************/
 /*
  * Rory Barnes, Wed May  7 16:27:19 PDT 2014
@@ -1329,6 +1328,10 @@ void ReadHaltMinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       AssignDefaultDouble(options,&control->Halt[iFile-1].dMinEcc,files->iNumInputs);
   }
 }
+
+
+/* Need to add ReadHaltDblSync function, since halt.bDblSync is never initialized anywhere! */
+
 
 /* Minimum obliquity */
   

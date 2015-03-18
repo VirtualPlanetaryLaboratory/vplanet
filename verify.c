@@ -375,7 +375,6 @@ void VerifyRotation(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,
     module->fnVerifyRotation[iBody][iModule](body,control,options,cFile,iBody);
 }
 
-
 /*
  *
  * Master Verify subroutine

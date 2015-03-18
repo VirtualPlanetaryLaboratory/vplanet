@@ -370,6 +370,9 @@ typedef struct {
   fnBodyCopyModule **fnBodyCopy;
 } EVOLVE;
 
+/* The CONTROL struct contains all the parameters that
+ * control program flow. */
+
 typedef struct {
   int iVerbose;           /* Verbosity: 0=no STDOUT, 5=all */
   double dOutputTime;	  /* Output interval */
@@ -520,15 +523,10 @@ typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnRea
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
-
 typedef void (*fnCountHaltsModule)(HALT*,int*);
-
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
-
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
-
 typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*);
-
 typedef void (*fnInitializeOutputFunctionModule)(OUTPUT*,int,int);
 typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 
@@ -580,11 +578,10 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,i
 #include "evolve.h"
 #include "halt.h"
 #include "module.h"
-#include "orbit.h"
 #include "options.h"
 #include "output.h"
+#include "system.h"
 #include "update.h"
-#include "util.h"
 #include "verify.h"
 
 /* module files */

@@ -89,7 +89,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 
   // XXXX Change Eqn to Proc?
 
-
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {

@@ -59,7 +59,7 @@ void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[]);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
-#define EQTUDEHALTBODYEND      5
+#define EQTIDEHALTBODYEND      5
 
 int HaltDblSync(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int HaltTideLock(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);

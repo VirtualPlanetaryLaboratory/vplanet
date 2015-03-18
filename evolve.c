@@ -126,7 +126,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   return dMin;
 }
  
-void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
+void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
   int iBody,iVar,iEqn;
   double dTimeOut;
 
@@ -153,7 +153,7 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
   }
 }
 
-void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iDir,double *dDt) {
+void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
   int iBody,iVar,iEqn,iSubStep;
   double dTimeOut,dFoo,dDelta;
   
@@ -303,7 +303,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
-    fnOneStep(body,control,system,update,fnUpdate,iDir,&dDt);
+    fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
 
     /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

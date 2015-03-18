@@ -1,18 +1,27 @@
-# Earth parameters
-sName		star
-dMass		0.31
-dRadius		0.00135	# AU
-#dTidalTau	-1
-dTidalQ		1e6
-dObliquity	0
-dRotPeriod	0.2579
-dRadGyra	0.5
-dK2		0.299
+# The host star, Gl 581
+sName		star		# Body's name
+saModules	eqtide		# Modules to apply, exact spelling required
 
-saModules	eqtide
-#iSciNot		12
+# Physical Parameters
+dMass		0.31		# Mass, negative -> Earth masses
+dRadius		0.00135		# Radius, negative -> Earth radii
+dObliquity	0		
+dRotPeriod	0.2579		# Rotation period, negative -> days
+dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
-#sTideModel	p2
-#sTideModel	t8
-#saTidePerts	c d
-saTidePerts	c
+# The first body in the saBodyFiles list must be the central mass.
+# This body carries no orbital information => the coordinate system is bodycentric.
+
+# EQTIDE Parameters
+#dTidalTau	-1		# Tidal time lag, negative -> seconds
+dTidalQ		1e6		# Tidal phase lag
+dK2		0.299		# Love number of degree 2
+sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
+#sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
+saTidePerts	c d		# Body name(s) of tidal perturbers
+
+# Some options are allowed to only appear in one file, but it can be primary or body.
+# That should really be documented!
+
+#iSciNot	12		# Decade to switch between normal/scientific notation
+

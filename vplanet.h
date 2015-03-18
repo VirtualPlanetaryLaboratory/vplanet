@@ -566,7 +566,7 @@ typedef struct {
 
 /* fnIntegrate is a pointer to a function that performs 
  * integration. */
-typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,double*);
+typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
 /* 
  * Other Header Files - These are primarily for function declarations

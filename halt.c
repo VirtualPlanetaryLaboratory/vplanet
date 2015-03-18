@@ -12,15 +12,53 @@
 #include <math.h>
 #include "vplanet.h"
 
+int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
+  int iModule,iNumHalts=0;
+
+  /* Multi-module halts */
+  if (halt->bMerge)
+    iNumHalts++;
+  if (halt->dMinObl >= 0)
+    iNumHalts++;
+  if (halt->dMaxEcc < 1)
+    iNumHalts++;
+  if (halt->dMinSemi > 0)
+    iNumHalts++;
+  if (halt->dMinEcc > 0) 
+    iNumHalts++;
+  if (halt->bPosDeDt)
+    iNumHalts++;
+  if (halt->dMinIntEn > 0)
+    iNumHalts++;
+
+  for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+    module->fnCountHalts[iBody][iModule](halt,&iNumHalts);
+  
+  return iNumHalts;
+}
+
+void InitializeHalts(CONTROL *control,MODULE *module) {
+  int iBody;
+  
+  control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->Halt[iBody].iNumHalts = fiNumHalts(&control->Halt[iBody],module,iBody);
+    control->fnHalt[iBody] = malloc(control->Halt[iBody].iNumHalts*sizeof(fnHaltModule));
+  }
+}
+
+/****************** HALTS *********************/
+
 /* Minimum obliquity? */
-int HaltMinObl(CONTROL *control,BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].dObliquity < control->Halt.dMinObl[iBody]) {
-    if (control->iVerbose >= VERBPROG) {
+int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dObliquity < halt->dMinObl) {
+    if (io->iVerbose >= VERBPROG) {
       printf("HALT: Body %s's Obliquity = ",body[iBody].cName);
-      fprintd(stdout,body[iBody].dObliquity,control->iSciNot,control->iDigits);
+      fprintd(stdout,body[iBody].dObliquity,io->iSciNot,io->iDigits);
       printf(", < minimum obliquity = ");
-      fprintd(stdout,control->Halt.dMinObl[iBody],control->iSciNot,control->iDigits);
-      printf(" at %.2e years.\n",control->Integr.dTime/YEARSEC);
+      fprintd(stdout,halt->dMinObl,io->iSciNot,io->iDigits);
+      printf(" at %.2e years.\n",evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -29,14 +67,14 @@ int HaltMinObl(CONTROL *control,BODY *body,UPDATE *update,int iBody) {
 }
 
 /* Maximum Eccentricity? */
-int HaltMaxEcc(CONTROL *control,BODY *body,UPDATE *update) {  
-  if (body[1].dEcc > control->Halt.dMaxEcc) {
-    if (control->iVerbose >= VERBPROG) {
+int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
+  if (body[iBody].dEcc >= halt->dMaxEcc) {
+    if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
-      fprintd(stdout,body[1].dEcc,control->iSciNot,control->iDigits);
+      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
       printf(", > max e = ");
-      fprintd(stdout,control->Halt.dMaxEcc,control->iSciNot,control->iDigits);
-      printf(" at %.2e years\n",control->Integr.dTime/YEARSEC);
+      fprintd(stdout,halt->dMaxEcc,io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -45,14 +83,46 @@ int HaltMaxEcc(CONTROL *control,BODY *body,UPDATE *update) {
 }
 
 /* Minimum Eccentricity? */
-int HaltMinEcc(CONTROL *control,BODY *body,UPDATE *update) {
-  if (body[1].dEcc < control->Halt.dMinEcc) {
-    if (control->iVerbose >= VERBPROG) {
+int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dEcc <= halt->dMinEcc) {
+    if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
-      fprintd(stdout,body[1].dEcc,control->iSciNot,control->iDigits);
+      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
       printf(", < min e = ");
-      fprintd(stdout,control->Halt.dMinEcc,control->iSciNot,control->iDigits);
-      printf(" at %.2e years\n",control->Integr.dTime/YEARSEC);
+      fprintd(stdout,halt->dMinEcc,io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+
+  return 0;
+}
+
+/* Minimum Semi-Major Axis? */
+int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dSemi <= halt->dMinSemi) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: e = ");
+      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
+      printf(", < min e = ");
+      fprintd(stdout,halt->dMinSemi,io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+
+  return 0;
+}
+
+/* Minimum Internal Power? */
+int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dIntEn <= halt->dMinIntEn) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: e = ");
+      fprintd(stdout,body[iBody].dIntEn,io->iSciNot,io->iDigits);
+      printf(", < min e = ");
+      fprintd(stdout,halt->dMinIntEn,io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -61,12 +131,12 @@ int HaltMinEcc(CONTROL *control,BODY *body,UPDATE *update) {
 }
 
 /* Positive de/dt? */
-int HaltPosDeccDt(CONTROL *control,BODY *body,UPDATE *update) {
-  if (*(update[1].pdDeccDt) > 0 && control->Halt.bPosDeDt) {
-    if (control->iVerbose >= VERBPROG) {
+int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (update[iBody].daDeriv[update[iBody].iEcc] > 0 && halt->bPosDeDt) {
+    if (io->iVerbose >= VERBPROG) {
       printf("HALT: de/dt = ");
-      fprintd(stdout,*(update[1].pdDeccDt),control->iSciNot,control->iDigits);
-      printf(" at %.2e years\n",control->Integr.dTime/YEARSEC);
+      fprintd(stdout,update[iBody].daDeriv[update[iBody].iEcc],io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -75,10 +145,10 @@ int HaltPosDeccDt(CONTROL *control,BODY *body,UPDATE *update) {
 }
 
 /* Merge? */
-int HaltMerge(CONTROL *control,BODY *body,UPDATE *update) {
-  if (body[1].dSemi*(1-body[1].dEcc) <= (body[0].dRadius + body[1].dRadius) && control->Halt.bMerge) { /* Merge! */
-    if (control->iVerbose > VERBPROG) 
-      printf("HALT: Merge at %.2e years!\n",control->Integr.dTime/YEARSEC);
+int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dSemi*(1-body[iBody].dEcc) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
+    if (io->iVerbose > VERBPROG) 
+      printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 
     return 1;
   }
@@ -86,45 +156,111 @@ int HaltMerge(CONTROL *control,BODY *body,UPDATE *update) {
   return 0;
 }
 
-int bCheckHalt(CONTROL *control,FNHALT *fnhalt,BODY *body,UPDATE *update,double dTime) {
-  int iBody,iHaltSys,iHaltBody;
-  double dMeanMotion;
+/******************* Verify *************************/
 
-  dMeanMotion = fdSemiToMeanMotion(body[1].dSemi,(body[0].dMass+body[1].dMass));
 
-  /* Global Halts */
-  for (iHaltSys=0;iHaltSys<MODULEHALTSYSEND;iHaltSys++) {
-    if (fnhalt->fnHaltSys[iHaltSys](control,body,update))
-      return 1;
+void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int iBody) {
+  int iModule,iHalt,iHalt0,iHaltNow;
+
+  iHaltNow=0;
+
+  if (control->Halt[iBody].bMerge)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
+  if (control->Halt[iBody].dMinObl >= 0)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
+  if (control->Halt[iBody].dMaxEcc < 1)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+  if (control->Halt[iBody].dMinSemi > 0)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
+  if (control->Halt[iBody].dMinEcc > 0)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
+  if (control->Halt[iBody].bPosDeDt)
+    control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
+  if (control->Halt[iBody].dMinIntEn > 0)
+    control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
+  
+  iHalt0=iHaltNow;
+  for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+    module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);
+  
+  /*    Now make sure all set halts apply to the selected modules 
+     XXX This sounds nice, but for now, it is left out
+  if (control->Halt.bMerge) {
+    if (!module->iEqtide) {
+      if (control->Io.iVerbose > 3)
+	fprintf(stderr,"WARNING: %s set to 1, but no selected module allows merging.\n",options[OPT_HALTMERGE].cName);
+    }
   }
 
-  /* Now check for body halts */
-  for (iBody=0;iBody<2;iBody++) {
-    for (iHaltBody=0;iHaltBody<MODULEHALTBODYEND;iHaltBody++) {
-      if (fnhalt->fnHaltBody[iHaltBody](control,body,update,iBody))
+  if (control->Halt.bDblSync >= 0) {
+    if (!module->iEqtide) {
+      if (control->Io.iVerbose > 3)
+	fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMAXECC].cName);
+    }
+  }
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (control->Halt.bTideLock[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName,body[iBody].cName);
+      }
+    }
+
+    if (control->Halt.bSync[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTSYNC].cName,body[iBody].cName);
+      }
+    }
+
+    if (control->Halt.bPosDeDt[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTPOSDEDT].cName,body[iBody].cName);
+      }
+    }
+
+    if (control->Halt.bMinEcc[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTMINECC].cName,body[iBody].cName);
+      }
+    }
+
+    if (control->Halt.dMinObl[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+	  fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMINOBL].cName);
+      }
+    }
+    
+    if (control->Halt.dMaxEcc[iBody] >= 0) {
+      if (!module->iEqtide) {
+	if (control->Io.iVerbose > 3)
+
+	  fprintf(stderr,"WARNING: %s set to 1, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName);
+      }
+    }
+  }
+  */
+}
+
+/************** Check for Halts *********************/
+
+int fbCheckHalt(BODY *body,CONTROL *control,UPDATE *update) {
+  int iBody,iHalt;
+  //double dMeanMotion;
+
+  //dMeanMotion = fdSemiToMeanMotion(body[1].dSemi,(body[0].dMass+body[1].dMass));
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    for (iHalt=0;iHalt<control->Halt[iBody].iNumHalts;iHalt++) {
+      //if (control->Halt[iBody].fnHalt(body,&control->Halt[iBody],update,&control->Evolve,&control->Io,iBody))
+      if (control->fnHalt[iBody][iHalt](body,&control->Evolve,&control->Halt[iBody],&control->Io,update,iBody))
 	return 1;
     }
   }
 
   return 0;
-}
-
-void InitializeHalt(HALT *halt,FNHALT *fnhalt,int iNumInputs) {
-  int iHaltBody=0,iHaltSys=0;
-
-  halt->dMinObl=malloc(iNumInputs*sizeof(double));
-  
-  fnhalt->fnHaltSys=malloc(MODULEHALTSYSEND*sizeof(fnHaltSystem));
-  fnhalt->fnHaltBody=malloc(MODULEHALTBODYEND*sizeof(fnHaltBod));
-
-
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMerge;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMinEcc;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltMaxEcc;
-  fnhalt->fnHaltSys[iHaltSys++] = &HaltPosDeccDt;
-
-  fnhalt->fnHaltBody[iHaltBody++] = &HaltMinObl;
-
-  /* Needs to be vectorized VPL */
-  InitializeHaltEqtide(halt,fnhalt,iNumInputs,&iHaltSys,&iHaltBody);
 }

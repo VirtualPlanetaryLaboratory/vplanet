@@ -16,13 +16,7 @@
 #define OUTBODYSTART            500
 #define OUTEND                  1000
 
-#define OUT_AGE			100
-#define OUT_ORBECC		110
-#define OUT_ORBEN		120 
-#define OUT_ORBMEANMOTION	130
-#define OUT_ORBPER		140
-#define OUT_ORBSEMI		150
-#define OUT_ORBANGMOM		160
+#define OUT_AGE			160
 #define OUT_TIME		170
 #define OUT_TOTANGMOM		180
 
@@ -30,9 +24,6 @@
 
 #define OUT_POTENERGY           191
 #define OUT_KINENERGY           192
-#define OUT_ORBKINENERGY        193
-#define OUT_ORBPOTENERGY        194
-#define OUT_ORBENERGY           195
 
 #define OUT_DT			200
 
@@ -45,6 +36,22 @@
 #define OUT_ROTRATE             550
 #define OUT_ROTPER              560
 
-void WriteLogEntry(CONTROL*,OUTPUT,BODY*,SYSTEM*,fnWriteOutput,FILE*,UPDATE*,int);
+#define OUT_SURFENFLUX          580
 
+#define OUT_ORBECC		610
+#define OUT_ORBEN		620 
+#define OUT_ORBMEANMOTION	630
+#define OUT_ORBPER		640
+#define OUT_ORBSEMI		650
+#define OUT_ORBANGMOM		660
 
+#define OUT_ORBKINENERGY        670
+#define OUT_ORBPOTENERGY        680
+#define OUT_ORBENERGY           690
+
+void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,int);
+
+void InitializeOutputFunctions(MODULE*,OUTPUT*,int);
+void WriteOutput(BODY*,CONTROL*,FILES*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,double,double);
+void WriteLog(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,int);
+void InitializeOutput(OUTPUT*,fnWriteOutput*);

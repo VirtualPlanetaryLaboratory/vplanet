@@ -9,5 +9,10 @@ dRotPeriod	0.2579
 dRadGyra	0.5
 dK2		0.299
 
+saModules	eqtide
 #iSciNot		12
 
+#sTideModel	p2
+#sTideModel	t8
+#saTidePerts	c d
+saTidePerts	c

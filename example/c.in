@@ -1,0 +1,29 @@
+# Gl581 c's parameters
+sName		c
+dMass		-5.5
+dRadius		-1.5
+#dTidalTau	-630
+dTidalQ		100
+dRotPeriod	-10
+dObliquity	23.5
+dK2		0.3
+dRadGyra	0.5
+
+dSemi           0.0721
+dEcc            0.06
+
+dMaxLockDiff	0.1
+
+#saModules	eqtide
+saModules	eqtide radheat
+saTidePerts	star
+#saOutputOrder	Time Semim Ecce Obli -heatfluxeqtide -SurfEnFluxRadheat $
+#		-40kpow -232thpow -238upow -radpow -SurfEnFluxT
+#saOutputOrder    Time Semim Ecce Obli -RotPer -OrbPer -heatfluxeqtide
+saOutputOrder    Time ecce
+
+#saModules	radheat
+d40KNum		-1
+d232ThNum	-1
+d238UNum	-1
+#saOutputOrder	Time  -40kpow -232thpow -238upow -radpow

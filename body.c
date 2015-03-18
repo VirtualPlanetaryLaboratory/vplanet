@@ -24,14 +24,14 @@
  * Mathematical Relationships 
  */
 
-int fiSign(double x) {
-  double foo;
+int fiSign(double dValue) {
+  int iSign;
 
-  if (x != 0) 
-    foo = x/fabs(x);
+  if (dValue != 0) 
+    iSign = (int)(dValue/fabs(dValue));
   else 
-    foo = 0;
-  return foo;
+    iSign = 0;
+  return iSign;
 }
 
 double fdDPerDt(double dRotRate, double dDrotrateDt) {
@@ -43,6 +43,19 @@ double fdTimescale(double dVar,double dDeriv) {
     return fabs(dVar/dDeriv);
   else
     return 0;
+}
+
+double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
+  double dTime;
+  int iPert;
+
+  dTime=0;
+  for (iPert=0;iPert<iNum;iPert++) {
+    if (dDeriv[iPert] != 0)
+      dTime += dDeriv[iPert]; // Note that here dTime is actullay the rate
+    dTime = fabs(dVar/dTime);
+  }
+  return dTime;
 }
 
 /* Convert an angular frequency to a period */
@@ -101,7 +114,7 @@ double fdRotVel(double dRadius,double dRotRate) {
  * See Barnes et al. (2013) Astrobiology 13:225-250.  */
 
 double fdRadToMass_ReidHawley(double dRadius) {
-    double x,y;
+  double x,y;
     
     x = log10(dRadius/RSUN);
     y = 0.1277 + 2.185*x + 3.135*x*x + 1.9031*x*x*x;
@@ -205,10 +218,32 @@ double fdRadToMass(double dMass,double iRelation) {
   else if (iRelation == 3)
     return fdRadToMass_Sotin07(dMass);
  
-  /* Need to add more! */
+  /* Need to add more! XXX */
  
   /* Whoops! */
   return 1./0;
 }
 
+void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
+  int iBody,iModule;
 
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    dest[iBody].dMass = src[iBody].dMass;
+    dest[iBody].dRadius = src[iBody].dRadius;
+    dest[iBody].dRadGyra = src[iBody].dRadGyra;
+    dest[iBody].dK2 = src[iBody].dK2;
+    dest[iBody].dObliquity = src[iBody].dObliquity;
+    dest[iBody].dRotRate = src[iBody].dRotRate;
+
+    /* Only orbiting bodies retain these parameters */
+    if (iBody > 0) {
+      dest[iBody].dEcc = src[iBody].dEcc;
+      dest[iBody].dSemi = src[iBody].dSemi;
+      dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
+    }
+    /* Copymodule specific properties */
+    for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)
+      // Only module reference in file -- can this be changed? XXX
+      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,iBody);
+  }
+}

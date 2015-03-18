@@ -13,13 +13,17 @@
 
 /* Initial Options */
 #define OPT_BODYFILES           10
-#define OPT_SYSTEMNAME		20
+#define OPT_MODULES             20
 
-#define OPT_UNITANGLE		30
-#define OPT_UNITLENGTH		40
-#define OPT_UNITMASS		50
-#define OPT_UNITTIME	        60
-#define OPT_VERBOSE		70
+#define OPT_SYSTEMNAME		30
+
+#define OPT_UNITANGLE		40
+#define OPT_UNITLENGTH		50
+#define OPT_UNITMASS		60
+#define OPT_UNITTIME	        70
+#define OPT_VERBOSE		80
+
+// Regular Options
 
 #define OPT_AGE			100
 
@@ -73,6 +77,9 @@
 #define OPT_ROTRATE	        665
 #define OPT_ROTVEL              680
 
+void InitializeOptions(OPTIONS*,fnReadOption*);
+void ReadOptions(BODY**,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE**,fnReadOption*,char[]);
+
 double dNegativeDouble(OPTIONS,char[],int);
 void AddOptionStringArray(char[],char[],char[MAXARRAY][OPTLEN],int*,int*,int*,int);
 void AddOptionDoubleArray(char[],char[],double*,int*,int*,int*,int);
@@ -81,40 +88,11 @@ void AddOptionDouble(char[],char[],double*,int*,int);
 void AddOptionInt(char[],char[],int*,int*,int);
 void AddOptionString(char[],char[],char[],int*,int);
 void AddOptionBool(char[],char[],int*,int*,int);
-void CheckDuplication(OPTIONS,FILES,char[],int,int);
+void CheckDuplication(FILES*,OPTIONS*,char[],int,int);
 void UpdateFoundOption(INFILE*,OPTIONS*,int,int);
-void AssignDefaultDouble(double*,OPTIONS,int);
-void AssignDefaultInt(int*,OPTIONS,int);
-void AssignDefaultString(char[],OPTIONS,int);
-
-/* This struct is for redundant variables */
-
-typedef struct {
-  double dPeriod;
-  int lPeriod;    
-  double dSemi;
-  int lSemi;  
-  double dMeanMotion;
-  int lMeanMotion;
-    
-  double dSpinPer;
-  int lSpinPer;
-  double dSpinRate;
-  int lSpinRate;
-  double dVRot;
-  int lVrot;
-  double bForceEqSpin;
-  int lForceEqSpin;
-
-  double dMass;
-  int lMass;
-  double dRadius;
-  int lRadius;
-  double dDensity;
-  int lDensity;
-  int iMassRad;
-  int lMassRad;
-
-} INPUT;
+void UpdateFoundOptionMulti(INFILE*,OPTIONS*,int*,int,int);
+void AssignDefaultDouble(OPTIONS*,double*,int);
+void AssignDefaultInt(OPTIONS*,int*,int);
+void AssignDefaultString(OPTIONS*,char[],int);
 
 

@@ -7,5 +7,6 @@
  *
 */
 
-int bCheckHalt(CONTROL*,FNHALT*,BODY*,UPDATE*,double);
-void InitializeHalt(HALT*,FNHALT*,int);
+int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
+void InitializeHalts(CONTROL*,MODULE*);
+void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*,int);

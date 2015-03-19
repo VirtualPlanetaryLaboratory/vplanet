@@ -318,9 +318,7 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
     /* Now do some initializing */
     body[iFile-1].iTidePerts=iNumIndices;
-    //body[iFile-1].saTidePerts = malloc(iNumIndices*sizeof(char*));
     for (iBody=0;iBody<=iNumIndices;iBody++) {
-      //body[iFile-1].saTidePerts[iBody] = malloc(NAMELEN);
       memset(body[iFile-1].saTidePerts[iBody],'\0',NAMELEN);
       strcpy(body[iFile-1].saTidePerts[iBody],saTmp[iBody]);
     }

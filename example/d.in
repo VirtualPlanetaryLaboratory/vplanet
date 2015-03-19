@@ -1,27 +1,33 @@
-# Gl581 d's parameters
-sName		d
+# Gl581 d
+saOutputOrder -40kpow -232thpow -238upow -radpow -SurfEnFluxT $
 
+  		Time Semim $
+# Damn! I put a $ at the start of this line, but it didn't work!
+#
+		Ecce Obli$
+		 -SurfEnFluxEqtide$
+
+		 -SurfEnFluxRadheat 
+
+# The order of options in a file is unimportant
+# The user selects the ordering of the output
+
+d238UNum	-1
 dMass		-5.6
-dRadius		-1.592
-dRotPeriod	-1
 dObliquity	23.5
 dK2		0.3
 dRadGyra	0.5
-
+dRotPeriod	-1
 dSemi           0.21847
 #dTidalTau	-630
+sName		d
 dTidalQ		100
 dEcc            0.38
-
-dMaxLockDiff	0.1
-
-saModules	eqtide
+dRadius		-1.592
 saTidePerts	star
-saOutputOrder    Time Semim Ecce Obli -RotPer -OrbPer
-
-#saModules	radheat
-#d40KNum		-10
-#d232ThNum	-10
-#d238UNum	-10
-#saOutputOrder	Time 40KNum 232ThNum 238UNum
+d40KNum		-30
+saModules	eqtide$		
+radheat
+d232ThNum	-1
+dMaxLockDiff	0.1
 

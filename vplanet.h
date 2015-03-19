@@ -518,7 +518,7 @@ typedef void (*fnFinalizeUpdate40KNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumModule)(BODY*,UPDATE*,int*,int,int);
 
-typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*);
+typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -566,7 +566,7 @@ typedef struct {
 
 /* fnIntegrate is a pointer to a function that performs 
  * integration. */
-typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,double*);
+typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
 /* 
  * Other Header Files - These are primarily for function declarations

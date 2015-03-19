@@ -1972,7 +1972,7 @@ void ReadOptionsModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-      module->fnReadOptions[iBody][iModule](body,control,files,options,system,fnRead);
+      module->fnReadOptions[iBody][iModule](body,control,files,options,system,fnRead,iBody);
   }
 }
 

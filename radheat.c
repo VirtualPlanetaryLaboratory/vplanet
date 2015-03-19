@@ -296,18 +296,12 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   
 }
 
-void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
-  int iFile,iOpt;
+void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+  int iOpt;
 
-  /* For each option, search the file for its occurence */
-  /* is iLine necessary? */
-
-  for (iFile=0;iFile<files->iNumInputs;iFile++) {
-    /* First get eqtide options */
-    for (iOpt=OPTSTARTRADHEAT;iOpt<OPTENDRADHEAT;iOpt++) 
-      if (options[iOpt].iType != -1) {
-	fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
-      }
+  for (iOpt=OPTSTARTRADHEAT;iOpt<OPTENDRADHEAT;iOpt++) {
+    if (options[iOpt].iType != -1) 
+      fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
 }
     

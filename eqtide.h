@@ -55,7 +55,7 @@ void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
-void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[]);
+void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5

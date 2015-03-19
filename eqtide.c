@@ -321,6 +321,7 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     //body[iFile-1].saTidePerts = malloc(iNumIndices*sizeof(char*));
     for (iBody=0;iBody<=iNumIndices;iBody++) {
       //body[iFile-1].saTidePerts[iBody] = malloc(NAMELEN);
+      memset(body[iFile-1].saTidePerts[iBody],'\0',NAMELEN);
       strcpy(body[iFile-1].saTidePerts[iBody],saTmp[iBody]);
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
@@ -422,18 +423,12 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   fnRead[OPT_TIDEPERTS] = &ReadTidePerts;
 }
 
-void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
-  int iFile,iOpt;
+void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+  int iOpt;
 
-  /* For each option, search the file for its occurence */
-  /* is iLine necessary? */
-
-  for (iFile=0;iFile<files->iNumInputs;iFile++) {
-    /* First get eqtide options */
-    for (iOpt=OPTSTARTEQTIDE;iOpt<OPTENDEQTIDE;iOpt++) 
-      if (options[iOpt].iType != -1) {
-	fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
-      }
+  for (iOpt=OPTSTARTEQTIDE;iOpt<OPTENDEQTIDE;iOpt++) {
+    if (options[iOpt].iType != -1)
+      fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
 }
     

@@ -51,7 +51,9 @@ void Read40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     if (dTmp < 0)
       body[iFile-1].d40KPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
    else
-      body[iFile-1].d40KPower = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+       //      body[iFile-1].d40KPower = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+       //CHANGED Mass to Power.
+       body[iFile-1].d40KPower = dTmp*fdUnitsPower(control->Units[iFile].iPower);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)

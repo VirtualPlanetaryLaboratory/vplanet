@@ -1,0 +1,33 @@
+# Gl581 c's parameters
+sName		c			# Body's name
+saModules	eqtide radheat		# Modules to apply, exact spelling required
+
+# Physical Properties
+dMass		-5.5			# Mass, negative -> Earth masses
+dRadius		-1.5			# Radius, negative -> Earth radii
+dRotPeriod	-10			# Rotation period, negative -> days
+dObliquity	23.5			
+dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+dSemi           0.0721			# Semi-major axis, negative -> AU
+dEcc            0.06			# Eccentricity
+
+# Output
+saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
+		-40kpow -232thpow -238upow -radpow -SurfEnFluxT
+
+# Output can be in any order and need only be ambiguous. 
+# Units of negative arguments are listed in the onboard help (./vplanet -h).
+
+# EQTIDE Parameters 
+#dTidalTau	-630			# Tidal time lag, negative -> seconds
+dTidalQ		100			# Tidal phase lag
+dK2		0.3			# Love number of degree 2
+dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
+saTidePerts	star			# Body name(s) of tidal perturbers
+
+# RADHEAT Parameters
+d40KNum		-1			# Numer of potassium-40 atoms, negative -> Earth
+d232ThNum	-1			# Number of thorium-232 atoms, negative -> Earth
+d238UNum	-1			# Number of uranium-238 atims, negative -> Earth

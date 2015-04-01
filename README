@@ -1,0 +1,18 @@
+This repository contains the source files and an example case for the code
+VPLANET. To compile:
+
+gcc -o vplanet *.c -lm
+
+This is version 0.1, which includes the EQTIDE and RADHEAT modules. Also included is 
+an example directory which demonstrates how to use the code, and the .in files provide
+helpful tips in lieu of actual documentation. The system is something like Gl 581 ca. mid-2010.
+
+To run the code:
+
+vplanet vpl.in
+
+You can also access the onboard help with the command: 
+
+vplanet -h
+
+Have fun!

@@ -69,8 +69,18 @@ pro vplot
   radpow=radpow(0:i-1)
   surfenfluxtot=surfenfluxtot(0:i-1)  
 
-;#####################################################
-;### PLOTTING #####
+;#####  DONE READING FILES #######
+
+;###### PRINT FINAL STATES  ######
+  print,'Final state at t='+stringf(time(i-1))
+  print,'a='+stringf(semim(i-1))+', e='+stringf(ecce(i-1))+', obli='+stringf(obli(i-1))
+  print,'surfenfluxeqtide='+stringf(surfenfluxeqtide(i-1))+', surfenfluxradheat='+stringf(surfenfluxradheat(i-1))+$
+        ', surfenfluxtot='+stringf(surfenfluxtot(i-1))
+  print,'k40pow='+stringf(k40pow(i-1))+', th232pow='+stringf(th232pow(i-1))+', u238pow='+stringf(u238pow(i-1))+$
+        ', radpow='+stringf(radpow(i-1))
+;#### END PRINT STATE ####
+  
+;##### BEGIN PLOTTING #######
 ;# Plotting options.
   loadct,39
   black=0 & blue=50 & green=150. & red=250. & white=255.

@@ -991,6 +991,10 @@ void FinalizeUpdate238UNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,in
   /* Nothing */
 }
 
+void FinalizeUpdate235UNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {  //PED
+  /* Nothing */
+}
+
 
 /***************** EQTIDE Halts *****************/
 
@@ -1785,7 +1789,8 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumEqtide;
   module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdate232ThNumEqtide;
   module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdate238UNumEqtide;
-
+  module->fnFinalizeUpdate235UNum[iBody][iModule] = &FinalizeUpdate235UNumEqtide;  //PED
+  
   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionEqtide;
 

@@ -29,6 +29,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate40KNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumModule));
   module->fnFinalizeUpdate232ThNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumModule));
+  module->fnFinalizeUpdate235UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumModule));  //PED
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -82,6 +83,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate40KNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumModule));
   module->fnFinalizeUpdate232ThNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumModule));
+  module->fnFinalizeUpdate235UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumModule));  //PED
 
   /************************
    * ADD NEW MODULES HERE *

@@ -87,6 +87,7 @@
 #define VNUM40K      5
 #define VNUM232TH    6
 #define VNUM238U     7
+#define VNUM235U     8  //PED
 
 
 /* Now define the structs */
@@ -157,6 +158,10 @@ typedef struct {
   double d238UNum;
   double d238UPower;
   double d238UMass;
+    double d235UConst;  //PED
+    double d235UNum;  //PED
+    double d235UPower;  //PED
+    double d235UMass;  //PED
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;
@@ -276,16 +281,20 @@ typedef struct {
   int i40K;
   int i232Th;
   int i238U;
+    int i235U; //PED
   int iNum40K;
   int iNum232Th;
   int iNum238U;
+    int iNum235U;  //PED
   double dD40KNumDt;
   double dD232ThNumDt;
   double dD238UNumDt;
+    double dD235UNumDt; //PED
 
   double *pdD40KNumDt;
   double *pdD232ThNumDt;
   double *pdD238UNumDt;
+    double *pdD235UNumDt;  //PED
 
 } UPDATE;
 
@@ -309,6 +318,7 @@ typedef struct {
   int dMin40KPower;
   int dMin232ThPower;
   int dMin238UPower;
+    int dMin235UPower;  //PED
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -517,6 +527,7 @@ typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate40KNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate235UNumModule)(BODY*,UPDATE*,int*,int,int);  //PED
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -550,6 +561,7 @@ typedef struct {
   fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
   fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
   fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
+    fnFinalizeUpdate235UNumModule **fnFinalizeUpdate235UNum;  //PED
 
   fnLogBodyModule **fnLogBody;
 

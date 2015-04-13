@@ -49,17 +49,17 @@ void Read40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
+  if (lTmp >= 0) {   //if line num of option ge 0
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
+    if (dTmp < 0)   //if input value lt 0
       body[iFile-1].d40KPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
    else
        //      body[iFile-1].d40KPower = dTmp*fdUnitsMass(control->Units[iFile].iMass);
-       //CHANGED Mass to Power.
+       //CHANGED units Mass to Power.
        body[iFile-1].d40KPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    if (iFile > 0)
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d40KPower = options->dDefault;
 }
 
@@ -69,6 +69,7 @@ void Read40KMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   int lTmp=-1;
   double dTmp;
 
+  printf("%s \n",files->Infile[iFile].cIn);
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
@@ -88,13 +89,15 @@ void Read40KNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   int lTmp=-1;
   double dTmp;
 
+  printf("%s \n",files->Infile[iFile].cIn);
+  //  fflush(stdout);
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      body[iFile-1].d40KNum = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+	body[iFile-1].d40KNum = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
     else
-      body[iFile-1].d40KNum = dTmp;
+	body[iFile-1].d40KNum = dTmp;   //units of num are num!
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -270,18 +273,18 @@ void Read235UNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].d235UNum = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-   else
-      body[iFile-1].d235UNum = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	  body[iFile-1].d235UNum = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	  body[iFile-1].d235UNum = dTmp;
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    if (iFile > 0)
-      body[iFile-1].d235UNum = options->dDefault;
+      if (iFile > 0)
+	  body[iFile-1].d235UNum = options->dDefault;
 }
 
-/* Halts */
+/* Initiatlize Input Options */
 
 void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
@@ -291,7 +294,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KMASS].cDefault,"Primordial Earth: xxx");
   options[OPT_40KMASS].iType = 2;
   options[OPT_40KMASS].iMultiFile = 1;
-  options[OPT_40KMASS].dNeg = MEARTH;
+  options[OPT_40KMASS].dNeg = MEARTH40K;
+  options[OPT_40KMASS].dDefault = 0;  //DO THIS FOR ALL!!!
   sprintf(options[OPT_40KMASS].cNeg,"Earth Masses");
   fnRead[OPT_40KMASS] = &Read40KMass;
   
@@ -310,7 +314,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KPOWER].cDefault,"Primordial Earth: xx TW");
   options[OPT_40KPOWER].iType = 2;
   options[OPT_40KPOWER].iMultiFile = 1;
-  options[OPT_40KPOWER].dNeg = 1e12*1e-7; // cgs
+  options[OPT_40KPOWER].dNeg = 0;  //POWER40K;  NOTE SET THIS IN radheat.h!
   sprintf(options[OPT_40KPOWER].cNeg,"TW");
   fnRead[OPT_40KPOWER] = &Read40KPower;
   
@@ -424,18 +428,21 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 
   if (options[OPT_40KMASS].iLine[iBody+1] >= 0) {
-    printf("40KMass not implemented.\n");
-    exit(1);
+      /*      printf("40KMass not implemented.\n");
+	      exit(1);*/
+      body[iBody].d40KNum = body[iBody].d40KMass/MASS40K;  //num=mass/atomicmass
   }
 
   if (options[OPT_40KNUM].iLine[iBody+1] >= 0) {
-    body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNum,dAge);
+      //    body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNum,dAge);
   }
 
   if (options[OPT_40KPOWER].iLine[iBody+1] >= 0) {
-    printf("40KPower not implemented.\n");
-    exit(1);
+      printf("40KPower not implemented.\n");
+      exit(1);
   }
+  
+  body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNum,dAge);  //moved from above.
 }
 
 void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -581,7 +588,7 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   /* Radheat is active for this body if this subroutine is called. */
 
-  if (body[iBody].d40KNum > 0) {
+  if (body[iBody].d40KNum > 0 || body[iBody].d40KMass > 0) {
     NotMassAndNum(options,OPT_40KMASS,OPT_40KNUM,iBody+1);
     Verify40K(body,options,update,system->dAge,fnUpdate,iBody);
     bRadheat = 1;
@@ -627,7 +634,7 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
      or < dMinRadPower, they will me removed from update[iBody] in 
      ForceBehavior.
   */
-  if (body[iBody].d40KNum > 0) {
+  if (body[iBody].d40KNum > 0 || body[iBody].d40KMass > 0 || body[iBody].d40KPower > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum40K++;
   }
@@ -1436,20 +1443,24 @@ double fdRadheatConst(double dNum,double dAge,double dHalfLife) {
   return dNum/(exp(-dAge/dHalfLife));
 }
 
-double fd40KConstant(double dPower,double dAge) {
+// PED COMMENT: shouldn't dPower be dNum below?  Prolly doesn't really matter it's a dummy anyway.
+/*double fd40KConstant(double dPower,double dAge) {  
     return fdRadheatConst(dPower,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
+    }*/
+double fd40KConstant(double dNum,double dAge) {  
+    return fdRadheatConst(dNum,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
 }
 
-double fd232ThConstant(double dPower,double dAge) {
-  return fdRadheatConst(dPower,dAge,HALFLIFE232TH);  //redirects to fdRadheatConst
+double fd232ThConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+  return fdRadheatConst(dNum,dAge,HALFLIFE232TH);  //redirects to fdRadheatConst
 }
 
-double fd238UConstant(double dPower,double dAge) {
-  return fdRadheatConst(dPower,dAge,HALFLIFE238U);  //redirects to fdRadheatConst
+double fd238UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+  return fdRadheatConst(dNum,dAge,HALFLIFE238U);  //redirects to fdRadheatConst
 }
 
-double fd235UConstant(double dPower,double dAge) {
-  return fdRadheatConst(dPower,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
+double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+  return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
 }
 
 double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {

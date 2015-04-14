@@ -7,6 +7,8 @@
  * that switch between the two models.
 */
 
+// PEDMACPRO
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>

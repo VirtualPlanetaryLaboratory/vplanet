@@ -7,7 +7,11 @@
  * that switch between the two models.
 */
 
+<<<<<<< HEAD
 // PEDMACPRO
+=======
+// PED
+>>>>>>> 53ffa79e9d55aa25e41dcd4afe2175a402ad41b2
 
 #include <stdio.h>
 #include <math.h>

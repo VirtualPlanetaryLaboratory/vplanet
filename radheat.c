@@ -294,7 +294,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KMASS].cDefault,"Primordial Earth: xxx");
   options[OPT_40KMASS].iType = 2;
   options[OPT_40KMASS].iMultiFile = 1;
-  options[OPT_40KMASS].dNeg = MEARTH40K;
+  options[OPT_40KMASS].dNeg = EMASSMAN40K;
   options[OPT_40KMASS].dDefault = 0;  //DO THIS FOR ALL!!!
   sprintf(options[OPT_40KMASS].cNeg,"Earth Masses");
   fnRead[OPT_40KMASS] = &Read40KMass;
@@ -302,10 +302,10 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KNUM].cName,"d40KNum");
   sprintf(options[OPT_40KNUM].cDescr,"Initial Number of 40K Atoms");
   sprintf(options[OPT_40KNUM].cDefault,"Primordial Earth: xxx");
-  options[OPT_40KNUM].dDefault = 0;
   options[OPT_40KNUM].iType = 2;
   options[OPT_40KNUM].iMultiFile = 1;
-  options[OPT_40KNUM].dNeg = NEARTH40K;
+  options[OPT_40KNUM].dNeg = ENUMMAN40K;
+  options[OPT_40KNUM].dDefault = 0;
   sprintf(options[OPT_40KNUM].cNeg,"Primordial Earth 40K Number");
   fnRead[OPT_40KNUM] = &Read40KNum;
   
@@ -314,7 +314,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KPOWER].cDefault,"Primordial Earth: xx TW");
   options[OPT_40KPOWER].iType = 2;
   options[OPT_40KPOWER].iMultiFile = 1;
-  options[OPT_40KPOWER].dNeg = 0;  //POWER40K;  NOTE SET THIS IN radheat.h!
+  options[OPT_40KPOWER].dNeg = EPOWERMAN40K;  //Earth's POWER of 40K
+  options[OPT_40KPOWER].dDefault = 0;
   sprintf(options[OPT_40KPOWER].cNeg,"TW");
   fnRead[OPT_40KPOWER] = &Read40KPower;
   
@@ -323,17 +324,18 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_232THMASS].cDefault,"Primordial Earth: xxx");
   options[OPT_232THMASS].iType = 2;
   options[OPT_232THMASS].iMultiFile = 1;
-  options[OPT_232THMASS].dNeg = MEARTH;
+  options[OPT_232THMASS].dNeg = EMASSMAN232TH;
+  options[OPT_232THMASS].dDefault = 0;
   sprintf(options[OPT_232THMASS].cNeg,"Earth Masses");
   fnRead[OPT_232THMASS] = &Read232ThMass; 
   
   sprintf(options[OPT_232THNUM].cName,"d232ThNum");
   sprintf(options[OPT_232THNUM].cDescr,"Initial Number of 232Th Atoms");
   sprintf(options[OPT_232THNUM].cDefault,"Primordial Earth: xxx");
-  options[OPT_232THNUM].dDefault = 0;
   options[OPT_232THNUM].iType = 2;
   options[OPT_232THNUM].iMultiFile = 1;
-  options[OPT_232THNUM].dNeg = NEARTH232TH;
+  options[OPT_232THNUM].dNeg = ENUMMAN232TH;
+  options[OPT_232THNUM].dDefault = 0;
   sprintf(options[OPT_232THNUM].cNeg,"Primordial Earth 232Th Number");
   fnRead[OPT_232THNUM] = &Read232ThNum;
   
@@ -342,7 +344,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_232THPOWER].cDefault,"Primordial Earth: xx TW");
   options[OPT_232THPOWER].iType = 2;
   options[OPT_232THPOWER].iMultiFile = 1;
-  options[OPT_232THPOWER].dNeg = 1e12*1e-7; // cgs
+  options[OPT_232THPOWER].dNeg = EPOWERMAN232TH;  //1e12*1e-7; // cgs
+  options[OPT_232THPOWER].dDefault = 0;
   sprintf(options[OPT_232THPOWER].cNeg,"TW");
   fnRead[OPT_232THPOWER] = &Read232ThPower;
 
@@ -351,7 +354,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UMASS].cDefault,"Primordial Earth: xxx");
   options[OPT_238UMASS].iType = 2;
   options[OPT_238UMASS].iMultiFile = 1;
-  options[OPT_238UMASS].dNeg = MEARTH;
+  options[OPT_238UMASS].dNeg = EMASSMAN238U;
+  options[OPT_238UMASS].dDefault = 0;
   sprintf(options[OPT_238UMASS].cNeg,"Earth Masses");
   fnRead[OPT_238UMASS] = &Read238UMass;
   
@@ -361,7 +365,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UNUM].dDefault = 0;
   options[OPT_238UNUM].iType = 2;
   options[OPT_238UNUM].iMultiFile = 1;
-  options[OPT_238UNUM].dNeg = NEARTH238U;
+  options[OPT_238UNUM].dNeg = ENUMMAN238U;
+  options[OPT_238UNUM].dDefault = 0;
   sprintf(options[OPT_238UNUM].cNeg,"Primordial Earth 238U Numer");
   fnRead[OPT_238UNUM] = &Read238UNum;
 
@@ -370,7 +375,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UPOWER].cDefault,"Primordial Earth: xx TW");
   options[OPT_238UPOWER].iType = 2;
   options[OPT_238UPOWER].iMultiFile = 1;
-  options[OPT_238UPOWER].dNeg = 1e12*1e-7; // cgs
+  options[OPT_238UPOWER].dNeg = EPOWERMAN238U;   //1e12*1e-7; // cgs
+  options[OPT_238UPOWER].dDefault = 0;
   sprintf(options[OPT_238UPOWER].cNeg,"TW");
   fnRead[OPT_238UPOWER] = &Read238UPower;
 
@@ -379,17 +385,18 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UMASS].cDefault,"Primordial Earth: xxx");
   options[OPT_235UMASS].iType = 2;
   options[OPT_235UMASS].iMultiFile = 1;
-  options[OPT_235UMASS].dNeg = MEARTH;
+  options[OPT_235UMASS].dNeg = EMASSMAN235U;
+  options[OPT_235UMASS].dDefault = 0;
   sprintf(options[OPT_235UMASS].cNeg,"Earth Masses");
   fnRead[OPT_235UMASS] = &Read235UMass;
   
   sprintf(options[OPT_235UNUM].cName,"d235UNum");  //PED
   sprintf(options[OPT_235UNUM].cDescr,"Initial Number of 235U Atoms");
   sprintf(options[OPT_235UNUM].cDefault,"1");
-  options[OPT_235UNUM].dDefault = 0;
   options[OPT_235UNUM].iType = 2;
   options[OPT_235UNUM].iMultiFile = 1;
-  options[OPT_235UNUM].dNeg = NEARTH235U;
+  options[OPT_235UNUM].dNeg = ENUMMAN235U;
+  options[OPT_235UNUM].dDefault = 0;
   sprintf(options[OPT_235UNUM].cNeg,"Primordial Earth 235U Numer");
   fnRead[OPT_235UNUM] = &Read235UNum;
 
@@ -398,7 +405,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UPOWER].cDefault,"Primordial Earth: xx TW");
   options[OPT_235UPOWER].iType = 2;
   options[OPT_235UPOWER].iMultiFile = 1;
-  options[OPT_235UPOWER].dNeg = 1e12*1e-7; // cgs
+  options[OPT_235UPOWER].dNeg = EPOWERMAN235U;   //1e12*1e-7; // cgs
+  options[OPT_235UPOWER].dDefault = 0;
   sprintf(options[OPT_235UPOWER].cNeg,"TW");
   fnRead[OPT_235UPOWER] = &Read235UPower;
 
@@ -428,18 +436,20 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 
   if (options[OPT_40KMASS].iLine[iBody+1] >= 0) {
-      /*      printf("40KMass not implemented.\n");
-	      exit(1);*/
-      body[iBody].d40KNum = body[iBody].d40KMass/MASS40K;  //num=mass/atomicmass
+      //  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
+      //      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
+      body[iBody].d40KNum=body[iBody].d40KMass/(MASS40K);
+      printf("40KMass set, body[iBody].d40KNum=%e, ENUMMAN40K=%e\n",body[iBody].d40KNum,ENUMMAN40K);
   }
 
   if (options[OPT_40KNUM].iLine[iBody+1] >= 0) {
-      //    body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNum,dAge);
+      // Do nothing bc default Num set.
   }
 
   if (options[OPT_40KPOWER].iLine[iBody+1] >= 0) {
-      printf("40KPower not implemented.\n");
-      exit(1);
+      body[iBody].d40KNum=body[iBody].d40KPower/(ENERGY40K)*(HALFLIFE40K);
+      printf("40KPower set, .d40KPower=%e, .d40KNum=%e, ENUMMAN40K=%e\n",body[iBody].d40KPower,body[iBody].d40KNum,ENUMMAN40K);
+      //      exit(1);
   }
   
   body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNum,dAge);  //moved from above.
@@ -448,52 +458,66 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 
   if (options[OPT_232THMASS].iLine[iBody+1] >= 0) {
-    printf("232ThMass not implemented.\n");
-    exit(1);
+      //    printf("232ThMass not implemented.\n");
+      //    exit(1);
+    body[iBody].d232ThNum=body[iBody].d232ThMass/(MASS232TH);
+    printf("232ThMass set, body[iBody].d232ThNum=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNum,ENUMMAN232TH);
   }
 
   if (options[OPT_232THNUM].iLine[iBody+1] >= 0) {
-    body[iBody].d232ThConst = fd232ThConstant(body[iBody].d232ThNum,dAge);
+      //Do nothing, use default.
   }
 
   if (options[OPT_232THPOWER].iLine[iBody+1] >= 0) {
-    printf("232ThPower not implemented.\n");
-    exit(1);
+      //    printf("232ThPower not implemented.\n");
+      //    exit(1);
+    body[iBody].d232ThNum=body[iBody].d232ThPower/(ENERGY232TH)*(HALFLIFE232TH);
+    printf("232ThPower set, .d232ThPower=%e, .d232ThNum=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPower,body[iBody].d232ThNum,ENUMMAN232TH);
   }
+  body[iBody].d232ThConst = fd232ThConstant(body[iBody].d232ThNum,dAge);
 }
 
 void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 
   if (options[OPT_238UMASS].iLine[iBody+1] >= 0) {
-    printf("238UMass not implemented.\n");
-    exit(1);
+      /*    printf("238UMass not implemented.\n");
+	    exit(1);*/
+      body[iBody].d238UNum=body[iBody].d238UMass/(MASS238U);
+      printf("238UMass set, body[iBody].d238UNum=%e, ENUMMAN238U=%e\n",body[iBody].d238UNum,ENUMMAN238U);
   }
 
   if (options[OPT_238UNUM].iLine[iBody+1] >= 0) {
-    body[iBody].d238UConst = fd238UConstant(body[iBody].d238UNum,dAge);
+
   }
 
   if (options[OPT_238UPOWER].iLine[iBody+1] >= 0) {
-    printf("238UPower not implemented.\n");
-    exit(1);
+      /*    printf("238UPower not implemented.\n");
+	    exit(1);*/
+      body[iBody].d238UNum=body[iBody].d238UPower/(ENERGY238U)*(HALFLIFE238U);
+      printf("238UPower set, .d238UPower=%e, .d238UNum=%e, ENUMMAN238U=%e\n",body[iBody].d238UPower,body[iBody].d238UNum,ENUMMAN238U);
   }
+  body[iBody].d238UConst = fd238UConstant(body[iBody].d238UNum,dAge);
 }
 
 void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
 
   if (options[OPT_235UMASS].iLine[iBody+1] >= 0) {
-    printf("235UMass not implemented.\n");
-    exit(1);
+      /*    printf("235UMass not implemented.\n");
+	    exit(1);*/
+    body[iBody].d235UNum=body[iBody].d235UMass/(MASS235U);
+    printf("235UMass set, body[iBody].d235UNum=%e, ENUMMAN235U=%e\n",body[iBody].d235UNum,ENUMMAN235U);
   }
 
   if (options[OPT_235UNUM].iLine[iBody+1] >= 0) {
-    body[iBody].d235UConst = fd235UConstant(body[iBody].d235UNum,dAge);
   }
 
   if (options[OPT_235UPOWER].iLine[iBody+1] >= 0) {
-    printf("235UPower not implemented.\n");
-    exit(1);
+      /*    printf("235UPower not implemented.\n");
+	    exit(1);*/
+    body[iBody].d235UNum=body[iBody].d235UPower/(ENERGY235U)*(HALFLIFE235U);
+    printf("235UPower set, .d235UPower=%e, .d235UNum=%e, ENUMMAN235U=%e\n",body[iBody].d235UPower,body[iBody].d235UNum,ENUMMAN235U);
   }
+  body[iBody].d235UConst = fd235UConstant(body[iBody].d235UNum,dAge);
 }
 
 void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -588,25 +612,25 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   /* Radheat is active for this body if this subroutine is called. */
 
-  if (body[iBody].d40KNum > 0 || body[iBody].d40KMass > 0) {
+  if (body[iBody].d40KNum > 0 || body[iBody].d40KMass > 0 || body[iBody].d40KPower > 0) {
     NotMassAndNum(options,OPT_40KMASS,OPT_40KNUM,iBody+1);
     Verify40K(body,options,update,system->dAge,fnUpdate,iBody);
     bRadheat = 1;
   }
 
-  if (body[iBody].d232ThNum > 0) {
+  if (body[iBody].d232ThNum > 0 || body[iBody].d232ThMass > 0 || body[iBody].d232ThPower > 0) {
     NotMassAndNum(options,OPT_232THMASS,OPT_232THNUM,iBody+1);
     Verify232Th(body,options,update,system->dAge,fnUpdate,iBody);
     bRadheat = 1;
   }
 
-  if (body[iBody].d238UNum > 0) {
+  if (body[iBody].d238UNum > 0 || body[iBody].d238UMass > 0 || body[iBody].d238UPower > 0) {
       NotMassAndNum(options,OPT_238UMASS,OPT_238UNUM,iBody+1);
       Verify238U(body,options,update,system->dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
-  if (body[iBody].d235UNum > 0) {  //PED
+  if (body[iBody].d235UNum > 0 || body[iBody].d235UMass > 0 || body[iBody].d235UPower > 0) {  //PED
       NotMassAndNum(options,OPT_235UMASS,OPT_235UNUM,iBody+1);
       Verify235U(body,options,update,system->dAge,fnUpdate,iBody);
       bRadheat = 1;
@@ -638,15 +662,15 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNum40K++;
   }
-  if (body[iBody].d232ThNum > 0) {
+  if (body[iBody].d232ThNum > 0 || body[iBody].d232ThMass > 0 || body[iBody].d232ThPower > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum232Th++;
   }
-  if (body[iBody].d238UNum > 0) {
+  if (body[iBody].d238UNum > 0 || body[iBody].d238UMass > 0 || body[iBody].d238UPower > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum238U++;
   }
-  if (body[iBody].d235UNum > 0) {  //PED
+  if (body[iBody].d235UNum > 0 || body[iBody].d235UMass > 0 || body[iBody].d235UPower > 0) {  //PED
     update[iBody].iNumVars++;
     update[iBody].iNum235U++;
   }
@@ -1109,7 +1133,7 @@ void WriteSurfEnFluxRadheat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   /* Potassium */
-
+    //  PED:  Do these default numbers matter??  If so they need to be changed.
   sprintf(output[OUT_40KPOWER].cName,"40KPower");
   sprintf(output[OUT_40KPOWER].cDescr,"Total Power Generated by 40K");
   sprintf(output[OUT_40KPOWER].cNeg,"TW");
@@ -1162,7 +1186,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KNUM].cDescr,"Total Number of 40K Atoms");
   sprintf(output[OUT_40KNUM].cNeg,"Initial Primordial Earth Number");
   output[OUT_40KNUM].bNeg = 1;
-  output[OUT_40KNUM].dNeg = MEARTH40K/MASS40K;
+  output[OUT_40KNUM].dNeg = EMASSMAN40K/MASS40K;
   output[OUT_40KNUM].iNum = 1;
   fnWrite[OUT_40KNUM] = &Write40KNum;
 
@@ -1212,7 +1236,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THNUM].cDescr,"Total Number of 232Th Atoms");
   sprintf(output[OUT_232THNUM].cNeg,"Initial Primordial Earth Number");
   output[OUT_232THNUM].bNeg = 1;
-  output[OUT_232THNUM].dNeg = MEARTH232TH/MASS232TH;
+  output[OUT_232THNUM].dNeg = EMASSMAN232TH/MASS232TH;
   output[OUT_232THNUM].iNum = 1;
   fnWrite[OUT_232THNUM] = &Write232ThNum;
 

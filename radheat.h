@@ -20,45 +20,45 @@
 #define RAD40K           10
 #define HALFLIFE40K      5.6860542e+16  //3.93838848e16  // seconds //really =tau_half/ln(2)=1/lambda
 #define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-23 [g]
-#define MEARTH40K        8.2845415e+20  //1.0241598e+21 //2.2e20    // gm, Turcotte & Schubert (2002), pg 137
+//#define MEARTH40K        8.2845415e+20  //1.0241598e+21 //2.2e20    // gm, Turcotte & Schubert (2002), pg 137
 #define EMASSMAN40K      8.2845415e+20  //1.0241598e+21 //2.2e20    // gm, Turcotte & Schubert (2002), pg 137
-#define NEARTH40K        1.2483906e+43  //7.6145990e+42 //2.1e43    // So modern Earth has 3 TW (6 orders of mag?)
+//#define NEARTH40K        1.2483906e+43  //7.6145990e+42 //2.1e43    // So modern Earth has 3 TW (6 orders of mag?)
 #define ENUMMAN40K       1.2483906e+43  //7.6145990e+42 //2.1e43    // So modern Earth has 3 TW (6 orders of mag?)
 #define ENERGY40K        2.13371243669e-6 // ergs -- weighting both Ar and Ca decay chains
-#define EPOWER40K        4.6846309e+20  //erg/s
+//#define EPOWER40K        4.6846309e+20  //erg/s
 #define EPOWERMAN40K     4.6846309e+20  //erg/s
 
 #define RAD232TH         11
 #define HALFLIFE232TH    6.3752726e+17 //4.4338428e17   // seconds
 #define MASS232TH        232.0377*ATOMMASS
-#define MEARTH232TH      2.1017728e+20  //2.5982745e+20  //3.1e20
+//#define MEARTH232TH      2.1017728e+20  //2.5982745e+20  //3.1e20
 #define EMASSMAN232TH    2.1017728e+20  //2.5982745e+20  //3.1e20
-#define NEARTH232TH      5.4547913e+41  //6.5205779e+41  //1.45e42
+//#define NEARTH232TH      5.4547913e+41  //6.5205779e+41  //1.45e42
 #define ENUMMAN232TH     5.4547913e+41  //6.5205779e+41  //1.45e42
 #define ENERGY232TH      6.833606619959e-5 // ergs
-#define EPOWER232TH      5.8469497e+19  //erg/s
+//#define EPOWER232TH      5.8469497e+19  //erg/s
 #define EPOWERMAN232TH   5.8469497e+19  //erg/s
 
 #define RAD238U          12
 #define HALFLIFE238U     2.0359742e+17  //1.409993568e17 // seconds
 #define MASS238U         238.050788268*ATOMMASS
-#define MEARTH238U       8.3866516e+19  //1.0367830e+20  //8e19
+//#define MEARTH238U       8.3866516e+19  //1.0367830e+20  //8e19
 #define EMASSMAN238U     8.3866516e+19  //1.0367830e+20  //8e19
-#define NEARTH238U       2.1216313e+41  //2.3878961e+41  //7.5e41
+//#define NEARTH238U       2.1216313e+41  //2.3878961e+41  //7.5e41
 #define ENUMMAN238U      2.1216313e+41  //2.3878961e+41  //7.5e41
 #define ENERGY238U       8.28293620554e-5 // ergs
-#define EPOWER238U       8.6314141e+19  //erg/s
+//#define EPOWER238U       8.6314141e+19  //erg/s
 #define EPOWERMAN238U    8.6314141e+19  //erg/s
 
 #define RAD235U          13     //Variable added PED
 #define HALFLIFE235U     3.2038174e+16 // seconds
 #define MASS235U         235.0439299*ATOMMASS
-#define MEARTH235U       2.5403288e+19  //3.1404304e+19
+//#define MEARTH235U       2.5403288e+19  //3.1404304e+19
 #define EMASSMAN235U     2.5403288e+19  //3.1404304e+19
-#define NEARTH235U       6.5086633e+40  //8.7334519e+40
+//#define NEARTH235U       6.5086633e+40  //8.7334519e+40
 #define ENUMMAN235U      6.5086633e+40  //8.7334519e+40
 #define ENERGY235U       6.55516e-05 // ergs
-#define EPOWER235U       1.3317029e+20  //erg/s
+//#define EPOWER235U       1.3317029e+20  //erg/s
 #define EPOWERMAN235U    1.3317029e+20  //erg/s
 
 void InitializeControlRadheat(CONTROL*);
@@ -73,13 +73,13 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTRADHEAT         1100 /* Start of RADHEAT options */
 #define OPTENDRADHEAT           1200 /* End of RADHEAT options */
 
-#define OPT_40KMASS             1110
+/*#define OPT_40KMASS             1110
 #define OPT_40KNUM              1112 
-#define OPT_40KPOWER             1114 
+#define OPT_40KPOWER             1114 */
 #define OPT_87RBMASS            1120
 #define OPT_87RBNUM             1122
 #define OPT_87RBPOWER            1124
-#define OPT_232THMASS	        1130
+/*#define OPT_232THMASS	        1130
 #define OPT_232THNUM            1132
 #define OPT_232THPOWER           1134
 #define OPT_238UMASS            1140
@@ -93,7 +93,8 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HALTMIN232THPOWER    1174
 #define OPT_HALTMIN238UPOWER	1176
 #define OPT_HALTMIN235UPOWER	1178  //PED
-/*
+*/
+
 #define OPT_40KMASSMAN            1110
 #define OPT_40KMASSCORE           1111
 #define OPT_40KNUMMAN             1112
@@ -130,7 +131,7 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HALTMIN238UPOWERCORE  1177
 #define OPT_HALTMIN235UPOWERMAN   1178  
 #define OPT_HALTMIN235UPOWERCORE  1179  
-*/
+
 
 /* Options Functions */
 void HelpOptionsRadheat(OPTIONS*);

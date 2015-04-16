@@ -148,8 +148,10 @@ typedef struct {
   double dIsotope; // XXX Hack. Prolly need to just use the isotopes
   double d40KConst;       
   double d40KNum;
-  double d40KPower;
-  double d40KMass;
+    double d40KPower;  //don't need this anymore?
+    //  double d40KMass;
+    //    double d40KPowerMan;
+    double d40KMassMan;
   double d232ThConst;
   double d232ThNum;
   double d232ThPower;
@@ -315,9 +317,10 @@ typedef struct {
   int bSync;            /* Halt if rotation becomes synchronous? */
 
   /* RADHEAT */
-  int dMin40KPower;
-  int dMin232ThPower;
-  int dMin238UPower;
+    int dMin40KPower;
+    //    int dMin40KPowerMan; //PED
+    int dMin232ThPower;
+    int dMin238UPower;
     int dMin235UPower;  //PED
 } HALT;
 

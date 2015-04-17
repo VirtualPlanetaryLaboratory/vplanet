@@ -146,23 +146,19 @@ typedef struct {
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
     int bRadheat;
     double dIsotope; // XXX Hack. Prolly need to just use the isotopes
-    double d40KConst;       
-    double d40KNum;
+    double d40KConstMan;       
     double d40KNumMan;
     double d40KPowerMan;
     double d40KMassMan;
-    double d232ThConst;
-    double d232ThNum;
+    double d232ThConstMan;
     double d232ThNumMan;
     double d232ThPowerMan;
     double d232ThMassMan;
-    double d238UConst;
-    double d238UNum;
+    double d238UConstMan;
     double d238UNumMan;
     double d238UPowerMan;
     double d238UMassMan;
-    double d235UConst;  //PED
-    double d235UNum;  //PED
+    double d235UConstMan; 
     double d235UNumMan;  //PED
     double d235UPowerMan;  //PED
     double d235UMassMan;  //PED

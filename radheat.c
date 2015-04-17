@@ -20,16 +20,16 @@ void  InitializeControlRadheat(CONTROL *control) {
 
 void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].d40KNumMan = src[iBody].d40KNumMan;
-  dest[iBody].d40KConst = src[iBody].d40KConst;
+  dest[iBody].d40KConstMan = src[iBody].d40KConstMan;
 
   dest[iBody].d232ThNumMan = src[iBody].d232ThNumMan;
-  dest[iBody].d232ThConst = src[iBody].d232ThConst;
+  dest[iBody].d232ThConstMan = src[iBody].d232ThConstMan;
 
   dest[iBody].d238UNumMan = src[iBody].d238UNumMan;
-  dest[iBody].d238UConst = src[iBody].d238UConst;
+  dest[iBody].d238UConstMan = src[iBody].d238UConstMan;
 
   dest[iBody].d235UNumMan = src[iBody].d235UNumMan;  //PED
-  dest[iBody].d235UConst = src[iBody].d235UConst; //PED
+  dest[iBody].d235UConstMan = src[iBody].d235UConstMan; //PED
 }
 
 void InitializeBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -453,7 +453,7 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
       //      exit(1);
   }
   
-  body[iBody].d40KConst = fd40KConstant(body[iBody].d40KNumMan,dAge);  //moved from above.
+  body[iBody].d40KConstMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //moved from above.
 }
 
 void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -476,7 +476,7 @@ void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     body[iBody].d232ThNumMan=body[iBody].d232ThPowerMan/(ENERGY232TH)*(HALFLIFE232TH);
     printf("232ThPowerMan set, .d232ThPowerMan=%e, .d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPowerMan,body[iBody].d232ThNumMan,ENUMMAN232TH);
   }
-  body[iBody].d232ThConst = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
+  body[iBody].d232ThConstMan = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
 }
 
 void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -498,7 +498,7 @@ void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
       body[iBody].d238UNumMan=body[iBody].d238UPowerMan/(ENERGY238U)*(HALFLIFE238U);
       printf("238UPowerMan set, .d238UPowerMan=%e, .d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UPowerMan,body[iBody].d238UNumMan,ENUMMAN238U);
   }
-  body[iBody].d238UConst = fd238UConstant(body[iBody].d238UNumMan,dAge);
+  body[iBody].d238UConstMan = fd238UConstant(body[iBody].d238UNumMan,dAge);
 }
 
 void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
@@ -520,7 +520,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
     body[iBody].d235UNumMan=body[iBody].d235UPowerMan/(ENERGY235U)*(HALFLIFE235U);
     printf("235UPowerMan set, .d235UPowerMan=%e, .d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UPowerMan,body[iBody].d235UNumMan,ENUMMAN235U);
   }
-  body[iBody].d235UConst = fd235UConstant(body[iBody].d235UNumMan,dAge);
+  body[iBody].d235UConstMan = fd235UConstant(body[iBody].d235UNumMan,dAge);
 }
 
 void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -1503,51 +1503,51 @@ double fdRadEnFlux(double dConst,double dHalfLife,double dAge,double dRadius) {
 }
 
 double fd40KPower(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadPower(body[iBody].d40KConst,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
+  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
 }
 
 double fd232ThPower(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d232ThConst,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
 }
 
 double fd238UPower(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d238UConst,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
 }
 
 double fd235UPower(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d235UConst,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
 }
 
 double fd40KEnFlux(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadEnFlux(body[iBody].d40KConst,HALFLIFE40K,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge,body[iBody].dRadius);
 }
 
 double fd232ThEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d232ThConst,HALFLIFE232TH,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge,body[iBody].dRadius);
 }
 
 double fd238UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d238UConst,HALFLIFE238U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge,body[iBody].dRadius);
 }
 
 double fd235UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d235UConst,HALFLIFE235U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge,body[iBody].dRadius);
 }
 
 double fdD40KNumDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConst,HALFLIFE40K,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,system->dAge);
 }
 
 double fdD232ThNumDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConst,HALFLIFE232TH,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,system->dAge);
 }
 
 double fdD238UNumDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConst,HALFLIFE238U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,system->dAge);
 }
 
 double fdD235UNumDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConst,HALFLIFE235U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,system->dAge);
 }
 
 /* Number derivatives? */

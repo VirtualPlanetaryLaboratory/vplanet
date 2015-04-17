@@ -84,10 +84,10 @@
 #define VECC         2
 #define VROT         3
 #define VOBL         4
-#define VNUM40K      5
-#define VNUM232TH    6
-#define VNUM238U     7
-#define VNUM235U     8  //PED
+#define VNUM40KMAN      5
+#define VNUM232THMAN    6
+#define VNUM238UMAN     7
+#define VNUM235UMAN     8  //PED
 
 
 /* Now define the structs */
@@ -278,22 +278,22 @@ typedef struct {
   double **padDrotDtEqtide;
 
   /* RADHEAT */
-  int i40K;
-  int i232Th;
-  int i238U;
+    int i40K;
+    int i232Th;
+    int i238U;
     int i235U; //PED
-  int iNum40K;
-  int iNum232Th;
-  int iNum238U;
-    int iNum235U;  //PED
-  double dD40KNumDt;
-  double dD232ThNumDt;
-  double dD238UNumDt;
+    int iNum40KMan;
+    int iNum232ThMan;
+    int iNum238UMan;
+    int iNum235UMan;  //PED
+    double dD40KNumDt;
+    double dD232ThNumDt;
+    double dD238UNumDt;
     double dD235UNumDt; //PED
 
-  double *pdD40KNumDt;
-  double *pdD232ThNumDt;
-  double *pdD238UNumDt;
+    double *pdD40KNumDt;
+    double *pdD232ThNumDt;
+    double *pdD238UNumDt;
     double *pdD235UNumDt;  //PED
 
 } UPDATE;

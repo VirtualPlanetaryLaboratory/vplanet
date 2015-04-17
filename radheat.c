@@ -663,19 +663,19 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   */
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0) {
     update[iBody].iNumVars++;
-    update[iBody].iNum40K++;
+    update[iBody].iNum40KMan++;
   }
   if (body[iBody].d232ThNumMan > 0 || body[iBody].d232ThMassMan > 0 || body[iBody].d232ThPowerMan > 0) {
     update[iBody].iNumVars++;
-    update[iBody].iNum232Th++;
+    update[iBody].iNum232ThMan++;
   }
   if (body[iBody].d238UNumMan > 0 || body[iBody].d238UMassMan > 0 || body[iBody].d238UPowerMan > 0) {
     update[iBody].iNumVars++;
-    update[iBody].iNum238U++;
+    update[iBody].iNum238UMan++;
   }
   if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0) {  //PED
     update[iBody].iNumVars++;
-    update[iBody].iNum235U++;
+    update[iBody].iNum235UMan++;
   }
 }
 
@@ -685,22 +685,22 @@ void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 void FinalizeUpdate40KNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40K;
-  update[iBody].iNum40K = (*iEqn)++;
+  update[iBody].iNum40KMan = (*iEqn)++;
 }
 
 void FinalizeUpdate232ThNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD232TH;
-  update[iBody].iNum232Th = (*iEqn)++;
+  update[iBody].iNum232ThMan = (*iEqn)++;
 }
 
 void FinalizeUpdate238UNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD238U;
-  update[iBody].iNum238U = (*iEqn)++;
+  update[iBody].iNum238UMan = (*iEqn)++;
 }
 
 void FinalizeUpdate235UNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RAD235U;
-  update[iBody].iNum235U = (*iEqn)++;
+  update[iBody].iNum235UMan = (*iEqn)++;
 }
 
 void FinalizeUpdateOblRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {

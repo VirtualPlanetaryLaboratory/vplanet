@@ -200,7 +200,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
 #define OUT_40KDNUMDT	        1115
 #define OUT_40KPOWERIME	        1116
 #define OUT_40KMASSMAN	        1118
-#define OUT_40KNUM              1120
+#define OUT_40KNUMMAN           1120
 #define OUT_40KTIME             1125
 
 #define OUT_232THPOWERMAN       1130
@@ -209,7 +209,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
 #define OUT_232THDNUMDT	        1135
 #define OUT_232THPOWERIME	1136
 #define OUT_232THMASSMAN        1138
-#define OUT_232THNUM            1140
+#define OUT_232THNUMMAN         1140
 #define OUT_232THTIME           1145
 
 #define OUT_238UPOWERMAN        1150
@@ -218,7 +218,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
 #define OUT_238UDNUMDT	        1155
 #define OUT_238UPOWERIME	1156
 #define OUT_238UMASSMAN	        1158
-#define OUT_238UNUM             1160
+#define OUT_238UNUMMAN          1160
 #define OUT_238UTIME            1165
 
 #define OUT_235UPOWERMAN        1170  //PED
@@ -227,7 +227,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
 #define OUT_235UDNUMDT	        1173  //PED
 #define OUT_235UPOWERIME	1174
 #define OUT_235UMASSMAN	        1175
-#define OUT_235UNUM             1176  //PED
+#define OUT_235UNUMMAN          1176  //PED
 #define OUT_235UTIME            1177
 
 #define OUT_RADPOWER            1180  //1175

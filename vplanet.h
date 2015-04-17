@@ -144,26 +144,24 @@ typedef struct {
   int **iTidalEpsilon;   /* Signs of phase lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-  int bRadheat;
-  double dIsotope; // XXX Hack. Prolly need to just use the isotopes
-  double d40KConst;       
-  double d40KNum;
-    double d40KPower;  //don't need this anymore?
-    //  double d40KMass;
-    //    double d40KPowerMan;
+    int bRadheat;
+    double dIsotope; // XXX Hack. Prolly need to just use the isotopes
+    double d40KConst;       
+    double d40KNum;
+    double d40KPowerMan;
     double d40KMassMan;
-  double d232ThConst;
-  double d232ThNum;
-  double d232ThPower;
-  double d232ThMass;
-  double d238UConst;
-  double d238UNum;
-  double d238UPower;
-  double d238UMass;
+    double d232ThConst;
+    double d232ThNum;
+    double d232ThPowerMan;
+    double d232ThMassMan;
+    double d238UConst;
+    double d238UNum;
+    double d238UPowerMan;
+    double d238UMassMan;
     double d235UConst;  //PED
     double d235UNum;  //PED
-    double d235UPower;  //PED
-    double d235UMass;  //PED
+    double d235UPowerMan;  //PED
+    double d235UMassMan;  //PED
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;

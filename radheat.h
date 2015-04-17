@@ -300,8 +300,8 @@ double fd235UPower(BODY*,SYSTEM*,int);   //PED
 double fdTotalRadPower(BODY*,int);
 
 
-double fdD40KNumDt(BODY*,SYSTEM*,int*,int);
-double fdD232ThNumDt(BODY*,SYSTEM*,int*,int);
-double fdD238UNumDt(BODY*,SYSTEM*,int*,int);
-double fdD235UNumDt(BODY*,SYSTEM*,int*,int);  //PED
+double fdD40KNumManDt(BODY*,SYSTEM*,int*,int);
+double fdD232ThNumManDt(BODY*,SYSTEM*,int*,int);
+double fdD238UNumManDt(BODY*,SYSTEM*,int*,int);
+double fdD235UNumManDt(BODY*,SYSTEM*,int*,int);  //PED
 

@@ -286,15 +286,15 @@ typedef struct {
     int iNum232ThMan;
     int iNum238UMan;
     int iNum235UMan;  //PED
-    double dD40KNumDt;
-    double dD232ThNumDt;
-    double dD238UNumDt;
-    double dD235UNumDt; //PED
+    double dD40KNumManDt;
+    double dD232ThNumManDt;
+    double dD238UNumManDt;
+    double dD235UNumManDt; //PED
 
-    double *pdD40KNumDt;
-    double *pdD232ThNumDt;
-    double *pdD238UNumDt;
-    double *pdD235UNumDt;  //PED
+    double *pdD40KNumManDt;
+    double *pdD232ThNumManDt;
+    double *pdD238UNumManDt;
+    double *pdD235UNumManDt;  //PED
 
 } UPDATE;
 

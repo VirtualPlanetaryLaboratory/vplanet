@@ -1102,12 +1102,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdate232ThNumRadheat;
   module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdate238UNumRadheat;
 
-  // Now include other primary variables not used by RADHEAT 
-  module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateEccRadheat;
-  module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateOblRadheat;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRadheat;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiRadheat;
-
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 

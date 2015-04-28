@@ -10,6 +10,10 @@
 #include <string.h>
 #include "vplanet.h"
 
+void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* Nothing */
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -83,10 +87,21 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate232ThNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumModule));
 
+  for(iModule = 0; iModule < iNumModules; iModule++) {
+    module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdateNULL;
+    }
+
   /************************
    * ADD NEW MODULES HERE *
    ************************/
 
+  iModule = 0;
   if (body[iBody].bEqtide) {
     AddModuleEqtide(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = EQTIDE;

@@ -8,12 +8,16 @@
 #define NUMMODULES    2
 #define EQTIDE        0
 #define RADHEAT       1
+#define LAGRANGE      2
+#define LASKAR        3
 
 /* Fundamental constants */
 
 #define BIGG          6.672e-8
 #define PI            3.1415926535
 
+#define KGAUSS        0.01720209895
+#define dS0           -0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units */
 
 #define MEARTH        5.9742e27
@@ -54,13 +58,13 @@
 /* File Limits */
 
 #define NUMOUT        2000  /* Number of output parameters */
-#define MAXBODIES     2
+#define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      64    /* Number of characters in option
 			     * description */
 #define LINE          128   /* Maximum number of characters 
 			     * in a line */
-#define NAMELEN       24
+#define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -91,6 +95,13 @@
 
 /* Now define the structs */
 
+/* Semi-major axis functions in Lagrange */
+#define LAPLNUM 	      26
+
+/* Integration elements for Lagrange */
+#define HKPQ          0
+#define ESVO          1
+/* 
 
 /* 
  * BODY contains all the physical parameters for every body 
@@ -127,6 +138,33 @@ typedef struct {
   double dEcc;           /* Eccentricity */
   double dMeanMotion;    /* Mean Motion */
   double dOrbPeriod;     /* Orbital Period */
+
+  /* Additional orbital properties used by LAGRANGE */
+  double dInc;           /* Inclination */
+  double dsInc;          /* sin(0.5*Inclination) */
+  double dLongA;         /* Longitude of ascending node */
+  double dArgP;          /* Argument of pericenter */
+  double dLongP;         /* Longitude of pericenter */
+  double dMeanA;         /* Mean anomaly */
+  double dMeanL;         /* Mean longitude */
+  double dTrueA;         /* True anomaly */
+  double dTrueL;         /* True longitude */
+  double dEccA;         /* Eccentric anomaly */
+  double dhecc;          /* h = e * sin(varpi) */
+  double dkecc;          /* k = e * cos(varpi) */
+  double dpinc;          /* p = i * sin(Omega) */
+  double dqinc;          /* q = i * cos(Omega) */ 
+  double *dPosition;     /* Cartesian position vector */
+  double *dVelocity;     /* Cartesian velocity vector */ 
+  double *dLaplaceC;     /* Store laplace coefficients */  
+  
+  /* Additional obliquity params used by Laskar */
+  double dPrecA;         /* Precession angle */
+  double dDynEllip;      /* Dynamical ellipticity */
+  double dbeta;          /* sin(obliq)*sin(preca) */
+  double dgamma;         /* sin(obliq)*cos(preca) */
+  double deta;           /* cos(obliq) */
+  int bObliqEvol;        /* 0 -> do not model obliquity evolution for this body */
 
   /* EQTIDE Parameters */
   int bEqtide;
@@ -213,6 +251,9 @@ typedef struct {
   double dAge;           /* System Age */
   double dTotAngMomInit; /* Initial angular momentum */
   double dTotAngMom;     /* Change in angular momentum: (l-l0)/l0 */
+  fnLaplaceFunction **fnLaplaceF;
+  double **dmLaplaceC;
+  int **imLaplaceN;   //use this to store the indices for dmLaplaceC corresponding to iBody, jBody
 } SYSTEM;
 
 /* 
@@ -287,6 +328,27 @@ typedef struct {
   double *pdD232ThNumDt;
   double *pdD238UNumDt;
 
+  /* LAGRANGE */
+  int *bAng;   /*Is the variable an angle? 1 = yes, 0 = no */
+  int *bPolar;  /*Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
+  double *pdDsemiDt;
+  double *pdDeccDt;
+  double *pdDoblDt;
+  double *pdDrotDt;
+  double *pdDsIncDt;
+  double *pdDvarDt;
+  double *pdDOmgDt;
+  double *pdDhDt;
+  double *pdDkDt;
+  double *pdDpDt;
+  double *pdDqDt;
+  
+  /* LASKAR */
+  double *pdDpADt;
+  double *pdDbetaDt;
+  double *pdDgammaDt;
+  double *pdDetaDt;
+  
 } UPDATE;
 
 typedef struct {
@@ -411,6 +473,11 @@ typedef struct {
   fnHaltModule **fnHalt;
   fnForceBehaviorModule **fnForceBehavior;
 
+  /* Things for Lagrange */
+  double dAngNum;         /* Value used in calculating timestep from angle variable */
+  int bDissipate;         /* 1 if dissipative model used (Lagrange will recalc Laplace coeffs) */
+  int iIntElements;       /* 0 = h,k,p,q; 1 = e, s, varpi, Omega */
+  
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -568,6 +635,9 @@ typedef struct {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
+/* Pointer to Laplace semi-major axis functions in Lagrange */
+typedef double (*fnLaplaceFunction)(double,int);
+
 /* 
  * Other Header Files - These are primarily for function declarations
  */
@@ -602,6 +672,6 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
-#define MODULEOPTEND        1200
-#define MODULEOUTEND        1200
+#define MODULEOPTEND        1500
+#define MODULEOUTEND        1500
 

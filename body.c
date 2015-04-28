@@ -1,5 +1,3 @@
-// Test change
-
 /******************* BODY.C ***********************/
 /*
  * Rory Barnes, Wed May  7 14:40:51 PDT 2014

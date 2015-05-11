@@ -825,7 +825,7 @@ void HelpOutputRadheat(OUTPUT *output) {
 
 /* Potassium */
 
-void Write40KPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write40KPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 40K */
 
   *dTmp = -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;
@@ -870,7 +870,7 @@ void Write40KTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   *dTmp=-1;
 }
 
-void Write40KMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write40KMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].d40KNumMan*MASS40K;
 
@@ -883,12 +883,12 @@ void Write40KMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   }
 }
 
+//PED: this subr is not finished?
 void WriteD40KPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
   *dTmp = -1;
 }
 
-void Write40KNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write40KNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumMan;
 
   if (output->bDoNeg[iBody]) {
@@ -900,7 +900,7 @@ void Write40KNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 /* Thorium */
 
-void Write232ThPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total heat from 232Th */
   *dTmp = -(*(update[iBody].pdD232ThNumManDt))*ENERGY232TH;
 
@@ -946,7 +946,7 @@ void Write232ThTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   *dTmp=-1;
 }
 
-void Write232ThMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan*MASS232TH;
 
   if (output->bDoNeg[iBody]) {
@@ -958,7 +958,7 @@ void Write232ThMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
-void Write232ThNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write232ThNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan;
 
   if (output->bDoNeg[iBody]) {
@@ -970,7 +970,7 @@ void Write232ThNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 /* Uranium 238 */
 
-void Write238UPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 238U */
   *dTmp = -(*(update[iBody].pdD238UNumManDt))*ENERGY238U;
 
@@ -1017,7 +1017,7 @@ void Write238UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   *dTmp=-1;
 }
 
-void Write238UMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan*MASS238U;
 
   if (output->bDoNeg[iBody]) {
@@ -1029,7 +1029,7 @@ void Write238UMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   }
 }
 
-void Write238UNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write238UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan;
 
   if (output->bDoNeg[iBody]) {
@@ -1041,7 +1041,7 @@ void Write238UNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 
 /* Uranium 235 PED */
 
-void Write235UPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 235U */
   *dTmp = -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
 
@@ -1088,7 +1088,7 @@ void Write235UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   *dTmp=-1;
 }
 
-void Write235UMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan*MASS235U;
 
   if (output->bDoNeg[iBody]) {
@@ -1100,7 +1100,7 @@ void Write235UMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   }
 }
 
-void Write235UNum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void Write235UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan;
 
   if (output->bDoNeg[iBody]) {
@@ -1147,7 +1147,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KPOWERMAN].bNeg = 1;
   output[OUT_40KPOWERMAN].dNeg = 1e-19; // ergs/s -> TW 
   output[OUT_40KPOWERMAN].iNum = 1;
-  fnWrite[OUT_40KPOWERMAN] = &Write40KPower;
+  fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
   
   sprintf(output[OUT_40KENFLUX].cName,"40KEnFlux");
   sprintf(output[OUT_40KENFLUX].cDescr,"Surface Energy Flux from 40K");
@@ -1163,7 +1163,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KDPOWERDT].bNeg = 1;
   output[OUT_40KDPOWERDT].dNeg = 1e12/1e9; /* XXX */
   output[OUT_40KDPOWERDT].iNum = 1;
-  fnWrite[OUT_40KDPOWERDT] = &WriteD40KPowerDt;
+  fnWrite[OUT_40KDPOWERDT] = &WriteD40KPowerDt;  //PED: that subr is not written yet?
   
   sprintf(output[OUT_40KDNUMDT].cName,"D40KNumManDt");
   sprintf(output[OUT_40KDNUMDT].cDescr,"Time Rate of Change of 40K Heat Generation");
@@ -1187,7 +1187,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KMASSMAN].bNeg = 1;
   output[OUT_40KMASSMAN].dNeg = MEARTH;
   output[OUT_40KMASSMAN].iNum = 1;
-  fnWrite[OUT_40KMASSMAN] = &Write40KMass;
+  fnWrite[OUT_40KMASSMAN] = &Write40KMassMan;
   
   sprintf(output[OUT_40KNUMMAN].cName,"40KNumMan");
   sprintf(output[OUT_40KNUMMAN].cDescr,"Total Number of 40K Atoms");
@@ -1195,7 +1195,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KNUMMAN].bNeg = 1;
   output[OUT_40KNUMMAN].dNeg = EMASSMAN40K/MASS40K;
   output[OUT_40KNUMMAN].iNum = 1;
-  fnWrite[OUT_40KNUMMAN] = &Write40KNum;
+  fnWrite[OUT_40KNUMMAN] = &Write40KNumMan;
 
   /* Thorium */
 
@@ -1205,7 +1205,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THPOWERMAN].bNeg = 1;
   output[OUT_232THPOWERMAN].dNeg = 1e-19; 
   output[OUT_232THPOWERMAN].iNum = 1;
-  fnWrite[OUT_232THPOWERMAN] = &Write232ThPower;
+  fnWrite[OUT_232THPOWERMAN] = &Write232ThPowerMan;
   
   sprintf(output[OUT_232THENFLUX].cName,"232ThEnFlux");
   sprintf(output[OUT_232THENFLUX].cDescr,"Surface Energy Flux from 232Th");
@@ -1237,15 +1237,15 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THMASSMAN].bNeg = 1;
   output[OUT_232THMASSMAN].dNeg = MEARTH;
   output[OUT_232THMASSMAN].iNum = 1;
-  fnWrite[OUT_232THMASSMAN] = &Write232ThMass;
+  fnWrite[OUT_232THMASSMAN] = &Write232ThMassMan;
   
-  sprintf(output[OUT_232THNUMMAN].cName,"232ThNumManber");
+  sprintf(output[OUT_232THNUMMAN].cName,"232ThNumMan");
   sprintf(output[OUT_232THNUMMAN].cDescr,"Total Number of 232Th Atoms");
   sprintf(output[OUT_232THNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_232THNUMMAN].bNeg = 1;
   output[OUT_232THNUMMAN].dNeg = EMASSMAN232TH/MASS232TH;
   output[OUT_232THNUMMAN].iNum = 1;
-  fnWrite[OUT_232THNUMMAN] = &Write232ThNum;
+  fnWrite[OUT_232THNUMMAN] = &Write232ThNumMan;
 
   /* Uranium 238 */
 
@@ -1255,7 +1255,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UPOWERMAN].bNeg = 1;
   output[OUT_238UPOWERMAN].dNeg = 1e-19; 
   output[OUT_238UPOWERMAN].iNum = 1;
-  fnWrite[OUT_238UPOWERMAN] = &Write238UPower;
+  fnWrite[OUT_238UPOWERMAN] = &Write238UPowerMan;
   
   sprintf(output[OUT_238UENFLUX].cName,"238UEnFlux");
   sprintf(output[OUT_238UENFLUX].cDescr,"Surface Energy Flux due to 238U");
@@ -1287,15 +1287,15 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UMASSMAN].bNeg = 1;
   output[OUT_238UMASSMAN].dNeg = MEARTH;
   output[OUT_238UMASSMAN].iNum = 1;
-  fnWrite[OUT_238UMASSMAN] = &Write238UMass;
+  fnWrite[OUT_238UMASSMAN] = &Write238UMassMan;
   
-  sprintf(output[OUT_238UNUMMAN].cName,"238UNumManber");
+  sprintf(output[OUT_238UNUMMAN].cName,"238UNumMan");
   sprintf(output[OUT_238UNUMMAN].cDescr,"Total Number of 238U Atoms");
   sprintf(output[OUT_238UNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_238UNUMMAN].bNeg = 1;
   output[OUT_238UNUMMAN].dNeg = 1;
   output[OUT_238UNUMMAN].iNum = 1;
-  fnWrite[OUT_238UNUMMAN] = &Write238UNum;
+  fnWrite[OUT_238UNUMMAN] = &Write238UNumMan;
 
 
     /* Uranium 235 PED */
@@ -1306,7 +1306,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UPOWERMAN].bNeg = 1;
   output[OUT_235UPOWERMAN].dNeg = 1e-19; 
   output[OUT_235UPOWERMAN].iNum = 1;
-  fnWrite[OUT_235UPOWERMAN] = &Write235UPower;
+  fnWrite[OUT_235UPOWERMAN] = &Write235UPowerMan;
   
   sprintf(output[OUT_235UENFLUX].cName,"235UEnFlux");
   sprintf(output[OUT_235UENFLUX].cDescr,"Surface Energy Flux due to 235U");
@@ -1338,15 +1338,15 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UMASSMAN].bNeg = 1;
   output[OUT_235UMASSMAN].dNeg = MEARTH;
   output[OUT_235UMASSMAN].iNum = 1;
-  fnWrite[OUT_235UMASSMAN] = &Write235UMass;
+  fnWrite[OUT_235UMASSMAN] = &Write235UMassMan;
   
-  sprintf(output[OUT_235UNUMMAN].cName,"235UNumManber");
+  sprintf(output[OUT_235UNUMMAN].cName,"235UNumMan");
   sprintf(output[OUT_235UNUMMAN].cDescr,"Total Number of 235U Atoms");
   sprintf(output[OUT_235UNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_235UNUMMAN].bNeg = 1;
   output[OUT_235UNUMMAN].dNeg = 1;
   output[OUT_235UNUMMAN].iNum = 1;
-  fnWrite[OUT_235UNUMMAN] = &Write235UNum;
+  fnWrite[OUT_235UNUMMAN] = &Write235UNumMan;
   
       
   /* Totals */
@@ -1518,6 +1518,8 @@ double fd235UPowerMan(BODY *body,SYSTEM *system,int iBody) {
   return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
 }
 
+//PED commenting these f out bc they aren't being used (5/11/15)
+
 double fd40KEnFlux(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
   return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge,body[iBody].dRadius);
 }
@@ -1533,6 +1535,7 @@ double fd238UEnFlux(BODY *body,SYSTEM *system,int iBody) {
 double fd235UEnFlux(BODY *body,SYSTEM *system,int iBody) {
   return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge,body[iBody].dRadius);
 }
+
 
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,system->dAge);

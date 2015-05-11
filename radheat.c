@@ -453,7 +453,8 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
       //      exit(1);
   }
   
-  body[iBody].d40KConstMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //moved from above.
+  //  body[iBody].d40KConstMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //moved from above.
+    body[iBody].d40KConstMan = fd40KConstantMan(body[iBody].d40KNumMan,dAge);  //moved from above.
 }
 
 void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -476,7 +477,8 @@ void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     body[iBody].d232ThNumMan=body[iBody].d232ThPowerMan/(ENERGY232TH)*(HALFLIFE232TH);
     printf("232ThPowerMan set, .d232ThPowerMan=%e, .d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPowerMan,body[iBody].d232ThNumMan,ENUMMAN232TH);
   }
-  body[iBody].d232ThConstMan = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
+  //  body[iBody].d232ThConstMan = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
+    body[iBody].d232ThConstMan = fd232ThConstantMan(body[iBody].d232ThNumMan,dAge);
 }
 
 void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -498,7 +500,8 @@ void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
       body[iBody].d238UNumMan=body[iBody].d238UPowerMan/(ENERGY238U)*(HALFLIFE238U);
       printf("238UPowerMan set, .d238UPowerMan=%e, .d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UPowerMan,body[iBody].d238UNumMan,ENUMMAN238U);
   }
-  body[iBody].d238UConstMan = fd238UConstant(body[iBody].d238UNumMan,dAge);
+  //  body[iBody].d238UConstMan = fd238UConstant(body[iBody].d238UNumMan,dAge);
+    body[iBody].d238UConstMan = fd238UConstantMan(body[iBody].d238UNumMan,dAge);
 }
 
 void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
@@ -520,7 +523,8 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
     body[iBody].d235UNumMan=body[iBody].d235UPowerMan/(ENERGY235U)*(HALFLIFE235U);
     printf("235UPowerMan set, .d235UPowerMan=%e, .d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UPowerMan,body[iBody].d235UNumMan,ENUMMAN235U);
   }
-  body[iBody].d235UConstMan = fd235UConstant(body[iBody].d235UNumMan,dAge);
+  //  body[iBody].d235UConstMan = fd235UConstant(body[iBody].d235UNumMan,dAge);
+  body[iBody].d235UConstMan = fd235UConstantMan(body[iBody].d235UNumMan,dAge);
 }
 
 void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -1470,23 +1474,19 @@ double fdRadheatConst(double dNum,double dAge,double dHalfLife) {
   return dNum/(exp(-dAge/dHalfLife));
 }
 
-// PED COMMENT: shouldn't dPower be dNum below?  Prolly doesn't really matter it's a dummy anyway.
-/*double fd40KConstant(double dPower,double dAge) {  
-    return fdRadheatConst(dPower,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
-    }*/
-double fd40KConstant(double dNum,double dAge) {  
+double fd40KConstantMan(double dNum,double dAge) {  
     return fdRadheatConst(dNum,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
 }
 
-double fd232ThConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+double fd232ThConstantMan(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE232TH);  //redirects to fdRadheatConst
 }
 
-double fd238UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+double fd238UConstantMan(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE238U);  //redirects to fdRadheatConst
 }
 
-double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
+double fd235UConstantMan(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
 }
 

@@ -293,12 +293,18 @@ double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
 double fd235UConstant(double,double);  //PED
 
+/*
 double fd40KPower(BODY*,SYSTEM*,int*,int);
 double fd232ThPower(BODY*,SYSTEM*,int);
 double fd238UPower(BODY*,SYSTEM*,int);
 double fd235UPower(BODY*,SYSTEM*,int);   //PED
 double fdTotalRadPower(BODY*,int);
-
+*/
+double fd40KPowerMan(BODY*,SYSTEM*,int*,int);
+double fd232ThPowerMan(BODY*,SYSTEM*,int);
+double fd238UPowerMan(BODY*,SYSTEM*,int);
+double fd235UPowerMan(BODY*,SYSTEM*,int);   //PED
+double fdTotalRadPowerMan(BODY*,int);
 
 double fdD40KNumManDt(BODY*,SYSTEM*,int*,int);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*,int);

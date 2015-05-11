@@ -316,7 +316,6 @@ typedef struct {
 
   /* RADHEAT */
     int dMin40KPower;
-    //    int dMin40KPowerMan; //PED
     int dMin232ThPower;
     int dMin238UPower;
     int dMin235UPower;  //PED

@@ -1490,7 +1490,7 @@ double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
 }
 
-double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {
+double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can be used by any radioactive system?
   return -dConst/dHalfLife*exp(-dAge/dHalfLife);
 }
 
@@ -1502,19 +1502,19 @@ double fdRadEnFlux(double dConst,double dHalfLife,double dAge,double dRadius) {
   return fdRadPower(dConst,dHalfLife,dAge)/(4*PI*dRadius*dRadius);
 }
 
-double fd40KPower(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
+double fd40KPowerMan(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
   return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
 }
 
-double fd232ThPower(BODY *body,SYSTEM *system,int iBody) {
+double fd232ThPowerMan(BODY *body,SYSTEM *system,int iBody) {
   return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
 }
 
-double fd238UPower(BODY *body,SYSTEM *system,int iBody) {
+double fd238UPowerMan(BODY *body,SYSTEM *system,int iBody) {
   return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
 }
 
-double fd235UPower(BODY *body,SYSTEM *system,int iBody) {
+double fd235UPowerMan(BODY *body,SYSTEM *system,int iBody) {
   return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
 }
 

@@ -9,6 +9,13 @@
 /* How many modules are available? */
 #define EQTIDE        0
 #define RADHEAT       1
+#define ATMESC        2
+#define LAGRANGE      3
+#define LASKAR        4
+#define STELLAR       5
+#define DYNAMO        6
+#define THERMAL       7
+#define EBM           8
 
 /* Fundamental constants */
 

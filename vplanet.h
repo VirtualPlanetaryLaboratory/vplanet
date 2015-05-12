@@ -4,6 +4,8 @@
  *
  */
 
+/*! Top-level declarations */
+
 /* How many modules are available? */
 #define NUMMODULES    2
 #define EQTIDE        0
@@ -103,8 +105,9 @@
 #define ESVO          1
 /* 
 
-/* 
+/*!
  * BODY contains all the physical parameters for every body 
+ * Why won't these lines be added?
  */
 
 #define MAXSPECIES       100
@@ -114,30 +117,30 @@ typedef struct {
 } PHOTOCHEM;
 
 typedef struct {
-  char cName[NAMELEN];   /* Name */
-  char cType[OPTLEN];    /* What kind of object */
+  char cName[NAMELEN];   /**< Body's Name */
+  char cType[OPTLEN];    /**< Type of object N/I */
 
   /* Body Properties */
-  double dMass;		 /* Mass */
-  double dRadius;	 /* Radius */
-  double dDensity;       /* Bulk density */
-  double dGravAccel;     /* Gravitational acceleration */
-  double dK2;		 /* Love number */
-  double dObliquity;     /* Obliquity */
-  double dRotRate;       /* Rotation Rate */
-  double dRotPer;        /* Rotation Period */
-  double dRotVel;        /* Rotational Velocity */
-  double dRadGyra;       /* Radius of Gyration */
-  double dIntEn;         /* Total Internal Energy */
+  double dMass;		 /**< Body's Mass */
+  double dRadius;	 /**< Radius of body */
+  double dDensity;       /**< Bulk density of body*/
+  double dGravAccel;     /**< Body's gravitational acceleration */
+  double dK2;		 /**< Body's Love number */
+  double dObliquity;     /**< Body's Obliquity */
+  double dRotRate;       /**< Body's Rotation Rate */
+  double dRotPer;        /**< Body's Rotation Period */
+  double dRotVel;        /**< Body's Rotational Velocity */
+  double dRadGyra;       /**< Body's Radius of Gyration */
+  double dIntEn;         /**< Body's Total Internal Energy */
 
-  double *daSED;
+  double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array.   */
-  double dSemi;          /* Semi-major axis */
-  double dEcc;           /* Eccentricity */
-  double dMeanMotion;    /* Mean Motion */
-  double dOrbPeriod;     /* Orbital Period */
+  double dSemi;          /**< Body's Semi-major Axis */
+  double dEcc;           /**< Body's Eccentricity */
+  double dMeanMotion;    /**< Body's Mean Motion */
+  double dOrbPeriod;     /**< Body's Orbital Period */
 
   /* Additional orbital properties used by LAGRANGE */
   double dInc;           /* Inclination */
@@ -167,37 +170,36 @@ typedef struct {
   int bObliqEvol;        /* 0 -> do not model obliquity evolution for this body */
 
   /* EQTIDE Parameters */
-  int bEqtide;
-  int iTidePerts;        /* Number of tidal perturbers */
-  int *iaTidePerts;      /* Body #'s of tidal perturbers */
-  char saTidePerts[MAXARRAY][NAMELEN];
+  int bEqtide;           /**< Apply Module EQTIDE? */
+  int iTidePerts;        /**< Number of Tidal Perturbers */
+  int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
+  char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
   //char **saTidePerts;
-  double dTidalQ;	 /* Tidal Q */
-  double dTidalTau;      /* Time lag */
-  double *dTidalZ;       /* Combination of variables for easier computing */
-  double *dTidalChi;     /* Ditto */
-  double **dTidalF;      /* Ditto */
-  double *dTidalBeta;    /* Ditto */
-  int **iTidalEpsilon;   /* Signs of phase lags */
+  double dTidalQ;	 /**< Boyd's Tidal Q */
+  double dTidalTau;      /**< Body's Tidal Time Lag */
+  double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
+  double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
+  double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
+  double *dTidalBeta;    /**< As Defined in \cite HellerEtal2011 */
+  int **iTidalEpsilon;   /**< Signs of Phase Lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-  int bRadheat;
-  double dIsotope; // XXX Hack. Prolly need to just use the isotopes
-  double d40KConst;       
-  double d40KNum;
-  double d40KPower;
-  double d40KMass;
-  double d232ThConst;
-  double d232ThNum;
-  double d232ThPower;
-  double d232ThMass;
-  double d238UConst;
-  double d238UNum;
-  double d238UPower;
-  double d238UMass;
+  int bRadheat;          /**< Apply Module RADHEAT? */
+  double d40KConst;      /**< Body's Potassium-40 Decay Constant */
+  double d40KNum;        /**< Body's Number of Potassium-40 Atoms */
+  double d40KPower;      /**< Body's Internal Power Due to Potassium-40 Decay */
+  double d40KMass;       /**< Body's Total Mass of Potassium-40 */
+  double d232ThConst;    /**< Body's Thorium-232 Decay Constant */
+  double d232ThNum;      /**< Body's Number of Thorium-232 Atoms */
+  double d232ThPower;    /**< Body's Internal Power Due to Thorium-232 Decay */
+  double d232ThMass;     /**< Body's Total Mass of Thorium-232 Atoms */
+  double d238UConst;     /**< Body's Uranium-238 Decay Constant */
+  double d238UNum;       /**< Body's Number of Uranium-238 Atoms */
+  double d238UPower;     /**< Body's Internal Power Due to Uranium-238 Decay */
+  double d238UMass;      /**< Body's Total Mass of Uranium-238 Atoms */
 
   /* PHOTOCHEM Parameters */
-  PHOTOCHEM Photochem;
+  PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
   double dNumAtmMolecules;
   char saMoleculeList[MAXSPECIES][NAMELEN];
@@ -247,13 +249,13 @@ typedef struct {
    every BODY */
 
 typedef struct {
-  char cName[NAMELEN];	 /* System name */
-  double dAge;           /* System Age */
-  double dTotAngMomInit; /* Initial angular momentum */
-  double dTotAngMom;     /* Change in angular momentum: (l-l0)/l0 */
-  fnLaplaceFunction **fnLaplaceF;
-  double **dmLaplaceC;
-  int **imLaplaceN;   //use this to store the indices for dmLaplaceC corresponding to iBody, jBody
+  char cName[NAMELEN];	 /**< System's Name */
+  double dAge;           /**< System's Age */
+  double dTotAngMomInit; /**< System's Initial Angular Momentum */
+  double dTotAngMom;     /**< System's Current Angular Momentum */
+  fnLaplaceFunction **fnLaplaceF; /**< Semi-major axis functions for each pair of bodies */
+  double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
+  int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
 } SYSTEM;
 
 /* 
@@ -263,69 +265,98 @@ typedef struct {
 typedef struct {  
   /* N.B. that pdVar points to the same memory location as
    * body.x, where x=semi, ecc, etc. */
-  double **pdVar;
-  int iNumVars;     // Number of update-able variables for a given body
+  double **pdVar;       /**< Pointers to Primary Variables */
+  int iNumVars;         /**< Number of Update-able Variables */
 
-  /* The "type" refers to how the variable is updated. If 0, then 
-     the variable is assumed to be an explicit function of age. The 
-     first timestep is then a bit dodgy as the rate is not initially
-     known. The suggested timestep will be dEta*dTimestep, so runs 
-     with a Type 0 variable must account for  the evolution with 
-     dTimeStep. */
-  int **iaType;     
-  double *daDeriv;      // Array of derivative values
-  double **daDerivProc; // Array of derivative values due to each process
-  double *dVar;         //
-  int ***iaBody;        // The body numbers needed to calculate the derivative
-  int **iNumBodies;     // Number of bodies relevant to calculate the derivative
+  /*! The "type" refers to how the variable is updated. If 0, then 
+      the variable is assumed to be an explicit function of age. The 
+      first timestep is then a bit dodgy as the rate is not initially
+      known. The suggested timestep will be dEta*dTimestep, so runs 
+      with a Type 0 variable must account for  the evolution with 
+      dTimeStep. 
+  */
+  int **iaType;        
+  double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
+  double **daDerivProc; /**< Array of Derivative Values Due to a Process */
+  double *dVar;         
+
+  /*! The body #s to calculate the derivative. First dimension is 
+      the Primary Variable #, second is the process #, third is the 
+      list body #s. 
+  */
+  int ***iaBody;        
+  int **iNumBodies;     /**< Number of Bodies Affecting a Process */
 
   /* These keep track of the variable and modules */
-  int iNumModules;
-  int *iNumEqns; // Number of equations that can modify the parameter
-  int *iaVar;
-  int **iaModule;
+  int iNumModules;      /**< Number of Modules Affecting a Body */
+  int *iNumEqns;        /**< Number of Equations That Modify a Primary Variable */
+  int *iaVar;           /**< Primary Variable # */
+  /*! The Module # responsible for a given process. The first dimension 
+    is the Primary Variable #. Second is the Equation. */
+  int **iaModule;      
+
 
   /* Number of eqns to modify a parameter */
-  int iNumEcc;
-  int iNumObl;
-  int iNumRot;
-  int iNumSemi;
+  int iNumEcc;          /**< Number of Equations Affecting Eccentricity */
+  int iNumObl;          /**< Number of Equations Affecting Obliquity */
+  int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
+  int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
 
   /* These are the variables that the update matrix modifies */
-  int iEcc;
-  double dDEccDt;
-  int iObl;
-  double dDOblDt;
-  int iRot;
-  double dDRotDt;
-  int iSemi;
-  double dDSemiDt;
+  int iEcc;             /**< Variable # Corresponding to Eccentricity */ 
+  double dDEccDt;       /**< Total Eccentricity Derivative */
+  int iObl;             /**< Variable # Corresponding to Obliquity */
+  double dDOblDt;       /**< Total Obliquity Derivative */
+  int iRot;             /**< Variable # Corresponding to Rotation Rate */
+  double dDRotDt;       /**< Total Rotation Rate Derivative */
+  int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
+  double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
 
   /* Next comes the identifiers for the module that modifies a variable */
 
   /* EQTIDE */
-  int iEccEqtide;
-  int *iaOblEqtide;
-  int *iaRotEqtide;
-  int iSemiEqtide;
-  double *pdDsemiDtEqtide;
+  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
+  int *iaOblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Obliquity */
+  int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
+  int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      semi-major axis' derivative due to EQTIDE. */
+  double *pdDsemiDtEqtide; 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      eccentricity' derivative due to EQTIDE. */
   double *pdDeccDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the 
+      obliquities' derivatives due to EQTIDE. */
   double **padDoblDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the 
+      rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
 
   /* RADHEAT */
-  int i40K;
-  int i232Th;
-  int i238U;
-  int iNum40K;
-  int iNum232Th;
-  int iNum238U;
-  double dD40KNumDt;
-  double dD232ThNumDt;
-  double dD238UNumDt;
+  int i40K;             /**< Variable # Corresponding to Potassium-40 */
+  int i232Th;           /**< Variable # Corresponding to Thorium-232 */
+  int i238U;            /**< Variable # Corresponding to Uranium-238 */
+  int iNum40K;          /**< Number of Equations Affecting Potassium-40 [1] */
+  int iNum232Th;        /**< Number of Equations Affecting Thorium-232 [1] */
+  int iNum238U;         /**< Number of Equations Affecting Uranium-238 [1] */
+  double dD40KNumDt;    /**< Total Potassium-40 Derivative */
+  double dD232ThNumDt;  /**< Total Thorium-232 Derivative */
+  double dD238UNumDt;   /**< Total Uranium-238 Derivative */
 
-  double *pdD40KNumDt;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      potassium-40's derivative due to RADHEAT. */
+  double *pdD40KNumDt;  
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      thorium-232's derivative due to RADHEAT. */
   double *pdD232ThNumDt;
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      uranium-40's derivative due to RADHEAT. */
   double *pdD238UNumDt;
 
   /* LAGRANGE */
@@ -352,25 +383,25 @@ typedef struct {
 } UPDATE;
 
 typedef struct {
-  int iNumHalts;
+  int iNumHalts;       /**< Total Number of Halts */
 
-  int bMerge;          /* Halt for merge? */
-  double dMinSemi;     /* Halt at this semi-major axis */
-  double dMinObl;      /* Halt at this obliquity */
-  double dMaxEcc;      /* Halt at this eccentricity */
-  double dMinEcc;      /* Halt at this eccentricity */
-  int bPosDeDt;        /* Halt when de/dt > 0 */
-  int dMinIntEn;       /* Minimum internal energy */
+  int bMerge;          /**< Halt for Merge? */
+  double dMinSemi;     /**< Halt at this Semi-major Axis */
+  double dMinObl;      /**< Halt at this Obliquity */
+  double dMaxEcc;      /**< Halt at this Eccentricity */
+  double dMinEcc;      /**< Halt at this Eccentricity */
+  int bPosDeDt;        /**< Halt if Eccentricity Derivative is Positive */
+  int dMinIntEn;       /**< Halt at this Internal Power */
 
   /* EQTIDE */
-  int bDblSync;         /* Double Synchronous? (e=obl1=obl2=0) */
-  int bTideLock;        /* Halt primary becomes tide locked? */
-  int bSync;            /* Halt if rotation becomes synchronous? */
+  int bDblSync;         /**< Halt if Double Synchronous? */
+  int bTideLock;        /**< Halt if Tide-locked? */
+  int bSync;            /**< Halt if Rotation Becomes Synchronous? */
 
   /* RADHEAT */
-  int dMin40KPower;
-  int dMin232ThPower;
-  int dMin238UPower;
+  int dMin40KPower;     /**< Halt at this Potassium-40 Power */
+  int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
+  int dMin238UPower;    /**< Halt at this Uranium-238 Power */
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -384,10 +415,15 @@ typedef struct {
  */
 
 typedef struct {
-  int iMass;            /* Mass Unit for input/output */
-  int iLength;          /* Length Unit for input/output */
-  int iAngle;           /* Angle Unit for input/output */
-  int iTime;            /* Time Unit for input/output */
+
+  int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
+
+  int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
+
+  int iAngle;         /**< 0=rad; 1=deg */ 
+
+  int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
+
 } UNITS;
 
 typedef void (*fnAuxPropsModule)(BODY*,int);
@@ -397,55 +433,55 @@ typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
 
 /* Integration parameters */
 typedef struct {
-  int bDoForward;	 /* Perform forward integration? */
-  int bDoBackward;	 /* Perform backward integration? */
-  double dTime;
-  double dEta;           /* Variable Timestep coefficients */
-  double dStopTime;	 /* Integration time */
-  double dTimeStep;	 /* Time step */
-  int bVarDt;            /* Use variable timestep? */
-  int nSteps;            /* Number of steps since last output */
-  double dMinValue;      /* Minimum value for e and obl */
-  int bFirstStep;        /* Has the first step been taken? */
-  int iNumBodies;        /* Number of bodies */
-  int iOneStep;          /* Integer version of integration method */
+  int bDoForward;	 /**< Perform Forward Integration? */
+  int bDoBackward;	 /**< Perform Backward Integration? */
+  double dTime;          /**< Integration Time */
+  double dEta;           /**< Variable Timestep Coefficient */
+  double dStopTime;	 /**< Integration Stop Time */
+  double dTimeStep;	 /**< Integration Time step */
+  int bVarDt;            /**< Use Variable Timestep? */
+  int nSteps;            /**< Number of Steps Since Last Output */
+  double dMinValue;      /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
+  int bFirstStep;        /**< Has the First Dtep Been Taken? */
+  int iNumBodies;        /**< Number of Bodies to be Integrated */
+  int iOneStep;          /**< Integration Method # */
 
   // These are to store midpoint derivative info in RK4.
-  BODY *tmpBody;
-  UPDATE *tmpUpdate;
-  double ***daDeriv;
+  BODY *tmpBody;         /**< Temporary BODY struct */
+  UPDATE *tmpUpdate;     /**< Temporary UPDATE struct */
+  double ***daDeriv;     /**< The Matrix of Time Derivatives. First dimension is Body #, second is the Primary Variable #, third is the Equation #.  */
 
   // Module-specific parameters
-  int *iNumModules;
+  int *iNumModules;      /**< Number of Modules per Primary Variable */
 
   /* EQTIDE */
-  int iEqtideModel;      /* Integer version of tide model */
-  int bDiscreteRot;	 /* Use Discrete Rotation model (CPL) */
-  int *bForceEqSpin;     /* Force spin rate to be equilibrium? */
-  double *dMaxLockDiff;  /* When to set spin rate to equilibrium */
-  double *dSyncEcc;
+  int iEqtideModel;      /**< EQTIDE Model # */
+  int bDiscreteRot;	 /**< Use Discrete Rotation Model (CPL)? */
+  int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
+  double *dMaxLockDiff;  /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
+  double *dSyncEcc;     
 
   /* RADHEAT */
   /* Nothing? */
 
-  fnAuxPropsModule **fnAuxProps;
-  fnBodyCopyModule **fnBodyCopy;
+  fnAuxPropsModule **fnAuxProps; /**< Function Pointers to Auxiliary Properties */
+  fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
 /* The CONTROL struct contains all the parameters that
  * control program flow. */
 
 typedef struct {
-  int iVerbose;           /* Verbosity: 0=no STDOUT, 5=all */
-  double dOutputTime;	  /* Output interval */
+  int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  double dOutputTime;	  /**< Integration Output Interval */
 
-  int bLog;               /* Write log file? */
+  int bLog;               /**< Write Log File? */
 
   /* Output Notation */
-  int iDigits;
-  int iSciNot;
+  int iDigits;            /**< Number of Digits After Decimal */
+  int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
-  int bOverwrite;         /* Allow files to be overwritten ? */
+  int bOverwrite;         /**< Allow files to be overwritten? */
 } IO;
   
 
@@ -468,10 +504,10 @@ typedef struct {
   UNITS *Units;
 
   /* Move to BODY */
-  int *iMassRad;           /* Mass-Radius relationship identifier */
+  int *iMassRad;           /**< Mass-Radius Relationship */
 
-  fnHaltModule **fnHalt;
-  fnForceBehaviorModule **fnForceBehavior;
+  fnHaltModule **fnHalt;   /**< Function Pointers to Halt Checks */
+  fnForceBehaviorModule **fnForceBehavior; /**< Function Pointers to Force Behaviors */
 
   /* Things for Lagrange */
   double dAngNum;         /* Value used in calculating timestep from angle variable */
@@ -484,13 +520,13 @@ typedef struct {
  * regarding the files that read in. */
 
 typedef struct {
-  char cIn[NAMELEN];
-  int *bLineOK;
-  int iNumLines;
+  char cIn[NAMELEN];       /**< File Name */
+  int *bLineOK;            /**< Line # Format OK? */
+  int iNumLines;           /**< Number of Input Lines */
   /* Species file for PHOTOCHEM */
-  char cSpecies[NAMELEN];
+  char cSpecies[NAMELEN];  /**< Name of Chemical Species N/I */
   /* Reaction file for PHOTOCHEM */
-  char cReactions[NAMELEN];
+  char cReactions[NAMELEN]; /**< Names of Chemical Reactions N/I */
 
   /* Aerosol scattering files */
   /* Aqueous file -- add to SpeciesFile? */
@@ -502,10 +538,10 @@ typedef struct {
  * regarding the output files. */
 
 typedef struct {
-  char cOut[NAMELEN];
-  int iNumCols;
-  char caCol[NUMOUT][OPTLEN];
-  int bNeg[NUMOUT];
+  char cOut[NAMELEN];       /**< Output File Name */
+  int iNumCols;             /**< Number of Columns in Output File */
+  char caCol[NUMOUT][OPTLEN];  /**< Output Value Name */
+  int bNeg[NUMOUT];         /**< Use Negative Option Units? */
 } OUTFILE;
 
 
@@ -513,29 +549,29 @@ typedef struct {
  * regarding every file. */
 
 typedef struct {
-  char cExe[LINE];             /* Name of executable */
-  OUTFILE *Outfile;  /* Forward integration */
-  char cLog[NAMELEN];               /* Log file */
-  INFILE *Infile;     /* Array of input file info */
-  int iNumInputs;              /* Number of input files */
+  char cExe[LINE];             /**< Name of Executable */
+  OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
+  char cLog[NAMELEN];          /**< Log File Name */
+  INFILE *Infile;              
+  int iNumInputs;              /**< Number of Input Files */
 } FILES;
 
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
 typedef struct {
-  char cName[OPTLEN];
-  char cDescr[OPTDESCR];
-  int iType;
-  char cDefault[OPTLEN];
-  double dDefault;
-  int iMultiFile;
+  char cName[OPTLEN];          /**< Option Name */
+  char cDescr[OPTDESCR];       /**< Brief Description of Option */
+  int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
+  char cDefault[OPTLEN];       /**< Description of Default Value */
+  double dDefault;             /**< Default Value */
+  int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
-  int *iLine;
+  int *iLine;                  /**< Option's Line # in Input File */ 
   char *iFile;
-  char cFile[MAXFILES][OPTLEN];
-  char cNeg[OPTDESCR];
-  double dNeg;
+  char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
+  char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
+  double dNeg;                 /**< Conversion Factor to System Units */
 } OPTIONS;
 
 /* OUTPUT contains the data regarding every output parameters */
@@ -546,16 +582,16 @@ typedef struct {
 typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
 
 typedef struct {
-  char cName[OPTLEN];    /* Name */
-  char cDescr[LINE];      /* Description */
-  int bNeg;              /* Is there a negative option? */
-  int *bDoNeg;            /* Should the output use "negative" units? */
-  char cNeg[NAMELEN];         /* Units of negative option */
-  double dNeg;           /* Conversion factor for negative option */
-  int iNum;              /* Number of columns for output */
+  char cName[OPTLEN];    /**< Output Name */
+  char cDescr[LINE];     /**< Output Description */
+  int bNeg;              /**< Is There a Negative Option? */
+  int *bDoNeg;           /**< Should the Output use "Negative" Units? */
+  char cNeg[NAMELEN];    /**< Units of Negative Option */
+  double dNeg;           /**< Conversion Factor for Negative Option */
+  int iNum;              /**< Number of Columns for Output */
 
   /* Now add vector output functions */
-  fnOutputModule **fnOutput;
+  fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
 
 } OUTPUT;
 
@@ -598,35 +634,77 @@ typedef void (*fnInitializeOutputFunctionModule)(OUTPUT*,int,int);
 typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 
 typedef struct {
-  int *iNumModules;
-  int **iaModule;
+  int *iNumModules; /**< Number of Modules per Body */
+  int **iaModule; /**< Module #s that Apply to the Body */
 
+  /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;
 
+  /*! These functions allocate memory to module-specific arrays 
+      inside the CONTROL struct */
   fnInitializeControlModule **fnInitializeControl;
+
+   /*! These functions allocate memory to module-specific arrays 
+       inside the UPDATE struct */
   fnInitializeUpdateModule **fnInitializeUpdate;
+
+  /*! These functions allocate memory to module-specific arrays 
+      inside the BODY struct */
   fnInitializeBodyModule **fnInitializeBody;
+
+   /*! These functions allocate memory to module-specific arrays 
+       inside the OUTPUT struct */
   fnInitializeOutputModule **fnInitializeOutput;
+
+   /*! These functions allocate memory to module-specific arrays 
+       inside the BODY struct */
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
+  /*! These functions assign Equation and Module information regarding 
+      eccentricity in the UPDATE struct. */ 
   fnFinalizeUpdateEccModule **fnFinalizeUpdateEcc;
-  fnFinalizeUpdateNumIsotopeModule **fnFinalizeUpdateNumIsotope;
+
+  /*! These functions assign Equation and Module information regarding 
+      obliquity in the UPDATE struct. */ 
   fnFinalizeUpdateOblModule **fnFinalizeUpdateObl;
+
+  /*! These functions assign Equation and Module information regarding 
+      rotation rate in the UPDATE struct. */ 
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
+
+  /*! These functions assign Equation and Module information regarding 
+      semi-major axis in the UPDATE struct. */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+
+  /*! These functions assign Equation and Module information regarding 
+      potassium-40 in the UPDATE struct. */ 
   fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
+
+  /*! These functions assign Equation and Module information regarding 
+      thorium-232 in the UPDATE struct. */ 
   fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
+
+  /*! These functions assign Equation and Module information regarding 
+      uranium-238 in the UPDATE struct. */ 
   fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
 
+  /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 
+  /*! These functions read module-specific option. */ 
   fnReadOptionsModule **fnReadOptions;
 
+  /*! These functions verify module-specific options. */ 
   fnVerifyModule **fnVerify;
+
+  /*! These functions verify module-specific halts. */ 
   fnVerifyHaltModule **fnVerifyHalt;
+
+  /*! These functions verify module-specific constraints on rotation rate. */ 
   fnVerifyRotationModule **fnVerifyRotation;
 
-  /* fnInitializeOutputFunctionModule **fnInitializeOutputFunction; */
+  /*! These functions adds subroutines to the output functions that require
+      module-specific values. */ 
   fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
   
 } MODULE;

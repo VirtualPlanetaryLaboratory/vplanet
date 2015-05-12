@@ -27,7 +27,7 @@ int main(int argc,char *argv[]) {
   fnUpdateVariable ***fnUpdate; 
   fnIntegrate fnOneStep;
 
-  /* Must initialize all options and outputs for all modules
+  /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete 
      help screen as well as checks during ReadOptions. This 
      also requires the only modifications outside of module.c: 

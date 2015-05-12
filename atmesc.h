@@ -7,6 +7,9 @@
  *
 */
 
+#define HELMSDEEPARMY           10000 // Strong
+#define ORCMASS                 80000 // grams
+
 void InitializeControlAtmEsc(CONTROL*);
 void AddModuleAtmEsc(MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int);

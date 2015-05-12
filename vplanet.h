@@ -7,7 +7,6 @@
 /*! Top-level declarations */
 
 /* How many modules are available? */
-#define NUMMODULES    2
 #define EQTIDE        0
 #define RADHEAT       1
 

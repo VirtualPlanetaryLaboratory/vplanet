@@ -230,7 +230,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
 #define OUT_235UNUMMAN          1176  //PED
 #define OUT_235UTIME            1177
 
-#define OUT_RADPOWER            1180  //1175
+#define OUT_RADPOWERMAN            1180  //1175
 #define OUT_SURFENFLUXRADHEAT   1181  //1180
 
 void HelpOutputRadheat(OUTPUT*);
@@ -266,7 +266,7 @@ void Write235UTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double
 void Write235UMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);  //PED
 void Write235UNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); //PED
 
-void WriteRadPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRadPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRadEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */

@@ -143,31 +143,31 @@ typedef struct {
   double dOrbPeriod;     /**< Body's Orbital Period */
 
   /* Additional orbital properties used by LAGRANGE */
-  double dInc;           /* Inclination */
-  double dsInc;          /* sin(0.5*Inclination) */
-  double dLongA;         /* Longitude of ascending node */
-  double dArgP;          /* Argument of pericenter */
-  double dLongP;         /* Longitude of pericenter */
-  double dMeanA;         /* Mean anomaly */
-  double dMeanL;         /* Mean longitude */
-  double dTrueA;         /* True anomaly */
-  double dTrueL;         /* True longitude */
-  double dEccA;         /* Eccentric anomaly */
-  double dhecc;          /* h = e * sin(varpi) */
-  double dkecc;          /* k = e * cos(varpi) */
-  double dpinc;          /* p = i * sin(Omega) */
-  double dqinc;          /* q = i * cos(Omega) */ 
-  double *dPosition;     /* Cartesian position vector */
-  double *dVelocity;     /* Cartesian velocity vector */ 
-  double *dLaplaceC;     /* Store laplace coefficients */  
+  double dInc;           /**< Inclination */
+  double dsInc;          /**< sin(0.5*Inclination) */
+  double dLongA;         /**< Longitude of ascending node */
+  double dArgP;          /**< Argument of pericenter */
+  double dLongP;         /**< Longitude of pericenter */
+  double dMeanA;         /**< Mean anomaly */
+  double dMeanL;         /**< Mean longitude */
+  double dTrueA;         /**< True anomaly */
+  double dTrueL;         /**< True longitude */
+  double dEccA;          /**< Eccentric anomaly */
+  double dhecc;          /**< h = e * sin(varpi) */
+  double dkecc;          /**< k = e * cos(varpi) */
+  double dpinc;          /**< p = i * sin(Omega) */
+  double dqinc;          /**< q = i * cos(Omega) */ 
+  double *dPosition;     /**< Cartesian position vector */
+  double *dVelocity;     /**< Cartesian velocity vector */ 
+  double *dLaplaceC;     /**< Store laplace coefficients */  
   
   /* Additional obliquity params used by Laskar */
-  double dPrecA;         /* Precession angle */
-  double dDynEllip;      /* Dynamical ellipticity */
-  double dbeta;          /* sin(obliq)*sin(preca) */
-  double dgamma;         /* sin(obliq)*cos(preca) */
-  double deta;           /* cos(obliq) */
-  int bObliqEvol;        /* 0 -> do not model obliquity evolution for this body */
+  double dPrecA;         /**< Precession angle */
+  double dDynEllip;      /**< Dynamical ellipticity */
+  double dxi;          /**< sin(obliq)*sin(preca) */
+  double dzeta;         /**< sin(obliq)*cos(preca) */
+  double dchi;           /**< cos(obliq) */
+  int bObliqEvol;        /**< 0 -> do not model obliquity evolution for this body */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -360,25 +360,41 @@ typedef struct {
   double *pdD238UNumDt;
 
   /* LAGRANGE */
-  int *bAng;   /*Is the variable an angle? 1 = yes, 0 = no */
-  int *bPolar;  /*Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
-  double *pdDsemiDt;
-  double *pdDeccDt;
-  double *pdDoblDt;
-  double *pdDrotDt;
-  double *pdDsIncDt;
-  double *pdDvarDt;
-  double *pdDOmgDt;
+  int *bAng;     /**< Is the variable an angle? 1 = yes, 0 = no */
+  int *bPolar;   /**< Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      semi-major axis' derivative due to LAGRANGE. */
+  double *pdDsemiDtLagrange; 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      h = e*sin(varpi) derivative due to LAGRANGE. */
   double *pdDhDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      k = e*cos(varpi) derivative due to LAGRANGE. */
   double *pdDkDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      p = s*sin(Omega) derivative due to LAGRANGE. */
   double *pdDpDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      q = s*cos(Omega) derivative due to LAGRANGE. */
   double *pdDqDt;
   
   /* LASKAR */
-  double *pdDpADt;
-  double *pdDbetaDt;
-  double *pdDgammaDt;
-  double *pdDetaDt;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      xi = sin(obliq)*sin(pA) derivative due to LASKAR. */
+  double *pdDxiDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      zeta = sin(obliq)*cos(pA) derivative due to LASKAR. */
+  double *pdDzetaDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      chi = cos(obliq) derivative due to LASKAR. */
+  double *pdDchiDt;
   
 } UPDATE;
 
@@ -510,10 +526,8 @@ typedef struct {
   fnForceBehaviorModule **fnForceBehavior; /**< Function Pointers to Force Behaviors */
 
   /* Things for Lagrange */
-  double dAngNum;         /* Value used in calculating timestep from angle variable */
-  int bDissipate;         /* 1 if dissipative model used (Lagrange will recalc Laplace coeffs) */
-  int iIntElements;       /* 0 = h,k,p,q; 1 = e, s, varpi, Omega */
-  
+  double dAngNum;         /**< Value used in calculating timestep from angle variable */
+  int bSemiMajChange;         /**< 1 if semi-major axis can change (Lagrange will recalc Laplace coeff functions) */
 } CONTROL;
 
 /* The INFILE struct contains all the information 

@@ -42,7 +42,7 @@ void InitializeUpdateTmpBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,i
 
 /* Potassium */
 
-void Read40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KMass and 40KNum */
   int lTmp=-1;
@@ -63,7 +63,7 @@ void Read40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       body[iFile-1].d40KPowerMan = options->dDefault;
 }
 
-void Read40KMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KPower and 40KNum */
   int lTmp=-1;
@@ -83,7 +83,7 @@ void Read40KMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].d40KMassMan = options->dDefault;
 }
 
-void Read40KNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KPower and 40KNum */
   int lTmp=-1;
@@ -106,7 +106,7 @@ void Read40KNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
 
 /* Thorium */
 
-void Read232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThMass and 232ThNum */
   int lTmp=-1;
@@ -126,7 +126,7 @@ void Read232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].d232ThPowerMan = options->dDefault;
 }
 
-void Read232ThMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
   int lTmp=-1;
@@ -145,7 +145,7 @@ void Read232ThMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].d232ThMassMan = options->dDefault;
 }
 
-void Read232ThNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
   int lTmp=-1;
@@ -166,7 +166,7 @@ void Read232ThNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 
 /* Uranium 238 */
 
-void Read238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UMass and 232UNum */
   int lTmp=-1;
@@ -186,7 +186,7 @@ void Read238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].d238UPowerMan = options->dDefault;
 }
 
-void Read238UMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
   int lTmp=-1;
@@ -205,7 +205,7 @@ void Read238UMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       body[iFile-1].d238UMassMan = options->dDefault;
 }
 
-void Read238UNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
   int lTmp=-1;
@@ -226,7 +226,7 @@ void Read238UNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
 
 /* Uranium 235 PED */
 
-void Read235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
   int lTmp=-1;
@@ -246,7 +246,7 @@ void Read235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].d235UPowerMan = options->dDefault;
 }
 
-void Read235UMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
   int lTmp=-1;
@@ -265,7 +265,7 @@ void Read235UMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       body[iFile-1].d235UMassMan = options->dDefault;
 }
 
-void Read235UNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void Read235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -297,7 +297,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KMASSMAN].dNeg = EMASSMAN40K;
   options[OPT_40KMASSMAN].dDefault = 0;  //DO THIS FOR ALL!!!
   sprintf(options[OPT_40KMASSMAN].cNeg,"Earth Masses");
-  fnRead[OPT_40KMASSMAN] = &Read40KMass;
+  fnRead[OPT_40KMASSMAN] = &Read40KMassMan;
   
   sprintf(options[OPT_40KNUMMAN].cName,"d40KNumMan");
   sprintf(options[OPT_40KNUMMAN].cDescr,"Initial Number of 40K Atoms");
@@ -307,7 +307,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KNUMMAN].dNeg = ENUMMAN40K;
   options[OPT_40KNUMMAN].dDefault = 0;
   sprintf(options[OPT_40KNUMMAN].cNeg,"Primordial Earth 40K Number");
-  fnRead[OPT_40KNUMMAN] = &Read40KNum;
+  fnRead[OPT_40KNUMMAN] = &Read40KNumMan;
   
   sprintf(options[OPT_40KPOWERMAN].cName,"d40KPowerMan");
   sprintf(options[OPT_40KPOWERMAN].cDescr,"Initial Power Production from 40K Atoms");
@@ -317,7 +317,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KPOWERMAN].dNeg = EPOWERMAN40K;  //Earth's POWER of 40K
   options[OPT_40KPOWERMAN].dDefault = 0;
   sprintf(options[OPT_40KPOWERMAN].cNeg,"TW");
-  fnRead[OPT_40KPOWERMAN] = &Read40KPower;
+  fnRead[OPT_40KPOWERMAN] = &Read40KPowerMan;
   
   sprintf(options[OPT_232THMASSMAN].cName,"d232ThMassMan");
   sprintf(options[OPT_232THMASSMAN].cDescr,"Initial Mass of 232Th");
@@ -327,7 +327,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THMASSMAN].dNeg = EMASSMAN232TH;
   options[OPT_232THMASSMAN].dDefault = 0;
   sprintf(options[OPT_232THMASSMAN].cNeg,"Earth Masses");
-  fnRead[OPT_232THMASSMAN] = &Read232ThMass; 
+  fnRead[OPT_232THMASSMAN] = &Read232ThMassMan; 
   
   sprintf(options[OPT_232THNUMMAN].cName,"d232ThNumMan");
   sprintf(options[OPT_232THNUMMAN].cDescr,"Initial Number of 232Th Atoms");
@@ -337,7 +337,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THNUMMAN].dNeg = ENUMMAN232TH;
   options[OPT_232THNUMMAN].dDefault = 0;
   sprintf(options[OPT_232THNUMMAN].cNeg,"Primordial Earth 232Th Number");
-  fnRead[OPT_232THNUMMAN] = &Read232ThNum;
+  fnRead[OPT_232THNUMMAN] = &Read232ThNumMan;
   
   sprintf(options[OPT_232THPOWERMAN].cName,"d232ThPowerMan");
   sprintf(options[OPT_232THPOWERMAN].cDescr,"Initial Power Production from 232Th Atoms");
@@ -347,7 +347,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THPOWERMAN].dNeg = EPOWERMAN232TH;  //1e12*1e-7; // cgs
   options[OPT_232THPOWERMAN].dDefault = 0;
   sprintf(options[OPT_232THPOWERMAN].cNeg,"TW");
-  fnRead[OPT_232THPOWERMAN] = &Read232ThPower;
+  fnRead[OPT_232THPOWERMAN] = &Read232ThPowerMan;
 
   sprintf(options[OPT_238UMASSMAN].cName,"d238UMassMan");
   sprintf(options[OPT_238UMASSMAN].cDescr,"Initial Mass of 238U");
@@ -357,7 +357,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UMASSMAN].dNeg = EMASSMAN238U;
   options[OPT_238UMASSMAN].dDefault = 0;
   sprintf(options[OPT_238UMASSMAN].cNeg,"Earth Masses");
-  fnRead[OPT_238UMASSMAN] = &Read238UMass;
+  fnRead[OPT_238UMASSMAN] = &Read238UMassMan;
   
   sprintf(options[OPT_238UNUMMAN].cName,"d238UNumMan");
   sprintf(options[OPT_238UNUMMAN].cDescr,"Initial Number of 238U Atoms");
@@ -367,8 +367,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UNUMMAN].iMultiFile = 1;
   options[OPT_238UNUMMAN].dNeg = ENUMMAN238U;
   options[OPT_238UNUMMAN].dDefault = 0;
-  sprintf(options[OPT_238UNUMMAN].cNeg,"Primordial Earth 238U Numer");
-  fnRead[OPT_238UNUMMAN] = &Read238UNum;
+  sprintf(options[OPT_238UNUMMAN].cNeg,"Primordial Earth 238U Number");
+  fnRead[OPT_238UNUMMAN] = &Read238UNumMan;
 
   sprintf(options[OPT_238UPOWERMAN].cName,"d238UPowerMan");  //section added PED
   sprintf(options[OPT_238UPOWERMAN].cDescr,"Initial Power Production from 238U Atoms");
@@ -378,7 +378,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UPOWERMAN].dNeg = EPOWERMAN238U;   //1e12*1e-7; // cgs
   options[OPT_238UPOWERMAN].dDefault = 0;
   sprintf(options[OPT_238UPOWERMAN].cNeg,"TW");
-  fnRead[OPT_238UPOWERMAN] = &Read238UPower;
+  fnRead[OPT_238UPOWERMAN] = &Read238UPowerMan;
 
   sprintf(options[OPT_235UMASSMAN].cName,"d235UMassMan");  //PED
   sprintf(options[OPT_235UMASSMAN].cDescr,"Initial Mass of 235U");
@@ -388,7 +388,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UMASSMAN].dNeg = EMASSMAN235U;
   options[OPT_235UMASSMAN].dDefault = 0;
   sprintf(options[OPT_235UMASSMAN].cNeg,"Earth Masses");
-  fnRead[OPT_235UMASSMAN] = &Read235UMass;
+  fnRead[OPT_235UMASSMAN] = &Read235UMassMan;
   
   sprintf(options[OPT_235UNUMMAN].cName,"d235UNumMan");  //PED
   sprintf(options[OPT_235UNUMMAN].cDescr,"Initial Number of 235U Atoms");
@@ -398,7 +398,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UNUMMAN].dNeg = ENUMMAN235U;
   options[OPT_235UNUMMAN].dDefault = 0;
   sprintf(options[OPT_235UNUMMAN].cNeg,"Primordial Earth 235U Numer");
-  fnRead[OPT_235UNUMMAN] = &Read235UNum;
+  fnRead[OPT_235UNUMMAN] = &Read235UNumMan;
 
   sprintf(options[OPT_235UPOWERMAN].cName,"d235UPowerMan");  //section added PED
   sprintf(options[OPT_235UPOWERMAN].cDescr,"Initial Power Production from 235U Atoms");
@@ -408,9 +408,8 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UPOWERMAN].dNeg = EPOWERMAN235U;   //1e12*1e-7; // cgs
   options[OPT_235UPOWERMAN].dDefault = 0;
   sprintf(options[OPT_235UPOWERMAN].cNeg,"TW");
-  fnRead[OPT_235UPOWERMAN] = &Read235UPower;
+  fnRead[OPT_235UPOWERMAN] = &Read235UPowerMan;
 
-  
 }
 
 void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -723,7 +722,7 @@ void FinalizeUpdateSemiRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 /***************** RADHEAT Halts *****************/
 
 /* Minimum 40K Powering? */
-
+//PED: these subroutines aren't finished.  The default halt values aren't set.  body.d40KPowerMan is not a primary variable, but NumMan is.
 int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (body[iBody].d40KPowerMan < halt->dMin40KPower) {
@@ -1383,6 +1382,7 @@ void LogOptionsRadheat(CONTROL *control, FILE *fp) {
   */
 }
 
+//PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
 void LogRadheat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
 
   /* Anything here? 
@@ -1452,27 +1452,38 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 }
 
 /************* RADHEAT Functions ************/
-
+// FIRST batch of subroutines are general for any species.
 // N = N_0 * exp(-t/lambda)
 // dN/dt = -(N_0/lambda) * exp(-t/lambda)
 
 double fdInternalPowerRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-
   return -(*(update[iBody].pdD238UNumManDt))*ENERGY238U - (*(update[iBody].pdD235UNumManDt))*ENERGY235U - (*(update[iBody].pdD232ThNumManDt))*ENERGY232TH - (*(update[iBody].pdD40KNumManDt))*ENERGY40K;
 }
 
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
 double fdSurfEnFluxRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   double dPower;
-
   dPower = fdInternalPowerRadheat(body,system,update,iBody,iFoo);
-
   return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 
 double fdRadheatConst(double dNum,double dAge,double dHalfLife) {
   return dNum/(exp(-dAge/dHalfLife));
 }
+
+double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can be used by any radioactive system?
+  return -dConst/dHalfLife*exp(-dAge/dHalfLife);
+}
+
+double fdRadPower(double dConst,double dHalfLife,double dAge) {
+    return dConst*exp(-dHalfLife/dAge);                      //Here const=N_0*energy_i*lambda, where energy_i=erg/num.
+}
+
+double fdRadEnFlux(double dConst,double dHalfLife,double dAge,double dRadius) {
+  return fdRadPower(dConst,dHalfLife,dAge)/(4*PI*dRadius*dRadius);
+}
+
+//SECOND batch of subroutines are for individual variables of species.
 
 double fd40KConstantMan(double dNum,double dAge) {  
     return fdRadheatConst(dNum,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
@@ -1488,18 +1499,6 @@ double fd238UConstantMan(double dNum,double dAge) {  //PED: changed dPower to dN
 
 double fd235UConstantMan(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
-}
-
-double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can be used by any radioactive system?
-  return -dConst/dHalfLife*exp(-dAge/dHalfLife);
-}
-
-double fdRadPower(double dConst,double dHalfLife,double dAge) {
-    return dConst*exp(-dHalfLife/dAge);                      //Here const=N_0*energy_i*lambda, where energy_i=erg/num.
-}
-
-double fdRadEnFlux(double dConst,double dHalfLife,double dAge,double dRadius) {
-  return fdRadPower(dConst,dHalfLife,dAge)/(4*PI*dRadius*dRadius);
 }
 
 double fd40KPowerMan(BODY *body,SYSTEM *system,int *iaBody,int iBody) {

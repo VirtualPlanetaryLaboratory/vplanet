@@ -750,16 +750,18 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
 }
 
+/** Verify all arguments to saTidePerturbers. This subroutine will called 
+   from each body using module eqtide, but we must make sure that each pair 
+   of perturbing bodies points to each other, so we must loop through verify 
+   all the bodies at the same time. This means all these lines will be 
+   repeated for each tidally evolving body. But, if it's verified the first 
+   time, it should verify every time! */
+
 void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *update,int iNumBodies,int iBody) {
   int iPert,iBodyPert,iVar,ok;
   int bFound[iNumBodies];
 
-  /* Verify all arguments to saTidePerturbers. This subroutine will called 
-     from each body using module eqtide, but we must make sure that each pair 
-     of perturbing bodies points to each other, so we must loop through verify 
-     all the bodies at the same time. This means all these lines will be 
-     repeated for each tidally evolving body. But, if it's verified the first 
-     time, it should verify every time! */
+
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     

@@ -150,18 +150,34 @@ typedef struct {
     double d40KNumMan;
     double d40KPowerMan;
     double d40KMassMan;
+    double d40KConstCore;       
+    double d40KNumCore;
+    double d40KPowerCore;
+    double d40KMassCore;
     double d232ThConstMan;
     double d232ThNumMan;
     double d232ThPowerMan;
     double d232ThMassMan;
+    double d232ThConstCore;
+    double d232ThNumCore;
+    double d232ThPowerCore;
+    double d232ThMassCore;
     double d238UConstMan;
     double d238UNumMan;
     double d238UPowerMan;
     double d238UMassMan;
+    double d238UConstCore;
+    double d238UNumCore;
+    double d238UPowerCore;
+    double d238UMassCore;
     double d235UConstMan; 
-    double d235UNumMan;  //PED
-    double d235UPowerMan;  //PED
-    double d235UMassMan;  //PED
+    double d235UNumMan;
+    double d235UPowerMan;
+    double d235UMassMan;
+    double d235UConstCore; 
+    double d235UNumCore;
+    double d235UPowerCore;
+    double d235UMassCore;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;

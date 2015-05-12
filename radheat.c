@@ -686,23 +686,24 @@ void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   /* Nothing */
 }
 
+//PED: Combine these into ..HeatMan?  and ..HeatCore?
 void FinalizeUpdate40KNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
-  update[iBody].iaModule[iVar][*iEqn] = RAD40K;
+  update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
   update[iBody].iNum40KMan = (*iEqn)++;
 }
 
 void FinalizeUpdate232ThNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
-  update[iBody].iaModule[iVar][*iEqn] = RAD232TH;
+  update[iBody].iaModule[iVar][*iEqn] = RAD232THMAN;
   update[iBody].iNum232ThMan = (*iEqn)++;
 }
 
 void FinalizeUpdate238UNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
-  update[iBody].iaModule[iVar][*iEqn] = RAD238U;
+  update[iBody].iaModule[iVar][*iEqn] = RAD238UMAN;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
 
 void FinalizeUpdate235UNumRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
-  update[iBody].iaModule[iVar][*iEqn] = RAD235U;
+  update[iBody].iaModule[iVar][*iEqn] = RAD235UMAN;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
 

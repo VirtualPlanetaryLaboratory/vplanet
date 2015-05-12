@@ -86,9 +86,9 @@ void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 #define RADHEATHALTSYSEND       5
 #define RADHEATHALTBODYEND      5
 
-int HaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
-int HaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
-int HaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
 void CountHaltsRadHeat(HALT*,int*);
 
 

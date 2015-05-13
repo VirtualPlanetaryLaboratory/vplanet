@@ -87,7 +87,11 @@
 #define VNUM40KMAN      5
 #define VNUM232THMAN    6
 #define VNUM238UMAN     7
-#define VNUM235UMAN     8  //PED
+#define VNUM235UMAN     8 
+#define VNUM40KCORE     9
+#define VNUM232THCORE   10
+#define VNUM238UCORE    11
+#define VNUM235UCORE    12 
 
 
 /* Now define the structs */
@@ -295,30 +299,26 @@ typedef struct {
 
   /* RADHEAT */
     int i40KMan;
-    int i40KCore;
-    int i232Th;
     int i232ThMan;
-    int i232ThCore;
-    int i238U;
     int i238UMan;
-    int i238UCore;
-    int i235U;
     int i235UMan;
-    int i235UCore;
     int iNum40KMan;
     int iNum232ThMan;
     int iNum238UMan;
-    int iNum235UMan;  //PED
+    int iNum235UMan;
     double dD40KNumManDt;
     double dD232ThNumManDt;
     double dD238UNumManDt;
-    double dD235UNumManDt; //PED
-
+    double dD235UNumManDt; 
     double *pdD40KNumManDt;
     double *pdD232ThNumManDt;
     double *pdD238UNumManDt;
-    double *pdD235UNumManDt;  //PED
+    double *pdD235UNumManDt;
 
+    int i40KCore;
+    int i232ThCore;
+    int i238UCore;
+    int i235UCore;
     int iNum40KCore;
     int iNum232ThCore;
     int iNum238UCore;
@@ -327,7 +327,6 @@ typedef struct {
     double dD232ThNumCoreDt;
     double dD238UNumCoreDt;
     double dD235UNumCoreDt; 
-
     double *pdD40KNumCoreDt;
     double *pdD232ThNumCoreDt;
     double *pdD238UNumCoreDt;
@@ -579,37 +578,37 @@ typedef void (*fnInitializeOutputFunctionModule)(OUTPUT*,int,int);
 typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 
 typedef struct {
-  int *iNumModules;
-  int **iaModule;
+    int *iNumModules;
+    int **iaModule;
 
-  fnCountHaltsModule **fnCountHalts;
+    fnCountHaltsModule **fnCountHalts;
+    
+    fnInitializeControlModule **fnInitializeControl;
+    fnInitializeUpdateModule **fnInitializeUpdate;
+    fnInitializeBodyModule **fnInitializeBody;
+    fnInitializeOutputModule **fnInitializeOutput;
+    fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
-  fnInitializeControlModule **fnInitializeControl;
-  fnInitializeUpdateModule **fnInitializeUpdate;
-  fnInitializeBodyModule **fnInitializeBody;
-  fnInitializeOutputModule **fnInitializeOutput;
-  fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
+    fnFinalizeUpdateEccModule **fnFinalizeUpdateEcc;
+    fnFinalizeUpdateNumIsotopeModule **fnFinalizeUpdateNumIsotope;
+    fnFinalizeUpdateOblModule **fnFinalizeUpdateObl;
+    fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
+    fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+    fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
+    fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
+    fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
+    fnFinalizeUpdate235UNumModule **fnFinalizeUpdate235UNum;  
 
-  fnFinalizeUpdateEccModule **fnFinalizeUpdateEcc;
-  fnFinalizeUpdateNumIsotopeModule **fnFinalizeUpdateNumIsotope;
-  fnFinalizeUpdateOblModule **fnFinalizeUpdateObl;
-  fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
-  fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
-  fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
-  fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
-  fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
-    fnFinalizeUpdate235UNumModule **fnFinalizeUpdate235UNum;  //PED
+    fnLogBodyModule **fnLogBody;
 
-  fnLogBodyModule **fnLogBody;
+    fnReadOptionsModule **fnReadOptions;
 
-  fnReadOptionsModule **fnReadOptions;
+    fnVerifyModule **fnVerify;
+    fnVerifyHaltModule **fnVerifyHalt;
+    fnVerifyRotationModule **fnVerifyRotation;
 
-  fnVerifyModule **fnVerify;
-  fnVerifyHaltModule **fnVerifyHalt;
-  fnVerifyRotationModule **fnVerifyRotation;
-
-  /* fnInitializeOutputFunctionModule **fnInitializeOutputFunction; */
-  fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
+    /* fnInitializeOutputFunctionModule **fnInitializeOutputFunction; */
+    fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
   
 } MODULE;
 

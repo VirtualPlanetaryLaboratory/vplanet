@@ -45,7 +45,11 @@ void UpdateTmpBody(BODY *tmpBody,CONTROL *control,UPDATE *update) {
     tmpBody[iBody].d40KNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KMan]);
     tmpBody[iBody].d232ThNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThMan]);
     tmpBody[iBody].d238UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UMan]);
-    tmpBody[iBody].d235UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UMan]); //PED
+    tmpBody[iBody].d235UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UMan]);
+    tmpBody[iBody].d40KNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KCore]);
+    tmpBody[iBody].d232ThNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThCore]);
+    tmpBody[iBody].d238UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UCore]);
+    tmpBody[iBody].d235UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UCore]);
     tmpBody[iBody].dRotRate=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iRot]);
     tmpBody[iBody].dObliquity=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iObl]);
   }

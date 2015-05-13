@@ -184,7 +184,10 @@ void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 /* Update functions */
 void InitializeUpdateRadheat(BODY*,UPDATE*,int);
 void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateNumIsotopeRadheat(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);

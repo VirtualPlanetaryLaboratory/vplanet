@@ -26,11 +26,21 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
 
-  module->fnFinalizeUpdate40KNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumModule));
+  /*  module->fnFinalizeUpdate40KNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumModule));
   module->fnFinalizeUpdate232ThNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumModule));
-  module->fnFinalizeUpdate235UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumModule));  //PED
+  module->fnFinalizeUpdate235UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumModule)); 
+  */
+  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
+  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
 
+  module->fnFinalizeUpdate40KNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -80,10 +90,20 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
 
-  module->fnFinalizeUpdate40KNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumModule));
+  /*  module->fnFinalizeUpdate40KNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumModule));
   module->fnFinalizeUpdate232ThNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumModule));
-  module->fnFinalizeUpdate235UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumModule));  //PED
+  module->fnFinalizeUpdate235UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumModule));  
+  */
+  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
+  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
+
+  module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));  
 
   /************************
    * ADD NEW MODULES HERE *

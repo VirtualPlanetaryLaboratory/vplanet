@@ -186,7 +186,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	  //	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	  module->fnFinalizeUpdate40KNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -215,7 +216,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	  //	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	  module->fnFinalizeUpdate40KNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -245,7 +247,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate232ThNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate232ThNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -274,7 +276,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate232ThNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate232ThNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -304,7 +306,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate238UNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate238UNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -333,7 +335,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate238UNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate238UNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -363,7 +365,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate235UNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate235UNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
@@ -392,7 +394,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	module->fnFinalizeUpdate235UNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	module->fnFinalizeUpdate235UNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

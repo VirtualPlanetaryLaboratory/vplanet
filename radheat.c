@@ -828,24 +828,37 @@ void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
   update[iBody].iNum40KMan = (*iEqn)++;
-  //  update[iBody].iaModule[iVar][*iEqn] = RAD40KCORE;
-  //  update[iBody].iNum40KMan = (*iEqn)++;
 }
-
 void FinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD232THMAN;
   update[iBody].iNum232ThMan = (*iEqn)++;
 }
-
 void FinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD238UMAN;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
-
 void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RAD235UMAN;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
+
+void FinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+    update[iBody].iaModule[iVar][*iEqn] = RAD40KCORE;
+    update[iBody].iNum40KCore = (*iEqn)++;
+}
+void FinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = RAD232THCORE;
+  update[iBody].iNum232ThCore = (*iEqn)++;
+}
+void FinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = RAD238UCORE;
+  update[iBody].iNum238UCore = (*iEqn)++;
+}
+void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
+  update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
+  update[iBody].iNum235UCore = (*iEqn)++;
+}
+
 
 void FinalizeUpdateOblRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
@@ -1597,11 +1610,21 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
-  module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;
+  /*  module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;
   module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdate232ThNumManRadheat;
   module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdate238UNumManRadheat;
   module->fnFinalizeUpdate235UNum[iBody][iModule] = &FinalizeUpdate235UNumManRadheat;
+  */
+  module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;
+  module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdate232ThNumManRadheat;
+  module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdate238UNumManRadheat;
+  module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdate235UNumManRadheat;
+
   //  NEED TO ADD CORE HERE?
+  module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdate40KNumCoreRadheat;
+  module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
+  module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
+  module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
   
   // Now include other primary variables not used by RADHEAT 
   module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateEccRadheat;

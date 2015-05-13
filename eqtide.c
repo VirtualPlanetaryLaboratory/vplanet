@@ -979,19 +979,29 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   (*iEqn)++;
 }
 
-void FinalizeUpdate40KNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+//void FinalizeUpdate40KNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate40KNumManEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
-
-void FinalizeUpdate232ThNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate232ThNumManEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
-
-void FinalizeUpdate238UNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate238UNumManEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
-
-void FinalizeUpdate235UNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {  //PED
+void FinalizeUpdate235UNumManEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {  //PED
+  /* Nothing */
+}
+void FinalizeUpdate40KNumCoreEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* Nothing */
+}
+void FinalizeUpdate232ThNumCoreEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* Nothing */
+}
+void FinalizeUpdate238UNumCoreEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* Nothing */
+}
+void FinalizeUpdate235UNumCoreEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {  //PED
   /* Nothing */
 }
 
@@ -1786,11 +1796,17 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiEqtide;
 
   // Now include other primary variables not used by EQTIDE
-  module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumEqtide;
-  module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdate232ThNumEqtide;
-  module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdate238UNumEqtide;
-  module->fnFinalizeUpdate235UNum[iBody][iModule] = &FinalizeUpdate235UNumEqtide;  //PED
+  //  module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumEqtide;
+  module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManEqtide;
+  module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdate232ThNumManEqtide;
+  module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdate238UNumManEqtide;
+  module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdate235UNumManEqtide;  
   
+  module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdate40KNumCoreEqtide;
+  module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreEqtide;
+  module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreEqtide;
+  module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreEqtide;  
+
   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionEqtide;
 

@@ -294,10 +294,17 @@ typedef struct {
   double **padDrotDtEqtide;
 
   /* RADHEAT */
-    int i40K;
+    int i40KMan;
+    int i40KCore;
     int i232Th;
+    int i232ThMan;
+    int i232ThCore;
     int i238U;
-    int i235U; //PED
+    int i238UMan;
+    int i238UCore;
+    int i235U;
+    int i235UMan;
+    int i235UCore;
     int iNum40KMan;
     int iNum232ThMan;
     int iNum238UMan;
@@ -311,6 +318,20 @@ typedef struct {
     double *pdD232ThNumManDt;
     double *pdD238UNumManDt;
     double *pdD235UNumManDt;  //PED
+
+    int iNum40KCore;
+    int iNum232ThCore;
+    int iNum238UCore;
+    int iNum235UCore; 
+    double dD40KNumCoreDt;
+    double dD232ThNumCoreDt;
+    double dD238UNumCoreDt;
+    double dD235UNumCoreDt; 
+
+    double *pdD40KNumCoreDt;
+    double *pdD232ThNumCoreDt;
+    double *pdD238UNumCoreDt;
+    double *pdD235UNumCoreDt;
 
 } UPDATE;
 

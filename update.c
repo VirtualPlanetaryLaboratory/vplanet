@@ -162,9 +162,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     
     // Num40KNum -- Sort out!!
 
-    update[iBody].i40K = -1;
+    update[iBody].i40KMan = -1;
     if (update[iBody].iNum40KMan) {
-      update[iBody].i40K = iVar;
+      update[iBody].i40KMan = iVar;
       update[iBody].iaVar[iVar] = VNUM40KMAN;
       update[iBody].iNumEqns[iVar] = update[iBody].iNum40KMan;
       update[iBody].pdVar[iVar] = &body[iBody].d40KNumMan;
@@ -191,9 +191,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
     
-    update[iBody].i232Th = -1;
+    update[iBody].i232ThMan = -1;
     if (update[iBody].iNum232ThMan) {
-      update[iBody].i232Th = iVar;
+      update[iBody].i232ThMan = iVar;
       update[iBody].iaVar[iVar] = VNUM232THMAN;
       update[iBody].iNumEqns[iVar] = update[iBody].iNum232ThMan;
       update[iBody].pdVar[iVar] = &body[iBody].d232ThNumMan;
@@ -220,9 +220,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
     
-    update[iBody].i238U = -1;
+    update[iBody].i238UMan = -1;
     if (update[iBody].iNum238UMan) {
-      update[iBody].i238U = iVar;
+      update[iBody].i238UMan = iVar;
       update[iBody].iaVar[iVar] = VNUM238UMAN;
       update[iBody].iNumEqns[iVar] = update[iBody].iNum238UMan;
       update[iBody].pdVar[iVar] = &body[iBody].d238UNumMan;
@@ -250,9 +250,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
 
         
-    update[iBody].i235U = -1;   //PED
+    update[iBody].i235UMan = -1;   //PED
     if (update[iBody].iNum235UMan) {
-      update[iBody].i235U = iVar;
+      update[iBody].i235UMan = iVar;
       update[iBody].iaVar[iVar] = VNUM235UMAN;
       update[iBody].iNumEqns[iVar] = update[iBody].iNum235UMan;
       update[iBody].pdVar[iVar] = &body[iBody].d235UNumMan;

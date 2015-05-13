@@ -303,15 +303,15 @@ void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* RadHeat functions */
 double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdInternalPowerRadheat(BODY*,SYSTEM*,UPDATE *update,int,int);
+double fdInternalPowerRadheatMan(BODY*,SYSTEM*,UPDATE *update,int,int);
 double fdRadPower(double,double,double); // XXX
 
 void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,int,int);
 
-double fd40KConstantMan(double,double);
-double fd232ThConstantMan(double,double);
-double fd238UConstantMan(double,double);
-double fd235UConstantMan(double,double);  
+double fd40KConstant(double,double);
+double fd232ThConstant(double,double);
+double fd238UConstant(double,double);
+double fd235UConstant(double,double);  
 double fd40KPowerMan(BODY*,SYSTEM*,int*,int);
 double fd232ThPowerMan(BODY*,SYSTEM*,int);
 double fd238UPowerMan(BODY*,SYSTEM*,int);
@@ -322,10 +322,6 @@ double fdD232ThNumManDt(BODY*,SYSTEM*,int*,int);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*,int);
 double fdD235UNumManDt(BODY*,SYSTEM*,int*,int); 
 
-double fd40KConstantCore(double,double);
-double fd232ThConstantCore(double,double);
-double fd238UConstantCore(double,double);
-double fd235UConstantCore(double,double); 
 double fd40KPowerCore(BODY*,SYSTEM*,int*,int);
 double fd232ThPowerCore(BODY*,SYSTEM*,int);
 double fd238UPowerCore(BODY*,SYSTEM*,int);

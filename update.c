@@ -186,7 +186,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	  //	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
 	  module->fnFinalizeUpdate40KNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -216,7 +215,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	  //	module->fnFinalizeUpdate40KNum[iBody][iModule](body,update,&iEqn,iVar,iBody);
 	  module->fnFinalizeUpdate40KNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));

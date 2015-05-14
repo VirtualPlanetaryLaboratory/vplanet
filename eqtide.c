@@ -979,7 +979,6 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   (*iEqn)++;
 }
 
-//void FinalizeUpdate40KNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
 void FinalizeUpdate40KNumManEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }

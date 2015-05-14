@@ -560,11 +560,6 @@ typedef void (*fnFinalizeUpdateNumIsotopeModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateOblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
-/*typedef void (*fnFinalizeUpdate40KNumModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumModule)(BODY*,UPDATE*,int*,int,int);  
-*/
 typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
@@ -603,11 +598,6 @@ typedef struct {
     fnFinalizeUpdateOblModule **fnFinalizeUpdateObl;
     fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
     fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
-    /*    fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
-    fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
-    fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
-    fnFinalizeUpdate235UNumModule **fnFinalizeUpdate235UNum;  
-    */
     fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
     fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
     fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;

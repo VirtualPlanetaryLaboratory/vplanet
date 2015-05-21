@@ -20,13 +20,11 @@ void InitializeUpdateTmpBodyAtmEsc(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTATMESC          1200 /* Start of AtmEsc options */
 #define OPTENDATMESC            1300 /* End of AtmEsc options */
 
-#define OPT_40KMASS             1210
-#define OPT_40KNUM              1212
+#define OPT_NUMBEROFORCS        1201
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
-void Read40KMass(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNum(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadNumberOfOrcs(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsAtmEsc(OPTIONS*,fnReadOption[]);
 void ReadOptionsAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
@@ -34,7 +32,7 @@ void ReadOptionsAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define ATMESCHALTSYSEND       5
 #define ATMESCHALTBODYEND      5
 
-int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltTooManyOrcs(BODY*,CONTROL*,UPDATE*,int);
 void CountHaltsAtmEsc(HALT*,int*);
 
 /* Verify Functions */
@@ -52,6 +50,7 @@ void FinalizeUpdateNumIsotopeAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateOblAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateNumberOfOrcsAtmEsc(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
 
@@ -59,17 +58,16 @@ void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int);
 #define OUTSTARTATMESC         1200
 #define OUTENDATMESC           1300
 
-/* Body Properties due to radiogenic heating */
-#define OUT_40KMASS	            1218
-#define OUT_40KNUM              1220
+/* Body Properties due to atmospheric escape */
+#define OUT_NUMBEROFORCS	     1201
+
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);
 
-void Write40KMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KNum(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumberOfOrcs(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -78,4 +76,4 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,int,int);
-double fdD40KNumDt(BODY*,SYSTEM*,int*,int);
+double fdDNumberOfOrcsDt(BODY*,SYSTEM*,int*,int);

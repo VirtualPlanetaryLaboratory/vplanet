@@ -95,6 +95,7 @@
 #define VNUM40K      5
 #define VNUM232TH    6
 #define VNUM238U     7
+#define VNUMORCS     1201
 
 
 /* Now define the structs */
@@ -305,9 +306,11 @@ typedef struct {
   int i40K;             /**< Variable # Corresponding to Potassium-40 */
   int i232Th;           /**< Variable # Corresponding to Thorium-232 */
   int i238U;            /**< Variable # Corresponding to Uranium-238 */
+  int iOrcs;            /**< Variable # Corresponding to the number of Orcs */
   int iNum40K;          /**< Number of Equations Affecting Potassium-40 [1] */
   int iNum232Th;        /**< Number of Equations Affecting Thorium-232 [1] */
   int iNum238U;         /**< Number of Equations Affecting Uranium-238 [1] */
+  int iNumOrcs;         /**< Number of Equations Affecting Orcs [1] */
   double dD40KNumDt;    /**< Total Potassium-40 Derivative */
   double dD232ThNumDt;  /**< Total Thorium-232 Derivative */
   double dD238UNumDt;   /**< Total Uranium-238 Derivative */
@@ -323,6 +326,10 @@ typedef struct {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       uranium-40's derivative due to RADHEAT. */
   double *pdD238UNumDt;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      derivative of the number of orcs due to ATMESC. */
+  double *pdDNumberOfOrcsDt;
 
 } UPDATE;
 
@@ -559,6 +566,7 @@ typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate40KNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateNumberOfOrcsModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -626,6 +634,10 @@ typedef struct {
   /*! These functions assign Equation and Module information regarding 
       uranium-238 in the UPDATE struct. */ 
   fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
+
+  /*! These functions assign Equation and Module information regarding 
+      NumberOfOrcs in the UPDATE struct. */ 
+  fnFinalizeUpdateNumberOfOrcsModule **fnFinalizeUpdateNumberOfOrcs;
 
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;

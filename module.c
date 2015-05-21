@@ -34,6 +34,8 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate232ThNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumModule));
 
+  module->fnFinalizeUpdateNumberofOrcs = malloc(iNumBodies*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
+
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -86,6 +88,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate40KNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumModule));
   module->fnFinalizeUpdate232ThNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumModule));
+  
+  module->fnFinalizeUpdateNumberofOrcs[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
@@ -95,6 +99,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateNumberOfOrcs[iBody][iModule] = &FinalizeUpdateNULL;
     }
 
   /************************
@@ -109,6 +114,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
+  }
+  if (body[iBody].bAtmEsc) {
+    AddModuleAtmEsc(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = ATMESC;
   }
 }
 

@@ -207,7 +207,7 @@ void WriteNumberOfOrcs(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
-  sprintf(output[OUT_NUMBEROFORCS].cName,"NumberOfOrcsber");
+  sprintf(output[OUT_NUMBEROFORCS].cName,"NumberOfOrcs");
   sprintf(output[OUT_NUMBEROFORCS].cDescr,"Total Number of Orcs");
   sprintf(output[OUT_NUMBEROFORCS].cNeg,"Helms Deep Armies");
   output[OUT_NUMBEROFORCS].bNeg = 1;
@@ -283,6 +283,8 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
+  module->fnFinalizeUpdateNumberOfOrcs[iBody][iModule] = &FinalizeUpdateNumberOfOrcsAtmEsc;
+
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;

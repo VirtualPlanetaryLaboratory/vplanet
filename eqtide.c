@@ -750,16 +750,18 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
 }
 
+/** Verify all arguments to saTidePerturbers. This subroutine will called 
+   from each body using module eqtide, but we must make sure that each pair 
+   of perturbing bodies points to each other, so we must loop through verify 
+   all the bodies at the same time. This means all these lines will be 
+   repeated for each tidally evolving body. But, if it's verified the first 
+   time, it should verify every time! */
+
 void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *update,int iNumBodies,int iBody) {
   int iPert,iBodyPert,iVar,ok;
   int bFound[iNumBodies];
 
-  /* Verify all arguments to saTidePerturbers. This subroutine will called 
-     from each body using module eqtide, but we must make sure that each pair 
-     of perturbing bodies points to each other, so we must loop through verify 
-     all the bodies at the same time. This means all these lines will be 
-     repeated for each tidally evolving body. But, if it's verified the first 
-     time, it should verify every time! */
+
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     
@@ -947,10 +949,6 @@ void FinalizeUpdateIntEnEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 */
 
-void FinalizeUpdateIsotopeEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 void FinalizeUpdateOblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   int iPert;
 
@@ -978,19 +976,6 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   update[iBody].iSemiEqtide = *iEqn;
   (*iEqn)++;
 }
-
-void FinalizeUpdate40KNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdate232ThNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdate238UNumEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 
 /***************** EQTIDE Halts *****************/
 
@@ -1780,11 +1765,6 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateOblEqtide;
   module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotEqtide;
   module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiEqtide;
-
-  // Now include other primary variables not used by EQTIDE
-  module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdate40KNumEqtide;
-  module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdate232ThNumEqtide;
-  module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdate238UNumEqtide;
 
   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionEqtide;

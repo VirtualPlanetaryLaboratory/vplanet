@@ -42,7 +42,6 @@ void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iBody) {
 
   dest[iBody].d235UNumCore = src[iBody].d235UNumCore;
   dest[iBody].d235UConstCore = src[iBody].d235UConstCore;
-
 }
 
 void InitializeBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -995,7 +994,6 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   exit(1);
 }
 */
-
 void fnPropertiesRadheat(BODY *body,int iBody) {
   /* Nothing */
 }
@@ -2167,7 +2165,6 @@ double fdRadPowerTotal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iF
     return dPowerMan+dPowerCore;
 }
 
-
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
 double fdSurfEnFluxRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   double dPower;
@@ -2274,4 +2271,3 @@ double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,system->dAge);
 }
-

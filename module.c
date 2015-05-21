@@ -10,6 +10,10 @@
 #include <string.h>
 #include "vplanet.h"
 
+void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* Nothing */
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -94,11 +98,26 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));  
+  for(iModule = 0; iModule < iNumModules; iModule++) {
+    module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;  //PED added man's.
+    module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;  //PED added core's.
+    module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    }
 
   /************************
    * ADD NEW MODULES HERE *
    ************************/
 
+  iModule = 0;
   if (body[iBody].bEqtide) {
     AddModuleEqtide(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = EQTIDE;

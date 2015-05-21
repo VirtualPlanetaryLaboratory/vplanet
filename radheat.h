@@ -165,10 +165,12 @@ void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 #define RADHEATHALTSYSEND       5
 #define RADHEATHALTBODYEND      5
 
-int HaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
-int HaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
-int HaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
-int HaltMin235UPower(BODY*,CONTROL*,UPDATE*,int);  //PED
+//int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
+//int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
+//int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
+int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsRadHeat(HALT*,int*);
 
 

@@ -292,6 +292,8 @@ void AddOptionInt(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbos
 void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {
 
   AddOptionInt(cFile,cOption,iInput,iLine,iVerbose);
+  if (*iLine == -1 )   //PED 4/9/15
+      return;
   if (*iInput == 0 || *iInput == 1) 
     return;
   else {

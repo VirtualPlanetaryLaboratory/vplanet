@@ -307,10 +307,6 @@ void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 /******************* Verify RADHEAT ******************/
 
-void VerifyRotationRadheat(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
     if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) 
       DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
@@ -1094,7 +1090,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
   module->fnVerify[iBody][iModule] = &VerifyRadheat;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationRadheat;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;

@@ -14,6 +14,10 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) 
   /* Nothing */
 }
 
+void VerifyRotationNULL(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
+  /* Nothing */
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -95,6 +99,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate40KNum[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate232ThNum[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNum[iBody][iModule] = &FinalizeUpdateNULL;
+
+    module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
   /************************

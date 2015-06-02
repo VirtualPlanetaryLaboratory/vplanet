@@ -761,8 +761,6 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
   int iPert,iBodyPert,iVar,ok;
   int bFound[iNumBodies];
 
-
-
   for (iBody=0;iBody<iNumBodies;iBody++) {
     
     if (body[iBody].iTidePerts > 0) {
@@ -976,6 +974,7 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   update[iBody].iSemiEqtide = *iEqn;
   (*iEqn)++;
 }
+
 
 /***************** EQTIDE Halts *****************/
 

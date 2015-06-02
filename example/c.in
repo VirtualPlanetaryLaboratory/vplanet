@@ -15,7 +15,7 @@ dEcc            0.06			# Eccentricity
 
 # Output
 saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
-		-40kpow -232thpow -238upow -radpow -SurfEnFluxT
+		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
 
 # Output can be in any order and need only be ambiguous. 
 # Units of negative arguments are listed in the onboard help (./vplanet -h).
@@ -28,6 +28,6 @@ dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
 saTidePerts	star			# Body name(s) of tidal perturbers
 
 # RADHEAT Parameters
-d40KNum		-1			# Numer of potassium-40 atoms, negative -> Earth
-d232ThNum	-1			# Number of thorium-232 atoms, negative -> Earth
-d238UNum	-1			# Number of uranium-238 atims, negative -> Earth
+d40KNumMan	-1			# Numer of potassium-40 atoms, negative -> Earth
+d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
+d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth

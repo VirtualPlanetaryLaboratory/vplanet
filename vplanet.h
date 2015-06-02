@@ -707,6 +707,8 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * Other Header Files - These are primarily for function declarations
  */
 
+#include <assert.h>
+
 /* Top-level files */
 #include "body.h"
 #include "control.h"

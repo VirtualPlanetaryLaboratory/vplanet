@@ -89,18 +89,20 @@
 
 /* Indices for variables in the update struct. These are the primary 
    variables. */
-#define VSEMI        1
-#define VECC         2
-#define VROT         3
-#define VOBL         4
-#define VNUM40KMAN      5
-#define VNUM232THMAN    6
-#define VNUM238UMAN     7
-#define VNUM235UMAN     8 
-#define VNUM40KCORE     9
-#define VNUM232THCORE   10
-#define VNUM238UCORE    11
-#define VNUM235UCORE    12 
+#define VSEMI        1001
+#define VECC         1002
+#define VROT         1003
+#define VOBL         1004
+
+// RADHEAT
+#define VNUM40KMAN      1101
+#define VNUM232THMAN    1102
+#define VNUM238UMAN     1103
+#define VNUM235UMAN     1104
+#define VNUM40KCORE     1105
+#define VNUM232THCORE   1106
+#define VNUM238UCORE    1107
+#define VNUM235UCORE    1108
 
 /* Now define the structs */
 

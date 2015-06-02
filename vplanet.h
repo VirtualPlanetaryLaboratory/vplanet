@@ -353,6 +353,10 @@ typedef struct {
   int dMin40KPower;     /**< Halt at this Potassium-40 Power */
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
+  
+  /* ATMESC */
+  int dMaxNumberOfOrcs; /**< Halt at this number of orcs */
+  
 } HALT;
 
 /* Units. These can be different for different bodies. If set

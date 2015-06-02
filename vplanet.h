@@ -741,6 +741,6 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
-#define MODULEOPTEND        1200
-#define MODULEOUTEND        1200
+#define MODULEOPTEND        1900
+#define MODULEOUTEND        1900
 

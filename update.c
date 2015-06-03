@@ -165,32 +165,29 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     // Radiogenic Isotopes
     /* 40K Mantle */
     update[iBody].i40KMan = -1;
-    if (update[iBody].iNum40KMan) {
-      update[iBody].i40KMan = iVar;
-      update[iBody].iaVar[iVar] = VNUM40KMAN;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNum40KMan;
-      update[iBody].pdVar[iVar] = &body[iBody].d40KNumMan;
-      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-
-      if (control->Evolve.iOneStep == RUNGEKUTTA) {
-	control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].d40KNumMan;
-	control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-	control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNum40KMan*sizeof(double));
-	control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-	control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
-	control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int*));
-      }
-
-      iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-	  module->fnFinalizeUpdate40KNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
-      
-      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
-      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
-      iVar++;
+    if (update[iBody].iNum40KMan) {   //iNum40KMan is number of processes that influence this variable.
+	update[iBody].i40KMan = iVar;    //i40KMan is the index in the matrix for this variable.
+	update[iBody].iaVar[iVar] = VNUM40KMAN;
+	update[iBody].iNumEqns[iVar] = update[iBody].iNum40KMan;
+	update[iBody].pdVar[iVar] = &body[iBody].d40KNumMan;
+	update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	update[iBody].iaBody[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int*));
+	update[iBody].iaType[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	update[iBody].iaModule[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	if (control->Evolve.iOneStep == RUNGEKUTTA) {
+	    control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].d40KNumMan;
+	    control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	    control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNum40KMan*sizeof(double));
+	    control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	    control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int));
+	    control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNum40KMan*sizeof(int*));
+	}
+	iEqn=0;
+	for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+	    module->fnFinalizeUpdate40KNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody);
+	(*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+	update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+	iVar++;
     }
     /* 40K Core */
     update[iBody].i40KCore = -1;

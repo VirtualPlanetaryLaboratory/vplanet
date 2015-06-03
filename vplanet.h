@@ -157,6 +157,14 @@ typedef struct {
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
     int bRadheat;             /**< Apply Module RADHEAT? */
+    int bRadheat40KMan;             /**< Use 40KMan? */
+    int bRadheat40KCore;             /**< Use 40KCore? */
+    int bRadheat232ThMan;             /**< Use 232ThMan? */
+    int bRadheat232ThCore;             /**< Use 232ThCore? */
+    int bRadheat238UMan;             /**< Use 238UMan? */
+    int bRadheat238UCore;             /**< Use 238UCore? */
+    int bRadheat235UMan;             /**< Use 235UMan? */
+    int bRadheat235UCore;             /**< Use 235UCore? */
     double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
     double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
     double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
@@ -588,7 +596,8 @@ typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
  */
 
 typedef void (*fnInitializeOptions)(OPTIONS*,fnReadOption*);
-typedef void (*fnInitializeBodyModule)(BODY*,CONTROL*,UPDATE*,int,int);
+//typedef void (*fnInitializeBodyModule)(BODY*,CONTROL*,UPDATE*,int,int);
+typedef void (*fnInitializeBodyModule)(BODY*,CONTROL*,int,int);
 typedef void (*fnInitializeControlModule)(CONTROL*);
 typedef void (*fnInitializeOptionsModule)(OPTIONS*,fnReadOption*);
 typedef void (*fnInitializeUpdateModule)(BODY*,UPDATE*,int);

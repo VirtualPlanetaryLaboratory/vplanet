@@ -393,7 +393,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       // Must initialize entire body struct before verifying modules
-      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
+	//      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
       module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
     }
   }

@@ -50,7 +50,8 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
   }
 }
 
-void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+//void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+void InitializeBodyEqtide(BODY *body,CONTROL *control,int iBody,int iModule) {
   body[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
 
 }

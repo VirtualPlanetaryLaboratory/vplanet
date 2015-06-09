@@ -504,7 +504,6 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 /* Initiatlize Input Options */
 
 void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
-  int iOpt,iFile;
 
   /* 40K */
   sprintf(options[OPT_40KMASSMAN].cName,"d40KMassMan");
@@ -1106,10 +1105,6 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 //PED: Combine these into ..HeatMan?  and ..HeatCore?
 void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
@@ -1144,20 +1139,6 @@ void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVa
   update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
   update[iBody].iNum235UCore = (*iEqn)++;
 }
-
-
-void FinalizeUpdateOblRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateRotRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateSemiRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 
 /***************** RADHEAT Halts *****************/
 
@@ -1254,16 +1235,8 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* RADHEAT Outputs ******************/
 
-void HelpOutputRadheat(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ RADHEAT output ------\n");
-  for (iOut=OUTSTARTRADHEAT;iOut<OUTENDRADHEAT;iOut++) 
-    WriteHelpOutput(&output[iOut]);
-}
-
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
-   block of initialization in InitializeOutputRadheat below /*
+   block of initialization in InitializeOutputRadheat below */
 
 /* Potassium */
 
@@ -2130,12 +2103,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
   
-  // Now include other primary variables not used by RADHEAT 
-  module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateEccRadheat;
-  module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateOblRadheat;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRadheat;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiRadheat;
-
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 

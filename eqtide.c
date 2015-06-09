@@ -331,7 +331,6 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 }
 
 void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
-  int iOpt,iFile;
 
   sprintf(options[OPT_DISCRETEROT].cName,"bDiscreteRot");
   sprintf(options[OPT_DISCRETEROT].cDescr,"Use Discrete Rotation Model (Phase lag only)");
@@ -1070,14 +1069,6 @@ void VerifyHaltEqtide(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 }
 
 /************* EQTIDE Outputs ******************/
-
-void HelpOutputEqtide(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ EQTIDE output ------\n");
-  for (iOut=OUTSTARTEQTIDE;iOut<OUTENDEQTIDE;iOut++) 
-    WriteHelpOutput(&output[iOut]);
-}
 
 /* 
  * B
@@ -2104,7 +2095,15 @@ double fdCTLF5(double dEcc) {
 }
 
 void fdaCTLF(BODY *body) {
-  // hack XXX
+  /* hack XXX
+  int iOrbiter;
+
+  if (bPrimary(body,iaBody[0]))
+    iOrbiter = body[iaBody[0]].iaTidePerts[iaBody[1]];
+  else
+    iOrbiter = iaBody[0];
+  */
+
   body->dTidalF[0][0] = fdCTLF1(body->dEcc);
   body->dTidalF[0][1] = fdCTLF2(body->dEcc);
   body->dTidalF[0][2] = fdCTLF3(body->dEcc);

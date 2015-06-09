@@ -18,6 +18,10 @@ void VerifyRotationNULL(BODY *body,CONTROL *control,OPTIONS *options,char cFile[
   /* Nothing */
 }
 
+double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iBody1) {
+  return 0;
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -62,6 +66,10 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
 void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   int iModule=0,iNumModules = 0;
+
+  /************************
+   * ADD NEW MODULES HERE *
+   ************************/
 
   if (body[iBody].bEqtide)
     iNumModules++;

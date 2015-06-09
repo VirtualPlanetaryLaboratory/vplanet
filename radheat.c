@@ -1113,7 +1113,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 // dN/dt = -(N_0/lambda) * exp(-t/lambda)
 
 double fdInternalPowerRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-
   return -(*(update[iBody].pdD238UNumDt))*ENERGY238U - (*(update[iBody].pdD232ThNumDt))*ENERGY232TH - (*(update[iBody].pdD40KNumDt))*ENERGY40K;
 }
 

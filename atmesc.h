@@ -31,8 +31,7 @@ void ReadOptionsAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 /* Halt Functions */
 #define ATMESCHALTSYSEND       5
 #define ATMESCHALTBODYEND      5
-
-int fbHaltTooManyOrcs(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltTooManyOrcs(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsAtmEsc(HALT*,int*);
 
 /* Verify Functions */
@@ -77,3 +76,5 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,int,int);
 double fdDNumberOfOrcsDt(BODY*,SYSTEM*,int*,int);
+
+double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

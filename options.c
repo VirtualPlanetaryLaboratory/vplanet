@@ -529,7 +529,7 @@ int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -608,7 +608,7 @@ int iAssignUnitTime(char cTmp[],int iVerbose,char cFile[],char cName[], int iLin
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 
@@ -678,7 +678,7 @@ int iAssignUnitAngle(char cTmp[],int iVerbose,char cFile[],char cName[], int iLi
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
    
 void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -754,7 +754,7 @@ int iAssignUnitLength(char cTmp[],int iVerbose,char cFile[],char cName[], int iL
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -1993,7 +1993,7 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
 
   /* Initialize module control */
   InitializeControl(control,module);
-
+  
   /* Initialize halts XXX Done in verify 
      InitializeHalt(control,module); */
 

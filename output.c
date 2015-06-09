@@ -839,8 +839,9 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
-      if (output[iOut].iNum > 0) 
-	WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+      if (output[iOut].iNum > 0) {
+	       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+	    }
 
     }
     /* Log modules */

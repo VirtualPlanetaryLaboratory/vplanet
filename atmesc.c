@@ -211,14 +211,14 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_NUMBEROFORCS].cDescr,"Total Number of Orcs");
   sprintf(output[OUT_NUMBEROFORCS].cNeg,"Helms Deep Armies");
   output[OUT_NUMBEROFORCS].bNeg = 1;
-  output[OUT_NUMBEROFORCS].dNeg = HELMSDEEPARMIES;
+  output[OUT_NUMBEROFORCS].dNeg = HELMSDEEPARMY;
   output[OUT_NUMBEROFORCS].iNum = 1;
   fnWrite[OUT_NUMBEROFORCS] = &WriteNumberOfOrcs;
 
 }
 
 void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule) {
-  //output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
+  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
 }
 
 /************ ATMESC Logging Functions **************/
@@ -245,9 +245,9 @@ void LogAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
 }
 
 void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  int iOut;
-
+  int iOut;  
   fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
+  
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
@@ -294,4 +294,8 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 /************* ATMESC Functions ************/
 double fdDNumberOfOrcsDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return sin(system->dAge/(1e7*YEARSEC));
+}
+
+double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+  // This is silly, but necessary!
 }

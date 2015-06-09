@@ -167,6 +167,10 @@ typedef struct {
   double d238UPower;     /**< Body's Internal Power Due to Uranium-238 Decay */
   double d238UMass;      /**< Body's Total Mass of Uranium-238 Atoms */
 
+  /* ATMESC Parameters */
+  int bAtmEsc;           /**< Apply Module ATMESC? */
+  double dNumberOfOrcs;
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -306,7 +310,6 @@ typedef struct {
   int i40K;             /**< Variable # Corresponding to Potassium-40 */
   int i232Th;           /**< Variable # Corresponding to Thorium-232 */
   int i238U;            /**< Variable # Corresponding to Uranium-238 */
-  int iOrcs;            /**< Variable # Corresponding to the number of Orcs */
   int iNum40K;          /**< Number of Equations Affecting Potassium-40 [1] */
   int iNum232Th;        /**< Number of Equations Affecting Thorium-232 [1] */
   int iNum238U;         /**< Number of Equations Affecting Uranium-238 [1] */
@@ -326,6 +329,10 @@ typedef struct {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       uranium-40's derivative due to RADHEAT. */
   double *pdD238UNumDt;
+  
+  /* ATMESC */
+  int iOrcs;            /**< Variable # Corresponding to the number of Orcs */
+  int iNumOfOrcs;       /**< Number of Equations Affecting Orcs [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of the number of orcs due to ATMESC. */
@@ -672,6 +679,8 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * Other Header Files - These are primarily for function declarations
  */
 
+#include <assert.h>
+
 /* Top-level files */
 #include "body.h"
 #include "control.h"
@@ -687,6 +696,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "atmesc.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 
@@ -702,6 +712,6 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
-#define MODULEOPTEND        1200
-#define MODULEOUTEND        1200
+#define MODULEOPTEND        1900
+#define MODULEOUTEND        1900
 

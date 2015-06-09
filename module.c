@@ -34,7 +34,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate232ThNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumModule));
 
-  module->fnFinalizeUpdateNumberofOrcs = malloc(iNumBodies*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
+  module->fnFinalizeUpdateNumberOfOrcs = malloc(iNumBodies*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -58,6 +58,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bEqtide)
     iNumModules++;
   if (body[iBody].bRadheat)
+    iNumModules++;
+  if (body[iBody].bAtmEsc)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -89,7 +91,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate232ThNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumModule));
   module->fnFinalizeUpdate238UNum[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumModule));
   
-  module->fnFinalizeUpdateNumberofOrcs[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
+  module->fnFinalizeUpdateNumberOfOrcs[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
@@ -147,6 +149,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
+	body[iFile-1].bAtmEsc = 1;
       } else {
 	if (control->Io.iVerbose >= VERBERR)
 	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);

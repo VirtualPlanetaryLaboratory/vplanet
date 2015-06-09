@@ -1,0 +1,159 @@
+Written by Rory Barnes
+
+./vplanet is a general purpose tidal integrator. It takes an input file consisting of options and initial conditions and simulates tidal evolution, along with other secondary parameters, forward and/or backward in time. This help describes the basics of the input file.
+
+----- Command Line Options -----
+
+-v, -verbose -- Maximum verbosity, i.e. display all warnings and updates.
+-q, -quiet   -- No verbosity, i.e. nothing printed to device.
+-h, -help    -- Display this message.
+
+----- Input File -----
+
+Comments/White Space: Any characters to the right of a # sign are treated as a comment and are ignored. All white space is ignored.
+Options that take an array may span multiple lines if a $ is placed at the end of the line.
+Options must be the first string on any line, and must be written exactly as listed below.
+Arguments may have any format, and need only be unambiguous.
+
+----- Input Options -----
+
+saBodyFiles () -- Input files for each body (Default = None).
+saModules (Array) -- Body's Module List (Default = none).
+sSystemName (String) -- System Name (Default = None - must be supplied).
+sUnitAngle (String) -- Angle Units: Degrees Radians (Default = Radians).
+sUnitLength (String) -- Length Units: cm m km Solar Earth Jupiter AU (Default = cm).
+sUnitMass (String) -- Mass Units: Grams Kilograms Solar Earth Jupiter Saturn (Default = grams).
+sUnitTime (String) -- Time Units: Seconds, Days Years Myr Gyr (Default = Seconds).
+iVerbose (Int) -- Verbosity Level: 1-5 (Default = 3).
+dAge (Double) -- System Age (Default = 0).
+bDoBackward (Bool) -- Do Backward Integration? (Default = No).
+sOutFile (String) -- Name of Output File (Default = cSystemName.backward).
+dEta (Double) -- Variable Time Step Coefficient (Default = 1).
+dOutputTime (Double) -- Output Interval (Default = 1 year).
+dStopTime (Double) -- Integration Stop Time (Default = 10 years).
+dTimeStep (Double) -- Integration Timestep (Default = 1 year).
+bVarDt (Bool) -- Use variable timestep? (Default = None).
+sName (String) -- Body's Name (Default = Integer of Input Order, i.e. 1).
+bDoForward (Bool) -- Do Forward Integration? (Default = 0).
+dHaltMaxEcc (Double) -- Maximum Eccentricity Value that Halts Integration (Default = 1).
+bHaltMerge (Bool) -- Halt at Merge (Default = 1).
+dHaltMinEcc (Double) -- Minimum Eccentricity Value that Halts Integration (Default = -1).
+dHaltMinObl (Double) -- Minimum Obliquity Value that Halts Integration (Default = -1 degrees).
+dHaltMinSemi (Double) -- Minimum Semi-Major Axis Value that Halts Integration (Default = 0).
+bHaltPosDeDt (Bool) -- Halt if de/dt > 0? (Default = 0).
+sIntegrationMethod (Array) -- Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4) (Default = Runge-Kutta4).
+bDoLog (Bool) -- Write Log File? (Default = 0).
+sLogFile (String) -- Log File Name (Default = tide.log).
+dMinValue (Double) -- Minimum Non-Zero Value of Eccentricity and Obliquities (Default = 0).
+dEcc (Double) -- Orbital Eccentricity (Default = 0).
+dMeanMotion (Double) -- Orbital Mean Motion (Default = 1 /yr).
+dOrbPeriod (Double) -- Orbital Period (Default = 1 year).
+dSemi (Double) -- Semi-Major Axis (Default = 1 AU).
+iDigits (Int) -- Number of Digits After Decimal Point (Default = 4).
+saOutputOrder () -- Output Parameter(s) (Default = None).
+iSciNot (Int) -- Logarithm to Change from Standard to Scientific Notation (Default = 4).
+bOverwrite (Bool) -- Permit file overwrite? (Default = 0).
+dMass (Double) -- Mass (Default = 1 Earth Mass).
+sMassRad (String) -- Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin0 (Default = None).
+dObliquity (Double) -- Obliquity (Default = 0).
+dRadius (Double) -- Radius (Default = 1 Earth Radius).
+dRadGyra (Double) -- Radius of Gyration (Default = 0.5).
+dRotPeriod (Double) -- Rotation Period (Default = 1 Day).
+dRotRate (Double) -- Rotational Angular Frequency (Default = 1 /day).
+dRotVel (Double) -- Rotational Velocity (Default = 0).
+bDiscreteRot (Bool) -- Use Discrete Rotation Model (Phase lag only) (Default = 1).
+bForceEqSpin (Bool) -- Force Spin Rate to Equilibrium (Default = 0).
+bHaltDblSync (Bool) -- Halt at Double Synchronous State? (Default = 0).
+bHaltTideLock (Bool) -- Halt if Tide-Locked? (Default = 0).
+bHaltSyncRot (Bool) -- Halt if Secondary's rotation becomes syncrhonous? (Default = 0).
+dK2 (Double) -- Love Number of Degree 2 (Default = 1).
+dMaxLockDiff (Double) -- Maximum relative difference between spin and equilibrium spin ra (Default = 0).
+dSyncEcc (Double) -- Minimum Eccentricity for Non-Synchronous Rotation (Default = 0).
+sTideModel (String) -- Tidal Model: p2 [constant-phase-lag, 2nd order] t8 [constant-tim (Default = p2).
+saTidePerts () -- Names of bodies engaged in tidal evolution (Default = none).
+dTidalTau (Double) -- Tidal Time Lag (Default = 1 Second).
+dTidalQ (Double) -- Tidal Quality Factor (Default = 1e6).
+d40KMass (Double) -- Initial Mass of 40K (Default = Primordial Earth: xxx).
+d40KNum (Double) -- Initial Number of 40K Atoms (Default = Primordial Earth: xxx).
+d40KPower (Double) -- Initial Power Production from 40K Atoms (Default = Primordial Earth: xx TW).
+d232ThMass (Double) -- Initial Mass of 232Th (Default = Primordial Earth: xxx).
+d232ThNum (Double) -- Initial Number of 232Th Atoms (Default = Primordial Earth: xxx).
+d232ThPower (Double) -- Initial Power Production from 232Th Atoms (Default = Primordial Earth: xx TW).
+d238UMass (Double) -- Initial Mass of 238U (Default = Primordial Earth: xxx).
+d238UNum (Double) -- Initial Number of 238U Atoms (Default = 1).
+
+----- Output Options -----
+
+These options follow the argument saOutputOrder.
+[-]Age -- System Age. [Gyr]
+[-]Time -- Simulation Time. []
+TotAngMom -- Total Angular Momentum.
+[-]TotEnergy -- Total Energy. [ergs]
+[-]PotEnergy -- Total Potential Energy. [ergs]
+[-]KinEnergy -- Total Kinetic Energy. [ergs]
+[-]DeltaTime -- Average Timestep Over Last Output Interval. [years]
+Mass -- Mass.
+Obliquity -- Obliquity.
+[-]Radius -- Radius. [Solar]
+RotAngMom -- Rotational Angular Momentum.
+RotKinEnergy -- Rotational Energy.
+[-]RotVel -- Rotational Velocity. [km/s]
+[-]RotRate -- Rotational Frequency. [/day]
+[-]RotPer -- Rotational Period. [days]
+[-]SurfEnFluxTotal -- Total Surface Energy Flux. [W/m^2]
+Eccentricity -- Orbital Eccentricity.
+[-]OrbEnergy -- Orbital Energy. [ergs]
+[-]MeanMotion -- Orbital Mean Motion. [/day]
+[-]OrbPeriod -- Orbital Period. [days]
+[-]SemiMajorAxis -- Semi-major Axis. [AU]
+OrbAngMom -- Orbital Angular Momentum.
+[-]OrbKinEnergy -- Orbital Kinetic Energy. [ergs]
+[-]OrbPotEnergy -- Orbital Potential Energy. [ergs]
+[-]OrbEnergy -- Orbital Energy. [ergs]
+[-]DsemiDtEqtide -- Total da/dt in EQTIDE. [AU/Gyr]
+[-]DeccDtEqtide -- Total de/dt in EQTIDE. [/Gyr]
+DMeanMotionDtEqtide -- Total dMeanMotion/dt in EQTIDE.
+[-]DOrbPerDtEqtide -- Total dOrbPer/dt in EQTIDE. [days/Gyr]
+[-]EccTimeEqtide -- Timescale for Eccentricity Evolution (e/[de/dt]) in EQTIDE. [years]
+[-]SemiTimeEqtide -- Timescale for Semi-major Axis Evolution (a/[da/dt]) in EQTIDE. [years]
+[-]BodyDsemiDtEqtide -- Body's Contribution to dSemi/dt in EQTIDE. [AU/Gyr]
+[-]BodyDeccDt -- Body's Contribution to dEcc/dt in EQTIDE. [/Gyr]
+[-]DOblDtEqtide -- Time Rate of Change of Obliquity in EQTIDE. [deg/Gyr]
+[-]DRotPerDtEqtide -- Time Rate of Change of Rotation Period in EQTIDE. [days/Myr]
+DRotRateDtEqtide -- Time Rate of Change of Rotational Frequency in EQTIDE.
+[-]EqRotRateDiscrete -- CPL2 Discrete Equilibrium Spin Rate. [/day]
+[-]EqRotPerDiscrete -- CPL2 Discrete Equilibrium Spin Period. [days]
+EqRotRateCont -- CPL2 Continuous Equilibrium Spin Rate.
+[-]EqRotPerCont -- CPL2 Continuous Equilibrium Rotation Period. [days]
+[-]EqRotPer -- Equilibrium Rotation Period. [days]
+[-]EqRotRate -- Equilibrium Rotation Rate. [/day]
+GammaRot -- Gamma_Rotation.
+GammaOrb -- Gamma_Orbital.
+TidalQ -- Tidal Q.
+[-]TidalTau -- Tidal Time Lag. [sec]
+TideLock -- Tidally Locked?.
+[-]RotTimeEqtide -- Timescale for Rotational Evolution in EQTIDE. [years]
+[-]OblTimeEqtide -- Timescale for Obliquity Evolution in EQTIDE. [years]
+[-]PowerEqtide -- Internal Power due to Tides in EQTIDE. [TW]
+[-]SurfEnFluxEqtide -- Surface Energy Flux due to Tides in EQTIDE. [W/m^2]
+[-]40KPower -- Total Power Generated by 40K. [TW]
+[-]40KEnFlux -- Surface Energy Flux from 40K. [W/m^2]
+[-]D40KPowerDt -- Time Rate of Change of 40K Power Generation. [TW/Gyr]
+[-]D40KNumDt -- Time Rate of Change of 40K Heat Generation. [/Gyr]
+[-]40KMass -- Total Mass of 40K. [Earth Masses]
+[-]40KNumber -- Total Number of 40K Atoms. [Initial Primordial Earth??ʣ+?>]
+[-]40KTimescale -- Timescale for 40K Power Generation. [Gyr]
+[-]232ThPower -- Total Power Generated by 232Th. [TW]
+[-]232ThEnFlux -- Surface Energy Flux from 232Th. [W/m^2]
+[-]D232ThNumDt -- Time Rate of Change of the number of 232Th nuclei. [/Gyr]
+[-]232ThMass -- Total Mass of 232Th. [Earth Masses]
+[-]232ThNumber -- Total Number of 232Th Atoms. [Initial Primordial Earth?=????>]
+[-]232ThTimescale -- Timescale for 232Th Power Generation. [Gyr]
+[-]238UPower -- Total Power Generated by 238U. [TW]
+[-]238UEnFlux -- Surface Energy Flux due to 238U. [W/m^2]
+[-]D238UNumDt -- Time Rate of Change of the Number of 238U Nuclei. [Gyr]
+[-]238UMass -- Total Mass of 238U. [Earth Masses]
+[-]238UNumber -- Total Number of 238U Atoms. [Initial Primordial Earth]
+[-]238UTimescale -- Timescale for 238U Power Generation. [Gyr]
+[-]RadPower -- Total Power Generated by Radiogenic Nuclides. [TW]
+[-]SurfEnFluxRadheat -- Total Power Generated by Radiogenic Nuclides. [W/m^2]

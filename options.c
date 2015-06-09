@@ -292,6 +292,8 @@ void AddOptionInt(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbos
 void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {
 
   AddOptionInt(cFile,cOption,iInput,iLine,iVerbose);
+  if (*iLine == -1 )   //PED 4/9/15
+      return;
   if (*iInput == 0 || *iInput == 1) 
     return;
   else {
@@ -529,7 +531,7 @@ int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -608,7 +610,7 @@ int iAssignUnitTime(char cTmp[],int iVerbose,char cFile[],char cName[], int iLin
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 
@@ -678,7 +680,7 @@ int iAssignUnitAngle(char cTmp[],int iVerbose,char cFile[],char cName[], int iLi
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
    
 void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -754,7 +756,7 @@ int iAssignUnitLength(char cTmp[],int iVerbose,char cFile[],char cName[], int iL
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {

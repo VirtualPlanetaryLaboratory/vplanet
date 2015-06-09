@@ -1,13 +1,6 @@
 # Gl581 d
-saOutputOrder -40kpow -232thpow -238upow -radpow -SurfEnFluxT $
-
-  		Time Semim $
-# Damn! I put a $ at the start of this line, but it didn't work!
-#
-		Ecce Obli$
-		 -SurfEnFluxEqtide$
-
-		 -SurfEnFluxRadheat 
+saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
+		-40kpow -232thpow -238upow -radpow -SurfEnFluxT
 
 # The order of options in a file is unimportant
 # The user selects the ordering of the output

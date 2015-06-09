@@ -4,6 +4,7 @@
  *
  */
 
+ 
 /*! Top-level declarations */
 
 /* How many modules are available? */
@@ -90,16 +91,20 @@
 
 /* Indices for variables in the update struct. These are the primary 
    variables. */
-#define VSEMI        1
-#define VECC         2
-#define VROT         3
-#define VOBL         4
-#define VNUM40K      5
-#define VNUM232TH    6
-#define VNUM238U     7
+#define VSEMI        1001
+#define VECC         1002
+#define VROT         1003
+#define VOBL         1004
 
-
-/* Now define the structs */
+// RADHEAT
+#define VNUM40KMAN      1101
+#define VNUM232THMAN    1102
+#define VNUM238UMAN     1103
+#define VNUM235UMAN     1104
+#define VNUM40KCORE     1105
+#define VNUM232THCORE   1106
+#define VNUM238UCORE    1107
+#define VNUM235UCORE    1108
 
 /* Semi-major axis functions in Lagrange */
 #define LAPLNUM 	      26
@@ -107,7 +112,8 @@
 /* Integration elements for Lagrange */
 #define HKPQ          0
 #define ESVO          1
-/* 
+
+/* Now define the structs */
 
 /*!
  * BODY contains all the physical parameters for every body 
@@ -147,7 +153,7 @@ typedef struct {
   double dOrbPeriod;     /**< Body's Orbital Period */
 
   /* Additional orbital properties used by LAGRANGE */
-  double dInc;           /**< Inclination */
+  int bLagrange;         /**< use Lagrange? */
   double dsInc;          /**< sin(0.5*Inclination) */
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
@@ -160,18 +166,16 @@ typedef struct {
   double dhecc;          /**< h = e * sin(varpi) */
   double dkecc;          /**< k = e * cos(varpi) */
   double dpinc;          /**< p = i * sin(Omega) */
-  double dqinc;          /**< q = i * cos(Omega) */ 
-  double *dPosition;     /**< Cartesian position vector */
-  double *dVelocity;     /**< Cartesian velocity vector */ 
-  double *dLaplaceC;     /**< Store laplace coefficients */  
+  double dqinc;          /**< q = i * cos(Omega) */  
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
   
   /* Additional obliquity params used by Laskar */
+  int bLaskar;           /**< use Laskar? */
   double dPrecA;         /**< Precession angle */
   double dDynEllip;      /**< Dynamical ellipticity */
-  double dxi;          /**< sin(obliq)*sin(preca) */
-  double dzeta;         /**< sin(obliq)*cos(preca) */
+  double dxi;            /**< sin(obliq)*sin(preca) */
+  double dzeta;          /**< sin(obliq)*cos(preca) */
   double dchi;           /**< cos(obliq) */
   int bObliqEvol;        /**< 0 -> do not model obliquity evolution for this body */
 
@@ -190,19 +194,39 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-  int bRadheat;          /**< Apply Module RADHEAT? */
-  double d40KConst;      /**< Body's Potassium-40 Decay Constant */
-  double d40KNum;        /**< Body's Number of Potassium-40 Atoms */
-  double d40KPower;      /**< Body's Internal Power Due to Potassium-40 Decay */
-  double d40KMass;       /**< Body's Total Mass of Potassium-40 */
-  double d232ThConst;    /**< Body's Thorium-232 Decay Constant */
-  double d232ThNum;      /**< Body's Number of Thorium-232 Atoms */
-  double d232ThPower;    /**< Body's Internal Power Due to Thorium-232 Decay */
-  double d232ThMass;     /**< Body's Total Mass of Thorium-232 Atoms */
-  double d238UConst;     /**< Body's Uranium-238 Decay Constant */
-  double d238UNum;       /**< Body's Number of Uranium-238 Atoms */
-  double d238UPower;     /**< Body's Internal Power Due to Uranium-238 Decay */
-  double d238UMass;      /**< Body's Total Mass of Uranium-238 Atoms */
+    int bRadheat;             /**< Apply Module RADHEAT? */
+    double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
+    double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
+    double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
+    double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
+    double d40KConstCore;       
+    double d40KNumCore;
+    double d40KPowerCore;
+    double d40KMassCore;
+    double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
+    double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
+    double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
+    double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
+    double d232ThConstCore;
+    double d232ThNumCore;
+    double d232ThPowerCore;
+    double d232ThMassCore;
+    double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
+    double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
+    double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
+    double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
+    double d238UConstCore;
+    double d238UNumCore;
+    double d238UPowerCore;
+    double d238UMassCore;
+    double d235UConstMan; 
+    double d235UNumMan;
+    double d235UPowerMan;
+    double d235UMassMan;
+    double d235UConstCore; 
+    double d235UNumCore;
+    double d235UPowerCore;
+    double d235UMassCore;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -236,7 +260,8 @@ typedef struct {
   double daAtmTempProfile;
   double daAtmPressProfile;
   double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
-  double daEddyDiffProfile;
+
+    double daEddyDiffProfile;
 
   int bAtmSulfur;
   int bAtmHydrogen;
@@ -342,16 +367,40 @@ typedef struct {
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
 
-  /* RADHEAT */
-  int i40K;             /**< Variable # Corresponding to Potassium-40 */
-  int i232Th;           /**< Variable # Corresponding to Thorium-232 */
-  int i238U;            /**< Variable # Corresponding to Uranium-238 */
-  int iNum40K;          /**< Number of Equations Affecting Potassium-40 [1] */
-  int iNum232Th;        /**< Number of Equations Affecting Thorium-232 [1] */
-  int iNum238U;         /**< Number of Equations Affecting Uranium-238 [1] */
-  double dD40KNumDt;    /**< Total Potassium-40 Derivative */
-  double dD232ThNumDt;  /**< Total Thorium-232 Derivative */
-  double dD238UNumDt;   /**< Total Uranium-238 Derivative */
+      /* RADHEAT */
+    int i40KMan;             /**< Variable # Corresponding to Potassium-40 */
+    int i232ThMan;           /**< Variable # Corresponding to Thorium-232 */
+    int i238UMan;            /**< Variable # Corresponding to Uranium-238 */
+    int i235UMan;
+    int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
+    int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
+    int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
+    int iNum235UMan;
+    double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
+    double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
+    double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
+    double dD235UNumManDt; 
+    double *pdD40KNumManDt;
+    double *pdD232ThNumManDt;
+    double *pdD238UNumManDt;
+    double *pdD235UNumManDt;
+
+    int i40KCore;
+    int i232ThCore;
+    int i238UCore;
+    int i235UCore;
+    int iNum40KCore;
+    int iNum232ThCore;
+    int iNum238UCore;
+    int iNum235UCore; 
+    double dD40KNumCoreDt;
+    double dD232ThNumCoreDt;
+    double dD238UNumCoreDt;
+    double dD235UNumCoreDt; 
+    double *pdD40KNumCoreDt;
+    double *pdD232ThNumCoreDt;
+    double *pdD238UNumCoreDt;
+    double *pdD235UNumCoreDt;
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       potassium-40's derivative due to RADHEAT. */
@@ -364,6 +413,7 @@ typedef struct {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       uranium-40's derivative due to RADHEAT. */
   double *pdD238UNumDt;
+
 
   /* LAGRANGE */
   int *bAng;     /**< Is the variable an angle? 1 = yes, 0 = no */
@@ -406,7 +456,6 @@ typedef struct {
 
 typedef struct {
   int iNumHalts;       /**< Total Number of Halts */
-
   int bMerge;          /**< Halt for Merge? */
   double dMinSemi;     /**< Halt at this Semi-major Axis */
   double dMinObl;      /**< Halt at this Obliquity */
@@ -424,6 +473,7 @@ typedef struct {
   int dMin40KPower;     /**< Halt at this Potassium-40 Power */
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
+    int dMin235UPower; 
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -437,15 +487,10 @@ typedef struct {
  */
 
 typedef struct {
-
-  int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
-
-  int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
-
-  int iAngle;         /**< 0=rad; 1=deg */ 
-
-  int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
-
+    int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
+    int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
+    int iAngle;         /**< 0=rad; 1=deg */ 
+    int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
 } UNITS;
 
 typedef void (*fnAuxPropsModule)(BODY*,int);
@@ -637,9 +682,14 @@ typedef void (*fnFinalizeUpdateNumIsotopeModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateOblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);  
+typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -696,18 +746,21 @@ typedef struct {
       semi-major axis in the UPDATE struct. */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
 
-  /*! These functions assign Equation and Module information regarding 
-      potassium-40 in the UPDATE struct. */ 
-  fnFinalizeUpdate40KNumModule **fnFinalizeUpdate40KNum;
-
-  /*! These functions assign Equation and Module information regarding 
+    /*! These functions assign Equation and Module information regarding 
+    potassium-40 in the UPDATE struct. */ 
+    fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
+    /*! These functions assign Equation and Module information regarding 
       thorium-232 in the UPDATE struct. */ 
-  fnFinalizeUpdate232ThNumModule **fnFinalizeUpdate232ThNum;
-
-  /*! These functions assign Equation and Module information regarding 
+    fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
+    /*! These functions assign Equation and Module information regarding 
       uranium-238 in the UPDATE struct. */ 
-  fnFinalizeUpdate238UNumModule **fnFinalizeUpdate238UNum;
-
+    fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+    fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+    fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
+    fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
+    fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+    fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+    
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 
@@ -740,6 +793,8 @@ typedef double (*fnLaplaceFunction)(double,int);
  * Other Header Files - These are primarily for function declarations
  */
 
+#include <assert.h>
+
 /* Top-level files */
 #include "body.h"
 #include "control.h"
@@ -770,6 +825,7 @@ typedef double (*fnLaplaceFunction)(double,int);
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
-#define MODULEOPTEND        1500
-#define MODULEOUTEND        1500
+#define MODULEOPTEND        1900
+#define MODULEOUTEND        1900
+
 

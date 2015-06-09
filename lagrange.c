@@ -17,7 +17,7 @@
 #include "output.h"
 
 void InitializeControlLagrange(CONTROL *control) {
-
+  /* Not sure if I need anything here yet */
 }
 
 void InitializeModuleLagrange(CONTROL *control,MODULE *module) {
@@ -27,628 +27,489 @@ void InitializeModuleLagrange(CONTROL *control,MODULE *module) {
 void BodyCopyLagrange(BODY *dest,BODY *src,int iBody) {
   int iIndex,iPert;
 
-  dest[iBody].dsInc = src[iBody].dsInc;
-  dest[iBody].dLongP = src[iBody].dLongP;
-  dest[iBody].dLongA = src[iBody].dLongA;
-  dest[iBody].dMeanL = src[iBody].dMeanL;
-  dest[iBody].iNumBodies = src[iBody].iNumBodies;
   dest[iBody].dhecc = src[iBody].dhecc;
   dest[iBody].dkecc = src[iBody].dkecc;
   dest[iBody].dpinc = src[iBody].dpinc;
   dest[iBody].dqinc = src[iBody].dqinc;
-  dest[iBody].dbeta = src[iBody].dbeta;
-  dest[iBody].deta = src[iBody].deta;
-  dest[iBody].dgamma = src[iBody].dgamma;
-  dest[iBody].dPrecA = src[iBody].dPrecA;
-  dest[iBody].bObliqEvol = src[iBody].bObliqEvol;
+
   for (iPert=0;iPert<src[iBody].iGravPerts;iPert++)
     dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
 }
 
 void InitializeBodyLagrange(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+}
+
+void InitializeUpdateTmpBodyLagrange(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  int iBodyPert;
+  
+  control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts);
 
 }
 
 /**************** LAGRANGE options ********************/
 
-void HelpOptionsLagrange(OPTIONS *options) {
-  int i;
-
-  printf("\n ------ LAGRANGE options ------\n");
-  for (i=OPTSTARTLAGRANGE;i<OPTENDLAGRANGE;i++) 
-    WriteHelpOption(options[i]);
-}
-
-
 /* Inclination */
 
-void ReadInc(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
 
-    //body[iNumFile-1].dInc = dTmp; 
-    body[iNumFile-1].dsInc = sin(0.5*dTmp);
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    //body[iFile-1].dInc = dTmp; 
+    body[iFile-1].dsInc = sin(0.5*dTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dInc = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dInc = options->dDefault;
 }  
 
 /* Longitude of ascending node */
 
-void ReadLongA(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
 
-    body[iNumFile-1].dLongA = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dLongA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dLongA = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dLongA = options->dDefault;
 }  
 
 
 /* Longitude of pericenter */
 
-void ReadLongP(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
     
-    body[iNumFile-1].dLongP = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dLongP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dLongP = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dLongP = options->dDefault;
 }  
 
 
 /* Argument of pericenter */
 
-void ReadArgP(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
     
-    body[iNumFile-1].dArgP = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dArgP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dArgP = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dArgP = options->dDefault;
 }  
 
 /* Mean anomaly */
 
-void ReadMeanA(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadMeanA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    body[iNumFile-1].dMeanA = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dMeanA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dMeanA = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dMeanA = options->dDefault;
 } 
 
 
 /* Mean longitude */
 
-void ReadMeanL(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadMeanL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    body[iNumFile-1].dMeanL = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dMeanL = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dMeanL = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dMeanL = options->dDefault;
 }  
 
 /* True longitude */
 
-void ReadTrueL(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadTrueL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }  
     
-    body[iNumFile-1].dTrueL = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dTrueL = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dTrueL = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dTrueL = options->dDefault;
 }  
 
 /* True anomaly */
 
-void ReadTrueA(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadTrueA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    body[iNumFile-1].dTrueA = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dTrueA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dTrueA = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dTrueA = options->dDefault;
 }  
 
 /* Eccentric anomaly */
 
-void ReadEccA(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadEccA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    body[iNumFile-1].dEccA = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dEccA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dEccA = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dEccA = options->dDefault;
 }  
 
-void ReadPrecAngle(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadPrecAngle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (control->Units[iNumFile].iAngle == 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
 	if (control->iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iNumFile].cIn,lTmp);	
+	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    body[iNumFile-1].dPrecA = dTmp; 
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dPrecA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
-    if (iNumFile > 0)
-      body[iNumFile-1].dPrecA = options->dDefault;
+    if (iFile > 0)
+      body[iFile-1].dPrecA = options->dDefault;
 }  
 
 
-void ReadDynEllip(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* Cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iNumFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
     /* Option was found */
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,options->iLine[iNumFile],control->iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,options->iLine[iFile],control->iVerbose);
     if (dTmp < 0 || dTmp >= 1) {
       if (control->iVerbose >= VERBERR)
 	fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iNumFile].cIn,lTmp);	
+      LineExit(files->Infile[iFile].cIn,lTmp);	
     }
-    body[iNumFile-1].dDynEllip = dTmp;
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    body[iFile-1].dDynEllip = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(&body[iNumFile-1].dDynEllip,*options,files->iNumInputs);
+    AssignDefaultDouble(&body[iFile-1].dDynEllip,*options,files->iNumInputs);
     
 }
 
-void ReadObliqEvol(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
+void ReadObliqEvol(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
   int bTmp;
 
-  AddOptionBool(files->Infile[iNumFile].cIn,options->cName,&bTmp,&lTmp,control->iVerbose);
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->iVerbose);
   if (lTmp >= 0) {
     /* Option was found */
-    NotPrimaryInput(iNumFile,options->cName,files->Infile[iNumFile].cIn,options->iLine[iNumFile],control->iVerbose);
-    body[iNumFile-1].bObliqEvol = bTmp;
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,options->iLine[iFile],control->iVerbose);
+    body[iFile-1].bObliqEvol = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     /* Set to default */
-    AssignDefaultInt(&body[iNumFile-1].bObliqEvol,*options,files->iNumInputs);
+    AssignDefaultInt(&body[iFile-1].bObliqEvol,*options,files->iNumInputs);
 }
-
-void ReadDissipate(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
-  /* This parameter can exist in any file, but only once */
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iNumFile].cIn,options->cName,&bTmp,&lTmp,control->iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    CheckDuplication(*options,*files,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    control->bDissipate = bTmp;
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
-  } else
-    /* Set to default */
-    AssignDefaultInt(&control->bDissipate,*options,files->iNumInputs);
-}
-
-
-void ReadUseShadow(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
-  /* This parameter can exist in any file, but only once */
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iNumFile].cIn,options->cName,&bTmp,&lTmp,control->iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    CheckDuplication(*options,*files,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    control->bUseShadow = bTmp;
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
-  } else
-    /* Set to default */
-    AssignDefaultInt(&control->bDissipate,*options,files->iNumInputs);
-}
-
-/* integration elements */
-
-void ReadIntElements(CONTROL *control,BODY *body,SYSTEM *system,OPTIONS *options,FILES *files,int iNumFile) {
-  /* This parameter can exist in any file, but only once */
-  int lTmp=-1;
-  char cTmp[OPTLEN];
-
-  /* Tide Model, use #defined variables */
-
-  AddOptionString(files->Infile[iNumFile].cIn,options->cName,cTmp,&lTmp,control->iVerbose);
-  if (lTmp >= 0) {
-    CheckDuplication(*options,*files,files->Infile[iNumFile].cIn,lTmp,control->iVerbose);
-    if (!memcmp(sLower(cTmp),"hk",2)) {
-      control->iIntElements = HKPQ;
-    } else if (!memcmp(sLower(cTmp),"es",2)) {
-      control->iIntElements = ESVO;
-    } else {
-      if (control->iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are hk or es.\n",options->cName,cTmp);
-      LineExit(files->Infile[iNumFile].cIn,lTmp);	
-    }
-    UpdateFoundOption(&files->Infile[iNumFile],options,lTmp,iNumFile);
-  }
-}
-
-
 
 void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
-  int iOpt,iFile;
-
-  for (iOpt=OPTSTARTLAGRANGE;iOpt<OPTENDLAGRANGE;iOpt++) {
-    sprintf(options[iOpt].cName,"null");
-    options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
-    options[iOpt].iMultiFile=0;
-    options[iOpt].iMultiIn=0;
-    options[iOpt].iType = -1;
-    
-    for (iFile=0;iFile<MAXFILES;iFile++) {
-      options[iOpt].iLine[iFile] = -1;
-      sprintf(options[iOpt].cFile[iFile],"null");
-    }
-  }
   
   sprintf(options[OPT_INC].cName,"dInc");
   sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
   sprintf(options[OPT_INC].cDefault,"0");
   options[OPT_INC].dDefault = 0.0;
-  options[OPT_INC].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_INC].iMultiFile = 1;  //nor this! XXX
+  options[OPT_INC].iType = 2;  
+  options[OPT_INC].iMultiFile = 1;  
   fnRead[OPT_INC] = &ReadInc;
   
   sprintf(options[OPT_LONGA].cName,"dLongA");
   sprintf(options[OPT_LONGA].cDescr,"Longitude of ascending node of planet's orbital plane");
   sprintf(options[OPT_LONGA].cDefault,"0");
   options[OPT_LONGA].dDefault = 0.0;
-  options[OPT_LONGA].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_LONGA].iMultiFile = 1;  //nor this! XXX
+  options[OPT_LONGA].iType = 2;  
+  options[OPT_LONGA].iMultiFile = 1; 
   fnRead[OPT_LONGA] = &ReadLongA;
   
   sprintf(options[OPT_LONGP].cName,"dLongP");
   sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
   sprintf(options[OPT_LONGP].cDefault,"0");
   options[OPT_LONGP].dDefault = 0.0;
-  options[OPT_LONGP].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_LONGP].iMultiFile = 1;   //nor this! XXX
+  options[OPT_LONGP].iType = 2;  
+  options[OPT_LONGP].iMultiFile = 1;   
   fnRead[OPT_LONGP] = &ReadLongP;
   
   sprintf(options[OPT_ARGP].cName,"dArgP");
   sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
   sprintf(options[OPT_ARGP].cDefault,"0");
   options[OPT_ARGP].dDefault = 0.0;
-  options[OPT_ARGP].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_ARGP].iMultiFile = 1;   //nor this! XXX
+  options[OPT_ARGP].iType = 2;  
+  options[OPT_ARGP].iMultiFile = 1;   
   fnRead[OPT_ARGP] = &ReadArgP;
   
-  /*sprintf(options[OPT_MEANA].cName,"dMeanA");
+  sprintf(options[OPT_MEANA].cName,"dMeanA");
   sprintf(options[OPT_MEANA].cDescr,"Mean anomaly of planet");
   sprintf(options[OPT_MEANA].cDefault,"0");
   options[OPT_MEANA].dDefault = 0.0;
-  options[OPT_MEANA].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_MEANA].iMultiFile = 1;   //nor this! XXX
-  fnRead[OPT_MEANA] = &ReadMeanA;*/
+  options[OPT_MEANA].iType = 2;  
+  options[OPT_MEANA].iMultiFile = 1;   
+  fnRead[OPT_MEANA] = &ReadMeanA;
   
   sprintf(options[OPT_MEANL].cName,"dMeanL");
   sprintf(options[OPT_MEANL].cDescr,"Mean longitude of planet");
   sprintf(options[OPT_MEANL].cDefault,"0");
   options[OPT_MEANL].dDefault = 0.0;
-  options[OPT_MEANL].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_MEANL].iMultiFile = 1;   //nor this! XXX
+  options[OPT_MEANL].iType = 2;  
+  options[OPT_MEANL].iMultiFile = 1;   
   fnRead[OPT_MEANL] = &ReadMeanL;
-  
-  sprintf(options[OPT_PRECA].cName,"dPrecA");
-  sprintf(options[OPT_PRECA].cDescr,"Precession angle (angle b/w LongP and equinox)");
-  sprintf(options[OPT_PRECA].cDefault,"0");
-  options[OPT_PRECA].dDefault = 0.0;
-  options[OPT_PRECA].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_PRECA].iMultiFile = 1;   //nor this! XXX
-  fnRead[OPT_PRECA] = &ReadPrecAngle;
-  
-  sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
-  sprintf(options[OPT_DYNELLIP].cDescr,"Dynamical ellipticity");
-  sprintf(options[OPT_DYNELLIP].cDefault,"0");
-  options[OPT_DYNELLIP].dDefault = 0.0;
-  options[OPT_DYNELLIP].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_DYNELLIP].iMultiFile = 1;   //nor this! XXX
-  fnRead[OPT_DYNELLIP] = &ReadDynEllip;
-  
-  sprintf(options[OPT_DISSIPATE].cName,"bDissipate");
-  sprintf(options[OPT_DISSIPATE].cDescr,"Is a dissipative model included?");
-  sprintf(options[OPT_DISSIPATE].cDefault,"No");
-  options[OPT_DISSIPATE].dDefault = 0;
-  options[OPT_DISSIPATE].iType = 0; 
-  options[OPT_DISSIPATE].iMultiFile = 0;
-  fnRead[OPT_DISSIPATE] = &ReadDissipate;
-  /*sprintf(options[OPT_TRUEL].cName,"dTrueL");
+ 
+  sprintf(options[OPT_TRUEL].cName,"dTrueL");
   sprintf(options[OPT_TRUEL].cDescr,"True longitude of planet");
   sprintf(options[OPT_TRUEL].cDefault,"0");
   options[OPT_TRUEL].dDefault = 0.0;
-  options[OPT_TRUEL].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_TRUEL].iMultiFile = 1;   //nor this! XXX
+  options[OPT_TRUEL].iType = 2;  
+  options[OPT_TRUEL].iMultiFile = 1;   
   fnRead[OPT_TRUEL] = &ReadTrueL;
   
   sprintf(options[OPT_TRUEA].cName,"dTrueA");
   sprintf(options[OPT_TRUEA].cDescr,"True anomaly of planet");
   sprintf(options[OPT_TRUEA].cDefault,"0");
   options[OPT_TRUEA].dDefault = 0.0;
-  options[OPT_TRUEA].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_TRUEA].iMultiFile = 1;   //nor this! XXX
+  options[OPT_TRUEA].iType = 2;  
+  options[OPT_TRUEA].iMultiFile = 1;  
   fnRead[OPT_TRUEA] = &ReadTrueA;
   
   sprintf(options[OPT_ECCA].cName,"dEccA");
   sprintf(options[OPT_ECCA].cDescr,"Eccentric anomaly of planet");
   sprintf(options[OPT_ECCA].cDefault,"0");
   options[OPT_ECCA].dDefault = 0.0;
-  options[OPT_ECCA].iType = 2;  //no idea what this means!!! XXX
-  options[OPT_ECCA].iMultiFile = 1;   //nor this! XXX
+  options[OPT_ECCA].iType = 2;  
+  options[OPT_ECCA].iMultiFile = 1;  
   fnRead[OPT_ECCA] = &ReadEccA;*/
   
-  sprintf(options[OPT_INTELEMENTS].cName,"sIntElements");
-  sprintf(options[OPT_INTELEMENTS].cDescr,"Integration elements: hk (h,k,p,q) or es (e,s,varpi,Omega)");
-  sprintf(options[OPT_INTELEMENTS].cDefault,"hk");
-  options[OPT_INTELEMENTS].iType = 3;
-  options[OPT_INTELEMENTS].iMultiFile = 0;
-  fnRead[OPT_INTELEMENTS] = &ReadIntElements;
-  
-  sprintf(options[OPT_SHADOW].cName,"bUseShadow");
-  sprintf(options[OPT_SHADOW].cDescr,"Use shadow particles for solar torque?");
-  sprintf(options[OPT_SHADOW].cDefault,"No");
-  options[OPT_SHADOW].dDefault = 0;
-  options[OPT_SHADOW].iType = 0; 
-  options[OPT_SHADOW].iMultiFile = 0;
-  fnRead[OPT_SHADOW] = &ReadUseShadow;
   
   sprintf(options[OPT_OBLEVOL].cName,"bObliqEvol");
   sprintf(options[OPT_OBLEVOL].cDescr,"Calculate obliquity evolution");
-  sprintf(options[OPT_OBLEVOL].cDefault,"No");
-  options[OPT_OBLEVOL].dDefault = 0;
+  sprintf(options[OPT_OBLEVOL].cDefault,"0");
   options[OPT_OBLEVOL].iType = 0; 
   options[OPT_OBLEVOL].iMultiFile = 1;
   fnRead[OPT_OBLEVOL] = &ReadObliqEvol;
   
-//   sprintf(options[OPT_DISTTERMS].cName,"bDisturbTerms");
-//   sprintf(options[OPT_DISTTERMS].cDescr,"Use only given terms of disturbing function");
-//   sprintf(options[OPT_DISTTERMS].cDefault,"No");
-//   options[OPT_DISTTERMS].dDefault = 0;
-//   options[OPT_DISTTERMS].iType = 0; 
-//   options[OPT_DISTTERMS].iMultiFile = 0;
-//   fnRead[OPT_DISTTERMS] = &ReadDistTerms;
-  
-  
 }
 
-void ReadOptionsLagrange(CONTROL *control,OPTIONS *options,BODY *body,SYSTEM *system,FILES *files,fnReadOption fnRead[]) {
-  int iFile,iOpt;
+void ReadOptionsLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+  int iOpt;
 
-  /* For each option, search the file for its occurence */
-  /* is iLine necessary? */
-
-  for (iFile=0;iFile<files->iNumInputs;iFile++) {
-    /* First get Lagrange options */
-    for (iOpt=OPTSTARTLAGRANGE;iOpt<OPTENDLAGRANGE;iOpt++) 
+  for (iOpt=OPTSTARTLAGRANGE;iOpt<OPTENDLAGRANGE;iOpt++) 
       if (options[iOpt].iType != -1) {
-	//printf("%d\n", iOpt);
-	fnRead[iOpt](control,body,system,&options[iOpt],files,iFile);
+	fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
-  }
 }
     
 
 /******************* Verify LAGRANGE ******************/
-void InitializeHKPQ(UPDATE *update,BODY *body, CONTROL *control) {
+void InitializeLagrange(BODY *body,CONTROL *control,UPDATE *update) {
   int iBody,jBody,i,j;
    
   
@@ -754,60 +615,6 @@ void InitializeHKPQ(UPDATE *update,BODY *body, CONTROL *control) {
 
 }
 
-void InitializeESVO(UPDATE *update,BODY *body) {
-  int iBody,jBody,i,j;
-   
-  
-  /* Body #0 updates */
-  update[0].iNum = 0;   //Can this be zero? Central body does not evolve in Lagrange.
-  InitializeUpdate(&update[0]);
-  
-  for (iBody=1; iBody<body[0].iNumBodies; iBody++) {
-    /* Body #1 updatesla */
-    update[iBody].iNum = 4;
-    InitializeUpdate(&update[iBody]);
-    
-    /* 0 -> Eccentricity */
-    update[iBody].iType[0] = 1;
-    update[iBody].pdVar[0] = &body[iBody].dEcc;
-    update[iBody].iNumEqns[0] = 1;
-    update[iBody].dDeriv[0]=malloc(update[iBody].iNumEqns[0]*sizeof(double));
-    update[iBody].bAng[0] = 0;    //do not set *both* bAng and bPolar = 1
-    update[iBody].bPolar[0] = 0;
-    
-    /* 1 -> sin(1/2 * Inclination) */
-    update[iBody].iType[1] = 1;
-    update[iBody].pdVar[1] = &body[iBody].dsInc;
-    update[iBody].iNumEqns[1] = 1;
-    update[iBody].dDeriv[1]=malloc(update[iBody].iNumEqns[1]*sizeof(double));
-    update[iBody].bAng[1] = 0;    //do not set *both* bAng and bPolar = 1
-    update[iBody].bPolar[1] = 0;
-    
-    /* 2 -> Long. pericenter */
-    update[iBody].iType[2] = 1;
-    update[iBody].pdVar[2] = &body[iBody].dLongP;
-    update[iBody].iNumEqns[2] = 1;
-    update[iBody].dDeriv[2]=malloc(update[iBody].iNumEqns[2]*sizeof(double));
-    update[iBody].bAng[2] = 1;    //do not set *both* bAng and bPolar = 1
-    update[iBody].bPolar[2] = 0;
-    
-    /* 3 -> Long. Asc. Node */
-    update[iBody].iType[3] = 1;
-    update[iBody].pdVar[3] = &body[iBody].dLongA;
-    update[iBody].iNumEqns[3] = 1;
-    update[iBody].dDeriv[3]=malloc(update[iBody].iNumEqns[3]*sizeof(double));
-    update[iBody].bAng[3] = 1;   //do not set *both* bAng and bPolar = 1
-    update[iBody].bPolar[3] = 0;
-    
-    body[iBody].dPosition = malloc(3*sizeof(double));
-    body[iBody].dVelocity = malloc(3*sizeof(double));
-    //body[iBody].dLaplaceC = malloc((body[0].iNumBodies)*sizeof(double));
-    
-    
-  }
-
-}
-
 /*
  *
  * Pericenter/Ascending node 
@@ -884,12 +691,10 @@ void CalcShadow(BODY *body, int iBody) {
   body[iBody].dShadowgamma = body[iBody].dgamma;
 }
 
-void VerifyLagrange(CONTROL *control,OUTPUT *output,FILES *files,BODY *body,OPTIONS *options,SYSTEM *system,fnUpdateVariable ***fnUpdate,UPDATE *update) {
-  int iBody,iTideLine,iEqn,iTideFile,iCol,iFile,j,i,jBody;
-
-  for (iBody=1;iBody<control->iNumBodies;iBody++) {
-      VerifyPericenter(control,&body[iBody],options,iBody+1,files->Infile[iBody+1].cIn,control->iVerbose);
-  }
+void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  
+    
+  VerifyPericenter(control,&body[iBody],options,iBody+1,files->Infile[iBody+1].cIn,control->iVerbose);
   
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
   system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
@@ -2226,7 +2031,7 @@ double fdSemiMajAxF26(double dAxRatio, int iIndexJ) {
 
 
 //----------------Disturbing function h k p q----------------------------------------------
-//--------dR/dh-----------(inner body)----------------------------------------------------------------
+//--------dR/dh-----------(inner body)------------------------------------------------------
 double fdDdistDhDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dhecc*( system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][1] + 2*(pow(body[iBody].dhecc,2)+pow(body[iBody].dkecc,2))*system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][3] + (pow(body[jBody].dhecc,2)+pow(body[jBody].dkecc,2))*system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][4] + (pow(body[iBody].dpinc,2)+pow(body[iBody].dqinc,2)+pow(body[jBody].dpinc,2)+pow(body[jBody].dqinc,2))*system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][6] );
 }

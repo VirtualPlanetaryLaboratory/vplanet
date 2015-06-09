@@ -198,6 +198,7 @@ typedef struct {
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dNumberOfOrcs;
+  double dSurfaceWaterMass;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -414,7 +415,8 @@ typedef struct {
   int dMin235UPower;
 
   /* ATMESC */
-  int dMaxNumberOfOrcs; /**< Halt at this number of orcs */  
+  double dMaxNumberOfOrcs;        /**< Halt at this number of orcs */  
+  double bSurfaceDesiccated;      /**< Halt if dry?*/ 
 
 } HALT;
 

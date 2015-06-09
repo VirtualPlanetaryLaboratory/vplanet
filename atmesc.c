@@ -20,6 +20,7 @@ void  InitializeControlAtmEsc(CONTROL *control) {
 
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dNumberOfOrcs = src[iBody].dNumberOfOrcs;
+  dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
 }
 
 void InitializeBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -50,6 +51,39 @@ void ReadNumberOfOrcs(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].dNumberOfOrcs = options->dDefault;
 }
 
+void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dSurfaceWaterMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSurfaceWaterMass = options->dDefault;
+}
+
+void ReadHaltMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bSurfaceDesiccated = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bSurfaceDesiccated,files->iNumInputs); 
+  }
+}
 
 /* Halts */
 
@@ -65,6 +99,22 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_NUMBEROFORCS].dNeg = HELMSDEEPARMY;
   sprintf(options[OPT_NUMBEROFORCS].cNeg,"Number of Helms Deep Armies");
   fnRead[OPT_NUMBEROFORCS] = &ReadNumberOfOrcs;
+
+  sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
+  sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
+  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"1 TO");
+  options[OPT_SURFACEWATERMASS].dDefault = TOMASS;
+  options[OPT_SURFACEWATERMASS].iType = 2;
+  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
+  options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
+  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
+  fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
+
+  sprintf(options[OPT_MINSURFACEWATERMASS].cName,"bSurfaceDesiccated");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Halt at Desiccation?");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cDefault,"0");
+  options[OPT_MINSURFACEWATERMASS].iType = 0;
+  fnRead[OPT_MINSURFACEWATERMASS] = &ReadHaltSurfaceDesiccated;
 
 }
 
@@ -92,6 +142,18 @@ void VerifyOrcs(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
 
   update[iBody].pdDNumberOfOrcsDt = &update[iBody].daDerivProc[update[iBody].iOrcs][0];
   fnUpdate[iBody][update[iBody].iOrcs][0] = &fdDNumberOfOrcsDt;
+  
+}
+
+void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  update[iBody].iaType[update[iBody].iSurfaceWater][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iSurfaceWater][0] = 1;
+  update[iBody].iaBody[update[iBody].iSurfaceWater][0] = malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWater][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iSurfaceWater][0][0] = iBody;
+
+  update[iBody].pdDSurfaceWaterMassDt = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
+  fnUpdate[iBody][update[iBody].iSurfaceWater][0] = &fdDSurfaceWaterMassDt;
 }
 
 void fnPropertiesAtmEsc(BODY *body,int iBody) {
@@ -102,6 +164,10 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModul
   if (body[iBody].dNumberOfOrcs < 0)
     // Can't have negative orcs!
     body[iBody].dNumberOfOrcs = 0;
+  
+  if (body[iBody].dSurfaceWaterMass < 0)
+    // Can't have negative water!
+    body[iBody].dSurfaceWaterMass = 0;
 }
 
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -114,8 +180,13 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     bAtmEsc = 1;
   }
   
+  if (body[iBody].dSurfaceWaterMass > 0) {
+    VerifySurfaceWaterMass(body,options,update,system->dAge,fnUpdate,iBody);
+    bAtmEsc = 1;
+  }
+  
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: ATMESC called for body %s, but no orcs are present!\n",body[iBody].cName);
+    fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
   control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesAtmEsc;
@@ -134,6 +205,11 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNumOrcs++;
   }
+  
+  if (body[iBody].dSurfaceWaterMass > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNumSurfaceWaterMass++;
+  }
 }
 
 void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -143,6 +219,11 @@ void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iB
 void FinalizeUpdateNumberOfOrcsAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumOrcs = (*iEqn)++;
+}
+
+void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumSurfaceWaterMass = (*iEqn)++;
 }
       
 void FinalizeUpdateOblAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -162,6 +243,8 @@ void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 int fbHaltTooManyOrcs(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
+  // BUG! dMaxNumberOfOrcs is never set.
+
   if (body[iBody].dNumberOfOrcs > halt->dMaxNumberOfOrcs) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's number of orcs =  ",body[iBody].cName);
@@ -175,8 +258,23 @@ int fbHaltTooManyOrcs(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
   return 0;
 }           
 
+int fbHaltSurfaceDessicated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+
+  if (body[iBody].dSurfaceWaterMass <= 0.) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's surface water mass =  ",body[iBody].cName);
+      fprintd(stdout,body[iBody].dSurfaceWaterMass/TOMASS,io->iSciNot,io->iDigits);
+      printf("TO.");
+    }
+    return 1;
+  }
+  return 0;
+} 
+
 void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
   if (halt->dMaxNumberOfOrcs >= 0)
+    (iHalt)++;
+  if (halt->bSurfaceDesiccated)
     (iHalt)++;
 }
 

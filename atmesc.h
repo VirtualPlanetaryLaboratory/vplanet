@@ -10,6 +10,9 @@
 #define HELMSDEEPARMY           10000 // Strong
 #define ORCMASS                 80000 // grams
 
+#define TOMASS                  1.39e24     // Mass of one terrestrial ocean (TO)
+#define TOHMASS                 TOMASS/9.   // Hydrogen mass in one TO
+
 void InitializeControlAtmEsc(CONTROL*);
 void AddModuleAtmEsc(MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int);
@@ -21,6 +24,7 @@ void InitializeUpdateTmpBodyAtmEsc(BODY*,CONTROL*,UPDATE*,int);
 #define OPTENDATMESC            1300 /* End of AtmEsc options */
 
 #define OPT_NUMBEROFORCS        1201
+#define OPT_SURFACEWATERMASS    1210 // Initial surface water mass
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -32,6 +36,7 @@ void ReadOptionsAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define ATMESCHALTSYSEND       5
 #define ATMESCHALTBODYEND      5
 int fbHaltTooManyOrcs(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltSurfaceDesiccated(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsAtmEsc(HALT*,int*);
 
 /* Verify Functions */
@@ -50,6 +55,7 @@ void FinalizeUpdateOblAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateNumberOfOrcsAtmEsc(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
 
@@ -59,7 +65,7 @@ void FinalizeUpdateNumberOfOrcsAtmEsc(BODY*,UPDATE*,int*,int,int);
 
 /* Body Properties due to atmospheric escape */
 #define OUT_NUMBEROFORCS	     1201
-
+#define OUT_SURFACEWATERMASS	 1210
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -67,6 +73,7 @@ void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);
 
 void WriteNumberOfOrcs(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSurfaceWaterMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -76,5 +83,7 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,int,int);
 double fdDNumberOfOrcsDt(BODY*,SYSTEM*,int*,int);
+double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*,int);
 
+/* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

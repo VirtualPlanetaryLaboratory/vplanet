@@ -164,6 +164,8 @@ typedef struct {
   double *dPosition;     /**< Cartesian position vector */
   double *dVelocity;     /**< Cartesian velocity vector */ 
   double *dLaplaceC;     /**< Store laplace coefficients */  
+  int iGravPerts;        /**< Number of bodies which perturb the body */
+  int *iaGravPerts;      /**< Which bodies are perturbers of the body */
   
   /* Additional obliquity params used by Laskar */
   double dPrecA;         /**< Precession angle */

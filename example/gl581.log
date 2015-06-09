@@ -1,0 +1,397 @@
+-------- Log file gl581.log -------
+
+Executable: ../vplanet
+System Name: gl581
+Primary Input File: vpl.in
+Body File #1: gl581.in
+Body File #2: c.in
+Body File #3: d.in
+Allow files to be overwitten: Yes
+Mass Units: Grams
+Length Units: Centimeters
+Time Units: Seconds
+Angle Units: Radians
+
+------- FORMATTING -----
+Verbosity Level: 3
+Crossover Decade for Scientific Notation: 4
+Number of Digits After Decimal: 6
+Integration Method: Runge-Kutta4
+Direction: Forward
+Time Step: 3.155760e+07
+Stop Time: 3.155760e+16
+Output Interval: 3.155760e+13
+Use Variable Timestep: Yes
+dEta: 0.100000
+Minimum Value of ecc and obl: 1.000000e-10
+
+
+---- INITIAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 0.000000 
+(Time) Simulation Time [sec]: 0.000000 
+(TotAngMom) Total Angular Momentum [grams*cm^2/sec]: 2.670079e+47 
+(TotEnergy) Total Energy [grams*cm^2/sec^2]: -7.535397e+47 
+(PotEnergy) Total Potential Energy [grams*cm^2/sec^2]: -7.535403e+47 
+(KinEnergy) Total Kinetic Energy [grams*cm^2/sec^2]: 6.453297e+41 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: 0.000000 
+
+----- BODY: star ----
+(Mass) Mass [grams]: 6.165652e+32 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [cm]: 2.019573e+10 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 4.853586e+46 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.873515e+40 
+(RotVel) Rotational Velocity [cm/sec]: 1.559136e+04 
+(RotRate) Rotational Frequency [/sec]: 7.720129e-07 
+(RotPer) Rotational Period [sec]: 8.138705e+06 
+(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: -1.266921e+06 
+(Eccentricity) Orbital Eccentricity []: -1.000000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
+(OrbPeriod) Orbital Period [sec]: -1.000000 
+(SemiMajorAxis) Semi-major Axis [cm]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+----- EQTIDE PARAMETERS (star)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -8.359453e-09 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 2.848564e-33 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.725818e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.982822e+08 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.921641e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 1.982822e+08 
+(EqRotPer) Equilibrium Rotation Period [sec]: 1.982822e+08 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.725818e-06 
+(GammaRot) Gamma_Rotation [cgs]: -4.108000 
+(GammaOrb) Gamma_Orbital [cgs]: -4.205200 
+(TidalQ) Tidal Q []: 1.000000e+06 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 0.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.929524e-22 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: -6.493497e+27 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: -1.266921e+06 
+Tidal Perturbers: c, d
+Output Order:
+
+----- BODY: c ----
+(Mass) Mass [grams]: 3.285810e+28 
+(Obliquity) Obliquity [rad]: 0.410152 
+(Radius) Radius [cm]: 9.567150e+08 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 5.467814e+40 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.988153e+35 
+(RotVel) Rotational Velocity [cm/sec]: 6957.427814 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-06 
+(RotPer) Rotational Period [sec]: 8.640000e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [W/m^2]: 11.731994 
+(Eccentricity) Orbital Eccentricity []: 0.060000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: 5.725818e-06 
+(OrbPeriod) Orbital Period [sec]: 1.097343e+06 
+(SemiMajorAxis) Semi-major Axis [cm]: 1.078602e+12 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 6.265943e+41 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.253189e+42 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+----- EQTIDE PARAMETERS (c)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: -2.118505e-13 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 7.159059e-07 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -6.025711e-18 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.725818e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.097343e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.921641e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 1.061055e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 1.097343e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.725818e-06 
+(GammaRot) Gamma_Rotation [cgs]: 3.119197 
+(GammaOrb) Gamma_Orbital [cgs]: 2.382393 
+(TidalQ) Tidal Q []: 100.000000 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 0.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.206863e+12 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: 1.936047e+12 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 1.313383e+23 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [W/m^2]: 11.418695 
+Tidal Perturbers: star
+----- RADHEAT PARAMETERS (c)------
+(40KPower) Total Power Generated by 40K [TW]: 113.772324 
+(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
+(D40KNumDt) Time Rate of Change of 40K Heat Generation [/sec]: -5.332130e+26 
+(40KMass) Total Mass of 40K [grams]: 1.393597e+21 
+(40KNumber) Total Number of 40K Atoms []: 2.100000e+43 
+(40KTimescale) Timescale for 40K Power Generation []: -1.000000 
+(232ThPower) Total Power Generated by 232Th [TW]: 22.347950 
+(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D232ThNumDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -3.270301e+24 
+(232ThMass) Total Mass of 232Th [grams]: 5.586961e+20 
+(232ThNumber) Total Number of 232Th Atoms []: 1.450000e+42 
+(232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
+(238UPower) Total Power Generated by 238U [TW]: 44.058372 
+(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D238UNumDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -5.319173e+24 
+(238UMass) Total Mass of 238U [grams]: 2.964694e+20 
+(238UNumber) Total Number of 238U Atoms []: 7.500000e+41 
+(238UTimescale) Timescale for 238U Power Generation []: -1.000000 
+(RadPower) Total Power Generated by Radiogenic Nuclides [TW]: 180.178646 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [W/m^2]: 0.156649 
+----- ATMESC PARAMETERS (c)------
+(NumberOfOrcs) Total Number of Orcs []: 10000.000000 
+Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg] SurfEnFluxEqtide[W/m^2] SurfEnFluxRadheat[W/m^2]40KPower[TW] 40KPower[TW] 232ThPower[TW] 238UPower[TW] RadPower[TW] SurfEnFluxTotal[W/m^2]
+
+----- BODY: d ----
+(Mass) Mass [grams]: 3.345552e+28 
+(Obliquity) Obliquity [rad]: 0.410152 
+(Radius) Radius [cm]: 1.015394e+09 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 6.271085e+41 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 2.280231e+37 
+(RotVel) Rotational Velocity [cm/sec]: 7.384150e+04 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [W/m^2]: 3.843446 
+(Eccentricity) Orbital Eccentricity []: 0.380000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.085558e-06 
+(OrbPeriod) Orbital Period [sec]: 5.787979e+06 
+(SemiMajorAxis) Semi-major Axis [cm]: 3.268268e+12 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105500e+41 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.211000e+41 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+----- EQTIDE PARAMETERS (d)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 3.213803e-17 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 2.901037e-11 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.441775e-20 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.725818e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.858653e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.921641e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.440332e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.858653e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.725818e-06 
+(GammaRot) Gamma_Rotation [cgs]: 4.108000 
+(GammaOrb) Gamma_Orbital [cgs]: 4.183600 
+(TidalQ) Tidal Q []: 100.000000 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 0.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 2.978245e+15 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: 1.276221e+16 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 1.500081e+22 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [W/m^2]: 1.157807 
+Tidal Perturbers: star
+----- RADHEAT PARAMETERS (d)------
+(40KPower) Total Power Generated by 40K [TW]: 3413.169732 
+(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
+(D40KNumDt) Time Rate of Change of 40K Heat Generation [/sec]: -1.599639e+28 
+(40KMass) Total Mass of 40K [grams]: 4.180792e+22 
+(40KNumber) Total Number of 40K Atoms []: 6.300000e+44 
+(40KTimescale) Timescale for 40K Power Generation []: -1.000000 
+(232ThPower) Total Power Generated by 232Th [TW]: 22.347950 
+(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D232ThNumDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -3.270301e+24 
+(232ThMass) Total Mass of 232Th [grams]: 5.586961e+20 
+(232ThNumber) Total Number of 232Th Atoms []: 1.450000e+42 
+(232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
+(238UPower) Total Power Generated by 238U [TW]: 44.058372 
+(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D238UNumDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -5.319173e+24 
+(238UMass) Total Mass of 238U [grams]: 2.964694e+20 
+(238UNumber) Total Number of 238U Atoms []: 7.500000e+41 
+(238UTimescale) Timescale for 238U Power Generation []: -1.000000 
+(RadPower) Total Power Generated by Radiogenic Nuclides [TW]: 3479.576054 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [W/m^2]: 2.685639 
+Output Order: 40KPower[TW] 232ThPower[TW] 238UPower[TW] RadPower[TW] SurfEnFluxTotal[W/m^2] Time[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg] SurfEnFluxEqtide[W/m^2] SurfEnFluxRadheat[W/m^2]
+
+
+
+---- FINAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 3.155760e+16 
+(Time) Simulation Time [sec]: 3.155760e+16 
+(TotAngMom) Total Angular Momentum [grams*cm^2/sec]: 5.789622e+47 
+(TotEnergy) Total Energy [grams*cm^2/sec^2]: -7.535387e+47 
+(PotEnergy) Total Potential Energy [grams*cm^2/sec^2]: -7.535403e+47 
+(KinEnergy) Total Kinetic Energy [grams*cm^2/sec^2]: 1.661223e+42 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+
+----- BODY: star ----
+(Mass) Mass [grams]: 6.165652e+32 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [cm]: 2.019573e+10 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 3.605649e+47 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.033948e+42 
+(RotVel) Rotational Velocity [cm/sec]: 1.158257e+05 
+(RotRate) Rotational Frequency [/sec]: 5.735157e-06 
+(RotPer) Rotational Period [sec]: 1.095556e+06 
+(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 9.840120e+06 
+(Eccentricity) Orbital Eccentricity []: -1.000000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
+(OrbPeriod) Orbital Period [sec]: -1.000000 
+(SemiMajorAxis) Semi-major Axis [cm]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+----- EQTIDE PARAMETERS (star)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.403779e-10 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.950713e-33 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.982822e+08 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 1.982822e+08 
+(EqRotPer) Equilibrium Rotation Period [sec]: 1.982822e+08 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.735144e-06 
+(GammaRot) Gamma_Rotation [cgs]: 3.782383 
+(GammaOrb) Gamma_Orbital [cgs]: 3.692775 
+(TidalQ) Tidal Q []: 1.000000e+06 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 0.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.348680e-22 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 5.043469e+28 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 9.840120e+06 
+Tidal Perturbers: c, d
+Output Order:
+
+----- BODY: c ----
+(Mass) Mass [grams]: 3.285810e+28 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [cm]: 9.567150e+08 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 4.312131e+40 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.236535e+35 
+(RotVel) Rotational Velocity [cm/sec]: 5486.898180 
+(RotRate) Rotational Frequency [/sec]: 5.735144e-06 
+(RotPer) Rotational Period [sec]: 1.095558e+06 
+(SurfEnFluxTotal) Total Surface Energy Flux [W/m^2]: 0.839422 
+(Eccentricity) Orbital Eccentricity []: 0.056571 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: 5.735144e-06 
+(OrbPeriod) Orbital Period [sec]: 1.095558e+06 
+(SemiMajorAxis) Semi-major Axis [cm]: 1.077432e+12 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 6.272745e+41 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.254549e+42 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+----- EQTIDE PARAMETERS (c)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -1.519027e-06 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 7.951963e-18 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.095558e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 1.063234e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 1.095558e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.735144e-06 
+(GammaRot) Gamma_Rotation [cgs]: -4.089607 
+(GammaOrb) Gamma_Orbital [cgs]: -4.179214 
+(TidalQ) Tidal Q []: 100.000000 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 1.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.212236e+11 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 7.513246e+21 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [W/m^2]: 0.653210 
+Tidal Perturbers: star
+----- RADHEAT PARAMETERS (c)------
+(40KPower) Total Power Generated by 40K [TW]: 51.055703 
+(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
+(D40KNumDt) Time Rate of Change of 40K Heat Generation [/sec]: -2.392811e+26 
+(40KMass) Total Mass of 40K [grams]: 6.253806e+20 
+(40KNumber) Total Number of 40K Atoms []: 9.423808e+42 
+(40KTimescale) Timescale for 40K Power Generation []: -1.000000 
+(232ThPower) Total Power Generated by 232Th [TW]: 20.812634 
+(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D232ThNumDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -3.045630e+24 
+(232ThMass) Total Mass of 232Th [grams]: 5.203134e+20 
+(232ThNumber) Total Number of 232Th Atoms []: 1.350384e+42 
+(232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
+(238UPower) Total Power Generated by 238U [TW]: 35.223082 
+(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D238UNumDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -4.252487e+24 
+(238UMass) Total Mass of 238U [grams]: 2.370166e+20 
+(238UNumber) Total Number of 238U Atoms []: 5.995980e+41 
+(238UTimescale) Timescale for 238U Power Generation []: -1.000000 
+(RadPower) Total Power Generated by Radiogenic Nuclides [TW]: 107.091419 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [W/m^2]: 0.093106 
+----- ATMESC PARAMETERS (c)------
+(NumberOfOrcs) Total Number of Orcs []: 4.346785e+13 
+Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg] SurfEnFluxEqtide[W/m^2] SurfEnFluxRadheat[W/m^2]40KPower[TW] 40KPower[TW] 232ThPower[TW] 238UPower[TW] RadPower[TW] SurfEnFluxTotal[W/m^2]
+
+----- BODY: d ----
+(Mass) Mass [grams]: 3.345552e+28 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [cm]: 1.015394e+09 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 1.404159e+40 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.143209e+34 
+(RotVel) Rotational Velocity [cm/sec]: 1653.385014 
+(RotRate) Rotational Frequency [/sec]: 1.628319e-06 
+(RotPer) Rotational Period [sec]: 3.858693e+06 
+(SurfEnFluxTotal) Total Surface Energy Flux [W/m^2]: 1.227839 
+(Eccentricity) Orbital Eccentricity []: 0.379999 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.085546e-06 
+(OrbPeriod) Orbital Period [sec]: 5.788040e+06 
+(SemiMajorAxis) Semi-major Axis [cm]: 3.268290e+12 
+(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105485e+41 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.210970e+41 
+(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+----- EQTIDE PARAMETERS (d)------
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
+(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 5.786113e-08 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.441666e-20 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.858693e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.440365e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.858693e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.735144e-06 
+(GammaRot) Gamma_Rotation [cgs]: 4.096008 
+(GammaOrb) Gamma_Orbital [cgs]: 4.163213 
+(TidalQ) Tidal Q []: 100.000000 
+(TidalTau) Tidal Time Lag [sec]: 1.000000 
+(TideLock) Tidally Locked? []: 1.000000 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 6.668887e+13 
+(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 3.109744e+19 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [W/m^2]: 0.002400 
+Tidal Perturbers: star
+----- RADHEAT PARAMETERS (d)------
+(40KPower) Total Power Generated by 40K [TW]: 1531.671080 
+(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
+(D40KNumDt) Time Rate of Change of 40K Heat Generation [/sec]: -7.178433e+27 
+(40KMass) Total Mass of 40K [grams]: 1.876142e+22 
+(40KNumber) Total Number of 40K Atoms []: 2.827142e+44 
+(40KTimescale) Timescale for 40K Power Generation []: -1.000000 
+(232ThPower) Total Power Generated by 232Th [TW]: 20.812634 
+(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D232ThNumDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -3.045630e+24 
+(232ThMass) Total Mass of 232Th [grams]: 5.203134e+20 
+(232ThNumber) Total Number of 232Th Atoms []: 1.350384e+42 
+(232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
+(238UPower) Total Power Generated by 238U [TW]: 35.223082 
+(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(D238UNumDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -4.252487e+24 
+(238UMass) Total Mass of 238U [grams]: 2.370166e+20 
+(238UNumber) Total Number of 238U Atoms []: 5.995980e+41 
+(238UTimescale) Timescale for 238U Power Generation []: -1.000000 
+(RadPower) Total Power Generated by Radiogenic Nuclides [TW]: 1587.706796 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [W/m^2]: 1.225439 
+Output Order: 40KPower[TW] 232ThPower[TW] 238UPower[TW] RadPower[TW] SurfEnFluxTotal[W/m^2] Time[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg] SurfEnFluxEqtide[W/m^2] SurfEnFluxRadheat[W/m^2]

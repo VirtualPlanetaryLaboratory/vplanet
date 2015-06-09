@@ -14,8 +14,7 @@ dSemi         0.0721			                # Semi-major axis, negative -> AU
 dEcc          0.06			                  # Eccentricity
 
 # Output
-saOutputOrder	Time NumberOfOrcs Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
-		          -40kpow -232thpow -238upow -radpow -SurfEnFluxT
+saOutputOrder	Time NumberOfOrcs Semim Ecce Obli
 
 # Output can be in any order and need only be ambiguous. 
 # Units of negative arguments are listed in the onboard help (./vplanet -h).

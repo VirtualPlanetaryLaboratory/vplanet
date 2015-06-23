@@ -1,0 +1,17 @@
+# Gl581 d
+saOutputOrder Time Semim
+dMass		      -5.6
+dObliquity	  23.5
+dK2		        0.3
+dRadGyra	    0.5
+dRotPeriod	  -1
+dSemi         0.21847
+#dTidalTau	  -630
+sName		      d
+dTidalQ		    100
+dEcc          0.38
+dRadius		    -1.592
+saTidePerts	  star
+saModules	    eqtide atmesc
+dMaxLockDiff	0.1
+

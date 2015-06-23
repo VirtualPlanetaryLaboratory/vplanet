@@ -25,6 +25,8 @@ void InitializeUpdateTmpBodyAtmEsc(BODY*,CONTROL*,UPDATE*,int);
 
 #define OPT_NUMBEROFORCS        1201
 #define OPT_SURFACEWATERMASS    1210 // Initial surface water mass
+#define OPT_HALTDESICCATED      1211 // Halt if desiccated?
+#define OPT_MINSURFACEWATERMASS 1212 // Minimum surface water mass (desiccated below this)
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);

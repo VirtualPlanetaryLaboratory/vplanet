@@ -105,7 +105,8 @@
 #define VNUM235UCORE    1108
 
 // ATMESC
-#define VNUMORCS        1201
+#define VNUMORCS           1201
+#define VSURFACEWATERMASS  1202
 
 /* Now define the structs */
 
@@ -233,7 +234,7 @@ typedef struct {
   double daAtmPressProfile;
   double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
 
-    double daEddyDiffProfile;
+  double daEddyDiffProfile;
 
   int bAtmSulfur;
   int bAtmHydrogen;
@@ -386,10 +387,13 @@ typedef struct {
   /* ATMESC */
   int iOrcs;            /**< Variable # Corresponding to the number of Orcs */
   int iNumOrcs;         /**< Number of Equations Affecting Orcs [1] */
+  int iSurfaceWaterMass;
+  int iNumSurfaceWaterMass;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of the number of orcs due to ATMESC. */
   double *pdDNumberOfOrcsDt;
+  double *pdDSurfaceWaterMassDt;
 
 } UPDATE;
 
@@ -415,8 +419,8 @@ typedef struct {
   int dMin235UPower;
 
   /* ATMESC */
-  double dMaxNumberOfOrcs;        /**< Halt at this number of orcs */  
-  double bSurfaceDesiccated;      /**< Halt if dry?*/ 
+  int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  double dMinSurfaceWaterMass;
 
 } HALT;
 
@@ -632,7 +636,7 @@ typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
 typedef void (*fnFinalizeUpdateNumberOfOrcsModule)(BODY*,UPDATE*,int*,int,int);
-
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -704,6 +708,7 @@ typedef struct {
   fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
   
   fnFinalizeUpdateNumberOfOrcsModule **fnFinalizeUpdateNumberOfOrcs;
+  fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
     
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;

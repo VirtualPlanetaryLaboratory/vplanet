@@ -45,6 +45,9 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
 
     dest[iBody].iNumOrcs = src[iBody].iNumOrcs;
     dest[iBody].iOrcs = src[iBody].iOrcs;
+    
+    dest[iBody].iNumSurfaceWaterMass = src[iBody].iNumSurfaceWaterMass;
+    dest[iBody].iSurfaceWaterMass = src[iBody].iSurfaceWaterMass;
 
     dest[iBody].iNumObl = src[iBody].iNumObl;
     dest[iBody].iObl = src[iBody].iObl;
@@ -94,6 +97,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum238UCore=0;
     update[iBody].iNum235UCore=0;
     update[iBody].iNumOrcs=0;
+    update[iBody].iNumSurfaceWaterMass=0;
     update[iBody].iNumObl=0;
     update[iBody].iNumRot=0;
     update[iBody].iNumSemi=0;
@@ -404,7 +408,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
     
     // Orcs
-        update[iBody].iOrcs = -1;
+    update[iBody].iOrcs = -1;
     if (update[iBody].iNumOrcs) {
       update[iBody].iOrcs = iVar;
       update[iBody].iaVar[iVar] = VNUMORCS;
@@ -427,6 +431,36 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
         module->fnFinalizeUpdateNumberOfOrcs[iBody][iModule](body,update,&iEqn,iVar,iBody);
+      
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+    
+    // Surface Water Mass
+    update[iBody].iSurfaceWaterMass = -1;
+    if (update[iBody].iNumSurfaceWaterMass) {
+      update[iBody].iSurfaceWaterMass = iVar;
+      update[iBody].iaVar[iVar] = VSURFACEWATERMASS;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumSurfaceWaterMass;
+      update[iBody].pdVar[iVar] = &body[iBody].dSurfaceWaterMass;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dSurfaceWaterMass;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumSurfaceWaterMass*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

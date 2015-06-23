@@ -120,8 +120,8 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
-  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"1 TO");
-  options[OPT_SURFACEWATERMASS].dDefault = TOMASS;
+  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
+  options[OPT_SURFACEWATERMASS].dDefault = 0;
   options[OPT_SURFACEWATERMASS].iType = 2;
   options[OPT_SURFACEWATERMASS].iMultiFile = 1;
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
@@ -317,6 +317,9 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
   }
 
 }
@@ -327,7 +330,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_NUMBEROFORCS].cDescr,"Total Number of Orcs");
   sprintf(output[OUT_NUMBEROFORCS].cNeg,"Helms Deep Armies");
   output[OUT_NUMBEROFORCS].bNeg = 1;
-  output[OUT_NUMBEROFORCS].dNeg = HELMSDEEPARMY;
+  output[OUT_NUMBEROFORCS].dNeg = 1./HELMSDEEPARMY;
   output[OUT_NUMBEROFORCS].iNum = 1;
   fnWrite[OUT_NUMBEROFORCS] = &WriteNumberOfOrcs;
 
@@ -335,7 +338,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SURFACEWATERMASS].cDescr,"Surface Water Mass");
   sprintf(output[OUT_SURFACEWATERMASS].cNeg,"TO");
   output[OUT_SURFACEWATERMASS].bNeg = 1;
-  output[OUT_SURFACEWATERMASS].dNeg = TOMASS;
+  output[OUT_SURFACEWATERMASS].dNeg = 1./TOMASS;
   output[OUT_SURFACEWATERMASS].iNum = 1;
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
 
@@ -421,8 +424,8 @@ double fdDNumberOfOrcsDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
 }
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  // TODO: Fix this
-  return cos(system->dAge/(1e7*YEARSEC));
+  // TODO: Fix this. Currently lose the ocean on a timescale of 1 Gyr
+  return -body[iaBody[0]].dSurfaceWaterMass/(1e9*YEARSEC);
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

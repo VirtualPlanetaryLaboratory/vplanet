@@ -1,5 +1,6 @@
 # Gl581 d
-saOutputOrder Time Semim
+saOutputOrder Time Semim -SurfWaterMass
+dSurfWaterMass -1.0
 dMass		      -5.6
 dObliquity	  23.5
 dK2		        0.3

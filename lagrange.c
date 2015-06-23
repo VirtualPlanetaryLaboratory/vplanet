@@ -488,14 +488,12 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ECCA].iMultiFile = 1;  
   fnRead[OPT_ECCA] = &ReadEccA;*/
   
-  
   sprintf(options[OPT_OBLEVOL].cName,"bObliqEvol");
   sprintf(options[OPT_OBLEVOL].cDescr,"Calculate obliquity evolution");
   sprintf(options[OPT_OBLEVOL].cDefault,"0");
   options[OPT_OBLEVOL].iType = 0; 
   options[OPT_OBLEVOL].iMultiFile = 1;
-  fnRead[OPT_OBLEVOL] = &ReadObliqEvol;
-  
+  fnRead[OPT_OBLEVOL] = &ReadObliqEvol; 
 }
 
 void ReadOptionsLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

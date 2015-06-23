@@ -229,7 +229,6 @@ void WriteRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
-
 void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = fdRotVel(body[iBody].dRadius,body[iBody].dRotRate);
@@ -571,11 +570,17 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
   int iBody,iModule;
 
+  // Add new mult-module outputs here
   output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-      output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    // Malloc number of modules for each multi-module output
+    output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      /* Initialize them all to return nothing, then they get changed 
+	 from AddModule subroutines */
+      output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
+    }
   }
 }
 

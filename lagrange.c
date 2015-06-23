@@ -971,246 +971,137 @@ void WriteBodyLongP(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTE
 }  
 
 void WriteBodyArgP(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  body[iBody].dArgP = body[iBody].dLongP - body[iBody].dLongA;
+  double varpi, Omega;
   
-  while (body[iBody].dArgP < 0.0) {
-    body[iBody].dArgP += 2*PI;
+  varpi = atan2(body[iBody].dhecc, body[iBody].dkecc);
+  Omega = atan2(body[iBody].dpinc, body[iBody].dqinc);
+  *dTmp = varpi - Omega;
+  
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
   }
-  
-  *dTmp = body[iBody].dArgP / DEGRAD;
-}    
-
-void WriteBodyMeanA(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  body[iBody].dMeanA = body[iBody].dMeanL - body[iBody].dLongP;
- 
-  while (body[iBody].dMeanA < 0.0) {
-    body[iBody].dMeanA += 2*PI;
-  }
-  
-  *dTmp = body[iBody].dMeanA / DEGRAD;
-}    
-
-void WriteBodyMeanL(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dMeanL / DEGRAD;
-}    
-
-void WriteBodyTrueA(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dTrueA / DEGRAD;
-}   
-
-void WriteBodyTrueL(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dTrueL / DEGRAD;
-}   
-
-void WriteBodyEccA(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dEccA / DEGRAD;
-}   
-
-void WriteBodyPrecA(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
- 
-  while (body[iBody].dPrecA < 0.0) {
-    body[iBody].dPrecA += 2*PI;
-  }
-  
-  while (body[iBody].dPrecA > 2*PI) {
-    body[iBody].dPrecA -= 2*PI;
-  }
-  
-  *dTmp = body[iBody].dPrecA / DEGRAD;
-}    
-
-void WriteShadowObl(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM *system,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dShadowObl;
-  if (output.bDoNeg[iBody]) {
-    *dTmp *= output.dNeg;
-    strcpy(cUnit,output.cNeg);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdAngleUnit(units->iAngle);
-    fvAngleUnit(units->iAngle,cUnit);
-  }
-}
-
-void WriteShadowPrecA(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
- 
-  while (body[iBody].dShadowPrecA < 0.0) {
-    body[iBody].dShadowPrecA += 2*PI;
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
   }
   
-  while (body[iBody].dShadowPrecA > 2*PI) {
-    body[iBody].dShadowPrecA -= 2*PI;
-  }
-  
-  *dTmp = body[iBody].dShadowPrecA / DEGRAD;
 }    
 
 void WriteBodyhecc(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dhecc;
+  strcpy(cUnit,"");
 }  
 
 void WriteBodykecc(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dkecc;
+  strcpy(cUnit,"");
 } 
 
 void WriteBodypinc(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dpinc;
+  strcpy(cUnit,"");
 } 
 
 void WriteBodyqinc(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dqinc;
+  strcpy(cUnit,"")
 } 
 
 void WriteBodyDheccDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
+  /* need to put check for star's output options in verify */
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite pdDrotDt */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDheccDtLagrange[iPert]);
+  
+  *dTmp = dDeriv;
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdLagrangeDhDt(body, system, iBody)*365.25*86400.;
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
 void WriteBodyDkeccDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
+  /* need to put check for star's output options in verify */
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite pdDrotDt */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDkeccDtLagrange[iPert]);
+  
+  *dTmp = dDeriv;
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdLagrangeDkDt(body, system, iBody)*365.25*86400.;
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
 void WriteBodyDpincDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
+  /* need to put check for star's output options in verify */
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite pdDrotDt */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDpincDtLagrange[iPert]);
+  
+  *dTmp = dDeriv;
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdLagrangeDpDt(body, system, iBody)*365.25*86400.;
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
 void WriteBodyDqincDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdLagrangeDqDt(body, system, iBody)*365.25*86400.;
-  }
-}
+  /* need to put check for star's output options in verify */
+  double dDeriv;
+  int iPert;
 
-void WriteBodyDbetaDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdLagrangeDbetaDt(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteBodyDgammaDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdLagrangeDgammaDt(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteBodyDetaDtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdLagrangeDetaDt(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteBodyDPrecADtLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdLagrangeDPrecADt(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteBodyCenTorqLagrange(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = fdCentralTorqueR(body, iBody)*365.25;
-  }
-}
-
-void WriteDpADt_SolTorq(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = dpAdt_SolTorq(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteDpADt_R01(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = dpAdt_R01(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteDpADt_R02(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = dpAdt_R02(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteDOblDt_R01(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = dObldt_R01(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteDOblDt_R02(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = dObldt_R02(body, system, iBody)*365.25*86400.;
-  }
-}
-
-void WriteC1_2term(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  //Temporary hack to give this constant for planet and its next exterior companion (2 term disturbing fxn analysis) 
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = body[iBody].dEcc*body[iBody+1].dEcc*system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][9] + pow(body[iBody].dEcc,3)*body[iBody+1].dEcc*system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][10] + pow(body[iBody+1].dEcc,3)*body[iBody].dEcc*system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][11] + body[iBody].dEcc*body[iBody+1].dEcc*(pow(body[iBody].dsInc,2) + pow(body[iBody+1].dsInc,2)) * system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][12];
-  }
-}
-
-void WriteC2_2term(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  //Temporary hack to give this constant for planet and its next exterior companion (2 term, 2 planet disturbing fxn analysis) 
-  if (iBody == 0) {
-    *dTmp = 0.0;
-  } else {
-    *dTmp = body[iBody].dsInc*system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][2] + (pow(body[iBody].dEcc,2)*body[iBody].dsInc+pow(body[iBody+1].dEcc,2)*body[iBody].dsInc) * system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][6] + 2.*pow(body[iBody].dsInc,3) * system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][7] + body[iBody].dsInc*pow(body[iBody+1].dsInc,2) * system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][8];
-  }
-}
+  /* Ensure that we don't overwrite pdDrotDt */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDqincDtLagrange[iPert]);
   
-void WriteC3_2term(CONTROL *control,UNITS *units,OUTPUT output,BODY *body,SYSTEM *system,UPDATE *update,SYSTEM* system,int iBody,double *dTmp,char cUnit[]) {
-  //Temporary hack to give this constant for planet and its next exterior companion (2 term, 2 planet disturbing fxn analysis) 
-  if (iBody == 0) {
-    *dTmp = 0.0;
+  *dTmp = dDeriv;
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = body[iBody].dEcc*body[iBody+1].dEcc*body[iBody].dsInc * system->dmLaplaceC[system->imLaplaceN[iBody][iBody+1]][12];
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
 
 void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_BODYDECCDTLAGRANGE].cName,"BodyDeccDtLagrange");
+  sprintf(output[OUT_BODYDECCDTLAGRANGE].cName,"DeccDtLagrange");
   sprintf(output[OUT_BODYDECCDTLAGRANGE].cDescr,"Body's decc/dt in Lagrange");
   sprintf(output[OUT_BODYDECCDTLAGRANGE].cNeg,"1/s");
   output[OUT_BODYDECCDTLAGRANGE].bNeg = 1;
@@ -1218,7 +1109,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDECCDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDECCDTLAGRANGE] = &WriteBodyDeccDtLagrange;
   
-  sprintf(output[OUT_BODYDSINCDTLAGRANGE].cName,"BodyDsIncDtLagrange");
+  sprintf(output[OUT_BODYDSINCDTLAGRANGE].cName,"DsIncDtLagrange");
   sprintf(output[OUT_BODYDSINCDTLAGRANGE].cDescr,"Body's dsin(.5*Inc)/dt in Lagrange");
   sprintf(output[OUT_BODYDSINCDTLAGRANGE].cNeg,"1/s");
   output[OUT_BODYDSINCDTLAGRANGE].bNeg = 1;
@@ -1226,7 +1117,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDSINCDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDSINCDTLAGRANGE] = &WriteBodyDsIncDtLagrange;
   
-  sprintf(output[OUT_BODYDVARDTLAGRANGE].cName,"BodyDvarDtLagrange");
+  sprintf(output[OUT_BODYDVARDTLAGRANGE].cName,"DvarDtLagrange");
   sprintf(output[OUT_BODYDVARDTLAGRANGE].cDescr,"Body's dvarpi/dt in Lagrange");
   sprintf(output[OUT_BODYDVARDTLAGRANGE].cNeg,"1/s");
   output[OUT_BODYDVARDTLAGRANGE].bNeg = 1;
@@ -1234,7 +1125,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDVARDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDVARDTLAGRANGE] = &WriteBodyDvarDtLagrange;
   
-  sprintf(output[OUT_BODYDOMGDTLAGRANGE].cName,"BodyDOmgDtLagrange");
+  sprintf(output[OUT_BODYDOMGDTLAGRANGE].cName,"DOmgDtLagrange");
   sprintf(output[OUT_BODYDOMGDTLAGRANGE].cDescr,"Body's dOmega/dt in Lagrange");
   sprintf(output[OUT_BODYDOMGDTLAGRANGE].cNeg,"1/s");
   output[OUT_BODYDOMGDTLAGRANGE].bNeg = 1;
@@ -1242,7 +1133,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDOMGDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDOMGDTLAGRANGE] = &WriteBodyDOmgDtLagrange;
   
-  sprintf(output[OUT_BODYDOBLDTLAGRANGE].cName,"BodyDOblDtLagrange");
+  sprintf(output[OUT_BODYDOBLDTLAGRANGE].cName,"DOblDtLagrange");
   sprintf(output[OUT_BODYDOBLDTLAGRANGE].cDescr,"Body's dObliq/dt in Lagrange");
   sprintf(output[OUT_BODYDOBLDTLAGRANGE].cNeg,"1/s");
   output[OUT_BODYDOBLDTLAGRANGE].bNeg = 1;
@@ -1254,15 +1145,12 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BODYINC].cDescr,"Body's Inclination in Lagrange");
   sprintf(output[OUT_BODYINC].cNeg,"Deg");
   output[OUT_BODYINC].bNeg = 1;
-  output[OUT_BODYINC].dNeg = DEGRAD;
+  output[OUT_BODYINC].dNeg = 1./DEGRAD;
   output[OUT_BODYINC].iNum = 1;
   fnWrite[OUT_BODYINC] = &WriteBodyInc;
   
   sprintf(output[OUT_BODYSINC].cName,"sInc");
   sprintf(output[OUT_BODYSINC].cDescr,"Body's sin(1/2*Inclination) in Lagrange");
-  sprintf(output[OUT_BODYSINC].cNeg,"Deg");
-  output[OUT_BODYSINC].bNeg = 1;
-  output[OUT_BODYSINC].dNeg = DEGRAD;
   output[OUT_BODYSINC].iNum = 1;
   fnWrite[OUT_BODYSINC] = &WriteBodysInc;
   
@@ -1270,23 +1158,23 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BODYLONGA].cDescr,"Body's Longitude of ascending node in Lagrange");
   sprintf(output[OUT_BODYLONGA].cNeg,"Deg");
   output[OUT_BODYLONGA].bNeg = 1;
-  output[OUT_BODYLONGA].dNeg = DEGRAD;
+  output[OUT_BODYLONGA].dNeg = 1./DEGRAD;
   output[OUT_BODYLONGA].iNum = 1;
   fnWrite[OUT_BODYLONGA] = &WriteBodyLongA;
   
-//   sprintf(output[OUT_BODYLONGP].cName,"LongP");
-//   sprintf(output[OUT_BODYLONGP].cDescr,"Body's Longitude of pericenter in Lagrange");
-//   sprintf(output[OUT_BODYLONGP].cNeg,"Deg");
-//   output[OUT_BODYLONGP].bNeg = 1;
-//   output[OUT_BODYLONGP].dNeg = DEGRAD;
-//   output[OUT_BODYLONGP].iNum = 1;
-//   fnWrite[OUT_BODYLONGP] = &WriteBodyLongP; 
+  sprintf(output[OUT_BODYLONGP].cName,"LongP");
+  sprintf(output[OUT_BODYLONGP].cDescr,"Body's Longitude of pericenter in Lagrange");
+  sprintf(output[OUT_BODYLONGP].cNeg,"Deg");
+  output[OUT_BODYLONGP].bNeg = 1;
+  output[OUT_BODYLONGP].dNeg = 1./DEGRAD;
+  output[OUT_BODYLONGP].iNum = 1;
+  fnWrite[OUT_BODYLONGP] = &WriteBodyLongP; 
   
   sprintf(output[OUT_BODYARGP].cName,"ArgP");
   sprintf(output[OUT_BODYARGP].cDescr,"Body's argument of pericenter in Lagrange");
   sprintf(output[OUT_BODYARGP].cNeg,"Deg");
   output[OUT_BODYARGP].bNeg = 1;
-  output[OUT_BODYARGP].dNeg = DEGRAD;
+  output[OUT_BODYARGP].dNeg = 1./DEGRAD;
   output[OUT_BODYARGP].iNum = 1;
   fnWrite[OUT_BODYARGP] = &WriteBodyArgP; 
   
@@ -1322,199 +1210,65 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYTRUEA].iNum = 1;
   fnWrite[OUT_BODYTRUEA] = &WriteBodyTrueA; 
   
-//   sprintf(output[OUT_BODYECCA].cName,"EccA");
-//   sprintf(output[OUT_BODYECCA].cDescr,"Body's eccentric anomaly in Lagrange");
-//   sprintf(output[OUT_BODYECCA].cNeg,"Deg");
-//   output[OUT_BODYECCA].bNeg = 1;
-//   output[OUT_BODYECCA].dNeg = DEGRAD;
-//   output[OUT_BODYECCA].iNum = 1;
-//   fnWrite[OUT_BODYECCA] = &WriteBodyEccA; 
+  sprintf(output[OUT_BODYECCA].cName,"EccA");
+  sprintf(output[OUT_BODYECCA].cDescr,"Body's eccentric anomaly in Lagrange");
+  sprintf(output[OUT_BODYECCA].cNeg,"Deg");
+  output[OUT_BODYECCA].bNeg = 1;
+  output[OUT_BODYECCA].dNeg = DEGRAD;
+  output[OUT_BODYECCA].iNum = 1;
+  fnWrite[OUT_BODYECCA] = &WriteBodyEccA; 
 
   sprintf(output[OUT_BODYHECC].cName,"hecc");
   sprintf(output[OUT_BODYHECC].cDescr,"Body's h = e*sin(varpi) in Lagrange");
-  sprintf(output[OUT_BODYHECC].cNeg,"0");
-  output[OUT_BODYHECC].bNeg = 0;
   output[OUT_BODYHECC].iNum = 1;
   fnWrite[OUT_BODYHECC] = &WriteBodyhecc;
   
   sprintf(output[OUT_BODYKECC].cName,"kecc");
   sprintf(output[OUT_BODYKECC].cDescr,"Body's k = e*cos(varpi) in Lagrange");
-  sprintf(output[OUT_BODYKECC].cNeg,"0");
-  output[OUT_BODYKECC].bNeg = 0;
   output[OUT_BODYKECC].iNum = 1;
   fnWrite[OUT_BODYKECC] = &WriteBodykecc;
   
   sprintf(output[OUT_BODYPINC].cName,"pinc");
   sprintf(output[OUT_BODYPINC].cDescr,"Body's p = s*sin(Omega) in Lagrange");
-  sprintf(output[OUT_BODYPINC].cNeg,"0");
-  output[OUT_BODYPINC].bNeg = 0;
   output[OUT_BODYPINC].iNum = 1;
   fnWrite[OUT_BODYPINC] = &WriteBodypinc;
   
   sprintf(output[OUT_BODYQINC].cName,"qinc");
   sprintf(output[OUT_BODYQINC].cDescr,"Body's q = s* cos(Omega) in Lagrange");
-  sprintf(output[OUT_BODYQINC].cNeg,"0");
-  output[OUT_BODYQINC].bNeg = 0;
   output[OUT_BODYQINC].iNum = 1;
   fnWrite[OUT_BODYQINC] = &WriteBodyqinc;
   
-  sprintf(output[OUT_BODYPRECA].cName,"PrecA");
-  sprintf(output[OUT_BODYPRECA].cDescr,"Body's precession angle");
-  sprintf(output[OUT_BODYPRECA].cNeg,"0");
-  output[OUT_BODYPRECA].bNeg = 0;
-  output[OUT_BODYPRECA].iNum = 1;
-  fnWrite[OUT_BODYPRECA] = &WriteBodyPrecA;  
-  
-  sprintf(output[OUT_SHADOWPRECA].cName,"ShPrecA");
-  sprintf(output[OUT_SHADOWPRECA].cDescr,"shadow's precession angle");
-  sprintf(output[OUT_SHADOWPRECA].cNeg,"0");
-  output[OUT_SHADOWPRECA].bNeg = 0;
-  output[OUT_SHADOWPRECA].iNum = 1;
-  fnWrite[OUT_SHADOWPRECA] = &WriteShadowPrecA;  
-  
-  sprintf(output[OUT_SHADOWOBL].cName,"ShObl");
-  sprintf(output[OUT_SHADOWOBL].cDescr,"shadow's obliquity");
-  sprintf(output[OUT_SHADOWOBL].cNeg,"0");
-  output[OUT_SHADOWOBL].bNeg = 0;
-  output[OUT_SHADOWOBL].iNum = 1;
-  fnWrite[OUT_SHADOWOBL] = &WriteShadowObl;  
-  
-  sprintf(output[OUT_BODYDHDTLAGRANGE].cName,"CheezeWhiz");
+  sprintf(output[OUT_BODYDHDTLAGRANGE].cName,"DheccDtLagrange");
   sprintf(output[OUT_BODYDHDTLAGRANGE].cDescr,"Body's dh/dt in Lagrange");
-  sprintf(output[OUT_BODYDHDTLAGRANGE].cNeg,"1/s");
+  sprintf(output[OUT_BODYDHDTLAGRANGE].cNeg,"1/year");
   output[OUT_BODYDHDTLAGRANGE].bNeg = 1;
   output[OUT_BODYDHDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_BODYDHDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDHDTLAGRANGE] = &WriteBodyDheccDtLagrange;
   
-  sprintf(output[OUT_BODYDKDTLAGRANGE].cName,"CornChips");
+  sprintf(output[OUT_BODYDKDTLAGRANGE].cName,"DkeccDtLagrange");
   sprintf(output[OUT_BODYDKDTLAGRANGE].cDescr,"Body's dk/dt in Lagrange");
-  sprintf(output[OUT_BODYDKDTLAGRANGE].cNeg,"1/s");
+  sprintf(output[OUT_BODYDKDTLAGRANGE].cNeg,"1/year");
   output[OUT_BODYDKDTLAGRANGE].bNeg = 1;
   output[OUT_BODYDKDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_BODYDKDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDKDTLAGRANGE] = &WriteBodyDkeccDtLagrange;
   
-  sprintf(output[OUT_BODYDPDTLAGRANGE].cName,"Liar");
+  sprintf(output[OUT_BODYDPDTLAGRANGE].cName,"DpincDtLagrange");
   sprintf(output[OUT_BODYDPDTLAGRANGE].cDescr,"Body's dp/dt in Lagrange");
-  sprintf(output[OUT_BODYDPDTLAGRANGE].cNeg,"1/s");
+  sprintf(output[OUT_BODYDPDTLAGRANGE].cNeg,"1/year");
   output[OUT_BODYDPDTLAGRANGE].bNeg = 1;
   output[OUT_BODYDPDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_BODYDPDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDPDTLAGRANGE] = &WriteBodyDpincDtLagrange;
   
-  sprintf(output[OUT_DBETADT].cName,"DBetaDt");
-  sprintf(output[OUT_DBETADT].cDescr,"Body's dbeta/dt in Lagrange");
-  sprintf(output[OUT_DBETADT].cNeg,"1/s");
-  output[OUT_DBETADT].bNeg = 1;
-  output[OUT_DBETADT].dNeg = YEARSEC;
-  output[OUT_DBETADT].iNum = 1;
-  fnWrite[OUT_DBETADT] = &WriteBodyDbetaDtLagrange;
-  
-  sprintf(output[OUT_DGAMMADT].cName,"DGammaDt");
-  sprintf(output[OUT_DGAMMADT].cDescr,"Body's dgamma/dt in Lagrange");
-  sprintf(output[OUT_DGAMMADT].cNeg,"1/s");
-  output[OUT_DGAMMADT].bNeg = 1;
-  output[OUT_DGAMMADT].dNeg = YEARSEC;
-  output[OUT_DGAMMADT].iNum = 1;
-  fnWrite[OUT_DGAMMADT] = &WriteBodyDgammaDtLagrange;
-  
-  sprintf(output[OUT_DETADT].cName,"DEtaDt");
-  sprintf(output[OUT_DETADT].cDescr,"Body's deta/dt in Lagrange");
-  sprintf(output[OUT_DETADT].cNeg,"1/s");
-  output[OUT_DETADT].bNeg = 1;
-  output[OUT_DETADT].dNeg = YEARSEC;
-  output[OUT_DETADT].iNum = 1;
-  fnWrite[OUT_DETADT] = &WriteBodyDetaDtLagrange;
-  
-  sprintf(output[OUT_BODYDQDTLAGRANGE].cName,"LikeMeOnFacebook");
+  sprintf(output[OUT_BODYDQDTLAGRANGE].cName,"DqincDtLagrange");
   sprintf(output[OUT_BODYDQDTLAGRANGE].cDescr,"Body's dq/dt in Lagrange");
-  sprintf(output[OUT_BODYDQDTLAGRANGE].cNeg,"1/s");
+  sprintf(output[OUT_BODYDQDTLAGRANGE].cNeg,"1/year");
   output[OUT_BODYDQDTLAGRANGE].bNeg = 1;
   output[OUT_BODYDQDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_BODYDQDTLAGRANGE].iNum = 1;
   fnWrite[OUT_BODYDQDTLAGRANGE] = &WriteBodyDqincDtLagrange;
-  
-  sprintf(output[OUT_C1R2].cName,"Irukandji");
-  sprintf(output[OUT_C1R2].cDescr,"2 term C1 constant");
-  sprintf(output[OUT_C1R2].cNeg,"1/s");
-  output[OUT_C1R2].bNeg = 1;
-  output[OUT_C1R2].dNeg = YEARSEC;
-  output[OUT_C1R2].iNum = 1;
-  fnWrite[OUT_C1R2] = &WriteC1_2term;
-  
-  sprintf(output[OUT_C2R2].cName,"Thylacine");
-  sprintf(output[OUT_C2R2].cDescr,"2 term C2 constant");
-  sprintf(output[OUT_C2R2].cNeg,"1/s");
-  output[OUT_C2R2].bNeg = 1;
-  output[OUT_C2R2].dNeg = YEARSEC;
-  output[OUT_C2R2].iNum = 1;
-  fnWrite[OUT_C2R2] = &WriteC2_2term;
-  
-  sprintf(output[OUT_C3R2].cName,"Coelacanth");
-  sprintf(output[OUT_C3R2].cDescr,"2 term C3 constant");
-  sprintf(output[OUT_C3R2].cNeg,"1/s");
-  output[OUT_C3R2].bNeg = 1;
-  output[OUT_C3R2].dNeg = YEARSEC;
-  output[OUT_C3R2].iNum = 1;
-  fnWrite[OUT_C3R2] = &WriteC3_2term;
-  
-  sprintf(output[OUT_BODYDPRECADTLAGRANGE].cName,"BodyDPrecADtLagrange");
-  sprintf(output[OUT_BODYDPRECADTLAGRANGE].cDescr,"Body's dpA/dt in Lagrange");
-  sprintf(output[OUT_BODYDPRECADTLAGRANGE].cNeg,"1/s");
-  output[OUT_BODYDPRECADTLAGRANGE].bNeg = 1;
-  output[OUT_BODYDPRECADTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_BODYDPRECADTLAGRANGE].iNum = 1;
-  fnWrite[OUT_BODYDPRECADTLAGRANGE] = &WriteBodyDPrecADtLagrange;
-  
-  sprintf(output[OUT_BODYCENTQLAGRANGE].cName,"BodyCenTorqLagrange");
-  sprintf(output[OUT_BODYCENTQLAGRANGE].cDescr,"Body's central torque in Lagrange");
-  sprintf(output[OUT_BODYCENTQLAGRANGE].cNeg,"1/s");
-  output[OUT_BODYCENTQLAGRANGE].bNeg = 1;
-  output[OUT_BODYCENTQLAGRANGE].dNeg = YEARSEC;
-  output[OUT_BODYCENTQLAGRANGE].iNum = 1;
-  fnWrite[OUT_BODYCENTQLAGRANGE] = &WriteBodyCenTorqLagrange;
-  
-  sprintf(output[OUT_DPADTSOLTQ].cName,"SolTorq");
-  sprintf(output[OUT_DPADTSOLTQ].cDescr,"Body's dpA/dt with central torque only");
-  sprintf(output[OUT_DPADTSOLTQ].cNeg,"1/s");
-  output[OUT_DPADTSOLTQ].bNeg = 1;
-  output[OUT_DPADTSOLTQ].dNeg = YEARSEC;
-  output[OUT_DPADTSOLTQ].iNum = 1;
-  fnWrite[OUT_DPADTSOLTQ] = &WriteDpADt_SolTorq;
-  
-  sprintf(output[OUT_DPADTR01].cName,"pR01");
-  sprintf(output[OUT_DPADTR01].cDescr,"Body's dpA/dt from R01");
-  sprintf(output[OUT_DPADTR01].cNeg,"1/s");
-  output[OUT_DPADTR01].bNeg = 1;
-  output[OUT_DPADTR01].dNeg = YEARSEC;
-  output[OUT_DPADTR01].iNum = 1;
-  fnWrite[OUT_DPADTR01] = &WriteDpADt_R01;
-  
-  sprintf(output[OUT_DPADTR02].cName,"pr02");
-  sprintf(output[OUT_DPADTR02].cDescr,"Body's dpA/dt from R02");
-  sprintf(output[OUT_DPADTR02].cNeg,"1/s");
-  output[OUT_DPADTR02].bNeg = 1;
-  output[OUT_DPADTR02].dNeg = YEARSEC;
-  output[OUT_DPADTR02].iNum = 1;
-  fnWrite[OUT_DPADTR02] = &WriteDpADt_R02;
-  
-  sprintf(output[OUT_DOBLDTR01].cName,"OR01");
-  sprintf(output[OUT_DOBLDTR01].cDescr,"Body's dObl/dt from R01");
-  sprintf(output[OUT_DOBLDTR01].cNeg,"1/s");
-  output[OUT_DOBLDTR01].bNeg = 1;
-  output[OUT_DOBLDTR01].dNeg = YEARSEC;
-  output[OUT_DOBLDTR01].iNum = 1;
-  fnWrite[OUT_DOBLDTR01] = &WriteDOblDt_R01;
-  
-  sprintf(output[OUT_DOBLDTR02].cName,"Or02");
-  sprintf(output[OUT_DOBLDTR02].cDescr,"Body's dObl/dt from R02");
-  sprintf(output[OUT_DOBLDTR02].cNeg,"1/s");
-  output[OUT_DOBLDTR02].bNeg = 1;
-  output[OUT_DOBLDTR02].dNeg = YEARSEC;
-  output[OUT_DOBLDTR02].iNum = 1;
-  fnWrite[OUT_DOBLDTR02] = &WriteDOblDt_R02;
-  
 }
 
 
@@ -1580,239 +1334,13 @@ void fvPropertiesLagrange(CONTROL *control,BODY *body,SYSTEM *system,double dDt)
     body[i].dMeanL = fdCorrectDomain(body[i].dMeanL + body[i].dMeanMotion * dDt);   
     body[i].dMeanA = fdCorrectDomain(body[i].dMeanL - body[i].dLongP);
     body[i].dArgP = fdCorrectDomain(body[i].dLongP - body[i].dLongA);
-    body[i].dPrecA = fdCorrectDomain(body[i].dPrecA);
-    
+    body[i].dPrecA = fdCorrectDomain(body[i].dPrecA);    
   }
 }
 
 
 
 /************* Lagrange Functions ************/
-/*
- * Element/coordinate conversions
- */
-
-double fdVectorNormal(double *vector) {
-  double vsq = 0.0;
-  int i;
-  
-  for (i = 0; i < 3; i++) {
-    vsq += vector[i]*vector[i];
-  }
-  return pow(vsq, 0.5);
-}
-
-double fvVectorCross(double *a, double *b, double *c) {
-  c[0] = a[1]*b[2] - b[1]*a[2];
-  c[1] = a[2]*b[0] - b[2]*a[0];
-  c[2] = a[0]*b[1] - b[0]*a[1];
-}
-
-double fdXAngle1(double dLongA, double dArgP, double dInc) {
-  return cos(dLongA)*cos(dArgP) - sin(dLongA)*sin(dArgP)*cos(dInc);
-}
-
-double fdXAngle2(double dLongA, double dArgP, double dInc) {
-  return -cos(dLongA)*sin(dArgP) - sin(dLongA)*cos(dArgP)*cos(dInc);
-}
-
-double fdYAngle1(double dLongA, double dArgP, double dInc) {
-  return sin(dLongA)*cos(dArgP) + cos(dLongA)*sin(dArgP)*cos(dInc);
-}
-
-double fdYAngle2(double dLongA, double dArgP, double dInc) {
-  return -sin(dLongA)*sin(dArgP) + cos(dLongA)*cos(dArgP)*cos(dInc);
-}
-
-double fdZAngle1(double dArgP, double dInc) {
-  return sin(dArgP)*sin(dInc);
-}
-
-double fdZAngle2(double dArgP, double dInc) {
-  return cos(dArgP)*sin(dInc);
-}
-
-double fdxOrbPlane(double dSemi, double dEcc, double dEccA) {
-  return dSemi * (cos(dEccA) - dEcc);
-}
-
-double fdyOrbPlane(double dSemi, double dEcc, double dEccA) {
-  return dSemi * pow(1.-dEcc*dEcc,0.5) * sin(dEccA);
-}
-
-double fdvxOrbPlane(double dMassCentral, double dMass, double dSemi, double dxOrbPlane, double dyOrbPlane, double dEccA) {
-  double mu, n;
-  mu = KGAUSS*KGAUSS * (dMassCentral + dMass);
-  n = pow(mu / pow(dSemi,3.), 0.5);
-  return -dSemi * dSemi * n * sin(dEccA) / pow(dxOrbPlane*dxOrbPlane+dyOrbPlane*dyOrbPlane,0.5);
-}
-
-double fdvyOrbPlane(double dMassCentral, double dMass, double dSemi, double dxOrbPlane, double dyOrbPlane, double dEccA, double dEcc) {
-  double mu, n;
-  mu = KGAUSS*KGAUSS * (dMassCentral + dMass);
-  n = pow(mu / pow(dSemi,3.), 0.5);
-  return dSemi * dSemi * n * pow( (1.0-dEcc*dEcc) / (dxOrbPlane*dxOrbPlane+dyOrbPlane*dyOrbPlane), 0.5) * cos(dEccA);
-}
- 
-double signof(double x) {
-  if (x > 0) return 1.0;
-  if (x < 0) return -1.0;
-  return 0.0;
-}
- 
-double fdEccAKeplersEq(double dMeanA, double dEcc) {
-  double dEccA;
-  double di_1, di_2, di_3 = 1.0, fi, fi_1, fi_2, fi_3;
-  
-  dEccA = dMeanA + signof(sin(dMeanA))*0.85*dEcc;
-  while (di_3 > 1e-15) {
-    fi = dEccA - dEcc*sin(dEccA) - dMeanA;
-    fi_1 = 1.0 - dEcc*cos(dEccA);
-    fi_2 = dEcc*sin(dEccA);
-    fi_3 = dEcc*cos(dEccA);
-    di_1 = -fi / fi_1;
-    di_2 = -fi / (fi_1 + 0.5*di_1*fi_2);
-    di_3 = -fi / (fi_1 + 0.5*di_2*fi_2 + 1./6.*di_2*di_2*fi_3);
-    dEccA += di_3;
-  }
-  return dEccA;
-}
-
-double fdCalcAscNode(double *dAngMom) {
-  double dLongA;  
-  dLongA = fdCorrectDomain(atan2(dAngMom[0], -dAngMom[1]));
-  return dLongA;
-}
-  
-double fdTrue2EccA(double dTrueA, double dEcc) {
-  double cosE, dEccA;
-  
-  while (dTrueA < 0.0) {
-    dTrueA += 2*PI;
-  }
-  
-  while (dTrueA >= 2*PI) {
-    dTrueA -= 2*PI;
-  }
-  
-  cosE = (cos(dTrueA) + dEcc) / (1.0 + dEcc*cos(dTrueA));
-  if (dTrueA <= PI) {
-    dEccA = acos(cosE);
-  } else if (dTrueA > PI) {
-    dEccA = 2*PI - acos(cosE);
-  }
-  return dEccA;
-}
-
-double fdMeanL2MeanA(double dMeanL, double dLongP) {
-  double dMeanA;
-  dMeanA = dMeanL - dLongP;
- 
-  while (dMeanA < 0.0) {
-    dMeanA += 2*PI;
-  }
-  
-  while (dMeanA >= 2*PI) {
-    dMeanA -= 2*PI;
-  }
-  
-  return dMeanA;
-}
-  
-void fvOsc2Cart(BODY *body) {
-  int iBody, iDim = 0;
-  double xi, yi, vxi, vyi, **AngMtx;
-  
-  AngMtx = (double **) malloc(3*sizeof(double*));
-  AngMtx[0] = malloc(3*sizeof(double));
-  AngMtx[1] = malloc(3*sizeof(double));
-  AngMtx[2] = malloc(3*sizeof(double));
-  
-  for (iBody = 1; iBody < body[0].iNumBodies; iBody++) {
-    body[iBody].dEccA = fdEccAKeplersEq(body[iBody].dMeanA, body[iBody].dEcc);
-    xi = fdxOrbPlane(body[iBody].dSemi/AUCM, body[iBody].dEcc, body[iBody].dEccA);
-    yi = fdyOrbPlane(body[iBody].dSemi/AUCM, body[iBody].dEcc, body[iBody].dEccA);
-    vxi = fdvxOrbPlane(body[0].dMass/MSUN, body[iBody].dMass/MSUN, body[iBody].dSemi/AUCM, xi, yi, body[iBody].dEccA);
-    vyi = fdvyOrbPlane(body[0].dMass/MSUN, body[iBody].dMass/MSUN, body[iBody].dSemi/AUCM, xi, yi, body[iBody].dEccA, body[iBody].dEcc);
-    
-    AngMtx[0][0] = fdXAngle1(body[iBody].dLongA, body[iBody].dArgP, body[iBody].dInc);
-    AngMtx[0][1] = fdXAngle2(body[iBody].dLongA, body[iBody].dArgP, body[iBody].dInc);
-    AngMtx[1][0] = fdYAngle1(body[iBody].dLongA, body[iBody].dArgP, body[iBody].dInc);
-    AngMtx[1][1] = fdYAngle2(body[iBody].dLongA, body[iBody].dArgP, body[iBody].dInc);
-    AngMtx[2][0] = fdZAngle1(body[iBody].dArgP, body[iBody].dInc);
-    AngMtx[2][1] = fdZAngle2(body[iBody].dArgP, body[iBody].dInc);
-    
-    for (iDim = 0; iDim < 3; iDim++) {
-      body[iBody].dPosition[iDim] = xi * AngMtx[iDim][0] + yi * AngMtx[iDim][1];
-      body[iBody].dVelocity[iDim] = vxi * AngMtx[iDim][0] + vyi * AngMtx[iDim][1];
-    }
-  }
-}
-  
-void fvCart2Osc(BODY *body) {
-  int iBody, j;
-  double R, vsq, RxRdot, Rdot, mu, *h, hsq, a, sinwf, coswf, sinf, cosf, sinw, cosw, f;
-  
-  h = malloc(3*sizeof(double));
-  for (iBody=1; iBody<body[0].iNumBodies; iBody++) {
-    /* preliminary quantities */
-    R = fdVectorNormal(body[iBody].dPosition);
-    vsq = pow(fdVectorNormal(body[iBody].dVelocity),2);
-    RxRdot = 0.0;
-    for (j=0;j<3;j++) {
-      RxRdot += body[iBody].dPosition[j]*body[iBody].dVelocity[j];
-    }
-    mu = KGAUSS*KGAUSS * (body[0].dMass + body[iBody].dMass)/MSUN;
-    fvVectorCross(body[iBody].dPosition, body[iBody].dVelocity, h);
-    hsq = fdVectorNormal(h)*fdVectorNormal(h);
-    Rdot = signof(RxRdot) * pow(vsq - hsq/pow(R,2),0.5);
-    
-    /* elements */
-    a = pow((2.0/R - vsq/mu),-1.0);
-    body[iBody].dEcc = pow((1.0-hsq/(mu*a)),0.5);
-    body[iBody].dInc = acos(h[2]/pow(hsq,0.5));
-    body[iBody].dLongA = fdCalcAscNode(h);
-    /* calc argument of pericenter */
-    sinwf = body[iBody].dPosition[2] / (R*sin(body[iBody].dInc));
-    coswf = (body[iBody].dPosition[0]/R + sin(body[iBody].dLongA)*sinwf*cos(body[iBody].dInc)) / \
-      cos(body[iBody].dLongA);
-    sinf = a * (1.0-pow(body[iBody].dEcc,2))/(pow(hsq,0.5)*body[iBody].dEcc) * Rdot;
-    cosf = (a*(1.0-pow(body[iBody].dEcc,2))/R -1.0)/body[iBody].dEcc;
-    sinw = sinwf * cosf - coswf * sinf;
-    cosw = sinwf * sinf + coswf * cosf;
-    body[iBody].dArgP = fdCorrectDomain(atan2(sinw, cosw));
-    /* mean anomaly */
-    f = fdCorrectDomain(atan2(sinf, cosf));
-    body[iBody].dEccA = fdTrue2EccA(f, body[iBody].dEcc);
-    body[iBody].dMeanA = fdCorrectDomain(body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA));
-    /* finally, update dSemi, dsInc, dLongP, dMeanL */
-    body[iBody].dSemi = a*AUCM;
-    body[iBody].dsInc = sin(0.5*body[iBody].dInc);
-    body[iBody].dLongP = fdCorrectDomain(body[iBody].dLongA + body[iBody].dArgP);
-    body[iBody].dMeanL = fdCorrectDomain(body[iBody].dLongP + body[iBody].dMeanA);
-  }
-}
-
-void fvRotateX(BODY *body, double theta) {
-  double ytmp, ztmp, vytmp, vztmp;
-  int iBody;
-  
-  fvOsc2Cart(body);
-  
-  for (iBody = 1; iBody < body[0].iNumBodies; iBody++) {
-    ytmp = body[iBody].dPosition[1];
-    ztmp = body[iBody].dPosition[2];
-    vytmp = body[iBody].dVelocity[1];
-    vztmp = body[iBody].dVelocity[2];
-    body[iBody].dPosition[1] = ytmp*cos(theta) - ztmp*sin(theta);
-    body[iBody].dPosition[2] = ytmp*sin(theta) + ztmp*cos(theta);
-    body[iBody].dVelocity[1] = vytmp*cos(theta) - vztmp*sin(theta);
-    body[iBody].dVelocity[2] = vytmp*sin(theta) + vztmp*cos(theta);
-  }
-  
-  fvCart2Osc(body);
-}
-
 // 
 /* 
  * Semi-major axis functions
@@ -2578,7 +2106,7 @@ double fdDdisturbDqincPrime(BODY *body, SYSTEM *system, int *iaBody) {
 
 
 
-//------------------- h k p q -------------------------------------
+//-------------------Lagrange's equations in h k p q -------------------------------------
 double fdLagrangeDhDt(BODY *body, SYSTEM *system, int *iaBody) {
   int i;
   double sum = 0.0, dMu;

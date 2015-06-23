@@ -402,7 +402,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
     sprintf(output[OUT_OBL].cName,"Obliquity");
     sprintf(output[OUT_OBL].cDescr,"Obliquity");
-    output[OUT_OBL].bNeg = 0;
+    sprintf(output[OUT_OBL].cNeg,"deg");
+    output[OUT_OBL].bNeg = 1;
+    output[OUT_OBL].dNeg = DEGRAD;
     output[OUT_OBL].iNum = 1;
     fnWrite[OUT_OBL] = &WriteObliquity;
 

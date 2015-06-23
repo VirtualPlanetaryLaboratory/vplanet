@@ -1216,7 +1216,7 @@ void WriteDRotPerDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   }  else {
-    strcat(cUnit,"");
+    strcpy(cUnit,"");
   }
 }
 
@@ -1227,7 +1227,7 @@ void WriteDRotRateDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) 
-    dDeriv = *(update[iBody].padDrotDtEqtide[iPert]);
+    dDeriv += *(update[iBody].padDrotDtEqtide[iPert]);
   
   *dTmp = dDeriv;
 
@@ -1429,7 +1429,7 @@ void WriteEnergyFluxEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dTidalQ;
-  strcat(cUnit,"");
+  strcpy(cUnit,"");
 }
 
 void WriteTidalTau(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

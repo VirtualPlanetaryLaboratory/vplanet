@@ -158,19 +158,14 @@ typedef struct {
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
-  double dMeanA;         /**< Mean anomaly */
-  double dMeanL;         /**< Mean longitude */
-  double dTrueA;         /**< True anomaly */
-  double dTrueL;         /**< True longitude */
-  double dEccA;          /**< Eccentric anomaly */
-  double dhecc;          /**< h = e * sin(varpi) */
-  double dkecc;          /**< k = e * cos(varpi) */
-  double dpinc;          /**< p = i * sin(Omega) */
-  double dqinc;          /**< q = i * cos(Omega) */  
+  double dHecc;          /**< h = e * sin(varpi) */
+  double dKecc;          /**< k = e * cos(varpi) */
+  double dPinc;          /**< p = i * sin(Omega) */
+  double dQinc;          /**< q = i * cos(Omega) */  
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
   
-  /* Additional obliquity params used by Laskar */
+  /* Additional obliquity params used by LASKAR */
   int bLaskar;           /**< use Laskar? */
   double dPrecA;         /**< Precession angle */
   double dDynEllip;      /**< Dynamical ellipticity */
@@ -284,7 +279,7 @@ typedef struct {
   double dAge;           /**< System's Age */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
-  fnLaplaceFunction **fnLaplaceF; /**< Semi-major axis functions for each pair of bodies */
+  fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
   int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
 } SYSTEM;
@@ -416,28 +411,29 @@ typedef struct {
 
 
   /* LAGRANGE */
+  int *iaHeccLagrange;       /**< Equation # Corresponding to Lagrange's change to h = e*sin(longp) */
+  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp)*/
+  int *iaPincLagrange;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
+  int *iaQincLagrange;
+  
   int *bAng;     /**< Is the variable an angle? 1 = yes, 0 = no */
   int *bPolar;   /**< Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      semi-major axis' derivative due to LAGRANGE. */
-  double *pdDsemiDtLagrange; 
-
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       h = e*sin(varpi) derivative due to LAGRANGE. */
-  double *pdDhDt;
+  double **padDHeccDtLagrange;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       k = e*cos(varpi) derivative due to LAGRANGE. */
-  double *pdDkDt;
+  double **padDKeccDtLagrange;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       p = s*sin(Omega) derivative due to LAGRANGE. */
-  double *pdDpDt;
+  double **padDPincDtLagrange;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       q = s*cos(Omega) derivative due to LAGRANGE. */
-  double *pdDqDt;
+  double **padDQincDtLagrange;
   
   /* LASKAR */
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
@@ -810,6 +806,7 @@ typedef double (*fnLaplaceFunction)(double,int);
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "lagrange.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

@@ -657,7 +657,7 @@ typedef struct {
 } OUTPUT;
 
 
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 

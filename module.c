@@ -144,7 +144,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
-  
+  if (body[iBody].bLagrange) {
+    AddModuleLagrange(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = LAGRANGE;
+  }
   
 }
 

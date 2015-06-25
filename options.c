@@ -855,7 +855,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<=iNumIndices;iIndex++)
+  for (iIndex=0;iIndex<iNumIndices;iIndex++) // Russell changed <= to < b/c iNumIndices+1 is outside the allocated memory of files->Infile
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
   
   control->Evolve.iNumBodies=iNumIndices;

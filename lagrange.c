@@ -13,6 +13,7 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
+#include "lagrange.h"
 
 void InitializeControlLagrange(CONTROL *control) {
   /* Not sure if I need anything here yet */
@@ -54,18 +55,18 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > PI) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
@@ -74,11 +75,11 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
 
     //body[iFile-1].dInc = dTmp; 
-    body[iFile-1].dsInc = sin(0.5*dTmp);
+    body[iFile-1].dSinc = sin(0.5*dTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
     if (iFile > 0)
-      body[iFile-1].dInc = options->dDefault;
+      body[iFile-1].dSinc = options->dDefault;
 }  
 
 /* Longitude of ascending node */
@@ -88,18 +89,18 @@ void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
@@ -122,18 +123,18 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
@@ -156,18 +157,18 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
-	if (control->iVerbose >= VERBERR)
+	if (control->Io.iVerbose >= VERBERR)
 	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
 	LineExit(files->Infile[iFile].cIn,lTmp);	
       }
@@ -343,6 +344,28 @@ void ReadOptionsLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
  *
  */
 
+double fdCorrectDomain(double angle) {
+  while (angle >= 2*PI) {
+    angle -= 2*PI;
+  }
+  while (angle < 0.0) {
+    angle += 2*PI;
+  }
+  return angle;
+}
+
+double fdCalcLongP(double dLongA, double dArgP) {
+  double varpi;
+  varpi = fdCorrectDomain(dLongA + dArgP);
+  return varpi;
+}
+
+double fdCalcLongA(double dLongP, double dArgP) {
+  double Omega;
+  Omega = fdCorrectDomain(dLongP - dArgP);
+  return Omega;
+}
+
 void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
   if (options[OPT_LONGA].iLine[iBody] > -1 && options[OPT_LONGP].iLine[iBody] > -1 && options[OPT_ARGP].iLine[iBody] == -1) 
@@ -396,8 +419,8 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
 void CalcHKPQ(BODY *body, int iBody) {
   body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
   body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
-  body[iBody].dPinc = body[iBody].dsInc*sin(body[iBody].dLongA);
-  body[iBody].dQinc = body[iBody].dsInc*cos(body[iBody].dLongA);
+  body[iBody].dPinc = body[iBody].dSinc*sin(body[iBody].dLongA);
+  body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
 }
 
 /* In the following, iBody is the current body number that is getting assigned,
@@ -452,10 +475,41 @@ void VerifyPerturbersLagrange(BODY *body,int iNumBodies,int iBody) {
   }
 }
   
+/* Factorial function. Nuff sed. */
+unsigned long int factorial(unsigned int n)
+{
+  unsigned long int result;
+  
+  if (n == 0)
+    result = 1;
+  else 
+    result = n * factorial(n - 1);
+  return result;
+}
+
+/* Number of combinations of k in N */
+int Nchoosek(int N, int k) {
+  if (N < 0 || k < 0 || N > 10 || k > N) {
+    printf("Error: received N = %d, k = %d\n",N,k);
+  } 
+  return factorial(N) / (factorial(k)*factorial(N-k));
+}
+
+/* Gives the index of a pair of values in N choose 2.
+* For example, for 4 planets, the index for the pair 
+* (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */  
+int CombCount(int x, int y, int N) {
+  if (x == 0) {
+    x = 1.3;
+  }
+  return N*(x-1) + (y-1) - Nchoosek(x+1, 2);
+} 
+
 
 void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  int i, j, iPert;
   
-  VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->iVerbose);
+  VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
   
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
@@ -491,14 +545,14 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->fnLaplaceF[24][0] = &fdSemiMajAxF25;
     system->fnLaplaceF[25][0] = &fdSemiMajAxF26;
     
-    system->dmLaplaceC = malloc(Nchoosek(body[0].iNumBodies-1,2)*sizeof(double*));
-    for (i=0;i<Nchoosek(body[0].iNumBodies-1,2);i++) {
+    system->dmLaplaceC = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+    for (i=0;i<Nchoosek(control->Evolve.iNumBodies-1,2);i++) {
       system->dmLaplaceC[i] = malloc(LAPLNUM*sizeof(double));  
     }
     
-    system->imLaplaceN = malloc((body[0].iNumBodies)*sizeof(int*));
-    for (i=1;i<body[0].iNumBodies;i++) {
-      system->imLaplaceN[i] = malloc((body[0].iNumBodies)*sizeof(int));
+    system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
+    for (i=1;i<control->Evolve.iNumBodies;i++) {
+      system->imLaplaceN[i] = malloc((control->Evolve.iNumBodies)*sizeof(int));
     }
   } else {
     /* Body updates */
@@ -521,10 +575,10 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       
       for (j=0;j<LAPLNUM;j++) {
 	if (body[iBody].dSemi < body[iPert].dSemi) {
-	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,body[0].iNumBodies-1);
+	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][iPert]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[iPert].dSemi, 0);
 	} else if (body[iBody].dSemi > body[iPert].dSemi) {
-	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,body[0].iNumBodies-1);
+	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][iPert]][j] = system->fnLaplaceF[j][0](body[iPert].dSemi/body[iBody].dSemi, 0);
 	}
       }
@@ -545,6 +599,8 @@ void InitializeUpdateLagrange(BODY *body,UPDATE *update,int iBody) {
 }
 
 void FinalizeUpdateHeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  int iPert;
+  
   update[iBody].padDHeccDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaHeccLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -554,6 +610,8 @@ void FinalizeUpdateHeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateKeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  int iPert;
+  
   update[iBody].padDKeccDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaKeccLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -563,6 +621,8 @@ void FinalizeUpdateKeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdatePincLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  int iPert;
+  
   update[iBody].padDPincDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaPincLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -572,6 +632,8 @@ void FinalizeUpdatePincLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateQincLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  int iPert;
+  
   update[iBody].padDQincDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaQincLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -592,15 +654,7 @@ void VerifyHaltLagrange(BODY *body,CONTROL *control,OPTIONS *options,int iBody,i
 
 /************* LAGRANGE Outputs ******************/
 
-void HelpOutputLagrange(OUTPUT *output) {
-  int i;
-
-  printf("\n ------ LAGRANGE output ------\n");
-  for (i=OUTSTARTLAGRANGE;i<OUTENDLAGRANGE;i++) 
-    WriteHelpOutput(output[i]);
-}
-
-void WriteBodyDEccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDEccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
@@ -620,7 +674,7 @@ void WriteBodyDEccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *s
   }
 }
 
-void WriteBodyDsIncDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDSincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
@@ -640,7 +694,7 @@ void WriteBodyDsIncDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *
   }
 }  
   
-void WriteBodyDLongPDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDLongPDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
@@ -660,7 +714,7 @@ void WriteBodyDLongPDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM 
   }
 }  
 
-void WriteBodyDLongADtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDLongADtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
@@ -680,7 +734,7 @@ void WriteBodyDLongADtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM 
   }
 } 
 
-void WriteBodyDIncDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDIncDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
@@ -700,13 +754,13 @@ void WriteBodyDIncDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *s
   }
 } 
 
-void WriteBodySinc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodySinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2));
   strcpy(cUnit,"");
 }  
 
-void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = 2.*asin(sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)));  
   
   if (output->bDoNeg[iBody]) {
@@ -718,7 +772,7 @@ void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS
   }
 }  
 
-void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
   
   while (*dTmp < 0.0) {
@@ -737,7 +791,7 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNI
   }
 }  
 
-void WriteBodyLongP(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
   
   while (*dTmp < 0.0) {
@@ -756,7 +810,7 @@ void WriteBodyLongP(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNI
   }
 }  
 
-void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double varpi, Omega;
   
   varpi = atan2(body[iBody].dHecc, body[iBody].dKecc);
@@ -775,31 +829,31 @@ void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNIT
   }
 }    
 
-void WriteBodyHecc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dHecc;
   strcpy(cUnit,"");
 }  
 
-void WriteBodyKecc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dKecc;
   strcpy(cUnit,"");
 } 
 
-void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dPinc;
   strcpy(cUnit,"");
 } 
 
-void WriteBodyQinc(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyQinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dQinc;
   strcpy(cUnit,"");
 } 
 
-void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -820,7 +874,7 @@ void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *
   }
 }
 
-void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -841,7 +895,7 @@ void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *
   }
 }
 
-void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -862,7 +916,7 @@ void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *
   }
 }
 
-void WriteBodyDQincDtLagrange(BODY *body,CONTROL *control,OUTPUT output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDQincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -892,7 +946,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DECCDTLAGRANGE].bNeg = 1;
   output[OUT_DECCDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_DECCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DECCDTLAGRANGE] = &WriteBodyDeccDtLagrange;
+  fnWrite[OUT_DECCDTLAGRANGE] = &WriteBodyDEccDtLagrange;
   
   sprintf(output[OUT_DSINCDTLAGRANGE].cName,"DsIncDtLagrange");
   sprintf(output[OUT_DSINCDTLAGRANGE].cDescr,"Body's dsin(.5*Inc)/dt in Lagrange");
@@ -900,7 +954,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DSINCDTLAGRANGE].bNeg = 1;
   output[OUT_DSINCDTLAGRANGE].dNeg = YEARSEC;
   output[OUT_DSINCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DSINCDTLAGRANGE] = &WriteBodyDsIncDtLagrange;
+  fnWrite[OUT_DSINCDTLAGRANGE] = &WriteBodyDSincDtLagrange;
  
   sprintf(output[OUT_DINCDTLAGRANGE].cName,"DIncDtLagrange");
   sprintf(output[OUT_DINCDTLAGRANGE].cDescr,"Body's dInc/dt in Lagrange");
@@ -937,7 +991,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SINC].cName,"sInc");
   sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in Lagrange");
   output[OUT_SINC].iNum = 1;
-  fnWrite[OUT_SINC] = &WriteBodysInc;
+  fnWrite[OUT_SINC] = &WriteBodySinc;
   
   sprintf(output[OUT_LONGA].cName,"LongA");
   sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in Lagrange");
@@ -1035,7 +1089,7 @@ void LogLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDAT
   fprintf(fp,"\n----- LAGRANGE PARAMETERS ------\n");
   for (iOut=OUTSTARTLAGRANGE;iOut<OUTBODYSTARTLAGRANGE;iOut++) {
     if (output[iOut].iNum > 0)
-      WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,system,0);
+      WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
   }
 }
 
@@ -1045,7 +1099,7 @@ void LogBodyLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"----- LAGRANGE PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=OUTBODYSTARTLAGRANGE;iOut<OUTENDLAGRANGE;iOut++) {
     if (output[iOut].iNum > 0) 
-      WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,system,iBody);
+      WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
 }
 
@@ -1870,11 +1924,11 @@ double fdLagrangeDkDt(BODY *body, SYSTEM *system, int *iaBody) {
   int i;
   double sum = 0.0, dMu;
   
-  dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
+  dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
-  } else if (body[iaBody].dSemi > body[iaBody[1]].dSemi) {
+  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
     sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }      
 
@@ -1886,8 +1940,8 @@ double fdLagrangeDpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
-    if (body[iaBody[0]].dSemi < body[iaBody[1].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody[0], iaBody[i])+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+    if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
     }

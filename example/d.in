@@ -10,8 +10,8 @@
 #
 #		 -SurfEnFluxRadheat 
 #=======
-saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
-		-40kpow -232thpow -238upow -radpow -SurfEnFluxT
+saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat 
+	
 #>>>>>>> bc3ede45b7ef6aa4ad24062e6456bb6b1042e81a
 
 # The order of options in a file is unimportant

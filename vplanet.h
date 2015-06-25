@@ -154,7 +154,7 @@ typedef struct {
 
   /* Additional orbital properties used by LAGRANGE */
   int bLagrange;         /**< use Lagrange? */
-  double dsInc;          /**< sin(0.5*Inclination) */
+  double dSinc;          /**< sin(0.5*Inclination) */
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
@@ -273,6 +273,9 @@ typedef struct {
 
 /* SYSTEM contains properties of the system that pertain to
    every BODY */
+
+/* Pointer to Laplace semi-major axis functions in Lagrange */
+typedef double (*fnLaplaceFunction)(double,int);
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
@@ -411,10 +414,24 @@ typedef struct {
 
 
   /* LAGRANGE */
+  /* Number of eqns to modify a parameter */
+  int iNumHecc;          /**< Number of Equations Affecting h = e*sin(longp) */
+  int iNumKecc;          /**< Number of Equations Affecting k = e*cos(longp) */
+  int iNumPinc;          /**< Number of Equations Affecting p = s*sin(longa) */
+  int iNumQinc;         /**< Number of Equations Affecting q = s*cos(longa) */
+  
+  int iHecc;             /**< Variable # Corresponding to h = e*sin(longp) */
+  double dDHeccDt;       /**< Total h Derivative */
+  int iKecc;             /**< Variable # Corresponding to k = e*cos(longp) */
+  double dDKeccDt;       /**< Total k Derivative */
+  int iPinc;             /**< Variable # Corresponding to p = s*sin(longa) */
+  double dDPincDt;       /**< Total p Derivative */
+  int iQinc;             /**< Variable # Corresponding to q = s*cos(longa) */
+  double dDQincDt;       /**< Total q Derivative */
   int *iaHeccLagrange;       /**< Equation # Corresponding to Lagrange's change to h = e*sin(longp) */
-  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp)*/
-  int *iaPincLagrange;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
-  int *iaQincLagrange;
+  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp) */
+  int *iaPincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  p = s*sin(longa) */
+  int *iaQincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  q = s*cos(longa) */
   
   int *bAng;     /**< Is the variable an angle? 1 = yes, 0 = no */
   int *bPolar;   /**< Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
@@ -686,6 +703,10 @@ typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -757,6 +778,13 @@ typedef struct {
     fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
     fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
     
+  /*! These functions assign Equation and Module information regarding 
+      Lagrange h,k,p,q variables in the UPDATE struct. */
+  fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
+  fnFinalizeUpdateKeccModule **fnFinalizeUpdateKecc;
+  fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
+  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
+    
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 
@@ -782,8 +810,6 @@ typedef struct {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
-/* Pointer to Laplace semi-major axis functions in Lagrange */
-typedef double (*fnLaplaceFunction)(double,int);
 
 /* 
  * Other Header Files - These are primarily for function declarations

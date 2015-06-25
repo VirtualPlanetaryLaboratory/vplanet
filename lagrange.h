@@ -9,7 +9,7 @@
 
 void InitializeControlLagrange(CONTROL*);
 void AddModuleLagrange(MODULE*,int,int);
-void BodyCopyLagrange(BODY*,BODY*,int,int);
+void BodyCopyLagrange(BODY*,BODY*,int);
 void InitializeBodyLagrange(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyLagrange(BODY*,CONTROL*,UPDATE*,int);
 
@@ -33,7 +33,7 @@ void ReadOptionsLagrange(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],i
 
 /* Verify Functions */
 void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyLagrange(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE,fnUpdateVariable***,int,int);
+void VerifyLagrange(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Update Functions */
 
@@ -66,7 +66,7 @@ void FinalizeUpdateQincLagrange(BODY*,UPDATE*,int*,int,int);
 
 #define OUT_DECCDTLAGRANGE       1340
 #define OUT_DINCDTLAGRANGE       1341
-#define OUT_DSINCCDTLAGRANGE     1342
+#define OUT_DSINCDTLAGRANGE      1342
 #define OUT_DLONGADTLAGRANGE     1343
 #define OUT_DLONGPDTLAGRANGE     1344
 
@@ -132,7 +132,7 @@ double fdSemiMajAxF25(double, int);
 double fdSemiMajAxF26(double, int);
 
 /* Lagrange's equations in h,k,p,q */
-double fdLagrangeDhDt(BODY*, SYSTEM*, int);
-double fdLagrangeDkDt(BODY*, SYSTEM*, int);
-double fdLagrangeDpDt(BODY*, SYSTEM*, int);
-double fdLagrangeDqDt(BODY*, SYSTEM*, int);
+double fdLagrangeDhDt(BODY*, SYSTEM*, int*);
+double fdLagrangeDkDt(BODY*, SYSTEM*, int*);
+double fdLagrangeDpDt(BODY*, SYSTEM*, int*);
+double fdLagrangeDqDt(BODY*, SYSTEM*, int*);

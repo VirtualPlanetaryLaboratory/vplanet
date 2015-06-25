@@ -2158,7 +2158,7 @@ double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   // Broken XXX
 
   dSum=0;
-  for (iBody=0;iBody<iNumBodies;iBody++) 
+//   for (iBody=0;iBody<iNumBodies;iBody++) 
     /* XXX Sum the body functions? */
       dSum += body[iBody].dTidalZ[0]*(cos(body[iBody].dObliquity)*body[1].dTidalF[0][1]*body[iBody].dRotRate/(pow(body[1].dTidalBeta[0],12)*body[1].dMeanMotion) - body[1].dTidalF[0][0]/pow(body[1].dTidalBeta[0],15));
 
@@ -2171,7 +2171,7 @@ double fdCTLDeccDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Broken
   dSum=0;
-  for (iBody=0;iBody<iNumBodies;iBody++) 
+//   for (iBody=0;iBody<iNumBodies;iBody++) 
     dSum += body[iBody].dTidalZ[0]*(cos(body[iBody].dObliquity)*body[1].dTidalF[0][3]*body[iBody].dRotRate/(pow(body[1].dTidalBeta[0],10)*body[1].dMeanMotion) - 18*body[1].dTidalF[0][2]/(11*pow(body[1].dTidalBeta[0],13)));
   
   return 11*body[1].dSemi*body[1].dEcc/(2*BIGG*body[0].dMass*body[1].dMass)*dSum;

@@ -9,7 +9,7 @@
 
 void InitializeControlLagrange(CONTROL*);
 void AddModuleLagrange(MODULE*,int,int);
-void BodyCopyLagrange(BODY*,BODY*,int);
+void BodyCopyLagrange(BODY*,BODY*,int,int);
 void InitializeBodyLagrange(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyLagrange(BODY*,CONTROL*,UPDATE*,int);
 
@@ -103,6 +103,7 @@ void LogBodyLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 
 /* Lagrange Functions */
 void PropertiesLagrange(BODY*,int);
+void ForceBehaviorLagrange(BODY*,EVOLVE*,IO*,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

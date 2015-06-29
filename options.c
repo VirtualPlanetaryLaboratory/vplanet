@@ -1222,6 +1222,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
   } else
     AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
     

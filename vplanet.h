@@ -106,12 +106,14 @@
 #define VNUM238UCORE    1107
 #define VNUM235UCORE    1108
 
+//LAGRANGE
+#define VHECC           1301
+#define VKECC           1302
+#define VPINC           1303
+#define VQINC           1304
+
 /* Semi-major axis functions in Lagrange */
 #define LAPLNUM 	      26
-
-/* Integration elements for Lagrange */
-#define HKPQ          0
-#define ESVO          1
 
 /* Now define the structs */
 

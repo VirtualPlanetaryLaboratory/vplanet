@@ -23,7 +23,7 @@ void InitializeModuleLagrange(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyLagrange(BODY *dest,BODY *src,int iBody) {
+void BodyCopyLagrange(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dHecc = src[iBody].dHecc;
@@ -178,6 +178,7 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
     
     body[iFile-1].dArgP = dTmp; 
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+    printf(" ");
   } else 
     if (iFile > 0)
       body[iFile-1].dArgP = options->dDefault;
@@ -368,48 +369,48 @@ double fdCalcLongA(double dLongP, double dArgP) {
 
 void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
-  if (options[OPT_LONGA].iLine[iBody] > -1 && options[OPT_LONGP].iLine[iBody] > -1 && options[OPT_ARGP].iLine[iBody] == -1) 
+  if (options[OPT_LONGA].iLine[iBody+1] > -1 && options[OPT_LONGP].iLine[iBody+1] > -1 && options[OPT_ARGP].iLine[iBody+1] == -1) 
     return;
 
   /* If none are set, raise error */
-  if (options[OPT_LONGA].iLine[iBody] == -1 && options[OPT_LONGP].iLine[iBody] == -1 && options[OPT_ARGP].iLine[iBody] == -1) {
+  if (options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_LONGP].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1) {
     if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Must set at least two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
+      fprintf(stderr,"ERROR: Must set two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
     exit(EXIT_INPUT);
   }
   
   /* At least 2 must be set */
-  if ((options[OPT_LONGA].iLine[iBody] == -1 && options[OPT_LONGP].iLine[iBody] == -1) || (options[OPT_LONGA].iLine[iBody] == -1 && options[OPT_ARGP].iLine[iBody] == -1) || (options[OPT_LONGP].iLine[iBody] == -1 && options[OPT_ARGP].iLine[iBody] == -1)) {
+  if ((options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_LONGP].iLine[iBody+1] == -1) || (options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1) || (options[OPT_LONGP].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1)) {
     if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Must set at least two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
+      fprintf(stderr,"ERROR: Must set two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
     exit(EXIT_INPUT);
   }
 
   /* Were all set? */
-  if (options[OPT_LONGA].iLine[iBody] > -1 && options[OPT_LONGP].iLine[iBody] > -1 && options[OPT_ARGP].iLine[iBody] > -1) {
-    VerifyTripleExit(options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName,options[OPT_LONGA].iLine[iBody],options[OPT_LONGP].iLine[iBody],options[OPT_ARGP].iLine[iBody],cFile,iVerbose);
+  if (options[OPT_LONGA].iLine[iBody+1] > -1 && options[OPT_LONGP].iLine[iBody+1] > -1 && options[OPT_ARGP].iLine[iBody+1] > -1) {
+    VerifyTripleExit(options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName,options[OPT_LONGA].iLine[iBody+1],options[OPT_LONGP].iLine[iBody+1],options[OPT_ARGP].iLine[iBody+1],cFile,iVerbose);
     exit(EXIT_INPUT);
   }
 
   /* Was LONGA set? */
-  if (options[OPT_LONGA].iLine[iBody] > -1) {
+  if (options[OPT_LONGA].iLine[iBody+1] > -1) {
     
-    if (options[OPT_LONGP].iLine[iBody] > -1)
+    if (options[OPT_LONGP].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
 	 return;
-    if (options[OPT_ARGP].iLine[iBody] > -1) 
+    if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
       body->dLongP = fdCalcLongP(body->dLongA,body->dArgP);    
     return;
   }
 
   /* Was LongP set? */
-  if (options[OPT_LONGP].iLine[iBody] > -1) {
+  if (options[OPT_LONGP].iLine[iBody+1] > -1) {
     
-    if (options[OPT_LONGA].iLine[iBody] > -1)
+    if (options[OPT_LONGA].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
 	 return;
-    if (options[OPT_ARGP].iLine[iBody] > -1) 
+    if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
       body->dLongA = fdCalcLongA(body->dLongP,body->dArgP);    
     return;
@@ -432,7 +433,7 @@ void InitializeHeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]][1] = iPert;
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
 void InitializeKeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
@@ -441,7 +442,7 @@ void InitializeKeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]][1] = iPert;
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
 void InitializePincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
@@ -450,7 +451,7 @@ void InitializePincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]][1] = iPert;
+  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
 void InitializeQincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
@@ -459,7 +460,7 @@ void InitializeQincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]][1] = iPert;
+  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
 void VerifyPerturbersLagrange(BODY *body,int iNumBodies,int iBody) {
@@ -507,13 +508,14 @@ int CombCount(int x, int y, int N) {
 
 
 void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j, iPert;
+  int i, j, iPert, jBody;
   
   VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
+  control->Evolve.fnAuxProps[iBody][iModule] = &PropertiesLagrange;
   
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
-  if (bPrimary(body,iBody)) {
+  if (iBody == 1) {
     system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
     for (j=0;j<LAPLNUM;j++) {
       system->fnLaplaceF[j] = malloc(1*sizeof(fnLaplaceFunction));
@@ -554,7 +556,9 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     for (i=1;i<control->Evolve.iNumBodies;i++) {
       system->imLaplaceN[i] = malloc((control->Evolve.iNumBodies)*sizeof(int));
     }
-  } else {
+    
+  }
+  if (iBody >= 1) {
     /* Body updates */
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
       /* h = Ecc*sin(LongP) */
@@ -574,22 +578,25 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = &fdLagrangeDqDt;
       
       for (j=0;j<LAPLNUM;j++) {
-	if (body[iBody].dSemi < body[iPert].dSemi) {
-	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,control->Evolve.iNumBodies-1);
-	    system->dmLaplaceC[system->imLaplaceN[iBody][iPert]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[iPert].dSemi, 0);
-	} else if (body[iBody].dSemi > body[iPert].dSemi) {
-	    system->imLaplaceN[iBody][iPert] = CombCount(iBody,iPert,control->Evolve.iNumBodies-1);
-	    system->dmLaplaceC[system->imLaplaceN[iBody][iPert]][j] = system->fnLaplaceF[j][0](body[iPert].dSemi/body[iBody].dSemi, 0);
+	jBody = body[iBody].iaGravPerts[iPert];
+	if (body[iBody].dSemi < body[jBody].dSemi) {
+	    system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 0);
+	} else if (body[iBody].dSemi > body[jBody].dSemi) {
+	    system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi, 0);
 	}
       }
     }
   }
+  control->fnForceBehavior[iBody][iModule]=&ForceBehaviorLagrange;
+  control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyLagrange;
 }
 
 
 /***************** LAGRANGE Update *****************/
 void InitializeUpdateLagrange(BODY *body,UPDATE *update,int iBody) {
-  if (!bPrimary(body,iBody)) {
+  if (iBody > 0) {
     update[iBody].iNumHecc++;
     update[iBody].iNumKecc++;
     update[iBody].iNumPinc++;
@@ -1136,6 +1143,9 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 
 void PropertiesLagrange(BODY *body,int iBody) {
   
+}
+
+void ForceBehaviorLagrange(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
 }
 
 // 

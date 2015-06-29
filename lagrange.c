@@ -400,7 +400,7 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
 	 return;
     if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
-      body->dLongP = fdCalcLongP(body->dLongA,body->dArgP);    
+      body[iBody].dLongP = fdCalcLongP(body[iBody].dLongA,body[iBody].dArgP);    
     return;
   }
 
@@ -412,7 +412,7 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
 	 return;
     if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
-      body->dLongA = fdCalcLongA(body->dLongP,body->dArgP);    
+      body[iBody].dLongA = fdCalcLongA(body[iBody].dLongP,body[iBody].dArgP);    
     return;
   }
 }
@@ -559,6 +559,7 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     
   }
   if (iBody >= 1) {
+    CalcHKPQ(body, iBody);
     /* Body updates */
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
       /* h = Ecc*sin(LongP) */
@@ -1141,8 +1142,7 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 
 /************* Lagrange Functions ************/
 
-void PropertiesLagrange(BODY *body,int iBody) {
-  
+void PropertiesLagrange(BODY *body,int iBody) {  
 }
 
 void ForceBehaviorLagrange(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {

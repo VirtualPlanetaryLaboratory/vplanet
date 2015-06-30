@@ -183,7 +183,7 @@ void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
 }
 
-void fnPropertiesAtmEsc(BODY *body,int iBody) {
+void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
 }
 

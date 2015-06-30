@@ -27,8 +27,7 @@ dRotPeriod	-1
 dSemi           0.21847
 #dTidalTau	-630
 sName		d
-#dTidalQ		100
-dTidalTau	-630
+dTidalQ		100
 dEcc            0.38
 dRadius		-1.592
 saTidePerts	star

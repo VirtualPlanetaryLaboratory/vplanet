@@ -183,3 +183,48 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
+
+/*
+ * Verify multi-module dependencies
+ */
+
+void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+
+  /* This will need modification if material can move between layers */
+
+  if (body[iBody].bThermint) {
+    if (!body[iBody].bRadheat) {
+      if (control->Io.iVerbose > VERBINPUT)
+	fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
+      body[iBody].dPowManRadiog = 0;
+      body[iBody].dPowCoreRadiog = 0;
+    } else
+      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesRadheatThermint;
+  }
+}
+
+void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+  int iModule=0;
+
+  if (module->iNumModules[iBody] > 1) {
+    /* XXX Note that the number of elements here is really a permutation, 
+       but this should work for a while. */
+    control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
+
+    // Now verify 
+    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iModule);
+  }
+
+  control->Evolve.iNumMulti[iBody] = iModule;
+  if (control->Io.iVerbose >= VERBALL)
+    fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
+}
+
+/*
+ * Auxiliary Properties for multi-module calculations
+ */
+
+void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+  body[iBody].dPowCoreRadiog = fdRadPowerCore(body,update,iBody);
+  body[iBody].dPowManRadiog = fdRadPowerMan(body,update,iBody);
+}

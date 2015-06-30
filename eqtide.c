@@ -787,6 +787,10 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     body[iBody].iTidalEpsilon[iPert]=malloc(10*sizeof(int));
   control->Evolve.fnAuxProps[iBody][iModule]=&PropertiesCPL;
 
+  /* Now remove output options unique to CTL. This will prevent segmentation
+     faults as memory will not be allocated to some parameters unless CTL
+     is chosen. */
+  output[OUT_TIDALTAU].iNum = 0;
 }
 
 /** Verify all arguments to saTidePerturbers. This subroutine will called 
@@ -1839,7 +1843,7 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
   return 0;
 }      
 
-void PropertiesCPL(BODY *body,int iBody) {
+void PropertiesCPL(BODY *body,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
 
@@ -1861,7 +1865,7 @@ void PropertiesCPL(BODY *body,int iBody) {
   }
 }
 
-void PropertiesCTL(BODY *body,int iBody) {
+void PropertiesCTL(BODY *body,UPDATE *update,int iBody) {
   int iPert,iIndex;
 
   if (iBody == 0) {

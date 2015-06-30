@@ -165,7 +165,6 @@ void LogBodyEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* Functions common to both CPL and CTL */
 
-void PropertiesCTL(BODY*,int);
 void PropertiesEqtide(BODY*,int);
 void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY,double,double,int,int);
@@ -181,7 +180,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropertiesCPL(BODY*,int);
+void PropertiesCPL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -210,7 +209,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropertiesCTL(BODY*,int);
+void PropertiesCTL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);

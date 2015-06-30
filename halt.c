@@ -113,7 +113,7 @@ int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
   return 0;
 }
 
-/* Minimum Internal Power? */
+/* Minimum Internal Power? XXX Rewrite with radheat and thermint written 
 int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].dIntEn <= halt->dMinIntEn) {
     if (io->iVerbose >= VERBPROG) {
@@ -128,6 +128,7 @@ int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 
   return 0;
 }
+*/
 
 /* Positive de/dt? */
 int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
@@ -172,9 +173,10 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int
     control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
   if (control->Halt[iBody].bPosDeDt)
     control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
+  /* XXX Should be changed with thermint completed
   if (control->Halt[iBody].dMinIntEn > 0)
     control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
-  
+  */
   iHalt0=iHaltNow;
   for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);

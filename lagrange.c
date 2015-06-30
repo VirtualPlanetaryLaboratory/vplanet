@@ -192,7 +192,9 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INC].cDefault,"0");
   options[OPT_INC].dDefault = 0.0;
   options[OPT_INC].iType = 2;  
-  options[OPT_INC].iMultiFile = 1;  
+  options[OPT_INC].iMultiFile = 1; 
+//   options[OPT_INC].dNeg = DEGRAD;
+//   sprintf(options[OPT_INC].cNeg,"Degrees");
   fnRead[OPT_INC] = &ReadInc;
   
   sprintf(options[OPT_LONGA].cName,"dLongA");
@@ -201,6 +203,8 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LONGA].dDefault = 0.0;
   options[OPT_LONGA].iType = 2;  
   options[OPT_LONGA].iMultiFile = 1; 
+//   options[OPT_LONGA].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_LONGA] = &ReadLongA;
   
   sprintf(options[OPT_LONGP].cName,"dLongP");
@@ -209,6 +213,8 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LONGP].dDefault = 0.0;
   options[OPT_LONGP].iType = 2;  
   options[OPT_LONGP].iMultiFile = 1;   
+//   options[OPT_LONGP].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   fnRead[OPT_LONGP] = &ReadLongP;
   
   sprintf(options[OPT_ARGP].cName,"dArgP");
@@ -216,7 +222,9 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ARGP].cDefault,"0");
   options[OPT_ARGP].dDefault = 0.0;
   options[OPT_ARGP].iType = 2;  
-  options[OPT_ARGP].iMultiFile = 1;   
+  options[OPT_ARGP].iMultiFile = 1; 
+//   options[OPT_ARGP].dNeg = DEGRAD;
+//   sprintf(options[OPT_ARGP].cNeg,"Degrees");
   fnRead[OPT_ARGP] = &ReadArgP;
  
 }
@@ -958,7 +966,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DECCDTLAGRANGE].iNum = 1;
   fnWrite[OUT_DECCDTLAGRANGE] = &WriteBodyDEccDtLagrange;
   
-  sprintf(output[OUT_DSINCDTLAGRANGE].cName,"DsIncDtLagrange");
+  sprintf(output[OUT_DSINCDTLAGRANGE].cName,"DSincDtLagrange");
   sprintf(output[OUT_DSINCDTLAGRANGE].cDescr,"Body's dsin(.5*Inc)/dt in Lagrange");
   sprintf(output[OUT_DSINCDTLAGRANGE].cNeg,"1/year");
   output[OUT_DSINCDTLAGRANGE].bNeg = 1;
@@ -970,7 +978,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DINCDTLAGRANGE].cDescr,"Body's dInc/dt in Lagrange");
   sprintf(output[OUT_DINCDTLAGRANGE].cNeg,"deg/year");
   output[OUT_DINCDTLAGRANGE].bNeg = 1;
-  output[OUT_DINCDTLAGRANGE].dNeg = YEARSEC;
+  output[OUT_DINCDTLAGRANGE].dNeg = YEARSEC/DEGRAD;
   output[OUT_DINCDTLAGRANGE].iNum = 1;
   fnWrite[OUT_DINCDTLAGRANGE] = &WriteBodyDIncDtLagrange;
   
@@ -978,7 +986,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DLONGPDTLAGRANGE].cDescr,"Body's dvarpi/dt in Lagrange");
   sprintf(output[OUT_DLONGPDTLAGRANGE].cNeg,"deg/yr");
   output[OUT_DLONGPDTLAGRANGE].bNeg = 1;
-  output[OUT_DLONGPDTLAGRANGE].dNeg = YEARSEC;
+  output[OUT_DLONGPDTLAGRANGE].dNeg = YEARSEC/DEGRAD;
   output[OUT_DLONGPDTLAGRANGE].iNum = 1;
   fnWrite[OUT_DLONGPDTLAGRANGE] = &WriteBodyDLongPDtLagrange;
   
@@ -986,7 +994,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DLONGADTLAGRANGE].cDescr,"Body's dOmega/dt in Lagrange");
   sprintf(output[OUT_DLONGADTLAGRANGE].cNeg,"deg/yr");
   output[OUT_DLONGADTLAGRANGE].bNeg = 1;
-  output[OUT_DLONGADTLAGRANGE].dNeg = DEGRAD;
+  output[OUT_DLONGADTLAGRANGE].dNeg = YEARSEC/DEGRAD;
   output[OUT_DLONGADTLAGRANGE].iNum = 1;
   fnWrite[OUT_DLONGADTLAGRANGE] = &WriteBodyDLongADtLagrange;
   
@@ -998,7 +1006,7 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_INC].iNum = 1;
   fnWrite[OUT_INC] = &WriteBodyInc;
   
-  sprintf(output[OUT_SINC].cName,"sInc");
+  sprintf(output[OUT_SINC].cName,"Sinc");
   sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in Lagrange");
   output[OUT_SINC].iNum = 1;
   fnWrite[OUT_SINC] = &WriteBodySinc;

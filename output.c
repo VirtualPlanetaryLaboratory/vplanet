@@ -840,7 +840,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
     /* Get auxiliary properties */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,iBody);
+      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
     
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
@@ -863,7 +863,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   double dDt;
 
   /* Get derivatives */
-  PropertiesAuxiliary(body,control);
+  PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
   if (iEnd == 0) {

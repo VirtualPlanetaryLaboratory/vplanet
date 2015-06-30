@@ -13,12 +13,13 @@ dRadGyra      0.5                         # Radius of gyration (moment of inerti
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
-#dTidalTau    -1                          # Tidal time lag, negative -> seconds
-dTidalQ       1e6                         # Tidal phase lag
-dK2           0.299                       # Love number of degree 2
-sTideModel    p2                          # Tidal model, p2=CPL, t8=CTL
-#sTideModel   t8                          # Uncomment sTideModel, dTidalTau && dTidalQ to compare
-saTidePerts   c d                         # Body name(s) of tidal perturbers
+#dTidalTau	-1		# Tidal time lag, negative -> seconds
+dTidalQ		1e6		# Tidal phase lag
+dK2		0.299		# Love number of degree 2
+sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
+#sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
+#saTidePerts	c d		# Body name(s) of tidal perturbers
+saTidePerts	d 		# Body name(s) of tidal perturbers
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!

@@ -1,17 +1,37 @@
 # Gl581 d
-saOutputOrder Time Semim
-dMass		      -5.6
-dObliquity	  23.5
-dK2		        0.3
-dRadGyra	    0.5
-dRotPeriod	  -1
-dSemi         0.21847
-#dTidalTau	  -630
-sName		      d
-dTidalQ		    100
-dEcc          0.38
-dRadius		    -1.592
-saTidePerts	  star
-saModules	    eqtide atmesc
+#saOutputOrder -40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT $
+#
+#  		Time Semim $
+# Damn! I put a $ at the start of this line, but it didn't work!
+#
+#		Ecce Obli$
+#		 -SurfEnFluxEqtide$
+#
+#		 -SurfEnFluxRadheat 
+#=======
+#saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
+#		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
+saOutputOrder Time Semim Ecce Obli -Rotper -SurfEnFluxEqtide
+
+# The order of options in a file is unimportant
+# The user selects the ordering of the output
+
+#d238UNumMan	-1
+dMass		-5.6
+dObliquity	23.5
+dK2		0.3
+dRadGyra	0.5
+dRotPeriod	-1
+dSemi           0.21847
+#dTidalTau	-630
+sName		d
+dTidalQ		100
+dEcc            0.38
+dRadius		-1.592
+saTidePerts	star
+#d40KNumMan		-30
+saModules	eqtide#$		
+#radheat
+#d232ThNumMan	-1
 dMaxLockDiff	0.1
 

@@ -5,7 +5,7 @@ System Name: gl581
 Primary Input File: vpl.in
 Body File #1: gl581.in
 Body File #2: c.in
-Body File #3: d.in
+Body File #3: e.in
 Allow files to be overwitten: Yes
 Mass Units: Grams
 Length Units: Centimeters
@@ -59,7 +59,7 @@ Minimum Value of ecc and obl: 1.000000e-10
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -8.359453e-09 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 2.848564e-33 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 7.929524e-22 
 (EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.725818e-06 
 (EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.982822e+08 
 (EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.921641e-06 
@@ -71,11 +71,11 @@ Minimum Value of ecc and obl: 1.000000e-10
 (TidalQ) Tidal Q []: 1.000000e+06 
 (TidalTau) Tidal Time Lag [sec]: 1.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.929524e-22 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 9.735930e+14 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
 (PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: -6.493497e+27 
 (SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: -1.266921e+06 
-Tidal Perturbers: c, d
+Tidal Perturbers: c
 Output Order:
 
 ----- BODY: c ----
@@ -166,7 +166,7 @@ Tidal Perturbers: star
 (SurfWaterMass) Surface Water Mass [grams]: 0.000000 
 Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg]
 
------ BODY: d ----
+----- BODY: e ----
 (Mass) Mass [grams]: 3.345552e+28 
 (Obliquity) Obliquity [rad]: 0.410152 
 (Radius) Radius [cm]: 1.015394e+09 
@@ -175,7 +175,7 @@ Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obl
 (RotVel) Rotational Velocity [cm/sec]: 7.384150e+04 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 2315.613441 
+(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 4.940656e-324 
 (Eccentricity) Orbital Eccentricity []: 0.380000 
 (OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
 (MeanMotion) Orbital Mean Motion [/sec]: 1.085558e-06 
@@ -185,29 +185,7 @@ Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obl
 (OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105500e+41 
 (OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.211000e+41 
 (OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
------ EQTIDE PARAMETERS (d)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
-(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
-(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 3.213803e-17 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 2.901037e-11 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.441775e-20 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.725818e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.858653e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.921641e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.440332e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.858653e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.725818e-06 
-(GammaRot) Gamma_Rotation [cgs]: 4.108000 
-(GammaOrb) Gamma_Orbital [cgs]: 4.183600 
-(TidalQ) Tidal Q []: 100.000000 
-(TidalTau) Tidal Time Lag [sec]: 1.000000 
-(TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 2.978245e+15 
-(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: 1.276221e+16 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 1.500081e+22 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 1157.806721 
-Tidal Perturbers: star
------ ATMESC PARAMETERS (d)------
+----- ATMESC PARAMETERS (e)------
 (NumberOfOrcs) Total Number of Orcs []: 10000.000000 
 (SurfWaterMass) Surface Water Mass [TO]: 1.000000 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
@@ -247,7 +225,7 @@ Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.403779e-10 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.950713e-33 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -7.348680e-22 
 (EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
 (EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.982822e+08 
 (EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
@@ -259,11 +237,11 @@ Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 (TidalQ) Tidal Q []: 1.000000e+06 
 (TidalTau) Tidal Time Lag [sec]: 1.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.348680e-22 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.804336e+15 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
 (PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 5.043469e+28 
 (SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 9.840120e+06 
-Tidal Perturbers: c, d
+Tidal Perturbers: c
 Output Order:
 
 ----- BODY: c ----
@@ -354,48 +332,26 @@ Tidal Perturbers: star
 (SurfWaterMass) Surface Water Mass [grams]: 0.000000 
 Output Order: Time[year] NumberOfOrcs[year] SemiMajorAxis[AU] Eccentricity[] Obliquity[deg]
 
------ BODY: d ----
+----- BODY: e ----
 (Mass) Mass [grams]: 3.345552e+28 
-(Obliquity) Obliquity [rad]: 0.000000 
+(Obliquity) Obliquity [rad]: 0.410152 
 (Radius) Radius [cm]: 1.015394e+09 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 1.404159e+40 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.143209e+34 
-(RotVel) Rotational Velocity [cm/sec]: 1653.385014 
-(RotRate) Rotational Frequency [/sec]: 1.628319e-06 
-(RotPer) Rotational Period [sec]: 3.858693e+06 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 4.800383 
-(Eccentricity) Orbital Eccentricity []: 0.379999 
+(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 6.271085e+41 
+(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 2.280231e+37 
+(RotVel) Rotational Velocity [cm/sec]: 7.384150e+04 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 4.940656e-324 
+(Eccentricity) Orbital Eccentricity []: 0.380000 
 (OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.085546e-06 
-(OrbPeriod) Orbital Period [sec]: 5.788040e+06 
-(SemiMajorAxis) Semi-major Axis [cm]: 3.268290e+12 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.085558e-06 
+(OrbPeriod) Orbital Period [sec]: 5.787979e+06 
+(SemiMajorAxis) Semi-major Axis [cm]: 3.268268e+12 
 (OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105485e+41 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.210970e+41 
+(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105500e+41 
+(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.211000e+41 
 (OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
------ EQTIDE PARAMETERS (d)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
-(BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
-(DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 5.786113e-08 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -2.441666e-20 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.858693e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.440365e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.858693e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 5.735144e-06 
-(GammaRot) Gamma_Rotation [cgs]: 4.096008 
-(GammaOrb) Gamma_Orbital [cgs]: 4.163213 
-(TidalQ) Tidal Q []: 100.000000 
-(TidalTau) Tidal Time Lag [sec]: 1.000000 
-(TideLock) Tidally Locked? []: 1.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 6.668887e+13 
-(OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 3.109744e+19 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 2.400192 
-Tidal Perturbers: star
------ ATMESC PARAMETERS (d)------
+----- ATMESC PARAMETERS (e)------
 (NumberOfOrcs) Total Number of Orcs []: 4.346785e+13 
 (SurfWaterMass) Surface Water Mass [TO]: 0.367879 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]

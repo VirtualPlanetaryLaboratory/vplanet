@@ -99,6 +99,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumPinc=0;
     update[iBody].iNumQinc=0;
     
+    /* Hack to get LAGRANGE working. Need iGravPerts for following arrays */
+    if (body[iBody].bLagrange) {
+      body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
+    }
+    
     /* First we must identify how many variables and models must be 
        assigned so we can malloc the update struct. */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
@@ -495,10 +500,12 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
+
+
     
+
     
     // h = e*sin(longp)
-
     update[iBody].iHecc = -1;
     if (update[iBody].iNumHecc) {
       update[iBody].iHecc = iVar;

@@ -428,7 +428,7 @@ void CalcHKPQ(BODY *body, int iBody) {
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
    body number of the current perturbing body. */
 void InitializeHeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = 1;
+  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = 2;
   update[iBody].padDHeccDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]];
   update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]*sizeof(int));
@@ -437,7 +437,7 @@ void InitializeHeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
 }
 
 void InitializeKeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = 1;
+  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = 2;
   update[iBody].padDKeccDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]];
   update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]*sizeof(int));
@@ -446,7 +446,7 @@ void InitializeKeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
 }
 
 void InitializePincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = 1;
+  update[iBody].iaType[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = 2;
   update[iBody].padDPincDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]];
   update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]*sizeof(int));
@@ -455,7 +455,7 @@ void InitializePincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
 }
 
 void InitializeQincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = 1;
+  update[iBody].iaType[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = 2;
   update[iBody].padDQincDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]];
   update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]=2;
   update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]*sizeof(int));
@@ -466,7 +466,6 @@ void InitializeQincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersLagrange(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iGravPerts = iNumBodies - 2; //will need to change this for zero mass particles in future
   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
@@ -507,13 +506,10 @@ int CombCount(int x, int y, int N) {
 } 
 
 
+
 void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j, iPert, jBody;
-  
-  VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
-  VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
-  control->Evolve.fnAuxProps[iBody][iModule] = &PropertiesLagrange;
-  
+  int i, j=0, iPert=0, jBody=0;
+     
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
   if (iBody == 1) {
     system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
@@ -559,6 +555,11 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     
   }
   if (iBody >= 1) {
+    VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+    body[iBody].iGravPerts = control->Evolve.iNumBodies - 2; //will need to change this for zero mass particles in future
+    VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
+    control->Evolve.fnAuxProps[iBody][iModule] = &PropertiesLagrange;
+    
     CalcHKPQ(body, iBody);
     /* Body updates */
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -578,13 +579,14 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       InitializeQincLagrange(body,update,iBody,iPert);
       fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = &fdLagrangeDqDt;
       
+      jBody = body[iBody].iaGravPerts[iPert];
+      
       for (j=0;j<LAPLNUM;j++) {
-	jBody = body[iBody].iaGravPerts[iPert];
-	if (body[iBody].dSemi < body[jBody].dSemi) {
+	if (body[iBody].dSemi < body[jBody].dSemi) {  
 	    system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 0);
 	} else if (body[iBody].dSemi > body[jBody].dSemi) {
-	    system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+	    system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi, 0);
 	}
       }
@@ -598,10 +600,10 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 /***************** LAGRANGE Update *****************/
 void InitializeUpdateLagrange(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
-    update[iBody].iNumHecc++;
-    update[iBody].iNumKecc++;
-    update[iBody].iNumPinc++;
-    update[iBody].iNumQinc++;
+    update[iBody].iNumHecc += body[iBody].iGravPerts;
+    update[iBody].iNumKecc += body[iBody].iGravPerts;
+    update[iBody].iNumPinc += body[iBody].iGravPerts;
+    update[iBody].iNumQinc += body[iBody].iGravPerts;
     update[iBody].iNumVars += 4;
   }
 }
@@ -1915,7 +1917,6 @@ double fdDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
 
 //-------------------Lagrange's equations in h k p q -------------------------------------
 double fdLagrangeDhDt(BODY *body, SYSTEM *system, int *iaBody) {
-  int i;
   double sum = 0.0, dMu;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
 
@@ -1931,7 +1932,6 @@ double fdLagrangeDhDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdLagrangeDkDt(BODY *body, SYSTEM *system, int *iaBody) {
-  int i;
   double sum = 0.0, dMu;
   
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
@@ -1946,7 +1946,6 @@ double fdLagrangeDkDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdLagrangeDpDt(BODY *body, SYSTEM *system, int *iaBody) {
-    int i;
     double sum = 0.0, dMu;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
@@ -1961,7 +1960,6 @@ double fdLagrangeDpDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 
 double fdLagrangeDqDt(BODY *body, SYSTEM *system, int *iaBody) {
-    int i;
     double sum = 0.0, dMu;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;

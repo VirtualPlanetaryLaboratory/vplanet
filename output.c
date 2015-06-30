@@ -99,7 +99,11 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (iBody > 0)
-    *dTmp = body[iBody].dEcc;
+    if (body[iBody].bLagrange) {
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    } else {
+      *dTmp = body[iBody].dEcc;
+    }
   else
     *dTmp = -1;
   sprintf(cUnit,"");

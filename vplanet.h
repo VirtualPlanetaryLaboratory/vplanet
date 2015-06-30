@@ -306,7 +306,7 @@ typedef struct {
       with a Type 0 variable must account for  the evolution with 
       dTimeStep. 
   */
-  int **iaType;        
+  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar quantity with time derivative) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         

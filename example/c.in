@@ -1,6 +1,6 @@
 # Gl581 c's parameters
 sName		c			# Body's name
-saModules	eqtide radheat		# Modules to apply, exact spelling required
+saModules	eqtide	radheat	# Modules to apply, exact spelling required
 
 # Physical Properties
 dMass		-5.5			# Mass, negative -> Earth masses

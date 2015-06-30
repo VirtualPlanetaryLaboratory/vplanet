@@ -112,6 +112,16 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	      if (dMinNow < dMin)
 		dMin = dMinNow;
 	    }
+	  } else if (update[iBody].iaType[iVar][iEqn] == 2) {  
+	    // The parameter is a "polar quantity" controlled by a time derivative
+	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+		dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+		if (dMinNow < dMin) 
+		  dMin = dMinNow;
+	      }
+	    }
 	  } else {
 	    // The parameter is controlled by a time derivative
 	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {

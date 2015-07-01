@@ -17,7 +17,7 @@ dEcc            0.06			# Eccentricity
 saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $
 		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal $
-		    -TMan -TDotMan
+		    -TMan -TDotMan -TCore -TDotCore
 
 # Output can be in any order and need only be ambiguous. 
 # Units of negative arguments are listed in the onboard help (./vplanet -h).

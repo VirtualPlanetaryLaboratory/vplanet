@@ -19,6 +19,7 @@ void  InitializeControlInteriorthermal(CONTROL *control) {
 
 void BodyCopyInteriorthermal(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
+  dest[iBody].dTCore = src[iBody].dTCore;
 }
 
 void InitializeBodyInteriorthermal(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -29,7 +30,7 @@ void InitializeUpdateTmpBodyInteriorthermal(BODY *body,CONTROL *control,UPDATE *
 
 /**************** RADHEAT options ********************/
 
-/* Initial Mantle Temperature */
+/* Initial Mantle & Core Temperature */
 
 void ReadTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -48,6 +49,23 @@ void ReadTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
       body[iFile-1].dTMan = options->dDefault;
 }
 
+void ReadTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dTCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+       body[iFile-1].dTCore = dTmp*fdUnitsTemp(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dTCore = options->dDefault;
+}
+
 
 /* Initiatlize Input Options */
 
@@ -64,6 +82,16 @@ void InitializeOptionsInteriorthermal(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TMAN].dDefault = 3000.0d; 
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
   fnRead[OPT_TMAN] = &ReadTMan;
+   /* TCore */
+  sprintf(options[OPT_TCORE].cName,"dTCore");
+  sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
+  sprintf(options[OPT_TCORE].cDefault,"Default=6000");
+  options[OPT_TCORE].iType = 2;
+  options[OPT_TCORE].iMultiFile = 1;
+  options[OPT_TCORE].dNeg = 6000.0d;  //Not sure about this??
+  options[OPT_TCORE].dDefault = 6000.0d; 
+  sprintf(options[OPT_TCORE].cNeg,"Default=6000");
+  fnRead[OPT_TCORE] = &ReadTCore;
 
 }
 
@@ -96,7 +124,7 @@ void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
 
 void VerifyTMan(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
     //  AssignTMan(body,options,dAge,iBody);
-  /* Mantle */
+    /* Mantle */
     update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
     update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
     update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
@@ -104,6 +132,18 @@ void VerifyTMan(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
     update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
     fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
 }
+
+void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+    //  AssignTCore(body,options,dAge,iBody);
+    /* Core */
+    update[iBody].iaType[update[iBody].iTCore][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+    update[iBody].iNumBodies[update[iBody].iTCore][0]=1;
+    update[iBody].iaBody[update[iBody].iTCore][0] = malloc(update[iBody].iNumBodies[update[iBody].iTCore][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
+    update[iBody].iaBody[update[iBody].iTCore][0][0]=iBody;
+    update[iBody].pdTDotCore = &update[iBody].daDerivProc[update[iBody].iTCore][0];
+    fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
+}
+
 
 
 void fnPropertiesInteriorthermal(BODY *body,int iBody) {
@@ -113,21 +153,13 @@ void fnPropertiesInteriorthermal(BODY *body,int iBody) {
 void fnForceBehaviorInteriorthermal(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
+  if (body[iBody].dTCore < 0.5)
+    body[iBody].dTCore = 0;
 }
 
 void VerifyInteriorthermal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-    //  int bInteriorthermal=0;
-  /* Is this necessary? 
-  if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
-      body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
-  if (!bInteriorthermal && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: INTERIORTHERMAL called for body %s, but no radiogenic species present.\n",body[iBody].cName);
-    VerifyTMan(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
-    bInteriorthermal = 1;
-  }
-  */
-  //  bInteriorthermal = 1;  //assume verified ok for now?
-  VerifyTMan(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
+  VerifyTMan(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man.
+  VerifyTCore(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorInteriorthermal;
   control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesInteriorthermal;
@@ -151,12 +183,22 @@ void InitializeUpdateInteriorthermal(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNumTMan++;  //Why is iNumTMan incremented here and below?
   }
+  if (body[iBody].dTCore > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNumTCore++;  
+  }
 }
 
 void FinalizeUpdateTManInteriorthermal(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = TMAN;
   update[iBody].iNumTMan = (*iEqn)++;
 }
+
+void FinalizeUpdateTCoreInteriorthermal(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = TCORE;
+  update[iBody].iNumTCore = (*iEqn)++;
+}
+
 
 /***************** RADHEAT Halts *****************/
 
@@ -173,16 +215,34 @@ int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
     return 1;
   }
   return 0;
+}
+
+int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dTCore < halt->dMinTCore) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's TCore =  ",body[iBody].cName);
+      fprintd(stdout,body[iBody].dTCore,io->iSciNot,io->iDigits);
+      printf(" < ");
+      fprintd(stdout,halt->dMinTCore,io->iSciNot,io->iDigits);
+      printf(".\n");
+    }
+    return 1;
+  }
+  return 0;
 }        
 
 void CountHaltsInteriorthermal(HALT *halt,int *iHalt) {
   if (halt->dMinTMan >= 0)
+    (iHalt)++;
+  if (halt->dMinTCore >= 0)
     (iHalt)++;
 }
 
 void VerifyHaltInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].dMinTMan > 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
+  if (control->Halt[iBody].dMinTCore > 0)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
 }
 
 /************* RADHEAT Outputs ******************/
@@ -210,9 +270,37 @@ void WriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
       */
   }
 }
+
+void WriteTCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TCore */
+  *dTmp = body[iBody].dTCore;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { 
+      /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set "iOldType" to 0, second input var, arbitarily.
+    fsUnitsTemp(units->iTemp,cUnit);
+      */
+  }
+}
+
 void WriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TDotMan */
   *dTmp = (*(update[iBody].pdTDotMan));
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+      /*
+      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
+      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add yr and Gyr options.
+      */
+  }
+}
+
+void WriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TDotCore */
+  *dTmp = (*(update[iBody].pdTDotCore));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -233,6 +321,14 @@ void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TMAN].iNum = 1;
   fnWrite[OUT_TMAN] = &WriteTMan;
 
+  sprintf(output[OUT_TCORE].cName,"TCore");
+  sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
+  sprintf(output[OUT_TCORE].cNeg,"K");
+  output[OUT_TCORE].bNeg = 1;
+  output[OUT_TCORE].dNeg = 1; // default units are K. 
+  output[OUT_TCORE].iNum = 1;
+  fnWrite[OUT_TCORE] = &WriteTCore;
+
   sprintf(output[OUT_TDOTMAN].cName,"TDotMan");
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
   sprintf(output[OUT_TDOTMAN].cNeg,"K/s");
@@ -240,6 +336,14 @@ void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TDOTMAN].dNeg = 1; // default units are K. 
   output[OUT_TDOTMAN].iNum = 1;
   fnWrite[OUT_TDOTMAN] = &WriteTDotMan;
+  
+  sprintf(output[OUT_TDOTCORE].cName,"TDotCore");
+  sprintf(output[OUT_TDOTCORE].cDescr,"Change in Core Temperature");
+  sprintf(output[OUT_TDOTCORE].cNeg,"K/s");
+  output[OUT_TDOTCORE].bNeg = 1;
+  output[OUT_TDOTCORE].dNeg = 1; // default units are K. 
+  output[OUT_TDOTCORE].iNum = 1;
+  fnWrite[OUT_TDOTCORE] = &WriteTDotCore;
 }
 
 void FinalizeOutputFunctionInteriorthermal(OUTPUT *output,int iBody,int iModule) {
@@ -301,6 +405,7 @@ void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
 
     // NEED TO ADD INTERIORTHERMAL VARIABLES HERE??
   module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManInteriorthermal;
+  module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreInteriorthermal;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionInteriorthermal;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionInteriorthermal;
@@ -310,6 +415,10 @@ void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
 /************* INTERIORTHERMAL Functions ************/
 
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+    return -(100.0/1e9/YEARSEC);   //arbitrary for now.
+}
+
+double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
     return -(100.0/1e9/YEARSEC);   //arbitrary for now.
 }
 

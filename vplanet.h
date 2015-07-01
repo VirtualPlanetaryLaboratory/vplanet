@@ -410,6 +410,10 @@ typedef struct {
     int iNumTMan;       /**< Number of Equations Affecting TMan */
     double dTDotMan;    /**< TMan time Derivative */
     double *pdTDotMan;
+    int iTCore;          /**< Variable # Corresponding to Tman */
+    int iNumTCore;       /**< Number of Equations Affecting TCore */
+    double dTDotCore;    /**< TCore time Derivative */
+    double *pdTDotCore;
 
 } UPDATE;
 
@@ -435,6 +439,7 @@ typedef struct {
     int dMin235UPower; 
     /* INTERIORTHERMAL */
     int dMinTMan;     /**< Halt at this TMan */
+    int dMinTCore;     /**< Halt at this TCore */
 
 } HALT;
 
@@ -652,6 +657,7 @@ typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -720,6 +726,7 @@ typedef struct {
     fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
 
     fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
+    fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
     
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;

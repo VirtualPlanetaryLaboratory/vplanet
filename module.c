@@ -41,6 +41,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
 
   module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
   
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -104,6 +105,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
 
   module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
   
   for(iModule = 0; iModule < iNumModules; iModule++) {
     module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
@@ -119,6 +121,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
     }
 
   /************************

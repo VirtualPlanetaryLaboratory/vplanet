@@ -7,6 +7,10 @@
  *
 */
 
+// GLOBAL VARIABLE INDEXES
+#define TMAN             20                    //index of TMAN variable.
+#define TCORE            21                    //index of TCORE variable.
+
 // UNITS CONSTANTS
 #define KM               1d3       //[m] 1 km in m
 //CONVERSIONS(for converting SI to cgs (swallow barf in mouth))
@@ -21,7 +25,6 @@
 #define GASCONSTANT      8.3144621             //[J/mol/K] gas constant in SI units.      
 
 // E MASS RESERVOIRS
-#define TMAN             20                    //index of TMAN variable.
 #define EMASS            5.9742e24             //[kg] mass of E
 #define EMASSFRACMAN     0.67                  //mass fraction of E mantle
 #define EMASSMAN         EMASSFRACMAN*EMASS    //[kg] mass of E mantle

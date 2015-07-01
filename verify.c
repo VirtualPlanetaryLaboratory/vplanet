@@ -424,7 +424,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
       InitializeUpdateTmpBody(body,control,module,update,iBody);
     }
   }
-  printf("update[iBody=1].i40KMan=%i, .i40KCore=%i, .iTMan=%i\n",update[1].i40KMan,update[1].i40KCore,update[1].iTMan);
   
 }
 

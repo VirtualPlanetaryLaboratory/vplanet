@@ -46,6 +46,9 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     dest[iBody].iNumTMan =src[iBody].iNumTMan;
     dest[iBody].iTMan =src[iBody].iTMan;
 
+    dest[iBody].iNumTCore =src[iBody].iNumTCore;
+    dest[iBody].iTCore =src[iBody].iTCore;
+
     dest[iBody].iNumObl = src[iBody].iNumObl;
     dest[iBody].iObl = src[iBody].iObl;
 
@@ -94,6 +97,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum238UCore=0;
     update[iBody].iNum235UCore=0;
     update[iBody].iNumTMan=0;
+    update[iBody].iNumTCore=0;
     update[iBody].iNumObl=0;
     update[iBody].iNumRot=0;
     update[iBody].iNumSemi=0;
@@ -404,6 +408,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
 
     /* Interior Thermal */
+    /* TMan */
     update[iBody].iTMan = -1;
     if (update[iBody].iNumTMan) {
       update[iBody].iTMan = iVar;
@@ -415,9 +420,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].iaType[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
       update[iBody].iaModule[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
       
-      if (control->Evolve.iOneStep == RUNGEKUTTA) {
-	  printf("RK: update[iBody=%i].iTMan=%i .iNumTMan=%i\n",iBody,update[iBody].iTMan,update[iBody].iNumTMan);
-		
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {		
 	  control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dTMan;
 	  control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
 	  control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumTMan*sizeof(double));
@@ -425,8 +428,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 	  control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
 	  control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumTMan*sizeof(int*));
       }
-
-      printf("update[iBody=%i].iTMan=%i .iNumTMan=%i\n",iBody,update[iBody].iTMan,update[iBody].iNumTMan);
       
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
@@ -435,9 +436,38 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-      printf("DONE FUTM: update[iBody=%i].iTMan=%i .iNumTMan=%i\n",iBody,update[iBody].iTMan,update[iBody].iNumTMan);
     }
     
+    /* TCore */
+    update[iBody].iTCore = -1;
+    if (update[iBody].iNumTCore) {
+      update[iBody].iTCore = iVar;
+      update[iBody].iaVar[iVar] = VTCORE;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumTCore;
+      update[iBody].pdVar[iVar] = &body[iBody].dTCore;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumTCore*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+      
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {		
+	  control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dTCore;
+	  control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+	  control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumTCore*sizeof(double));
+	  control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+	  control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
+	  control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumTCore*sizeof(int*));
+      }
+      
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+	module->fnFinalizeUpdateTCore[iBody][iModule](body,update,&iEqn,iVar,iBody);
+      
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
     // Obliquity
     
     update[iBody].iObl = -1;

@@ -23,16 +23,23 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   }
 }
 
-void PropertiesAuxiliary(BODY *body,CONTROL *control) {
+void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   int iBody,iModule;
 
   PropsAuxGeneral(body,control);
 
   /* Get properties from each module */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    // Uni-module properties
     for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,iBody);
+      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
+
+    // Multi-module properties
+    for (iModule=0;iModule<control->Evolve.iNumMulti[iBody];iModule++)
+      control->Evolve.fnAuxPropsMulti[iBody][iModule](body,update,iBody);
   }
+
+
 }
 
 void UpdateTmpBody(BODY *tmpBody,CONTROL *control,UPDATE *update) {
@@ -42,9 +49,14 @@ void UpdateTmpBody(BODY *tmpBody,CONTROL *control,UPDATE *update) {
     /* XXX Only update active variables? */
     tmpBody[iBody].dSemi=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iSemi]);
     tmpBody[iBody].dEcc=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iEcc]);
-    tmpBody[iBody].d40KNum=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40K]);
-    tmpBody[iBody].d232ThNum=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232Th]);
-    tmpBody[iBody].d238UNum=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238U]);
+    tmpBody[iBody].d40KNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KMan]);
+    tmpBody[iBody].d232ThNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThMan]);
+    tmpBody[iBody].d238UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UMan]);
+    tmpBody[iBody].d235UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UMan]);
+    tmpBody[iBody].d40KNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KCore]);
+    tmpBody[iBody].d232ThNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThCore]);
+    tmpBody[iBody].d238UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UCore]);
+    tmpBody[iBody].d235UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UCore]);
     tmpBody[iBody].dRotRate=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iRot]);
     tmpBody[iBody].dObliquity=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iObl]);
   }
@@ -195,7 +207,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Now copy new parameters into control->Evolve.tmpBody, and 
      calculate new auxiliary properties. XXX Unnecessary? 
      UpdateTmpBody(control->Evolve.tmpBody,control,update); */
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
   /* Don't need this timestep info, so assign output to dFoo */
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
@@ -214,7 +226,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Second midpoint derivative */
   // UpdateTmpBody(control->Evolve.tmpBody,control,update);
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -231,7 +243,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Full step derivative */
   // UpdateTmpBody(control->Evolve.tmpBody,control,update);
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -273,7 +285,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
 
-  PropertiesAuxiliary(body,control);
+  PropertiesAuxiliary(body,control,update);
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
@@ -322,8 +334,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       return;
     }
 
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
+      body[iBody].dAge += iDir*dDt;
+
     control->Evolve.dTime += dDt;
-    system->dAge += iDir*dDt;
     control->Evolve.nSteps++;
 
     /* Time for Output? */
@@ -336,7 +350,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     /* Get tidal properties for next step -- first call 
        was prior to loop. */
-    PropertiesAuxiliary(body,control);
+    PropertiesAuxiliary(body,control,update);
 
   }
 

@@ -37,8 +37,10 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iSubStep;
 
   control->Evolve.fnAuxProps = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
+  control->Evolve.fnAuxPropsMulti = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->Evolve.iNumMulti = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));
@@ -253,7 +255,7 @@ double fdUnitsLength(int iType) {
   if (iType == 0)
     return 1;
   else if (iType == 1)
-    return 100;
+    return 0.1;
   else if (iType == 2)
     return 1e5;
   else if (iType == 3)
@@ -272,9 +274,9 @@ double fdUnitsLength(int iType) {
 
 void fsUnitsLength(int iType,char cUnit[]) {
   if (iType == 0)
-    sprintf(cUnit,"cm");
-  else if (iType == 1)
     sprintf(cUnit,"m");
+  else if (iType == 1)
+    sprintf(cUnit,"cm");
   else if (iType == 2)
     sprintf(cUnit,"km");
   else if (iType == 3)
@@ -330,7 +332,7 @@ double fdUnitsMass(int iType) {
   if (iType == 0)
     return 1;
   else if (iType == 1)
-    return 100;
+    return 1e-3;
   else if (iType == 2)
     return MSUN;
   else if (iType == 3)
@@ -347,9 +349,9 @@ double fdUnitsMass(int iType) {
 
 void fsUnitsMass(int iType,char cUnit[]) {
   if (iType == 0)
-    sprintf(cUnit,"grams");
-  else if (iType == 1)
     sprintf(cUnit,"kg");
+  else if (iType == 1)
+    sprintf(cUnit,"gm");
   else if (iType == 2)
     sprintf(cUnit,"solar");
   else if (iType == 3)

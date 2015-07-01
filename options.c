@@ -531,7 +531,7 @@ int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -610,7 +610,7 @@ int iAssignUnitTime(char cTmp[],int iVerbose,char cFile[],char cName[], int iLin
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 
@@ -680,7 +680,7 @@ int iAssignUnitAngle(char cTmp[],int iVerbose,char cFile[],char cName[], int iLi
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
    
 void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -756,7 +756,7 @@ int iAssignUnitLength(char cTmp[],int iVerbose,char cFile[],char cName[], int iL
   }
 
   /* Whoops! */
-  return 1./0;
+  assert(0);
 }
 
 void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -855,7 +855,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<=iNumIndices;iIndex++)
+  for (iIndex=0;iIndex<iNumIndices;iIndex++) // Russell changed <= to < b/c iNumIndices+1 is outside the allocated memory of files->Infile
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
   
   control->Evolve.iNumBodies=iNumIndices;

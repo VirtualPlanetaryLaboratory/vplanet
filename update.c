@@ -32,16 +32,16 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     dest[iBody].iEcc = src[iBody].iEcc;
 
     dest[iBody].iNum40KMan =src[iBody].iNum40KMan;
-    dest[iBody].iNum40KMan =src[iBody].iNum40KMan;
+    dest[iBody].i40KMan =src[iBody].i40KMan;
 
     dest[iBody].iNum232ThMan =src[iBody].iNum232ThMan;
-    dest[iBody].iNum232ThMan =src[iBody].iNum232ThMan;
+    dest[iBody].i232ThMan =src[iBody].i232ThMan;
 
     dest[iBody].iNum238UMan =src[iBody].iNum238UMan;
-    dest[iBody].iNum238UMan =src[iBody].iNum238UMan;
+    dest[iBody].i238UMan =src[iBody].i238UMan;
 
     dest[iBody].iNum235UMan =src[iBody].iNum235UMan;
-    dest[iBody].iNum235UMan =src[iBody].iNum235UMan;
+    dest[iBody].i235UMan =src[iBody].i235UMan;
 
     dest[iBody].iNumObl = src[iBody].iNumObl;
     dest[iBody].iObl = src[iBody].iObl;

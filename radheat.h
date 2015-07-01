@@ -311,10 +311,10 @@ void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* RadHeat functions */
-double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdRadPowerMan(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdRadPowerCore(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdRadPowerTotal(BODY*,SYSTEM*,UPDATE *update,int,int);
+double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
+double fdRadPowerMan(BODY*,UPDATE*,int);
+double fdRadPowerCore(BODY*,UPDATE*,int);
+double fdRadPowerTotal(BODY*,UPDATE*,int);
 double fdRadPower(double,double,double); // XXX
 
 void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,int,int);

@@ -18,104 +18,94 @@
 #define DENS_SI_CGS      G_KG/(CM_M)^3 //=(g/cm^3)/(kg/m^3) to convert SI to cgs.
 
 // FUNDAMENTAL CONSTANTS
-#define GASCONSTANT_SI   8.3144621                //[J/mol/K] gas constant in SI units.      
+#define GASCONSTANT      8.3144621             //[J/mol/K] gas constant in SI units.      
 
 // E MASS RESERVOIRS
-#define TMAN             20                       //index of TMAN variable.
-#define EMASS            5.9742e24                //[kg] mass of E
-#define EMASSFRACMAN     0.67                     //mass fraction of E mantle
-#define EMASSMAN         EMASSFRACMAN*EMASS      //[kg] mass of E mantle
-#define EMASSFRACCORE    0.32                     //mass frac E core
-#define EMASSCORE        EMASSFRACCORE*EMASS     //[kg] mass of E core
-#define EMASSIC          9.7d22                   //[kg] mass of present IC.
-#define EMASSOC          EMASSCORE-EMASSIC        //[kg] mass of present OC.
-#define EMASSOCEAN       1.4d21                   //[kg] mass of E oceans
-#define EMASSFRACOCEAN   EMASSOCEAN/EMASS        //ocean mass frac
+#define TMAN             20                    //index of TMAN variable.
+#define EMASS            5.9742e24             //[kg] mass of E
+#define EMASSFRACMAN     0.67                  //mass fraction of E mantle
+#define EMASSMAN         EMASSFRACMAN*EMASS    //[kg] mass of E mantle
+#define EMASSFRACCORE    0.32                  //mass frac E core
+#define EMASSCORE        EMASSFRACCORE*EMASS   //[kg] mass of E core
+#define EMASSIC          9.7d22                //[kg] mass of present IC.
+#define EMASSOC          EMASSCORE-EMASSIC     //[kg] mass of present OC.
+#define EMASSOCEAN       1.4d21                //[kg] mass of E oceans
+#define EMASSFRACOCEAN   EMASSOCEAN/EMASS      //ocean mass frac
 #define EMASSFRACCRUST   1-EMASSFRACMAN-EMASSFRACCORE-EMASSFRACOCEAN  //crust is remaining bit of mass.
-#define EMASSCRUST       EMASSFRACCRUST*EMASS    //[kg] mass E crust today.
+#define EMASSCRUST       EMASSFRACCRUST*EMASS  //[kg] mass E crust today.
 
 // INTERNAL STRUCTURE E
-#define ERADIUS          6371.0*KM             //[m] radius of E.
-#define ERMAN            6371.0*CM_KM          //[cm] radius of E mantle.
-#define ERCORE           3481.0*CM_KM          //[cm] radius Core
-#define ERICB            1221.0*CM_KM          //[cm] present day ICB radius.
-#define EDMAN            ERADIUS-ERCORE        //[cm] mantle shell thickness
-#define EDOC             ERCORE-ERICB          //[cm] present day core shell thickness
-#define EVOL             4.0/3*PI*ERADIUS^3    //[cm^3] volume of E.
-#define EVOLIC           4.0/3*PI*ERICB^3      //[cm^3] volume of present-day IC.
-#define EVOLCORE         4.0/3*PI*ERCORE^3     //[cm^3] volume of total core.
-#define EVOLOC           EVOLCORE-EVOLIC       //[cm^3] volume of OC today.
-#define EVOLMAN          EVOL-EVOLCORE         //[cm^3] volume of Mantle.
+#define ERADIUS          6371.0*KM          //[m] radius of E.
+#define ERMAN            6371.0*KM          //[m] radius of E mantle.
+#define ERCORE           3481.0*KM          //[m] radius Core
+#define ERICB            1221.0*KM          //[m] present day ICB radius.
+#define EDMAN            ERADIUS-ERCORE     //[m] mantle shell thickness
+#define EDOC             ERCORE-ERICB       //[m] present day core shell thickness
+#define EVOL             4.0/3*PI*ERADIUS^3 //[m^3] volume of E.
+#define EVOLIC           4.0/3*PI*ERICB^3   //[m^3] volume of present-day IC.
+#define EVOLCORE         4.0/3*PI*ERCORE^3  //[m^3] volume of total core.
+#define EVOLOC           EVOLCORE-EVOLIC    //[m^3] volume of OC today.
+#define EVOLMAN          EVOL-EVOLCORE      //[m^3] volume of Mantle.
 // DENSITIES - derived from mass and radius dfns.
-#define EDENS            EMASS/EVOL           //[g/cm^3] density of E
-#define EDENSMAN         EMASSMAN/EVOLMAN      //[g/cm^3] density of E mantle.
-#define EDENSCORE        EMASSCORE/EVOLCORE    //[g/cm^3] density of E core.
-#define EDENSOC          EMASSOC/EVOLOC        //[g/cm^3] density of E core.
-#define EDENSIC          EMASSIC/EVOLIC        //[g/cm^3] density of E IC.
-#define DENSOCLE         700.0*DENS_SI_CGS     //[g/cm^3] density diff of OC light elements.
+#define EDENS            EMASS/EVOL         //[kg/m^3] density of E
+#define EDENSMAN         EMASSMAN/EVOLMAN   //[kg/m^3] density of E mantle.
+#define EDENSCORE        EMASSCORE/EVOLCORE //[kg/m^3] density of E core.
+#define EDENSOC          EMASSOC/EVOLOC     //[kg/m^3] density of E core.
+#define EDENSIC          EMASSIC/EVOLIC     //[kg/m^3] density of E IC.
+#define DENSOCLE         700.0*DENS_SI_CGS  //[kg/m^3] density diff of OC light elements.
 // Gravity
-#define GRAVSURF_SI      9.8                      //[m/s2] Surf gravity in SI
-#define GRAVUMAN_SI      10.5                     //[m/s2] UM gravity in SI
-#define GRAVLMAN_SI      10.5                     //[m/s2] LM gravity in SI
-#define GRAVSURF         GRAVSURF_SI*CM_M         //[cm/s2] Surf gravity in cgs
-#define GRAVUMAN         GRAVUMAN_SI*CM_M         //[cm/s2] UM gravity in cgs
-#define GRAVLMAN         GRAVLMAN_SI*CM_M         //[cm/s2] LM gravity in cgs
+#define GRAVSURF         9.8                //[m/s2] Surf gravity in SI
+#define GRAVUMAN         10.5               //[m/s2] UM gravity in SI
+#define GRAVLMAN         10.5               //[m/s2] LM gravity in SI
 
 /* THERMAL PROPERTIES */
-#define SPECHEATMAN_SI   1265.0                   //[J/kg/K] specfic heat mantle.
-#define SPECHEATMAN      CPMAN_SI*ERG_JOULE/G_KG  //[erg/g/K]
-#define SPECHEATCORE_SI  840.0                    //[J/kg/K] sp heat core.
-#define SPECHEATCORE     CPCORE_SI*ERG_JOULE/G_KG //[erg/g/K]
-#define THERMEXPANMAN    3d-5                     //[K^-1] thermal expansivity of mantle.
-#define THERMEXPANCORE   1d-5                     //[K^-1] thermal expansivity of core.
-#define THERMCONDUMAN_SI 4.2                      //[W/m/K] thermal conductivity of Upper mantle.
-#define THERMCONDLMAN_SI 10.0                     //[W/m/K] thermal conductivity of Lower mantle.
-#define THERMALCONDUMAN  THERMALCONDUMAN_SI*ERG_S_WATT/CM_M     //[erg/s/cm/K]
-#define THERMALCONDLMAN  THERMALCONDLMAN_SI*ERG_S_WATT/CM_M     //[erg/s/cm/K]
-#define THERMALDIFFUMAN  THERMALCONDUMAN/(EDENSMAN*SPECHEATMAN) //[cm^2/s] thermal diffusivity mantle.
-#define SPECLATENTICB_SI 750d3                    //[J/kg] specific latent heat release at ICB
-#define SPECLATENTMAN_SI 320d3                    //[J/kg] specific latent heat release at ICB
-#define SPECLATENTICB    SPECLATENTICB_SI*ERG_JOULE/G_KG        //[erg/J/g] in cgs.
-#define SPECLATENTMAN    SPECLATENTMAN_SI*ERG_JOULE/G_KG        //[erg/J/g] in cgs.
+#define SPECHEATMAN      1265.0             //[J/kg/K] specfic heat mantle.
+#define SPECHEATCORE     840.0              //[J/kg/K] sp heat core.
+#define THERMEXPANMAN    3d-5               //[K^-1] thermal expansivity of mantle.
+#define THERMEXPANCORE   1d-5               //[K^-1] thermal expansivity of core.
+#define THERMCONDUMAN    4.2                //[W/m/K] thermal conductivity of Upper mantle.
+#define THERMCONDLMAN    10.0               //[W/m/K] thermal conductivity of Lower mantle.
+#define THERMALDIFFUMAN  THERMALCONDUMAN/(EDENSMAN*SPECHEATMAN) //[m^2/s] thermal diffusivity mantle.
+#define SPECLATENTICB    750d3              //[J/kg] specific latent heat release at ICB
+#define SPECLATENTMAN    320d3              //[J/kg] specific latent heat release at ICB
 /* CONVECTION CONSTANTS */
-#define RAYLEIGHCRIT     660.                     //[-] critical rayleigh number for spherical convection.
-#define CONVEXPON        1./3                     //[nd] convective cooling nusselt exponent "beta"
+#define RAYLEIGHCRIT     660.          //[-] critical rayleigh number for spherical convection.
+#define CONVEXPON        1./3          //[nd] convective cooling nusselt exponent "beta"
 /* VISCOSITY PROPERTIES */
-#define ACTVISCMAN_SI    3d5                      //[J/mol] viscosity activation energy mantle
-#define ACTSHMODMAN_SI   2d5                      //[J/mol] shear modulus activation energy mantle
-#define VISCREF_SI       6d7                      //[m2/s] reference kinematic mantle viscosity
-#define VISCREF          VISCREF_SI*CM_M^2        //[cm2/s] reference kinematic mantle viscosity
-#define VISCJUMPULM      2.                       //[nd] viscosity jump from upper to lower mantle
-#define SHMODREF_SI      6.24d4                   //[Pa] reference kinematic mantle viscosity
-#define MELTB            2.5                      //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
-#define MELTPHISTAR      0.8                      //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
-#define MELTDELTA        6.0                      //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
-#define MELTGAMMA        6.0                      //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
-#define MELTXI           5d-4                     //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
+#define ACTVISCMAN       3d5           //[J/mol] viscosity activation energy mantle
+#define ACTSHMODMAN      2d5           //[J/mol] shear modulus activation energy mantle
+#define VISCREF          6d7           //[m2/s] reference kinematic mantle viscosity
+#define VISCJUMPULM      2.            //[nd] viscosity jump from upper to lower mantle
+#define SHMODREF_SI      6.24d4        //[Pa] reference kinematic mantle shear modulus
+#define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
+#define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
+#define MELTDELTA        6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
+#define MELTGAMMA        6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
+#define MELTXI           5d-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
 
 /* TIDAL PROPERTIES */
-#define STIFFNESS_SI     1.71d4*1d9               //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+#define STIFFNESS        1.71d4*1d9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
 /* MELTING CONSTANTS */
-#define ASOLIDUS_SI      -1.160d-16               //[K/m3] mantle solidus coefficient Tsol(r)=A*r^3+B*r^2+C*r+D
-#define BSOLIDUS_SI      +1.708d-9                //[K/m2] B coefficient
-#define CSOLIDUS_SI      -9.074d-3                //[K/m] C coefficient
-#define DSOLIDUS_SI      +1.993d4                 //[K] D coefficient
-#define DTLIQMAN         +500.0                   //[K] mantle liquidus offset, T_liq=T_sol+DTLIQMAN
-#define DVLIQDTM_SI      +8d17                    //[m3/K] change in mantle liquid volume with T_m approximated (Driscoll&B 2015)
-#define DLIND            7000*CM_KM               //[cm] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
-#define TREFLIND         5600.0                   //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
+#define ASOLIDUS         -1.160d-16    //[K/m3] mantle solidus coefficient Tsol(r)=A*r^3+B*r^2+C*r+D
+#define BSOLIDUS         +1.708d-9     //[K/m2] B coefficient
+#define CSOLIDUS         -9.074d-3     //[K/m] C coefficient
+#define DSOLIDUS         +1.993d4      //[K] D coefficient
+#define DTLIQMAN         +500.0        //[K] mantle liquidus offset, T_liq=T_sol+DTLIQMAN
+#define DVLIQDTM         +8d17         //[m3/K] change in mantle liquid volume with T_m approximated (Driscoll&B 2015)
+#define DLIND            7000.0*KM     //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
+#define TREFLIND         5600.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
 /* ADIABATIC PROPERTIES */
-#define ADGRADMAN        0.5*1d-3/CM_M            //[K/cm] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
-#define DADCORE          6340*CM_KM               //[cm] liq iron core adiabatic length scale (DB15 eq A22)
-#define GRUNEISEN        1.3                      //[nd] core gruneisen parameter
-#define ADJUMPM2UM       0.7                      //[nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM"
-#define ADJUMPM2LM       1.3                      //[nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM"
-#define ADJUMPC2CMB      0.8                      //[nd] adiabatic temp jump from ave core to CMB. "epsilon_c"
+#define ADGRADMAN        0.5/KM        //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
+#define DADCORE          6340.0*KM     //[m] liq iron core adiabatic length scale (DB15 eq A22)
+#define GRUNEISEN        1.3           //[nd] core gruneisen parameter
+#define ADJUMPM2UM       0.7           //[nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM"
+#define ADJUMPM2LM       1.3           //[nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM"
+#define ADJUMPC2CMB      0.8           //[nd] adiabatic temp jump from ave core to CMB. "epsilon_c"
 /* MAGNETIC DYNAMO PROPERTIES */
-#define MAGPERM_SI       4*PI*1d-7                //[H/m] magnetic permeability constant in SI units.
+#define MAGPERM          4*PI*1d-7                //[H/m] magnetic permeability constant in SI units.
 #define GAMMADIPOLE      0.2                      //[nd] saturation constant for fast rot dipolar dynamos (OC2006)
-#define ELECCONDCORE_SI  10d5                     //[S/m]  electrical conductivity of core.  How does this convert to cgs??
-#define LORENTZNUM_SI    2.5d-8                   //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.        
+#define ELECCONDCORE     10d5                     //[S/m]  electrical conductivity of core.  How does this convert to cgs??
+#define LORENTZNUM       2.5d-8                   //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.        
 
 void InitializeControlInteriorthermal(CONTROL*);
 void AddModuleInteriorthermal(MODULE*,int,int);

@@ -13,7 +13,7 @@
 #include <string.h>
 #include "vplanet.h"
 
-voﬁid  InitializeControlInteriorthermal(CONTROL *control) {
+void  InitializeControlInteriorthermal(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
@@ -39,15 +39,13 @@ void ReadTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {   //if line num of option ge 0
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)   //if input value lt 0
-      body[iFile-1].d40KPowerMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dTMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
    else
-       //      body[iFile-1].d40KPowerMan = dTmp*fdUnitsMass(control->Units[iFile].iMass);
-       //CHANGED units Mass to Power.
-       body[iFile-1].d40KPowerMan = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+       body[iFile-1].dTMan = dTmp*fdUnitsTemp(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].d40KPowerMan = options->dDefault;
+      body[iFile-1].dTMan = options->dDefault;
 }
 
 
@@ -57,55 +55,54 @@ void InitializeOptionsInteriorthermal(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
   /* TMan */
-  sprintf(options[OPT_40KMASSMAN].cName,"dTMan");
-  sprintf(options[OPT_40KMASSMAN].cDescr,"Initial Mantle Temperature");
-  sprintf(options[OPT_40KMASSMAN].cDefault,"Default=3000");
-  options[OPT_40KMASSMAN].iType = 2;
-  options[OPT_40KMASSMAN].iMultiFile = 1;
-  options[OPT_40KMASSMAN].dNeg = EMASSMAN40K;
-  options[OPT_40KMASSMAN].dDefault = 3000d; 
-  sprintf(options[OPT_40KMASSMAN].cNeg,"Earth Masses");
-  fnRead[OPT_40KMASSMAN] = &Read40KMassMan;
+  sprintf(options[OPT_TMAN].cName,"dTMan");
+  sprintf(options[OPT_TMAN].cDescr,"Initial Mantle Temperature");
+  sprintf(options[OPT_TMAN].cDefault,"Default=3000");
+  options[OPT_TMAN].iType = 2;
+  options[OPT_TMAN].iMultiFile = 1;
+  options[OPT_TMAN].dNeg = 3000.0d;  //Not sure about this??
+  options[OPT_TMAN].dDefault = 3000.0d; 
+  sprintf(options[OPT_TMAN].cNeg,"Default=3000");
+  fnRead[OPT_TMAN] = &ReadTMan;
 
 }
 
 void ReadOptionsInteriorthermal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  for (iOpt=OPTSTARTRADHEAT;iOpt<OPTENDRADHEAT;iOpt++) {
+  for (iOpt=OPTSTARTINTERIORTHERMAL;iOpt<OPTENDINTERIORTHERMAL;iOpt++) {
     if (options[iOpt].iType != -1) 
       fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
 }
     
-/******************* Verify RADHEAT ******************/
+/******************* Verify INTERIORTHERMAL ******************/
 
 void VerifyRotationInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
   /* Nothing */
 }
 
+/* Is this necessary? */
 void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
-    if (options[OPT_TMAN].iLine[iBody+1] >= 0) {
-	//  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
-	//      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
+    /*    if (options[OPT_TMAN].iLine[iBody+1] >= 0) {
 	body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
 	printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
     }
     body[iBody].dTMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the constant given num and age.
-
+    */
 }
 
 
 void VerifyTMan(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-  AssignTMan(body,options,dAge,iBody);
+    //  AssignTMan(body,options,dAge,iBody);
   /* Mantle */
-  update[iBody].iaType[update[iBody].i40KMan][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i40KMan][0]=1;
-  update[iBody].iaBody[update[iBody].i40KMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
-  update[iBody].iaBody[update[iBody].i40KMan][0][0]=iBody;
-  update[iBody].pdD40KNumManDt = &update[iBody].daDerivProc[update[iBody].i40KMan][0];
-  fnUpdate[iBody][update[iBody].i40KMan][0] = &fdD40KNumManDt;
+    update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+    update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
+    update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
+    update[iBody].iaBody[update[iBody].iTMan][0][0]=iBody;
+    update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
+    fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
 }
 
 
@@ -119,21 +116,23 @@ void fnForceBehaviorInteriorthermal(BODY *body,EVOLVE *evolve,IO *io,int iBody,i
 }
 
 void VerifyInteriorthermal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int bInteriorthermal=0;
-
+    //  int bInteriorthermal=0;
+  /* Is this necessary? 
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
       body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
+  if (!bInteriorthermal && control->Io.iVerbose >= VERBINPUT) 
+    fprintf(stderr,"WARNING: INTERIORTHERMAL called for body %s, but no radiogenic species present.\n",body[iBody].cName);
     VerifyTMan(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
     bInteriorthermal = 1;
   }
-
-  if (!bInteriorthermal && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: INTERIORTHERMAL called for body %s, but no radiogenic species present.\n",body[iBody].cName);
+  */
+  //  bInteriorthermal = 1;  //assume verified ok for now?
+  VerifyTMan(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorInteriorthermal;
   control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesInteriorthermal;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyInteriorthermal;
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxInteriorthermal;
+  //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }
 
 
@@ -150,44 +149,25 @@ void InitializeUpdateInteriorthermal(BODY *body,UPDATE *update,int iBody) {
   */
   if (body[iBody].dTMan > 0) {
     update[iBody].iNumVars++;
-    update[iBody].iNumTMan++;
+    update[iBody].iNumTMan++;  //Why is iNumTMan incremented here and below?
   }
 }
 
-void FinalizeUpdateEccInteriorthermal(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 void FinalizeUpdateTManInteriorthermal(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
-  update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
-  update[iBody].iNum40KMan = (*iEqn)++;
+  update[iBody].iaModule[iVar][*iEqn] = TMAN;
+  update[iBody].iNumTMan = (*iEqn)++;
 }
-
-void FinalizeUpdateOblInteriorthermal(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateRotInteriorthermal(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateSemiInteriorthermal(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 
 /***************** RADHEAT Halts *****************/
 
-/* Minimum 40K Powering? */
-//PED: these subroutines aren't finished.  The default halt values aren't set.  body.d40KPowerMan is not a primary variable, but NumMan is.
+/* Minimum TMan */
 int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-
-  if (body[iBody].d40KPowerMan < halt->dMin40KPower) {
+  if (body[iBody].dTMan < halt->dMinTMan) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: %s's 40K Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d40KPowerMan,io->iSciNot,io->iDigits);
+      printf("HALT: %s's TMan =  ",body[iBody].cName);
+      fprintd(stdout,body[iBody].dTMan,io->iSciNot,io->iDigits);
       printf(" < ");
-      fprintd(stdout,halt->dMin40KPower,io->iSciNot,io->iDigits);
+      fprintd(stdout,halt->dMinTMan,io->iSciNot,io->iDigits);
       printf(".\n");
     }
     return 1;
@@ -195,23 +175,14 @@ int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   return 0;
 }        
 
-
-
-void CountHaltsRadHeat(HALT *halt,int *iHalt) {
-  if (halt->dMin40KPower >= 0)
-    (iHalt)++;
-  if (halt->dMin232ThPower >=0)
-    (iHalt)++;
-  if (halt->dMin238UPower >= 0)
-    (iHalt)++;
-  if (halt->dMin235UPower >= 0)  //PED
+void CountHaltsInteriorthermal(HALT *halt,int *iHalt) {
+  if (halt->dMinTMan >= 0)
     (iHalt)++;
 }
 
 void VerifyHaltInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-
-  if (control->Halt[iBody].dMin40KPower > 0)
-    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin40KPower;
+  if (control->Halt[iBody].dMinTMan > 0)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
 }
 
 /************* RADHEAT Outputs ******************/
@@ -219,48 +190,64 @@ void VerifyHaltInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,int 
 void HelpOutputInteriorthermal(OUTPUT *output) {
   int iOut;
 
-  printf("\n ------ RADHEAT output ------\n");
-  for (iOut=OUTSTARTRADHEAT;iOut<OUTENDRADHEAT;iOut++) 
+  printf("\n ------ INTERIORTHERMAL output ------\n");
+  for (iOut=OUTSTARTINTERIORTHERMAL;iOut<OUTENDINTERIORTHERMAL;iOut++) 
     WriteHelpOutput(&output[iOut]);
 }
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
    block of initialization in InitializeOutputInteriorthermal below */
 
-
 void WriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get total power from 40K */
-  *dTmp = -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;
+  /* Get TMan */
+  *dTmp = body[iBody].dTMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else { 
-    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
-    fsUnitsPower(units,cUnit);
+      /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set "iOldType" to 0, second input var, arbitarily.
+    fsUnitsTemp(units->iTemp,cUnit);
+      */
+  }
+}
+void WriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TDotMan */
+  *dTmp = (*(update[iBody].pdTDotMan));
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+      /*
+      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
+      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add yr and Gyr options.
+      */
   }
 }
 
-
-
 void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
+  sprintf(output[OUT_TMAN].cName,"TMan");
+  sprintf(output[OUT_TMAN].cDescr,"Mantle Temperature");
+  sprintf(output[OUT_TMAN].cNeg,"K");
+  output[OUT_TMAN].bNeg = 1;
+  output[OUT_TMAN].dNeg = 1; // default units are K. 
+  output[OUT_TMAN].iNum = 1;
+  fnWrite[OUT_TMAN] = &WriteTMan;
 
-  /* Potassium */
-    //  PED:  Do these default numbers matter??  If so they need to be changed.
-  sprintf(output[OUT_40KPOWERMAN].cName,"40KPowerMan");
-  sprintf(output[OUT_40KPOWERMAN].cDescr,"Total Power Generated by 40K");
-  sprintf(output[OUT_40KPOWERMAN].cNeg,"TW");
-  output[OUT_40KPOWERMAN].bNeg = 1;
-  output[OUT_40KPOWERMAN].dNeg = 1e-19; // ergs/s -> TW 
-  output[OUT_40KPOWERMAN].iNum = 1;
-  fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
- 
+  sprintf(output[OUT_TDOTMAN].cName,"TDotMan");
+  sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
+  sprintf(output[OUT_TDOTMAN].cNeg,"K/s");
+  output[OUT_TDOTMAN].bNeg = 1;
+  output[OUT_TDOTMAN].dNeg = 1; // default units are K. 
+  output[OUT_TDOTMAN].iNum = 1;
+  fnWrite[OUT_TDOTMAN] = &WriteTDotMan;
 }
 
 void FinalizeOutputFunctionInteriorthermal(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxInteriorthermal;
+  //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
+    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxRadheat; //This is need to print the global var to log.  Needs to be fixed.
 }
 
-/************ RADHEAT Logging Functions **************/
+/************ INTERIORTHERMAL Logging Functions **************/
 
 void LogOptionsInteriorthermal(CONTROL *control, FILE *fp) {
   /* Anything here?
@@ -283,8 +270,8 @@ void LogInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 void LogBodyInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
 
-  fprintf(fp,"----- RADHEAT PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTSTARTRADHEAT;iOut<OUTENDRADHEAT;iOut++) {
+  fprintf(fp,"----- INTERIORTHERMAL PARAMETERS (%s)------\n",body[iBody].cName);
+  for (iOut=OUTSTARTINTERIORTHERMAL;iOut<OUTENDINTERIORTHERMAL;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     /*
@@ -297,7 +284,7 @@ void LogBodyInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = RADHEAT;
+  module->iaModule[iBody][iModule] = INTERIORTHERMAL;
 
   module->fnInitializeControl[iBody][iModule] = &InitializeControlInteriorthermal;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyInteriorthermal;
@@ -308,147 +295,21 @@ void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
   module->fnVerify[iBody][iModule] = &VerifyInteriorthermal;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltInteriorthermal;
   module->fnVerifyRotation[iBody][iModule] = &VerifyRotationInteriorthermal;
-
+  
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyInteriorthermal;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateInteriorthermal;
 
-  module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManInteriorthermal;
-  
-  // Now include other primary variables not used by RADHEAT 
-  module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateEccInteriorthermal;
-  module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateOblInteriorthermal;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotInteriorthermal;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiInteriorthermal;
-
-  // NEED TO ADD RADHEAT VARIABLES HERE??
+    // NEED TO ADD INTERIORTHERMAL VARIABLES HERE??
+  module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManInteriorthermal;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionInteriorthermal;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionInteriorthermal;
 
 }
 
-/************* RADHEAT Functions ************/
-// FIRST batch of subroutines are general for any species.
-// N = N_0 * exp(-t/lambda)
-// dN/dt = -(N_0/lambda) * exp(-t/lambda)
+/************* INTERIORTHERMAL Functions ************/
 
-double fdRadPowerMan(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  return -(*(update[iBody].pdD238UNumManDt))*ENERGY238U - (*(update[iBody].pdD235UNumManDt))*ENERGY235U - (*(update[iBody].pdD232ThNumManDt))*ENERGY232TH - (*(update[iBody].pdD40KNumManDt))*ENERGY40K;
-}
-double fdRadPowerCore(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  return -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U - (*(update[iBody].pdD235UNumCoreDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
-}
-double fdRadPowerTotal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-    double dPowerMan;
-    double dPowerCore;
-    dPowerMan = fdRadPowerMan(body,system,update,iBody,iFoo);
-    dPowerCore = fdRadPowerCore(body,system,update,iBody,iFoo);
-    return dPowerMan+dPowerCore;
+double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+    return -(100.0/1e9/YEARSEC);   //arbitrary for now.
 }
 
-/* This is part of output[OUT_SURFENFLUX].fnOutput */
-double fdSurfEnFluxInteriorthermal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  double dPower;
-    dPower = fdRadPowerMan(body,system,update,iBody,iFoo);
-  return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
-}
-
-double fdInteriorthermalConst(double dNum,double dAge,double dHalfLife) {
-  return dNum/(exp(-dAge/dHalfLife));
-}
-
-double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can be used by any radioactive system?
-  return -dConst/dHalfLife*exp(-dAge/dHalfLife);
-}
-
-double fdRadPower(double dConst,double dHalfLife,double dAge) {
-    return dConst*exp(-dHalfLife/dAge);                      //Here const=N_0*energy_i*lambda, where energy_i=erg/num.
-}
-
-double fdRadEnFlux(double dConst,double dHalfLife,double dAge,double dRadius) {
-  return fdRadPower(dConst,dHalfLife,dAge)/(4*PI*dRadius*dRadius);
-}
-
-//SECOND batch of subroutines are for individual variables of species.
-/* Constant coefficients */
-double fd40KConstant(double dNum,double dAge) {  
-    return fdInteriorthermalConst(dNum,dAge,HALFLIFE40K);   //redirects to fdInteriorthermalConst
-}
-
-double fd232ThConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
-  return fdInteriorthermalConst(dNum,dAge,HALFLIFE232TH);  //redirects to fdInteriorthermalConst
-}
-
-double fd238UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
-  return fdInteriorthermalConst(dNum,dAge,HALFLIFE238U);  //redirects to fdInteriorthermalConst
-}
-
-double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
-  return fdInteriorthermalConst(dNum,dAge,HALFLIFE235U);  //redirects to fdInteriorthermalConst
-}
-
-double fd40KPowerMan(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
-}
-
-double fd232ThPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
-}
-
-double fd238UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
-}
-
-double fd235UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
-}
-
-/* Energy Flux */
-double fd40KEnFlux(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge,body[iBody].dRadius);
-}
-
-double fd232ThEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge,body[iBody].dRadius);
-}
-
-double fd238UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge,body[iBody].dRadius);
-}
-
-double fd235UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge,body[iBody].dRadius);
-}
-
-/* DN/Dt */
-double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,system->dAge);
-}
-
-double fdD232ThNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,system->dAge);
-}
-
-double fdD238UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,system->dAge);
-}
-
-double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,system->dAge);
-}
-
-double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,system->dAge);
-}
-
-double fdD232ThNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,system->dAge);
-}
-
-double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,system->dAge);
-}
-
-double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,system->dAge);
-}

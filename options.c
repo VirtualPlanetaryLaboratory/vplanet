@@ -858,6 +858,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   InfileCopy(&files->Infile[0],infile);
 
   for (iIndex=0;iIndex<iNumIndices;iIndex++)  
+
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
  
   control->Evolve.iNumBodies=iNumIndices;

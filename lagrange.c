@@ -1152,7 +1152,7 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 
 /************* Lagrange Functions ************/
 
-void PropertiesLagrange(BODY *body,int iBody) {  
+void PropertiesLagrange(BODY *body,UPDATE *update,int iBody) {  
 }
 
 void ForceBehaviorLagrange(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {

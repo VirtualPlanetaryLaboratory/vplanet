@@ -102,7 +102,7 @@ void LogLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Lagrange Functions */
-void PropertiesLagrange(BODY*,int);
+void PropertiesLagrange(BODY*,UPDATE*,int);
 void ForceBehaviorLagrange(BODY*,EVOLVE*,IO*,int,int);
 
 double fdSemiMajAxF1(double, int);

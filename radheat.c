@@ -504,7 +504,6 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 /* Initiatlize Input Options */
 
 void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
-  int iOpt,iFile;
 
   /* 40K */
   sprintf(options[OPT_40KMASSMAN].cName,"d40KMassMan");
@@ -764,10 +763,6 @@ void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 /******************* Verify RADHEAT ******************/
 
-void VerifyRotationRadheat(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
     if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) 
       DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
@@ -994,7 +989,7 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   exit(1);
 }
 */
-void fnPropertiesRadheat(BODY *body,int iBody) {
+void fnPropertiesRadheat(BODY *body,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
@@ -1024,7 +1019,7 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   int bRadheat=0;
 
   /* Cannot set 2 or more of Power, Mass and Number for any isotope */
-  /*XXX Need a VerifyOneOfThree subroutine */
+  /* XXX Need a VerifyOneOfThree subroutine */
   /* Radheat is active for this body if this subroutine is called. */
 
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
@@ -1110,10 +1105,6 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 //PED: Combine these into ..HeatMan?  and ..HeatCore?
 void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
@@ -1148,20 +1139,6 @@ void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVa
   update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
   update[iBody].iNum235UCore = (*iEqn)++;
 }
-
-
-void FinalizeUpdateOblRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateRotRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateSemiRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 
 /***************** RADHEAT Halts *****************/
 
@@ -1258,16 +1235,8 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* RADHEAT Outputs ******************/
 
-void HelpOutputRadheat(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ RADHEAT output ------\n");
-  for (iOut=OUTSTARTRADHEAT;iOut<OUTENDRADHEAT;iOut++) 
-    WriteHelpOutput(&output[iOut]);
-}
-
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
-   block of initialization in InitializeOutputRadheat below /*
+   block of initialization in InitializeOutputRadheat below */
 
 /* Potassium */
 
@@ -1666,7 +1635,7 @@ void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 /* Totals */
 void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerMan(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerMan(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1677,7 +1646,7 @@ void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerCore(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerCore(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1688,7 +1657,7 @@ void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerTotal(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerTotal(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -2119,7 +2088,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
   module->fnVerify[iBody][iModule] = &VerifyRadheat;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationRadheat;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
@@ -2135,12 +2103,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
   
-  // Now include other primary variables not used by RADHEAT 
-  module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateEccRadheat;
-  module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateOblRadheat;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRadheat;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiRadheat;
-
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 
@@ -2151,24 +2113,27 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 // N = N_0 * exp(-t/lambda)
 // dN/dt = -(N_0/lambda) * exp(-t/lambda)
 
-double fdRadPowerMan(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+double fdRadPowerMan(BODY *body,UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD238UNumManDt))*ENERGY238U - (*(update[iBody].pdD235UNumManDt))*ENERGY235U - (*(update[iBody].pdD232ThNumManDt))*ENERGY232TH - (*(update[iBody].pdD40KNumManDt))*ENERGY40K;
 }
-double fdRadPowerCore(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+
+double fdRadPowerCore(BODY *body,UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U - (*(update[iBody].pdD235UNumCoreDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
 }
-double fdRadPowerTotal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+
+double fdRadPowerTotal(BODY *body,UPDATE *update,int iBody) {
     double dPowerMan;
     double dPowerCore;
-    dPowerMan = fdRadPowerMan(body,system,update,iBody,iFoo);
-    dPowerCore = fdRadPowerCore(body,system,update,iBody,iFoo);
+    dPowerMan = fdRadPowerMan(body,update,iBody);
+    dPowerCore = fdRadPowerCore(body,update,iBody);
     return dPowerMan+dPowerCore;
 }
 
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
 double fdSurfEnFluxRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   double dPower;
-    dPower = fdRadPowerMan(body,system,update,iBody,iFoo);
+
+  dPower = fdRadPowerMan(body,update,iBody);
   return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 

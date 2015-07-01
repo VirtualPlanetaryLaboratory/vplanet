@@ -37,8 +37,10 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iSubStep;
 
   control->Evolve.fnAuxProps = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
+  control->Evolve.fnAuxPropsMulti = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->Evolve.iNumMulti = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));

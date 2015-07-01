@@ -229,7 +229,6 @@ void WriteRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
-
 void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = fdRotVel(body[iBody].dRadius,body[iBody].dRotRate);
@@ -571,11 +570,17 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
   int iBody,iModule;
 
+  // Add new mult-module outputs here
   output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-      output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    // Malloc number of modules for each multi-module output
+    output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      /* Initialize them all to return nothing, then they get changed 
+	 from AddModule subroutines */
+      output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
+    }
   }
 }
 
@@ -835,7 +840,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
     /* Get auxiliary properties */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,iBody);
+      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
     
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
@@ -857,7 +862,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   double dDt;
 
   /* Get derivatives */
-  PropertiesAuxiliary(body,control);
+  PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
   if (iEnd == 0) {

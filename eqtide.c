@@ -1706,7 +1706,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ENFLUXEQTIDE].cDescr,"Surface Energy Flux due to Tides in EQTIDE");
   sprintf(output[OUT_ENFLUXEQTIDE].cNeg,"W/m^2");
   output[OUT_ENFLUXEQTIDE].bNeg = 1;
-  output[OUT_ENFLUXEQTIDE].dNeg = 1e-3;
+  output[OUT_ENFLUXEQTIDE].dNeg = 1;
   output[OUT_ENFLUXEQTIDE].iNum = 1;
   fnWrite[OUT_ENFLUXEQTIDE] = &WriteEnergyFluxEqtide;
   

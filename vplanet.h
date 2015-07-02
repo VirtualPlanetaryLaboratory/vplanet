@@ -159,7 +159,6 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-<<<<<<< HEAD
     int bRadheat;             /**< Apply Module RADHEAT? */
     int bRadheat40KMan;             /**< Use 40KMan? */
     int bRadheat40KCore;             /**< Use 40KCore? */
@@ -201,43 +200,8 @@ typedef struct {
     double d235UNumCore;
     double d235UPowerCore;
     double d235UMassCore;
-=======
-  int bRadheat;             /**< Apply Module RADHEAT? */
-  double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
-  double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
-  double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
-  double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
-  double d40KConstCore;       
-  double d40KNumCore;
-  double d40KPowerCore;
-  double d40KMassCore;
-  double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
-  double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
-  double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
-  double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
-  double d232ThConstCore;
-  double d232ThNumCore;
-  double d232ThPowerCore;
-  double d232ThMassCore;
-  double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
-  double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
-  double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
-  double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
-  double d238UConstCore;
-  double d238UNumCore;
-  double d238UPowerCore;
-  double d238UMassCore;
-  double d235UConstMan; 
-  double d235UNumMan;
-  double d235UPowerMan;
-  double d235UMassMan;
-  double d235UConstCore; 
-  double d235UNumCore;
-  double d235UPowerCore;
-  double d235UMassCore;
 
-  int bThermint;
->>>>>>> 0722885c8a2de92b14651f354756a0771a2ad5a6
+    int bThermint;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */

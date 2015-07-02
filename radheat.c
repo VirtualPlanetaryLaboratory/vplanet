@@ -1166,14 +1166,6 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-<<<<<<< HEAD
-void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-=======
-//PED: Combine these into ..HeatMan?  and ..HeatCore?
->>>>>>> 0722885c8a2de92b14651f354756a0771a2ad5a6
 void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
   update[iBody].iNum40KMan = (*iEqn)++;

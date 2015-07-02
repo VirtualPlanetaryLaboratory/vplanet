@@ -37,7 +37,10 @@ int main(int argc,char *argv[]) {
   options = malloc(MODULEOPTEND*sizeof(OPTIONS));
   InitializeOptions(options,fnRead);
   output = malloc(MODULEOUTEND*sizeof(OUTPUT));
+  /* Commenting out this line and adding something new
   InitializeOutput(output,fnWrite);
+  */
+  printf("What is synching??\n");
 
   /* Set to IntegrationMethod to 0, so default can be
      assigned if necessary */

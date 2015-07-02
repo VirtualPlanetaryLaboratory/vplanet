@@ -20,7 +20,7 @@
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-8
+#define BIGG          6.672e-11
 #define PI            3.1415926535
 
 /* Units: Calculations are done in SI */

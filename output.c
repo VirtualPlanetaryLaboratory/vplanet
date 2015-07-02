@@ -22,7 +22,7 @@
  */
 
 void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = system->dAge;
+  *dTmp = body[iBody].dAge;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

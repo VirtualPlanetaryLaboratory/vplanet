@@ -418,7 +418,6 @@ void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
 
 /* Uranium 235 PED */
-
 void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
@@ -1086,28 +1085,28 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
       body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
       NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody+1);
-      Verify40K(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
+      Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
       bRadheat = 1;
   }
 
   if (body[iBody].d232ThNumMan > 0 || body[iBody].d232ThMassMan > 0 || body[iBody].d232ThPowerMan > 0 ||
       body[iBody].d232ThNumCore > 0 || body[iBody].d232ThMassCore > 0 || body[iBody].d232ThPowerCore > 0) {
       NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iBody+1);
-      Verify232Th(body,options,update,system->dAge,fnUpdate,iBody);
+      Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
   if (body[iBody].d238UNumMan > 0 || body[iBody].d238UMassMan > 0 || body[iBody].d238UPowerMan > 0 ||
       body[iBody].d238UNumCore > 0 || body[iBody].d238UMassCore > 0 || body[iBody].d238UPowerCore > 0) {
       NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iBody+1);
-      Verify238U(body,options,update,system->dAge,fnUpdate,iBody);
+      Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
   if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0 ||
       body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {  //PED
       NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iBody+1);
-      Verify235U(body,options,update,system->dAge,fnUpdate,iBody);
+      Verify235U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
@@ -1270,15 +1269,15 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
-void CountHaltsRadHeat(HALT *halt,int *iHalt) {
+void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin40KPower >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
   if (halt->dMin232ThPower >=0)
-    (iHalt)++;
+    (*iNumHalts)++;
   if (halt->dMin238UPower >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
   if (halt->dMin235UPower >= 0)  //PED
-    (iHalt)++;
+    (*iNumHalts)++;
 }
 
 void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -2232,67 +2231,67 @@ double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
 }
 
 double fd40KPowerMan(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
+  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,body[iBody].dAge);   //redirects to fdRadPower
 }
 
 double fd232ThPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 double fd238UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 double fd235UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 /* Energy Flux */
 double fd40KEnFlux(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd232ThEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd238UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd235UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,body[iBody].dAge,body[iBody].dRadius);
 }
 
 /* DN/Dt */
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,body[iaBody[0]].dAge);
 }
 
 double fdD232ThNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
 
 double fdD238UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,body[iaBody[0]].dAge);
 }
 
 double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,body[iaBody[0]].dAge);
 }
 
 double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,body[iaBody[0]].dAge);
 }
 
 double fdD232ThNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
 
 double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,body[iaBody[0]].dAge);
 }
 
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,body[iaBody[0]].dAge);
 }

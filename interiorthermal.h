@@ -11,6 +11,8 @@
 #define TMAN             20                    //index of TMAN variable.
 #define TCORE            21                    //index of TCORE variable.
 
+// !!!HACK!!!  Assume a constant surf temp for now.
+#define TSURF  300.0  
 // UNITS CONSTANTS
 #define KM               1d3       //[m] 1 km in m
 
@@ -251,6 +253,9 @@ void FinalizeOutputFunctionInteriorthermal(OUTPUT*,int,int);
 
 void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -276,14 +281,14 @@ void LogBodyInteriorthermal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 /* Thermal Functions */
 double fdTDotMan(BODY*,SYSTEM*,int*,int);
 double fdTDotCore(BODY*,SYSTEM*,int*,int);
-double fdTUMan(BODY*,SYSTEM*,int*,int);
-double fdTLMan(BODY*,SYSTEM*,int*,int);
-double fdTCMB(BODY*,SYSTEM*,int*,int);
+double fdTUMan(BODY*,SYSTEM*,int);
+double fdTLMan(BODY*,SYSTEM*,int);
+double fdTCMB(BODY*,SYSTEM*,int);
 double fdTICB(BODY*,SYSTEM*,int*,int);
-double fdThickBLUMan(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdThickBLLMan(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdDTempUMan(BODY*,SYSTEM*,UPDATE *update,int,int);
-double fdDTempLMan(BODY*,SYSTEM*,UPDATE *update,int,int);
+double fdThickBLUMan(BODY*,SYSTEM*,int,int);
+double fdThickBLLMan(BODY*,SYSTEM*,int,int);
+double fdTJumpUMan(BODY*,SYSTEM*,int,double);
+double fdTJumpLMan(BODY*,SYSTEM*,int,double);
 double fdHfluxUMan(BODY*,SYSTEM*,UPDATE *update,int,int);
 double fdHfluxCMB(BODY*,SYSTEM*,UPDATE *update,int,int);
 double fdHflowUMan(BODY*,SYSTEM*,UPDATE *update,int,int);

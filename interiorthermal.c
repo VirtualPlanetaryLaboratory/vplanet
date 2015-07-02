@@ -145,9 +145,9 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
 }
 
 
-
+/* Is this auxiliary properties?? */
 void fnPropertiesInteriorthermal(BODY *body,int iBody) {
-  /* Nothing */
+    body[iBody].dTUMan=fdTUMan(body,system,iBody);
 }
 
 void fnForceBehaviorInteriorthermal(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
@@ -270,6 +270,30 @@ void WriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
       */
   }
 }
+void WriteTUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TUMan */
+    *dTmp = fdTUMan(body,system,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { 
+      /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set "iOldType" to 0, second input var, arbitarily.
+    fsUnitsTemp(units->iTemp,cUnit);
+      */
+  }
+}
+void WriteTLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TLMan */
+    *dTmp = fdTLMan(body,system,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { 
+      /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set "iOldType" to 0, second input var, arbitarily.
+    fsUnitsTemp(units->iTemp,cUnit);
+      */
+  }
+}
 
 void WriteTCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TCore */
@@ -321,6 +345,22 @@ void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TMAN].iNum = 1;
   fnWrite[OUT_TMAN] = &WriteTMan;
 
+  sprintf(output[OUT_TUMAN].cName,"TUMan");
+  sprintf(output[OUT_TUMAN].cDescr,"Upper Mantle Temperature");
+  sprintf(output[OUT_TUMAN].cNeg,"K");
+  output[OUT_TUMAN].bNeg = 1;
+  output[OUT_TUMAN].dNeg = 1; // default units are K. 
+  output[OUT_TUMAN].iNum = 1;
+  fnWrite[OUT_TUMAN] = &WriteTUMan;
+
+  sprintf(output[OUT_TLMAN].cName,"TLMan");
+  sprintf(output[OUT_TLMAN].cDescr,"Lower Mantle Temperature");
+  sprintf(output[OUT_TLMAN].cNeg,"K");
+  output[OUT_TLMAN].bNeg = 1;
+  output[OUT_TLMAN].dNeg = 1; // default units are K. 
+  output[OUT_TLMAN].iNum = 1;
+  fnWrite[OUT_TLMAN] = &WriteTLMan;
+  
   sprintf(output[OUT_TCORE].cName,"TCore");
   sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
   sprintf(output[OUT_TCORE].cNeg,"K");
@@ -415,18 +455,25 @@ void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
 /************* INTERIORTHERMAL Functions ************/
 
 /* Get TUMan */
-double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
-    return ADJUMP2UM*TMan;
+double fdTUMan(BODY *body,SYSTEM *system,int iBody) {
+    return ADJUMPM2UM*body[iBody].dTMan;
 }
-
 /* Get TLMan */
-double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
-    return ADJUMP2LM*TMan;
+double fdTLMan(BODY *body,SYSTEM *system,int iBody) {
+    return ADJUMPM2LM*body[iBody].dTMan;
+}
+/* Get TCMB */
+double fdTCMB(BODY *body,SYSTEM *system,int iBody) {
+    return ADJUMPC2CMB*body[iBody].dTCore;
 }
 
-/* Get TUMan */
-double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
-    return ADJUMP2UM*TMan;
+/* Get TJumpUMan */ 
+double fdTJumpUMan(BODY *body,SYSTEM *system,int iBody,double TSurf) {
+    return body[iBody].dTUMan-TSurf;
+}
+/* Get TJumpLMan */
+double fdTJumpLMan(BODY *body,SYSTEM *system,int iBody,double TSurf) {
+    return body[iBody].dTLMan-TSurf;
 }
 
 /* Get TDotMan */

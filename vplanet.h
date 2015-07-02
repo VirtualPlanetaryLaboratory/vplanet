@@ -200,8 +200,12 @@ typedef struct {
     int bInteriorthermal;    /**< Apply Module INTERIORTHERMAL? */
     double dTMan;            /**< Temperature Mantle AVE */
     double dTCore;           /**< Temperature Core AVE */
-    double dTBLUMan;         /**< UM TBL thickness */
-    double dTBLLMan;         /**< LM TBL thickness */
+    double dTUMan;           /**< Temperature UMTBL */
+    double dTLMan;           /**< Temperature LMTBL */
+    double dTCMB;            /**< Temperature CMB */
+    double dTICB;            /**< Temperature ICB */
+    double dBLUMan;          /**< UM TBL thickness */
+    double dBLLMan;          /**< LM TBL thickness */
     double dTJumpUMan;       /**< Temperature Jump across UMTBL */
     double dTJumpLMan;       /**< Temperature Jump across LMTBL */
     double dViscUMan;        /**< Viscosity UMTBL */

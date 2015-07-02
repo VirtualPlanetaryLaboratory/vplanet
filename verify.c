@@ -418,6 +418,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
     
+    VerifyModuleMulti(body,control,files,module,options,iBody);
+
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {
       InitializeUpdateBodyPerts(control,update,iBody);

@@ -20,28 +20,28 @@
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-8
+#define BIGG          6.672e-11
 #define PI            3.1415926535
 
-/* Units */
+/* Units: Calculations are done in SI */
 
-#define MEARTH        5.9742e27
-#define MSUN          1.98892e33
-#define AUCM          1.49598e13
-#define RSUN          6.955e10
+#define MEARTH        5.9742e24
+#define MSUN          1.98892e30
+#define AUCM          1.49598e11
+#define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
-#define REARTH        6.3781e8
-#define RJUP          7.1492e9
-#define MJUP          1.8987e30
-#define RNEP          2.4764e9
-#define MNEP          1.0244e29
-#define RHOEARTH      5.52                  // cgs
+#define REARTH        6.3781e6
+#define RJUP          7.1492e7
+#define MJUP          1.8987e27
+#define RNEP          2.4764e7
+#define MNEP          1.0244e26
+#define RHOEARTH      5515
 #define eEARTH        0.016710219
 #define YEARDAY       365.25
-#define MSAT          5.6851e29
+#define MSAT          5.6851e26
 #define DEGRAD        0.017453292519444445
-#define ATOMMASS      1.660538921e-24       // g
+#define ATOMMASS      1.660538921e-27
 
 /* Exit Status */
 
@@ -122,6 +122,7 @@ typedef struct {
   char cType[OPTLEN];    /**< Type of object N/I */
 
   /* Body Properties */
+  double dAge;           /**< Body's Age */
   double dMass;		 /**< Body's Mass */
   double dRadius;	 /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
@@ -132,7 +133,10 @@ typedef struct {
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
   double dRadGyra;       /**< Body's Radius of Gyration */
-  double dIntEn;         /**< Body's Total Internal Energy */
+  double dPowRadiogCore; /**< Body's Core's  Radiogenic Power */
+  double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
+  double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
+  double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
 
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
@@ -142,6 +146,10 @@ typedef struct {
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
+  double Hecc;           /**< Poincare H */
+  double Kecc;           /**< Poincare K */
+  double Pinc;           /**< Poincare P */
+  double Qinc;           /**< Poincare Q */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -158,39 +166,41 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-    int bRadheat;             /**< Apply Module RADHEAT? */
-    double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
-    double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
-    double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
-    double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
-    double d40KConstCore;       
-    double d40KNumCore;
-    double d40KPowerCore;
-    double d40KMassCore;
-    double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
-    double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
-    double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
-    double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
-    double d232ThConstCore;
-    double d232ThNumCore;
-    double d232ThPowerCore;
-    double d232ThMassCore;
-    double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
-    double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
-    double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
-    double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
-    double d238UConstCore;
-    double d238UNumCore;
-    double d238UPowerCore;
-    double d238UMassCore;
-    double d235UConstMan; 
-    double d235UNumMan;
-    double d235UPowerMan;
-    double d235UMassMan;
-    double d235UConstCore; 
-    double d235UNumCore;
-    double d235UPowerCore;
-    double d235UMassCore;
+  int bRadheat;             /**< Apply Module RADHEAT? */
+  double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
+  double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
+  double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
+  double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
+  double d40KConstCore;       
+  double d40KNumCore;
+  double d40KPowerCore;
+  double d40KMassCore;
+  double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
+  double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
+  double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
+  double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
+  double d232ThConstCore;
+  double d232ThNumCore;
+  double d232ThPowerCore;
+  double d232ThMassCore;
+  double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
+  double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
+  double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
+  double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
+  double d238UConstCore;
+  double d238UNumCore;
+  double d238UPowerCore;
+  double d238UMassCore;
+  double d235UConstMan; 
+  double d235UNumMan;
+  double d235UPowerMan;
+  double d235UMassMan;
+  double d235UConstCore; 
+  double d235UNumCore;
+  double d235UPowerCore;
+  double d235UMassCore;
+
+  int bThermint;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -225,7 +235,7 @@ typedef struct {
   double daAtmPressProfile;
   double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
 
-    double daEddyDiffProfile;
+  double daEddyDiffProfile;
 
   int bAtmSulfur;
   int bAtmHydrogen;
@@ -245,9 +255,8 @@ typedef struct {
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
-  double dAge;           /**< System's Age */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
-  double dTotAngMom;     /**< System's Current Angular Momentum */
+  double dTotEnInit;     /**< System's Initial Energy */
 } SYSTEM;
 
 /* 
@@ -395,7 +404,7 @@ typedef struct {
   int dMin40KPower;     /**< Halt at this Potassium-40 Power */
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-    int dMin235UPower; 
+  int dMin235UPower; 
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -415,7 +424,7 @@ typedef struct {
     int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
 } UNITS;
 
-typedef void (*fnAuxPropsModule)(BODY*,int);
+typedef void (*fnAuxPropsModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
@@ -442,6 +451,7 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
+  int *iNumMulti;        /**< Number of Multi-module AuxProps functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
@@ -454,6 +464,7 @@ typedef struct {
   /* Nothing? */
 
   fnAuxPropsModule **fnAuxProps; /**< Function Pointers to Auxiliary Properties */
+  fnAuxPropsModule **fnAuxPropsMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -665,21 +676,21 @@ typedef struct {
       semi-major axis in the UPDATE struct. */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
 
-    /*! These functions assign Equation and Module information regarding 
+  /*! These functions assign Equation and Module information regarding 
     potassium-40 in the UPDATE struct. */ 
-    fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
-    /*! These functions assign Equation and Module information regarding 
-      thorium-232 in the UPDATE struct. */ 
-    fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
-    /*! These functions assign Equation and Module information regarding 
-      uranium-238 in the UPDATE struct. */ 
-    fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
-    fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
-    fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
-    fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
-    fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
-    fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
-    
+  fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
+  /*! These functions assign Equation and Module information regarding 
+    thorium-232 in the UPDATE struct. */ 
+  fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
+  /*! These functions assign Equation and Module information regarding 
+    uranium-238 in the UPDATE struct. */ 
+  fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+  fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
+  fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
+  fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+  fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 

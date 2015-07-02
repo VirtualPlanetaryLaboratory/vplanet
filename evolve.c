@@ -23,16 +23,23 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   }
 }
 
-void PropertiesAuxiliary(BODY *body,CONTROL *control) {
+void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   int iBody,iModule;
 
   PropsAuxGeneral(body,control);
 
   /* Get properties from each module */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    // Uni-module properties
     for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,iBody);
+      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
+
+    // Multi-module properties
+    for (iModule=0;iModule<control->Evolve.iNumMulti[iBody];iModule++)
+      control->Evolve.fnAuxPropsMulti[iBody][iModule](body,update,iBody);
   }
+
+
 }
 
 void UpdateTmpBody(BODY *tmpBody,CONTROL *control,UPDATE *update) {
@@ -200,7 +207,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Now copy new parameters into control->Evolve.tmpBody, and 
      calculate new auxiliary properties. XXX Unnecessary? 
      UpdateTmpBody(control->Evolve.tmpBody,control,update); */
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
   /* Don't need this timestep info, so assign output to dFoo */
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
@@ -219,7 +226,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Second midpoint derivative */
   // UpdateTmpBody(control->Evolve.tmpBody,control,update);
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -236,7 +243,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Full step derivative */
   // UpdateTmpBody(control->Evolve.tmpBody,control,update);
-  PropertiesAuxiliary(control->Evolve.tmpBody,control);
+  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -278,7 +285,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
 
-  PropertiesAuxiliary(body,control);
+  PropertiesAuxiliary(body,control,update);
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
@@ -327,8 +334,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       return;
     }
 
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
+      body[iBody].dAge += iDir*dDt;
+
     control->Evolve.dTime += dDt;
-    system->dAge += iDir*dDt;
     control->Evolve.nSteps++;
 
     /* Time for Output? */
@@ -341,7 +350,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     /* Get tidal properties for next step -- first call 
        was prior to loop. */
-    PropertiesAuxiliary(body,control);
+    PropertiesAuxiliary(body,control,update);
 
   }
 

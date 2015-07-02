@@ -918,6 +918,7 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) 
     FinalizeModule(*body,module,iBody);
 
+  /*  /* This block of code is not in the master anymore /*
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
 	  // Must initialize entire body struct before verifying modules
@@ -925,6 +926,8 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 	  module->fnInitializeBody[iBody][iModule](body,control,iBody,iModule);
       }
   }
+  */
+
   /* XXX Should check this file here */
 
 }

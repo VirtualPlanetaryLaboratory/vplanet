@@ -1211,19 +1211,35 @@ double fdDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double d
   return result;
 }
 
+/*--------- f1 ----------------------*/
 double fdSemiMajAxF1(double dAxRatio, int iIndexJ) {
   return 1./2 * fdLaplaceCoeff(A(iIndexJ));
 }
 
+double fdDSemiF1Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./2 * fdDerivLaplaceCoeff(1,A(iIndexJ));
+}
+
+/*--------- f2 ----------------------*/
 double fdSemiMajAxF2(double dAxRatio, int iIndexJ) {
   return 1./8* (-4.*iIndexJ*iIndexJ * fdLaplaceCoeff(A(iIndexJ)) + 2.*dAxRatio * fdDerivLaplaceCoeff(1,A(iIndexJ))\
     + dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,A(iIndexJ)) );
 }
 
+double fdDSemiF2Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./8 * ( (2.-4.*pow(iIndexJ,2))*fdDerivLaplaceCoeff(1,A(iIndexJ)) + 4.*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ)) + pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ)) );
+}
+
+/*--------- f3 ----------------------*/
 double fdSemiMajAxF3(double dAxRatio, int iIndexJ) {
   return -1./4*dAxRatio * ( fdLaplaceCoeff(B(abs(iIndexJ-1))) + fdLaplaceCoeff(B(iIndexJ+1)) );
 }
 
+double fdDSemiF3Dalpha(double dAxRatio, int iIndexJ) {
+  return -1./4*( (fdLaplaceCoeff(B(abs(iIndexJ-1))) + fdLaplaceCoeff(B(iIndexJ+1))) + dAxRatio*(fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) + fdDerivLaplaceCoeff(1,B(iIndexJ+1))) );
+}
+
+/*--------- f4 ----------------------*/
 double fdSemiMajAxF4(double dAxRatio, int iIndexJ) {
   return 1./128 * ( (-9.*iIndexJ*iIndexJ + 16.*pow(iIndexJ,4)) * fdLaplaceCoeff(A(iIndexJ))  \
     -8.*iIndexJ*iIndexJ*dAxRatio * fdDerivLaplaceCoeff(1,A(iIndexJ)) \
@@ -1232,6 +1248,15 @@ double fdSemiMajAxF4(double dAxRatio, int iIndexJ) {
     + pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ)) );
 }
 
+double fdDSemiF4Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./128 * ( (-17.*pow(iIndexJ,2)+16.*pow(iIndexJ,4))*fdDerivLaplaceCoeff(1,A(iIndexJ)) \
+    - 24.*pow(iIndexJ,2)*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ)) \
+    + (12.-8.*pow(iIndexJ,2))*pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ)) \
+    + (8.*pow(dAxRatio,3))*fdDerivLaplaceCoeff(4,A(iIndexJ)) \
+    + pow(dAxRatio,4)*fdDerivLaplaceCoeff(5,A(iIndexJ)) );
+}
+
+/*--------- f5 ----------------------*/
 double fdSemiMajAxF5(double dAxRatio, int iIndexJ) {
   return 1./32 * ( 16.*pow(iIndexJ,4) * fdLaplaceCoeff(A(iIndexJ)) \
     + (4. - 16.*iIndexJ*iIndexJ) * dAxRatio * fdDerivLaplaceCoeff(1,A(iIndexJ)) \
@@ -1240,6 +1265,15 @@ double fdSemiMajAxF5(double dAxRatio, int iIndexJ) {
     + pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ)) );
 }
 
+double fdDSemiF5Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./32 * ( (4.-16.*pow(iIndexJ,2)+16.*pow(iIndexJ,4))*fdDerivLaplaceCoeff(1,A(iIndexJ)) \
+    + (32.-32.*pow(iIndexJ,2))*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ)) \
+    + (38.-8.*pow(iIndexJ,2))*pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ)) \
+    + 12.*pow(dAxRatio,3)*fdDerivLaplaceCoeff(4,A(iIndexJ)) \
+    + pow(dAxRatio,4)*fdDerivLaplaceCoeff(5,A(iIndexJ)) );
+}
+
+/*--------- f6 ----------------------*/
 double fdSemiMajAxF6(double dAxRatio, int iIndexJ) {
   return 1./128 * ( (-17.*iIndexJ*iIndexJ + 16.*pow(iIndexJ,4)) * fdLaplaceCoeff(A(iIndexJ)) \
     + (1. - iIndexJ*iIndexJ) * 24. * dAxRatio * fdDerivLaplaceCoeff(1,A(iIndexJ)) \
@@ -1248,29 +1282,71 @@ double fdSemiMajAxF6(double dAxRatio, int iIndexJ) {
     + pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ)) );
 }
 
+double fdDSemiF6Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./128 * ( (24.-41.*pow(iIndexJ,2)+16.*pow(iIndexJ,4))*fdDerivLaplaceCoeff(1,A(iIndexJ)) \
+    + (96.- 40.*pow(iIndexJ,2))*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ)) \
+    + (72.-8.*pow(iIndexJ,2))*pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ)) \
+    + (16.*pow(dAxRatio,3))*fdDerivLaplaceCoeff(4,A(iIndexJ)) \
+    + pow(dAxRatio,4)*fdDerivLaplaceCoeff(5,A(iIndexJ)) );
+}
+
+/*--------- f7 ----------------------*/
 double fdSemiMajAxF7(double dAxRatio, int iIndexJ) {
   return 1./16*( (-2.+4.*iIndexJ*iIndexJ)*dAxRatio*(fdLaplaceCoeff(B(abs(iIndexJ-1)))+fdLaplaceCoeff(B(iIndexJ+1)))
     - 4.*pow(dAxRatio,2) * (fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) + fdDerivLaplaceCoeff(1,B(iIndexJ+1))) \
     - pow(dAxRatio,3) * (fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1))) + fdDerivLaplaceCoeff(2,B(iIndexJ+1))) );
 }
 
+double fdDSemiF7Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./16 * ( (-2.+4.*pow(iIndexJ,2))*(fdLaplaceCoeff(B(abs(iIndexJ-1))) + fdLaplaceCoeff(B(iIndexJ+1))) \
+  -(10.-4.*pow(iIndexJ,2))*dAxRatio*(fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1)))+fdDerivLaplaceCoeff(1,B(iIndexJ+1)))\
+  - 7.*pow(dAxRatio,2)*(fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1)))+fdDerivLaplaceCoeff(2,B(iIndexJ+1)))\
+  - pow(dAxRatio,3)*(fdDerivLaplaceCoeff(3,B(abs(iIndexJ-1)))+fdDerivLaplaceCoeff(3,B(iIndexJ+1))) );
+}
+  
+/*--------- f8 ----------------------*/
 double fdSemiMajAxF8(double dAxRatio, int iIndexJ) {
   return 3./16 * dAxRatio*dAxRatio * ( fdLaplaceCoeff(C(abs(iIndexJ-2))) \
     + 4. * fdLaplaceCoeff(C(iIndexJ)) + fdLaplaceCoeff(C(iIndexJ+2)) );
 }
 
+double fdDSemiF8Dalpha(double dAxRatio, int iIndexJ) {
+  return 3./16 * dAxRatio* ( 2*(fdLaplaceCoeff(C(abs(iIndexJ-2))) \
+    + 4. * fdLaplaceCoeff(C(iIndexJ)) + fdLaplaceCoeff(C(iIndexJ+2))) \
+    + dAxRatio*(fdDerivLaplaceCoeff(1,C(abs(iIndexJ-2))) \
+    + 4. * fdDerivLaplaceCoeff(1,C(iIndexJ)) + fdDerivLaplaceCoeff(1,C(iIndexJ+2))) );
+}
+
+/*--------- f9 ----------------------*/
 double fdSemiMajAxF9(double dAxRatio, int iIndexJ) {
   return 1./4 * dAxRatio * (fdLaplaceCoeff(B(abs(iIndexJ-1))) + fdLaplaceCoeff(B(iIndexJ+1))) \
     + 3./8 * pow(dAxRatio,2) * ( fdLaplaceCoeff(C(abs(iIndexJ-2))) + 10. * fdLaplaceCoeff(C(iIndexJ)) \
     + fdLaplaceCoeff(C(iIndexJ+2)) );
 }
 
+double fdDSemiF9Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( (fdLaplaceCoeff(B(abs(iIndexJ-1))) + fdLaplaceCoeff(B(iIndexJ+1))) \
+    + dAxRatio*(fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) + fdDerivLaplaceCoeff(1,B(iIndexJ+1))) ) \
+    + 3./8 * dAxRatio * ( 2*(fdLaplaceCoeff(C(abs(iIndexJ-2))) + 10. * fdLaplaceCoeff(C(iIndexJ)) \
+    + fdLaplaceCoeff(C(iIndexJ+2))) + dAxRatio*(fdDerivLaplaceCoeff(1,C(abs(iIndexJ-2)))\
+    + 10. * fdDerivLaplaceCoeff(1,C(iIndexJ)) + fdDerivLaplaceCoeff(1,C(iIndexJ+2))) );
+}
+
+/*--------- f10 ----------------------*/
 double fdSemiMajAxF10(double dAxRatio, int iIndexJ) {
   return 1./4 * ( (2. + 6.*iIndexJ + 4.*iIndexJ*iIndexJ) * fdLaplaceCoeff(A(iIndexJ+1)) \
     - 2. * dAxRatio * fdDerivLaplaceCoeff(1,A(iIndexJ+1)) \
     - pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,A(iIndexJ+1)) );
 }
 
+double fdDSemiF10Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( (6.*iIndexJ + 4.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(1,A(iIndexJ+1)) \
+    - 4. * dAxRatio * fdDerivLaplaceCoeff(2,A(iIndexJ+1)) \
+    - pow(dAxRatio,2) * fdDerivLaplaceCoeff(3,A(iIndexJ+1)) );
+}
+  
+  
+/*--------- f11 ----------------------*/
 double fdSemiMajAxF11(double dAxRatio, int iIndexJ) {
   return 1./32*((-6.*iIndexJ-26.*iIndexJ*iIndexJ-36.*pow(iIndexJ,3) \
     -16*pow(iIndexJ,4))*fdLaplaceCoeff(A(iIndexJ+1))\
@@ -1280,6 +1356,15 @@ double fdSemiMajAxF11(double dAxRatio, int iIndexJ) {
     - pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ+1)) );
 }
 
+double fdDSemiF11Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./32*((-14.*iIndexJ*iIndexJ-36.*pow(iIndexJ,3)-16*pow(iIndexJ,4))*fdDerivLaplaceCoeff(1,A(iIndexJ+1))\
+    + dAxRatio * (-8.+20.*iIndexJ+28.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(2,A(iIndexJ+1)) \
+    + pow(dAxRatio,2) * (-22.+7.*iIndexJ+8.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(3,A(iIndexJ+1)) \
+    - 10.*pow(dAxRatio,3) * fdDerivLaplaceCoeff(4,A(iIndexJ+1)) \
+    - pow(dAxRatio,4) * fdDerivLaplaceCoeff(5,A(iIndexJ+1)) );
+}
+  
+/*--------- f12 ----------------------*/
 double fdSemiMajAxF12(double dAxRatio, int iIndexJ) {
   return 1./32 * ( (4. + 2.*iIndexJ - 22.*iIndexJ*iIndexJ - 36.*pow(iIndexJ,3) - 16.*pow(iIndexJ,4)) * \
     fdLaplaceCoeff(A(iIndexJ+1)) \
@@ -1289,27 +1374,66 @@ double fdSemiMajAxF12(double dAxRatio, int iIndexJ) {
     - pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ+1)) );
 }
 
+double fdDSemiF12Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./32 * ( (24.*iIndexJ-2.*iIndexJ*iIndexJ-36.*pow(iIndexJ,3)-16.*pow(iIndexJ,4)) * \
+    fdDerivLaplaceCoeff(1,A(iIndexJ+1)) \
+    + dAxRatio * (-48. + 36.*iIndexJ + 36.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(2,A(iIndexJ+1)) \
+    + pow(dAxRatio,2) * (-52. + 7.*iIndexJ + 8.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(3,A(iIndexJ+1)) \
+    - 14.*pow(dAxRatio,3) * fdDerivLaplaceCoeff(4,A(iIndexJ+1)) \
+    - pow(dAxRatio,4) * fdDerivLaplaceCoeff(5,A(iIndexJ+1)) );
+}
+
+/*--------- f13 ----------------------*/
 double fdSemiMajAxF13(double dAxRatio, int iIndexJ) {
   return 1./8*((-6.*iIndexJ-4.*iIndexJ*iIndexJ)*dAxRatio*(fdLaplaceCoeff(B(iIndexJ))+fdLaplaceCoeff(B(iIndexJ+2)))\
     + 4.*pow(dAxRatio,2) * (fdDerivLaplaceCoeff(1,B(iIndexJ)) + fdDerivLaplaceCoeff(1,B(iIndexJ+2)))\
     + pow(dAxRatio,3) * (fdDerivLaplaceCoeff(2,B(iIndexJ)) + fdDerivLaplaceCoeff(2,B(iIndexJ+2))) );
 }
 
+double fdDSemiF13Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./8*( (-6.*iIndexJ-4.*iIndexJ*iIndexJ)*(fdLaplaceCoeff(B(iIndexJ))+fdLaplaceCoeff(B(iIndexJ+2)))\
+    + (8.-6.*iIndexJ-4.*pow(iIndexJ,2))*dAxRatio \
+    * (fdDerivLaplaceCoeff(1,B(iIndexJ))+fdDerivLaplaceCoeff(1,B(iIndexJ+2)))\
+    + 7.*pow(dAxRatio,2) * (fdDerivLaplaceCoeff(2,B(iIndexJ)) + fdDerivLaplaceCoeff(2,B(iIndexJ+2))) \
+    + pow(dAxRatio,3) * (fdDerivLaplaceCoeff(3,B(iIndexJ)) + fdDerivLaplaceCoeff(3,B(iIndexJ+2))) );
+}
+
+/*--------- f14 ----------------------*/
 double fdSemiMajAxF14(double dAxRatio, int iIndexJ) {
   return dAxRatio * fdLaplaceCoeff(B(iIndexJ+1));
 }
 
+double fdDSemiF14Dalpha(double dAxRatio, int iIndexJ) {
+  return fdLaplaceCoeff(B(iIndexJ+1)) + dAxRatio*fdDerivLaplaceCoeff(1,B(iIndexJ+1));
+}
+  
+/*--------- f15 ----------------------*/
 double fdSemiMajAxF15(double dAxRatio, int iIndexJ) {
   return 1./4 * ( (2. - 4.*iIndexJ*iIndexJ) * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
    + 4.*pow(dAxRatio,2) * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) );
 }
 
+double fdDSemiF15Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( (2.-4.*iIndexJ*iIndexJ) * fdLaplaceCoeff(B(iIndexJ+1)) \
+   + (10.-4.*pow(iIndexJ,2))*dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
+   + 7.*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) \
+   + pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ+1)) );
+}
+  
+/*--------- f16 ----------------------*/
 double fdSemiMajAxF16(double dAxRatio, int iIndexJ) {
   return -1./2 * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
     -3.* pow(dAxRatio,2) * fdLaplaceCoeff(C(iIndexJ)) - 3./2 * pow(dAxRatio,2) * fdLaplaceCoeff(C(iIndexJ+2));
 }
 
+double fdDSemiF16Dalpha(double dAxRatio, int iIndexJ) {
+  return -1./2 * ( fdLaplaceCoeff(B(iIndexJ+1)) + dAxRatio*fdDerivLaplaceCoeff(1,B(iIndexJ+1)) ) \
+    -3.* dAxRatio * ( 2.*(fdLaplaceCoeff(C(iIndexJ)) + 1./2 * fdLaplaceCoeff(C(iIndexJ+2))) \
+    + dAxRatio*(fdDerivLaplaceCoeff(1,C(iIndexJ)) + 1./2 * fdDerivLaplaceCoeff(1,C(iIndexJ+2))) );
+}
+  
+/*--------- f17 ----------------------*/
 double fdSemiMajAxF17(double dAxRatio, int iIndexJ) {
   return 1./64 * ( (12. + 64.*iIndexJ + 109.*iIndexJ*iIndexJ + 72.*pow(iIndexJ,3) + 16.*pow(iIndexJ,4)) \
     * fdLaplaceCoeff(A(iIndexJ+2)) \
@@ -1319,59 +1443,139 @@ double fdSemiMajAxF17(double dAxRatio, int iIndexJ) {
     + pow(dAxRatio,4) * fdDerivLaplaceCoeff(4,A(iIndexJ+2)) );
 }
 
+double fdDSemiF17Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./64 * ( (36.*iIndexJ + 93.*iIndexJ*iIndexJ + 72.*pow(iIndexJ,3) + 16.*pow(iIndexJ,4)) \
+    * fdDerivLaplaceCoeff(1,A(iIndexJ+2)) \
+    - dAxRatio * (56.*iIndexJ + 32.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(2,A(iIndexJ+2)) \
+    + pow(dAxRatio,2) * (30. - 14.*iIndexJ - 8.*iIndexJ*iIndexJ) * fdDerivLaplaceCoeff(3,A(iIndexJ+2)) \
+    + 12.*pow(dAxRatio,3) * fdDerivLaplaceCoeff(4,A(iIndexJ+2)) \
+    + pow(dAxRatio,4) * fdDerivLaplaceCoeff(5,A(iIndexJ+2)) );
+}
+  
+/*--------- f18 ----------------------*/
 double fdSemiMajAxF18(double dAxRatio, int iIndexJ) {
   return 1./16 * ( (12. - 15.*iIndexJ + 4.*iIndexJ*iIndexJ) * dAxRatio * fdLaplaceCoeff(B(abs(iIndexJ-1))) \
     + pow(dAxRatio,2) * (8. - 4.*iIndexJ) * fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) \
     + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1))) );
 }
 
+double fdDSemiF18Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./16 * ( (12. - 15.*iIndexJ + 4.*iIndexJ*iIndexJ) * fdLaplaceCoeff(B(abs(iIndexJ-1))) \
+    + dAxRatio * (28. - 23.*iIndexJ + 4.*pow(iIndexJ,2)) * fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) \
+    + (11.-4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1))) \
+    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(abs(iIndexJ-1))));
+}
+
+/*--------- f19 ----------------------*/
 double fdSemiMajAxF19(double dAxRatio, int iIndexJ) {
   return 1./8 * ( (6. - 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ)) \
    + pow(dAxRatio,2) * (-4. + 4.*iIndexJ) * fdDerivLaplaceCoeff(1,B(iIndexJ)) \
    - pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ)) );
 }
 
+double fdDSemiF19Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./8 * ( (6. - 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ)) \
+   + dAxRatio * (-8. + 14.*iIndexJ - 4.*pow(iIndexJ,2)) * fdDerivLaplaceCoeff(1,B(iIndexJ)) \
+   + (-7.+4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
+   - pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
+}
+
+/*--------- f20 ----------------------*/
 double fdSemiMajAxF20(double dAxRatio, int iIndexJ) {
   return 1./16 * ( (3. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
    - 4.*iIndexJ * pow(dAxRatio,2) * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) );
 }
 
+double fdDSemiF20Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./16 * ( (3. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ+1)) \
+   + (-5.*iIndexJ + 4.*pow(iIndexJ,2)) * dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
+   + (3.-4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) \
+   + pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ+1)) );
+}
+
+/*--------- f21 ----------------------*/
 double fdSemiMajAxF21(double dAxRatio, int iIndexJ) {
   return 1./8 * ( (-12. + 15.*iIndexJ - 4.*iIndexJ*iIndexJ) * dAxRatio * fdLaplaceCoeff(B(abs(iIndexJ-1))) \
    + pow(dAxRatio,2) * (-8. + 4.*iIndexJ) * fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) \
    - pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1))) );
 }
 
+double fdDSemiF21Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./8 * ( (-12. + 15.*iIndexJ - 4.*iIndexJ*iIndexJ) * fdLaplaceCoeff(B(abs(iIndexJ-1))) \
+   + dAxRatio * (-28. + 23.*iIndexJ -4.*pow(iIndexJ,2)) * fdDerivLaplaceCoeff(1,B(abs(iIndexJ-1))) \
+   + (-11.+4.*iIndexJ)* pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1))) \
+   - pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(abs(iIndexJ-1))) );
+}
+
+/*--------- f22 ----------------------*/
 double fdSemiMajAxF22(double dAxRatio, int iIndexJ) {
   return 1./4 * ( dAxRatio * iIndexJ * (6. + 4.*iIndexJ) * fdLaplaceCoeff(B(iIndexJ)) \
    - 4. * pow(dAxRatio,2) * fdDerivLaplaceCoeff(1,B(iIndexJ)) \
    - pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ)) );
 }
 
+double fdDSemiF22Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( iIndexJ * (6. + 4.*iIndexJ) * fdLaplaceCoeff(B(iIndexJ)) \
+   + (-8.+6.*iIndexJ+4.*pow(iIndexJ,2)) * dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ)) \
+   - 7.*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
+   - pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
+}
+  
+/*--------- f23 ----------------------*/
 double fdSemiMajAxF23(double dAxRatio, int iIndexJ) {
   return 1./4 * ( dAxRatio * iIndexJ * (6. + 4.*iIndexJ) * fdLaplaceCoeff(B(iIndexJ+2)) \
    - 4. * pow(dAxRatio,2) * fdDerivLaplaceCoeff(1,B(iIndexJ+2)) \
    - pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ+2)) );
 }
 
+double fdDSemiF23Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( iIndexJ * (6. + 4.*iIndexJ) * fdLaplaceCoeff(B(iIndexJ+2)) \
+   + (-8.+6.*iIndexJ+4.*pow(iIndexJ,2)) * dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+2)) \
+   - 7.*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ+2)) \
+   - pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ+2)) );
+}
+
+/*--------- f24 ----------------------*/
 double fdSemiMajAxF24(double dAxRatio, int iIndexJ) {
   return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ))	\
    + 4.*pow(dAxRatio,2) * (1. - iIndexJ) * fdDerivLaplaceCoeff(1,B(iIndexJ))    \
    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ)) );
 }
 
+double fdDSemiF24Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ))	\
+   + (8.-14.*iIndexJ+4.*pow(iIndexJ,2))*dAxRatio* fdDerivLaplaceCoeff(1,B(iIndexJ))    \
+   + (7.-4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
+   +  pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
+}
+  
+/*--------- f25 ----------------------*/
 double fdSemiMajAxF25(double dAxRatio, int iIndexJ) {
   return 1./8 * ( (-3. - 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
    + 4.*iIndexJ*pow(dAxRatio,2) * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
    - pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) );
 }
-
+ 
+double fdDSemiF25Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./8 * ( (-3. - 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ+1)) \
+   + (5.*iIndexJ-4.*pow(iIndexJ,2))*dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
+   + (-3.+4.*iIndexJ)* pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) \
+   - pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ+1)) );
+}
+ 
+/*--------- f26 ----------------------*/
 double fdSemiMajAxF26(double dAxRatio, int iIndexJ) {
   return 1./2 * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) + 3./4 * pow(dAxRatio,2) * fdLaplaceCoeff(C(iIndexJ)) \
     + 3./2 * pow(dAxRatio,2) * fdLaplaceCoeff(C(iIndexJ+2));
 }
 
+double fdDSemiF26Dalpha(double dAxRatio, int iIndexJ) {
+  return 1./2 * ( fdLaplaceCoeff(B(iIndexJ+1)) + dAxRatio*fdDerivLaplaceCoeff(1,B(iIndexJ+1)) ) \
+    + 3./4 * dAxRatio * ( 2.*(fdLaplaceCoeff(C(iIndexJ)) + 2.*fdLaplaceCoeff(C(iIndexJ+2))) \
+    + dAxRatio*(fdDerivLaplaceCoeff(1,C(iIndexJ)) + 2.*fdDerivLaplaceCoeff(1,C(iIndexJ+2))) ) ;
+}
+  
 
 //----------------Disturbing function h k p q----------------------------------------------
 //--------dR/dh-----------(inner body)------------------------------------------------------

@@ -132,6 +132,33 @@ double fdSemiMajAxF24(double, int);
 double fdSemiMajAxF25(double, int);
 double fdSemiMajAxF26(double, int);
 
+double fdDSemiF1Dalpha(double, int);
+double fdDSemiF2Dalpha(double, int);
+double fdDSemiF3Dalpha(double, int);
+double fdDSemiF4Dalpha(double, int);
+double fdDSemiF5Dalpha(double, int);
+double fdDSemiF6Dalpha(double, int);
+double fdDSemiF7Dalpha(double, int);
+double fdDSemiF8Dalpha(double, int);
+double fdDSemiF9Dalpha(double, int);
+double fdDSemiF10Dalpha(double, int);
+double fdDSemiF11Dalpha(double, int);
+double fdDSemiF12Dalpha(double, int);
+double fdDSemiF13Dalpha(double, int);
+double fdDSemiF14Dalpha(double, int);
+double fdDSemiF15Dalpha(double, int);
+double fdDSemiF16Dalpha(double, int);
+double fdDSemiF17Dalpha(double, int);
+double fdDSemiF18Dalpha(double, int);
+double fdDSemiF19Dalpha(double, int);
+double fdDSemiF20Dalpha(double, int);
+double fdDSemiF21Dalpha(double, int);
+double fdDSemiF22Dalpha(double, int);
+double fdDSemiF23Dalpha(double, int);
+double fdDSemiF24Dalpha(double, int);
+double fdDSemiF25Dalpha(double, int);
+double fdDSemiF26Dalpha(double, int);
+
 /* Lagrange's equations in h,k,p,q */
 double fdLagrangeDhDt(BODY*, SYSTEM*, int*);
 double fdLagrangeDkDt(BODY*, SYSTEM*, int*);

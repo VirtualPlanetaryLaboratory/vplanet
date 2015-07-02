@@ -48,7 +48,7 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     control->Evolve.fnAuxProps[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnAuxPropsModule));
-  control->Evolve.fnBodyCopy[iBody] = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule));
+  control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
   }
 
   /* Currently this only matters for RK4 integration. This should

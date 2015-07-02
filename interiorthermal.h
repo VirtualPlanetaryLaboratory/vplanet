@@ -13,13 +13,6 @@
 
 // UNITS CONSTANTS
 #define KM               1d3       //[m] 1 km in m
-//CONVERSIONS(for converting SI to cgs (swallow barf in mouth))
-#define ERG_JOULE        1d7       //=erg/J
-#define ERG_S_WATT       1d7       //=erg/s/W (W=J/s)
-#define G_KG             1d3       //=g/kg
-#define CM_M             1d2       //=cm/m
-#define CM_KM            1d3*CM_M  //=cm/km
-#define DENS_SI_CGS      G_KG/(CM_M)^3 //=(g/cm^3)/(kg/m^3) to convert SI to cgs.
 
 // FUNDAMENTAL CONSTANTS
 #define GASCONSTANT      8.3144621             //[J/mol/K] gas constant in SI units.      
@@ -55,7 +48,7 @@
 #define EDENSCORE        EMASSCORE/EVOLCORE //[kg/m^3] density of E core.
 #define EDENSOC          EMASSOC/EVOLOC     //[kg/m^3] density of E core.
 #define EDENSIC          EMASSIC/EVOLIC     //[kg/m^3] density of E IC.
-#define DENSOCLE         700.0*DENS_SI_CGS  //[kg/m^3] density diff of OC light elements.
+#define DENSOCLE         700.0              //[kg/m^3] density diff of OC light elements.
 // Gravity
 #define GRAVSURF         9.8                //[m/s2] Surf gravity in SI
 #define GRAVUMAN         10.5               //[m/s2] UM gravity in SI
@@ -123,11 +116,14 @@ void InitializeUpdateTmpBodyInteriorthermal(BODY*,CONTROL*,UPDATE*,int);
 
 /* Scalar Properties */
 #define OPT_TMAN            1210   //Temperature Mantle AVE
-#define OPT_TCORE           1211   //Temperature Core AVE
-#define OPT_TBLUMAN         1212   //UM TBL thickness
-#define OPT_TBLLMAN         1213   //LM TBL thickness
-#define OPT_TJUMPUMAN       1214   //Temperature Jump across UMTBL
-#define OPT_TJUMPLMAN       1215   //Temperature Jump across LMTBL
+#define OPT_TUMAN           1211   //Temperature UMTBL
+#define OPT_TLMAN           1212   //Temperature LMTBL
+#define OPT_TCORE           1213   //Temperature Core AVE
+#define OPT_TICB            1214   //Temperature ICB
+#define OPT_BLUMAN          1215   //UM TBL thickness
+#define OPT_BLLMAN          1216   //LM TBL thickness
+#define OPT_TJUMPUMAN       1217   //Temperature Jump across UMTBL
+#define OPT_TJUMPLMAN       1218   //Temperature Jump across LMTBL
 #define OPT_VISCUMAN        1220   //Viscosity UMTBL
 #define OPT_VISCLMAN        1221   //Viscosity LMTBL
 #define OPT_SHMODUMAN       1222   //Shear modulus UMTBL
@@ -209,11 +205,14 @@ void FinalizeUpdateSemiInteriorthermal(BODY*,UPDATE*,int*,int,int);
 /* Output Body Properties */
 /* Scalar Properties */
 #define OUT_TMAN            1210   //Temperature Mantle AVE
-#define OUT_TCORE           1211   //Temperature Core AVE
-#define OUT_TBLUMAN         1212   //UM TBL thickness
-#define OUT_TBLLMAN         1213   //LM TBL thickness
-#define OUT_TJUMPUMAN       1214   //Temperature Jump across UMTBL
-#define OUT_TJUMPLMAN       1215   //Temperature Jump across LMTBL
+#define OUT_TUMAN           1211   //Temperature UMTBL
+#define OUT_TLMAN           1212   //Temperature LMTBL
+#define OUT_TCORE           1213   //Temperature Core AVE
+#define OUT_TICB            1214   //Temperature ICB
+#define OUT_BLUMAN          1215   //UM TBL thickness
+#define OUT_BLLMAN          1216   //LM TBL thickness
+#define OUT_TJUMPUMAN       1217   //Temperature Jump across UMTBL
+#define OUT_TJUMPLMAN       1218   //Temperature Jump across LMTBL
 #define OUT_VISCUMAN        1220   //Viscosity UMTBL
 #define OUT_VISCLMAN        1221   //Viscosity LMTBL
 #define OUT_SHMODUMAN       1222   //Shear modulus UMTBL
@@ -251,7 +250,9 @@ void InitializeOutputFunctionInteriorthermal(OUTPUT*,int,int);
 void FinalizeOutputFunctionInteriorthermal(OUTPUT*,int,int);
 
 void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -275,6 +276,10 @@ void LogBodyInteriorthermal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 /* Thermal Functions */
 double fdTDotMan(BODY*,SYSTEM*,int*,int);
 double fdTDotCore(BODY*,SYSTEM*,int*,int);
+double fdTUMan(BODY*,SYSTEM*,int*,int);
+double fdTLMan(BODY*,SYSTEM*,int*,int);
+double fdTCMB(BODY*,SYSTEM*,int*,int);
+double fdTICB(BODY*,SYSTEM*,int*,int);
 double fdThickBLUMan(BODY*,SYSTEM*,UPDATE *update,int,int);
 double fdThickBLLMan(BODY*,SYSTEM*,UPDATE *update,int,int);
 double fdDTempUMan(BODY*,SYSTEM*,UPDATE *update,int,int);

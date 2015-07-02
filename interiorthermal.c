@@ -414,10 +414,27 @@ void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
 
 /************* INTERIORTHERMAL Functions ************/
 
+/* Get TUMan */
+double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
+    return ADJUMP2UM*TMan;
+}
+
+/* Get TLMan */
+double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
+    return ADJUMP2LM*TMan;
+}
+
+/* Get TUMan */
+double fdTUMan(BODY *body,SYSTEM *system,int *iaBody,int TMan) {
+    return ADJUMP2UM*TMan;
+}
+
+/* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
     return -(100.0/1e9/YEARSEC);   //arbitrary for now.
 }
 
+/* Get TDotCore */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
     return -(100.0/1e9/YEARSEC);   //arbitrary for now.
 }

@@ -226,8 +226,8 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
     if (!body[iBody].bRadheat) {
       if (control->Io.iVerbose > VERBINPUT)
 	fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
-      body[iBody].dPowManRadiog = 0;
-      body[iBody].dPowCoreRadiog = 0;
+      body[iBody].dPowRadiogCore = 0;
+      body[iBody].dPowRadiogMan = 0;
     } else
       control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesRadheatThermint;
   }
@@ -255,6 +255,6 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  */
 
 void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dPowCoreRadiog = fdRadPowerCore(body,update,iBody);
-  body[iBody].dPowManRadiog = fdRadPowerMan(body,update,iBody);
+  body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
+  body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
 }

@@ -390,7 +390,6 @@ void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
 
 /* Uranium 235 PED */
-
 void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */

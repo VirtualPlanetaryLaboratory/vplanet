@@ -135,6 +135,8 @@ typedef struct {
   double dRadGyra;       /**< Body's Radius of Gyration */
   double dPowRadiogCore; /**< Body's Core's  Radiogenic Power */
   double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
+  double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
+  double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
 
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 

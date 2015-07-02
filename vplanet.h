@@ -20,28 +20,28 @@
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-8
+#define BIGG          6.672e-11
 #define PI            3.1415926535
 
-/* Units */
+/* Units: Calculations are done in SI */
 
-#define MEARTH        5.9742e27
-#define MSUN          1.98892e33
-#define AUCM          1.49598e13
-#define RSUN          6.955e10
+#define MEARTH        5.9742e24
+#define MSUN          1.98892e30
+#define AUCM          1.49598e11
+#define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
-#define REARTH        6.3781e8
-#define RJUP          7.1492e9
-#define MJUP          1.8987e30
-#define RNEP          2.4764e9
-#define MNEP          1.0244e29
-#define RHOEARTH      5.52                  // cgs
+#define REARTH        6.3781e6
+#define RJUP          7.1492e7
+#define MJUP          1.8987e27
+#define RNEP          2.4764e7
+#define MNEP          1.0244e26
+#define RHOEARTH      5515
 #define eEARTH        0.016710219
 #define YEARDAY       365.25
-#define MSAT          5.6851e29
+#define MSAT          5.6851e26
 #define DEGRAD        0.017453292519444445
-#define ATOMMASS      1.660538921e-24       // g
+#define ATOMMASS      1.660538921e-27
 
 /* Exit Status */
 
@@ -122,6 +122,7 @@ typedef struct {
   char cType[OPTLEN];    /**< Type of object N/I */
 
   /* Body Properties */
+  double dAge;           /**< Body's Age */
   double dMass;		 /**< Body's Mass */
   double dRadius;	 /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
@@ -132,6 +133,8 @@ typedef struct {
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
   double dRadGyra;       /**< Body's Radius of Gyration */
+  double dPowRadiogCore; /**< Body's Core's  Radiogenic Power */
+  double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
   double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
   double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
 
@@ -143,6 +146,10 @@ typedef struct {
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
+  double Hecc;           /**< Poincare H */
+  double Kecc;           /**< Poincare K */
+  double Pinc;           /**< Poincare P */
+  double Qinc;           /**< Poincare Q */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -228,7 +235,7 @@ typedef struct {
   double daAtmPressProfile;
   double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
 
-    double daEddyDiffProfile;
+  double daEddyDiffProfile;
 
   int bAtmSulfur;
   int bAtmHydrogen;
@@ -248,9 +255,8 @@ typedef struct {
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
-  double dAge;           /**< System's Age */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
-  double dTotAngMom;     /**< System's Current Angular Momentum */
+  double dTotEnInit;     /**< System's Initial Energy */
 } SYSTEM;
 
 /* 

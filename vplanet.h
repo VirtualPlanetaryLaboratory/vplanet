@@ -146,10 +146,17 @@ typedef struct {
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
-  double Hecc;           /**< Poincare H */
-  double Kecc;           /**< Poincare K */
-  double Pinc;           /**< Poincare P */
-  double Qinc;           /**< Poincare Q */
+  double dEccSq;         /**< Eccentricity squared */
+
+  /* LAGRANGE parameters */
+  int bLagrange;         /**< Has module LAGRANGE been implemented */ 
+  double dHEcc;           /**< Poincare H */
+  double dKEcc;           /**< Poincare K */
+  double dPInc;           /**< Poincare P */
+  double dQInc;           /**< Poincare Q */
+
+  /* LASKAR parameters */
+  int bLaskar;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */

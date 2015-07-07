@@ -158,26 +158,23 @@ typedef struct {
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
-  double Hecc;           /**< Poincare H */
-  double Kecc;           /**< Poincare K */
-  double Pinc;           /**< Poincare P */
-  double Qinc;           /**< Poincare Q */
+  double dEccSq;         /**< Eccentricity squared */
 
-  /* Additional orbital properties used by LAGRANGE */
-  int bLagrange;         /**< use Lagrange? */
+  /* LAGRANGE parameters */
+  int bLagrange;         /**< Has module LAGRANGE been implemented */ 
+  double dHecc;           /**< Poincare H */
+  double dKecc;           /**< Poincare K */
+  double dPinc;           /**< Poincare P */
+  double dQinc;           /**< Poincare Q */
   double dSinc;          /**< sin(0.5*Inclination) */
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
-  double dHecc;          /**< h = e * sin(varpi) */
-  double dKecc;          /**< k = e * cos(varpi) */
-  double dPinc;          /**< p = i * sin(Omega) */
-  double dQinc;          /**< q = i * cos(Omega) */  
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
-  
-  /* Additional obliquity params used by LASKAR */
-  int bLaskar;           /**< use Laskar? */
+
+  /* LASKAR parameters */
+  int bLaskar;
   double dPrecA;         /**< Precession angle */
   double dDynEllip;      /**< Dynamical ellipticity */
   double dxi;            /**< sin(obliq)*sin(preca) */

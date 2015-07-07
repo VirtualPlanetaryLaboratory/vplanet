@@ -1152,7 +1152,7 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 
 /************* Lagrange Functions ************/
 void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
-  double alpha1;
+  double alpha1, dalpha;
   int j = 0, reset = 0;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
@@ -1161,18 +1161,18 @@ void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
       alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
   }
   
-  dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplace[iaBody[0]][iaBody[1]]]);
+  dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]]);
   
   for (j=0;j<LAPLNUM;j++) {
-    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplace[iaBody[0]][iaBody[1]]][j]) {
+    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
       if (reset == 0) {
-	system->dmLaplaceC[system->imLaplace[iaBody[0]][iaBody[1]]][j] = 
+	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
 	system->fnLaplaceF[j][0](alpha1, 0);
 		
-	system->dmLaplaceD[system->imLaplace[iaBody[0]][iaBody[1]]][j] = 
+	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
 	system->fnLaplaceDeriv[j][0](alpha1, 0);
 		
-	system->dmAlpha0[system->imLaplace[iaBody[0]][iaBody[1]]] = alpha1;
+	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]] = alpha1;
 	
 	reset = 1;
       }

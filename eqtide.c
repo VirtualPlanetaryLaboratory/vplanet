@@ -64,7 +64,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
   control->Evolve.tmpBody[iBody].dTidalChi = malloc(control->Evolve.iNumBodies*sizeof(double));
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
   
-  control->Evolve.tmpBody[iBody].iaTidePerts = malloc(body[iBody].iTidePerts);
+  control->Evolve.tmpBody[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
@@ -1707,7 +1707,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ENFLUXEQTIDE].cDescr,"Surface Energy Flux due to Tides in EQTIDE");
   sprintf(output[OUT_ENFLUXEQTIDE].cNeg,"W/m^2");
   output[OUT_ENFLUXEQTIDE].bNeg = 1;
-  output[OUT_ENFLUXEQTIDE].dNeg = 1e-3;
+  output[OUT_ENFLUXEQTIDE].dNeg = 1;
   output[OUT_ENFLUXEQTIDE].iNum = 1;
   fnWrite[OUT_ENFLUXEQTIDE] = &WriteEnergyFluxEqtide;
   

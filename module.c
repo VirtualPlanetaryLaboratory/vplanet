@@ -218,6 +218,17 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
  * Verify multi-module dependencies
  */
 
+void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+
+  if (body[iBody].bLaskar) {
+    if (!body[iBody].bLagrange) {
+      fprintf(stderr,"ERROR: Module LASKAR selected for %s, but LAGRANGE not selected.\n",body[iBody].cName);
+      exit(EXIT_INPUT);
+    } else 
+      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesLagrangeLaskar;
+  }
+}
+
 void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
 
   /* This will need modification if material can move between layers */
@@ -234,7 +245,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
 }
 
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
-  int iModule=0;
+  int iNumMulti=0;
 
   if (module->iNumModules[iBody] > 1) {
     /* XXX Note that the number of elements here is really a permutation, 
@@ -242,10 +253,13 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
     control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
 
     // Now verify 
-    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iModule);
+    VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
+
+    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
+
   }
 
-  control->Evolve.iNumMulti[iBody] = iModule;
+  control->Evolve.iNumMulti[iBody] = iNumMulti;
   if (control->Io.iVerbose >= VERBALL)
     fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
 }
@@ -254,7 +268,13 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
+void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
+  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
+}
+
+
 void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
   body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
 }
+

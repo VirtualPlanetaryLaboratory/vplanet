@@ -171,6 +171,14 @@ typedef struct {
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */
+  int bRadheat40KMan;
+  int bRadheat232ThMan;
+  int bRadheat238UMan;
+  int bRadheat235UMan;
+  int bRadheat40KCore;
+  int bRadheat232ThCore;
+  int bRadheat238UCore;
+  int bRadheat235UCore;
   double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
   double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
   double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */

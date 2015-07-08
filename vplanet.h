@@ -203,6 +203,13 @@ typedef struct {
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dNumberOfOrcs;
   double dSurfaceWaterMass;
+  double dXFrac;
+  double dAtmXAbsEff;
+
+  /* STELLAR Parameters */
+  int bStellar;
+  double dLuminosity;
+  double dXUVLuminosity;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */

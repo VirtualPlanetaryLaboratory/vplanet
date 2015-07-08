@@ -128,7 +128,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
 
-  sprintf(options[OPT_HALTDESICCATED].cName,"bSurfaceDesiccated");
+  sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
   sprintf(options[OPT_HALTDESICCATED].cDefault,"0");
   options[OPT_HALTDESICCATED].iType = 0;
@@ -269,12 +269,12 @@ void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 /***************** ATMESC Halts *****************/
 
 int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-
+  
   if (body[iBody].dSurfaceWaterMass <= halt->dMinSurfaceWaterMass) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's surface water mass =  ",body[iBody].cName);
       fprintd(stdout,body[iBody].dSurfaceWaterMass/TOMASS,io->iSciNot,io->iDigits);
-      printf("TO.");
+      printf("TO.\n");
     }
     return 1;
   }
@@ -283,10 +283,11 @@ int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *
 
 void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
   if (halt->bSurfaceDesiccated)
-    (iHalt)++;
+    (*iHalt)++;
 }
 
 void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+
   if (control->Halt[iBody].bSurfaceDesiccated)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltSurfaceDesiccated;
 }
@@ -424,8 +425,22 @@ double fdDNumberOfOrcsDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
 }
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  // TODO: Fix this. Currently lose the ocean on a timescale of 1 Gyr
-  return -body[iaBody[0]].dSurfaceWaterMass/(1e9*YEARSEC);
+  // TODO: Add other escape regimes
+  
+  double elim, fxuv, xi, ktide;
+  
+  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
+       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
+  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+	else ktide = 0;
+  
+  fxuv = body[0].dXUVLuminosity / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
+         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
+  
+  elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
+         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dXFrac * ktide);
+  
+  return -elim;
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

@@ -15,7 +15,7 @@
 #define LASKAR        4
 #define STELLAR       5
 #define DYNAMO        6
-#define INTERIORTHERMAL       7
+#define THERMINT      7
 #define EBM           8
 
 /* Fundamental constants */
@@ -204,10 +204,8 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  int bThermint;
-
   /* Interior Thermal Parameters */
-  int bInteriorthermal;    /**< Apply Module INTERIORTHERMAL? */
+  int bThermint;    /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */
@@ -424,7 +422,7 @@ typedef struct {
     double *pdD238UNumCoreDt;
     double *pdD235UNumCoreDt;
 
-    /* INTERIORTHERMAL */
+    /* THERMINT */
     int iTMan;          /**< Variable # Corresponding to Tman */
     int iNumTMan;       /**< Number of Equations Affecting TMan */
     double dTDotMan;    /**< TMan time Derivative */
@@ -456,7 +454,7 @@ typedef struct {
     int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
     int dMin238UPower;    /**< Halt at this Uranium-238 Power */
     int dMin235UPower; 
-    /* INTERIORTHERMAL */
+    /* THERMINT */
     int dMinTMan;     /**< Halt at this TMan */
     int dMinTCore;     /**< Halt at this TCore */
 } HALT;
@@ -794,7 +792,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
-#include "interiorthermal.h"
+#include "thermint.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

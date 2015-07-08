@@ -1,4 +1,4 @@
-/********************** INTERIORTHERMAL.C **********************/
+/********************** THERMINT.C **********************/
 /*
  * Peter Driscoll 6/1/15
  *
@@ -13,19 +13,19 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlInteriorthermal(CONTROL *control) {
+void  InitializeControlThermint(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyInteriorthermal(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
 }
 
-void InitializeBodyInteriorthermal(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 }
 
-void InitializeUpdateTmpBodyInteriorthermal(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+void InitializeUpdateTmpBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 }
 
 /**************** RADHEAT options ********************/
@@ -69,7 +69,7 @@ void ReadTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 
 /* Initiatlize Input Options */
 
-void InitializeOptionsInteriorthermal(OPTIONS *options,fnReadOption fnRead[]) {
+void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
   /* TMan */
@@ -95,18 +95,18 @@ void InitializeOptionsInteriorthermal(OPTIONS *options,fnReadOption fnRead[]) {
 
 }
 
-void ReadOptionsInteriorthermal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+void ReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  for (iOpt=OPTSTARTINTERIORTHERMAL;iOpt<OPTENDINTERIORTHERMAL;iOpt++) {
+  for (iOpt=OPTSTARTTHERMINT;iOpt<OPTENDTHERMINT;iOpt++) {
     if (options[iOpt].iType != -1) 
       fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
 }
     
-/******************* Verify INTERIORTHERMAL ******************/
+/******************* Verify THERMINT ******************/
 
-void VerifyRotationInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
+void VerifyRotationThermint(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
   /* Nothing */
 }
 
@@ -146,7 +146,7 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
 
 
 /* Auxiliary Properties */
-void fnPropertiesInteriorthermal(BODY *body,UPDATE *update,int iBody) {
+void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);
@@ -180,31 +180,31 @@ void fnPropertiesInteriorthermal(BODY *body,UPDATE *update,int iBody) {
 
 }
 
-void fnForceBehaviorInteriorthermal(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
   if (body[iBody].dTCore < 0.5)
     body[iBody].dTCore = 0;
 }
 
-void VerifyInteriorthermal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   VerifyTMan(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
   VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
 
-  control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorInteriorthermal;
-  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesInteriorthermal;
-  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyInteriorthermal;
+  control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
+  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesThermint;
+  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyThermint;
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }
 
 
-void InitializeModuleInteriorthermal(CONTROL *control,MODULE *module) {
+void InitializeModuleThermint(CONTROL *control,MODULE *module) {
   /* Anything Here? */
 }
 
 /**************** RADHEAT update ****************/
 
-void InitializeUpdateInteriorthermal(BODY *body,UPDATE *update,int iBody) {
+void InitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
   /* Initially allow all radiogenic heat sources to be present. If any are 0, 
      or < dMinRadPower, they will me removed from update[iBody] in 
      ForceBehavior.
@@ -219,12 +219,12 @@ void InitializeUpdateInteriorthermal(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateTManInteriorthermal(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = TMAN;
   update[iBody].iNumTMan = (*iEqn)++;
 }
 
-void FinalizeUpdateTCoreInteriorthermal(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = TCORE;
   update[iBody].iNumTCore = (*iEqn)++;
 }
@@ -261,14 +261,14 @@ int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,in
   return 0;
 }        
 
-void CountHaltsInteriorthermal(HALT *halt,int *iHalt) {
+void CountHaltsThermint(HALT *halt,int *iHalt) {
   if (halt->dMinTMan >= 0)
     (iHalt)++;
   if (halt->dMinTCore >= 0)
     (iHalt)++;
 }
 
-void VerifyHaltInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+void VerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].dMinTMan > 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
   if (control->Halt[iBody].dMinTCore > 0)
@@ -277,16 +277,16 @@ void VerifyHaltInteriorthermal(BODY *body,CONTROL *control,OPTIONS *options,int 
 
 /************* RADHEAT Outputs ******************/
 
-void HelpOutputInteriorthermal(OUTPUT *output) {
+void HelpOutputThermint(OUTPUT *output) {
   int iOut;
 
-  printf("\n ------ INTERIORTHERMAL output ------\n");
-  for (iOut=OUTSTARTINTERIORTHERMAL;iOut<OUTENDINTERIORTHERMAL;iOut++) 
+  printf("\n ------ THERMINT output ------\n");
+  for (iOut=OUTSTARTTHERMINT;iOut<OUTENDTHERMINT;iOut++) 
     WriteHelpOutput(&output[iOut]);
 }
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
-   block of initialization in InitializeOutputInteriorthermal below */
+   block of initialization in InitializeOutputThermint below */
 
 void WriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TMan */
@@ -454,7 +454,7 @@ void WriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   }
 }
 
-void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
+void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TMAN].cName,"TMan");
   sprintf(output[OUT_TMAN].cDescr,"Mantle Temperature");
   sprintf(output[OUT_TMAN].cNeg,"K");
@@ -610,21 +610,21 @@ void InitializeOutputInteriorthermal(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TDOTCORE] = &WriteTDotCore;
 }
 
-void FinalizeOutputFunctionInteriorthermal(OUTPUT *output,int iBody,int iModule) {
+void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
     output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxRadheat; //This is need to print the global var to log.  Needs to be fixed.
 }
 
-/************ INTERIORTHERMAL Logging Functions **************/
+/************ THERMINT Logging Functions **************/
 
-void LogOptionsInteriorthermal(CONTROL *control, FILE *fp) {
+void LogOptionsThermint(CONTROL *control, FILE *fp) {
   /* Anything here?
   fprintf(fp,"-------- RADHEAT Options -----\n\n");
   */
 }
 
 //PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
-void LogInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+void LogThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   /* Anything here? 
   int iOut;
   fprintf(fp,"\n----- RADHEAT PARAMETERS ------\n");
@@ -635,11 +635,11 @@ void LogInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   */
 }
 
-void LogBodyInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
 
-  fprintf(fp,"----- INTERIORTHERMAL PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTSTARTINTERIORTHERMAL;iOut<OUTENDINTERIORTHERMAL;iOut++) {
+  fprintf(fp,"----- THERMINT PARAMETERS (%s)------\n",body[iBody].cName);
+  for (iOut=OUTSTARTTHERMINT;iOut<OUTENDTHERMINT;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
@@ -649,33 +649,33 @@ void LogBodyInteriorthermal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e THERMDIFFUMAN=%e cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
 }
 
-void AddModuleInteriorthermal(MODULE *module,int iBody,int iModule) {
+void AddModuleThermint(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = INTERIORTHERMAL;
+  module->iaModule[iBody][iModule] = THERMINT;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlInteriorthermal;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyInteriorthermal;
+  module->fnInitializeControl[iBody][iModule] = &InitializeControlThermint;
+  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyThermint;
 
   module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsInteriorthermal;
-  module->fnLogBody[iBody][iModule] = &LogBodyInteriorthermal;
-  module->fnVerify[iBody][iModule] = &VerifyInteriorthermal;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltInteriorthermal;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationInteriorthermal;
+  module->fnReadOptions[iBody][iModule] = &ReadOptionsThermint;
+  module->fnLogBody[iBody][iModule] = &LogBodyThermint;
+  module->fnVerify[iBody][iModule] = &VerifyThermint;
+  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltThermint;
+  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationThermint;
   
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyInteriorthermal;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateInteriorthermal;
+  module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
+  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;
 
-    // NEED TO ADD INTERIORTHERMAL VARIABLES HERE??
-  module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManInteriorthermal;
-  module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreInteriorthermal;
+    // NEED TO ADD THERMINT VARIABLES HERE??
+  module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManThermint;
+  module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreThermint;
 
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionInteriorthermal;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionInteriorthermal;
+  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionThermint;
+  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionThermint;
 
 }
 
-/************* INTERIORTHERMAL Functions ************/
+/************* THERMINT Functions ************/
 /* Scalar Properties */
 /* Get TUMan */
 double fdTUMan(BODY *body,int iBody) {

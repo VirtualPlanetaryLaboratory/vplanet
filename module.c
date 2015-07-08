@@ -151,8 +151,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-      AddModuleInteriorthermal(module,iBody,iModule);
-    module->iaModule[iBody][iModule++] = INTERIORTHERMAL;
+      AddModuleThermint(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = THERMINT;
   }
 }
 
@@ -182,7 +182,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
-      } else if (memcmp(sLower(saTmp[iModule]),"interiorthermal",15) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
       } else {
 	if (control->Io.iVerbose >= VERBERR)

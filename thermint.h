@@ -1,9 +1,9 @@
-/***************** INTERIORTHERMAL.H *********************** 
+/***************** THERMINT.H *********************** 
  *
  * Peter Driscoll 6/1/15
  *
  * This header file contains all the subroutines in
- * file interiorthermal.c.
+ * file thermint.c.
  *
 */
 
@@ -108,16 +108,16 @@
 #define ELECCONDCORE     10e5                     //[S/m]  electrical conductivity of core.  How does this convert to cgs??
 #define LORENTZNUM       2.5e-8                   //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.        
 
-void InitializeControlInteriorthermal(CONTROL*);
-void AddModuleInteriorthermal(MODULE*,int,int);
-void BodyCopyInteriorthermal(BODY*,BODY*,int,int);
+void InitializeControlThermint(CONTROL*);
+void AddModuleThermint(MODULE*,int,int);
+void BodyCopyThermint(BODY*,BODY*,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyInteriorthermal(BODY*,CONTROL*,UPDATE*,int);
+void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTINTERIORTHERMAL         1200 /* Start of INTERIORTHERMAL options */
-#define OPTENDINTERIORTHERMAL           1400 /* End of INTERIORTHERMAL options */
+#define OPTSTARTTHERMINT         1200 /* Start of THERMINT options */
+#define OPTENDTHERMINT           1400 /* End of THERMINT options */
 
 /* Scalar Properties */
 #define OPT_TMAN            1210   //Temperature Mantle AVE
@@ -166,52 +166,52 @@ void InitializeUpdateTmpBodyInteriorthermal(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HALTMINTCORE    1291
 
 /* Options Functions */
-void HelpOptionsInteriorthermal(OPTIONS*);
+void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
-void InitializeOptionsInteriorthermal(OPTIONS*,fnReadOption[]);
-void ReadOptionsInteriorthermal(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
+void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
-#define INTERIORTHERMALHALTSYSEND       6
-#define INTERIORTHERMALHALTBODYEND      6
+#define THERMINTHALTSYSEND       6
+#define THERMINTHALTBODYEND      6
 
 int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
 int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsInteriorthermal(HALT*,int*);
+void CountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */
 
-void VerifyInteriorthermal(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void VerifyRotationInteriorthermal(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetInteriorthermal(CONTROL*,MODULE*);
-void PropertiesInteriorthermal(BODY*,int);
-void VerifyHaltInteriorthermal(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationInteriorthermal(BODY*,CONTROL*,OPTIONS*,char[],int);
+void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+void InitializeVplanetThermint(CONTROL*,MODULE*);
+void PropertiesThermint(BODY*,int);
+void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
+void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
-void InitializeUpdateInteriorthermal(BODY*,UPDATE*,int);
-void FinalizeUpdateEccInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate40KNumManInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate232ThNumManInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate238UNumManInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate235UNumManInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotInteriorthermal(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiInteriorthermal(BODY*,UPDATE*,int*,int,int);
+void InitializeUpdateThermint(BODY*,UPDATE*,int);
+void FinalizeUpdateEccThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate40KNumManThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate232ThNumManThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate238UNumManThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdate235UNumManThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateOblThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateRotThermint(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateSemiThermint(BODY*,UPDATE*,int*,int,int);
 
 /* Auxiliary Properties */
-void fnPropertiesInteriorthermal(BODY*,UPDATE*,int);
+void fnPropertiesThermint(BODY*,UPDATE*,int);
 
 /* Output Functinos */
 
-/* INTERIORTHERMAL */
-#define OUTSTARTINTERIORTHERMAL         1200
-#define OUTENDINTERIORTHERMAL           1400
+/* THERMINT */
+#define OUTSTARTTHERMINT         1200
+#define OUTENDTHERMINT           1400
 
 /* Output Body Properties */
 /* Scalar Properties */
@@ -258,10 +258,10 @@ void fnPropertiesInteriorthermal(BODY*,UPDATE*,int);
 #define OUT_THERMCONDUCTIC  1283   //Thermal conductivity IC
 
 
-void HelpOutputInteriorthermal(OUTPUT*);
-void InitializeOutputInteriorthermal(OUTPUT*,fnWriteOutput[]);
-void InitializeOutputFunctionInteriorthermal(OUTPUT*,int,int);
-void FinalizeOutputFunctionInteriorthermal(OUTPUT*,int,int);
+void HelpOutputThermint(OUTPUT*);
+void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
+void InitializeOutputFunctionThermint(OUTPUT*,int,int);
+void FinalizeOutputFunctionThermint(OUTPUT*,int,int);
 
 void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -289,9 +289,9 @@ void WriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
-void LogOptionsInteriorthermal(CONTROL*,FILE*);
-void LogInteriorthermal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyInteriorthermal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void LogOptionsThermint(CONTROL*,FILE*);
+void LogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void LogBodyThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Thermal Functions */
 double fdTDotMan(BODY*,SYSTEM*,int*,int);
@@ -325,7 +325,7 @@ double fdHflowLatentMan(BODY*,int);
 double fdPowerTidalMan(BODY*,int);
 double fdHflowSurfMan(BODY*,int);
 
-void fnForceBehaviorInteriorthermal(BODY*,EVOLVE*,IO*,int,int);
+void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

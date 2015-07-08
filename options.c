@@ -816,6 +816,78 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
   }
 }
 
+int iAssignTempUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
+  if (memcmp(sLower(cTmp),"k",1) == 0) 
+    return 0;
+  else if (memcmp(sLower(cTmp),"c",1) == 0)
+    return 1;
+  else if (memcmp(sLower(cTmp),"f",1) == 0)
+    return 2;
+  else {
+    if (iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are: K, C, F.\n",cName,cTmp);
+    LineExit(cFile,iLine);
+  }
+  assert(0);
+}
+
+void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
+  int iFileNow,lTmp=-1;
+  char cTmp[OPTLEN];
+  /* Temperature Units
+     0=Kelvin
+     1=Celsius
+     2=Farenheit */
+
+  //Copied from ReadUnitMass
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (iFile == 0) {
+    if (lTmp >= 0) {
+      /* This unit is propagated to all other files */
+      /* Now assign the integer value */
+      if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+      control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
+      for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
+	control->Units[iFileNow].iTemp = control->Units[iFile].iTemp;
+	/* Negative sign for lTmp indicated that the parameter was found in another file */
+	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+      }
+    } /* If not set in primary file, do nothing */
+  } else {
+    /* Not in primary file */
+    if (lTmp >= 0) {
+      /* Assigned in body file */
+      /* First check, was it set in primary file? */
+      if (options->iLine[0] != -1) {
+	/* Assigned in primary file */
+	if (control->Io.iVerbose >= VERBERR)
+	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
+	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+	exit(EXIT_INPUT);
+      } else {
+	/* Wasn't assigned in primary */
+	control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      }  
+    } else {
+      /* Not assigned in this file */
+      /* Was it assigned in primary? */
+      if (options->iLine[0] == -1) {
+	/* No, assign default */
+	if (control->Io.iVerbose >= VERBUNITS)
+	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+	control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+      }
+      /* If assigned in primary, nothing to do, as assigned during primary read */
+    }
+  }
+
+}
+
 void ReadSystemName(CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* System Name */
   int lTmp=-1;
@@ -909,6 +981,7 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadUnitTime(control,files,&options[OPT_UNITTIME],iFile);
     ReadUnitAngle(control,files,&options[OPT_UNITANGLE],iFile);
     ReadUnitLength(control,files,&options[OPT_UNITLENGTH],iFile);
+    ReadUnitTemp(control,files,&options[OPT_UNITTEMP],iFile);
     ReadSystemName(control,files,&options[OPT_SYSTEMNAME],system,iFile);
     /* Get Modules first as it helps with verification
        ReadModules is in module.c */
@@ -2423,7 +2496,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_UNITTIME].cDescr,"Time Units: Seconds, Days Years Myr Gyr");
   sprintf(options[OPT_UNITTIME].cDefault,"Seconds");
   options[OPT_UNITTIME].iType = 3;
-  
+
+  sprintf(options[OPT_UNITTEMP].cName,"sUnitTemp");
+  sprintf(options[OPT_UNITTEMP].cDescr,"Temperature Units: Kelvin Celsius Farenheit");
+  sprintf(options[OPT_UNITTEMP].cDefault,"Kelvin");
+  options[OPT_UNITTEMP].iType = 3;
+    
   /*
    *
    *   V
@@ -2463,6 +2541,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   InitializeOptionsEqtide(options,fnRead);
   InitializeOptionsRadheat(options,fnRead);
+  InitializeOptionsThermint(options,fnRead);
 
 }
  

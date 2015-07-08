@@ -334,8 +334,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       return;
     }
 
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
+      body[iBody].dAge += iDir*dDt;
+
     control->Evolve.dTime += dDt;
-    system->dAge += iDir*dDt;
     control->Evolve.nSteps++;
 
     /* Time for Output? */

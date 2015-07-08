@@ -105,8 +105,10 @@
 #define VNUM235UCORE    1108
 
 // ATMESC
-#define VNUMORCS           1201
 #define VSURFACEWATERMASS  1202
+
+// STELLAR
+#define VLUMINOSITY     1502
 
 /* Now define the structs */
 
@@ -215,7 +217,6 @@ typedef struct {
 
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
-  double dNumberOfOrcs;
   double dSurfaceWaterMass;
   double dXFrac;
   double dAtmXAbsEff;
@@ -223,7 +224,8 @@ typedef struct {
   /* STELLAR Parameters */
   int bStellar;
   double dLuminosity;
-  double dXUVLuminosity;
+  double dLXUV;
+  double dSatXUVFrac;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -407,16 +409,23 @@ typedef struct {
       uranium-40's derivative due to RADHEAT. */
   double *pdD238UNumDt;
 
-  /* ATMESC */
-  int iOrcs;            /**< Variable # Corresponding to the number of Orcs */
-  int iNumOrcs;         /**< Number of Equations Affecting Orcs [1] */
-  int iSurfaceWaterMass;
-  int iNumSurfaceWaterMass;
+  /* ATMESC */         
+  int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
+  int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      derivative of the number of orcs due to ATMESC. */
-  double *pdDNumberOfOrcsDt;
+      derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDt;
+
+  /* STELLAR */ 
+         
+  // TODO!
+  // int iLuminosity;           /**< Variable # Corresponding to the luminosity */
+  // int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      derivative of these variables due to ATMESC. */
+  // double *pdDLuminosityDt;
 
 } UPDATE;
 
@@ -444,6 +453,9 @@ typedef struct {
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
   double dMinSurfaceWaterMass;
+  
+  /* STELLAR */
+  // Nothing
 
 } HALT;
 
@@ -660,8 +672,8 @@ typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
-typedef void (*fnFinalizeUpdateNumberOfOrcsModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
+// TODO typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -731,8 +743,8 @@ typedef struct {
   fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
   fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
   fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
-  fnFinalizeUpdateNumberOfOrcsModule **fnFinalizeUpdateNumberOfOrcs;
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  // TODO fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
     
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
@@ -781,6 +793,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "eqtide.h"
 #include "radheat.h"
 #include "atmesc.h"
+#include "stellar.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

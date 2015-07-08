@@ -47,8 +47,9 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
   
-  module->fnFinalizeUpdateNumberOfOrcs = malloc(iNumBodies*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  // TODO: module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
+
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -78,6 +79,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat)
     iNumModules++;
   if (body[iBody].bAtmEsc)
+    iNumModules++;
+  if (body[iBody].bStellar)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -114,8 +117,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));  
   
-  module->fnFinalizeUpdateNumberOfOrcs[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateNumberOfOrcsModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  // TODO module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   
   for(iModule = 0; iModule < iNumModules; iModule++) {
     module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
@@ -130,8 +133,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateNumberOfOrcs[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    // TODO module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
@@ -151,6 +154,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bAtmEsc) {
     AddModuleAtmEsc(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = ATMESC;
+  }
+  if (body[iBody].bStellar) {
+    AddModuleStellar(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = STELLAR;
   }
 }
 
@@ -182,6 +189,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
 	body[iFile-1].bAtmEsc = 1;
+	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
+	body[iFile-1].bStellar = 1;
       } else {
 	if (control->Io.iVerbose >= VERBERR)
 	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);

@@ -19,8 +19,9 @@ void  InitializeControlAtmEsc(CONTROL *control) {
 }
 
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
-  dest[iBody].dNumberOfOrcs = src[iBody].dNumberOfOrcs;
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
+  dest[iBody].dXFrac = src[iBody].dXFrac;
+  dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
 }
 
 void InitializeBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -33,7 +34,7 @@ void InitializeUpdateTmpBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,in
 
 /**************** ATMESC options ********************/
 
-void ReadNumberOfOrcs(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -41,15 +42,39 @@ void ReadNumberOfOrcs(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dNumberOfOrcs = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dNumberOfOrcs = dTmp;
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    body[iFile-1].dXFrac = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
+  } else 
     if (iFile > 0)
-      body[iFile-1].dNumberOfOrcs = options->dDefault;
+      body[iFile-1].dXFrac = options->dDefault;
 }
+
+
+void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    body[iFile-1].dAtmXAbsEff = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dAtmXAbsEff = options->dDefault;
+}
+
 
 void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -107,16 +132,22 @@ void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
 
 void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
+
+  sprintf(options[OPT_XFRAC].cName,"dXFrac");
+  sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/XUV");
+  sprintf(options[OPT_XFRAC].cDefault,"1");
+  options[OPT_XFRAC].dDefault = 1;
+  options[OPT_XFRAC].iType = 2;
+  options[OPT_XFRAC].iMultiFile = 1;
+  fnRead[OPT_XFRAC] = &ReadXFrac;
   
-  sprintf(options[OPT_NUMBEROFORCS].cName,"dNumberOfOrcs");
-  sprintf(options[OPT_NUMBEROFORCS].cDescr,"Initial Number of Orcs");
-  sprintf(options[OPT_NUMBEROFORCS].cDefault,"Ten thousand strong at least");
-  options[OPT_NUMBEROFORCS].dDefault = HELMSDEEPARMY;
-  options[OPT_NUMBEROFORCS].iType = 2;
-  options[OPT_NUMBEROFORCS].iMultiFile = 1;
-  options[OPT_NUMBEROFORCS].dNeg = HELMSDEEPARMY;
-  sprintf(options[OPT_NUMBEROFORCS].cNeg,"Number of Helms Deep Armies");
-  fnRead[OPT_NUMBEROFORCS] = &ReadNumberOfOrcs;
+  sprintf(options[OPT_XFRAC].cName,"dAtmXAbsEff");
+  sprintf(options[OPT_XFRAC].cDescr,"X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_XFRAC].cDefault,"0.15");
+  options[OPT_XFRAC].dDefault = 0.15;
+  options[OPT_XFRAC].iType = 2;
+  options[OPT_XFRAC].iMultiFile = 1;
+  fnRead[OPT_XFRAC] = &ReadAtmXAbsEff;
 
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
@@ -160,18 +191,6 @@ void VerifyRotationAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,char cFil
   /* Nothing */
 }
 
-void VerifyOrcs(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-
-  update[iBody].iaType[update[iBody].iOrcs][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iOrcs][0] = 1;
-  update[iBody].iaBody[update[iBody].iOrcs][0] = malloc(update[iBody].iNumBodies[update[iBody].iOrcs][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iOrcs][0][0] = iBody;
-
-  update[iBody].pdDNumberOfOrcsDt = &update[iBody].daDerivProc[update[iBody].iOrcs][0];
-  fnUpdate[iBody][update[iBody].iOrcs][0] = &fdDNumberOfOrcsDt;
-  
-}
-
 void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   update[iBody].iaType[update[iBody].iSurfaceWaterMass][0] = 1;
@@ -188,10 +207,6 @@ void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
 }
 
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
-  if (body[iBody].dNumberOfOrcs < 0)
-    // Can't have negative orcs!
-    body[iBody].dNumberOfOrcs = 0;
-  
   if (body[iBody].dSurfaceWaterMass < 0)
     // Can't have negative water!
     body[iBody].dSurfaceWaterMass = 0;
@@ -201,14 +216,9 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   int bAtmEsc=0;
 
   /* AtmEsc is active for this body if this subroutine is called. */
-
-  if (body[iBody].dNumberOfOrcs > 0) {
-    VerifyOrcs(body,options,update,system->dAge,fnUpdate,iBody);
-    bAtmEsc = 1;
-  }
   
   if (body[iBody].dSurfaceWaterMass > 0) {
-    VerifySurfaceWaterMass(body,options,update,system->dAge,fnUpdate,iBody);
+    VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bAtmEsc = 1;
   }
   
@@ -227,12 +237,7 @@ void InitializeModuleAtmEsc(CONTROL *control,MODULE *module) {
 
 /**************** ATMESC update ****************/
 
-void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].dNumberOfOrcs > 0) {
-    update[iBody].iNumVars++;
-    update[iBody].iNumOrcs++;
-  }
-  
+void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
   if (body[iBody].dSurfaceWaterMass > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNumSurfaceWaterMass++;
@@ -241,11 +246,6 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
 
 void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
-}
-
-void FinalizeUpdateNumberOfOrcsAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
-  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
-  update[iBody].iNumOrcs = (*iEqn)++;
 }
 
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
@@ -302,16 +302,6 @@ void HelpOutputAtmEsc(OUTPUT *output) {
     WriteHelpOutput(&output[iOut]);
 }
 
-void WriteNumberOfOrcs(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dNumberOfOrcs;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  }
-
-}
-
 void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dSurfaceWaterMass;
 
@@ -327,14 +317,6 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
-  sprintf(output[OUT_NUMBEROFORCS].cName,"NumberOfOrcs");
-  sprintf(output[OUT_NUMBEROFORCS].cDescr,"Total Number of Orcs");
-  sprintf(output[OUT_NUMBEROFORCS].cNeg,"Helms Deep Armies");
-  output[OUT_NUMBEROFORCS].bNeg = 1;
-  output[OUT_NUMBEROFORCS].dNeg = 1./HELMSDEEPARMY;
-  output[OUT_NUMBEROFORCS].iNum = 1;
-  fnWrite[OUT_NUMBEROFORCS] = &WriteNumberOfOrcs;
-
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
   sprintf(output[OUT_SURFACEWATERMASS].cDescr,"Surface Water Mass");
   sprintf(output[OUT_SURFACEWATERMASS].cNeg,"TO");
@@ -411,7 +393,6 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
-  module->fnFinalizeUpdateNumberOfOrcs[iBody][iModule] = &FinalizeUpdateNumberOfOrcsAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
@@ -420,9 +401,6 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 }
 
 /************* ATMESC Functions ************/
-double fdDNumberOfOrcsDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return sin(system->dAge/(1e7*YEARSEC));
-}
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   // TODO: Add other escape regimes
@@ -433,12 +411,16 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodie
        body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
+
+  // DEBUG
+  body[0].dLXUV = body[0].dLuminosity * body[0].dSatXUVFrac;
   
-  fxuv = body[0].dXUVLuminosity / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
+  
+  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
          pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
   
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
-         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dXFrac * ktide);
+         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
   
   return -elim;
 }

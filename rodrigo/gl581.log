@@ -29,33 +29,33 @@ Minimum Value of ecc and obl: 1.000000e-10
 ---- INITIAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 0.000000 
 (Time) Simulation Time [sec]: 0.000000 
-(TotAngMom) Total Angular Momentum [grams*cm^2/sec]: 2.670079e+47 
-(TotEnergy) Total Energy [grams*cm^2/sec^2]: -7.535397e+47 
-(PotEnergy) Total Potential Energy [grams*cm^2/sec^2]: -7.535403e+47 
-(KinEnergy) Total Kinetic Energy [grams*cm^2/sec^2]: 6.453297e+41 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 2.670079e+40 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.535397e+40 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.535403e+40 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 6.453297e+34 
 (DeltaTime) Average Timestep Over Last Output Interval [sec]: 0.000000 
 
 ----- BODY: star ----
-(Mass) Mass [grams]: 6.165652e+32 
+(Mass) Mass [kg]: 6.165652e+29 
 (Obliquity) Obliquity [rad]: 0.000000 
-(Radius) Radius [cm]: 2.019573e+10 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 4.853586e+46 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.873515e+40 
-(RotVel) Rotational Velocity [cm/sec]: 1.559136e+04 
+(Radius) Radius [m]: 2.019573e+08 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.853586e+39 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.873515e+33 
+(RotVel) Rotational Velocity [m/sec]: 155.913642 
 (RotRate) Rotational Frequency [/sec]: 7.720129e-07 
 (RotPer) Rotational Period [sec]: 8.138705e+06 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: -0.001799 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: -3.598319e-06 
 (Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
 (OrbPeriod) Orbital Period [sec]: -1.000000 
-(SemiMajorAxis) Semi-major Axis [cm]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.184720e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 ----- EQTIDE PARAMETERS (star)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -1.187129e-17 
@@ -72,32 +72,33 @@ Minimum Value of ecc and obl: 1.000000e-10
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 6.855788e+23 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: -9.221438e+18 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: -0.001799 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: -9.221438e+11 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: -1.799159e-06 
 Tidal Perturbers: c
+----- STELLAR PARAMETERS (star)------
 Output Order:
 
 ----- BODY: c ----
-(Mass) Mass [grams]: 3.285810e+28 
+(Mass) Mass [kg]: 3.285810e+25 
 (Obliquity) Obliquity [rad]: 0.410152 
-(Radius) Radius [cm]: 9.567150e+08 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 5.467814e+40 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.988153e+35 
-(RotVel) Rotational Velocity [cm/sec]: 6957.427814 
+(Radius) Radius [m]: 9.567150e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 5.467814e+33 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.988153e+28 
+(RotVel) Rotational Velocity [m/sec]: 69.574278 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-06 
 (RotPer) Rotational Period [sec]: 8.640000e+05 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 1.154848e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 11.548484 
 (Eccentricity) Orbital Eccentricity []: 0.060000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: 5.725818e-06 
 (OrbPeriod) Orbital Period [sec]: 1.097343e+06 
-(SemiMajorAxis) Semi-major Axis [cm]: 1.078602e+12 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 6.265943e+41 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.253189e+42 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(SemiMajorAxis) Semi-major Axis [m]: 1.078602e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.184720e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 6.265943e+34 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.253189e+35 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 ----- EQTIDE PARAMETERS (c)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: -2.118505e-13 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 7.159059e-07 
@@ -114,77 +115,75 @@ Output Order:
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.206863e+12 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: 1.936047e+12 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 1.313383e+23 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 1.141870e+04 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 1.313383e+16 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 11.418695 
 Tidal Perturbers: star
 ----- RADHEAT PARAMETERS (c)------
-(40KPowerMan) Total Power Generated by 40K [grams*cm^2/sec^3]: 4.684631e+20 
-(40KPowerCore) Core Power Generated by 40K [grams*cm^2/sec^3]: 1.140122e+20 
-(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(40KPowerMan) Total Power Generated by 40K [kg*m^2/sec^3]: 4.684631e+13 
+(40KPowerCore) Core Power Generated by 40K [kg*m^2/sec^3]: 1.140122e+13 
+(40KEnFlux) Surface Energy Flux from 40K [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
 (D40KNumManDt) Time Rate of Change of 40K Heat Generation [/sec]: -2.195531e+26 
-(40KMassMan) Total Mass of 40K [grams]: 8.284542e+20 
-(40KMassCore) Total Core Mass of 40K [grams]: 2.016250e+20 
+(40KMassMan) Total Mass of 40K [kg]: 8.284542e+17 
+(40KMassCore) Total Core Mass of 40K [kg]: 2.016250e+17 
 (40KNumMan) Total Number of 40K Atoms []: 1.248391e+43 
 (40KNumCore) Total Core Number of 40K Atoms []: 3.038271e+42 
 (40KTimescale) Timescale for 40K Power Generation []: -1.000000 
-(232ThPowerMan) Total Power Generated by 232Th [grams*cm^2/sec^3]: 5.846950e+19 
-(232ThPowerCore) Total Power Generated by 232Th [grams*cm^2/sec^3]: 2.846003e+17 
-(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(232ThPowerMan) Total Power Generated by 232Th [kg*m^2/sec^3]: 5.846950e+12 
+(232ThPowerCore) Total Power Generated by 232Th [kg*m^2/sec^3]: 2.846003e+10 
+(232ThEnFlux) Surface Energy Flux from 232Th [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D232ThNumManDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -8.556170e+23 
-(232ThMassMan) Total Mass of 232Th [grams]: 2.101773e+20 
-(232ThMassCore) Total Mass of 232Th [grams]: 1.023038e+18 
+(232ThMassMan) Total Mass of 232Th [kg]: 2.101773e+17 
+(232ThMassCore) Total Mass of 232Th [kg]: 1.023038e+15 
 (232ThNumMan) Total Number of 232Th Atoms []: 5.454791e+41 
 (232ThNumCore) Total Number of 232Th Atoms []: 2.655120e+39 
 (232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
-(238UPowerMan) Total Power Generated by 238U [grams*cm^2/sec^3]: 8.631414e+19 
-(238UPowerCore) Total Core Power Generated by 238U [grams*cm^2/sec^3]: 4.201341e+17 
-(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(238UPowerMan) Total Power Generated by 238U [kg*m^2/sec^3]: 8.631414e+12 
+(238UPowerCore) Total Core Power Generated by 238U [kg*m^2/sec^3]: 4.201341e+10 
+(238UEnFlux) Surface Energy Flux due to 238U [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D238UNumManDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -1.042072e+24 
-(238UMassMan) Total Mass of 238U [grams]: 8.386652e+19 
-(238UMassCore) Total Core Mass of 238U [grams]: 4.082202e+17 
+(238UMassMan) Total Mass of 238U [kg]: 8.386652e+16 
+(238UMassCore) Total Core Mass of 238U [kg]: 4.082202e+14 
 (238UNumMan) Total Number of 238U Atoms []: 2.121631e+41 
 (238UNumCore) Total Core Number of 238U Atoms []: 1.032704e+39 
 (238UTimescale) Timescale for 238U Power Generation []: -1.000000 
-(235UPowerMan) Total Power Generated by 235U [grams*cm^2/sec^3]: 1.331703e+20 
-(235UPowerCore) Total Core Power Generated by 235U [grams*cm^2/sec^3]: 6.482064e+17 
-(235UEnFlux) Surface Energy Flux due to 235U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(235UPowerMan) Total Power Generated by 235U [kg*m^2/sec^3]: 1.331703e+13 
+(235UPowerCore) Total Core Power Generated by 235U [kg*m^2/sec^3]: 6.482064e+10 
+(235UEnFlux) Surface Energy Flux due to 235U [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D235UNumManDt) Time Rate of Change of the Number of 235U Nuclei [/sec]: -2.031534e+24 
-(235UMassMan) Total Mass of 235U [grams]: 2.540329e+19 
-(235UMassCore) Total Core Mass of 235U [grams]: 1.236505e+17 
+(235UMassMan) Total Mass of 235U [kg]: 2.540329e+16 
+(235UMassCore) Total Core Mass of 235U [kg]: 1.236505e+14 
 (235UNumMan) Total Number of 235U Atoms []: 6.508663e+40 
 (235UNumCore) Total Core Number of 235U Atoms []: 3.168092e+38 
 (235UTimescale) Timescale for 235U Power Generation []: -1.000000 
-(RadPowerMan) Total Power Generated by Radiogenic Nuclides in Mantle [grams*cm^2/sec^3]: 7.464170e+20 
-(RadPowerCore) Total Power Generated by Radiogenic Nuclides in Core [grams*cm^2/sec^3]: 1.153651e+20 
-(RadPowerTotal) Total Power Generated by Radiogenic Nuclides in Total (M+C) [grams*cm^2/sec^3]: 8.617822e+20 
-(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [grams*cm^2/sec^2/(cm^2*sec)]: 64.894293 
+(RadPowerMan) Total Power Generated by Radiogenic Nuclides in Mantle [kg*m^2/sec^3]: 7.464170e+13 
+(RadPowerCore) Total Power Generated by Radiogenic Nuclides in Core [kg*m^2/sec^3]: 1.153651e+13 
+(RadPowerTotal) Total Power Generated by Radiogenic Nuclides in Total (M+C) [kg*m^2/sec^3]: 8.617822e+13 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [kg*m^2/sec^2/(m^2*sec)]: 0.064894 
 ----- ATMESC PARAMETERS (c)------
-(NumberOfOrcs) Total Number of Orcs []: 10000.000000 
 (SurfWaterMass) Surface Water Mass [TO]: 0.000000 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 
 ----- BODY: e ----
-(Mass) Mass [grams]: 3.345552e+28 
+(Mass) Mass [kg]: 3.345552e+25 
 (Obliquity) Obliquity [rad]: 0.410152 
-(Radius) Radius [cm]: 1.015394e+09 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 6.271085e+41 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 2.280231e+37 
-(RotVel) Rotational Velocity [cm/sec]: 7.384150e+04 
+(Radius) Radius [m]: 1.015394e+07 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 6.271085e+34 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 2.280231e+30 
+(RotVel) Rotational Velocity [m/sec]: 738.415005 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 4.940656e-324 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 4.940656e-324 
 (Eccentricity) Orbital Eccentricity []: 0.380000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: 1.085558e-06 
 (OrbPeriod) Orbital Period [sec]: 5.787979e+06 
-(SemiMajorAxis) Semi-major Axis [cm]: 3.268268e+12 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.184720e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105500e+41 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.211000e+41 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.265943e+41 
+(SemiMajorAxis) Semi-major Axis [m]: 3.268268e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.184720e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.105500e+34 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -4.211000e+34 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.265943e+34 
 ----- ATMESC PARAMETERS (e)------
-(NumberOfOrcs) Total Number of Orcs []: 10000.000000 
 (SurfWaterMass) Surface Water Mass [TO]: 0.100000 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 
@@ -193,33 +192,33 @@ Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 ---- FINAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 3.155760e+16 
 (Time) Simulation Time [sec]: 3.155760e+16 
-(TotAngMom) Total Angular Momentum [grams*cm^2/sec]: 2.669332e+47 
-(TotEnergy) Total Energy [grams*cm^2/sec^2]: -7.535397e+47 
-(PotEnergy) Total Potential Energy [grams*cm^2/sec^2]: -7.535403e+47 
-(KinEnergy) Total Kinetic Energy [grams*cm^2/sec^2]: 6.460098e+41 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 2.669332e+40 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.535397e+40 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.535403e+40 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 6.460098e+34 
 (DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
 
 ----- BODY: star ----
-(Mass) Mass [grams]: 6.165652e+32 
+(Mass) Mass [kg]: 6.165652e+29 
 (Obliquity) Obliquity [rad]: 0.000000 
-(Radius) Radius [cm]: 2.019573e+10 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 4.853586e+46 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.873516e+40 
-(RotVel) Rotational Velocity [cm/sec]: 1.559136e+04 
+(Radius) Radius [m]: 2.019573e+08 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.853586e+39 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.873516e+33 
+(RotVel) Rotational Velocity [m/sec]: 155.913649 
 (RotRate) Rotational Frequency [/sec]: 7.720129e-07 
 (RotPer) Rotational Period [sec]: 8.138705e+06 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: -0.001814 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: -3.627719e-06 
 (Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
 (OrbPeriod) Orbital Period [sec]: -1.000000 
-(SemiMajorAxis) Semi-major Axis [cm]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.183973e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 ----- EQTIDE PARAMETERS (star)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -1.191394e-17 
@@ -234,38 +233,39 @@ Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 (GammaOrb) Gamma_Orbital [cgs]: 0.000000 
 (TidalQ) Tidal Q []: 1.000000e+06 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 6.831244e+23 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 6.831246e+23 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: -9.296784e+18 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: -0.001814 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: -9.296782e+11 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: -1.813860e-06 
 Tidal Perturbers: c
+----- STELLAR PARAMETERS (star)------
 Output Order:
 
 ----- BODY: c ----
-(Mass) Mass [grams]: 3.285810e+28 
+(Mass) Mass [kg]: 3.285810e+25 
 (Obliquity) Obliquity [rad]: 0.000000 
-(Radius) Radius [cm]: 9.567150e+08 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 4.312131e+40 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 1.236535e+35 
-(RotVel) Rotational Velocity [cm/sec]: 5486.898352 
+(Radius) Radius [m]: 9.567150e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.312131e+33 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.236535e+28 
+(RotVel) Rotational Velocity [m/sec]: 54.868981 
 (RotRate) Rotational Frequency [/sec]: 5.735144e-06 
 (RotPer) Rotational Period [sec]: 1.095558e+06 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 731.148681 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.731149 
 (Eccentricity) Orbital Eccentricity []: 0.056571 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: 5.735144e-06 
 (OrbPeriod) Orbital Period [sec]: 1.095558e+06 
-(SemiMajorAxis) Semi-major Axis [cm]: 1.077432e+12 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 6.272745e+41 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -1.254549e+42 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(SemiMajorAxis) Semi-major Axis [m]: 1.077432e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.183973e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 6.272745e+34 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.254549e+35 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 ----- EQTIDE PARAMETERS (c)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [cm/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE [/sec]: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: -1.519027e-06 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 7.951964e-18 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: 7.951963e-18 
 (EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 5.735144e-06 
 (EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 1.095558e+06 
 (EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 5.909506e-06 
@@ -276,78 +276,76 @@ Output Order:
 (GammaOrb) Gamma_Orbital [cgs]: -4.179214 
 (TidalQ) Tidal Q []: 100.000000 
 (TideLock) Tidally Locked? []: 1.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.212236e+11 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.212237e+11 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE [sec]: nan 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [grams*cm^2/sec^3]: 7.513246e+21 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [grams*cm^2/sec^2/(cm^2*sec)]: 653.209640 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 7.513245e+14 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 0.653210 
 Tidal Perturbers: star
 ----- RADHEAT PARAMETERS (c)------
-(40KPowerMan) Total Power Generated by 40K [grams*cm^2/sec^3]: 2.689317e+20 
-(40KPowerCore) Core Power Generated by 40K [grams*cm^2/sec^3]: 6.545124e+19 
-(40KEnFlux) Surface Energy Flux from 40K [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(40KPowerMan) Total Power Generated by 40K [kg*m^2/sec^3]: 2.689317e+13 
+(40KPowerCore) Core Power Generated by 40K [kg*m^2/sec^3]: 6.545124e+12 
+(40KEnFlux) Surface Energy Flux from 40K [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
 (D40KNumManDt) Time Rate of Change of 40K Heat Generation [/sec]: -1.260393e+26 
-(40KMassMan) Total Mass of 40K [grams]: 4.755923e+20 
-(40KMassCore) Total Core Mass of 40K [grams]: 1.157473e+20 
-(40KNumMan) Total Number of 40K Atoms []: 7.166661e+42 
-(40KNumCore) Total Core Number of 40K Atoms []: 1.744186e+42 
+(40KMassMan) Total Mass of 40K [kg]: 3.864838e+17 
+(40KMassCore) Total Core Mass of 40K [kg]: 9.406050e+16 
+(40KNumMan) Total Number of 40K Atoms []: 5.823892e+42 
+(40KNumCore) Total Core Number of 40K Atoms []: 1.417390e+42 
 (40KTimescale) Timescale for 40K Power Generation []: -1.000000 
-(232ThPowerMan) Total Power Generated by 232Th [grams*cm^2/sec^3]: 5.564572e+19 
-(232ThPowerCore) Total Power Generated by 232Th [grams*cm^2/sec^3]: 2.708555e+17 
-(232ThEnFlux) Surface Energy Flux from 232Th [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(232ThPowerMan) Total Power Generated by 232Th [kg*m^2/sec^3]: 5.564572e+12 
+(232ThPowerCore) Total Power Generated by 232Th [kg*m^2/sec^3]: 2.708555e+10 
+(232ThEnFlux) Surface Energy Flux from 232Th [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D232ThNumManDt) Time Rate of Change of the number of 232Th nuclei [/sec]: -8.142951e+23 
-(232ThMassMan) Total Mass of 232Th [grams]: 2.000268e+20 
-(232ThMassCore) Total Mass of 232Th [grams]: 9.736304e+17 
-(232ThNumMan) Total Number of 232Th Atoms []: 5.191353e+41 
-(232ThNumCore) Total Number of 232Th Atoms []: 2.526891e+39 
+(232ThMassMan) Total Mass of 232Th [kg]: 1.998157e+17 
+(232ThMassCore) Total Mass of 232Th [kg]: 9.726030e+14 
+(232ThNumMan) Total Number of 232Th Atoms []: 5.185875e+41 
+(232ThNumCore) Total Number of 232Th Atoms []: 2.524224e+39 
 (232ThTimescale) Timescale for 232Th Power Generation []: -1.000000 
-(238UPowerMan) Total Power Generated by 238U [grams*cm^2/sec^3]: 7.392074e+19 
-(238UPowerCore) Total Core Power Generated by 238U [grams*cm^2/sec^3]: 3.598092e+17 
-(238UEnFlux) Surface Energy Flux due to 238U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(238UPowerMan) Total Power Generated by 238U [kg*m^2/sec^3]: 7.392074e+12 
+(238UPowerCore) Total Core Power Generated by 238U [kg*m^2/sec^3]: 3.598092e+10 
+(238UEnFlux) Surface Energy Flux due to 238U [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D238UNumManDt) Time Rate of Change of the Number of 238U Nuclei [/sec]: -8.924461e+23 
-(238UMassMan) Total Mass of 238U [grams]: 7.182455e+19 
-(238UMassCore) Total Core Mass of 238U [grams]: 3.496060e+17 
-(238UNumMan) Total Number of 238U Atoms []: 1.816997e+41 
-(238UNumCore) Total Core Number of 238U Atoms []: 8.844234e+38 
+(238UMassMan) Total Mass of 238U [kg]: 7.102676e+16 
+(238UMassCore) Total Core Mass of 238U [kg]: 3.457228e+14 
+(238UNumMan) Total Number of 238U Atoms []: 1.796815e+41 
+(238UNumCore) Total Core Number of 238U Atoms []: 8.745996e+38 
 (238UTimescale) Timescale for 238U Power Generation []: -1.000000 
-(235UPowerMan) Total Power Generated by 235U [grams*cm^2/sec^3]: 4.973101e+19 
-(235UPowerCore) Total Core Power Generated by 235U [grams*cm^2/sec^3]: 2.420657e+17 
-(235UEnFlux) Surface Energy Flux due to 235U [grams*cm^2/sec^2/(cm^2*sec)]: 0.000000 
+(235UPowerMan) Total Power Generated by 235U [kg*m^2/sec^3]: 4.973101e+12 
+(235UPowerCore) Total Core Power Generated by 235U [kg*m^2/sec^3]: 2.420657e+10 
+(235UEnFlux) Surface Energy Flux due to 235U [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (D235UNumManDt) Time Rate of Change of the Number of 235U Nuclei [/sec]: -7.586544e+23 
-(235UMassMan) Total Mass of 235U [grams]: 9.486566e+18 
-(235UMassCore) Total Core Mass of 235U [grams]: 4.617586e+16 
-(235UNumMan) Total Number of 235U Atoms []: 2.430586e+40 
-(235UNumCore) Total Core Number of 235U Atoms []: 1.183088e+38 
+(235UMassMan) Total Mass of 235U [kg]: 1.898636e+15 
+(235UMassCore) Total Core Mass of 235U [kg]: 9.241612e+12 
+(235UNumMan) Total Number of 235U Atoms []: 4.864561e+39 
+(235UNumCore) Total Core Number of 235U Atoms []: 2.367825e+37 
 (235UTimescale) Timescale for 235U Power Generation []: -1.000000 
-(RadPowerMan) Total Power Generated by Radiogenic Nuclides in Mantle [grams*cm^2/sec^3]: 4.482291e+20 
-(RadPowerCore) Total Power Generated by Radiogenic Nuclides in Core [grams*cm^2/sec^3]: 6.632397e+19 
-(RadPowerTotal) Total Power Generated by Radiogenic Nuclides in Total (M+C) [grams*cm^2/sec^3]: 5.145531e+20 
-(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [grams*cm^2/sec^2/(cm^2*sec)]: 38.969521 
+(RadPowerMan) Total Power Generated by Radiogenic Nuclides in Mantle [kg*m^2/sec^3]: 4.482291e+13 
+(RadPowerCore) Total Power Generated by Radiogenic Nuclides in Core [kg*m^2/sec^3]: 6.632397e+12 
+(RadPowerTotal) Total Power Generated by Radiogenic Nuclides in Total (M+C) [kg*m^2/sec^3]: 5.145531e+13 
+(SurfEnFluxRadheat) Total Power Generated by Radiogenic Nuclides [kg*m^2/sec^2/(m^2*sec)]: 0.038970 
 ----- ATMESC PARAMETERS (c)------
-(NumberOfOrcs) Total Number of Orcs []: 4.346785e+13 
 (SurfWaterMass) Surface Water Mass [TO]: 0.000000 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 
 ----- BODY: e ----
-(Mass) Mass [grams]: 3.345552e+28 
+(Mass) Mass [kg]: 3.345552e+25 
 (Obliquity) Obliquity [rad]: 0.410152 
-(Radius) Radius [cm]: 1.015394e+09 
-(RotAngMom) Rotational Angular Momentum [grams*cm^2/sec]: 6.271085e+41 
-(RotKinEnergy) Rotational Energy [grams*cm^2/sec^2]: 2.280231e+37 
-(RotVel) Rotational Velocity [cm/sec]: 7.384150e+04 
+(Radius) Radius [m]: 1.015394e+07 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 6.271085e+34 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 2.280231e+30 
+(RotVel) Rotational Velocity [m/sec]: 738.415005 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [grams*cm^2/sec^2/(cm^2*sec)]: 4.940656e-324 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 4.940656e-324 
 (Eccentricity) Orbital Eccentricity []: 0.380000 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 (MeanMotion) Orbital Mean Motion [/sec]: 1.085558e-06 
 (OrbPeriod) Orbital Period [sec]: 5.787979e+06 
-(SemiMajorAxis) Semi-major Axis [cm]: 3.268268e+12 
-(OrbAngMom) Orbital Angular Momentum [grams*cm^2/sec]: 2.183973e+47 
-(OrbKinEnergy) Orbital Kinetic Energy [grams*cm^2/sec^2]: 2.105500e+41 
-(OrbPotEnergy) Orbital Potential Energy [grams*cm^2/sec^2]: -4.211000e+41 
-(OrbEnergy) Orbital Energy [grams*cm^2/sec^2]: -6.272745e+41 
+(SemiMajorAxis) Semi-major Axis [m]: 3.268268e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.183973e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.105500e+34 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -4.211000e+34 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -6.272745e+34 
 ----- ATMESC PARAMETERS (e)------
-(NumberOfOrcs) Total Number of Orcs []: 4.346785e+13 
-(SurfWaterMass) Surface Water Mass [TO]: nan 
+(SurfWaterMass) Surface Water Mass [TO]: 0.100000 
 Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]

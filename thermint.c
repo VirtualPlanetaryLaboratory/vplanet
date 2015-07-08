@@ -157,6 +157,8 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dViscLMan=fdViscLMan(body,iBody);
   body[iBody].dBLUMan=fdBLUMan(body,iBody);
   body[iBody].dBLLMan=fdBLLMan(body,iBody);
+  body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
+  body[iBody].dLove2Man=fdLove2Man(body,iBody);
   /* Heat Flows */
   /* Mantle */
   body[iBody].dHfluxUMan=fdHfluxUMan(body,iBody);
@@ -380,6 +382,20 @@ void WriteBLLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteShmodUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dShmodUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteLove2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dLove2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 
 /* Heat Flows/Fluxes */
 void WriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -526,7 +542,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCLMAN].dNeg = 1; 
   output[OUT_VISCLMAN].iNum = 1;
   fnWrite[OUT_VISCLMAN] = &WriteViscLMan;
-
+  /* BLUMan */
   sprintf(output[OUT_BLUMAN].cName,"BLUMan");
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
   sprintf(output[OUT_BLUMAN].cNeg,"km");
@@ -534,7 +550,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLUMAN].dNeg = 1;  //KM; 
   output[OUT_BLUMAN].iNum = 1;
   fnWrite[OUT_BLUMAN] = &WriteBLUMan;
-
+  /* BLLMan */
   sprintf(output[OUT_BLLMAN].cName,"BLLMan");
   sprintf(output[OUT_BLLMAN].cDescr,"Boundary Layer Thickness Lower Mantle");
   sprintf(output[OUT_BLLMAN].cNeg,"km");
@@ -542,6 +558,22 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLLMAN].dNeg = 1; 
   output[OUT_BLLMAN].iNum = 1;
   fnWrite[OUT_BLLMAN] = &WriteBLLMan;
+  /* ShmodUMan */
+  sprintf(output[OUT_SHMODUMAN].cName,"ShmodUMan");
+  sprintf(output[OUT_SHMODUMAN].cDescr,"Shear Modulus Upper Mantle");
+  sprintf(output[OUT_SHMODUMAN].cNeg,"Pa");
+  output[OUT_SHMODUMAN].bNeg = 1;
+  output[OUT_SHMODUMAN].dNeg = 1; 
+  output[OUT_SHMODUMAN].iNum = 1;
+  fnWrite[OUT_SHMODUMAN] = &WriteShmodUMan;
+  /* Love2Man */
+  sprintf(output[OUT_LOVE2MAN].cName,"Love2Man");
+  sprintf(output[OUT_LOVE2MAN].cDescr,"Real Love Number k2 Mantle");
+  sprintf(output[OUT_LOVE2MAN].cNeg,"nd");
+  output[OUT_LOVE2MAN].bNeg = 1;
+  output[OUT_LOVE2MAN].dNeg = 1; 
+  output[OUT_LOVE2MAN].iNum = 1;
+  fnWrite[OUT_LOVE2MAN] = &WriteLove2Man;
 
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
@@ -711,7 +743,12 @@ double fdBLUMan(BODY *body,int iBody) {
 double fdBLLMan(BODY *body,int iBody) {
   return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
-
+double fdShmodUMan(BODY *body,int iBody) {
+  return (SHMODREF)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan));  //NEED to add melt effect.
+}
+double fdLove2Man(BODY *body,int iBody) {
+  return (3/2)/(1+(19/2)*(body[iBody].dShmodUMan/(STIFFNESS)));
+}
 /* Heat Fluxes/flows */
 double fdHfluxUMan(BODY *body,int iBody) {
   return (THERMCONDUMAN)*body[iBody].dTJumpUMan/body[iBody].dBLUMan;

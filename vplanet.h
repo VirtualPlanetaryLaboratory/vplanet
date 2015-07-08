@@ -387,51 +387,51 @@ typedef struct {
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
 
-      /* RADHEAT */
-    int i40KMan;             /**< Variable # Corresponding to Potassium-40 */
-    int i232ThMan;           /**< Variable # Corresponding to Thorium-232 */
-    int i238UMan;            /**< Variable # Corresponding to Uranium-238 */
-    int i235UMan;
-    int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
-    int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
-    int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
-    int iNum235UMan;
-    double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
-    double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
-    double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
-    double dD235UNumManDt; 
-    double *pdD40KNumManDt;
-    double *pdD232ThNumManDt;
-    double *pdD238UNumManDt;
-    double *pdD235UNumManDt;
-    /* RADHEAT CORE */
-    int i40KCore;
-    int i232ThCore;
-    int i238UCore;
-    int i235UCore;
-    int iNum40KCore;
-    int iNum232ThCore;
-    int iNum238UCore;
-    int iNum235UCore; 
-    double dD40KNumCoreDt;
-    double dD232ThNumCoreDt;
-    double dD238UNumCoreDt;
-    double dD235UNumCoreDt; 
-    double *pdD40KNumCoreDt;
-    double *pdD232ThNumCoreDt;
-    double *pdD238UNumCoreDt;
-    double *pdD235UNumCoreDt;
-
-    /* THERMINT */
-    int iTMan;          /**< Variable # Corresponding to Tman */
-    int iNumTMan;       /**< Number of Equations Affecting TMan */
-    double dTDotMan;    /**< TMan time Derivative */
-    double *pdTDotMan;
-    int iTCore;          /**< Variable # Corresponding to Tman */
-    int iNumTCore;       /**< Number of Equations Affecting TCore */
-    double dTDotCore;    /**< TCore time Derivative */
-    double *pdTDotCore;
-
+  /* RADHEAT */
+  int i40KMan;             /**< Variable # Corresponding to Potassium-40 */
+  int i232ThMan;           /**< Variable # Corresponding to Thorium-232 */
+  int i238UMan;            /**< Variable # Corresponding to Uranium-238 */
+  int i235UMan;
+  int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
+  int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
+  int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
+  int iNum235UMan;
+  double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
+  double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
+  double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
+  double dD235UNumManDt; 
+  double *pdD40KNumManDt;
+  double *pdD232ThNumManDt;
+  double *pdD238UNumManDt;
+  double *pdD235UNumManDt;
+  /* RADHEAT CORE */
+  int i40KCore;
+  int i232ThCore;
+  int i238UCore;
+  int i235UCore;
+  int iNum40KCore;
+  int iNum232ThCore;
+  int iNum238UCore;
+  int iNum235UCore; 
+  double dD40KNumCoreDt;
+  double dD232ThNumCoreDt;
+  double dD238UNumCoreDt;
+  double dD235UNumCoreDt; 
+  double *pdD40KNumCoreDt;
+  double *pdD232ThNumCoreDt;
+  double *pdD238UNumCoreDt;
+  double *pdD235UNumCoreDt;
+  
+  /* THERMINT */
+  int iTMan;          /**< Variable # Corresponding to Tman */
+  int iNumTMan;       /**< Number of Equations Affecting TMan */
+  double dTDotMan;    /**< TMan time Derivative */
+  double *pdTDotMan;
+  int iTCore;          /**< Variable # Corresponding to Tman */
+  int iNumTCore;       /**< Number of Equations Affecting TCore */
+  double dTDotCore;    /**< TCore time Derivative */
+  double *pdTDotCore;
+  
 } UPDATE;
 
 typedef struct {

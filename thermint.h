@@ -76,8 +76,8 @@
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
 #define VISCREF          6e7           //[m2/s] reference kinematic mantle viscosity
-#define VISCJUMPULM      2.            //[nd] viscosity jump from upper to lower mantle
-#define SHMODREF_SI      6.24e4        //[Pa] reference kinematic mantle shear modulus
+#define VISCJUMPULM      2.0           //[nd] viscosity jump from upper to lower mantle
+#define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
 #define MELTDELTA        6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
@@ -111,7 +111,7 @@
 void InitializeControlThermint(CONTROL*);
 void AddModuleThermint(MODULE*,int,int);
 void BodyCopyThermint(BODY*,BODY*,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+//void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
@@ -306,7 +306,8 @@ double fdViscUMan(BODY*,int);
 double fdViscLMan(BODY*,int);
 double fdBLUMan(BODY*,int);
 double fdBLLMan(BODY*,int);
-double fdShmodMan(BODY*,int);
+double fdShmodUMan(BODY*,int);
+double fdShmodLMan(BODY*,int);
 double fdFmeltUMan(BODY*,int);
 double fdTsolUMan(BODY*,int);
 double fdTliqUMan(BODY*,int);

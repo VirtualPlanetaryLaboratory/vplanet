@@ -165,6 +165,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleLagrange(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = LAGRANGE;
   }
+   if (body[iBody].bLaskar) {
+    AddModuleLaskar(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = LASKAR;
+  }
+  
   
 }
 

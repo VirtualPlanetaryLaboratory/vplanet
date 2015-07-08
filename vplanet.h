@@ -113,8 +113,15 @@
 #define VPINC           1303
 #define VQINC           1304
 
+//LASKAR
+#define VXOBL           1401
+#define VYOBL           1402
+#define VZOBL           1403
+
 /* Semi-major axis functions in Lagrange */
 #define LAPLNUM 	      26
+
+#define S0            0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
 
 /* Now define the structs */
 
@@ -177,11 +184,10 @@ typedef struct {
   int bLaskar;
   double dPrecA;         /**< Precession angle */
   double dDynEllip;      /**< Dynamical ellipticity */
-  double dxi;            /**< sin(obliq)*sin(preca) */
-  double dzeta;          /**< sin(obliq)*cos(preca) */
-  double dchi;           /**< cos(obliq) */
-  int bObliqEvol;        /**< 0 -> do not model obliquity evolution for this body */
-
+  double dYobl;          /**< sin(obliq)*sin(preca) */
+  double dXobl;          /**< sin(obliq)*cos(preca) */
+  double dZobl;           /**< cos(obliq) */
+  
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -449,10 +455,7 @@ typedef struct {
   int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp) */
   int *iaPincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  p = s*sin(longa) */
   int *iaQincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  q = s*cos(longa) */
-  
-  int *bAng;     /**< Is the variable an angle? 1 = yes, 0 = no */
-  int *bPolar;   /**< Is the variable a polar coordinate (h,k,p, or q)? 1=yes,0=no*/
-  
+     
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       h = e*sin(varpi) derivative due to LAGRANGE. */
   double **padDHeccDtLagrange;
@@ -470,17 +473,31 @@ typedef struct {
   double **padDQincDtLagrange;
   
   /* LASKAR */
+  int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
+  int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
+  int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
+  
+  int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
+  double dDXoblDt;       /**< Total x Derivative */
+  int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
+  double dDYoblDt;       /**< Total y Derivative */
+  int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
+  double dDZoblDt;       /**< Total p Derivative */
+  int *iaXoblLaskar;     /**< Equation # Corresponding to Laskar's change to x = sin(obl)*cos(pA) */
+  int *iaYoblLaskar;     /**< Equation #s Corresponding to Laskar's change to y = sin(obl)*sin(pA) */
+  int *iaZoblLaskar;     /**< Equation #s Corresponding to Laskar's change to z = cos(obl) */
+
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       xi = sin(obliq)*sin(pA) derivative due to LASKAR. */
-  double *pdDxiDt;
+  double **padDXoblDtLaskar;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       zeta = sin(obliq)*cos(pA) derivative due to LASKAR. */
-  double *pdDzetaDt;
+  double **padDYoblDtLaskar;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       chi = cos(obliq) derivative due to LASKAR. */
-  double *pdDchiDt;
+  double **padDZoblDtLaskar;
   
 } UPDATE;
 
@@ -726,6 +743,9 @@ typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -805,6 +825,12 @@ typedef struct {
   fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
   fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
 
+  /*! These functions assign Equation and Module information regarding 
+      Laskar x,y,z variables in the UPDATE struct. */
+  fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
+  fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
+  fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
+  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 

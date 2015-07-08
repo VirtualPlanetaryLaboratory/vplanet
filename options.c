@@ -927,7 +927,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<=iNumIndices;iIndex++)
+  for (iIndex=0;iIndex<iNumIndices;iIndex++) // Russell changed <= to < b/c iNumIndices+1 is outside the allocated memory of files->Infile
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
   
   control->Evolve.iNumBodies=iNumIndices;
@@ -1055,21 +1055,21 @@ int bOptionAlreadyFound(int *iLine,int iNumFiles) {
 /* Age */
 
 void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter can exist in any file, but only once */
+  /* This parameter cannot exist in primary input file */
   int lTmp=-1;
   double dTmp;
   
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     /* Option was found */
-    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
-      system->dAge = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dAge = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     } else 
-      system->dAge = dTmp*fdUnitsTime(control->Units[iFile].iTime);
+      body[iFile-1].dAge = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&system->dAge,files->iNumInputs);
+    AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
 }
 
 /*

@@ -1,4 +1,4 @@
-void PropertiesAuxiliary(BODY*,CONTROL*);
+void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);
 double fdGetUpdateInfo(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 
 void Evolve(BODY*,CONTROL*,FILES*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,fnIntegrate);

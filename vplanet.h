@@ -20,28 +20,28 @@
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-8
+#define BIGG          6.672e-11
 #define PI            3.1415926535
 
-/* Units */
+/* Units: Calculations are done in SI */
 
-#define MEARTH        5.9742e27
-#define MSUN          1.98892e33
-#define AUCM          1.49598e13
-#define RSUN          6.955e10
+#define MEARTH        5.9742e24
+#define MSUN          1.98892e30
+#define AUCM          1.49598e11
+#define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
-#define REARTH        6.3781e8
-#define RJUP          7.1492e9
-#define MJUP          1.8987e30
-#define RNEP          2.4764e9
-#define MNEP          1.0244e29
-#define RHOEARTH      5.52                  // cgs
+#define REARTH        6.3781e6
+#define RJUP          7.1492e7
+#define MJUP          1.8987e27
+#define RNEP          2.4764e7
+#define MNEP          1.0244e26
+#define RHOEARTH      5515
 #define eEARTH        0.016710219
 #define YEARDAY       365.25
-#define MSAT          5.6851e29
+#define MSAT          5.6851e26
 #define DEGRAD        0.017453292519444445
-#define ATOMMASS      1.660538921e-24       // g
+#define ATOMMASS      1.660538921e-27
 
 /* Exit Status */
 
@@ -126,6 +126,7 @@ typedef struct {
   char cType[OPTLEN];    /**< Type of object N/I */
 
   /* Body Properties */
+  double dAge;           /**< Body's Age */
   double dMass;		 /**< Body's Mass */
   double dRadius;	 /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
@@ -136,7 +137,10 @@ typedef struct {
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
   double dRadGyra;       /**< Body's Radius of Gyration */
-  double dIntEn;         /**< Body's Total Internal Energy */
+  double dPowRadiogCore; /**< Body's Core's  Radiogenic Power */
+  double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
+  double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
+  double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
 
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
@@ -146,6 +150,10 @@ typedef struct {
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
+  double Hecc;           /**< Poincare H */
+  double Kecc;           /**< Poincare K */
+  double Pinc;           /**< Poincare P */
+  double Qinc;           /**< Poincare Q */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -162,82 +170,90 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-    int bRadheat;             /**< Apply Module RADHEAT? */
-    double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
-    double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
-    double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
-    double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
-    double d40KConstCore;       
-    double d40KNumCore;
-    double d40KPowerCore;
-    double d40KMassCore;
-    double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
-    double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
-    double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
-    double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
-    double d232ThConstCore;
-    double d232ThNumCore;
-    double d232ThPowerCore;
-    double d232ThMassCore;
-    double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
-    double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
-    double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
-    double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
-    double d238UConstCore;
-    double d238UNumCore;
-    double d238UPowerCore;
-    double d238UMassCore;
-    double d235UConstMan; 
-    double d235UNumMan;
-    double d235UPowerMan;
-    double d235UMassMan;
-    double d235UConstCore; 
-    double d235UNumCore;
-    double d235UPowerCore;
-    double d235UMassCore;
+  int bRadheat;             /**< Apply Module RADHEAT? */
+  double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
+  double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
+  double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
+  double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
+  double d40KConstCore;       
+  double d40KNumCore;
+  double d40KPowerCore;
+  double d40KMassCore;
+  double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
+  double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
+  double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
+  double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
+  double d232ThConstCore;
+  double d232ThNumCore;
+  double d232ThPowerCore;
+  double d232ThMassCore;
+  double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
+  double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
+  double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
+  double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
+  double d238UConstCore;
+  double d238UNumCore;
+  double d238UPowerCore;
+  double d238UMassCore;
+  double d235UConstMan; 
+  double d235UNumMan;
+  double d235UPowerMan;
+  double d235UMassMan;
+  double d235UConstCore; 
+  double d235UNumCore;
+  double d235UPowerCore;
+  double d235UMassCore;
 
-    /* Interior Thermal Parameters */
-    int bInteriorthermal;    /**< Apply Module INTERIORTHERMAL? */
-    double dTMan;            /**< Temperature Mantle AVE */
-    double dTCore;           /**< Temperature Core AVE */
-    double dTUMan;           /**< Temperature UMTBL */
-    double dTLMan;           /**< Temperature LMTBL */
-    double dTCMB;            /**< Temperature CMB */
-    double dTICB;            /**< Temperature ICB */
-    double dBLUMan;          /**< UM TBL thickness */
-    double dBLLMan;          /**< LM TBL thickness */
-    double dTJumpUMan;       /**< Temperature Jump across UMTBL */
-    double dTJumpLMan;       /**< Temperature Jump across LMTBL */
-    double dViscUMan;        /**< Viscosity UMTBL */
-    double dViscLMan;        /**< Viscosity LMTBL */
-    double dShmodUMan;       /**< Shear modulus UMTBL */
-    double dShmodLMan;       /**< Shear modulus LMTBL */
-    double dFmeltUMan;       /**< Melt fraction UMTBL */
-    double dFmeltLMan;       /**< Melt fraction LMTBL */
-    double dLove2Man;        /**< Mantle k2 love number */
-    double dImLove2Man;      /**< Mantle Im(k2) love number */
-    /* Time Derivatives & Gradients */
-    double dTDotMan;         /**< Time deriv of mean mantle temp */
-    double dTDotCore;        /**< time deriv of mean core temp */
-    double dHFluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
-    double dHFlowUMan;       /**< hflow UMTBL */
-    double dHFluxCMB;        /**< hflux lower mantle TBL = CMB */
-    double dHFlowCMB;        /**< hflow LMTBL=CMB */
-    double dHFlowTidalMan;   /**< hflow tidal dissipation in mantle */
-    double dHFlowTidalCore;  /**< hflow tidal dissipation in core */
-    double dHFlowLatentMan;  /**< latent hflow from solidification of mantle */
-    double dHFlowLatentIC;   /**< latent hflow from solidification of IC */
-    double dHFlowICB;        /**< hflow across ICB */
-    double dHFluxSurf;       /**< hflux surface of mantle */
-    double dHFlowSurf;       /**< hflow surface of mantle */
-    /* Core Variables */
-    double dRIC;             /**< IC radius */
-    double dDOC;             /**< OC shell thickness */
-    double dChiOC;           /**< OC light element concentration chi. */
-    double dChiIC;           /**< IC light element concentration chi. */
-    double dThermConductOC;  /**< Thermal conductivity OC */
-    double dThermConductIC;  /**< Thermal conductivity IC */
+  int bThermint;
 
+  /* Interior Thermal Parameters */
+  int bInteriorthermal;    /**< Apply Module INTERIORTHERMAL? */
+  double dTMan;            /**< Temperature Mantle AVE */
+  double dTCore;           /**< Temperature Core AVE */
+  double dTUMan;           /**< Temperature UMTBL */
+  double dTLMan;           /**< Temperature LMTBL */
+  double dTCMB;            /**< Temperature CMB */
+  double dTICB;            /**< Temperature ICB */
+  double dBLUMan;          /**< UM TBL thickness */
+  double dBLLMan;          /**< LM TBL thickness */
+  double dTJumpUMan;       /**< Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Temperature Jump across LMTBL */
+  double dViscUMan;        /**< Viscosity UMTBL */
+  double dViscLMan;        /**< Viscosity LMTBL */
+  double dShmodUMan;       /**< Shear modulus UMTBL */
+  double dShmodLMan;       /**< Shear modulus LMTBL */
+  double dTsolUMan;        /**< Solidus Temperature UMTBL */
+  double dTliqUMan;        /**< Liquidus Temperature UMTBL */
+  double dTsolLMan;        /**< Solidus Temperature LMTBL */
+  double dTliqLMan;        /**< Liquidus Temperature LMTBL */
+  double dFmeltUMan;       /**< Melt fraction UMTBL */
+  double dFmeltLMan;       /**< Melt fraction LMTBL */
+  double dLove2Man;        /**< Mantle k2 love number */
+  double dImLove2Man;      /**< Mantle Im(k2) love number */
+  /* Time Derivatives & Gradients */
+  double dTDotMan;         /**< Time deriv of mean mantle temp */
+  double dTDotCore;        /**< time deriv of mean core temp */
+  double dHfluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
+  double dHflowUMan;       /**< hflow UMTBL */
+  double dHfluxLMan;       /**< hflux lower mantle thermal boundary layer (UMTBL) */
+  double dHflowLMan;       /**< hflow LMTBL */
+  double dHfluxCMB;        /**< hflux CMB */
+  double dHflowCMB;        /**< hflow CMB */
+  double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
+  double dHflowTidalCore;  /**< hflow tidal dissipation in core */
+  double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
+  double dHflowLatentIC;   /**< latent hflow from solidification of IC */
+  double dHflowICB;        /**< hflow across ICB */
+  double dHfluxSurf;       /**< hflux surface of mantle */
+  double dHflowSurf;       /**< hflow surface of mantle */
+  /* Core Variables */
+  double dRIC;             /**< IC radius */
+  double dDOC;             /**< OC shell thickness */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dThermConductOC;  /**< Thermal conductivity OC */
+  double dThermConductIC;  /**< Thermal conductivity IC */
+  
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -271,7 +287,7 @@ typedef struct {
   double daAtmPressProfile;
   double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
 
-    double daEddyDiffProfile;
+  double daEddyDiffProfile;
 
   int bAtmSulfur;
   int bAtmHydrogen;
@@ -291,9 +307,8 @@ typedef struct {
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
-  double dAge;           /**< System's Age */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
-  double dTotAngMom;     /**< System's Current Angular Momentum */
+  double dTotEnInit;     /**< System's Initial Energy */
 } SYSTEM;
 
 /* 
@@ -444,7 +459,6 @@ typedef struct {
     /* INTERIORTHERMAL */
     int dMinTMan;     /**< Halt at this TMan */
     int dMinTCore;     /**< Halt at this TCore */
-
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -465,7 +479,7 @@ typedef struct {
     int iTemp;
 } UNITS;
 
-typedef void (*fnAuxPropsModule)(BODY*,int);
+typedef void (*fnAuxPropsModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
@@ -492,6 +506,7 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
+  int *iNumMulti;        /**< Number of Multi-module AuxProps functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
@@ -504,6 +519,7 @@ typedef struct {
   /* Nothing? */
 
   fnAuxPropsModule **fnAuxProps; /**< Function Pointers to Auxiliary Properties */
+  fnAuxPropsModule **fnAuxPropsMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -718,7 +734,7 @@ typedef struct {
       semi-major axis in the UPDATE struct. */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
 
-    /*! These functions assign Equation and Module information regarding 
+  /*! These functions assign Equation and Module information regarding 
     potassium-40 in the UPDATE struct. */ 
     fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
     fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
@@ -731,7 +747,7 @@ typedef struct {
 
     fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
     fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
-    
+ 
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 

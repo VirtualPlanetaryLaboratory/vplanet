@@ -390,7 +390,6 @@ void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
 
 /* Uranium 235 PED */
-
 void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
@@ -504,7 +503,6 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 /* Initiatlize Input Options */
 
 void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
-  int iOpt,iFile;
 
   /* 40K */
   sprintf(options[OPT_40KMASSMAN].cName,"d40KMassMan");
@@ -764,10 +762,6 @@ void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 /******************* Verify RADHEAT ******************/
 
-void VerifyRotationRadheat(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
     if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) 
       DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
@@ -994,7 +988,7 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   exit(1);
 }
 */
-void fnPropertiesRadheat(BODY *body,int iBody) {
+void fnPropertiesRadheat(BODY *body,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
@@ -1024,34 +1018,34 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   int bRadheat=0;
 
   /* Cannot set 2 or more of Power, Mass and Number for any isotope */
-  /*XXX Need a VerifyOneOfThree subroutine */
+  /* XXX Need a VerifyOneOfThree subroutine */
   /* Radheat is active for this body if this subroutine is called. */
 
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
       body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
     NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody+1);
-    Verify40K(body,options,update,system->dAge,fnUpdate,iBody);  //Verify Man and Core.
+    Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
     bRadheat = 1;
   }
 
   if (body[iBody].d232ThNumMan > 0 || body[iBody].d232ThMassMan > 0 || body[iBody].d232ThPowerMan > 0 ||
       body[iBody].d232ThNumCore > 0 || body[iBody].d232ThMassCore > 0 || body[iBody].d232ThPowerCore > 0) {
     NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iBody+1);
-    Verify232Th(body,options,update,system->dAge,fnUpdate,iBody);
+    Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bRadheat = 1;
   }
 
   if (body[iBody].d238UNumMan > 0 || body[iBody].d238UMassMan > 0 || body[iBody].d238UPowerMan > 0 ||
       body[iBody].d238UNumCore > 0 || body[iBody].d238UMassCore > 0 || body[iBody].d238UPowerCore > 0) {
       NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iBody+1);
-      Verify238U(body,options,update,system->dAge,fnUpdate,iBody);
+      Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
   if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0 ||
       body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {  //PED
       NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iBody+1);
-      Verify235U(body,options,update,system->dAge,fnUpdate,iBody);
+      Verify235U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
       bRadheat = 1;
   }
 
@@ -1110,10 +1104,6 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateEccRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 //PED: Combine these into ..HeatMan?  and ..HeatCore?
 void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
@@ -1148,20 +1138,6 @@ void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVa
   update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
   update[iBody].iNum235UCore = (*iEqn)++;
 }
-
-
-void FinalizeUpdateOblRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateRotRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateSemiRadheat(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
 
 /***************** RADHEAT Halts *****************/
 
@@ -1233,15 +1209,15 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
-void CountHaltsRadHeat(HALT *halt,int *iHalt) {
-  if (halt->dMin40KPower >= 0)
-    (iHalt)++;
-  if (halt->dMin232ThPower >=0)
-    (iHalt)++;
-  if (halt->dMin238UPower >= 0)
-    (iHalt)++;
-  if (halt->dMin235UPower >= 0)  //PED
-    (iHalt)++;
+void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
+  if (halt->dMin40KPower > 0)
+    (*iNumHalts)++;
+  if (halt->dMin232ThPower > 0)
+    (*iNumHalts)++;
+  if (halt->dMin238UPower > 0)
+    (*iNumHalts)++;
+  if (halt->dMin235UPower > 0)  //PED
+    (*iNumHalts)++;
 }
 
 void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -1258,16 +1234,8 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* RADHEAT Outputs ******************/
 
-void HelpOutputRadheat(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ RADHEAT output ------\n");
-  for (iOut=OUTSTARTRADHEAT;iOut<OUTENDRADHEAT;iOut++) 
-    WriteHelpOutput(&output[iOut]);
-}
-
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
-   block of initialization in InitializeOutputRadheat below /*
+   block of initialization in InitializeOutputRadheat below */
 
 /* Potassium */
 
@@ -1666,7 +1634,7 @@ void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 /* Totals */
 void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerMan(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerMan(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1677,7 +1645,7 @@ void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerCore(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerCore(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1688,7 +1656,7 @@ void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-      *dTmp = fdRadPowerTotal(body,system,update,iBody,iBody);
+      *dTmp = fdRadPowerTotal(body,update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1719,7 +1687,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KPOWERMAN].cDescr,"Total Power Generated by 40K");
   sprintf(output[OUT_40KPOWERMAN].cNeg,"TW");
   output[OUT_40KPOWERMAN].bNeg = 1;
-  output[OUT_40KPOWERMAN].dNeg = 1e-19; // ergs/s -> TW 
+  output[OUT_40KPOWERMAN].dNeg = 1e-12; 
   output[OUT_40KPOWERMAN].iNum = 1;
   fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
   
@@ -1727,7 +1695,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KENFLUX].cDescr,"Surface Energy Flux from 40K");
   sprintf(output[OUT_40KENFLUX].cNeg,"W/m^2");
   output[OUT_40KENFLUX].bNeg = 1;
-  output[OUT_40KENFLUX].dNeg = 1e-3;
+  output[OUT_40KENFLUX].dNeg = 1;
   output[OUT_40KENFLUX].iNum = 1;
   fnWrite[OUT_40KENFLUX] = &Write40KEnFlux;
 
@@ -1776,7 +1744,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KPOWERCORE].cDescr,"Core Power Generated by 40K");
   sprintf(output[OUT_40KPOWERCORE].cNeg,"TW");
   output[OUT_40KPOWERCORE].bNeg = 1;
-  output[OUT_40KPOWERCORE].dNeg = 1e-19; // ergs/s -> TW 
+  output[OUT_40KPOWERCORE].dNeg = 1e-12; // ergs/s -> TW 
   output[OUT_40KPOWERCORE].iNum = 1;
   fnWrite[OUT_40KPOWERCORE] = &Write40KPowerCore;
   
@@ -1801,7 +1769,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THPOWERMAN].cDescr,"Total Power Generated by 232Th");
   sprintf(output[OUT_232THPOWERMAN].cNeg,"TW");
   output[OUT_232THPOWERMAN].bNeg = 1;
-  output[OUT_232THPOWERMAN].dNeg = 1e-19; 
+  output[OUT_232THPOWERMAN].dNeg = 1e-12; 
   output[OUT_232THPOWERMAN].iNum = 1;
   fnWrite[OUT_232THPOWERMAN] = &Write232ThPowerMan;
   
@@ -1809,7 +1777,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THENFLUX].cDescr,"Surface Energy Flux from 232Th");
   sprintf(output[OUT_232THENFLUX].cNeg,"W/m^2");
   output[OUT_232THENFLUX].bNeg = 1;
-  output[OUT_232THENFLUX].dNeg = 1e-3;
+  output[OUT_232THENFLUX].dNeg = 1;
   output[OUT_232THENFLUX].iNum = 1;
   fnWrite[OUT_232THENFLUX] = &Write232ThEnFlux;
 
@@ -1850,7 +1818,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THPOWERCORE].cDescr,"Total Power Generated by 232Th");
   sprintf(output[OUT_232THPOWERCORE].cNeg,"TW");
   output[OUT_232THPOWERCORE].bNeg = 1;
-  output[OUT_232THPOWERCORE].dNeg = 1e-19; 
+  output[OUT_232THPOWERCORE].dNeg = 1e-12; 
   output[OUT_232THPOWERCORE].iNum = 1;
   fnWrite[OUT_232THPOWERCORE] = &Write232ThPowerCore;
 
@@ -1876,7 +1844,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UPOWERMAN].cDescr,"Total Power Generated by 238U");
   sprintf(output[OUT_238UPOWERMAN].cNeg,"TW");
   output[OUT_238UPOWERMAN].bNeg = 1;
-  output[OUT_238UPOWERMAN].dNeg = 1e-19; 
+  output[OUT_238UPOWERMAN].dNeg = 1e-12; 
   output[OUT_238UPOWERMAN].iNum = 1;
   fnWrite[OUT_238UPOWERMAN] = &Write238UPowerMan;
   
@@ -1884,7 +1852,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UENFLUX].cDescr,"Surface Energy Flux due to 238U");
   sprintf(output[OUT_238UENFLUX].cNeg,"W/m^2");
   output[OUT_238UENFLUX].bNeg = 1;
-  output[OUT_238UENFLUX].dNeg = 1e-3;
+  output[OUT_238UENFLUX].dNeg = 1;
   output[OUT_238UENFLUX].iNum = 1;
   fnWrite[OUT_238UENFLUX] = &Write238UEnFlux;
 
@@ -1925,7 +1893,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UPOWERCORE].cDescr,"Total Core Power Generated by 238U");
   sprintf(output[OUT_238UPOWERCORE].cNeg,"TW");
   output[OUT_238UPOWERCORE].bNeg = 1;
-  output[OUT_238UPOWERCORE].dNeg = 1e-19; 
+  output[OUT_238UPOWERCORE].dNeg = 1e-12; 
   output[OUT_238UPOWERCORE].iNum = 1;
   fnWrite[OUT_238UPOWERCORE] = &Write238UPowerCore;
   
@@ -1951,7 +1919,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UPOWERMAN].cDescr,"Total Power Generated by 235U");
   sprintf(output[OUT_235UPOWERMAN].cNeg,"TW");
   output[OUT_235UPOWERMAN].bNeg = 1;
-  output[OUT_235UPOWERMAN].dNeg = 1e-19; 
+  output[OUT_235UPOWERMAN].dNeg = 1e-12; 
   output[OUT_235UPOWERMAN].iNum = 1;
   fnWrite[OUT_235UPOWERMAN] = &Write235UPowerMan;
   
@@ -2000,7 +1968,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UPOWERCORE].cDescr,"Total Core Power Generated by 235U");
   sprintf(output[OUT_235UPOWERCORE].cNeg,"TW");
   output[OUT_235UPOWERCORE].bNeg = 1;
-  output[OUT_235UPOWERCORE].dNeg = 1e-19; 
+  output[OUT_235UPOWERCORE].dNeg = 1e-12; 
   output[OUT_235UPOWERCORE].iNum = 1;
   fnWrite[OUT_235UPOWERCORE] = &Write235UPowerCore;
 
@@ -2026,7 +1994,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RADPOWERMAN].cDescr,"Total Power Generated by Radiogenic Nuclides in Mantle");
   sprintf(output[OUT_RADPOWERMAN].cNeg,"TW");
   output[OUT_RADPOWERMAN].bNeg = 1;
-  output[OUT_RADPOWERMAN].dNeg = 1e-19; 
+  output[OUT_RADPOWERMAN].dNeg = 1e-12; 
   output[OUT_RADPOWERMAN].iNum = 1;
   fnWrite[OUT_RADPOWERMAN] = &WriteRadPowerMan;
 
@@ -2034,7 +2002,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RADPOWERCORE].cDescr,"Total Power Generated by Radiogenic Nuclides in Core");
   sprintf(output[OUT_RADPOWERCORE].cNeg,"TW");
   output[OUT_RADPOWERCORE].bNeg = 1;
-  output[OUT_RADPOWERCORE].dNeg = 1e-19; 
+  output[OUT_RADPOWERCORE].dNeg = 1e-12; 
   output[OUT_RADPOWERCORE].iNum = 1;
   fnWrite[OUT_RADPOWERCORE] = &WriteRadPowerCore;
 
@@ -2042,7 +2010,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RADPOWERTOTAL].cDescr,"Total Power Generated by Radiogenic Nuclides in Total (M+C)");
   sprintf(output[OUT_RADPOWERTOTAL].cNeg,"TW");
   output[OUT_RADPOWERTOTAL].bNeg = 1;
-  output[OUT_RADPOWERTOTAL].dNeg = 1e-19; 
+  output[OUT_RADPOWERTOTAL].dNeg = 1e-12; 
   output[OUT_RADPOWERTOTAL].iNum = 1;
   fnWrite[OUT_RADPOWERTOTAL] = &WriteRadPowerTotal;
 
@@ -2050,7 +2018,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SURFENFLUXRADHEAT].cDescr,"Total Power Generated by Radiogenic Nuclides");
   sprintf(output[OUT_SURFENFLUXRADHEAT].cNeg,"W/m^2");
   output[OUT_SURFENFLUXRADHEAT].bNeg = 1;
-  output[OUT_SURFENFLUXRADHEAT].dNeg = 1e-3; 
+  output[OUT_SURFENFLUXRADHEAT].dNeg = 1; 
   output[OUT_SURFENFLUXRADHEAT].iNum = 1;
   fnWrite[OUT_SURFENFLUXRADHEAT] = &WriteSurfEnFluxRadheat;
 
@@ -2119,7 +2087,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
   module->fnVerify[iBody][iModule] = &VerifyRadheat;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationRadheat;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
@@ -2134,7 +2101,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
-
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 
@@ -2145,24 +2111,27 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 // N = N_0 * exp(-t/lambda)
 // dN/dt = -(N_0/lambda) * exp(-t/lambda)
 
-double fdRadPowerMan(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+double fdRadPowerMan(BODY *body,UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD238UNumManDt))*ENERGY238U - (*(update[iBody].pdD235UNumManDt))*ENERGY235U - (*(update[iBody].pdD232ThNumManDt))*ENERGY232TH - (*(update[iBody].pdD40KNumManDt))*ENERGY40K;
 }
-double fdRadPowerCore(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+
+double fdRadPowerCore(BODY *body,UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U - (*(update[iBody].pdD235UNumCoreDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
 }
-double fdRadPowerTotal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+
+double fdRadPowerTotal(BODY *body,UPDATE *update,int iBody) {
     double dPowerMan;
     double dPowerCore;
-    dPowerMan = fdRadPowerMan(body,system,update,iBody,iFoo);
-    dPowerCore = fdRadPowerCore(body,system,update,iBody,iFoo);
+    dPowerMan = fdRadPowerMan(body,update,iBody);
+    dPowerCore = fdRadPowerCore(body,update,iBody);
     return dPowerMan+dPowerCore;
 }
 
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
 double fdSurfEnFluxRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   double dPower;
-    dPower = fdRadPowerMan(body,system,update,iBody,iFoo);
+
+  dPower = fdRadPowerMan(body,update,iBody);
   return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 
@@ -2201,67 +2170,67 @@ double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
 }
 
 double fd40KPowerMan(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge);   //redirects to fdRadPower
+  return fdRadPower(body[iBody].d40KConstMan,HALFLIFE40K,body[iBody].dAge);   //redirects to fdRadPower
 }
 
 double fd232ThPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d232ThConstMan,HALFLIFE232TH,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 double fd238UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d238UConstMan,HALFLIFE238U,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 double fd235UPowerMan(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge);    //redirects to fdRadPower
+  return fdRadPower(body[iBody].d235UConstMan,HALFLIFE235U,body[iBody].dAge);    //redirects to fdRadPower
 }
 
 /* Energy Flux */
 double fd40KEnFlux(BODY *body,SYSTEM *system,int *iaBody,int iBody) {
-  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d40KConstMan,HALFLIFE40K,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd232ThEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d232ThConstMan,HALFLIFE232TH,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd238UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d238UConstMan,HALFLIFE238U,body[iBody].dAge,body[iBody].dRadius);
 }
 
 double fd235UEnFlux(BODY *body,SYSTEM *system,int iBody) {
-  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,system->dAge,body[iBody].dRadius);
+  return fdRadEnFlux(body[iBody].d235UConstMan,HALFLIFE235U,body[iBody].dAge,body[iBody].dRadius);
 }
 
 /* DN/Dt */
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,body[iaBody[0]].dAge);
 }
 
 double fdD232ThNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
 
 double fdD238UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,body[iaBody[0]].dAge);
 }
 
 double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,body[iaBody[0]].dAge);
 }
 
 double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,body[iaBody[0]].dAge);
 }
 
 double fdD232ThNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
 
 double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,body[iaBody[0]].dAge);
 }
 
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,system->dAge);
+  return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,body[iaBody[0]].dAge);
 }

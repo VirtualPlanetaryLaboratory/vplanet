@@ -14,6 +14,14 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) 
   /* Nothing */
 }
 
+void VerifyRotationNULL(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
+  /* Nothing */
+}
+
+double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iBody1) {
+  return 0;
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -62,11 +70,15 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   int iModule=0,iNumModules = 0;
 
+  /************************
+   * ADD NEW MODULES HERE *
+   ************************/
+
   if (body[iBody].bEqtide)
     iNumModules++;
   if (body[iBody].bRadheat)
     iNumModules++;
-  if (body[iBody].bInteriorthermal)
+  if (body[iBody].bThermint)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -122,6 +134,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
   /************************
@@ -137,7 +150,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
-  if (body[iBody].bInteriorthermal) {
+  if (body[iBody].bThermint) {
       AddModuleInteriorthermal(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = INTERIORTHERMAL;
   }
@@ -170,7 +183,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"interiorthermal",15) == 0) {
-	body[iFile-1].bInteriorthermal = 1;
+	body[iFile-1].bThermint = 1;
       } else {
 	if (control->Io.iVerbose >= VERBERR)
 	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -186,3 +199,48 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
+
+/*
+ * Verify multi-module dependencies
+ */
+
+void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+
+  /* This will need modification if material can move between layers */
+
+  if (body[iBody].bThermint) {
+    if (!body[iBody].bRadheat) {
+      if (control->Io.iVerbose > VERBINPUT)
+	fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
+      body[iBody].dPowRadiogCore = 0;
+      body[iBody].dPowRadiogMan = 0;
+    } else
+      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesRadheatThermint;
+  }
+}
+
+void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+  int iModule=0;
+
+  if (module->iNumModules[iBody] > 1) {
+    /* XXX Note that the number of elements here is really a permutation, 
+       but this should work for a while. */
+    control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
+
+    // Now verify 
+    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iModule);
+  }
+
+  control->Evolve.iNumMulti[iBody] = iModule;
+  if (control->Io.iVerbose >= VERBALL)
+    fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
+}
+
+/*
+ * Auxiliary Properties for multi-module calculations
+ */
+
+void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+  body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
+  body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
+}

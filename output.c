@@ -73,7 +73,12 @@ void WriteMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dObliquity;
+  if (body[iBody].bLaskar) {
+    *dTmp = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+  } else {
+    *dTmp = body[iBody].dObliquity;
+  }
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -967,6 +972,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
   InitializeOutputLagrange(output,fnWrite);
+  InitializeOutputLaskar(output,fnWrite);
 
 }
 

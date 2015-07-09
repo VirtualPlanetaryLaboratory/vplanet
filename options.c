@@ -2458,6 +2458,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsEqtide(options,fnRead);
   InitializeOptionsRadheat(options,fnRead);
   InitializeOptionsLagrange(options,fnRead);
+  InitializeOptionsLaskar(options,fnRead);
 
 }
  

@@ -109,15 +109,15 @@ void InitializeOptionsLaskar(OPTIONS *options,fnReadOption fnRead[]) {
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_PRECA] = &ReadPrecA;
   
-  sprintf(options[OPT_PRECA].cName,"dDynEllip");
-  sprintf(options[OPT_PRECA].cDescr,"Planet's dynamical ellipticity");
-  sprintf(options[OPT_PRECA].cDefault,"0");
-  options[OPT_PRECA].dDefault = 0.0;
-  options[OPT_PRECA].iType = 2;  
-  options[OPT_PRECA].iMultiFile = 1;   
+  sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
+  sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
+  sprintf(options[OPT_DYNELLIP].cDefault,"0");
+  options[OPT_DYNELLIP].dDefault = 0.0;
+  options[OPT_DYNELLIP].iType = 2;  
+  options[OPT_DYNELLIP].iMultiFile = 1;   
 //   options[OPT_LONGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGP].cNeg,"Degrees");
-  fnRead[OPT_PRECA] = &ReadDynEllip;
+  fnRead[OPT_DYNELLIP] = &ReadDynEllip;
 }
 
 void ReadOptionsLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -303,6 +303,8 @@ void WriteBodyDOblDtLaskar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
   }
 }
 
@@ -326,6 +328,8 @@ void WriteBodyDPrecADtLaskar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
   }
 }  
   
@@ -335,7 +339,7 @@ void WriteBodyDXoblDtLaskar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
     dDeriv += *(update[iBody].padDXoblDtLaskar[iPert]);
   
   *dTmp = dDeriv;
@@ -355,7 +359,7 @@ void WriteBodyDYoblDtLaskar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
     dDeriv += *(update[iBody].padDYoblDtLaskar[iPert]);
   
   *dTmp = dDeriv;
@@ -409,6 +413,13 @@ void WriteBodyZobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+  
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
+  }
+  while (*dTmp > 2*PI) {
+    *dTmp -= 2*PI;
+  }
   
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -553,18 +564,16 @@ void PropertiesLaskar(BODY *body,UPDATE *update,int iBody) {
 void ForceBehaviorLaskar(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
 }
 
-
-
 /* Equations used to calculate obliquity/spin evolution */
 double fdCentralTorqueSfac(BODY *body, int iBody) {
-  return 0.5*pow(1-pow(body[iBody].dHecc,2)-pow(body[iBody].dKecc,2),-1.5) - S0;
+  return 0.5*pow(1.-pow(body[iBody].dHecc,2)-pow(body[iBody].dKecc,2),-1.5) - S0;
 }
   
 double fdCentralTorqueR(BODY *body, int iBody) {
   double obliq;
-  obliq = atan2(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2),body[iBody].dZobl);
+  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   
-  return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*cos(obliq);
+  return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*cos(obliq)/DAYSEC;
 }
 
 double fdObliquityC(BODY *body, SYSTEM *system, int *iaBody) {
@@ -579,14 +588,13 @@ double fdObliquityB(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdLagrangeDpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityC(body,system,iaBody) );
 }
 
-
 //--------------Obliquity/spin evolution---------------------------------------------------------------
 
 double fdLaskarDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0])/DAYSEC;
+    return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
     return -fdObliquityB(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityC(body,system,iaBody);
@@ -597,7 +605,7 @@ double fdLaskarDxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0])/DAYSEC;
+    return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
     return fdObliquityA(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityC(body,system,iaBody);

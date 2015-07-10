@@ -30,6 +30,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
+  dest[iBody].dImK2 = src[iBody].dImK2;
 
   for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
@@ -1400,6 +1401,13 @@ void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcat(cUnit,"cgs");
 }
 
+void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dImK2;
+
+  strcat(cUnit,"");
+}
+
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = fdTimescaleMulti(body[iBody].dObliquity,*(update[iBody].padDoblDtEqtide),body[iBody].iTidePerts);
 
@@ -1639,6 +1647,16 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_GAMMAORB].bNeg = 0;
   output[OUT_GAMMAORB].iNum = 1;
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
+
+  sprintf(output[OUT_IMK2].cName,"ImK2");
+  sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
+  output[OUT_IMK2].bNeg = 0;
+  output[OUT_IMK2].iNum = 1;
+  fnWrite[OUT_IMK2] = &WriteImK2;
+
+  /*
+   * O
+   */
   
   sprintf(output[OUT_OBLTIMEEQTIDE].cName,"OblTimeEqtide");
   sprintf(output[OUT_OBLTIMEEQTIDE].cDescr,"Timescale for Obliquity Evolution in EQTIDE");
@@ -1648,6 +1666,10 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBLTIMEEQTIDE].iNum = 1;
   fnWrite[OUT_OBLTIMEEQTIDE] = &WriteOblTimescaleEqtide;
   
+  /*
+   * R
+   */
+
   sprintf(output[OUT_ROTRATETIMEEQTIDE].cName,"RotTimeEqtide");
   sprintf(output[OUT_ROTRATETIMEEQTIDE].cDescr,"Timescale for Rotational Evolution in EQTIDE");
   output[OUT_ROTRATETIMEEQTIDE].bNeg = 0;
@@ -1983,7 +2005,9 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
-  body[iBody].dTidalZ[iPert] = 3*BIGG*BIGG*body[iBody].dK2*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion*body[iBody].dTidalQ);
+  /* Note that this is different from Heller et al (2011) because 
+     we now use Im(k_2) which equals 3/2*k_2/Q.*/
+  body[iBody].dTidalZ[iPert] = body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion); 
 }
 
 /*

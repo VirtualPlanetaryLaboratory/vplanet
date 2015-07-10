@@ -76,8 +76,8 @@
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
 #define VISCREF          6e7           //[m2/s] reference kinematic mantle viscosity
-#define VISCJUMPULM      2.            //[nd] viscosity jump from upper to lower mantle
-#define SHMODREF_SI      6.24e4        //[Pa] reference kinematic mantle shear modulus
+#define VISCJUMPULM      2.0           //[nd] viscosity jump from upper to lower mantle
+#define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
 #define MELTDELTA        6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
@@ -85,7 +85,7 @@
 #define MELTXI           5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
 
 /* TIDAL PROPERTIES */
-#define STIFFNESS        1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+#define STIFFNESS        3.1217e11     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
 /* MELTING CONSTANTS */
 #define ASOLIDUS         -1.160e-16    //[K/m3] mantle solidus coefficient Tsol(r)=A*r^3+B*r^2+C*r+D
 #define BSOLIDUS         +1.708e-9     //[K/m2] B coefficient
@@ -136,8 +136,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SHMODLMAN       1223   //Shear modulus LMTBL
 #define OPT_FMELTUMAN       1224   //Melt fraction UMTBL
 #define OPT_FMELTLMAN       1225   //Melt fraction LMTBL
-#define OPT_LOVE2MAN        1226   //Mantle k2 love number
-#define OPT_IMLOVE2MAN      1227   //Mantle Im(k2) love number
+#define OPT_K2MAN        1226   //Mantle k2 love number
+#define OPT_IMK2MAN      1227   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1233   //time deriv of mean core temp
@@ -154,6 +154,7 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HFLOWICB        1251   //hflow across ICB
 #define OPT_HFLUXSURF       1260   //hflux surface of mantle
 #define OPT_HFLOWSURF       1261   //hflow surface of mantle
+#define OPT_TIDALPOWMAN     1262   //Tidal Power Mantle
 /* Core Variables */
 #define OPT_RIC             1270   //IC radius
 #define OPT_DOC             1271   //OC shell thickness
@@ -195,14 +196,6 @@ void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
 void InitializeUpdateThermint(BODY*,UPDATE*,int);
-void FinalizeUpdateEccThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate40KNumManThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate232ThNumManThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate238UNumManThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate235UNumManThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotThermint(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiThermint(BODY*,UPDATE*,int*,int,int);
 
 /* Auxiliary Properties */
 void fnPropertiesThermint(BODY*,UPDATE*,int);
@@ -225,14 +218,16 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_BLLMAN          1217   //LM TBL thickness
 #define OUT_TJUMPUMAN       1218   //Temperature Jump across UMTBL
 #define OUT_TJUMPLMAN       1219   //Temperature Jump across LMTBL
-#define OUT_VISCUMAN        1220   //Viscosity UMTBL
-#define OUT_VISCLMAN        1221   //Viscosity LMTBL
-#define OUT_SHMODUMAN       1222   //Shear modulus UMTBL
-#define OUT_SHMODLMAN       1223   //Shear modulus LMTBL
-#define OUT_FMELTUMAN       1224   //Melt fraction UMTBL
-#define OUT_FMELTLMAN       1225   //Melt fraction LMTBL
-#define OUT_LOVE2MAN        1226   //Mantle k2 love number
-#define OUT_IMLOVE2MAN      1227   //Mantle Im(k2) love number
+#define OUT_SIGNTJUMPUMAN   1220   //Temperature Jump across UMTBL
+#define OUT_SIGNTJUMPLMAN   1221   //Temperature Jump across LMTBL
+#define OUT_VISCUMAN        1222   //Viscosity UMTBL
+#define OUT_VISCLMAN        1223   //Viscosity LMTBL
+#define OUT_SHMODUMAN       1224   //Shear modulus UMTBL
+#define OUT_SHMODLMAN       1225   //Shear modulus LMTBL
+#define OUT_FMELTUMAN       1226   //Melt fraction UMTBL
+#define OUT_FMELTLMAN       1227   //Melt fraction LMTBL
+#define OUT_K2MAN           1228   //Mantle k2 love number
+#define OUT_IMK2MAN         1229   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1233   //time deriv of mean core temp
@@ -249,6 +244,7 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_HFLOWICB        1251   //hflow across ICB
 #define OUT_HFLUXSURF       1260   //hflux surface of mantle
 #define OUT_HFLOWSURF       1261   //hflow surface of mantle
+#define OUT_TIDALPOWMAN     1262   //Tidal Power Mantle
 /* Core Variables */
 #define OUT_RIC             1270   //IC radius
 #define OUT_DOC             1271   //OC shell thickness
@@ -268,11 +264,15 @@ void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]
 void WriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSignTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -285,6 +285,7 @@ void WriteHflowLatentMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doubl
 void WriteHflowLatentIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowSurf(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTidalPowMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
@@ -302,18 +303,21 @@ double fdTCMB(BODY*,int);
 double fdTICB(BODY*,int);
 double fdTJumpUMan(BODY*,int);
 double fdTJumpLMan(BODY*,int);
+double fdSignTJumpUMan(BODY*,int);
+double fdSignTJumpLMan(BODY*,int);
 double fdViscUMan(BODY*,int);
 double fdViscLMan(BODY*,int);
 double fdBLUMan(BODY*,int);
 double fdBLLMan(BODY*,int);
-double fdShmodMan(BODY*,int);
+double fdShmodUMan(BODY*,int);
+double fdShmodLMan(BODY*,int);
 double fdFmeltUMan(BODY*,int);
 double fdTsolUMan(BODY*,int);
 double fdTliqUMan(BODY*,int);
 double fdTsolLMan(BODY*,int);
 double fdTliqLMan(BODY*,int);
-double fdImLove2Man(BODY*,int);
-double fdLove2Man(BODY*,int);
+double fdImk2Man(BODY*,int);
+double fdK2Man(BODY*,int);
 double fdHfluxUMan(BODY*,int);
 double fdHfluxLMan(BODY*,int);
 double fdHfluxCMB(BODY*,int);
@@ -322,7 +326,7 @@ double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
 double fdHflowLatentMan(BODY*,int);
-double fdPowerTidalMan(BODY*,int);
+double fdTidalPowMan(BODY*,int);
 double fdHflowSurfMan(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,int,int);

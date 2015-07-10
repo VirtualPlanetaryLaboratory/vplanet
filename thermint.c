@@ -153,10 +153,15 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dTCMB=fdTCMB(body,iBody);
   body[iBody].dTJumpUMan=fdTJumpUMan(body,iBody);
   body[iBody].dTJumpLMan=fdTJumpLMan(body,iBody);
+  body[iBody].dSignTJumpUMan=fdSignTJumpUMan(body,iBody);
+  body[iBody].dSignTJumpLMan=fdSignTJumpLMan(body,iBody);
   body[iBody].dViscUMan=fdViscUMan(body,iBody);
   body[iBody].dViscLMan=fdViscLMan(body,iBody);
   body[iBody].dBLUMan=fdBLUMan(body,iBody);
   body[iBody].dBLLMan=fdBLLMan(body,iBody);
+  body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
   /* Heat Flows */
   /* Mantle */
   body[iBody].dHfluxUMan=fdHfluxUMan(body,iBody);
@@ -165,6 +170,7 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dHflowUMan=fdHflowUMan(body,iBody);
   body[iBody].dHflowLMan=fdHflowLMan(body,iBody);
   body[iBody].dHflowCMB=fdHflowCMB(body,iBody);
+  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
   /* Core */
 
     //body[iBody].dTsolUMan=fdTsolUMan(body,iBody);
@@ -332,6 +338,22 @@ void WriteTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteSignTJumpUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TLMan */
+    *dTmp = body[iBody].dSignTJumpUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteSignTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TLMan */
+    *dTmp = body[iBody].dSignTJumpLMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 
 void WriteTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TCore */
@@ -380,6 +402,27 @@ void WriteBLLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteShmodUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dShmodUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dK2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dImk2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 
 /* Heat Flows/Fluxes */
 void WriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -419,6 +462,13 @@ void WriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 void WriteHflowCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowCMB;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dTidalPowMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -478,7 +528,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TLMAN].dNeg = 1; // default units are K. 
   output[OUT_TLMAN].iNum = 1;
   fnWrite[OUT_TLMAN] = &WriteTLMan;
-  
+  /* TJumpUMan */
   sprintf(output[OUT_TJUMPUMAN].cName,"TJumpUMan");
   sprintf(output[OUT_TJUMPUMAN].cDescr,"Upper Mantle Temperature Jump");
   sprintf(output[OUT_TJUMPUMAN].cNeg,"K");
@@ -486,7 +536,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TJUMPUMAN].dNeg = 1; // default units are K. 
   output[OUT_TJUMPUMAN].iNum = 1;
   fnWrite[OUT_TJUMPUMAN] = &WriteTJumpUMan;
-
+  /* TJumpLMan */
   sprintf(output[OUT_TJUMPLMAN].cName,"TJumpLMan");
   sprintf(output[OUT_TJUMPLMAN].cDescr,"Lower Mantle Temperature Jump");
   sprintf(output[OUT_TJUMPLMAN].cNeg,"K");
@@ -494,6 +544,22 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TJUMPLMAN].dNeg = 1; // default units are K. 
   output[OUT_TJUMPLMAN].iNum = 1;
   fnWrite[OUT_TJUMPLMAN] = &WriteTJumpLMan;
+  /* SignTJumpUMan */
+  sprintf(output[OUT_SIGNTJUMPUMAN].cName,"SignTJumpUMan");
+  sprintf(output[OUT_SIGNTJUMPUMAN].cDescr,"Sign of Upper Mantle Temperature Jump");
+  sprintf(output[OUT_SIGNTJUMPUMAN].cNeg,"K");
+  output[OUT_SIGNTJUMPUMAN].bNeg = 1;
+  output[OUT_SIGNTJUMPUMAN].dNeg = 1; // default units are K. 
+  output[OUT_SIGNTJUMPUMAN].iNum = 1;
+  fnWrite[OUT_SIGNTJUMPUMAN] = &WriteSignTJumpUMan;
+  /* SignTJumpLMan */
+  sprintf(output[OUT_SIGNTJUMPLMAN].cName,"SignTJumpLMan");
+  sprintf(output[OUT_SIGNTJUMPLMAN].cDescr,"Sign of Lower Mantle Temperature Jump");
+  sprintf(output[OUT_SIGNTJUMPLMAN].cNeg,"K");
+  output[OUT_SIGNTJUMPLMAN].bNeg = 1;
+  output[OUT_SIGNTJUMPLMAN].dNeg = 1; // default units are K. 
+  output[OUT_SIGNTJUMPLMAN].iNum = 1;
+  fnWrite[OUT_SIGNTJUMPLMAN] = &WriteSignTJumpLMan;
   
   sprintf(output[OUT_TCMB].cName,"TCMB");
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
@@ -542,6 +608,30 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLLMAN].dNeg = 1; 
   output[OUT_BLLMAN].iNum = 1;
   fnWrite[OUT_BLLMAN] = &WriteBLLMan;
+  /* ShmodUMan */
+  sprintf(output[OUT_SHMODUMAN].cName,"ShmodUMan");
+  sprintf(output[OUT_SHMODUMAN].cDescr,"Shear Modulus Upper Mantle");
+  sprintf(output[OUT_SHMODUMAN].cNeg,"Pa");
+  output[OUT_SHMODUMAN].bNeg = 1;
+  output[OUT_SHMODUMAN].dNeg = 1; 
+  output[OUT_SHMODUMAN].iNum = 1;
+  fnWrite[OUT_SHMODUMAN] = &WriteShmodUMan;
+  /* K2Man */
+  sprintf(output[OUT_K2MAN].cName,"K2Man");
+  sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
+  sprintf(output[OUT_K2MAN].cNeg,"nd");
+  output[OUT_K2MAN].bNeg = 1;
+  output[OUT_K2MAN].dNeg = 1; 
+  output[OUT_K2MAN].iNum = 1;
+  fnWrite[OUT_K2MAN] = &WriteK2Man;
+  /* Imk2Man */
+  sprintf(output[OUT_IMK2MAN].cName,"Imk2Man");
+  sprintf(output[OUT_IMK2MAN].cDescr,"Imaginary Love Number k2 Mantle");
+  sprintf(output[OUT_IMK2MAN].cNeg,"nd");
+  output[OUT_IMK2MAN].bNeg = 1;
+  output[OUT_IMK2MAN].dNeg = 1; 
+  output[OUT_IMK2MAN].iNum = 1;
+  fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
 
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
@@ -592,6 +682,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWCMB].dNeg = 1;
   output[OUT_HFLOWCMB].iNum = 1;
   fnWrite[OUT_HFLOWCMB] = &WriteHflowCMB;
+  /* TidalPowMan */
+  sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
+  sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
+  sprintf(output[OUT_TIDALPOWMAN].cNeg,"W");
+  output[OUT_TIDALPOWMAN].bNeg = 1;
+  output[OUT_TIDALPOWMAN].dNeg = 1;
+  output[OUT_TIDALPOWMAN].iNum = 1;
+  fnWrite[OUT_TIDALPOWMAN] = &WriteTidalPowMan;
   /* TDotMan */
   sprintf(output[OUT_TDOTMAN].cName,"TDotMan");
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
@@ -645,7 +743,7 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
   /* Write out some global constants. */
   fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e EVOLCORE=%e EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);
-  fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC);
+  fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e STIFFNESS=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC,STIFFNESS);
   fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e THERMDIFFUMAN=%e cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
 }
 
@@ -691,11 +789,19 @@ double fdTCMB(BODY *body,int iBody) {
 }
 /* Get TJumpUMan */ 
 double fdTJumpUMan(BODY *body,int iBody) {
-    return body[iBody].dTUMan-TSURF;
+    return fabs(body[iBody].dTUMan-TSURF);
 }
 /* Get TJumpLMan */
 double fdTJumpLMan(BODY *body,int iBody) {
-    return body[iBody].dTCMB-body[iBody].dTLMan;
+    return fabs(body[iBody].dTCMB-body[iBody].dTLMan);
+}
+/* Get SignTJumpUMan */ 
+double fdSignTJumpUMan(BODY *body,int iBody) {
+    return (body[iBody].dTUMan-TSURF)/fabs(body[iBody].dTUMan-TSURF);
+}
+/* Get SignTJumpLMan */
+double fdSignTJumpLMan(BODY *body,int iBody) {
+    return (body[iBody].dTCMB-body[iBody].dTLMan)/fabs(body[iBody].dTCMB-body[iBody].dTLMan);
 }
 /* Get ViscUMan */
 double fdViscUMan(BODY *body,int iBody) {
@@ -711,13 +817,28 @@ double fdBLUMan(BODY *body,int iBody) {
 double fdBLLMan(BODY *body,int iBody) {
   return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
+double fdShmodUMan(BODY *body,int iBody) {
+    return (SHMODREF)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan));  //NEED to add melt effect.
+}
+double fdK2Man(BODY *body,int iBody) {
+    return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
+}
+double fdImk2Man(BODY *body,int iBody) {
+  double viscdyn=body[iBody].dViscUMan*(EDENSMAN); //dynamic viscosity.
+  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);
+  double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (STIFFNESS)*(1.0+ denom2) );
+  return imk2;
+}
+double fdTidalPowMan(BODY *body,int iBody) {
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+}
 
 /* Heat Fluxes/flows */
 double fdHfluxUMan(BODY *body,int iBody) {
-  return (THERMCONDUMAN)*body[iBody].dTJumpUMan/body[iBody].dBLUMan;
+  return (THERMCONDUMAN)*body[iBody].dSignTJumpUMan*body[iBody].dTJumpUMan/body[iBody].dBLUMan;
 }
 double fdHfluxLMan(BODY *body,int iBody) {
-  return (THERMCONDLMAN)*body[iBody].dTJumpLMan/body[iBody].dBLLMan;
+  return (THERMCONDLMAN)*body[iBody].dSignTJumpLMan*body[iBody].dTJumpLMan/body[iBody].dBLLMan;
 }
 double fdHfluxCMB(BODY *body,int iBody) {
   return fdHfluxLMan(body,iBody);
@@ -735,15 +856,12 @@ double fdHflowCMB(BODY *body,int iBody) {
 /*** These derivatives are called from the udpate matrix, format is fixed. ***/
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  //return -(100.0/1e9/YEARSEC);   //arbitrary for now.
-  //    return body[iBody].dPowRadiogMan;
   int iBody=iaBody[0];   //Is this correct?
-  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan-body[iBody].dHflowUMan)/((EMASSMAN)*(SPECHEATMAN));
+  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan)/((EMASSMAN)*(SPECHEATMAN));
 }
 
 /* Get TDotCore */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-    //return -(100.0/1e9/YEARSEC);   //arbitrary for now.
   int iBody=iaBody[0];   //Is this correct?
   return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE));   //NEED to add IC heat.
 }

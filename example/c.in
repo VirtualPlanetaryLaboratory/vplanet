@@ -3,22 +3,24 @@ sName		c			# Body's name
 saModules	eqtide radheat thermint  #interiorthermal		# Modules to apply, exact spelling required
 
 # Physical Properties
-dMass		-5.5			# Mass, negative -> Earth masses
-dRadius		-1.5			# Radius, negative -> Earth radii
-dRotPeriod	-10			# Rotation period, negative -> days
+dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
+dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Orbital Properties
-dSemi           0.0721			# Semi-major axis, negative -> AU
-dEcc            0.06			# Eccentricity
+dSemi           0.02     #0.0721			# Semi-major axis, negative -> AU
+dEcc            0.5      #0.06			# Eccentricity
 
 # Output
 saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $
 		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal $
-		    -TUMan -TMan -TLMan -TDotMan -TCMB -TCore -TDotCore -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan $
-		    -BLUMan -BLLMan -HfluxUMan -HfluxLMan -HfluxCMB -HflowUMan -HflowLMan -HflowCMB
+		    -TUMan -TMan -TLMan -TDotMan -TCMB -TCore -TDotCore $
+		    -TJumpUMan -TJumpLMan -SignTJumpUMan -SignTJumpLMan -ViscUMan -ViscLMan $
+		    -BLUMan -BLLMan -HfluxUMan -HfluxLMan -HfluxCMB -HflowUMan -HflowLMan -HflowCMB $
+		    -ShmodUMan -K2Man -Imk2Man -TidalPowMan
 
 # Output can be in any order and need only be unambiguous. 
 # Units of negative arguments are listed in the onboard help (./vplanet -h).

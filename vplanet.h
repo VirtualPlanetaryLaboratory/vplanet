@@ -214,8 +214,10 @@ typedef struct {
   double dTICB;            /**< Temperature ICB */
   double dBLUMan;          /**< UM TBL thickness */
   double dBLLMan;          /**< LM TBL thickness */
-  double dTJumpUMan;       /**< Temperature Jump across UMTBL */
-  double dTJumpLMan;       /**< Temperature Jump across LMTBL */
+  double dTJumpUMan;       /**< Abs Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
+  double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
+  double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dShmodUMan;       /**< Shear modulus UMTBL */
@@ -226,8 +228,8 @@ typedef struct {
   double dTliqLMan;        /**< Liquidus Temperature LMTBL */
   double dFmeltUMan;       /**< Melt fraction UMTBL */
   double dFmeltLMan;       /**< Melt fraction LMTBL */
-  double dLove2Man;        /**< Mantle k2 love number */
-  double dImLove2Man;      /**< Mantle Im(k2) love number */
+  double dK2Man;           /**< Mantle k2 love number */
+  double dImk2Man;         /**< Mantle Im(k2) love number */
   /* Time Derivatives & Gradients */
   double dTDotMan;         /**< Time deriv of mean mantle temp */
   double dTDotCore;        /**< time deriv of mean core temp */
@@ -244,6 +246,7 @@ typedef struct {
   double dHflowICB;        /**< hflow across ICB */
   double dHfluxSurf;       /**< hflux surface of mantle */
   double dHflowSurf;       /**< hflow surface of mantle */
+  double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
   /* Core Variables */
   double dRIC;             /**< IC radius */
   double dDOC;             /**< OC shell thickness */

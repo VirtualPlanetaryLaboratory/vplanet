@@ -30,7 +30,7 @@
 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30
-#define AUCM          1.49598e11
+#define AUCM          1.49598e11 // XXX Change to AUM
 #define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
@@ -187,14 +187,15 @@ typedef struct {
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
   double dZobl;           /**< cos(obliq) */
-  
+
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
   //char **saTidePerts;
-  double dTidalQ;	 /**< Boyd's Tidal Q */
+  double dImK2;          /**< Imaginary part of Love's K_2 */
+  double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
@@ -726,6 +727,7 @@ typedef void (*fnInitializeOptionsModule)(OPTIONS*,fnReadOption*);
 typedef void (*fnInitializeUpdateModule)(BODY*,UPDATE*,int);
 typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
+// XXX Make into fnFinalizeUpdateVarModule?
 typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateNumIsotopeModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateOblModule)(BODY*,UPDATE*,int*,int,int);
@@ -894,6 +896,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
+// XXX Obsolete?
 #define MODULEOPTEND        1900
 #define MODULEOUTEND        1900
 

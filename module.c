@@ -240,8 +240,7 @@ void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OP
     if (!body[iBody].bLagrange) {
       fprintf(stderr,"ERROR: Module LASKAR selected for %s, but LAGRANGE not selected.\n",body[iBody].cName);
       exit(EXIT_INPUT);
-    } else 
-      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesLagrangeLaskar;
+    }
   }
 }
 
@@ -260,21 +259,33 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
   }
 }
 
+void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+
+  if (body[iBody].bEqtide) {
+    if (!body[iBody].bThermint) 
+      body[iBody].dImK2=3*body[iBody].dK2/body[iBody].dTidalQ;
+    else
+      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesEqtideThermint;
+  }
+  printf("Im(k2)[%d] = %f\n",iBody,body[iBody].dImK2);
+}
+
+
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
   int iNumMulti=0;
 
-  if (module->iNumModules[iBody] > 1) {
+  if (module->iNumModules[iBody] > 1) 
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
     control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
 
-    // Now verify 
-    VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
-
-    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
-
-  }
-
+  // Now verify 
+  VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
+  
+  VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
+  
+  VerifyModuleMultiEqtideThermint(body,control,files,options,iBody,&iNumMulti);
+  
   control->Evolve.iNumMulti[iBody] = iNumMulti;
   if (control->Io.iVerbose >= VERBALL)
     fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
@@ -284,10 +295,15 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
+void PropertiesEqtideThermint(BODY *body,UPDATE *update,int iBody) {
+  // Add Peter's lines for dImK2
+}
+
+/* This does not seem to be necessary
 void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
-
+*/
 
 void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);

@@ -119,6 +119,8 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
 #define OUT_GAMMAROT	        1078
 #define OUT_GAMMAORB            1080
 
+#define OUT_IMK2                1082
+
 #define OUT_TIDALQ              1084
 #define OUT_TIDALTAU		1086
 #define OUT_TIDELOCK            1088

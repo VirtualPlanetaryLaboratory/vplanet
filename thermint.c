@@ -914,7 +914,8 @@ double fdViscUMan(BODY *body,int iBody) {
   return VISCREF*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdViscLMan(BODY *body,int iBody) {
-  return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
+  //  return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
+  return body[iBody].dViscUMan*VISCJUMPULM;  //this could be switched to be visc(TLMan).
 }
 /* Get Boundary Layer Thicknesses */
 double fdBLUMan(BODY *body,int iBody) {

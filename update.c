@@ -46,10 +46,8 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     dest[iBody].iNumSurfaceWaterMass = src[iBody].iNumSurfaceWaterMass;
     dest[iBody].iSurfaceWaterMass = src[iBody].iSurfaceWaterMass;
     
-    /* TODO
     dest[iBody].iNumLuminosity = src[iBody].iNumLuminosity;
     dest[iBody].iLuminosity = src[iBody].iLuminosity;    
-    */
     
     dest[iBody].iNumObl = src[iBody].iNumObl;
     dest[iBody].iObl = src[iBody].iObl;
@@ -99,7 +97,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum238UCore=0;
     update[iBody].iNum235UCore=0;
     update[iBody].iNumSurfaceWaterMass=0;
-    // TODO update[iBody].iNumLuminosity=0;
+    update[iBody].iNumLuminosity=0;
     update[iBody].iNumObl=0;
     update[iBody].iNumRot=0;
     update[iBody].iNumSemi=0;
@@ -439,7 +437,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    /* Luminosity: TODO
+    // Luminosity:
     update[iBody].iLuminosity = -1;
     if (update[iBody].iNumLuminosity) {
       update[iBody].iLuminosity = iVar;
@@ -468,7 +466,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    */
 
     // Obliquity
     

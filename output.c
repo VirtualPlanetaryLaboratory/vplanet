@@ -962,6 +962,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
   InitializeOutputAtmEsc(output,fnWrite);
+  InitializeOutputStellar(output,fnWrite);
 
 }
 

@@ -104,33 +104,36 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
-	for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	  if (update[iBody].iaType[iVar][iEqn] == 0) {
-	    /* The parameter does not require a derivative, but is 
-	       calculated explicitly as a function of age. */
-	    dVarNow=*update[iBody].pdVar[iVar];
-	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
-	    
-	    if (control->Evolve.bFirstStep) {
-	      dMin = integr.dTimeStep;
-	      control->Evolve.bFirstStep = 0;
-	    } else {
-	      dMinNow = dVarNow/(fabs(dVarNow - update[iBody].daDerivProc[iVar][iEqn])/integr.dTimeStep);
-	      if (dMinNow < dMin)
-		dMin = dMinNow;
-	    }
-	  } else {
-	    // The parameter is controlled by a time derivative
-	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
-	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
-		dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-		if (dMinNow < dMin) 
-		  dMin = dMinNow;
-	      }
-	    }
-	  }
-	}
+        for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+          if (update[iBody].iaType[iVar][iEqn] == 0) {
+            /* The parameter does not require a derivative, but is 
+               calculated explicitly as a function of age. */
+            dVarNow = *update[iBody].pdVar[iVar];
+            update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
+      
+            if (control->Evolve.bFirstStep) {
+              dMin = integr.dTimeStep;
+              control->Evolve.bFirstStep = 0;
+            } else {
+              // LUGER: ADDED CHECK TO PREVENT DIVISION BY ZERO
+              if (dVarNow != update[iBody].daDerivProc[iVar][iEqn]) {
+                dMinNow = dVarNow/(fabs(dVarNow - update[iBody].daDerivProc[iVar][iEqn])/integr.dTimeStep);
+                if (dMinNow < dMin)
+                  dMin = dMinNow;
+              }
+            }
+          } else {
+            // The parameter is controlled by a time derivative
+            for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
+              if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+              if (dMinNow < dMin) 
+                dMin = dMinNow;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -192,21 +195,21 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[0][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	// XXX Set update.dDxDtModule here?
-	control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+	      // XXX Set update.dDxDtModule here?
+	      control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
 
-	//control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
+	      //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
-      /* While we're in this loop, move each parameter to the midpoint 
-	 of the timestep */
+      /* While we're in this loop, move each parameter to the midpoint of the timestep */
       *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[0][iBody][iVar];
     }
   }
 
   /* First midpoint derivative.*/
   /* Now copy new parameters into control->Evolve.tmpBody, and 
-     calculate new auxiliary properties. XXX Unnecessary? 
-     UpdateTmpBody(control->Evolve.tmpBody,control,update); */
+  calculate new auxiliary properties. XXX Unnecessary? 
+  UpdateTmpBody(control->Evolve.tmpBody,control,update); */
+     
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
   /* Don't need this timestep info, so assign output to dFoo */
@@ -216,10 +219,10 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[1][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+	      control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       /* While we're in this loop, move each parameter to the midpoint 
-	 of the timestep based on the midpoint derivative. */
+	    of the timestep based on the midpoint derivative. */
       *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[1][iBody][iVar];
     }
   }
@@ -233,10 +236,10 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[2][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+	      control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       /* While we're in this loop, move each parameter to the end of 
-	 the timestep based on the second midpoint derivative. */
+	    the timestep based on the second midpoint derivative. */
       *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + *dDt*control->Evolve.daDeriv[2][iBody][iVar];
     }
   }
@@ -250,7 +253,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[3][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+	      control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
     }
   }
@@ -259,8 +262,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] + 
-      2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
-
+                                    2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
       *(update[iBody].pdVar[iVar]) += update[iBody].daDeriv[iVar]*(*dDt);
     }
   }

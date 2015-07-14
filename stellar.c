@@ -83,7 +83,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cDescr,"Saturated XUV Luminosity Fraction");
   sprintf(options[OPT_SATXUVFRAC].cDefault,"1e-3");
   options[OPT_SATXUVFRAC].dDefault = 1.e-3;
-  options[OPT_SATXUVFRAC].iType = 2;
+  options[OPT_SATXUVFRAC].iType = 0;
   options[OPT_SATXUVFRAC].iMultiFile = 1;
   fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
 
@@ -91,7 +91,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
   sprintf(options[OPT_LUMINOSITY].cDefault,"LSUN");
   options[OPT_LUMINOSITY].dDefault = LSUN;
-  options[OPT_LUMINOSITY].iType = 2;
+  options[OPT_LUMINOSITY].iType = 0;
   options[OPT_LUMINOSITY].iMultiFile = 1;
   options[OPT_LUMINOSITY].dNeg = LSUN;
   sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
@@ -114,7 +114,6 @@ void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFi
   /* Nothing */
 }
 
-/* *** TODO! ***
 void VerifyLuminosity(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   update[iBody].iaType[update[iBody].iLuminosity][0] = 1;
@@ -122,10 +121,9 @@ void VerifyLuminosity(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   update[iBody].iaBody[update[iBody].iLuminosity][0] = malloc(update[iBody].iNumBodies[update[iBody].iLuminosity][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
 
-  update[iBody].pdDLuminosityDt = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];
-  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdDLuminosityDt;
+  update[iBody].pdLuminosity = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
+  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                          // NOTE: Same here!
 }
-*/
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
@@ -141,7 +139,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* Stellar is active for this body if this subroutine is called. */
   
   if (body[iBody].dLuminosity > 0) {
-    // TODO VerifyLuminosity(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyLuminosity(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bStellar = 1;
   }
   
@@ -161,24 +159,20 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 /**************** STELLAR update ****************/
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {  
-  /* TODO!
   if (body[iBody].dLuminosity > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
   }
-  */
 }
 
 void FinalizeUpdateEccStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
 
-/* TODO!
 void FinalizeUpdateLuminosityStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iNumLuminosity = (*iEqn)++;
 }
-*/
       
 void FinalizeUpdateOblStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
@@ -325,7 +319,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyStellar;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
-  // TODO! module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
+  module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionStellar;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionStellar;
@@ -334,8 +328,9 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 
 /************* STELLAR Functions ************/
 
-double fdDLuminosityDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  // TODO!
+double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+  // TODO: Add evolution here.
+  return body[0].dLuminosity;
 }
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

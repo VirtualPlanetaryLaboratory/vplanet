@@ -418,14 +418,12 @@ typedef struct {
   double *pdDSurfaceWaterMassDt;
 
   /* STELLAR */ 
-         
-  // TODO!
-  // int iLuminosity;           /**< Variable # Corresponding to the luminosity */
-  // int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
+  int iLuminosity;           /**< Variable # Corresponding to the luminosity */
+  int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
-  // double *pdDLuminosityDt;
+  double *pdLuminosity;
 
 } UPDATE;
 
@@ -673,7 +671,7 @@ typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
-// TODO typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -744,7 +742,7 @@ typedef struct {
   fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
   fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
-  // TODO fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
+  fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
     
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;

@@ -76,7 +76,7 @@ void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* Stellar functions */
 void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,int,int);
-// TODO! double fdDLuminosityDt(BODY*,SYSTEM*,int*,int);
+double fdLuminosity(BODY*,SYSTEM*,int*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

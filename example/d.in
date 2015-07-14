@@ -1,18 +1,6 @@
 # Gl581 d
-#<<<<<<< HEAD
-#saOutputOrder -40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT $
-#
-#  		Time Semim $
-# Damn! I put a $ at the start of this line, but it didn't work!
-#
-#		Ecce Obli$
-#		 -SurfEnFluxEqtide$
-#
-#		 -SurfEnFluxRadheat 
-#=======
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
-#>>>>>>> bc3ede45b7ef6aa4ad24062e6456bb6b1042e81a
 saOutputOrder Time Semim Ecce Obli -Rotper -SurfEnFluxEqtide drotperdte imk2
 
 # The order of options in a file is unimportant

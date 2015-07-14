@@ -15,7 +15,7 @@
 #define LASKAR        4
 #define STELLAR       5
 #define DYNAMO        6
-#define THERMAL       7
+#define THERMINT      7
 #define EBM           8
 
 /* Fundamental constants */
@@ -103,6 +103,9 @@
 #define VNUM232THCORE   1106
 #define VNUM238UCORE    1107
 #define VNUM235UCORE    1108
+/* INTERIOR THERMAL */   // Use 1200's ok??
+#define VTMAN     1201
+#define VTCORE    1202
 
 /* Now define the structs */
 
@@ -117,6 +120,7 @@ typedef struct {
   double dMaxSteps;
 } PHOTOCHEM;
 
+/* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   char cType[OPTLEN];    /**< Type of object N/I */
@@ -167,6 +171,7 @@ typedef struct {
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
+  double dTidePower;     /**< Body's Internal Tidal Power Dissipation */
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
@@ -208,8 +213,58 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  int bThermint;
-
+  /* Interior Thermal Parameters */
+  int bThermint;    /**< Apply Module THERMINT? */
+  double dTMan;            /**< Temperature Mantle AVE */
+  double dTCore;           /**< Temperature Core AVE */
+  double dTUMan;           /**< Temperature UMTBL */
+  double dTLMan;           /**< Temperature LMTBL */
+  double dTCMB;            /**< Temperature CMB */
+  double dTICB;            /**< Temperature ICB */
+  double dBLUMan;          /**< UM TBL thickness */
+  double dBLLMan;          /**< LM TBL thickness */
+  double dTJumpUMan;       /**< Abs Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
+  double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
+  double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
+  double dViscUMan;        /**< Viscosity UMTBL */
+  double dViscLMan;        /**< Viscosity LMTBL */
+  double dShmodUMan;       /**< Shear modulus UMTBL */
+  double dShmodLMan;       /**< Shear modulus LMTBL */
+  double dTsolUMan;        /**< Solidus Temperature UMTBL */
+  double dTliqUMan;        /**< Liquidus Temperature UMTBL */
+  double dTsolLMan;        /**< Solidus Temperature LMTBL */
+  double dTliqLMan;        /**< Liquidus Temperature LMTBL */
+  double dFMeltUMan;       /**< Melt fraction UMTBL */
+  double dFMeltLMan;       /**< Melt fraction LMTBL */
+  double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
+  double dK2Man;           /**< Mantle k2 love number */
+  double dImk2Man;         /**< Mantle Im(k2) love number */
+  /* Time Derivatives & Gradients */
+  double dTDotMan;         /**< Time deriv of mean mantle temp */
+  double dTDotCore;        /**< time deriv of mean core temp */
+  double dHfluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
+  double dHflowUMan;       /**< hflow UMTBL */
+  double dHfluxLMan;       /**< hflux lower mantle thermal boundary layer (UMTBL) */
+  double dHflowLMan;       /**< hflow LMTBL */
+  double dHfluxCMB;        /**< hflux CMB */
+  double dHflowCMB;        /**< hflow CMB */
+  double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
+  double dHflowTidalCore;  /**< hflow tidal dissipation in core */
+  double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
+  double dHflowLatentIC;   /**< latent hflow from solidification of IC */
+  double dHflowICB;        /**< hflow across ICB */
+  double dHfluxSurf;       /**< hflux surface of mantle */
+  double dHflowSurf;       /**< hflow surface of mantle */
+  double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
+  /* Core Variables */
+  double dRIC;             /**< IC radius */
+  double dDOC;             /**< OC shell thickness */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dThermConductOC;  /**< Thermal conductivity OC */
+  double dThermConductIC;  /**< Thermal conductivity IC */
+  
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -362,7 +417,7 @@ typedef struct {
     double *pdD232ThNumManDt;
     double *pdD238UNumManDt;
     double *pdD235UNumManDt;
-
+    /* RADHEAT CORE */
     int i40KCore;
     int i232ThCore;
     int i238UCore;
@@ -380,17 +435,16 @@ typedef struct {
     double *pdD238UNumCoreDt;
     double *pdD235UNumCoreDt;
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      potassium-40's derivative due to RADHEAT. */
-  double *pdD40KNumDt;  
+    /* THERMINT */
+    int iTMan;          /**< Variable # Corresponding to Tman */
+    int iNumTMan;       /**< Number of Equations Affecting TMan */
+    double dTDotMan;    /**< TMan time Derivative */
+    double *pdTDotMan;
+    int iTCore;          /**< Variable # Corresponding to Tman */
+    int iNumTCore;       /**< Number of Equations Affecting TCore */
+    double dTDotCore;    /**< TCore time Derivative */
+    double *pdTDotCore;
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      thorium-232's derivative due to RADHEAT. */
-  double *pdD232ThNumDt;
-
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      uranium-40's derivative due to RADHEAT. */
-  double *pdD238UNumDt;
 } UPDATE;
 
 typedef struct {
@@ -408,11 +462,14 @@ typedef struct {
   int bTideLock;        /**< Halt if Tide-locked? */
   int bSync;            /**< Halt if Rotation Becomes Synchronous? */
 
-  /* RADHEAT */
-  int dMin40KPower;     /**< Halt at this Potassium-40 Power */
-  int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
-  int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower; 
+    /* RADHEAT */
+    int dMin40KPower;     /**< Halt at this Potassium-40 Power */
+    int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
+    int dMin238UPower;    /**< Halt at this Uranium-238 Power */
+    int dMin235UPower; 
+    /* THERMINT */
+    int dMinTMan;     /**< Halt at this TMan */
+    int dMinTCore;     /**< Halt at this TCore */
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -429,7 +486,8 @@ typedef struct {
     int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
     int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
     int iAngle;         /**< 0=rad; 1=deg */ 
-    int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
+    int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */
+    int iTemp;
 } UNITS;
 
 typedef void (*fnAuxPropsModule)(BODY*,UPDATE*,int);
@@ -628,7 +686,10 @@ typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 
@@ -687,19 +748,18 @@ typedef struct {
 
   /*! These functions assign Equation and Module information regarding 
     potassium-40 in the UPDATE struct. */ 
-  fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
-  /*! These functions assign Equation and Module information regarding 
-    thorium-232 in the UPDATE struct. */ 
-  fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
-  /*! These functions assign Equation and Module information regarding 
-    uranium-238 in the UPDATE struct. */ 
-  fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
-  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
-  fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
-  fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
-  fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
-  fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
-  
+    fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
+    fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
+    fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+    fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+    fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
+    fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
+    fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+    fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+
+    fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
+    fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
+ 
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 
@@ -746,6 +806,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "thermint.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

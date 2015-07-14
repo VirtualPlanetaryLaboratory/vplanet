@@ -47,6 +47,9 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
   module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+
+  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
   
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -74,6 +77,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bEqtide)
     iNumModules++;
   if (body[iBody].bRadheat)
+    iNumModules++;
+  if (body[iBody].bThermint)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -109,7 +114,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
   module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));  
+  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
+
+  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
+  
   for(iModule = 0; iModule < iNumModules; iModule++) {
     module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
@@ -123,7 +132,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-
+    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
@@ -139,6 +149,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
+  }
+  if (body[iBody].bThermint) {
+      AddModuleThermint(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = THERMINT;
   }
 }
 
@@ -168,6 +182,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
+	body[iFile-1].bThermint = 1;
       } else {
 	if (control->Io.iVerbose >= VERBERR)
 	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -217,7 +233,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,OP
 
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) 
-      body[iBody].dImK2=3*body[iBody].dK2/body[iBody].dTidalQ;
+      body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
     else
       control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesEqtideThermint;
   }
@@ -250,7 +266,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  */
 
 void PropertiesEqtideThermint(BODY *body,UPDATE *update,int iBody) {
-  // Add Peter's lines for dImK2
+    body[iBody].dImK2 = fdImk2Man(body,iBody);
+    body[iBody].dTidePower = fdCPLTidePower(body,iBody);
 }
 
 /* This does not seem to be necessary

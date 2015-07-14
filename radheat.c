@@ -2101,7 +2101,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
-  
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 

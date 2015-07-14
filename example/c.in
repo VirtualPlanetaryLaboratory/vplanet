@@ -61,4 +61,5 @@ d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 d235UNumCore	-1
 
 # THERMINT inputs.
-#dTMan  2500.0
+dTMan  2500.0
+dViscRatioMan 1.0

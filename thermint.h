@@ -75,8 +75,8 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
-#define VISCREF          6e7           //[m2/s] reference kinematic mantle viscosity
-#define VISCJUMPULM      2.0           //[nd] viscosity jump from upper to lower mantle
+#define VISCREF          7e7 //6e7           //[m2/s] reference kinematic mantle viscosity
+#define VISCJUMPULM      5.6  //2.0           //[nd] viscosity jump from upper to lower mantle
 #define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
@@ -132,13 +132,14 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TJUMPLMAN       1219   //Temperature Jump across LMTBL
 #define OPT_VISCUMAN        1220   //Viscosity UMTBL
 #define OPT_VISCLMAN        1221   //Viscosity LMTBL
-#define OPT_SHMODUMAN       1222   //Shear modulus UMTBL
-#define OPT_SHMODLMAN       1223   //Shear modulus LMTBL
-#define OPT_FMELTUMAN       1224   //Melt fraction UMTBL
-#define OPT_FMELTLMAN       1225   //Melt fraction LMTBL
-#define OPT_MELTFACTORUMAN  1226   //Melt fraction UMTBL
-#define OPT_K2MAN           1227   //Mantle k2 love number
-#define OPT_IMK2MAN         1228   //Mantle Im(k2) love number
+#define OPT_VISCRATIOMAN    1222   //Viscosity ratio UM 2 LM
+#define OPT_SHMODUMAN       1223   //Shear modulus UMTBL
+#define OPT_SHMODLMAN       1224   //Shear modulus LMTBL
+#define OPT_FMELTUMAN       1225   //Melt fraction UMTBL
+#define OPT_FMELTLMAN       1226   //Melt fraction LMTBL
+#define OPT_MELTFACTORUMAN  1227   //Melt fraction UMTBL
+#define OPT_K2MAN           1228   //Mantle k2 love number
+#define OPT_IMK2MAN         1229   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1233   //time deriv of mean core temp
@@ -223,13 +224,14 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_SIGNTJUMPLMAN   1221   //Temperature Jump across LMTBL
 #define OUT_VISCUMAN        1222   //Viscosity UMTBL
 #define OUT_VISCLMAN        1223   //Viscosity LMTBL
-#define OUT_SHMODUMAN       1224   //Shear modulus UMTBL
-#define OUT_SHMODLMAN       1225   //Shear modulus LMTBL
-#define OUT_FMELTUMAN       1226   //Melt fraction UMTBL
-#define OUT_FMELTLMAN       1227   //Melt fraction LMTBL
-#define OUT_MELTFACTORUMAN  1228   //Melt factor UMTBL
-#define OUT_K2MAN           1229   //Mantle k2 love number
-#define OUT_IMK2MAN         1230   //Mantle Im(k2) love number
+#define OUT_VISCRATIOMAN    1224   //Viscosity ratio UM 2 LM
+#define OUT_SHMODUMAN       1225   //Shear modulus UMTBL
+#define OUT_SHMODLMAN       1226   //Shear modulus LMTBL
+#define OUT_FMELTUMAN       1227   //Melt fraction UMTBL
+#define OUT_FMELTLMAN       1228   //Melt fraction LMTBL
+#define OUT_MELTFACTORUMAN  1229   //Melt factor UMTBL
+#define OUT_K2MAN           1230   //Mantle k2 love number
+#define OUT_IMK2MAN         1231   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1233   //time deriv of mean core temp

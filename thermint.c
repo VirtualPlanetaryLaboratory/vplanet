@@ -41,11 +41,11 @@ void ReadTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)   //if input value lt 0
       body[iFile-1].dTMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-   else
-       body[iFile-1].dTMan = dTmp*fdUnitsTemp(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    else
+      body[iFile-1].dTMan = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+    if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dTMan = options->dDefault;
 }
 
@@ -59,13 +59,28 @@ void ReadTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     if (dTmp < 0)   //if input value lt 0
       body[iFile-1].dTCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
    else
-       body[iFile-1].dTCore = dTmp*fdUnitsTemp(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+       body[iFile-1].dTCore = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dTCore = options->dDefault;
 }
+void ReadViscRatioMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
 
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dViscRatioMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dViscRatioMan = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dViscRatioMan = options->dDefault;
+}
 
 /* Initiatlize Input Options */
 
@@ -92,6 +107,16 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TCORE].dDefault = 6000.0d; 
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
   fnRead[OPT_TCORE] = &ReadTCore;
+   /* ViscRatioMan */
+  sprintf(options[OPT_VISCRATIOMAN].cName,"dViscRatioMan");
+  sprintf(options[OPT_VISCRATIOMAN].cDescr,"ViscRatioMan");
+  sprintf(options[OPT_VISCRATIOMAN].cDefault,"Default=1");
+  options[OPT_VISCRATIOMAN].iType = 2;
+  options[OPT_VISCRATIOMAN].iMultiFile = 1;
+  options[OPT_VISCRATIOMAN].dNeg = 1.0;
+  options[OPT_VISCRATIOMAN].dDefault = 1.0; 
+  sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default=1");
+  fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
 
 }
 
@@ -393,6 +418,14 @@ void WriteViscLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteViscRatioMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get TLMan */
+    *dTmp = body[iBody].dViscRatioMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 void WriteBLUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dBLUMan;
   if (output->bDoNeg[iBody]) {
@@ -617,7 +650,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCUMAN].dNeg = 1; 
   output[OUT_VISCUMAN].iNum = 1;
   fnWrite[OUT_VISCUMAN] = &WriteViscUMan;
-
+  /* ViscLMan */
   sprintf(output[OUT_VISCLMAN].cName,"ViscLMan");
   sprintf(output[OUT_VISCLMAN].cDescr,"Lower Mantle Viscosity");
   sprintf(output[OUT_VISCLMAN].cNeg,"m^2/s");
@@ -625,6 +658,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCLMAN].dNeg = 1; 
   output[OUT_VISCLMAN].iNum = 1;
   fnWrite[OUT_VISCLMAN] = &WriteViscLMan;
+  /* ViscRatioMan */
+  sprintf(output[OUT_VISCRATIOMAN].cName,"ViscRatioMan");
+  sprintf(output[OUT_VISCRATIOMAN].cDescr,"Mantle Viscosity Ratio");
+  sprintf(output[OUT_VISCRATIOMAN].cNeg,"nd");
+  output[OUT_VISCRATIOMAN].bNeg = 1;
+  output[OUT_VISCRATIOMAN].dNeg = 1; 
+  output[OUT_VISCRATIOMAN].iNum = 1;
+  fnWrite[OUT_VISCRATIOMAN] = &WriteViscRatioMan;
 
   sprintf(output[OUT_BLUMAN].cName,"BLUMan");
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
@@ -873,7 +914,7 @@ double fdViscUMan(BODY *body,int iBody) {
   return VISCREF*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdViscLMan(BODY *body,int iBody) {
-  return body[iBody].dViscUMan*VISCJUMPULM;  //this could be switched to be visc(TLMan).
+  return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
 }
 /* Get Boundary Layer Thicknesses */
 double fdBLUMan(BODY *body,int iBody) {

@@ -229,6 +229,7 @@ typedef struct {
   double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
+  double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
   double dTsolUMan;        /**< Solidus Temperature UMTBL */

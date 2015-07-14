@@ -171,6 +171,7 @@ typedef struct {
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
+  double dTidePower;     /**< Body's Internal Tidal Power Dissipation */
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
@@ -234,8 +235,9 @@ typedef struct {
   double dTliqUMan;        /**< Liquidus Temperature UMTBL */
   double dTsolLMan;        /**< Solidus Temperature LMTBL */
   double dTliqLMan;        /**< Liquidus Temperature LMTBL */
-  double dFmeltUMan;       /**< Melt fraction UMTBL */
-  double dFmeltLMan;       /**< Melt fraction LMTBL */
+  double dFMeltUMan;       /**< Melt fraction UMTBL */
+  double dFMeltLMan;       /**< Melt fraction LMTBL */
+  double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
   double dK2Man;           /**< Mantle k2 love number */
   double dImk2Man;         /**< Mantle Im(k2) love number */
   /* Time Derivatives & Gradients */

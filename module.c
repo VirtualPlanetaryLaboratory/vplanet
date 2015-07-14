@@ -233,7 +233,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,OP
 
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) 
-      body[iBody].dImK2=3*body[iBody].dK2/body[iBody].dTidalQ;
+      body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
     else
       control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesEqtideThermint;
   }
@@ -266,7 +266,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  */
 
 void PropertiesEqtideThermint(BODY *body,UPDATE *update,int iBody) {
-  // Add Peter's lines for dImK2
+    body[iBody].dImK2 = fdImk2Man(body,iBody);
+    body[iBody].dTidePower = fdCPLTidePower(body,iBody);
 }
 
 /* This does not seem to be necessary

@@ -68,7 +68,7 @@
 #define THERMDIFFUMAN    THERMCONDUMAN/(EDENSMAN*SPECHEATMAN) //[m^2/s] thermal diffusivity mantle.
 #define THERMDIFFLMAN    THERMDIFFUMAN
 #define SPECLATENTICB    750e3              //[J/kg] specific latent heat release at ICB
-#define SPECLATENTMAN    320e3              //[J/kg] specific latent heat release at ICB
+#define SPECLATENTMAN    320e3              //[J/kg] specific latent heat release by mantle solidification.
 /* CONVECTION CONSTANTS */
 #define RACRIT           660.          //[-] critical rayleigh number for spherical convection.
 #define CONVEXPON        1./3          //[nd] convective cooling nusselt exponent "beta"
@@ -83,7 +83,6 @@
 #define MELTDELTA        6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
 #define MELTGAMMA        6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
 #define MELTXI           5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
-
 /* TIDAL PROPERTIES */
 #define STIFFNESS        3.1217e11     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
 /* MELTING CONSTANTS */
@@ -95,6 +94,7 @@
 #define DVLIQDTM         +8e17         //[m3/K] change in mantle liquid volume with T_m approximated (Driscoll&B 2015)
 #define DLIND            7000.0*KM     //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
 #define TREFLIND         5600.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
+#define DVLIQDTEMP       8e17          //[m^3/K] approximation of mantle DV_liq/DT.
 /* ADIABATIC PROPERTIES */
 #define ADGRADMAN        (0.5)/(KM)        //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
 #define DADCORE          6340.0*KM     //[m] liq iron core adiabatic length scale (DB15 eq A22)
@@ -136,8 +136,9 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SHMODLMAN       1223   //Shear modulus LMTBL
 #define OPT_FMELTUMAN       1224   //Melt fraction UMTBL
 #define OPT_FMELTLMAN       1225   //Melt fraction LMTBL
-#define OPT_K2MAN        1226   //Mantle k2 love number
-#define OPT_IMK2MAN      1227   //Mantle Im(k2) love number
+#define OPT_MELTFACTORUMAN  1226   //Melt fraction UMTBL
+#define OPT_K2MAN           1227   //Mantle k2 love number
+#define OPT_IMK2MAN         1228   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1233   //time deriv of mean core temp
@@ -226,8 +227,9 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_SHMODLMAN       1225   //Shear modulus LMTBL
 #define OUT_FMELTUMAN       1226   //Melt fraction UMTBL
 #define OUT_FMELTLMAN       1227   //Melt fraction LMTBL
-#define OUT_K2MAN           1228   //Mantle k2 love number
-#define OUT_IMK2MAN         1229   //Mantle Im(k2) love number
+#define OUT_MELTFACTORUMAN  1228   //Melt factor UMTBL
+#define OUT_K2MAN           1229   //Mantle k2 love number
+#define OUT_IMK2MAN         1230   //Mantle Im(k2) love number
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1232   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1233   //time deriv of mean core temp
@@ -273,6 +275,9 @@ void WriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,cha
 void WriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFMeltLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMeltfactorUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -311,7 +316,8 @@ double fdBLUMan(BODY*,int);
 double fdBLLMan(BODY*,int);
 double fdShmodUMan(BODY*,int);
 double fdShmodLMan(BODY*,int);
-double fdFmeltUMan(BODY*,int);
+double fdFMeltUMan(BODY*,int);
+double fdMeltfactorUMan(BODY*,int);
 double fdTsolUMan(BODY*,int);
 double fdTliqUMan(BODY*,int);
 double fdTsolLMan(BODY*,int);
@@ -325,7 +331,7 @@ double fdHflowUMan(BODY*,int);
 double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
-double fdHflowLatentMan(BODY*,int);
+double fdHflowLatentMan(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
 double fdHflowSurfMan(BODY*,int);
 
@@ -333,3 +339,11 @@ void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);
+#define max(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+#define min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })

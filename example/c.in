@@ -23,7 +23,9 @@ saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide $
 		    -TJumpUMan -TJumpLMan -SignTJumpUMan -SignTJumpLMan -ViscUMan -ViscLMan $
 		    -BLUMan -BLLMan -HflowUMan -HflowLMan -HflowCMB $
 		    -HflowLatentMan -RadPowerMan -RadPowerCore -ShmodUMan -FMeltUMan -MeltfactorUMan $
-		    -K2Man -Imk2Man -TidalPowMan ImK2 -PowerEqTide
+		    -K2Man -Imk2Man -TidalPowMan ImK2 -PowerEqTide DepthMeltMan TDepthMeltMan HflowMeltMan $
+	             RIC
+# HflowLatentIC PowerGravIC DRICDTCMB
 # -HfluxUMan -HfluxLMan -HfluxCMB
 
 # Output can be in any order and need only be unambiguous. 
@@ -41,7 +43,7 @@ saTidePerts	star			# Body name(s) of tidal perturbers
 d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
 #d40KMassMan    -1
 #d40KPowerMan   -1
-d40KNumCore     -1			# Numer of potassium-40 atoms, negative -> Earth
+d40KNumCore     -2			# Numer of potassium-40 atoms, negative -> Earth
 #d40KPowerCore   -1
 #d40KMassCore   -1
 ### 232Th
@@ -61,5 +63,6 @@ d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 d235UNumCore	-1
 
 # THERMINT inputs.
-dTMan  2500.0
-dViscRatioMan 1.0
+dTMan  3000.0  #2500.0
+dViscRatioMan 4.0  #5.6
+dEruptEff 0.2

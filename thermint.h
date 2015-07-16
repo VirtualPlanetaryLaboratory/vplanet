@@ -69,6 +69,7 @@
 #define THERMDIFFLMAN    THERMDIFFUMAN
 #define SPECLATENTICB    750e3              //[J/kg] specific latent heat release at ICB
 #define SPECLATENTMAN    320e3              //[J/kg] specific latent heat release by mantle solidification.
+#define SPECPOWGRAVIC    3e5           //[J/kg]  Gravitational power release during IC growth.
 /* CONVECTION CONSTANTS */
 #define RACRIT           660.          //[-] critical rayleigh number for spherical convection.
 #define CONVEXPON        1./3          //[nd] convective cooling nusselt exponent "beta"
@@ -96,7 +97,7 @@
 #define TREFLIND         5600.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
 #define DVLIQDTEMP       8e17          //[m^3/K] approximation of mantle DV_liq/DT.
 /* ADIABATIC PROPERTIES */
-#define ADGRADMAN        (0.5)/(KM)        //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
+#define ADGRADMAN        (0.5)/(KM)    //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
 #define DADCORE          6340.0*KM     //[m] liq iron core adiabatic length scale (DB15 eq A22)
 #define GRUNEISEN        1.3           //[nd] core gruneisen parameter
 #define ADJUMPM2UM       0.7           //[nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM"
@@ -138,22 +139,28 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_FMELTUMAN       1225   //Melt fraction UMTBL
 #define OPT_FMELTLMAN       1226   //Melt fraction LMTBL
 #define OPT_MELTFACTORUMAN  1227   //Melt fraction UMTBL
-#define OPT_K2MAN           1228   //Mantle k2 love number
-#define OPT_IMK2MAN         1229   //Mantle Im(k2) love number
+#define OPT_DEPTHMELTMAN    1228   //Depth to base of UM melt region.
+#define OPT_TDEPTHMELTMAN   1229   //Temp at base of UM melt region.
+#define OPT_TJUMPMELTMAN    1230   //Temp jump across UM melt region.
+#define OPT_K2MAN           1231   //Mantle k2 love number
+#define OPT_IMK2MAN         1232   //Mantle Im(k2) love number
+#define OPT_ERUPTEFF        1233   //Mantle Melt Eruption Efficiency
 /* Time Derivatives & Gradients */
-#define OPT_TDOTMAN         1232   //Time deriv of mean mantle temp
-#define OPT_TDOTCORE        1233   //time deriv of mean core temp
-#define OPT_HFLUXUMAN       1234   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OPT_HFLOWUMAN       1235   //hflow UMTBL
-#define OPT_HFLUXLMAN       1236   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OPT_HFLOWLMAN       1237   //hflow UMTBL
-#define OPT_HFLUXCMB        1238   //hflux lower mantle TBL = CMB
-#define OPT_HFLOWCMB        1239   //hflow LMTBL=CMB
-#define OPT_HFLOWTIDALMAN   1242   //hflow tidal dissipation in mantle
-#define OPT_HFLOWTIDALCORE  1243   //hflow tidal dissipation in core
-#define OPT_HFLOWLATENTMAN  1244   //latent hflow from solidification of mantle
-#define OPT_HFLOWLATENTIC   1250   //latent hflow from solidification of IC
-#define OPT_HFLOWICB        1251   //hflow across ICB
+#define OPT_TDOTMAN         1240   //Time deriv of mean mantle temp
+#define OPT_TDOTCORE        1241   //time deriv of mean core temp
+#define OPT_HFLUXUMAN       1242   //hflux upper mantle thermal boundary layer (UMTBL)
+#define OPT_HFLOWUMAN       1243   //hflow UMTBL
+#define OPT_HFLUXLMAN       1244   //hflux upper mantle thermal boundary layer (UMTBL)
+#define OPT_HFLOWLMAN       1245   //hflow UMTBL
+#define OPT_HFLUXCMB        1246   //hflux lower mantle TBL = CMB
+#define OPT_HFLOWCMB        1247   //hflow LMTBL=CMB
+#define OPT_HFLOWTIDALMAN   1248   //hflow tidal dissipation in mantle
+#define OPT_HFLOWTIDALCORE  1249   //hflow tidal dissipation in core
+#define OPT_HFLOWLATENTMAN  1250   //latent hflow from solidification of mantle
+#define OPT_HFLOWMELTMAN    1251   //Melt hflow from mantle
+#define OPT_HFLOWLATENTIC   1252   //latent hflow from solidification of IC
+#define OPT_POWERGRAVIC     1253   //Gravitation Power release from solidification of IC
+#define OPT_HFLOWICB        1254   //hflow across ICB
 #define OPT_HFLUXSURF       1260   //hflux surface of mantle
 #define OPT_HFLOWSURF       1261   //hflow surface of mantle
 #define OPT_TIDALPOWMAN     1262   //Tidal Power Mantle
@@ -172,6 +179,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscRatioMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -230,28 +239,35 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_FMELTUMAN       1227   //Melt fraction UMTBL
 #define OUT_FMELTLMAN       1228   //Melt fraction LMTBL
 #define OUT_MELTFACTORUMAN  1229   //Melt factor UMTBL
-#define OUT_K2MAN           1230   //Mantle k2 love number
-#define OUT_IMK2MAN         1231   //Mantle Im(k2) love number
+#define OUT_DEPTHMELTMAN    1230   //Depth to base of UM melt region.
+#define OUT_TDEPTHMELTMAN   1231   //Temp at base of UM melt region.
+#define OUT_TJUMPMELTMAN    1232   //Temp jump across UM melt region.
+#define OUT_K2MAN           1233   //Mantle k2 love number
+#define OUT_IMK2MAN         1234   //Mantle Im(k2) love number
+#define OUT_ERUPTEFF        1235   //Mantle Melt Eruption Efficiency
 /* Time Derivatives & Gradients */
-#define OUT_TDOTMAN         1232   //Time deriv of mean mantle temp
-#define OUT_TDOTCORE        1233   //time deriv of mean core temp
-#define OUT_HFLUXUMAN       1234   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OUT_HFLOWUMAN       1235   //hflow UMTBL
-#define OUT_HFLUXLMAN       1236   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OUT_HFLOWLMAN       1237   //hflow UMTBL
-#define OUT_HFLUXCMB        1238   //hflux lower mantle TBL = CMB
-#define OUT_HFLOWCMB        1239   //hflow LMTBL=CMB
-#define OUT_HFLOWTIDALMAN   1242   //hflow tidal dissipation in mantle
-#define OUT_HFLOWTIDALCORE  1243   //hflow tidal dissipation in core
-#define OUT_HFLOWLATENTMAN  1244   //latent hflow from solidification of mantle
-#define OUT_HFLOWLATENTIC   1250   //latent hflow from solidification of IC
-#define OUT_HFLOWICB        1251   //hflow across ICB
+#define OUT_TDOTMAN         1240   //Time deriv of mean mantle temp
+#define OUT_TDOTCORE        1241   //time deriv of mean core temp
+#define OUT_HFLUXUMAN       1242   //hflux upper mantle thermal boundary layer (UMTBL)
+#define OUT_HFLOWUMAN       1243   //hflow UMTBL
+#define OUT_HFLUXLMAN       1244   //hflux upper mantle thermal boundary layer (UMTBL)
+#define OUT_HFLOWLMAN       1245   //hflow UMTBL
+#define OUT_HFLUXCMB        1246   //hflux lower mantle TBL = CMB
+#define OUT_HFLOWCMB        1247   //hflow LMTBL=CMB
+#define OUT_HFLOWTIDALMAN   1248   //hflow tidal dissipation in mantle
+#define OUT_HFLOWTIDALCORE  1249   //hflow tidal dissipation in core
+#define OUT_HFLOWLATENTMAN  1250   //latent hflow from solidification of mantl
+#define OUT_HFLOWMELTMAN    1251   //Melt hflow from mantle
+#define OUT_HFLOWLATENTIC   1252   //latent hflow from solidification of IC
+#define OUT_POWERGRAVIC     1253   //Gravitation Power release from solidification of IC
+#define OUT_HFLOWICB        1254   //hflow across ICB
 #define OUT_HFLUXSURF       1260   //hflux surface of mantle
 #define OUT_HFLOWSURF       1261   //hflow surface of mantle
 #define OUT_TIDALPOWMAN     1262   //Tidal Power Mantle
 /* Core Variables */
 #define OUT_RIC             1270   //IC radius
 #define OUT_DOC             1271   //OC shell thickness
+#define OUT_DRICDTCMB       1272   //d(R_ic)/d(T_cmb)
 #define OUT_CHIOC           1280   //OC light element concentration chi.
 #define OUT_CHIIC           1281   //IC light element concentration chi.
 #define OUT_THERMCONDUCTOC  1282   //Thermal conductivity OC
@@ -280,6 +296,9 @@ void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFMeltLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteMeltfactorUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTJumpMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -289,11 +308,14 @@ void WriteHflowLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteHflowTidalMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowTidalCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowLatentMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHflowMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowLatentIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePowerGravIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowSurf(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalPowMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDRICDTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
@@ -314,16 +336,22 @@ double fdSignTJumpUMan(BODY*,int);
 double fdSignTJumpLMan(BODY*,int);
 double fdViscUMan(BODY*,int);
 double fdViscLMan(BODY*,int);
+double fdViscRatioMan(BODY*,int);
 double fdBLUMan(BODY*,int);
 double fdBLLMan(BODY*,int);
 double fdShmodUMan(BODY*,int);
 double fdShmodLMan(BODY*,int);
 double fdFMeltUMan(BODY*,int);
 double fdMeltfactorUMan(BODY*,int);
-double fdTsolUMan(BODY*,int);
-double fdTliqUMan(BODY*,int);
+double fdTsolUMan(BODY*,int);  //solidus temp at UMBL
+double fdTliqUMan(BODY*,int);  //liquidus at UMBL
 double fdTsolLMan(BODY*,int);
 double fdTliqLMan(BODY*,int);
+double fdDepthMeltMan(BODY*,int);  //depth to bottom of UM melt region (where solidus and geother intersect).
+double fdTDepthMeltMan(BODY*,int);  //T at bottom of UM melt region.
+double fdSolTempDiffMan(double,BODY*,int);  //difference between solidus and geotherm at a given depth.
+double fdSolidusMan(double);   //solidus at a given depth.
+double fdTJumpMeltMan(BODY*,int);  //temp jump across UM melt region.
 double fdImk2Man(BODY*,int);
 double fdK2Man(BODY*,int);
 double fdHfluxUMan(BODY*,int);
@@ -334,14 +362,21 @@ double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
 double fdHflowLatentMan(BODY*,UPDATE*,int);
+double fdMassICDot(BODY*,UPDATE*,int);
+double fdHflowLatentIC(BODY*,UPDATE*,int);
+double fdPowerGravIC(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
 double fdHflowSurfMan(BODY*,int);
+double fdRIC(BODY*,int);
+double fdDRICDTCMB(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);
-#define max(a,b) \
+double root(int,BODY*,int,double,double,double,int);
+double cubicroot(int,BODY*,int);
+#define max(a,b)	       \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })

@@ -20,6 +20,48 @@ void  InitializeControlThermint(CONTROL *control) {
 void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
+  dest[iBody].dViscRatioMan = src[iBody].dViscRatioMan;
+  dest[iBody].dEruptEff = src[iBody].dEruptEff;
+  /* Aux Props Variables */
+  dest[iBody].dTUMan=src[iBody].dTUMan;
+  dest[iBody].dTLMan=src[iBody].dTLMan;
+  dest[iBody].dTCMB=src[iBody].dTCMB;
+  dest[iBody].dTJumpUMan=src[iBody].dTJumpUMan;
+  dest[iBody].dTJumpLMan=src[iBody].dTJumpLMan;
+  dest[iBody].dSignTJumpUMan=src[iBody].dSignTJumpUMan;
+  dest[iBody].dSignTJumpLMan=src[iBody].dSignTJumpLMan;
+  dest[iBody].dViscUMan=src[iBody].dViscUMan;
+  dest[iBody].dViscLMan=src[iBody].dViscLMan;
+  dest[iBody].dBLUMan=src[iBody].dBLUMan;
+  dest[iBody].dBLLMan=src[iBody].dBLLMan;
+  dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
+  dest[iBody].dTsolUMan=src[iBody].dTsolUMan;
+  dest[iBody].dTliqUMan=src[iBody].dTliqUMan;
+  dest[iBody].dFMeltUMan=src[iBody].dFMeltUMan;
+  dest[iBody].dMeltfactorUMan=src[iBody].dMeltfactorUMan;
+  dest[iBody].dDepthMeltMan=src[iBody].dDepthMeltMan;
+  dest[iBody].dTDepthMeltMan=src[iBody].dTDepthMeltMan;
+  dest[iBody].dTJumpMeltMan=src[iBody].dTJumpMeltMan;
+  /* Tides */
+  dest[iBody].dK2Man=src[iBody].dK2Man;
+  dest[iBody].dImk2Man=src[iBody].dImk2Man;
+  /* Heat Flows */
+  /* Mantle */
+  dest[iBody].dHfluxUMan=src[iBody].dHfluxUMan;
+  dest[iBody].dHfluxLMan=src[iBody].dHfluxLMan;
+  dest[iBody].dHfluxCMB=src[iBody].dHfluxCMB;
+  dest[iBody].dHflowUMan=src[iBody].dHflowUMan;
+  dest[iBody].dHflowLMan=src[iBody].dHflowLMan;
+  dest[iBody].dHflowCMB=src[iBody].dHflowCMB;
+  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
+  dest[iBody].dHflowLatentMan=src[iBody].dHflowLatentMan;
+  dest[iBody].dHflowMeltMan=src[iBody].dHflowMeltMan;
+  /* Core */
+  dest[iBody].dRIC=src[iBody].dRIC;
+  dest[iBody].dDRICDTCMB=src[iBody].dDRICDTCMB;
+  dest[iBody].dMassICDot=src[iBody].dMassICDot;
+  dest[iBody].dHflowLatentIC=src[iBody].dHflowLatentIC;
+  dest[iBody].dPowerGravIC=src[iBody].dPowerGravIC;
 }
 
 void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -81,7 +123,21 @@ void ReadViscRatioMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dViscRatioMan = options->dDefault;
 }
-
+void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dEruptEff = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dEruptEff = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dEruptEff = options->dDefault;
+}
 /* Initiatlize Input Options */
 
 void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
@@ -117,6 +173,16 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCRATIOMAN].dDefault = 1.0; 
   sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default=1");
   fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
+  /* EruptEff */
+  sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
+  sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
+  sprintf(options[OPT_ERUPTEFF].cDefault,"Default=1");
+  options[OPT_ERUPTEFF].iType = 2;
+  options[OPT_ERUPTEFF].iMultiFile = 1;
+  options[OPT_ERUPTEFF].dNeg = 0.1;
+  options[OPT_ERUPTEFF].dDefault = 0.0; 
+  sprintf(options[OPT_ERUPTEFF].cNeg,"Default=0");
+  fnRead[OPT_ERUPTEFF] = &ReadEruptEff;
 
 }
 
@@ -170,6 +236,8 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
 }
 
 
+
+/******************************  AUX PROPS  ***********************************************/
 /* Auxiliary Properties */
 void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   /* Scalar Properties */
@@ -180,6 +248,7 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dTJumpLMan=fdTJumpLMan(body,iBody);
   body[iBody].dSignTJumpUMan=fdSignTJumpUMan(body,iBody);
   body[iBody].dSignTJumpLMan=fdSignTJumpLMan(body,iBody);
+  //  body[iBody].dViscRatioMan=fdViscRatioMan(body,iBody);
   if (body[iBody].dMeltfactorUMan==0)
       body[iBody].dMeltfactorUMan=1.;  //need to initialize this so that visc=visc/meltfactor doesn't crash it.
   /* Loop through melt calculation once to get dependence of visc on melt. */
@@ -194,10 +263,13 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
       body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
       body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
       body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
+      //body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
+      //body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
+      //body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
   }
-    //body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
-    //body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
-    //body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
+  body[iBody].dDepthMeltMan=fdDepthMeltMan(body,iBody);
+  body[iBody].dTDepthMeltMan=fdTDepthMeltMan(body,iBody);
+  body[iBody].dTJumpMeltMan=fdTJumpMeltMan(body,iBody);
   /* Tides */
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
@@ -211,9 +283,13 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dHflowCMB=fdHflowCMB(body,iBody);
   body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
+  body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   /* Core */
-
-
+  body[iBody].dRIC=fdRIC(body,iBody);
+  body[iBody].dDRICDTCMB=fdDRICDTCMB(body,iBody);
+  body[iBody].dMassICDot=fdMassICDot(body,update,iBody);
+  body[iBody].dHflowLatentIC=fdHflowLatentIC(body,update,iBody);
+  body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
 }
 
 void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
@@ -468,6 +544,34 @@ void WriteMeltfactorUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dDepthMeltMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteTDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dTDepthMeltMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteTJumpMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dTJumpMeltMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dEruptEff;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
@@ -477,6 +581,20 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
 }
 void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dImk2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dRIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dDRICDTCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -533,8 +651,29 @@ void WriteHflowLatentMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteHflowMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dHflowMeltMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 void WriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTidalPowMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteHflowLatentIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dHflowLatentIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WritePowerGravIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dPowerGravIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -571,6 +710,7 @@ void WriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
+  /* TMan */  
   sprintf(output[OUT_TMAN].cName,"TMan");
   sprintf(output[OUT_TMAN].cDescr,"Mantle Temperature");
   sprintf(output[OUT_TMAN].cNeg,"K");
@@ -578,7 +718,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TMAN].dNeg = 1; // default units are K. 
   output[OUT_TMAN].iNum = 1;
   fnWrite[OUT_TMAN] = &WriteTMan;
-
+  /* TUMan */  
   sprintf(output[OUT_TUMAN].cName,"TUMan");
   sprintf(output[OUT_TUMAN].cDescr,"Upper Mantle Temperature");
   sprintf(output[OUT_TUMAN].cNeg,"K");
@@ -586,7 +726,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TUMAN].dNeg = 1; // default units are K. 
   output[OUT_TUMAN].iNum = 1;
   fnWrite[OUT_TUMAN] = &WriteTUMan;
-
+  /* TLMan */  
   sprintf(output[OUT_TLMAN].cName,"TLMan");
   sprintf(output[OUT_TLMAN].cDescr,"Lower Mantle Temperature");
   sprintf(output[OUT_TLMAN].cNeg,"K");
@@ -626,7 +766,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SIGNTJUMPLMAN].dNeg = 1; // default units are K. 
   output[OUT_SIGNTJUMPLMAN].iNum = 1;
   fnWrite[OUT_SIGNTJUMPLMAN] = &WriteSignTJumpLMan;
-  
+  /* TCMB */    
   sprintf(output[OUT_TCMB].cName,"TCMB");
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
   sprintf(output[OUT_TCMB].cNeg,"K");
@@ -634,7 +774,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TCMB].dNeg = 1; // default units are K. 
   output[OUT_TCMB].iNum = 1;
   fnWrite[OUT_TCMB] = &WriteTCMB;
-
+  /* TCore */  
   sprintf(output[OUT_TCORE].cName,"TCore");
   sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
   sprintf(output[OUT_TCORE].cNeg,"K");
@@ -642,7 +782,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TCORE].dNeg = 1; // default units are K. 
   output[OUT_TCORE].iNum = 1;
   fnWrite[OUT_TCORE] = &WriteTCore;
-
+  /* ViscUman */
   sprintf(output[OUT_VISCUMAN].cName,"ViscUMan");
   sprintf(output[OUT_VISCUMAN].cDescr,"Upper Mantle Viscosity");
   sprintf(output[OUT_VISCUMAN].cNeg,"m^2/s");
@@ -666,7 +806,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCRATIOMAN].dNeg = 1; 
   output[OUT_VISCRATIOMAN].iNum = 1;
   fnWrite[OUT_VISCRATIOMAN] = &WriteViscRatioMan;
-
+  /* BLUMan */
   sprintf(output[OUT_BLUMAN].cName,"BLUMan");
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
   sprintf(output[OUT_BLUMAN].cNeg,"km");
@@ -674,7 +814,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLUMAN].dNeg = 1;  //KM; 
   output[OUT_BLUMAN].iNum = 1;
   fnWrite[OUT_BLUMAN] = &WriteBLUMan;
-
+  /* BLLMan */
   sprintf(output[OUT_BLLMAN].cName,"BLLMan");
   sprintf(output[OUT_BLLMAN].cDescr,"Boundary Layer Thickness Lower Mantle");
   sprintf(output[OUT_BLLMAN].cNeg,"km");
@@ -714,6 +854,38 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTFACTORUMAN].dNeg = 1; 
   output[OUT_MELTFACTORUMAN].iNum = 1;
   fnWrite[OUT_MELTFACTORUMAN] = &WriteMeltfactorUMan;
+  /* DepthMeltMan */
+  sprintf(output[OUT_DEPTHMELTMAN].cName,"DepthMeltMan");
+  sprintf(output[OUT_DEPTHMELTMAN].cDescr,"Depth to base of UM Melt Region");
+  sprintf(output[OUT_DEPTHMELTMAN].cNeg,"m");
+  output[OUT_DEPTHMELTMAN].bNeg = 1;
+  output[OUT_DEPTHMELTMAN].dNeg = 1; 
+  output[OUT_DEPTHMELTMAN].iNum = 1;
+  fnWrite[OUT_DEPTHMELTMAN] = &WriteDepthMeltMan;
+  /* TDepthMeltMan */
+  sprintf(output[OUT_TDEPTHMELTMAN].cName,"TDepthMeltMan");
+  sprintf(output[OUT_TDEPTHMELTMAN].cDescr,"Temp at base of UM Melt Region");
+  sprintf(output[OUT_TDEPTHMELTMAN].cNeg,"K");
+  output[OUT_TDEPTHMELTMAN].bNeg = 1;
+  output[OUT_TDEPTHMELTMAN].dNeg = 1; 
+  output[OUT_TDEPTHMELTMAN].iNum = 1;
+  fnWrite[OUT_TDEPTHMELTMAN] = &WriteTDepthMeltMan;
+  /* TJumpMeltMan */
+  sprintf(output[OUT_TJUMPMELTMAN].cName,"TJumpMeltMan");
+  sprintf(output[OUT_TJUMPMELTMAN].cDescr,"Temp Jump across UM Melt Region");
+  sprintf(output[OUT_TJUMPMELTMAN].cNeg,"K");
+  output[OUT_TJUMPMELTMAN].bNeg = 1;
+  output[OUT_TJUMPMELTMAN].dNeg = 1; 
+  output[OUT_TJUMPMELTMAN].iNum = 1;
+  fnWrite[OUT_TJUMPMELTMAN] = &WriteTJumpMeltMan;
+  /* EruptEff */
+  sprintf(output[OUT_ERUPTEFF].cName,"EruptEff");
+  sprintf(output[OUT_ERUPTEFF].cDescr,"Mantle Melt Eruption Efficiency");
+  sprintf(output[OUT_ERUPTEFF].cNeg,"nd");
+  output[OUT_ERUPTEFF].bNeg = 1;
+  output[OUT_ERUPTEFF].dNeg = 1; 
+  output[OUT_ERUPTEFF].iNum = 1;
+  fnWrite[OUT_ERUPTEFF] = &WriteEruptEff;
   /* K2Man */
   sprintf(output[OUT_K2MAN].cName,"K2Man");
   sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
@@ -730,6 +902,22 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].dNeg = 1; 
   output[OUT_IMK2MAN].iNum = 1;
   fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+  /* RIC */
+  sprintf(output[OUT_RIC].cName,"RIC");
+  sprintf(output[OUT_RIC].cDescr,"Inner Core Radius");
+  sprintf(output[OUT_RIC].cNeg,"m");
+  output[OUT_RIC].bNeg = 1;
+  output[OUT_RIC].dNeg = 1; 
+  output[OUT_RIC].iNum = 1;
+  fnWrite[OUT_RIC] = &WriteRIC;
+  /* DRICDTCMB */
+  sprintf(output[OUT_DRICDTCMB].cName,"DRICDTCMB");
+  sprintf(output[OUT_DRICDTCMB].cDescr,"d(R_ic)/d(T_cmb)");
+  sprintf(output[OUT_DRICDTCMB].cNeg,"m/K");
+  output[OUT_DRICDTCMB].bNeg = 1;
+  output[OUT_DRICDTCMB].dNeg = 1; 
+  output[OUT_DRICDTCMB].iNum = 1;
+  fnWrite[OUT_DRICDTCMB] = &WriteDRICDTCMB;
 
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
@@ -788,6 +976,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWLATENTMAN].dNeg = 1;
   output[OUT_HFLOWLATENTMAN].iNum = 1;
   fnWrite[OUT_HFLOWLATENTMAN] = &WriteHflowLatentMan;
+  /* HFlowMeltMan */
+  sprintf(output[OUT_HFLOWMELTMAN].cName,"HflowMeltMan");
+  sprintf(output[OUT_HFLOWMELTMAN].cDescr,"Melt Heat Flow Mantle");
+  sprintf(output[OUT_HFLOWMELTMAN].cNeg,"W");
+  output[OUT_HFLOWMELTMAN].bNeg = 1;
+  output[OUT_HFLOWMELTMAN].dNeg = 1;
+  output[OUT_HFLOWMELTMAN].iNum = 1;
+  fnWrite[OUT_HFLOWMELTMAN] = &WriteHflowMeltMan;
   /* TidalPowMan */
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
@@ -796,6 +992,23 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWMAN].dNeg = 1;
   output[OUT_TIDALPOWMAN].iNum = 1;
   fnWrite[OUT_TIDALPOWMAN] = &WriteTidalPowMan;
+  /* HFlowLatentIC */
+  sprintf(output[OUT_HFLOWLATENTIC].cName,"HflowLatentIC");
+  sprintf(output[OUT_HFLOWLATENTIC].cDescr,"Latent Heat Release at ICB");
+  sprintf(output[OUT_HFLOWLATENTIC].cNeg,"W");
+  output[OUT_HFLOWLATENTIC].bNeg = 1;
+  output[OUT_HFLOWLATENTIC].dNeg = 1;
+  output[OUT_HFLOWLATENTIC].iNum = 1;
+  fnWrite[OUT_HFLOWLATENTIC] = &WriteHflowLatentIC;
+  /* PowerGravIC */
+  sprintf(output[OUT_POWERGRAVIC].cName,"PowerGravIC");
+  sprintf(output[OUT_POWERGRAVIC].cDescr,"Gravitational Power Release at ICB");
+  sprintf(output[OUT_POWERGRAVIC].cNeg,"W");
+  output[OUT_POWERGRAVIC].bNeg = 1;
+  output[OUT_POWERGRAVIC].dNeg = 1;
+  output[OUT_POWERGRAVIC].iNum = 1;
+  fnWrite[OUT_POWERGRAVIC] = &WritePowerGravIC;
+
   /* TDotMan */
   sprintf(output[OUT_TDOTMAN].cName,"TDotMan");
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
@@ -914,8 +1127,11 @@ double fdViscUMan(BODY *body,int iBody) {
   return VISCREF*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdViscLMan(BODY *body,int iBody) {
-  //  return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
-  return body[iBody].dViscUMan*VISCJUMPULM;  //this could be switched to be visc(TLMan).
+    return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
+}
+/* Get ViscRatioMan */
+double fdViscRatioMan(BODY *body,int iBody) {
+    return body[iBody].dViscRatioMan;
 }
 /* Get Boundary Layer Thicknesses */
 double fdBLUMan(BODY *body,int iBody) {
@@ -928,11 +1144,7 @@ double fdShmodUMan(BODY *body,int iBody) {
     return (SHMODREF)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdTsolUMan(BODY *body,int iBody) {
-    double r=(ERMAN)-body[iBody].dBLUMan;  //radius to bottom of UMTBL.
-    double aterm=(ASOLIDUS)*pow(r,3.);
-    double bterm=(BSOLIDUS)*pow(r,2.);
-    double cterm=(CSOLIDUS)*r;
-    return (ASOLIDUS)*pow(r,3.)+(BSOLIDUS)*pow(r,2.)+(CSOLIDUS)*r+(DSOLIDUS);
+    return fdSolidusMan(body[iBody].dBLUMan);
 }
 double fdTliqUMan(BODY *body,int iBody) {
     return body[iBody].dTsolUMan+DTLIQMAN;  //approx constant offset btwn sol and liq.
@@ -952,6 +1164,32 @@ double fdMeltfactorUMan(BODY *body,int iBody) {
     double meltexp=(MELTB)*(MELTPHISTAR);
     return (1.0+pow(bigphi,(MELTDELTA)))/pow(1.0-bigf,meltexp);
 }
+/* Get DepthMeltMan */ 
+double fdDepthMeltMan(BODY *body,int iBody) {
+    //    double guess1=body[iBody].dBLUMan;  //lower bound of depth to bottom of UM melt layer.
+    //    double guess2=1.445e6;  //(EDMAN)/2.0;  //mid-mantle= upper bound to depth of melt layer.
+    //    double tol=10.0;  //root resolution is +/- 10 m?
+    //    int nmax=100;  //nmax iterations of root.
+    int type=0;  //types: 0=UMan, 1=LMan, 2=ICN
+    //    return root(type,body,iBody,guess1,guess2,tol,nmax);
+    double depthmeltman=cubicroot(type,body,iBody);
+    if (depthmeltman < body[iBody].dBLUMan) {        //if solidus intersects adiabat within UMTBL then recompute it.
+	depthmeltman=cubicroot(1,body,iBody);        //type=1 to find intersection within UMTBL.
+    }
+    return depthmeltman;
+}
+/* Get TDepthMeltMan */
+double fdTDepthMeltMan(BODY *body,int iBody) {
+    if (body[iBody].dDepthMeltMan==0) {    //if no melt layer found.
+	    return 0;
+	} else {                         //if yes melt layer found.
+	    return fdSolidusMan(body[iBody].dDepthMeltMan);
+	}
+}
+/* Get TJumpMeltMan */ 
+double fdTJumpMeltMan(BODY *body,int iBody) {
+    return body[iBody].dTDepthMeltMan-TSURF-(ADGRADMAN)*body[iBody].dDepthMeltMan;  //Temp jump across entire UM melt region.
+}
 double fdK2Man(BODY *body,int iBody) {
     return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
 }
@@ -961,8 +1199,14 @@ double fdImk2Man(BODY *body,int iBody) {
   double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (STIFFNESS)*(1.0+ denom2) );
   return imk2;
 }
-double fdTidalPowMan(BODY *body,int iBody) {
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+/* Inner Core Size */
+double fdRIC(BODY *body,int iBody) {
+    double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
+    if (numerator>0) {    //IC Found.
+	return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
+    } else {
+	return 0;        //no IC.
+    }
 }
 
 /* Heat Fluxes/flows */
@@ -989,23 +1233,120 @@ double fdHflowLatentMan(BODY *body,UPDATE *update,int iBody) {
     HflowLatentMan=max(HflowLatentMan,0);   //ensure positive.
     return HflowLatentMan;
 }
+double fdHflowMeltMan(BODY *body,int iBody) {
+    double MeltMassDot=1.16*(THERMDIFFUMAN)*(AREASURF)/body[iBody].dBLUMan*(EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)   
+    return body[iBody].dEruptEff*MeltMassDot*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
+}
+double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
+    if (body[iBody].dRIC>0) {   //If IC exists.
+	double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
+	return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)	
+    } else {                    //If no IC.
+	return 0;
+    }	
+}
+double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
+    if (body[iBody].dRIC>0) {   //If IC exists.
+	double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
+	return areaic*(EDENSIC)*(*(update[iBody].pdTDotCore))/(ADJUMPC2CMB)*body[iBody].dDRICDTCMB;  //DB14 (31)
+    } else {                    //If no IC.
+	return 0;
+    }
+}
+
+double fdHflowLatentIC(BODY *body,UPDATE *update,int iBody) {
+    if (body[iBody].dRIC>0) {   //If IC exists.
+	return body[iBody].dMassICDot*(SPECLATENTICB);  //DB14 (26)
+    } else {                    //If no IC.
+	return 0;
+    }
+}
+double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
+    if (body[iBody].dRIC>0) {   //If IC exists.
+	return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)	
+    } else {                    //If no IC.
+	return 0;
+    }
+}
+double fdTidalPowMan(BODY *body,int iBody) {
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+}
 
 /*** These derivatives are called from the udpate matrix, format is fixed. ***/
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   int iBody=iaBody[0];   //Is this correct?
   //  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan)/((EMASSMAN)*(SPECHEATMAN));  //With tides.
-  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan-body[iBody].dHflowUMan)/((EMASSMAN)*(SPECHEATMAN)); //Without tides.
+  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); //Without tides.
 }
 
 /* Get TDotCore */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   int iBody=iaBody[0];   //Is this correct?
-  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE));   //NEED to add IC heat.
+  //  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE));   //No IC heat.
+  double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
+  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE) -areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
 }
 
+/*********************************   MATH   *********************************/
 /* MATH FUNCTIONS */
 double cube(double x) {
   return pow(x,3);
 }
-
+double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol,int nmax) {
+    double mid=0.0;  //current midpoint or root.
+    double fmid=0.0;  //current value of f(mid).
+    double fguess1=0.0;  //current value of f(guess1).
+    int count=0.0;
+    while (count <= nmax) {
+	mid=(guess1+guess2)/2.0;                            //bisection method from wikipedia.
+	if (type == 0) {                                    //use fdSolTempDiffMan
+	    fmid=fdSolTempDiffMan(mid,body,iBody);          //function at mid.
+	    fguess1=fdSolTempDiffMan(guess1,body,iBody);    //function at guess1.
+	}
+	if (fmid==0 || (guess2-guess1)/2.0<=tol) {          //solution found.
+	    return mid;
+	}
+	count++;             //increment count by 1.
+	if (fmid/abs(fmid)==fguess1/abs(fguess1)) {guess2=mid;}
+	else {guess1=mid;}
+    }
+    printf("method failed (nmax exceeded)\n");
+}
+double cubicroot(int type,BODY *body,int iBody) {
+    double a=0,b=0,c=0,d=0;  //coefficients of cubic polynomial.    
+    if (type==0){     //type=0 is melt intersection in adiabatic part of mantle, away from TBL's.
+	a=ASOLIDUS;
+	b=BSOLIDUS;
+	c=CSOLIDUS+ADGRADMAN;
+	d=DSOLIDUS-body[iBody].dTUMan-(ADGRADMAN)*((ERMAN)-body[iBody].dBLUMan);
+    }
+    if (type==1){    //type=1 is melt intersection within UM TBL.
+	a=ASOLIDUS;
+	b=BSOLIDUS;
+	c=CSOLIDUS+body[iBody].dTJumpUMan/body[iBody].dBLUMan;
+	d=DSOLIDUS-TSURF-body[iBody].dTJumpUMan/body[iBody].dBLUMan*(ERMAN);
+    }	
+    double delta0=pow(b,2.0)-3.0*a*c;                                             //cubic root component (wikip)
+    double delta1=2.0*cube(b)-9.0*a*b*c+27.0*pow(a,2.0)*d;                        //cubic root component (wikip)
+    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
+    if (pow(delta1,2.0)-4.0*cube(delta0) < 0) {
+	//	printf("imaginary cubic root!\n");
+	//	exit(1);
+	return 0;       //imaginary root implies no intersection, no melt layer?
+    }
+    double root=-1.0/(3.0*a)*(b+croot+delta0/croot);	                          //real cubic root, radius of layer.
+    return ERMAN-root;                                                            //Return depth.
+}
+double fdSolidusMan(double depth) {
+    double r=(ERMAN)-depth;  //radius to bottom of region.
+    double aterm=(ASOLIDUS)*pow(r,3.);
+    double bterm=(BSOLIDUS)*pow(r,2.);
+    double cterm=(CSOLIDUS)*r;
+    return (ASOLIDUS)*pow(r,3.)+(BSOLIDUS)*pow(r,2.)+(CSOLIDUS)*r+(DSOLIDUS);
+}    
+double fdSolTempDiffMan(double depth,BODY *body,int iBody) { //Given a depth and BODY, return the difference between the solidus and geotherm at that depth.
+    double solidus=fdSolidusMan(depth);
+    double geotherm=TSURF+body[iBody].dSignTJumpUMan*body[iBody].dTJumpUMan*erf(2.0*depth/body[iBody].dBLUMan); //DB14 (16)
+    return solidus-geotherm;
+}

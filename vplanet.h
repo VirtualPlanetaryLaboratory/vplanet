@@ -534,6 +534,7 @@ typedef struct {
   int iEqtideModel;      /**< EQTIDE Model # */
   int bDiscreteRot;	 /**< Use Discrete Rotation Model (CPL)? */
   int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
+  int *bFixOrbit;        /**< Fix Orbit? */
   double *dMaxLockDiff;  /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
   double *dSyncEcc;     
 

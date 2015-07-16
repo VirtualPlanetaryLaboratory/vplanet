@@ -20,6 +20,7 @@ void InitializeControlEqtide(CONTROL *control) {
   control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
   control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));
+  control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
 void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
@@ -121,6 +122,25 @@ void ReadHaltDblSync(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       AssignDefaultInt(options,&control->Halt[iFile-1].bDblSync,files->iNumInputs); 
   }
+}
+
+/* Fix Orbits -- for testing purposes */
+
+void ReadFixOrbit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary input file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,options->iLine[iFile],control->Io.iVerbose);
+    control->Evolve.bFixOrbit[iFile-1] = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      /* Set to default */
+      AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
 }
 
 /* Force Equilibrium Spin Rate? */
@@ -230,19 +250,19 @@ void ReadSyncEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  AddOptionDouble(files->Infile[iFile-1].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile-1].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile-1].cIn,lTmp);	
     }
-    control->Evolve.dSyncEcc[iFile] = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+    control->Evolve.dSyncEcc[iFile-1] = dTmp;
+    UpdateFoundOption(&files->Infile[iFile-1],options,lTmp,iFile);
   } else {
     if (iFile > 0)
-      control->Evolve.dSyncEcc[iFile] = options->dDefault;
+      control->Evolve.dSyncEcc[iFile-1] = options->dDefault;
   }
 }    
 
@@ -355,8 +375,15 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_DISCRETEROT].iType = 0;
   fnRead[OPT_DISCRETEROT] = &ReadDiscreteRot;
   
+  sprintf(options[OPT_FIXORBIT].cName,"bFixOrbit");
+  sprintf(options[OPT_FIXORBIT].cDescr,"Fix Orbital Elements?");
+  sprintf(options[OPT_FIXORBIT].cDefault,"0");
+  options[OPT_FIXORBIT].iType = 0;
+  options[OPT_FIXORBIT].iMultiFile = 1;
+  fnRead[OPT_FIXORBIT] = &ReadFixOrbit;
+  
   sprintf(options[OPT_FORCEEQSPIN].cName,"bForceEqSpin");
-  sprintf(options[OPT_FORCEEQSPIN].cDescr,"Force Spin Rate to Equilibrium");
+  sprintf(options[OPT_FORCEEQSPIN].cDescr,"Force Spin Rate to Equilibrium?");
   sprintf(options[OPT_FORCEEQSPIN].cDefault,"0");
   options[OPT_FORCEEQSPIN].iType = 0;
   options[OPT_FORCEEQSPIN].iMultiFile = 1;
@@ -553,8 +580,6 @@ void InitializeSemiEqtide(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqtide][1]=0;
 }
 
-
-
 void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
@@ -669,13 +694,19 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
      other body average to 0. */
   
   if (!bPrimary(body,iBody)) {
-    /* Semi-major axis */
-    InitializeSemiEqtide(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
-    
-    /* Eccentricity */
-    InitializeEccEqtide(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCTLDeccDt;
+    if (!control->Evolve.bFixOrbit[iBody]) {
+      /* Semi-major axis */
+      InitializeSemiEqtide(body,update,iBody);
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
+      
+      /* Eccentricity */
+      InitializeEccEqtide(body,update,iBody);
+      fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCTLDeccDt;
+    } else {
+      // XXX This won't work if more than one module is affecting the orbit
+      update[iBody].iNumEqns[update[iBody].iEcc]--;
+      update[iBody].iNumEqns[update[iBody].iSemi]--;
+    }
   }
 
   /* Malloc body memory 
@@ -767,13 +798,19 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
   if (!bPrimary(body,iBody)) {
-    /* Semi-major axis */
-    InitializeSemiEqtide(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
-    
-    /* Eccentricity */
-    InitializeEccEqtide(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCPLDeccDt;
+    if (!control->Evolve.bFixOrbit[iBody]) {
+      /* Semi-major axis */
+      InitializeSemiEqtide(body,update,iBody);
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
+      
+      /* Eccentricity */
+      InitializeEccEqtide(body,update,iBody);
+      fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCPLDeccDt;
+    } else {
+      // XXX This won't work if more than one module is affecting the orbit
+      update[iBody].iNumEqns[update[iBody].iEcc]--;
+      update[iBody].iNumEqns[update[iBody].iSemi]--;
+    }
   }
 
   /* Malloc body memory 

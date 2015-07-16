@@ -25,6 +25,7 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPTENDEQTIDE            1100 /* End of Eqtide options */
 
 #define OPT_DISCRETEROT         1005
+#define OPT_FIXORBIT            1007
 #define OPT_FORCEEQSPIN         1010 
 #define OPT_HALTDBLSYNC	        1015
 #define OPT_HALTTIDELOCK        1020
@@ -45,6 +46,7 @@ int fiGetModuleIntEqtide(MODULE*,int);
 void HelpOptionsEqtide(OPTIONS*);
 void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);

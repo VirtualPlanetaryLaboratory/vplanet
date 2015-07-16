@@ -1351,7 +1351,9 @@ double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol
 	else {guess1=mid;}
     }
     printf("method failed (nmax exceeded)\n");
+    return 0;
 }
+
 double cubicroot(int type,BODY *body,int iBody) {
     double a=0,b=0,c=0,d=0;  //coefficients of cubic polynomial.    
     if (type==0){     //type=0 is melt intersection in adiabatic part of mantle, away from TBL's.

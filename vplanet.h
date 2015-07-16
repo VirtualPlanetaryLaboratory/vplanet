@@ -238,6 +238,9 @@ typedef struct {
   double dFMeltUMan;       /**< Melt fraction UMTBL */
   double dFMeltLMan;       /**< Melt fraction LMTBL */
   double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
+  double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
+  double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
+  double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
   double dK2Man;           /**< Mantle k2 love number */
   double dImk2Man;         /**< Mantle Im(k2) love number */
   /* Time Derivatives & Gradients */
@@ -252,19 +255,27 @@ typedef struct {
   double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
   double dHflowTidalCore;  /**< hflow tidal dissipation in core */
   double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
+  double dHflowMeltMan;    /**< Eruptive Melt Hflow from mantle */
+  double dMassICDot;       /**< Mass Growth Rate of IC */
   double dHflowLatentIC;   /**< latent hflow from solidification of IC */
+  double dPowerGravIC;     /**< latent hflow from solidification of IC */
   double dHflowICB;        /**< hflow across ICB */
   double dHfluxSurf;       /**< hflux surface of mantle */
   double dHflowSurf;       /**< hflow surface of mantle */
   double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
   /* Core Variables */
   double dRIC;             /**< IC radius */
+  double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
   double dDOC;             /**< OC shell thickness */
   double dChiOC;           /**< OC light element concentration chi. */
   double dChiIC;           /**< IC light element concentration chi. */
   double dThermConductOC;  /**< Thermal conductivity OC */
   double dThermConductIC;  /**< Thermal conductivity IC */
-  
+  /* Constants */
+  double dViscRatioMan;    /**< Viscosity Ratio Man */
+  double dEruptEff;        /**< Mantle melt eruption efficiency */
+  double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;

@@ -229,7 +229,6 @@ typedef struct {
   double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
-  double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
   double dTsolUMan;        /**< Solidus Temperature UMTBL */
@@ -242,7 +241,6 @@ typedef struct {
   double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
   double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
   double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
-  double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dK2Man;           /**< Mantle k2 love number */
   double dImk2Man;         /**< Mantle Im(k2) love number */
   /* Time Derivatives & Gradients */
@@ -273,7 +271,11 @@ typedef struct {
   double dChiIC;           /**< IC light element concentration chi. */
   double dThermConductOC;  /**< Thermal conductivity OC */
   double dThermConductIC;  /**< Thermal conductivity IC */
-  
+  /* Constants */
+  double dViscRatioMan;    /**< Viscosity Ratio Man */
+  double dEruptEff;        /**< Mantle melt eruption efficiency */
+  double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -499,7 +501,7 @@ typedef struct {
     int iTemp;
 } UNITS;
 
-typedef void (*fnAuxPropsModule)(BODY*,UPDATE*,int);
+typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
@@ -526,7 +528,7 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
-  int *iNumMulti;        /**< Number of Multi-module AuxProps functions */
+  int *iNumMulti;        /**< Number of Multi-module PropsAux functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
@@ -538,8 +540,8 @@ typedef struct {
   /* RADHEAT */
   /* Nothing? */
 
-  fnAuxPropsModule **fnAuxProps; /**< Function Pointers to Auxiliary Properties */
-  fnAuxPropsModule **fnAuxPropsMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
+  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
+  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 

@@ -133,7 +133,6 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TJUMPLMAN       1219   //Temperature Jump across LMTBL
 #define OPT_VISCUMAN        1220   //Viscosity UMTBL
 #define OPT_VISCLMAN        1221   //Viscosity LMTBL
-#define OPT_VISCRATIOMAN    1222   //Viscosity ratio UM 2 LM
 #define OPT_SHMODUMAN       1223   //Shear modulus UMTBL
 #define OPT_SHMODLMAN       1224   //Shear modulus LMTBL
 #define OPT_FMELTUMAN       1225   //Melt fraction UMTBL
@@ -144,7 +143,6 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TJUMPMELTMAN    1230   //Temp jump across UM melt region.
 #define OPT_K2MAN           1231   //Mantle k2 love number
 #define OPT_IMK2MAN         1232   //Mantle Im(k2) love number
-#define OPT_ERUPTEFF        1233   //Mantle Melt Eruption Efficiency
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1240   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1241   //time deriv of mean core temp
@@ -171,15 +169,20 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_CHIIC           1281   //IC light element concentration chi.
 #define OPT_THERMCONDUCTOC  1282   //Thermal conductivity OC
 #define OPT_THERMCONDUCTIC  1283   //Thermal conductivity IC
+/* Constants */
+#define OPT_VISCRATIOMAN    1290   //Viscosity ratio UM 2 LM
+#define OPT_ERUPTEFF        1291   //Mantle Melt Eruption Efficiency
+#define OPT_VISCREF         1292   //Reference Viscosity
 
-#define OPT_HALTMINTMAN     1290
-#define OPT_HALTMINTCORE    1291
+#define OPT_HALTMINTMAN     1300
+#define OPT_HALTMINTCORE    1301
 
 /* Options Functions */
 void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRatioMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -201,7 +204,6 @@ void CountHaltsThermint(HALT*,int*);
 void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetThermint(CONTROL*,MODULE*);
-void PropertiesThermint(BODY*,int);
 void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 
@@ -209,7 +211,7 @@ void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeUpdateThermint(BODY*,UPDATE*,int);
 
 /* Auxiliary Properties */
-void fnPropertiesThermint(BODY*,UPDATE*,int);
+void PropsAuxThermint(BODY*,UPDATE*,int);
 
 /* Output Functinos */
 
@@ -233,7 +235,6 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_SIGNTJUMPLMAN   1221   //Temperature Jump across LMTBL
 #define OUT_VISCUMAN        1222   //Viscosity UMTBL
 #define OUT_VISCLMAN        1223   //Viscosity LMTBL
-#define OUT_VISCRATIOMAN    1224   //Viscosity ratio UM 2 LM
 #define OUT_SHMODUMAN       1225   //Shear modulus UMTBL
 #define OUT_SHMODLMAN       1226   //Shear modulus LMTBL
 #define OUT_FMELTUMAN       1227   //Melt fraction UMTBL
@@ -244,7 +245,6 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_TJUMPMELTMAN    1232   //Temp jump across UM melt region.
 #define OUT_K2MAN           1233   //Mantle k2 love number
 #define OUT_IMK2MAN         1234   //Mantle Im(k2) love number
-#define OUT_ERUPTEFF        1235   //Mantle Melt Eruption Efficiency
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1240   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1241   //time deriv of mean core temp
@@ -272,6 +272,10 @@ void fnPropertiesThermint(BODY*,UPDATE*,int);
 #define OUT_CHIIC           1281   //IC light element concentration chi.
 #define OUT_THERMCONDUCTOC  1282   //Thermal conductivity OC
 #define OUT_THERMCONDUCTIC  1283   //Thermal conductivity IC
+/* Constants */
+#define OUT_VISCRATIOMAN    1290   //Viscosity ratio UM 2 LM
+#define OUT_ERUPTEFF        1291   //Mantle Melt Eruption Efficiency
+#define OUT_VISCREF         1292   //Reference Viscosity
 
 
 void HelpOutputThermint(OUTPUT*);

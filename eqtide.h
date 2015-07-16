@@ -17,7 +17,7 @@ void AddModuleEqtide(MODULE*,int,int);
 void BodyCopyEqtide(BODY*,BODY*,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
-
+int fiGetModuleIntEqtide(MODULE*,int);
 
 /* Options Info */
 
@@ -182,7 +182,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropertiesCPL(BODY*,UPDATE*,int);
+void PropsAuxCPL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -211,7 +211,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropertiesCTL(BODY*,UPDATE*,int);
+void PropsAuxCTL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);

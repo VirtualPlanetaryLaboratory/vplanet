@@ -20,7 +20,9 @@ void  InitializeControlThermint(CONTROL *control) {
 void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
+  /* Constants */
   dest[iBody].dViscRatioMan = src[iBody].dViscRatioMan;
+  dest[iBody].dViscRef = src[iBody].dViscRef;
   dest[iBody].dEruptEff = src[iBody].dEruptEff;
   /* Aux Props Variables */
   dest[iBody].dTUMan=src[iBody].dTUMan;
@@ -110,7 +112,6 @@ void ReadTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 void ReadViscRatioMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
-
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {   //if line num of option ge 0
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
@@ -123,6 +124,22 @@ void ReadViscRatioMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dViscRatioMan = options->dDefault;
 }
+void ReadViscRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dViscRef = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dViscRef = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dViscRef = options->dDefault;
+}
+
 void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
@@ -149,8 +166,8 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMAN].cDefault,"Default=3000");
   options[OPT_TMAN].iType = 2;
   options[OPT_TMAN].iMultiFile = 1;
-  options[OPT_TMAN].dNeg = 3000.0d;  //Not sure about this??
-  options[OPT_TMAN].dDefault = 3000.0d; 
+  options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
+  options[OPT_TMAN].dDefault = 3000.0; 
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
   fnRead[OPT_TMAN] = &ReadTMan;
    /* TCore */
@@ -159,8 +176,8 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TCORE].cDefault,"Default=6000");
   options[OPT_TCORE].iType = 2;
   options[OPT_TCORE].iMultiFile = 1;
-  options[OPT_TCORE].dNeg = 6000.0d;  //Not sure about this??
-  options[OPT_TCORE].dDefault = 6000.0d; 
+  options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
+  options[OPT_TCORE].dDefault = 6000.0; 
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
   fnRead[OPT_TCORE] = &ReadTCore;
    /* ViscRatioMan */
@@ -173,6 +190,16 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCRATIOMAN].dDefault = 1.0; 
   sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default=1");
   fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
+   /* ViscRef */
+  sprintf(options[OPT_VISCREF].cName,"dViscRef");
+  sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
+  sprintf(options[OPT_VISCREF].cDefault,"Default=1");
+  options[OPT_VISCREF].iType = 2;
+  options[OPT_VISCREF].iMultiFile = 1;
+  options[OPT_VISCREF].dNeg = 6e7;
+  options[OPT_VISCREF].dDefault = 6e7; 
+  sprintf(options[OPT_VISCREF].cNeg,"Default=7e7");
+  fnRead[OPT_VISCREF] = &ReadViscRef;
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
@@ -239,7 +266,7 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
 
 /******************************  AUX PROPS  ***********************************************/
 /* Auxiliary Properties */
-void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);
@@ -252,8 +279,8 @@ void fnPropertiesThermint(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].dMeltfactorUMan==0)
       body[iBody].dMeltfactorUMan=1.;  //need to initialize this so that visc=visc/meltfactor doesn't crash it.
   /* Loop through melt calculation once to get dependence of visc on melt. */
-  int i=0.;
-  for (i=0;i<1;i++) {
+  int i=0, nloop=1;
+  for (i=0;i<nloop;i++) {
       body[iBody].dViscUMan=fdViscUMan(body,iBody);
       body[iBody].dViscLMan=fdViscLMan(body,iBody);
       body[iBody].dBLUMan=fdBLUMan(body,iBody);
@@ -304,7 +331,7 @@ void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
-  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesThermint;
+  control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxThermint;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyThermint;
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }
@@ -580,7 +607,8 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   } else { }
 }
 void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dImk2Man;
+  *dTmp = body[iBody].dImk2Man;
+  strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1124,7 +1152,7 @@ double fdSignTJumpLMan(BODY *body,int iBody) {
 }
 /* Get ViscUMan */
 double fdViscUMan(BODY *body,int iBody) {
-  return VISCREF*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
+  return body[iBody].dViscRef*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdViscLMan(BODY *body,int iBody) {
     return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
@@ -1193,10 +1221,16 @@ double fdTJumpMeltMan(BODY *body,int iBody) {
 double fdK2Man(BODY *body,int iBody) {
     return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
 }
+
 double fdImk2Man(BODY *body,int iBody) {
   double viscdyn=body[iBody].dViscUMan*(EDENSMAN); //dynamic viscosity.
+
+  /* Peter's version. I think dRotRate should be dMeanMotion
   double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);
   double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (STIFFNESS)*(1.0+ denom2) );
+  */
+  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (STIFFNESS)*(1.0+ denom2) );
   return imk2;
 }
 /* Inner Core Size */
@@ -1207,6 +1241,13 @@ double fdRIC(BODY *body,int iBody) {
     } else {
 	return 0;        //no IC.
     }
+}
+
+double fdTidalPowMan(BODY *body,int iBody) {
+  /* Peter's version. I think dRotRate should be dMeanMotion.
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+  */
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
 }
 
 /* Heat Fluxes/flows */
@@ -1268,16 +1309,12 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 	return 0;
     }
 }
-double fdTidalPowMan(BODY *body,int iBody) {
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-}
 
 /*** These derivatives are called from the udpate matrix, format is fixed. ***/
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  int iBody=iaBody[0];   //Is this correct?
-  //  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan)/((EMASSMAN)*(SPECHEATMAN));  //With tides.
-  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); //Without tides.
+  int iBody=iaBody[0];
+  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); 
 }
 
 /* Get TDotCore */
@@ -1287,6 +1324,8 @@ double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
   return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE) -areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
 }
+
+
 
 /*********************************   MATH   *********************************/
 /* MATH FUNCTIONS */

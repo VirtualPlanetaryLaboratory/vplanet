@@ -225,19 +225,29 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else
-      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesRadheatThermint;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModule)++] = &PropsAuxRadheatThermint;
   }
 }
 
-void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModule) {
+  int iEqtide;
 
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) 
+      // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
-    else
-      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesEqtideThermint;
+    else { // Thermint and Eqtide called
+      /* When Thermint and Eqtide are called together, care must be taken as 
+	 Im(k_2) must be known in order to calculate TidalZ. As the individual 
+	 module PropsAux are called prior to PropsAuxMulti, we must call the 
+	 "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+	 "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+	 PropsAuxEqtideThermint. */
+      iEqtide = fiGetModuleIntEqtide(module,iBody);
+      control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModule)++] = &PropsAuxEqtideThermint;
+    }
   }
-  printf("Im(k2)[%d] = %f\n",iBody,body[iBody].dImK2);
 }
 
 
@@ -247,14 +257,16 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   if (module->iNumModules[iBody] > 1) 
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
-    control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
+    control->Evolve.fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
 
-  // Now verify 
+  /* Now verify. Even if only module is called, we still need to call
+     these functions as some default behavior is set if other modules aren't
+     called. */
   VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
   
   VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
   
-  VerifyModuleMultiEqtideThermint(body,control,files,options,iBody,&iNumMulti);
+  VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMulti);
   
   control->Evolve.iNumMulti[iBody] = iNumMulti;
   if (control->Io.iVerbose >= VERBALL)
@@ -265,8 +277,9 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropertiesEqtideThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
     body[iBody].dImK2 = fdImk2Man(body,iBody);
+    PropsAuxCPL(body,update,iBody);
     body[iBody].dTidePower = fdCPLTidePower(body,iBody);
 }
 
@@ -276,7 +289,7 @@ void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
   body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
 }

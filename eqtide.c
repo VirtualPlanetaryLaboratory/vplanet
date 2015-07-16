@@ -26,10 +26,14 @@ void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
+/* All the auxiliary properties for EQTIDE calculations need to be included
+   in this subroutine! */
+
 void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
+  dest[iBody].dImK2 = src[iBody].dImK2;
 
   for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
@@ -448,28 +452,29 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {
-    fprintf(stderr,"WARNING: %s and %s are both set. Rotation rate will be synchronous.\n",cName1,cName2);
-    fprintf(stderr,"File: %s, Lines %d and %d\n",cFile,iLine1,iLine2);
+    fprintf(stderr,"WARNING: %s and %s are both set. Rotation rate will be in equilibrium.\n",cName1,cName2);
+    fprintf(stderr,"\tFile: %s, Lines %d and %d\n",cFile,iLine1,iLine2);
   }
 }
 
 void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
   double dMeanMotion;
   
-  if (options[OPT_FORCEEQSPIN].iLine[iBody] >= 0) {
-    dMeanMotion=fdSemiToMeanMotion(body[1].dSemi,body[0].dMass+body[1].dMass);
+  if (options[OPT_FORCEEQSPIN].iLine[iBody+1] >= 0) {
+    dMeanMotion=fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
 
-    if (options[OPT_ROTPER].iLine[iBody] >= 0) 
-      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTPER].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody],options[OPT_ROTPER].iLine[iBody],control->Io.iVerbose);
+    if (options[OPT_ROTPER].iLine[iBody+1] >= 0) 
+      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTPER].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_ROTPER].iLine[iBody+1],control->Io.iVerbose);
       
-    if (options[OPT_ROTRATE].iLine[iBody] >= 0) 
-      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTRATE].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody],options[OPT_ROTRATE].iLine[iBody],control->Io.iVerbose);
+    if (options[OPT_ROTRATE].iLine[iBody+1] >= 0) 
+      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTRATE].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_ROTRATE].iLine[iBody+1],control->Io.iVerbose);
 
-    if (options[OPT_ROTVEL].iLine[iBody] >= 0) 
-      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTVEL].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody],options[OPT_ROTVEL].iLine[iBody],control->Io.iVerbose);
+    if (options[OPT_ROTVEL].iLine[iBody+1] >= 0) 
+      VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTVEL].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_ROTVEL].iLine[iBody+1],control->Io.iVerbose);
 
     /* Done with warnings, do the assignment */
-    body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[1].dEcc,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+
+    body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iBody].dEcc,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
   }
 }
 
@@ -689,7 +694,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
     body[iBody].dTidalF[iPert]=malloc(5*sizeof(double));
 
-  control->Evolve.fnAuxProps[iBody][iModule]=&PropertiesCTL;
+  control->Evolve.fnPropsAux[iBody][iModule]=&PropsAuxCTL;
 
   /* Now remove output options unique to CPL. This will prevent segmentation
      faults as memory will not be allocated to some parameters unless CPL
@@ -785,7 +790,7 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   body[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
   for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
     body[iBody].iTidalEpsilon[iPert]=malloc(10*sizeof(int));
-  control->Evolve.fnAuxProps[iBody][iModule]=&PropertiesCPL;
+  control->Evolve.fnPropsAux[iBody][iModule]=&PropsAuxCPL;
 
   /* Now remove output options unique to CTL. This will prevent segmentation
      faults as memory will not be allocated to some parameters unless CTL
@@ -872,11 +877,11 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
   }
 }
 
-int fiGetModuleIntEqtide(UPDATE *update,int iBody) {
+int fiGetModuleIntEqtide(MODULE *module,int iBody) {
   int iModule;
 
-  for (iModule=0;iModule<update[iBody].iNumModules;iModule++) {
-    if (update->iaModule[iModule] == EQTIDE)
+  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+    if (module->iaModule[iBody][iModule] == EQTIDE)
       return iModule;
   }
 
@@ -1400,6 +1405,13 @@ void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcat(cUnit,"cgs");
 }
 
+void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dImK2;
+
+  strcpy(cUnit,"");
+}
+
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = fdTimescaleMulti(body[iBody].dObliquity,*(update[iBody].padDoblDtEqtide),body[iBody].iTidePerts);
 
@@ -1639,6 +1651,16 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_GAMMAORB].bNeg = 0;
   output[OUT_GAMMAORB].iNum = 1;
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
+
+  sprintf(output[OUT_IMK2].cName,"ImK2");
+  sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
+  output[OUT_IMK2].bNeg = 0;
+  output[OUT_IMK2].iNum = 1;
+  fnWrite[OUT_IMK2] = &WriteImK2;
+
+  /*
+   * O
+   */
   
   sprintf(output[OUT_OBLTIMEEQTIDE].cName,"OblTimeEqtide");
   sprintf(output[OUT_OBLTIMEEQTIDE].cDescr,"Timescale for Obliquity Evolution in EQTIDE");
@@ -1648,6 +1670,10 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBLTIMEEQTIDE].iNum = 1;
   fnWrite[OUT_OBLTIMEEQTIDE] = &WriteOblTimescaleEqtide;
   
+  /*
+   * R
+   */
+
   sprintf(output[OUT_ROTRATETIMEEQTIDE].cName,"RotTimeEqtide");
   sprintf(output[OUT_ROTRATETIMEEQTIDE].cDescr,"Timescale for Rotational Evolution in EQTIDE");
   output[OUT_ROTRATETIMEEQTIDE].bNeg = 0;
@@ -1843,7 +1869,10 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
   return 0;
 }      
 
-void PropertiesCPL(BODY *body,UPDATE *update,int iBody) {
+/* Auxiliary properties required for the CPL calculations. N.B.: These 
+   parameters also need to be included in BodyCopyEqtide!!! */
+
+void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
 
@@ -1865,7 +1894,7 @@ void PropertiesCPL(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void PropertiesCTL(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,UPDATE *update,int iBody) {
   int iPert,iIndex;
 
   if (iBody == 0) {
@@ -1983,7 +2012,11 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
-  body[iBody].dTidalZ[iPert] = 3*BIGG*BIGG*body[iBody].dK2*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion*body[iBody].dTidalQ);
+  /* Note that this is different from Heller et al (2011) because 
+     we now use Im(k_2) which equals k_2/Q. The value of Im(k_2) is set in
+     VerifyEqtideTherming in module.c 
+  */
+  body[iBody].dTidalZ[iPert] = 3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion); 
 }
 
 /*

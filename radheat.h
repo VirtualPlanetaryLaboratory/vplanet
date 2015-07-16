@@ -181,7 +181,7 @@ void CountHaltsRadHeat(HALT*,int*);
 void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetRadheat(CONTROL*,MODULE*);
-void PropertiesRadheat(BODY*,int);
+void PropsAuxRadheat(BODY*,UPDATE*,int);
 void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 

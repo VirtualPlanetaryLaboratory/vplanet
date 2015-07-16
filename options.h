@@ -21,6 +21,7 @@
 #define OPT_UNITLENGTH		50
 #define OPT_UNITMASS		60
 #define OPT_UNITTIME	        70
+#define OPT_UNITTEMP	        71
 #define OPT_VERBOSE		80
 
 // Regular Options

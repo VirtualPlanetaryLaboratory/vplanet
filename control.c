@@ -36,8 +36,8 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iSubStep;
 
-  control->Evolve.fnAuxProps = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
-  control->Evolve.fnAuxPropsMulti = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
+  control->Evolve.fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
+  control->Evolve.fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.iNumMulti = malloc(control->Evolve.iNumBodies*sizeof(int));
@@ -47,8 +47,8 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    control->Evolve.fnAuxProps[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnAuxPropsModule));
-  control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
+      control->Evolve.fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
+      control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
   }
 
   /* Currently this only matters for RK4 integration. This should
@@ -479,6 +479,78 @@ double fdUnitsEnergyFlux(int iTime,int iMass,int iLength) {
   dTmp=fdUnitsPower(iTime,iMass,iLength);  
   return dTmp/(fdUnitsLength(iLength)*fdUnitsLength(iLength));
 }	
+
+double fdUnitsTemp(double dTemp,int iOldType,int iNewType) {
+  if (iOldType == 0) {
+    if (iNewType == 1) {
+      /* Kelvin -> Celsius */
+      return dTemp - 273;
+    } else if (iNewType == 2) {
+      /* Kelvin to Farenheit */
+      return (dTemp - 273)*1.8 + 32;
+    } else if (iNewType == 0) {
+      return dTemp;
+    } else {
+      fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
+      exit(EXIT_UNITS);
+    }
+  } else if (iOldType == 1) {
+    if (iNewType == 0) {
+      /* Celsius -> Kelvin */
+      return dTemp + 273;
+    } else if (iNewType == 2) {
+      /* Celsius -> Farenheit */
+      return (1.8*dTemp) + 32;
+    } else if (iNewType == 1) {
+      return dTemp;
+    } else {
+      fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
+      exit(EXIT_UNITS);
+    }
+  } else if (iOldType == 2) {
+    if (iNewType == 0) {
+      /* Farenheit -> Kelvin */
+      return 5/9*(dTemp - 32) + 273;
+    } else if (iNewType == 1) {
+      /* Farenheit -> Celsius */
+      return 5/9*(dTemp - 32);
+    } else if (iNewType == 2) {
+      return dTemp;
+    } else {
+      fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
+      exit(EXIT_UNITS);
+    }
+  } else {
+    fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iOldType);
+    exit(EXIT_UNITS);
+  }
+}
+
+void fsUnitsTemp(int iType,char cUnit[]) {
+  if (iType == 0)
+    sprintf(cUnit,"K");
+  else if (iType == 1)
+    sprintf(cUnit,"C");
+  else if (iType == 2)
+    sprintf(cUnit,"F");
+  else {
+    fprintf(stderr,"ERROR: Unknown iUnitTemp %d.\n",iType);
+    exit(EXIT_UNITS);      
+  }
+}
+
+void fsUnitsTempRate(int iType,char cUnit[]) {
+  if (iType == 0)
+    sprintf(cUnit,"K/s");
+  else if (iType == 1)
+    sprintf(cUnit,"C/s");
+  else if (iType == 2)
+    sprintf(cUnit,"F/s");
+  else {
+    fprintf(stderr,"ERROR: Unknown iUnitTempRate %d.\n",iType);
+    exit(EXIT_UNITS);      
+  }
+}
 
 /*
  * FILES struct functions 

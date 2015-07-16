@@ -5,5 +5,7 @@ void ReadModules(BODY*,CONTROL*,FILES*,OPTIONS*,int);
 
 void VerifyModuleMulti(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 
-void PropertiesRadheatThermint(BODY*,UPDATE*,int);
+void PropsAuxEqtideThermint(BODY*,UPDATE*,int);
+void PropsAuxLagrangeLaskar(BODY*,UPDATE*,int);
+void PropsAuxRadheatThermint(BODY*,UPDATE*,int);
 

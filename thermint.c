@@ -18,8 +18,6 @@ void  InitializeControlThermint(CONTROL *control) {
 }
 
 void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
-  dest[iBody].dTMan = src[iBody].dTMan;
-  dest[iBody].dTCore = src[iBody].dTCore;
   dest[iBody].dViscRatioMan = src[iBody].dViscRatioMan;
   dest[iBody].dEruptEff = src[iBody].dEruptEff;
   /* Aux Props Variables */

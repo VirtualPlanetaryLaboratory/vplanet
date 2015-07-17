@@ -7,7 +7,7 @@
  *
 */
 
-#define LSUN                    3.846e26 // Solar luminosity (W)
+#define LSUN                          3.846e26      // Solar luminosity (W)
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);

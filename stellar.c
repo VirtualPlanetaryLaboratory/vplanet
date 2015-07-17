@@ -116,7 +116,7 @@ void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFi
 
 void VerifyLuminosity(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iLuminosity][0] = 1;
+  update[iBody].iaType[update[iBody].iLuminosity][0] = 0;
   update[iBody].iNumBodies[update[iBody].iLuminosity][0] = 1;
   update[iBody].iaBody[update[iBody].iLuminosity][0] = malloc(update[iBody].iNumBodies[update[iBody].iLuminosity][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
@@ -139,6 +139,14 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* Stellar is active for this body if this subroutine is called. */
   
   if (body[iBody].dLuminosity > 0) {
+    
+    if (update[iBody].iNumLuminosity > 1) {
+      // ERROR: Since this is a variable we read from a grid, we can't have more than one equation affecting it!
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Since iaType is 0 for dLuminosity, cannot have more than one equation affecting it!");
+      exit(EXIT_INPUT);
+    }
+    
     VerifyLuminosity(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bStellar = 1;
   }
@@ -329,8 +337,15 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 /************* STELLAR Functions ************/
 
 double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  // TODO: Add evolution here.
-  return body[0].dLuminosity;
+  // TODO: Better error handling
+  int iError;
+  double L = fdBaraffe(STELLAR_L, body[0].dAge, body[0].dMass, 3, &iError);
+  if (iError == 0)
+    return L;
+  else {
+    fprintf(stderr,"ERROR: Routine fdBaraffe() returned an error.\n");
+    exit(EXIT_INT);
+  }
 }
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

@@ -76,9 +76,9 @@ Minimum Value of ecc and obl: 1.000000e-10
 (SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: -1.799159e-06 
 Tidal Perturbers: c
 ----- STELLAR PARAMETERS (star)------
-(Luminosity) Luminosity [kg*m^2/sec^3]: 3.846000e+26 
+(Luminosity) Luminosity [LSUN]: 1.000000 
 (LXUV) X-ray/XUV Luminosity [kg*m^2/sec^3]: 3.846000e+23 
-Output Order: Time[year] Luminosity[solar*AU^2/year^3]
+Output Order: Time[year] Luminosity[LSUN]
 
 ----- BODY: c ----
 (Mass) Mass [kg]: 3.285810e+25 
@@ -241,9 +241,9 @@ Output Order: Time[year] SemiMajorAxis[AU] SurfWaterMass[TO]
 (SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: -1.813860e-06 
 Tidal Perturbers: c
 ----- STELLAR PARAMETERS (star)------
-(Luminosity) Luminosity [kg*m^2/sec^3]: 3.846000e+26 
-(LXUV) X-ray/XUV Luminosity [kg*m^2/sec^3]: 3.846000e+23 
-Output Order: Time[year] Luminosity[solar*AU^2/year^3]
+(Luminosity) Luminosity [LSUN]: 1.191345 
+(LXUV) X-ray/XUV Luminosity [kg*m^2/sec^3]: 4.581912e+23 
+Output Order: Time[year] Luminosity[LSUN]
 
 ----- BODY: c ----
 (Mass) Mass [kg]: 3.285810e+25 

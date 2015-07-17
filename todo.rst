@@ -1,7 +1,10 @@
 TODO
 ----
 
-1. Adapt Euler and RungeKutta to iType = 0 variables
+
+*. Error in baraffe!
+0. Verify that RungeKutta is working wiht iaType = 0
+1. Adapt Euler to iaType = 0 variables
 2. Add code in ForceBehavior to update dLXUV
 3. Add other escape regimes
 4. Log stuff

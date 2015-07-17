@@ -792,6 +792,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "radheat.h"
 #include "atmesc.h"
 #include "stellar.h"
+#include "baraffe2015.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

@@ -230,12 +230,20 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
 }
 
 void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+  UPDATE foo; // Dummy variable needed to call PropertiesCPL
 
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) 
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
-    else
+    else { // Thermint and Eqtide called
+      /* This can be tricky as dTidalZ relies on dImK2. Thus, before we begin, 
+	 we set all the tidal properties based on thermint's value for 
+	 Im(k_2). */
+      body[iBody].dImK2 = fdImk2Man(body,iBody);
+      PropertiesCPL(body,&foo,iBody);
+      body[iBody].dTidePower = fdCPLTidePower(body,iBody);
       control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesEqtideThermint;
+    }
   }
   printf("Im(k2)[%d] = %f\n",iBody,body[iBody].dImK2);
 }

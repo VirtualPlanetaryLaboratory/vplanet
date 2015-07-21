@@ -1405,7 +1405,7 @@ void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
   *dTmp = body[iBody].dImK2;
 
-  strcat(cUnit,"");
+  strcpy(cUnit,"");
 }
 
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

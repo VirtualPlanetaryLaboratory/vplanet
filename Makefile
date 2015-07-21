@@ -1,5 +1,5 @@
 default:
-	-gcc -o vplanet *.c -lm &> makelog
+	-gcc -o vplanet *.c -lm
 
 debug:
-	-gcc -g -o vplanet *.c -lm &> makelog
+	-gcc -g -o vplanet *.c -lm

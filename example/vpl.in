@@ -34,13 +34,13 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Option names must be exact in spelling and case.
 
 # Evolution Parameters
-bDoForward	1		# Perform a forward evolution?
-bVarDt		1		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
+#bDoForward	1		# Perform a forward evolution?
+#bVarDt		1		# Use variable timestepping?
+#dEta		0.1		# Coefficient for variable timestepping
 #dStopTime	1e5		# Stop time for evolution
 #dOutputTime	1e2		# Output timesteps (assuming in body files)
-dStopTime	4.5e9		# Stop time for evolution
-dOutputTime	1e6		# Output timesteps (assuming in body files)
+#dStopTime	4.5e9		# Stop time for evolution
+#dOutputTime	1e6		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden. 
 # That should really be documented!

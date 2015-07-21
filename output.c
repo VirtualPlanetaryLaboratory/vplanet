@@ -628,9 +628,9 @@ void LogUnits(FILE *fp) {
 
   fprintf(fp,"Mass Units: ");
   if (units.iMass == 0) {
-    fprintf(fp,"Grams\n");
-  } else if (units.iMass == 1) {
     fprintf(fp,"Kilograms\n");
+  } else if (units.iMass == 1) {
+    fprintf(fp,"Grams\n");
   } else if (units.iMass == 2) {
     fprintf(fp,"Solar\n");
   } else if (units.iMass == 3) {
@@ -645,9 +645,9 @@ void LogUnits(FILE *fp) {
   
   fprintf(fp,"Length Units: ");
   if (units.iLength == 0) {
-    fprintf(fp,"Centimeters\n");
-  } else if (units.iLength == 1) {
     fprintf(fp,"Meters\n");
+  } else if (units.iLength == 1) {
+    fprintf(fp,"Centimeters\n");
   } else if (units.iLength == 2) {
     fprintf(fp,"Kilometers\n");
   } else if (units.iLength == 3) {

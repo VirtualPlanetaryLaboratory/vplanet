@@ -78,8 +78,8 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMAN].cDefault,"Default=3000");
   options[OPT_TMAN].iType = 2;
   options[OPT_TMAN].iMultiFile = 1;
-  options[OPT_TMAN].dNeg = 3000.0d;  //Not sure about this??
-  options[OPT_TMAN].dDefault = 3000.0d; 
+  options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
+  options[OPT_TMAN].dDefault = 3000.0; 
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
   fnRead[OPT_TMAN] = &ReadTMan;
    /* TCore */
@@ -88,8 +88,8 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TCORE].cDefault,"Default=6000");
   options[OPT_TCORE].iType = 2;
   options[OPT_TCORE].iMultiFile = 1;
-  options[OPT_TCORE].dNeg = 6000.0d;  //Not sure about this??
-  options[OPT_TCORE].dDefault = 6000.0d; 
+  options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
+  options[OPT_TCORE].dDefault = 6000.0; 
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
   fnRead[OPT_TCORE] = &ReadTCore;
 
@@ -443,7 +443,8 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   } else { }
 }
 void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dImk2Man;
+  *dTmp = body[iBody].dImk2Man;
+  strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

@@ -9,8 +9,9 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	gl581.in $	# The host star
-		c.in # $		# Gl 581 c, Earth-like w/strong tides
+		c.in # $			# Gl 581 c, Earth-like w/strong tides
 #		d.in		# Gl 581 d, weaker tides, 30x potassium-40
+
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.

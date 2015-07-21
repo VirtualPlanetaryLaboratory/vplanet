@@ -73,7 +73,12 @@ void WriteMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dObliquity;
+  if (body[iBody].bLaskar) {
+    *dTmp = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+  } else {
+    *dTmp = body[iBody].dObliquity;
+  }
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -99,7 +104,11 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (iBody > 0)
-    *dTmp = body[iBody].dEcc;
+    if (body[iBody].bLagrange) {
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    } else {
+      *dTmp = body[iBody].dEcc;
+    }
   else
     *dTmp = -1;
   sprintf(cUnit,"");
@@ -402,7 +411,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
     sprintf(output[OUT_OBL].cName,"Obliquity");
     sprintf(output[OUT_OBL].cDescr,"Obliquity");
-    output[OUT_OBL].bNeg = 0;
+    sprintf(output[OUT_OBL].cNeg,"deg");
+    output[OUT_OBL].bNeg = 1;
+    output[OUT_OBL].dNeg = DEGRAD;
     output[OUT_OBL].iNum = 1;
     fnWrite[OUT_OBL] = &WriteObliquity;
 
@@ -956,6 +967,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
+  InitializeOutputLagrange(output,fnWrite);
+  InitializeOutputLaskar(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
 
 }

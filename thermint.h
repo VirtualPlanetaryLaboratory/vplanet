@@ -328,8 +328,8 @@ void LogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Thermal Functions */
-double fdTDotMan(BODY*,SYSTEM*,int*,int);
-double fdTDotCore(BODY*,SYSTEM*,int*,int);
+double fdTDotMan(BODY*,SYSTEM*,int*);
+double fdTDotCore(BODY*,SYSTEM*,int*);
 double fdTUMan(BODY*,int);
 double fdTLMan(BODY*,int);
 double fdTCMB(BODY*,int);

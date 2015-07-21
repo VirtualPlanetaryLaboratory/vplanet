@@ -5,7 +5,8 @@
  * Subroutines that control the integration of the tidal
  * model. Also includes subroutines that switch between
  * the two models.
-*/
+*/ 
+//testing a change
 
 
 #include <stdio.h>
@@ -1303,7 +1304,7 @@ void WriteDRotPerDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   }  else {
-    strcat(cUnit,"");
+    strcpy(cUnit,"");
   }
 }
 
@@ -1523,7 +1524,7 @@ void WriteEnergyFluxEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dTidalQ;
-  strcat(cUnit,"");
+  strcpy(cUnit,"");
 }
 
 void WriteTidalTau(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2107,8 +2108,9 @@ double fdCPLEqRotRate(double dEcc,double dMeanMotion,int bDiscrete) {
  * Derivatives
  */
 
-double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[1] = central body */
+double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
+  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[0] = central body */
+
   double dSum=0;
 
     /* Old sum
@@ -2124,7 +2126,7 @@ double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return body[iaBody[0]].dSemi*body[iaBody[0]].dSemi/(4*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }
 
-double fdCPLDeccDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCPLDeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. 
      iaBody[0] = the orbiter, iaBody[0] = central body */
   double dSum=0;
@@ -2163,7 +2165,7 @@ double fdCPLDeccDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
   return -1;
 }  
 
-double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* Don't know if this is the central body or orbiter, but orbital
      info stored in body[iOrbter], so must figure this out. 
      Is there a faster way to do this? Note that forcing iaBody[0]
@@ -2183,7 +2185,7 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return -body[iaBody[0]].dTidalZ[iaBody[1]]/(8*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion)*(4*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + body[iOrbiter].dEcc*body[iOrbiter].dEcc*(-20*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + 49*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + body[iaBody[0]].iTidalEpsilon[iaBody[1]][2]) + 2*sin(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dObliquity)*(-2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0]+body[iaBody[0]].iTidalEpsilon[iaBody[1]][8]+body[iaBody[0]].iTidalEpsilon[iaBody[1]][9]));
 }
 
-double fdCPLDobliquityDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCPLDobliquityDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iOrbiter;
 
   if (bPrimary(body,iaBody[0]))
@@ -2276,18 +2278,21 @@ void fdaCTLZ(BODY *body,double dSemi,int iBody,int iPert) {
  * Derivatives
  */
 
-double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[1] = central body */
   double dSum=0;
 
   /*
+
   int iBody;
   double dSum;
   // Broken XXX
 
   dSum=0;
-  for (iBody=0;iBody<iNumBodies;iBody++) 
-     XXX Sum the body functions? 
+
+//   for (iBody=0;iBody<iNumBodies;iBody++) 
+    /* XXX Sum the body functions? 
+
       dSum += body[iBody].dTidalZ[0]*(cos(body[iBody].dObliquity)*body[1].dTidalF[0][1]*body[iBody].dRotRate/(pow(body[1].dTidalBeta[0],12)*body[1].dMeanMotion) - body[1].dTidalF[0][0]/pow(body[1].dTidalBeta[0],15));
 
   return 2*body[1].dSemi*body[1].dSemi/(BIGG*body[0].dMass*body[1].dMass)*dSum;
@@ -2305,7 +2310,7 @@ double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return 2*body[iaBody[0]].dSemi*body[iaBody[1]].dSemi/(BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }
 
-double fdCTLDeccDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCTLDeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[1] = central body */
   double dSum=0;
 
@@ -2315,7 +2320,7 @@ double fdCTLDeccDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
 
   // Broken
   dSum=0;
-  for (iBody=0;iBody<iNumBodies;iBody++) 
+//   for (iBody=0;iBody<iNumBodies;iBody++) 
     dSum += body[iBody].dTidalZ[0]*(cos(body[iBody].dObliquity)*body[1].dTidalF[0][3]*body[iBody].dRotRate/(pow(body[1].dTidalBeta[0],10)*body[1].dMeanMotion) - 18*body[1].dTidalF[0][2]/(11*pow(body[1].dTidalBeta[0],13)));
   
   return 11*body[1].dSemi*body[1].dEcc/(2*BIGG*body[0].dMass*body[1].dMass)*dSum;
@@ -2351,7 +2356,7 @@ double fdCTLDeccDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
   return 11*dSemi*dEcc/(2*BIGG*dMassPert*body.dMass)*foo;
 }
 
-double fdCTLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdCTLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* Note if tidally locked, ForceBehavior will fix the rotation
      rate and override this derivative. XXX TBC */
   int iOrbiter;
@@ -2364,7 +2369,8 @@ double fdCTLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
   return body[iaBody[0]].dTidalZ[iaBody[1]]/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion) * (2*cos(body[iaBody[0]].dObliquity)*body[iaBody[0]].dTidalF[iaBody[1]][1]/pow(body[iaBody[0]].dTidalBeta[iaBody[1]],12) - (1+cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dObliquity))*body[iaBody[0]].dTidalF[iaBody[1]][4]*body[iaBody[0]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],9)*body[iOrbiter].dMeanMotion));
 }
 
-double fdCTLDobliquityDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+
+double fdCTLDobliquityDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* Note if tidally locked, ForceBehavior will fix the rotation
      rate and override this derivative. XXX TBC */
   int iOrbiter;
@@ -2373,6 +2379,7 @@ double fdCTLDobliquityDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
     iOrbiter = iaBody[1];
   else
     iOrbiter = iaBody[0];
+
 
   int iBody=iaBody[0];
 

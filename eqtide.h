@@ -194,10 +194,10 @@ double fdCPLEqRotRateDiscrete(double,double);
 double fdCPLEqRotRateCont(double,double);
 
 /* Derivatives */
-double fdCPLDsemiDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDeccDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDrotrateDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDobliquityDt(BODY*,SYSTEM*,int*,int);
+double fdCPLDsemiDt(BODY*,SYSTEM*,int*);
+double fdCPLDeccDt(BODY*,SYSTEM*,int*);
+double fdCPLDrotrateDt(BODY*,SYSTEM*,int*);
+double fdCPLDobliquityDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
 double fdCPLDeccDtBody(BODY,double,double,double);
 
@@ -219,9 +219,9 @@ void PropsAuxCTL(BODY*,UPDATE*,int);
 double fdCTLTidePowerEq(BODY,double);
 double fdCTLEqRotRate(double,double,double);
 
-double fdCTLDsemiDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDeccDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDrotrateDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDobliquityDt(BODY*,SYSTEM*,int*,int);
+double fdCTLDsemiDt(BODY*,SYSTEM*,int*);
+double fdCTLDeccDt(BODY*,SYSTEM*,int*);
+double fdCTLDrotrateDt(BODY*,SYSTEM*,int*);
+double fdCTLDobliquityDt(BODY*,SYSTEM*,int*);
 double fdCTLDsemiDtBody(BODY,double,double,double,double,double);
 double fdCTLDeccDtBody(BODY,double,double,double);

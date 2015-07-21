@@ -23,7 +23,10 @@
 #define BIGG          6.672e-11
 #define PI            3.1415926535
 
+#define KGAUSS        0.01720209895
+#define dS0           -0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units: Calculations are done in SI */
+
 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30
@@ -63,13 +66,13 @@
 /* File Limits */
 
 #define NUMOUT        2000  /* Number of output parameters */
-#define MAXBODIES     2
+#define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      64    /* Number of characters in option
 			     * description */
 #define LINE          128   /* Maximum number of characters 
 			     * in a line */
-#define NAMELEN       24
+#define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -106,6 +109,22 @@
 /* INTERIOR THERMAL */   // Use 1200's ok??
 #define VTMAN     1201
 #define VTCORE    1202
+
+//LAGRANGE
+#define VHECC           1301
+#define VKECC           1302
+#define VPINC           1303
+#define VQINC           1304
+
+//LASKAR
+#define VXOBL           1401
+#define VYOBL           1402
+#define VZOBL           1403
+
+/* Semi-major axis functions in Lagrange */
+#define LAPLNUM 	      26
+
+#define S0            0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
 
 /* Now define the structs */
 
@@ -154,13 +173,24 @@ typedef struct {
 
   /* LAGRANGE parameters */
   int bLagrange;         /**< Has module LAGRANGE been implemented */ 
-  double dHEcc;           /**< Poincare H */
-  double dKEcc;           /**< Poincare K */
-  double dPInc;           /**< Poincare P */
-  double dQInc;           /**< Poincare Q */
+  double dHecc;           /**< Poincare H */
+  double dKecc;           /**< Poincare K */
+  double dPinc;           /**< Poincare P */
+  double dQinc;           /**< Poincare Q */
+  double dSinc;          /**< sin(0.5*Inclination) */
+  double dLongA;         /**< Longitude of ascending node */
+  double dArgP;          /**< Argument of pericenter */
+  double dLongP;         /**< Longitude of pericenter */
+  int iGravPerts;        /**< Number of bodies which perturb the body */
+  int *iaGravPerts;      /**< Which bodies are perturbers of the body */
 
   /* LASKAR parameters */
-  int bLaskar;            /**< Use module LASLAR? */
+  int bLaskar;
+  double dPrecA;         /**< Precession angle */
+  double dDynEllip;      /**< Dynamical ellipticity */
+  double dYobl;          /**< sin(obliq)*sin(preca) */
+  double dXobl;          /**< sin(obliq)*cos(preca) */
+  double dZobl;           /**< cos(obliq) */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -327,10 +357,24 @@ typedef struct {
 /* SYSTEM contains properties of the system that pertain to
    every BODY */
 
+/* Pointer to Laplace semi-major axis functions in Lagrange */
+typedef double (*fnLaplaceFunction)(double,int);
+
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
+
+  double dTotAngMom;     /**< System's Current Angular Momentum */
+  fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
+  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
+  double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
+  double **dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
+  double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
+  int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
+  double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
+  
   double dTotEnInit;     /**< System's Initial Energy */
+
 } SYSTEM;
 
 /* 
@@ -350,7 +394,7 @@ typedef struct {
       with a Type 0 variable must account for  the evolution with 
       dTimeStep. 
   */
-  int **iaType;        
+  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar quantity with time derivative) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
@@ -456,6 +500,69 @@ typedef struct {
     double dTDotCore;    /**< TCore time Derivative */
     double *pdTDotCore;
 
+  /* LAGRANGE */
+  /* Number of eqns to modify a parameter */
+  int iNumHecc;          /**< Number of Equations Affecting h = e*sin(longp) */
+  int iNumKecc;          /**< Number of Equations Affecting k = e*cos(longp) */
+  int iNumPinc;          /**< Number of Equations Affecting p = s*sin(longa) */
+  int iNumQinc;         /**< Number of Equations Affecting q = s*cos(longa) */
+  
+  int iHecc;             /**< Variable # Corresponding to h = e*sin(longp) */
+  double dDHeccDt;       /**< Total h Derivative */
+  int iKecc;             /**< Variable # Corresponding to k = e*cos(longp) */
+  double dDKeccDt;       /**< Total k Derivative */
+  int iPinc;             /**< Variable # Corresponding to p = s*sin(longa) */
+  double dDPincDt;       /**< Total p Derivative */
+  int iQinc;             /**< Variable # Corresponding to q = s*cos(longa) */
+  double dDQincDt;       /**< Total q Derivative */
+  int *iaHeccLagrange;       /**< Equation # Corresponding to Lagrange's change to h = e*sin(longp) */
+  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp) */
+  int *iaPincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  p = s*sin(longa) */
+  int *iaQincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  q = s*cos(longa) */
+     
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      h = e*sin(varpi) derivative due to LAGRANGE. */
+  double **padDHeccDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      k = e*cos(varpi) derivative due to LAGRANGE. */
+  double **padDKeccDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      p = s*sin(Omega) derivative due to LAGRANGE. */
+  double **padDPincDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      q = s*cos(Omega) derivative due to LAGRANGE. */
+  double **padDQincDtLagrange;
+  
+  /* LASKAR */
+  int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
+  int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
+  int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
+  
+  int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
+  double dDXoblDt;       /**< Total x Derivative */
+  int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
+  double dDYoblDt;       /**< Total y Derivative */
+  int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
+  double dDZoblDt;       /**< Total p Derivative */
+  int *iaXoblLaskar;     /**< Equation # Corresponding to Laskar's change to x = sin(obl)*cos(pA) */
+  int *iaYoblLaskar;     /**< Equation #s Corresponding to Laskar's change to y = sin(obl)*sin(pA) */
+  int *iaZoblLaskar;     /**< Equation #s Corresponding to Laskar's change to z = cos(obl) */
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      xi = sin(obliq)*sin(pA) derivative due to LASKAR. */
+  double **padDXoblDtLaskar;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      zeta = sin(obliq)*cos(pA) derivative due to LASKAR. */
+  double **padDYoblDtLaskar;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      chi = cos(obliq) derivative due to LASKAR. */
+  double **padDZoblDtLaskar;
+  
 } UPDATE;
 
 typedef struct {
@@ -587,6 +694,9 @@ typedef struct {
   fnHaltModule **fnHalt;   /**< Function Pointers to Halt Checks */
   fnForceBehaviorModule **fnForceBehavior; /**< Function Pointers to Force Behaviors */
 
+  /* Things for Lagrange */
+  double dAngNum;         /**< Value used in calculating timestep from angle variable */
+  int bSemiMajChange;         /**< 1 if semi-major axis can change (Lagrange will recalc Laplace coeff functions) */
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -669,7 +779,7 @@ typedef struct {
 } OUTPUT;
 
 
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 
@@ -698,7 +808,15 @@ typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
 
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
@@ -760,14 +878,32 @@ typedef struct {
 
   /*! These functions assign Equation and Module information regarding 
     potassium-40 in the UPDATE struct. */ 
-    fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
-    fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
-    fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
-    fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
-    fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
-    fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
-    fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
-    fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+  fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
+  /*! These functions assign Equation and Module information regarding 
+    thorium-232 in the UPDATE struct. */ 
+  fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
+  /*! These functions assign Equation and Module information regarding 
+    uranium-238 in the UPDATE struct. */ 
+  fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+  fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
+  fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
+  fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+  fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+  
+ 
+  /*! These functions assign Equation and Module information regarding 
+      Lagrange h,k,p,q variables in the UPDATE struct. */
+  fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
+  fnFinalizeUpdateKeccModule **fnFinalizeUpdateKecc;
+  fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
+  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
+
+  /*! These functions assign Equation and Module information regarding 
+      Laskar x,y,z variables in the UPDATE struct. */
+  fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
+  fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
+  fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
 
     fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
     fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
@@ -797,6 +933,7 @@ typedef struct {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
+
 /* 
  * Other Header Files - These are primarily for function declarations
  */
@@ -818,6 +955,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "lagrange.h"
 #include "thermint.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
@@ -837,4 +975,5 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 // XXX Obsolete?
 #define MODULEOPTEND        1900
 #define MODULEOUTEND        1900
+
 

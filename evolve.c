@@ -112,7 +112,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	    /* The parameter does not require a derivative, but is 
 	       calculated explicitly as a function of age. */
 	    dVarNow=*update[iBody].pdVar[iVar];
-	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
+	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
 	    
 	    if (control->Evolve.bFirstStep) {
 	      dMin = integr.dTimeStep;
@@ -122,10 +122,20 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	      if (dMinNow < dMin)
 		dMin = dMinNow;
 	    }
+	  } else if (update[iBody].iaType[iVar][iEqn] == 2) {  
+	    // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
+	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+		dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+		if (dMinNow < dMin) 
+		  dMin = dMinNow;
+	      }
+	    }
 	  } else {
 	    // The parameter is controlled by a time derivative
 	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
+	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
 	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
 		dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
 		if (dMinNow < dMin) 
@@ -177,7 +187,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
@@ -289,7 +299,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
 
   PropertiesAuxiliary(body,control,update);
-
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* This is minimum dynamical timescale */

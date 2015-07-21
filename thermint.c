@@ -1312,13 +1312,13 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 
 /*** These derivatives are called from the udpate matrix, format is fixed. ***/
 /* Get TDotMan */
-double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
   return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); 
 }
 
 /* Get TDotCore */
-double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];   //Is this correct?
   //  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE));   //No IC heat.
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);

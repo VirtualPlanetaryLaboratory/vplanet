@@ -300,6 +300,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   PropertiesAuxiliary(body,control,update);
   
+  //Hack to test recalc laplace
+//   body[1].dSemi = 0.5*AUCM;
+//   RecalcLaplace(body,&control->Evolve,system);
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* This is minimum dynamical timescale */

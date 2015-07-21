@@ -13,8 +13,6 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
-#include "lagrange.h"
-#include "laskar.h"
 
 void InitializeControlLaskar(CONTROL *control) {
   /* Not sure if I need anything here yet */

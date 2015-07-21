@@ -13,7 +13,6 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
-#include "lagrange.h"
 
 void InitializeControlLagrange(CONTROL *control) {
   /* Not sure if I need anything here yet */
@@ -403,9 +402,10 @@ int Nchoosek(int N, int k) {
 * For example, for 4 planets, the index for the pair 
 * (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */  
 int CombCount(int x, int y, int N) {
+  /*
   if (x == 0) {
     x = 1.3;
-  }
+  }*/
   return N*(x-1) + (y-1) - Nchoosek(x+1, 2);
 } 
 
@@ -1085,26 +1085,31 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 }
 
 /************* Lagrange Functions ************/
-void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
+void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
   double alpha1, dalpha;
-  int j = 0;
+  int j, iBody, jBody;
   
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
-  }
-    
-  for (j=0;j<LAPLNUM;j++) {
-    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
-    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceF[j][0](alpha1, 0);
-		
-	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceDeriv[j][0](alpha1, 0);
-		
-	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
+  j = 0;
+  for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      if (body[iBody].dSemi < body[jBody].dSemi) {
+	  alpha1 = body[iBody].dSemi/body[jBody].dSemi;
+      } else if (body[iBody].dSemi > body[jBody].dSemi) {
+	  alpha1 = body[jBody].dSemi/body[iBody].dSemi;
+      }
+	
+      for (j=0;j<LAPLNUM;j++) {
+	dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
+	if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j]) {
+	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
+	    system->fnLaplaceF[j][0](alpha1, 0);
+		    
+	    system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
+	    system->fnLaplaceDeriv[j][0](alpha1, 0);
+		    
+	    system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+	}
+      }
     }
   }
 }

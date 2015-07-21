@@ -1,3 +1,4 @@
+void PropsAuxNULL(BODY*,UPDATE*,int);
 void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);
 double fdGetUpdateInfo(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 

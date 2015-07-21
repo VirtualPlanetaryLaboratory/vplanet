@@ -9,20 +9,9 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	gl581.in $	# The host star
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-		c.in # $		# Gl 581 c, Earth-like w/strong tides
-		d.in		# Gl 581 d, weaker tides, 30x potassium-40
-=======
-		c.in # $		# Gl 581 c, Earth-like w/strong tides
+		c.in # $			# Gl 581 c, Earth-like w/strong tides
 #		d.in		# Gl 581 d, weaker tides, 30x potassium-40
->>>>>>> 055381aed21ff37afe4f092c5977e78ac7d92e95
 
-=======
-#		c.in # $		# Gl 581 c, Earth-like w/strong tides
-		d.in		# Gl 581 d, weaker tides, 30x potassium-40
->>>>>>> ae511cda0a4e1e70ec2765fba4763346317ae1ae
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -32,6 +21,7 @@ sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
 sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
+sUnitTemp       K
 
 # Units specified in the primary input file are propagated into the bodies. Otherwise
 # specifiy units on a per body basis in the body files.

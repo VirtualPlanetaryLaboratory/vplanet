@@ -462,7 +462,7 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 2; //will need to change this for zero mass particles in future
     VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
-    control->Evolve.fnAuxProps[iBody][iModule] = &PropertiesLagrange;
+    control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesLagrange;
     
     CalcHKPQ(body, iBody);
     /* Body updates */

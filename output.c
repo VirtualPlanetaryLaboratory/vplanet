@@ -849,10 +849,6 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
-    /* Get auxiliary properties */
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
-    
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
@@ -973,6 +969,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputRadheat(output,fnWrite);
   InitializeOutputLagrange(output,fnWrite);
   InitializeOutputLaskar(output,fnWrite);
+  InitializeOutputThermint(output,fnWrite);
 
 }
 

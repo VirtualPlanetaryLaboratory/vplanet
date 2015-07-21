@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
+void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
+}
+
 void PropsAuxGeneral(BODY *body,CONTROL *control) {
   int iBody;
 
@@ -32,11 +35,11 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Uni-module properties
     for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
+      control->Evolve.fnPropsAux[iBody][iModule](body,update,iBody);
 
     // Multi-module properties
     for (iModule=0;iModule<control->Evolve.iNumMulti[iBody];iModule++)
-      control->Evolve.fnAuxPropsMulti[iBody][iModule](body,update,iBody);
+      control->Evolve.fnPropsAuxMulti[iBody][iModule](body,update,iBody);
   }
 
 

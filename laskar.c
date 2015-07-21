@@ -190,7 +190,7 @@ void VerifyLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   int i, j=0, iPert=0, jBody=0;
      
   if (iBody >= 1) {
-    control->Evolve.fnAuxProps[iBody][iModule] = &PropertiesLaskar;
+    control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesLaskar;
     
     CalcXYZobl(body, iBody);
     /* Body updates */

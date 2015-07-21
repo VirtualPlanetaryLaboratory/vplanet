@@ -988,7 +988,7 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   exit(1);
 }
 */
-void fnPropertiesRadheat(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheat(BODY *body,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
@@ -1053,7 +1053,7 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     fprintf(stderr,"WARNING: RADHEAT called for body %s, but no radiogenic species present.\n",body[iBody].cName);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
-  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesRadheat;
+  control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyRadheat;
   output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxRadheat;
 }
@@ -2101,7 +2101,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
-  
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 

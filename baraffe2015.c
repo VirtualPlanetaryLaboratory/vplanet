@@ -110,6 +110,13 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 	int dxi, dyi;
   double result = 0;
 	
+	// Let's enforce a minimum age of 0.001 GYR
+	// NOTE: This results in a constant luminosity at times earlier than this, which
+	// is not realistic. Shouldn't be an issue for most planet evolution calculations,
+	// since planets typically form after this time, but this issue needs to be
+	// revisited eventually.
+	if (A < 0.001) A = 0.001;
+		
 	// Get bounds on grid
 	*iError = 0;
 	xi = fiGetLowerBound(M,xarr,iMLEN);

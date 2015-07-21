@@ -299,7 +299,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
 
   PropertiesAuxiliary(body,control,update);
-
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* This is minimum dynamical timescale */

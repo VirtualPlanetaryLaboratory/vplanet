@@ -102,6 +102,8 @@ void LogLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Lagrange Functions */
+void RecalcLaplace(BODY*, SYSTEM*, int*);
+
 void PropertiesLagrange(BODY*,UPDATE*,int);
 void ForceBehaviorLagrange(BODY*,EVOLVE*,IO*,int,int);
 

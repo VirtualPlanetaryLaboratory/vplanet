@@ -417,8 +417,10 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
   if (iBody == 1) {
     system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
+    system->fnLaplaceDeriv = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
     for (j=0;j<LAPLNUM;j++) {
       system->fnLaplaceF[j] = malloc(1*sizeof(fnLaplaceFunction));
+      system->fnLaplaceDeriv[j] = malloc(1*sizeof(fnLaplaceFunction));
     }
     system->fnLaplaceF[0][0] = &fdSemiMajAxF1;
     system->fnLaplaceF[1][0] = &fdSemiMajAxF2;
@@ -447,9 +449,40 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->fnLaplaceF[24][0] = &fdSemiMajAxF25;
     system->fnLaplaceF[25][0] = &fdSemiMajAxF26;
     
+    system->fnLaplaceDeriv[0][0] = &fdDSemiF1Dalpha;
+    system->fnLaplaceDeriv[1][0] = &fdDSemiF2Dalpha;
+    system->fnLaplaceDeriv[2][0] = &fdDSemiF3Dalpha;
+    system->fnLaplaceDeriv[3][0] = &fdDSemiF4Dalpha;
+    system->fnLaplaceDeriv[4][0] = &fdDSemiF5Dalpha;
+    system->fnLaplaceDeriv[5][0] = &fdDSemiF6Dalpha;
+    system->fnLaplaceDeriv[6][0] = &fdDSemiF7Dalpha;
+    system->fnLaplaceDeriv[7][0] = &fdDSemiF8Dalpha;
+    system->fnLaplaceDeriv[8][0] = &fdDSemiF9Dalpha;
+    system->fnLaplaceDeriv[9][0] = &fdDSemiF10Dalpha;
+    system->fnLaplaceDeriv[10][0] = &fdDSemiF11Dalpha;
+    system->fnLaplaceDeriv[11][0] = &fdDSemiF12Dalpha;
+    system->fnLaplaceDeriv[12][0] = &fdDSemiF13Dalpha;
+    system->fnLaplaceDeriv[13][0] = &fdDSemiF14Dalpha;
+    system->fnLaplaceDeriv[14][0] = &fdDSemiF15Dalpha;
+    system->fnLaplaceDeriv[15][0] = &fdDSemiF16Dalpha;
+    system->fnLaplaceDeriv[16][0] = &fdDSemiF17Dalpha;
+    system->fnLaplaceDeriv[17][0] = &fdDSemiF18Dalpha;
+    system->fnLaplaceDeriv[18][0] = &fdDSemiF19Dalpha;
+    system->fnLaplaceDeriv[19][0] = &fdDSemiF20Dalpha;
+    system->fnLaplaceDeriv[20][0] = &fdDSemiF21Dalpha;
+    system->fnLaplaceDeriv[21][0] = &fdDSemiF22Dalpha;
+    system->fnLaplaceDeriv[22][0] = &fdDSemiF23Dalpha;
+    system->fnLaplaceDeriv[23][0] = &fdDSemiF24Dalpha;
+    system->fnLaplaceDeriv[24][0] = &fdDSemiF25Dalpha;
+    system->fnLaplaceDeriv[25][0] = &fdDSemiF26Dalpha;
+    
     system->dmLaplaceC = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+    system->dmLaplaceD = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+    system->dmAlpha0 = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
     for (i=0;i<Nchoosek(control->Evolve.iNumBodies-1,2);i++) {
-      system->dmLaplaceC[i] = malloc(LAPLNUM*sizeof(double));  
+      system->dmLaplaceC[i] = malloc(LAPLNUM*sizeof(double));
+      system->dmLaplaceD[i] = malloc(LAPLNUM*sizeof(double));
+      system->dmAlpha0[i] = malloc(LAPLNUM*sizeof(double));
     }
     
     system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
@@ -489,15 +522,20 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 	if (body[iBody].dSemi < body[jBody].dSemi) {  
 	    system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 0);
+	    system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi, 0);    
+	    system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
 	} else if (body[iBody].dSemi > body[jBody].dSemi) {
 	    system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
 	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi, 0);
+	    system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi, 0);  
+	    system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
 	}
       }
     }
   }
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorLagrange;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyLagrange;
+  system->dDfcrit = 0.1;
 }
 
 
@@ -1049,29 +1087,24 @@ void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
 /************* Lagrange Functions ************/
 void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
   double alpha1, dalpha;
-  int j = 0, reset = 0;
+  int j = 0;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
       alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
       alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
   }
-  
-  dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]]);
-  
+    
   for (j=0;j<LAPLNUM;j++) {
+    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
     if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-      if (reset == 0) {
 	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
 	system->fnLaplaceF[j][0](alpha1, 0);
 		
 	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
 	system->fnLaplaceDeriv[j][0](alpha1, 0);
 		
-	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]] = alpha1;
-	
-	reset = 1;
-      }
+	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
     }
   }
 }

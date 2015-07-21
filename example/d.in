@@ -1,7 +1,7 @@
 # Gl581 d
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
-saOutputOrder Time Semim Ecce Obli -Rotper -SurfEnFluxEqtide drotperdte imk2
+saOutputOrder Time Semim Ecce Obli -Rotper -SurfEnFluxEqtide
 
 # The order of options in a file is unimportant
 # The user selects the ordering of the output
@@ -20,7 +20,7 @@ dEcc            0.38
 dRadius		-1.592
 saTidePerts	star
 #d40KNumMan		-30
-saModules	eqtide#$		
+saModules	eqtide#$
 #radheat
 #d232ThNumMan	-1
 dMaxLockDiff	0.1

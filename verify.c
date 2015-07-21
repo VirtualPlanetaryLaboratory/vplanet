@@ -408,7 +408,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     VerifyHalts(body,control,module,options,iBody);
     /* Verify Modules */
 
-    VerifyRotation(body,control,module,options,files->Infile[iBody].cIn,iBody);
+    VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
 
     /* XXX Only module reference in file -- can this be changed? */
     if (iBody > 0 && body[iBody].bEqtide /* || other spin/orbit modules */) {

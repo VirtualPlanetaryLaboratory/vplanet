@@ -907,8 +907,9 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   char saTmp[MAXARRAY][OPTLEN];
 
   lTmp=malloc(MAXLINES*sizeof(int));
-
+  
   AddOptionStringArray(infile->cIn,options->cName,saTmp,&iNumIndices,&iNumLines,lTmp,control->Io.iVerbose);
+  
   if (lTmp[0] >= 0) {
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
@@ -921,20 +922,22 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
     exit(EXIT_INPUT);
   }
-
+  
   /* With body files identified, must allocate space */
-  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));
+  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));  
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
+  
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<iNumIndices;iIndex++) // Russell changed <= to < b/c iNumIndices+1 is outside the allocated memory of files->Infile
+  for (iIndex=0;iIndex<iNumIndices;iIndex++)  
+
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
-  
+ 
   control->Evolve.iNumBodies=iNumIndices;
   files->Outfile = malloc(iNumIndices*sizeof(OUTFILE));
-
+  
   UpdateFoundOptionMulti(&files->Infile[0],options,lTmp,iNumLines,0);
-
+  
   free(lTmp);
 }
 
@@ -1293,6 +1296,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
   } else
     AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
     
@@ -2531,6 +2535,8 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   InitializeOptionsEqtide(options,fnRead);
   InitializeOptionsRadheat(options,fnRead);
+  InitializeOptionsLagrange(options,fnRead);
+  InitializeOptionsLaskar(options,fnRead);
   InitializeOptionsThermint(options,fnRead);
 
 }

@@ -36,8 +36,8 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iSubStep;
 
-  control->Evolve.fnAuxProps = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
-  control->Evolve.fnAuxPropsMulti = malloc(control->Evolve.iNumBodies*sizeof(fnAuxPropsModule*));
+  control->Evolve.fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
+  control->Evolve.fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.iNumMulti = malloc(control->Evolve.iNumBodies*sizeof(int));
@@ -47,7 +47,7 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-      control->Evolve.fnAuxProps[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnAuxPropsModule));
+      control->Evolve.fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
   }
 

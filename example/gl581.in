@@ -25,6 +25,6 @@ saTidePerts	c 		# Body name(s) of tidal perturbers
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-#iSciNot	12		# Decade to switch between normal/scientific notation
+#iSciNot		12		# Decade to switch between normal/scientific notation
 
-saOutputOrder	Time ImK2
+saOutputOrder	Time ImK2 deltatime

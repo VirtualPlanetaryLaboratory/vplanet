@@ -17,7 +17,7 @@ void AddModuleEqtide(MODULE*,int,int);
 void BodyCopyEqtide(BODY*,BODY*,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
-
+int fiGetModuleIntEqtide(MODULE*,int);
 
 /* Options Info */
 
@@ -25,6 +25,7 @@ void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 #define OPTENDEQTIDE            1100 /* End of Eqtide options */
 
 #define OPT_DISCRETEROT         1005
+#define OPT_FIXORBIT            1007
 #define OPT_FORCEEQSPIN         1010 
 #define OPT_HALTDBLSYNC	        1015
 #define OPT_HALTTIDELOCK        1020
@@ -45,6 +46,7 @@ void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 void HelpOptionsEqtide(OPTIONS*);
 void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -182,7 +184,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropertiesCPL(BODY*,UPDATE*,int);
+void PropsAuxCPL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -192,10 +194,10 @@ double fdCPLEqRotRateDiscrete(double,double);
 double fdCPLEqRotRateCont(double,double);
 
 /* Derivatives */
-double fdCPLDsemiDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDeccDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDrotrateDt(BODY*,SYSTEM*,int*,int);
-double fdCPLDobliquityDt(BODY*,SYSTEM*,int*,int);
+double fdCPLDsemiDt(BODY*,SYSTEM*,int*);
+double fdCPLDeccDt(BODY*,SYSTEM*,int*);
+double fdCPLDrotrateDt(BODY*,SYSTEM*,int*);
+double fdCPLDobliquityDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
 double fdCPLDeccDtBody(BODY,double,double,double);
 
@@ -211,15 +213,15 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropertiesCTL(BODY*,UPDATE*,int);
+void PropsAuxCTL(BODY*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);
 double fdCTLEqRotRate(double,double,double);
 
-double fdCTLDsemiDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDeccDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDrotrateDt(BODY*,SYSTEM*,int*,int);
-double fdCTLDobliquityDt(BODY*,SYSTEM*,int*,int);
+double fdCTLDsemiDt(BODY*,SYSTEM*,int*);
+double fdCTLDeccDt(BODY*,SYSTEM*,int*);
+double fdCTLDrotrateDt(BODY*,SYSTEM*,int*);
+double fdCTLDobliquityDt(BODY*,SYSTEM*,int*);
 double fdCTLDsemiDtBody(BODY,double,double,double,double,double);
 double fdCTLDeccDtBody(BODY,double,double,double);

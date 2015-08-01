@@ -20,7 +20,6 @@ void InitializeUpdateTmpBodyLagrange(BODY*,CONTROL*,UPDATE*,int);
 
 #define OPT_INC                1301
 #define OPT_LONGA              1302
-#define OPT_LONGP              1303
 #define OPT_ARGP               1304
 
 /* Options Functions */
@@ -56,11 +55,8 @@ void FinalizeUpdateQincLagrange(BODY*,UPDATE*,int*,int,int);
 #define OUT_INC                 1321
 #define OUT_SINC                1322
 #define OUT_LONGA               1323
-#define OUT_LONGP               1324
 #define OUT_ARGP                1325
 
-#define OUT_HECC                1331
-#define OUT_KECC                1332
 #define OUT_PINC                1333
 #define OUT_QINC                1334
 
@@ -104,7 +100,7 @@ void LogBodyLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 /* Lagrange Functions */
 void RecalcLaplace(BODY*, SYSTEM*, int*);
 
-void PropertiesLagrange(BODY*,UPDATE*,int);
+void PropsAuxLagrange(BODY*,UPDATE*,int);
 void ForceBehaviorLagrange(BODY*,EVOLVE*,IO*,int,int);
 
 double fdSemiMajAxF1(double, int);

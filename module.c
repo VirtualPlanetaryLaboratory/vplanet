@@ -33,29 +33,24 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnInitializeOutput = malloc(iNumBodies*sizeof(fnInitializeOutputModule*));
   module->fnFinalizeOutputFunction = malloc(iNumBodies*sizeof(fnFinalizeOutputFunctionModule*));
 
-  module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
-  module->fnFinalizeUpdateObl = malloc(iNumBodies*sizeof(fnFinalizeUpdateOblModule));
-  module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
-
-  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
-
+  // Finalize Primary Variable Functions
+  //module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
   module->fnFinalizeUpdate40KNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
-  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
-
-  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
-  
+  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
+  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
   module->fnFinalizeUpdateHecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
   module->fnFinalizeUpdateKecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
   module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
-  
+  module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
+  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
   module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
@@ -85,12 +80,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   if (body[iBody].bEqtide)
     iNumModules++;
-  if (body[iBody].bRadheat)
-    iNumModules++;
-
   if (body[iBody].bLagrange)
     iNumModules++;
   if (body[iBody].bLaskar)
+    iNumModules++;
+  if (body[iBody].bRadheat)
     iNumModules++;
   if (body[iBody].bThermint)
     iNumModules++;
@@ -115,58 +109,52 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
-  module->fnFinalizeUpdateEcc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccModule));
-  module->fnFinalizeUpdateObl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOblModule));
-  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
 
+  // Finalize Primary Variable Functions
+  //module->fnFinalizeUpdateEcc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccModule));
+  module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
+  module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
   module->fnFinalizeUpdateHecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHeccModule));
   module->fnFinalizeUpdateKecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateKeccModule));
   module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
-
+  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
   module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
   
-  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
-
-  module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
-  module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
-  module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
-
-  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
-  
+  /* Initialize all FinalizeUpdate functions to null. The modules that
+     need them will replace them in AddModule. */
   for(iModule = 0; iModule < iNumModules; iModule++) {
-    module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
-    
-    module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
-    
+    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
     
-    module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;  //PED added man's.
-    module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;  //PED added core's.
-    module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
@@ -179,10 +167,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleEqtide(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
-  if (body[iBody].bRadheat) {
-    AddModuleRadheat(module,iBody,iModule);
-    module->iaModule[iBody][iModule++] = RADHEAT;
-  }
   if (body[iBody].bLagrange) {
     AddModuleLagrange(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = LAGRANGE;
@@ -190,6 +174,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
    if (body[iBody].bLaskar) {
     AddModuleLaskar(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = LASKAR;
+  }
+  if (body[iBody].bRadheat) {
+    AddModuleRadheat(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
       AddModuleThermint(module,iBody,iModule);
@@ -221,12 +209,12 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
 	body[iFile-1].bEqtide = 1;
-      } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
-	body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"lagrange",8) == 0) {
 	body[iFile-1].bLagrange = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"laskar",6) == 0) {
 	body[iFile-1].bLaskar = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
+	body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
       } else {
@@ -244,12 +232,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
-
 /*
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bLaskar) {
     if (!body[iBody].bLagrange) {
@@ -259,7 +246,7 @@ void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OP
   }
 }
 
-void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   /* This will need modification if material can move between layers */
 
@@ -270,11 +257,11 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else
-      control->Evolve.fnPropsAuxMulti[iBody][(*iModule)++] = &PropsAuxRadheatThermint;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxRadheatThermint;
   }
 }
 
-void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iEqtide;
 
   if (body[iBody].bEqtide) {
@@ -290,30 +277,42 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 	 PropsAuxEqtideThermint. */
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
-      control->Evolve.fnPropsAuxMulti[iBody][(*iModule)++] = &PropsAuxEqtideThermint;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
 }
 
+void VerifyModuleMultiEqtideLagrange(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bLagrange) {
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideLagrange;
+    }
+  }
+}
 
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
-  int iNumMulti=0;
+  int iNumMultiProps=0,iNumMultiForce=0;
 
-  if (module->iNumModules[iBody] > 1) 
+  if (module->iNumModules[iBody] > 1) {
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
     control->Evolve.fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
+    control->fnForceBehaviorMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnForceBehaviorModule*));
+  }
 
   /* Now verify. Even if only module is called, we still need to call
      these functions as some default behavior is set if other modules aren't
      called. */
-  VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
+  VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
   
-  VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
+  VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
   
-  VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMulti);
+  VerifyModuleMultiEqtideLagrange(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
   
-  control->Evolve.iNumMulti[iBody] = iNumMulti;
+  control->Evolve.iNumMultiProps[iBody] = iNumMultiProps;
+  control->iNumMultiForce[iBody] = iNumMultiForce;
   if (control->Io.iVerbose >= VERBALL)
     fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
 }
@@ -339,3 +338,37 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
 }
 
+/*
+ * Force Behavior for multi-module calculations
+ */
+
+void ForceBehaviorEqtideLagrange(BODY *body,EVOLVE *evolve,IO *io,int iFoo,int iBar) {
+  /*  
+  // Insert Russell's code here.
+  printf("Entered  ForceBehaviorEqtideLagrange.\n");
+
+// XXX This function 
+void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
+  double alpha1, dalpha;
+  int j = 0;
+
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+      alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
+  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+      alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
+  }
+    
+  for (j=0;j<LAPLNUM;j++) {
+    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
+    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
+	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+	system->fnLaplaceF[j][0](alpha1, 0);
+		
+	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+	system->fnLaplaceDeriv[j][0](alpha1, 0);
+		
+	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
+    }
+  }
+  */
+} 

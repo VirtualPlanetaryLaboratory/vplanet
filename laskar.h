@@ -18,7 +18,6 @@ void InitializeUpdateTmpBodyLaskar(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTLASKAR        1400 /* Start of LASKAR options */
 #define OPTENDLASKAR          1500 /* End of LASKAR options */
 
-#define OPT_PRECA                1401
 #define OPT_DYNELLIP              1402
 
 
@@ -49,9 +48,6 @@ void FinalizeUpdateZoblLaskar(BODY*,UPDATE*,int*,int,int);
 
 
 #define OUT_PRECA               1421
-#define OUT_XOBL                1422
-#define OUT_YOBL                1423
-#define OUT_ZOBL                1424
 
 #define OUT_DOBLDTLASKAR        1440
 #define OUT_DPRECADTLASKAR      1441

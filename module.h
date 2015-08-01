@@ -9,3 +9,4 @@ void PropsAuxEqtideThermint(BODY*,UPDATE*,int);
 void PropsAuxLagrangeLaskar(BODY*,UPDATE*,int);
 void PropsAuxRadheatThermint(BODY*,UPDATE*,int);
 
+void ForceBehaviorEqtideLagrange(BODY*,EVOLVE*,IO*,int,int);

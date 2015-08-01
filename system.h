@@ -26,3 +26,6 @@ int bPrimary(BODY*,int);
 
 double fdOrbEnergy(BODY*,int);
 double fdTotEnergy(BODY *);
+
+void CalcHK(BODY*,int);
+void CalcPQ(BODY*,int);

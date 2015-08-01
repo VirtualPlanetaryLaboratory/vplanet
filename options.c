@@ -1268,6 +1268,7 @@ void ReadDigits(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     control->Io.iDigits = iTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
+    // XXX Don't we need to check if it was found in another file already??
     AssignDefaultInt(options,&control->Io.iDigits,files->iNumInputs);
 }
 
@@ -1564,6 +1565,38 @@ void ReadLogFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     sprintf(files->cLog,"%s.log",system->cName);
   }
 }
+
+/* Longitude of pericenter */
+void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+    
+    body[iFile-1].dLongP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dLongP = options->dDefault;
+}  
 
 /*
  *
@@ -1867,6 +1900,41 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else
     AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
 }
+
+/* Precession parameter */
+
+void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dPrecA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dPrecA = options->dDefault;
+}  
+
+
 
 /*
  *
@@ -2288,6 +2356,16 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LOGFILE].iType = 3;
   fnRead[OPT_LOGFILE] = &ReadLogFile;
   
+  sprintf(options[OPT_LONGP].cName,"dLongP");
+  sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
+  sprintf(options[OPT_LONGP].cDefault,"0");
+  options[OPT_LONGP].dDefault = 0.0;
+  options[OPT_LONGP].iType = 2;  
+  options[OPT_LONGP].iMultiFile = 1;   
+//   options[OPT_LONGP].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
+  fnRead[OPT_LONGP] = &ReadLongP;
+  
   /*
    *
    *   M
@@ -2383,6 +2461,22 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dNeg = AUCM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
+
+  /*
+   * P
+   */
+
+  sprintf(options[OPT_PRECA].cName,"dPrecA");
+  sprintf(options[OPT_PRECA].cDescr,"Planet's precession parameter");
+  sprintf(options[OPT_PRECA].cDefault,"0");
+  options[OPT_PRECA].dDefault = 0.0;
+  options[OPT_PRECA].iType = 2;  
+  options[OPT_PRECA].iMultiFile = 1; 
+//   options[OPT_LONGA].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  fnRead[OPT_PRECA] = &ReadPrecA;
+  
+
   
   /*
    *

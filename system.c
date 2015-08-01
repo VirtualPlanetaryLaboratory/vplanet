@@ -108,3 +108,15 @@ int bPrimary(BODY *body,int iBody) {
 
   return bPrimary;
 }
+
+/* Orbital Relationships */
+
+void CalcHK(BODY *body, int iBody) {
+  body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+  body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
+}
+
+void CalcPQ(BODY *body, int iBody) {
+  body[iBody].dPinc = body[iBody].dSinc*sin(body[iBody].dLongA);
+  body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
+}

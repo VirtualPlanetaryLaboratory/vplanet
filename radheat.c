@@ -760,8 +760,10 @@ void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /******************* Verify RADHEAT ******************/
 
 void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
-    if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) 
-      DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
+  if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) {
+    fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",options[iMass].cName,options[iNum].cName);
+    DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
+  }
 }
 
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {

@@ -73,7 +73,7 @@ void WriteMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (body[iBody].bLaskar) {
+  if (body[iBody].bDistRot) {
     *dTmp = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   } else {
     *dTmp = body[iBody].dObliquity;
@@ -104,7 +104,7 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (iBody > 0)
-    if (body[iBody].bLagrange) {
+    if (body[iBody].bDistOrb) {
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
     } else {
       *dTmp = body[iBody].dEcc;
@@ -967,8 +967,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
-  InitializeOutputLagrange(output,fnWrite);
-  InitializeOutputLaskar(output,fnWrite);
+  InitializeOutputDistOrb(output,fnWrite);
+  InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
 
 }

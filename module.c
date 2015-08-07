@@ -88,9 +88,9 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat)
     iNumModules++;
 
-  if (body[iBody].bLagrange)
+  if (body[iBody].bDistOrb)
     iNumModules++;
-  if (body[iBody].bLaskar)
+  if (body[iBody].bDistRot)
     iNumModules++;
   if (body[iBody].bThermint)
     iNumModules++;
@@ -183,13 +183,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
-  if (body[iBody].bLagrange) {
-    AddModuleLagrange(module,iBody,iModule);
-    module->iaModule[iBody][iModule++] = LAGRANGE;
+  if (body[iBody].bDistOrb) {
+    AddModuleDistOrb(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = DISTORB;
   }
-   if (body[iBody].bLaskar) {
-    AddModuleLaskar(module,iBody,iModule);
-    module->iaModule[iBody][iModule++] = LASKAR;
+   if (body[iBody].bDistRot) {
+    AddModuleDistRot(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bThermint) {
       AddModuleThermint(module,iBody,iModule);
@@ -223,10 +223,10 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
-      } else if (memcmp(sLower(saTmp[iModule]),"lagrange",8) == 0) {
-	body[iFile-1].bLagrange = 1;
-      } else if (memcmp(sLower(saTmp[iModule]),"laskar",6) == 0) {
-	body[iFile-1].bLaskar = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
+	body[iFile-1].bDistOrb = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
+	body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
       } else {
@@ -249,11 +249,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
 
-  if (body[iBody].bLaskar) {
-    if (!body[iBody].bLagrange) {
-      fprintf(stderr,"ERROR: Module LASKAR selected for %s, but LAGRANGE not selected.\n",body[iBody].cName);
+  if (body[iBody].bDistRot) {
+    if (!body[iBody].bDistOrb) {
+      fprintf(stderr,"ERROR: Module DISTROT selected for %s, but DISTORB not selected.\n",body[iBody].cName);
       exit(EXIT_INPUT);
     }
   }
@@ -307,7 +307,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   /* Now verify. Even if only module is called, we still need to call
      these functions as some default behavior is set if other modules aren't
      called. */
-  VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
+  VerifyModuleMultiDistOrbDistRot(body,control,files,options,iBody,&iNumMulti);
   
   VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
   
@@ -329,7 +329,7 @@ void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
 }
 
 /* This does not seem to be necessary
-void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
+void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 */

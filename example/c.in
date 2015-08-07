@@ -7,7 +7,7 @@ dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	0.  #23.5			
-dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+dRadGyra	 0.5			# Radius of gyration (moment of inertia constant)
 
 # Orbital Properties
 dSemi           0.02     #0.0721			# Semi-major axis, negative -> AU

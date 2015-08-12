@@ -24,6 +24,7 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ARGP               1304
 #define OPT_DFCRIT             1350
 #define OPT_GRCORR             1351
+#define OPT_INVPLANE           1352
 
 /* Options Functions */
 void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -108,6 +109,8 @@ void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
 
 void PropertiesDistOrb(BODY*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,int,int);
+
+void inv_plane(BODY*,SYSTEM*,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

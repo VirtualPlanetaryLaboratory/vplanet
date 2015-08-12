@@ -205,7 +205,6 @@ void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
 }
 
 void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter can exist in any file, but only once */
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -215,6 +214,18 @@ void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&body[iFile-1].bGRCorr,files->iNumInputs);
+}
+
+void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->bInvPlane = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&control->bInvPlane,files->iNumInputs);
 }
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
@@ -272,9 +283,16 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GRCORR].cDefault,"0");
   options[OPT_GRCORR].dDefault = 0;
   options[OPT_GRCORR].iType = 0;  
-  options[OPT_GRCORR].iMultiFile = 0; 
+  options[OPT_GRCORR].iMultiFile = 1; 
   fnRead[OPT_GRCORR] = &ReadGRCorr;
- 
+  
+  sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
+  sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");
+  sprintf(options[OPT_INVPLANE].cDefault,"0");
+  options[OPT_INVPLANE].dDefault = 0;
+  options[OPT_INVPLANE].iType = 0;  
+  options[OPT_INVPLANE].iMultiFile = 0; 
+  fnRead[OPT_INVPLANE] = &ReadInvPlane;
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -485,7 +503,7 @@ int CombCount(int x, int y, int N) {
 
 void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
-     
+      
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
   
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
@@ -606,6 +624,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 	}
       }
     } 
+    if (iBody == control->Evolve.iNumBodies-1) {
+      if (control->bInvPlane) {
+	inv_plane(body, system, control->Evolve.iNumBodies);
+      }
+    }
     if (body[iBody].bGRCorr) {
       /* Body updates for general relativistic correction, indexing star as a "perturber"*/
       InitializeHeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
@@ -1227,6 +1250,334 @@ void PropertiesDistOrb(BODY *body,UPDATE *update,int iBody) {
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
 }
+
+/*
+ * Invariable plane calculations
+ */ 
+
+double xangle1(BODY *body, int iBody) {
+  return cos(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA) - sin(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double xangle2(BODY *body, int iBody) {
+  return -cos(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA) - sin(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double yangle1(BODY *body, int iBody) {
+  return sin(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA) + cos(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double yangle2(BODY *body, int iBody) {
+  return -sin(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA) + cos(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double zangle1(BODY *body, int iBody) {
+  return sin(body[iBody].dLongP-body[iBody].dLongA)*(2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+}
+
+double zangle2(BODY *body, int iBody) {
+  return cos(body[iBody].dLongP-body[iBody].dLongA)*(2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+}
+
+double xinit(BODY *body, int iBody) {
+  return body[iBody].dSemi/AUCM * (cos(body[iBody].dEccA) - body[iBody].dEcc);
+}
+
+double yinit(BODY *body, int iBody) {
+  return body[iBody].dSemi/AUCM * sqrt(1.0-pow(body[iBody].dEcc,2)) * sin(body[iBody].dEccA);
+}
+
+double vxi(BODY *body, int iBody) {
+  double x, y, mu, n;
+  x = xinit(body, iBody);
+  y = yinit(body, iBody);
+  mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+  n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
+  return -pow(body[iBody].dSemi/AUCM,2)*n*sin(body[iBody].dEccA)/sqrt(pow(x,2)+pow(y,2));
+}
+  
+double vyi(BODY *body, int iBody) {
+  double x, y, mu, n, v;
+  x = xinit(body, iBody);
+  y = yinit(body, iBody);
+  mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+  n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
+  v = pow(body[iBody].dSemi/AUCM,2)*n*sqrt((1.0-pow(body[iBody].dEcc,2))/(pow(x,2)+pow(y,2)))*cos(body[iBody].dEccA);
+  return v;
+}
+
+double signf(double value) {
+  if (value > 0) return 1;
+  if (value < 0) return -1;
+  return 0;
+}
+
+void kepler_eqn(BODY *body, int iBody) {
+  double di1, di2, di3, fi, fi1, fi2, fi3;
+  if (body[iBody].dMeanA == 0) {
+    body[iBody].dEccA = 0;
+  } else {
+    body[iBody].dEccA = body[iBody].dMeanA + signf(sin(body[iBody].dMeanA))*0.85*body[iBody].dEcc;
+    di3 = 1.0;
+    
+    while (di3 > 1e-15) {
+      fi = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA) - body[iBody].dMeanA;
+      fi1 = 1.0 - body[iBody].dEcc*cos(body[iBody].dEccA);
+      fi2 = body[iBody].dEcc*sin(body[iBody].dEccA);
+      fi3 = body[iBody].dEcc*cos(body[iBody].dEccA);
+      di1 = -fi/fi1;
+      di2 = -fi/(fi1+0.5*di1*fi2);
+      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*pow(di2,2)*fi3);
+      body[iBody].dEccA += di3;
+    }
+  }
+}
+
+void osc2cart(BODY *body, int iNumBodies) {
+  int iBody;
+  double xtmp, ytmp, vxtmp, vytmp;
+  
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    body[iBody].dCartPos = malloc(3*sizeof(double));
+    body[iBody].dCartVel = malloc(3*sizeof(double));
+    
+    if (iBody == 0) {
+      body[iBody].dCartPos[0] = 0;
+      body[iBody].dCartPos[1] = 0;
+      body[iBody].dCartPos[2] = 0;
+  
+      body[iBody].dCartVel[0] = 0;
+      body[iBody].dCartVel[1] = 0;
+      body[iBody].dCartVel[2] = 0;
+    } else {
+      kepler_eqn(body, iBody);
+      xtmp = xinit(body, iBody);
+      ytmp = yinit(body, iBody);
+      vxtmp = vxi(body, iBody);
+      vytmp = vyi(body, iBody);
+      
+      body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
+      body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
+      body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+  
+      body[iBody].dCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
+      body[iBody].dCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
+      body[iBody].dCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
+    }
+  }
+}
+
+void astro2bary(BODY *body, int iNumBodies) {
+  int i, iBody;
+  double *xcom, *vcom, mtotal;
+  xcom = malloc(3*sizeof(double));
+  vcom = malloc(3*sizeof(double));
+  mtotal = 0;
+  for (iBody=0;iBody<iNumBodies;iBody++) mtotal += body[iBody].dMass;
+  
+  for (i=0;i<3;i++) {
+    xcom[i] = 0;
+    vcom[i] = 0;
+    for (iBody=1;iBody<iNumBodies;iBody++) {
+      xcom[i] += (body[iBody].dMass*body[iBody].dCartPos[i]/mtotal);
+      vcom[i] += (body[iBody].dMass*body[iBody].dCartVel[i]/mtotal);
+    }
+  }
+  
+  for (i=0;i<3;i++) {
+    for (iBody=0;iBody<iNumBodies;iBody++) {
+      body[iBody].dCartPos[i] -= xcom[i];
+      body[iBody].dCartVel[i] -= vcom[i];
+    }
+  }
+}
+
+void bary2astro(BODY *body, int iNumBodies) {
+  int i, iBody;
+  double xtmp, vtmp;
+  
+  for (i=0;i<3;i++) {
+    xtmp = body[0].dCartPos[i];
+    vtmp = body[0].dCartVel[i];
+    for (iBody=0;iBody<iNumBodies;iBody++) {
+      body[iBody].dCartPos[i] -= xtmp;
+      body[iBody].dCartVel[i] -= vtmp;
+    }
+  }
+}
+
+void cross(double *a, double *b, double *c) {
+  c[0] = a[1]*b[2] - b[1]*a[2];
+  c[1] = a[2]*b[0] - b[2]*a[0];
+  c[2] = a[0]*b[1] - b[0]*a[1];
+}
+
+void angularmom(BODY *body, double *AngMom, int iNumBodies) {
+  double *rxptmp;
+  int i, iBody;
+  
+  osc2cart(body, iNumBodies);
+  astro2bary(body, iNumBodies);
+  
+  rxptmp = malloc(3*sizeof(double));
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, rxptmp);
+    for (i=0;i<3;i++) {
+      AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
+    }
+  }
+}
+
+void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
+  double *xtmp, *vtmp;
+  int iBody;
+  
+  xtmp = malloc(3*sizeof(double));
+  vtmp = malloc(3*sizeof(double));
+  
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    xtmp[0] = body[iBody].dCartPos[0]*cos(system->dThetaInvP)+body[iBody].dCartPos[1]*sin(system->dThetaInvP);
+    xtmp[1] = -body[iBody].dCartPos[0]*sin(system->dThetaInvP)+body[iBody].dCartPos[1]*cos(system->dThetaInvP);
+    xtmp[2] = body[iBody].dCartPos[2];
+    vtmp[0] = body[iBody].dCartVel[0]*cos(system->dThetaInvP)+body[iBody].dCartVel[1]*sin(system->dThetaInvP);
+    vtmp[1] = -body[iBody].dCartVel[0]*sin(system->dThetaInvP)+body[iBody].dCartVel[1]*cos(system->dThetaInvP);
+    vtmp[2] = body[iBody].dCartVel[2];
+    
+    body[iBody].dCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
+    body[iBody].dCartPos[1] = xtmp[1];
+    body[iBody].dCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
+    body[iBody].dCartVel[0] = vtmp[0]*cos(system->dPhiInvP)-vtmp[2]*sin(system->dPhiInvP);
+    body[iBody].dCartVel[1] = vtmp[1];
+    body[iBody].dCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
+  }
+}
+
+double normv(double *vector) {
+  return sqrt(pow(vector[0],2)+pow(vector[1],2)+pow(vector[2],2));
+}
+
+void cart2osc(BODY *body, int iNumBodies) {
+  int iBody;
+  double r, vsq, rdot, mu, *h, hsq, sinwf, coswf, sinf, cosf, sinw, cosw, cosE, f;
+  
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    r = normv(body[iBody].dCartPos);
+    vsq = pow(normv(body[iBody].dCartVel),2);
+    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
+	    body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
+    mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+    h = malloc(3*sizeof(double));
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    hsq = pow(normv(h),2);
+    
+    body[iBody].dSemi = pow((2.0/r - vsq/mu),-1)*AUCM;
+    body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUCM));
+    body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
+    body[iBody].dLongA = atan2(h[0],-h[1]);
+    if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;
+    
+    sinwf = body[iBody].dCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+    coswf = (body[iBody].dCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*pow(body[iBody].dSinc,2)))/cos(body[iBody].dLongA);
+    
+    sinf = body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))*rdot/(normv(h)*body[iBody].dEcc);
+    cosf = (body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))/r - 1.0)/body[iBody].dEcc;
+    
+    sinw = sinwf*cosf - coswf*sinf;
+    cosw = sinwf*sinf + coswf*cosf;
+    body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
+    if (body[iBody].dLongP >= 2.*PI) {
+      body[iBody].dLongP -= 2.*PI;
+    } else if (body[iBody].dLongP < 0.0) {
+      body[iBody].dLongP += 2.*PI;
+    }
+    
+    f = atan2(sinf, cosf);
+    if (f >= 2.*PI) {
+      f -= 2.*PI;
+    } else if (f < 0.0) {
+      f += 2.*PI;
+    }
+    cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
+    if (f <= PI) body[iBody].dEccA = acos(cosE);
+    if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
+    
+    body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA);
+    if (body[iBody].dMeanA < 0) body[iBody].dMeanA += 2*PI;
+    if (body[iBody].dMeanA >= 2*PI) body[iBody].dMeanA -= 2*PI;
+  }
+}
+
+
+void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
+  int iBody;
+  double *AngMom;
+  AngMom = malloc(3*sizeof(double));
+  
+  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
+     This angle is invariant under rotations. */
+  for (iBody=1;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bDistRot) {
+      body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
+      while (body[iBody].dTrueApA<0) {
+	body[iBody].dTrueApA += 2*PI;
+      }
+    }
+  }
+  
+  angularmom(body, AngMom, iNumBodies);
+  system->dThetaInvP = atan2(AngMom[1],AngMom[0]);
+  system->dPhiInvP = atan2(sqrt(pow(AngMom[0],2)+pow(AngMom[1],2)),AngMom[2]);
+  
+  rotate_inv(body, system, iNumBodies);
+  bary2astro(body, iNumBodies);
+  cart2osc(body, iNumBodies);
+
+  /* Loop below recalculates precession param for planets with DistRot enabled.*/
+  for (iBody=1;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bDistRot) {
+      body[iBody].dPrecA = 2*PI - (body[iBody].dTrueApA+body[iBody].dLongP);
+      while (body[iBody].dPrecA<0) {
+	body[iBody].dPrecA += 2*PI;
+      }
+      CalcXYZobl(body, iBody);
+    }
+    CalcHKPQ(body, iBody);
+  }
+}
+
+// void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {
+//   double *xtmp, *vtmp;
+//   int iBody;
+//   
+//   xtmp = malloc(3*sizeof(double));
+//   vtmp = malloc(3*sizeof(double));
+//   
+//   for (iBody=0;iBody<iNumBodies;iBody++) {
+//     xtmp[0] = body[iBody].dCartPos[0]*cos(-system->dPhiInvP)-body[iBody].dCartPos[2]*sin(-system->dPhiInvP);
+//     xtmp[1] = body[iBody].dCartPos[1];
+//     xtmp[2] = body[iBody].dCartPos[0]*sin(-system->dPhiInvP)+body[iBody].dCartPos[2]*cos(-system->dPhiInvP);
+//     vtmp[0] = body[iBody].dCartVel[0]*cos(-system->dPhiInvP)-body[iBody].dCartVel[2]*sin(-system->dPhiInvP);
+//     vtmp[1] = body[iBody].dCartVel[1];
+//     vtmp[2] = body[iBody].dCartVel[0]*sin(-system->dPhiInvP)+body[iBody].dCartVel[2]*cos(-system->dPhiInvP);
+//     
+//     body[iBody].dCartPos[0] = xtmp[0]*cos(-system->dThetaInvP)+xtmp[1]*sin(-system->dThetaInvP);
+//     body[iBody].dCartPos[1] = -xtmp[0]*sin(-system->dThetaInvP)+xtmp[1]*cos(-system->dThetaInvP);
+//     body[iBody].dCartPos[2] = xtmp[2];
+//     body[iBody].dCartVel[0] = vtmp[0]*cos(-system->dThetaInvP)+vtmp[1]*sin(-system->dThetaInvP);
+//     body[iBody].dCartVel[1] = -vtmp[0]*sin(-system->dThetaInvP)+vtmp[1]*cos(-system->dThetaInvP);
+//     body[iBody].dCartVel[2] = vtmp[2];  
+//   }
+// }
+// 
+// void inv2input_plane(BODY *body, SYSTEM *system, int iNumBodies) {
+//   osc2cart(body, iNumBodies);
+//   astro2bary(body, iNumBodies);
+//   rotate_rev(body, system, iNumBodies);
+//   bary2astro(body, iNumBodies);
+//   cart2osc(body, iNumBodies);
+// }
+
+
 
 // 
 /* 

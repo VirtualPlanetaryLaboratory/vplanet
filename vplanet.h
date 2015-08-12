@@ -181,6 +181,10 @@ typedef struct {
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
+  double dMeanA;         /**< Mean anomaly (currently only used for inv plane calculation) */
+  double dEccA;          /**< Eccentric anomaly (currently only used for inv plane calculation) */
+  double *dCartPos;      /**< Cartesian position of body (currently only used for inv plane calculation) */
+  double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
@@ -188,6 +192,7 @@ typedef struct {
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
+  double dTrueApA;       /**< True anomaly at equinox (used for invariable plane conversion) */        
   double dDynEllip;      /**< Dynamical ellipticity */
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
@@ -373,6 +378,8 @@ typedef struct {
   double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
   int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
+  double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
+  double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
   
   double dTotEnInit;     /**< System's Initial Energy */
 
@@ -698,6 +705,7 @@ typedef struct {
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
+  int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
 } CONTROL;
 
 /* The INFILE struct contains all the information 

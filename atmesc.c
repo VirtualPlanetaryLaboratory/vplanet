@@ -198,7 +198,7 @@ void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0][0] = iBody;
 
-  update[iBody].pdDSurfaceWaterMassDt = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
+  update[iBody].pdDSurfaceWaterMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
   fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
 }
 

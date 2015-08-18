@@ -37,6 +37,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateObl = malloc(iNumBodies*sizeof(fnFinalizeUpdateOblModule));
   module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
+  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
   
   module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
@@ -107,6 +108,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateObl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOblModule));
   module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
 
   module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
@@ -125,6 +127,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;  //PED added man's.
     module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;

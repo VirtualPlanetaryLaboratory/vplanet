@@ -3,11 +3,11 @@ sName	        star		                    # Body's name
 saModules	    eqtide stellar              # Modules to apply, exact spelling required
 
 # Output
-saOutputOrder Time -Luminosity
+saOutputOrder Time -Luminosity -Radius
 
 # Physical Parameters
 dMass         0.31                        # Mass, negative -> Earth masses
-dRadius       0.00135                     # Radius, negative -> Earth radii
+sStellarModel baraffe
 dObliquity    0		
 dRotPeriod    0.2579                      # Rotation period, negative -> days
 dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)

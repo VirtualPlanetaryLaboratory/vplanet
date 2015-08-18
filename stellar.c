@@ -21,6 +21,7 @@ void  InitializeControlStellar(CONTROL *control) {
 void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
+  dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
 }
 
@@ -52,6 +53,29 @@ void ReadSatXUVFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   } else 
     if (iFile > 0)
       body[iFile-1].dSatXUVFrac = options->dDefault;
+}
+
+void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"ba",2)) {
+      body[iFile-1].iStellarModel = STELLAR_MODEL_BARAFFE;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iStellarModel = STELLAR_MODEL_NONE;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iStellarModel = STELLAR_MODEL_BARAFFE;
 }
 
 void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -87,6 +111,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SATXUVFRAC].iMultiFile = 1;
   fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
 
+  sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
+  sprintf(options[OPT_STELLARMODEL].cDescr,"Luminosity Evolution Model");
+  sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
+  options[OPT_STELLARMODEL].iType = 3;
+  options[OPT_STELLARMODEL].iMultiFile = 1;
+  fnRead[OPT_STELLARMODEL] = &ReadStellarModel;
+
   sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
   sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
   sprintf(options[OPT_LUMINOSITY].cDefault,"LSUN");
@@ -114,15 +145,48 @@ void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFi
   /* Nothing */
 }
 
-void VerifyLuminosity(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+
+  // Assign luminosity
+  if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    body[iBody].dLuminosity = fdLuminosityFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
+      // User specified luminosity, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  }
 
   update[iBody].iaType[update[iBody].iLuminosity][0] = 0;
   update[iBody].iNumBodies[update[iBody].iLuminosity][0] = 1;
   update[iBody].iaBody[update[iBody].iLuminosity][0] = malloc(update[iBody].iNumBodies[update[iBody].iLuminosity][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
 
-  update[iBody].pdLuminosity = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
-  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                          // NOTE: Same here!
+  update[iBody].pdLuminosityStellar = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
+  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                                 // NOTE: Same here!
+}
+
+void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+
+  // Assign radius
+  if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    body[iBody].dRadius = fdRadiusFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
+      // User specified radius, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  }
+
+  update[iBody].iaType[update[iBody].iRadius][0] = 0;
+  update[iBody].iNumBodies[update[iBody].iRadius][0] = 1;
+  update[iBody].iaBody[update[iBody].iRadius][0] = malloc(update[iBody].iNumBodies[update[iBody].iRadius][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
+
+  update[iBody].pdRadiusStellar = &update[iBody].daDerivProc[update[iBody].iRadius][0];  // NOTE: This points to the VALUE of the radius
+  fnUpdate[iBody][update[iBody].iRadius][0] = &fdRadius;                                 // NOTE: Same here!
 }
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
@@ -138,21 +202,20 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   /* Stellar is active for this body if this subroutine is called. */
   
-  if (body[iBody].dLuminosity > 0) {
-    
-    if (update[iBody].iNumLuminosity > 1) {
-      // ERROR: Since this is a variable we read from a grid, we can't have more than one equation affecting it!
-      if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Since iaType is 0 for dLuminosity, cannot have more than one equation affecting it!");
-      exit(EXIT_INPUT);
-    }
-    
-    VerifyLuminosity(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    bStellar = 1;
+  if (update[iBody].iNumLuminosity > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Since iaType is 0 for dLuminosity, cannot have more than one equation affecting it!");
+    exit(EXIT_INPUT);
   }
+  VerifyLuminosity(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  bStellar = 1;
   
-  if (!bStellar && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: STELLAR called for body %s, but luminosity is zero!\n", body[iBody].cName);
+  if (update[iBody].iNumRadius > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Since iaType is 0 for dRadius, cannot have more than one equation affecting it!");
+    exit(EXIT_INPUT);
+  }
+  VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesStellar;
@@ -171,6 +234,11 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
   }
+  
+  if (body[iBody].dRadius > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNumRadius++;
+  }
 }
 
 void FinalizeUpdateEccStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -181,7 +249,12 @@ void FinalizeUpdateLuminosityStellar(BODY *body,UPDATE*update,int *iEqn,int iVar
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iNumLuminosity = (*iEqn)++;
 }
-      
+     
+void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iNumRadius = (*iEqn)++;
+}
+ 
 void FinalizeUpdateOblStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
@@ -328,6 +401,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyStellar;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
   module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
+  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionStellar;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionStellar;
@@ -337,13 +411,63 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 /************* STELLAR Functions ************/
 
 double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
-  // TODO: Better error handling
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
+    return fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+    return body[iaBody[0]].dLuminosity;
+}
+
+double fdRadius(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
+    return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+    return body[iaBody[0]].dRadius;
+}
+
+double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
   int iError;
-  double L = fdBaraffe(STELLAR_L, body[0].dAge, body[0].dMass, 3, &iError);
-  if (iError == 0)
+  double L = fdBaraffe(STELLAR_L, dAge, dMass, 3, &iError);
+  if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
     return L;
   else {
-    fprintf(stderr,"ERROR: Routine fdBaraffe() returned an error.\n");
+    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
+      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+      fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
+      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_ISNAN)
+      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
+    else if (iError == STELLAR_ERR_FILE)
+      fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_BADORDER)
+      fprintf(stderr,"ERROR: Bad interpolation order in routine fdBaraffe().\n");
+    else
+      fprintf(stderr,"ERROR: Undefined error in fdBaraffe().\n");
+    exit(EXIT_INT);
+  }
+}
+
+double fdRadiusFunctionBaraffe(double dAge, double dMass) {
+  int iError;
+  double R = fdBaraffe(STELLAR_R, dAge, dMass, 3, &iError);
+  if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
+    return R;
+  else {
+    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
+      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+      fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
+      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_ISNAN)
+      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
+    else if (iError == STELLAR_ERR_FILE)
+      fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_BADORDER)
+      fprintf(stderr,"ERROR: Bad interpolation order in routine fdBaraffe().\n");
+    else
+      fprintf(stderr,"ERROR: Undefined error in fdBaraffe().\n");
     exit(EXIT_INT);
   }
 }

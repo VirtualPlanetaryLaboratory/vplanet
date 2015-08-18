@@ -47,7 +47,10 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     dest[iBody].iSurfaceWaterMass = src[iBody].iSurfaceWaterMass;
     
     dest[iBody].iNumLuminosity = src[iBody].iNumLuminosity;
-    dest[iBody].iLuminosity = src[iBody].iLuminosity;    
+    dest[iBody].iLuminosity = src[iBody].iLuminosity;  
+    
+    dest[iBody].iNumRadius = src[iBody].iNumRadius;
+    dest[iBody].iRadius = src[iBody].iRadius;  
     
     dest[iBody].iNumObl = src[iBody].iNumObl;
     dest[iBody].iObl = src[iBody].iObl;
@@ -98,6 +101,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum235UCore=0;
     update[iBody].iNumSurfaceWaterMass=0;
     update[iBody].iNumLuminosity=0;
+    update[iBody].iNumRadius=0;
     update[iBody].iNumObl=0;
     update[iBody].iNumRot=0;
     update[iBody].iNumSemi=0;
@@ -461,6 +465,36 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
         module->fnFinalizeUpdateLuminosity[iBody][iModule](body,update,&iEqn,iVar,iBody);
+      
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    // Radius:
+    update[iBody].iRadius = -1;
+    if (update[iBody].iNumRadius) {
+      update[iBody].iRadius = iVar;
+      update[iBody].iaVar[iVar] = VRADIUS;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumRadius;
+      update[iBody].pdVar[iVar] = &body[iBody].dRadius;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumRadius*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dRadius;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumRadius*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumRadius*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumRadius*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateRadius[iBody][iModule](body,update,&iEqn,iVar,iBody);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

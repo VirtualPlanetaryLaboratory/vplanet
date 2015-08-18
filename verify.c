@@ -278,6 +278,7 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char c
 
   /* Was mass set? */
   if (options[OPT_MASS].iLine[iBody] > -1) {
+  
     /* Can only set 1 other */
     if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_MASSRAD].iLine[iBody] > -1) 
       VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_MASSRAD].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],cFile,iVerbose);
@@ -285,11 +286,10 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char c
     if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) 
       VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
 
-    if (options[OPT_MASSRAD].iLine[iBody] >= -1 && options[OPT_DENSITY].iLine[iBody] >= -1) 
+    if (options[OPT_MASSRAD].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) 
       VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_MASSRAD].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
     
-    /* Only Mass and something else set */
-      
+    /* Only Mass and something else set */ 
 
     if (options[OPT_RADIUS].iLine[iBody] > -1)
       /* Mass and radius were the only two set - Nothing to do */

@@ -234,11 +234,13 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dK2 = src[iBody].dK2;
     dest[iBody].dObliquity = src[iBody].dObliquity;
     dest[iBody].dRotRate = src[iBody].dRotRate;
+    dest[iBody].dAge = src[iBody].dAge;
 
     /* Only orbiting bodies retain these parameters */
     if (iBody > 0) {
       dest[iBody].dEcc = src[iBody].dEcc;
       dest[iBody].dSemi = src[iBody].dSemi;
+      dest[iBody].dRadius = src[iBody].dRadius;
       dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
     }
     /* Copymodule specific properties */

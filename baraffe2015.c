@@ -49,7 +49,7 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 		return i;
 }
 
-double fdBaraffeBiLinear(int iMLEN, int iALEN, double data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
 	// and normalized distances to the interpolation point dx, dy.
 	double C0, C1, C;	
@@ -59,7 +59,7 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double data[iMLEN][iALEN], int xi
 	return C;
 }
 
-double fdBaraffeBiCubic(int iMLEN, int iALEN, double data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	double dvCoeff[16];
 	int j,k;
 	int ijkn = 0;
@@ -104,12 +104,12 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double data[iMLEN][iALEN], int xi,
   return result;
 }
 
-double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], double const yarr[iALEN], double data[iMLEN][iALEN], double M, double A, int iOrder, int *iError){
+double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], double const yarr[iALEN], double const data[iMLEN][iALEN], double M, double A, int iOrder, int *iError){
 	double dx, dy;
 	int xi,yi;
 	int dxi, dyi;
   double result = 0;
-	
+
 	// Let's enforce a minimum age of 0.001 GYR
 	// NOTE: This results in a constant luminosity at times earlier than this, which
 	// is not realistic. Shouldn't be an issue for most planet evolution calculations,
@@ -171,33 +171,19 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 	// by interpolating over the Baraffe grid
 	// using either a bilinear (iOrder = 1) or
 	// a bicubic (iOrder = 3) interpolation.
-	FILE *fp1 = NULL;
 	double res;
 
-  double data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN];
-  if (iParam == STELLAR_T) 			
-    fp1 = fopen("stellar/logt.bin", "r");
-  else if (iParam == STELLAR_L) 	
-    fp1 = fopen("stellar/logl.bin", "r");
-  else if (iParam == STELLAR_R) 	
-    fp1 = fopen("stellar/rad.bin", "r");
-  else {
-    *iError = STELLAR_ERR_FILE;
-    return 0;
+  if (iParam == STELLAR_T) {			
+      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGT, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+      return pow(10., res);
+  } else if (iParam == STELLAR_L) {
+      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGL, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+      return LSUN * pow(10., res);
+  } else if (iParam == STELLAR_R) {	
+      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RADIUS, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+      return RSUN * res;
+  } else {
+      *iError = STELLAR_ERR_FILE;
+      return 0;
   }
-  if(fp1 != NULL) fread(data, sizeof(double), STELLAR_BAR_MLEN*STELLAR_BAR_ALEN, fp1);
-  else {
-    *iError = STELLAR_ERR_FILE;
-    return 0;
-  }
-  fclose(fp1);
-  res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR,
-                              STELLAR_BAR_AARR, data, M / MSUN, A / (1.e9 * YEARSEC),
-                              iOrder, iError);
-  if (iParam == STELLAR_T)
-    return pow(10., res);
-  else if (iParam == STELLAR_L)
-    return pow(10., LSUN * res);
-  else if (iParam == STELLAR_R)
-    return RSUN * res;
 }

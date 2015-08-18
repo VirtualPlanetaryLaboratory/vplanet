@@ -8,6 +8,8 @@
 */
 
 #define LSUN                          3.846e26      // Solar luminosity (W)
+#define STELLAR_MODEL_NONE            0
+#define STELLAR_MODEL_BARAFFE         1
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
@@ -21,6 +23,7 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 
 #define OPT_LUMINOSITY          1510 // (Initial) luminosity
 #define OPT_SATXUVFRAC          1511 // Saturation XUV luminosity fraction
+#define OPT_STELLARMODEL        1512 // Luminosity evolution model
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -50,6 +53,7 @@ void FinalizeUpdateOblStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRotStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateLuminosityStellar(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
 
@@ -77,6 +81,9 @@ void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 /* Stellar functions */
 void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,int,int);
 double fdLuminosity(BODY*,SYSTEM*,int*,int);
+double fdLuminosityFunctionBaraffe(double, double);
+double fdRadius(BODY*,SYSTEM*,int*,int);
+double fdRadiusFunctionBaraffe(double, double);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

@@ -93,6 +93,7 @@
 #define VECC         1002
 #define VROT         1003
 #define VOBL         1004
+#define VRADIUS      1005
 
 // RADHEAT
 #define VNUM40KMAN      1101
@@ -226,6 +227,7 @@ typedef struct {
   double dLuminosity;
   double dLXUV;
   double dSatXUVFrac;
+  int iStellarModel;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -327,6 +329,7 @@ typedef struct {
   int iNumObl;          /**< Number of Equations Affecting Obliquity */
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
+  int iNumRadius;
 
   /* These are the variables that the update matrix modifies */
   int iEcc;             /**< Variable # Corresponding to Eccentricity */ 
@@ -337,6 +340,7 @@ typedef struct {
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
+  int iRadius;
 
   /* Next comes the identifiers for the module that modifies a variable */
 
@@ -415,15 +419,16 @@ typedef struct {
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
-  double *pdDSurfaceWaterMassDt;
+  double *pdDSurfaceWaterMassDtAtmesc;
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      derivative of these variables due to ATMESC. */
-  double *pdLuminosity;
+      function that returns these variables due to STELLAR evolution. */
+  double *pdLuminosityStellar;
+  double *pdRadiusStellar;
 
 } UPDATE;
 
@@ -662,6 +667,7 @@ typedef void (*fnFinalizeUpdateNumIsotopeModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateOblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
@@ -725,6 +731,8 @@ typedef struct {
   /*! These functions assign Equation and Module information regarding 
       semi-major axis in the UPDATE struct. */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+
+  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;
 
   /*! These functions assign Equation and Module information regarding 
   potassium-40 in the UPDATE struct. */ 

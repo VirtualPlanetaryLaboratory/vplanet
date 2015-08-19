@@ -40,39 +40,6 @@ void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,i
 
 /**************** DISTROT options ********************/
 
-/* Precession parameter */
-
-void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (control->Units[iFile].iAngle == 0) {
-      if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
-      }
-    } else {
-      if (dTmp < 0 || dTmp > 360) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
-      }
-      /* Change to radians */
-      dTmp *= DEGRAD;
-    }
-
-    body[iFile-1].dPrecA = dTmp; 
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dPrecA = options->dDefault;
-}  
-
 void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* Cannot exist in primary file */
   int lTmp=-1;
@@ -97,16 +64,6 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   
-  sprintf(options[OPT_PRECA].cName,"dPrecA");
-  sprintf(options[OPT_PRECA].cDescr,"Planet's precession parameter");
-  sprintf(options[OPT_PRECA].cDefault,"0");
-  options[OPT_PRECA].dDefault = 0.0;
-  options[OPT_PRECA].iType = 2;  
-  options[OPT_PRECA].iMultiFile = 1; 
-//   options[OPT_LONGA].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
-  fnRead[OPT_PRECA] = &ReadPrecA;
-  
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
   sprintf(options[OPT_DYNELLIP].cDefault,"0");
@@ -130,11 +87,6 @@ void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 
 /******************* Verify DISTROT ******************/
-void CalcXYZobl(BODY *body, int iBody) {
-  body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
-  body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
-  body[iBody].dZobl = cos(body[iBody].dObliquity);
-}
 
 /* In the following, iBody is the current body number that is getting assigned,
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
@@ -239,10 +191,18 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 /***************** DISTROT Update *****************/
 void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
+    if (update[iBody].iNumXobl == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumXobl += body[iBody].iGravPerts+1;
+
+    if (update[iBody].iNumYobl == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumYobl += body[iBody].iGravPerts+1;
+
+    if (update[iBody].iNumZobl == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumZobl += body[iBody].iGravPerts;
-    update[iBody].iNumVars += 3;
+    
     if (body[iBody].bGRCorr) {
       update[iBody].iNumXobl += 1;
       update[iBody].iNumYobl += 1;
@@ -432,24 +392,6 @@ void WriteBodyDZoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   }
 } 
 
-void WriteBodyXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dXobl;
-  strcpy(cUnit,"");
-}  
-
-void WriteBodyYobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dYobl;
-  strcpy(cUnit,"");
-}  
-
-void WriteBodyZobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dZobl;
-  strcpy(cUnit,"");
-}  
-
 void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
   
@@ -519,20 +461,6 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECA].iNum = 1;
   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
-  sprintf(output[OUT_XOBL].cName,"Xobl");
-  sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
-  output[OUT_XOBL].iNum = 1;
-  fnWrite[OUT_XOBL] = &WriteBodyXobl;
-  
-  sprintf(output[OUT_YOBL].cName,"Yobl");
-  sprintf(output[OUT_YOBL].cDescr,"Body's sin(obl)*sin(pA)");
-  output[OUT_YOBL].iNum = 1;
-  fnWrite[OUT_YOBL] = &WriteBodyYobl;
-  
-  sprintf(output[OUT_ZOBL].cName,"Zobl");
-  sprintf(output[OUT_ZOBL].cDescr,"Body's cos(obl)");
-  output[OUT_ZOBL].iNum = 1;
-  fnWrite[OUT_ZOBL] = &WriteBodyZobl;  
 }
 
 void FinalizeOutputFunctionDistRot(OUTPUT *output,int iBody,int iModule) {
@@ -651,6 +579,8 @@ double fdDistRotDyDt(BODY *body, SYSTEM *system, int *iaBody) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
     return -fdObliquityB(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityC(body,system,iaBody);
   }
+  assert(0);
+  return 0;
 }
 
 double fdDistRotDxDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -662,6 +592,8 @@ double fdDistRotDxDt(BODY *body, SYSTEM *system, int *iaBody) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
     return fdObliquityA(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityC(body,system,iaBody);
   }
+  assert(0);
+  return 0;
 }
 
 double fdDistRotDzDt(BODY *body, SYSTEM *system, int *iaBody) {

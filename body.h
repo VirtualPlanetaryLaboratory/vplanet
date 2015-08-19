@@ -39,3 +39,5 @@ double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
 
 void BodyCopy(BODY*,BODY*,EVOLVE*);
+
+void CalcXYZobl(BODY*,int);

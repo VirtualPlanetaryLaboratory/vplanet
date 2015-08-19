@@ -20,7 +20,6 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 
 #define OPT_INC                1301
 #define OPT_LONGA              1302
-#define OPT_LONGP              1303
 #define OPT_ARGP               1304
 #define OPT_DFCRIT             1350
 #define OPT_GRCORR             1351
@@ -59,11 +58,8 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int);
 #define OUT_INC                 1321
 #define OUT_SINC                1322
 #define OUT_LONGA               1323
-#define OUT_LONGP               1324
 #define OUT_ARGP                1325
 
-#define OUT_HECC                1331
-#define OUT_KECC                1332
 #define OUT_PINC                1333
 #define OUT_QINC                1334
 
@@ -107,10 +103,10 @@ void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 /* DistOrb Functions */
 void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
 
-void PropertiesDistOrb(BODY*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,int,int);
-
 void inv_plane(BODY*,SYSTEM*,int);
+
+void PropsAuxDistOrb(BODY*,UPDATE*,int);
+void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

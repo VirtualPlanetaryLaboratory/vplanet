@@ -18,7 +18,6 @@ void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTDISTROT        1400 /* Start of DISTROT options */
 #define OPTENDDISTROT        1500 /* End of DISTROT options */
 
-#define OPT_PRECA                1401
 #define OPT_DYNELLIP              1402
 
 

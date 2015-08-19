@@ -25,8 +25,6 @@ void InitializeModuleDistOrb(CONTROL *control,MODULE *module) {
 void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
 
-  dest[iBody].dHecc = src[iBody].dHecc;
-  dest[iBody].dKecc = src[iBody].dKecc;
   dest[iBody].dPinc = src[iBody].dPinc;
   dest[iBody].dQinc = src[iBody].dQinc;
 
@@ -113,41 +111,6 @@ void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     if (iFile > 0)
       body[iFile-1].dLongA = options->dDefault;
 }  
-
-
-/* Longitude of pericenter */
-
-void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (control->Units[iFile].iAngle == 0) {
-      if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
-      }
-    } else {
-      if (dTmp < 0 || dTmp > 360) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
-      }
-      /* Change to radians */
-      dTmp *= DEGRAD;
-    }
-    
-    body[iFile-1].dLongP = dTmp; 
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dLongP = options->dDefault;
-}  
-
 
 /* Argument of pericenter */
 
@@ -249,16 +212,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_LONGA] = &ReadLongA;
-  
-  sprintf(options[OPT_LONGP].cName,"dLongP");
-  sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
-  sprintf(options[OPT_LONGP].cDefault,"0");
-  options[OPT_LONGP].dDefault = 0.0;
-  options[OPT_LONGP].iType = 2;  
-  options[OPT_LONGP].iMultiFile = 1;   
-//   options[OPT_LONGP].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
-  fnRead[OPT_LONGP] = &ReadLongP;
   
   sprintf(options[OPT_ARGP].cName,"dArgP");
   sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
@@ -387,13 +340,6 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
   }
 }
 
-void CalcHKPQ(BODY *body, int iBody) {
-  body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
-  body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
-  body[iBody].dPinc = body[iBody].dSinc*sin(body[iBody].dLongA);
-  body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
-}
-
 /* In the following, iBody is the current body number that is getting assigned,
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
    body number of the current perturbing body. */
@@ -492,10 +438,11 @@ int Nchoosek(int N, int k) {
 * For example, for 4 planets, the index for the pair 
 * (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */  
 int CombCount(int x, int y, int N) {
-  /*
+  /* Russell's not sure if this is necessary. XXX
   if (x == 0) {
     x = 1.3;
-  }*/
+  }
+  */
   return N*(x-1) + (y-1) - Nchoosek(x+1, 2);
 } 
 
@@ -586,10 +533,12 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   if (iBody >= 1) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 2; //will need to change this for zero mass particles in future
+
     VerifyPerturbersDistOrb(body,control->Evolve.iNumBodies,iBody);
-    control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesDistOrb;
+    control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
     
-    CalcHKPQ(body, iBody);
+    CalcHK(body,iBody);
+    CalcPQ(body,iBody);
     /* Body updates */
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
       /* h = Ecc*sin(LongP) */
@@ -646,11 +595,22 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 /***************** DISTORB Update *****************/
 void InitializeUpdateDistOrb(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
+    if (update[iBody].iNumHecc == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumHecc += body[iBody].iGravPerts;
+
+    if (update[iBody].iNumKecc == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumKecc += body[iBody].iGravPerts;
+
+    if (update[iBody].iNumPinc == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumPinc += body[iBody].iGravPerts;
+
+    if (update[iBody].iNumQinc == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumQinc += body[iBody].iGravPerts;
-    update[iBody].iNumVars += 4;
+
     if (body[iBody].bGRCorr) {
       update[iBody].iNumHecc += 1;
       update[iBody].iNumKecc += 1;
@@ -873,25 +833,6 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }  
 
-void WriteBodyLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
-  
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  while (*dTmp > 2*PI) {
-    *dTmp -= 2*PI;
-  }
-  
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}  
-
 void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double varpi, Omega;
   
@@ -910,18 +851,6 @@ void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     fsUnitsAngle(units->iAngle,cUnit);
   }
 }    
-
-void WriteBodyHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dHecc;
-  strcpy(cUnit,"");
-}  
-
-void WriteBodyKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
-  *dTmp = body[iBody].dKecc;
-  strcpy(cUnit,"");
-} 
 
 void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
@@ -1083,14 +1012,6 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGA].iNum = 1;
   fnWrite[OUT_LONGA] = &WriteBodyLongA;
   
-  sprintf(output[OUT_LONGP].cName,"LongP");
-  sprintf(output[OUT_LONGP].cDescr,"Body's Longitude of pericenter in DistOrb");
-  sprintf(output[OUT_LONGP].cNeg,"Deg");
-  output[OUT_LONGP].bNeg = 1;
-  output[OUT_LONGP].dNeg = 1./DEGRAD;
-  output[OUT_LONGP].iNum = 1;
-  fnWrite[OUT_LONGP] = &WriteBodyLongP; 
-  
   sprintf(output[OUT_ARGP].cName,"ArgP");
   sprintf(output[OUT_ARGP].cDescr,"Body's argument of pericenter in DistOrb");
   sprintf(output[OUT_ARGP].cNeg,"Deg");
@@ -1098,17 +1019,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ARGP].dNeg = 1./DEGRAD;
   output[OUT_ARGP].iNum = 1;
   fnWrite[OUT_ARGP] = &WriteBodyArgP; 
-  
-  sprintf(output[OUT_HECC].cName,"Hecc");
-  sprintf(output[OUT_HECC].cDescr,"Body's h = e*sin(varpi) in DistOrb");
-  output[OUT_HECC].iNum = 1;
-  fnWrite[OUT_HECC] = &WriteBodyHecc;
-  
-  sprintf(output[OUT_KECC].cName,"Kecc");
-  sprintf(output[OUT_KECC].cDescr,"Body's k = e*cos(varpi) in DistOrb");
-  output[OUT_KECC].iNum = 1;
-  fnWrite[OUT_KECC] = &WriteBodyKecc;
-  
+
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
   output[OUT_PINC].iNum = 1;
@@ -1215,6 +1126,13 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
+void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+
+}
+
+void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+}
+
 void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
   double alpha1, dalpha;
   int j, iBody, jBody;
@@ -1242,13 +1160,6 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
       }
     }
   }
-}
-
-void PropertiesDistOrb(BODY *body,UPDATE *update,int iBody) { 
-  
-}
-
-void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
 }
 
 /*
@@ -1430,8 +1341,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
 void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
   double *xtmp, *vtmp;
-  int iBody;
-  
+  int iBody;  
   xtmp = malloc(3*sizeof(double));
   vtmp = malloc(3*sizeof(double));
   
@@ -1541,7 +1451,8 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
       }
       CalcXYZobl(body, iBody);
     }
-    CalcHKPQ(body, iBody);
+    CalcHK(body, iBody);
+    CalcPQ(body, iBody);
   }
 }
 

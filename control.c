@@ -23,7 +23,9 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
-  
+  control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
+  control->iNumMultiForce = malloc(control->Evolve.iNumBodies*sizeof(int));
+
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     control->fnForceBehavior[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnForceBehaviorModule));
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
@@ -40,7 +42,7 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   control->Evolve.fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
-  control->Evolve.iNumMulti = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->Evolve.iNumMultiProps = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));

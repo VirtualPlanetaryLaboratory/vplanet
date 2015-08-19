@@ -27,6 +27,8 @@
 
 #define OUT_DT			200
 
+#define OUT_LONGP               300
+
 #define OUT_MASS                500
 #define OUT_OBL                 510
 #define OUT_RADIUS              520
@@ -38,6 +40,8 @@
 
 #define OUT_SURFENFLUX          580
 
+#define OUT_HECC                600
+#define OUT_KECC                605
 #define OUT_ORBECC		610
 #define OUT_ORBEN		620 
 #define OUT_ORBMEANMOTION	630

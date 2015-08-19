@@ -95,12 +95,17 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
 #define OUTENDEQTIDE            1100
 
 #define OUT_DSEMIDTEQTIDE	1010
-#define OUT_DECCDTEQTIDE	1015
-#define OUT_DMMDTEQTIDE	        1020
-#define OUT_DORBPERDTEQTIDE	1025
-#define OUT_DORBEPSILON		1030
-#define OUT_ECCTIMEEQTIDE       1035
-#define OUT_SEMITIMEEQTIDE      1040
+#define OUT_DECCDTEQTIDE	1012
+#define OUT_DMMDTEQTIDE	        1015
+#define OUT_DORBPERDTEQTIDE	1017
+#define OUT_DORBEPSILON		1020
+#define OUT_ECCTIMEEQTIDE       1023
+#define OUT_SEMITIMEEQTIDE      1025
+#define OUT_DHECCDTEQTIDE       1028
+#define OUT_DKECCDTEQTIDE       1030
+#define OUT_DXOBLDTEQTIDE       1033
+#define OUT_DYOBLDTEQTIDE       1036
+#define OUT_DZOBLDTEQTIDE       1040
 
 /* Body Properties due to tidal evolution */
 
@@ -195,11 +200,15 @@ double fdCPLEqRotRateCont(double,double);
 
 /* Derivatives */
 double fdCPLDsemiDt(BODY*,SYSTEM*,int*);
-double fdCPLDeccDt(BODY*,SYSTEM*,int*);
+double fdCPLDHeccDt(BODY*,SYSTEM*,int*);
+double fdCPLDKeccDt(BODY*,SYSTEM*,int*);
 double fdCPLDrotrateDt(BODY*,SYSTEM*,int*);
-double fdCPLDobliquityDt(BODY*,SYSTEM*,int*);
+double fdCPLDoblDt(BODY*,int*);
+double fdCPLDXoblDt(BODY*,SYSTEM*,int*);
+double fdCPLDYoblDt(BODY*,SYSTEM*,int*);
+double fdCPLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
-double fdCPLDeccDtBody(BODY,double,double,double);
+double fdCPLDeccDt(BODY*,UPDATE*,int*);
 
 /******************** CTL Functions ********************/
 

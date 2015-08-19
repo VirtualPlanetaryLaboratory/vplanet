@@ -1347,7 +1347,7 @@ double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol
 	    return mid;
 	}
 	count++;             //increment count by 1.
-	if (fmid/abs(fmid)==fguess1/abs(fguess1)) {guess2=mid;}
+	if (fmid/fabs(fmid)==fguess1/fabs(fguess1)) {guess2=mid;}
 	else {guess1=mid;}
     }
     printf("method failed (nmax exceeded)\n");

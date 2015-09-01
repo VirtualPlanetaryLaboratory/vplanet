@@ -21,6 +21,7 @@
 #define OPT_UNITLENGTH		50
 #define OPT_UNITMASS		60
 #define OPT_UNITTIME	        70
+#define OPT_UNITTEMP	        71
 #define OPT_VERBOSE		80
 
 // Regular Options
@@ -50,14 +51,14 @@
 #define OPT_INTEGRATIONMETHOD   400
 
 #define OPT_LOG		        500
-
 #define OPT_LOGFILE		510
+#define OPT_LONGP               515
 
-#define OPT_MASS		620
-#define OPT_MASSRAD	        630
-#define OPT_MINVALUE            520
+#define OPT_MASS		520
+#define OPT_MASSRAD	        525
+#define OPT_MINVALUE            530
 
-#define OPT_ORBECC		530
+#define OPT_ORBECC		535
 #define OPT_ORBMEANMOTION	540
 #define OPT_ORBPER		550
 #define OPT_ORBSEMI		560
@@ -68,6 +69,7 @@
 #define OPT_OUTSCINOT	        590
 #define OPT_OVERWRITE           595
 
+#define OPT_PRECA               610
 #define OPT_PRILUM	        615
 
 #define OPT_RADIUS              650
@@ -76,6 +78,10 @@
 #define OPT_ROTPER	        660
 #define OPT_ROTRATE	        665
 #define OPT_ROTVEL              680
+
+#define OUT_XOBL                1422
+#define OUT_YOBL                1423
+#define OUT_ZOBL                1424
 
 void InitializeOptions(OPTIONS*,fnReadOption*);
 void ReadOptions(BODY**,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE**,fnReadOption*,char[]);

@@ -4,21 +4,15 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
+void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
+}
+
 void PropsAuxGeneral(BODY *body,CONTROL *control) {
   int iBody;
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (iBody != 0) {
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
-    }
-
-    /* If small enough, set some quantities to zero */
-    /* Generalize! fnPropsAuxMinMax? */
-    if (control->Evolve.dMinValue > 0) {
-      if (body[iBody].dEcc < control->Evolve.dMinValue)
-	body[iBody].dEcc = 0;
-      if (body[iBody].dObliquity < control->Evolve.dMinValue)
-	body[iBody].dObliquity = 0;
     }
   }
 }
@@ -32,34 +26,14 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Uni-module properties
     for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
+      control->Evolve.fnPropsAux[iBody][iModule](body,update,iBody);
 
     // Multi-module properties
-    for (iModule=0;iModule<control->Evolve.iNumMulti[iBody];iModule++)
-      control->Evolve.fnAuxPropsMulti[iBody][iModule](body,update,iBody);
+    for (iModule=0;iModule<control->Evolve.iNumMultiProps[iBody];iModule++)
+      control->Evolve.fnPropsAuxMulti[iBody][iModule](body,update,iBody);
   }
 
 
-}
-
-void UpdateTmpBody(BODY *tmpBody,CONTROL *control,UPDATE *update) {
-  int iBody;
-
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    /* XXX Only update active variables? */
-    tmpBody[iBody].dSemi=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iSemi]);
-    tmpBody[iBody].dEcc=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iEcc]);
-    tmpBody[iBody].d40KNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KMan]);
-    tmpBody[iBody].d232ThNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThMan]);
-    tmpBody[iBody].d238UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UMan]);
-    tmpBody[iBody].d235UNumMan=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UMan]);
-    tmpBody[iBody].d40KNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum40KCore]);
-    tmpBody[iBody].d232ThNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum232ThCore]);
-    tmpBody[iBody].d238UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum238UCore]);
-    tmpBody[iBody].d235UNumCore=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iNum235UCore]);
-    tmpBody[iBody].dRotRate=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iRot]);
-    tmpBody[iBody].dObliquity=*(control->Evolve.tmpUpdate[iBody].pdVar[update[iBody].iObl]);
-  }
 }
 
 /*
@@ -104,18 +78,15 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
-        // LUGER: Put this outside iEqn loop
         if (update[iBody].iaType[iVar][0] == 0) {
-          /* The parameter does not require a derivative, but is 
-          calculated explicitly as a function of age. */
+          // The parameter does not require a derivative, but is calculated explicitly as a function of age.
           dVarNow = *update[iBody].pdVar[iVar];
-          update[iBody].daDerivProc[iVar][0] = fnUpdate[iBody][iVar][0](body,system,update[iBody].iaBody[iVar][0],update[iBody].iNumBodies[iVar][0]);
-    
+          update[iBody].daDerivProc[iVar][0] = fnUpdate[iBody][iVar][0](body,system,update[iBody].iaBody[iVar][0]);
           if (control->Evolve.bFirstStep) {
             dMin = integr.dTimeStep;
             control->Evolve.bFirstStep = 0;
           } else {
-            // LUGER: ADDED CHECK TO PREVENT DIVISION BY ZERO
+            // Prevent division by zero
             if (dVarNow != update[iBody].daDerivProc[iVar][0]) {
               dMinNow = dVarNow/(fabs(dVarNow - update[iBody].daDerivProc[iVar][0])/integr.dTimeStep);
               if (dMinNow < dMin)
@@ -124,23 +95,31 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
           }
         } else {
           for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-            // The parameter is controlled by a time derivative
-            for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn],update[iBody].iNumBodies[iVar][iEqn]);
+            
+            if (update[iBody].iaType[iVar][iEqn] == 2) {
+              // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
+              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+              if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+                if (dMinNow < dMin) 
+                  dMin = dMinNow;
+              }
+              
+            } else {
+              // The parameter is controlled by a time derivative
+              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
               if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
                 dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-              if (dMinNow < dMin) 
-                dMin = dMinNow;
+                if (dMinNow < dMin) 
+                  dMin = dMinNow;
               }
             }
-          }        
+          }
         }
       }
     }
   }
-  
-  //debug printf("%.5e\n", dMin/YEARSEC);
-  
+
   return dMin;
 }
  
@@ -180,7 +159,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
@@ -216,10 +195,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* First midpoint derivative.*/
-  /* Now copy new parameters into control->Evolve.tmpBody, and 
-  calculate new auxiliary properties. XXX Unnecessary? 
-  UpdateTmpBody(control->Evolve.tmpBody,control,update); */
-     
+
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
   /* Don't need this timestep info, so assign output to dFoo */
@@ -246,7 +222,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* Second midpoint derivative */
-  // UpdateTmpBody(control->Evolve.tmpBody,control,update);
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -272,7 +247,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* Full step derivative */
-  // UpdateTmpBody(control->Evolve.tmpBody,control,update);
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -326,7 +300,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
 
   PropertiesAuxiliary(body,control,update);
-
+  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* This is minimum dynamical timescale */
@@ -361,7 +335,11 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
 	control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,iBody,iModule);
+
+      for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
+	control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,iModule,iBody);
     }
+
 
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {
@@ -388,7 +366,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       control->Evolve.nSteps=0;
     }
 
-    /* Get tidal properties for next step -- first call 
+    /* Get auxiliary properties for next step -- first call 
        was prior to loop. */
     PropertiesAuxiliary(body,control,update);
 

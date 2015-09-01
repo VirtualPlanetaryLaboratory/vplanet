@@ -67,10 +67,11 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 
 /* Maximum Eccentricity? */
 int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
-  if (body[iBody].dEcc >= halt->dMaxEcc) {
+  // XXX is EccSq defined here
+  if (sqrt(body[iBody].dEccSq) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
-      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
+      fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
       printf(", > max e = ");
       fprintd(stdout,halt->dMaxEcc,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
@@ -83,10 +84,11 @@ int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 
 /* Minimum Eccentricity? */
 int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].dEcc <= halt->dMinEcc) {
+  //XXX Is dEccSq defined here?
+  if (sqrt(body[iBody].dEccSq) <= halt->dMinEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
-      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
+      fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
       printf(", < min e = ");
       fprintd(stdout,halt->dMinEcc,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
@@ -102,7 +104,7 @@ int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
   if (body[iBody].dSemi <= halt->dMinSemi) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
-      fprintd(stdout,body[iBody].dEcc,io->iSciNot,io->iDigits);
+      fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
       printf(", < min e = ");
       fprintd(stdout,halt->dMinSemi,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
@@ -132,6 +134,8 @@ int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 
 /* Positive de/dt? */
 int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+
+  /* XXX This needs to be redone with Hecc and Kecc
   if (update[iBody].daDeriv[update[iBody].iEcc] > 0 && halt->bPosDeDt) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: de/dt = ");
@@ -141,12 +145,13 @@ int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
     return 1;
   }
 
+  */
   return 0;
 }
 
 /* Merge? */
 int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].dSemi*(1-body[iBody].dEcc) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
+  if (body[iBody].dSemi*(1-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
     if (io->iVerbose > VERBPROG) 
       printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 

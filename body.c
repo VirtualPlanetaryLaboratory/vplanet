@@ -227,18 +227,23 @@ double fdRadToMass(double dMass,double iRelation) {
 void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   int iBody,iModule;
 
+  /* This subroutine only includes parameters needed for more than 1 module,
+     Module-specific parameters belong in the fnBodyCopy subroutines. */
+
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;
     dest[iBody].dRadGyra = src[iBody].dRadGyra;
-    dest[iBody].dK2 = src[iBody].dK2;
-    dest[iBody].dObliquity = src[iBody].dObliquity;
+    dest[iBody].dXobl = src[iBody].dXobl;
+    dest[iBody].dYobl = src[iBody].dYobl;
+    dest[iBody].dZobl = src[iBody].dZobl;
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
 
     /* Only orbiting bodies retain these parameters */
     if (iBody > 0) {
-      dest[iBody].dEcc = src[iBody].dEcc;
+      dest[iBody].dHecc = src[iBody].dHecc;
+      dest[iBody].dKecc = src[iBody].dKecc;
       dest[iBody].dSemi = src[iBody].dSemi;
       dest[iBody].dRadius = src[iBody].dRadius;
       dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
@@ -248,4 +253,10 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
       // Only module reference in file -- can this be changed? XXX
       evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,iBody);
   }
+}
+
+void CalcXYZobl(BODY *body, int iBody) {
+  body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
+  body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
+  body[iBody].dZobl = cos(body[iBody].dObliquity);
 }

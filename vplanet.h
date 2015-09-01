@@ -15,7 +15,7 @@
 #define LASKAR        4
 #define STELLAR       5
 #define DYNAMO        6
-#define THERMAL       7
+#define THERMINT      7
 #define EBM           8
 
 /* Fundamental constants */
@@ -23,11 +23,14 @@
 #define BIGG          6.672e-11
 #define PI            3.1415926535
 
+#define KGAUSS        0.01720209895
+#define dS0           -0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units: Calculations are done in SI */
+
 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30
-#define AUCM          1.49598e11
+#define AUCM          1.49598e11 // XXX Change to AUM
 #define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
@@ -63,13 +66,13 @@
 /* File Limits */
 
 #define NUMOUT        2000  /* Number of output parameters */
-#define MAXBODIES     2
+#define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      64    /* Number of characters in option
 			     * description */
 #define LINE          128   /* Maximum number of characters 
 			     * in a line */
-#define NAMELEN       24
+#define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -104,6 +107,25 @@
 #define VNUM232THCORE   1106
 #define VNUM238UCORE    1107
 #define VNUM235UCORE    1108
+/* INTERIOR THERMAL */   // Use 1200's ok??
+#define VTMAN     1201
+#define VTCORE    1202
+
+//LAGRANGE
+#define VHECC           1301
+#define VKECC           1302
+#define VPINC           1303
+#define VQINC           1304
+
+//LASKAR
+#define VXOBL           1401
+#define VYOBL           1402
+#define VZOBL           1403
+
+/* Semi-major axis functions in Lagrange */
+#define LAPLNUM 	      26
+
+#define S0            0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
@@ -124,6 +146,7 @@ typedef struct {
   double dMaxSteps;
 } PHOTOCHEM;
 
+/* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   char cType[OPTLEN];    /**< Type of object N/I */
@@ -157,13 +180,24 @@ typedef struct {
 
   /* LAGRANGE parameters */
   int bLagrange;         /**< Has module LAGRANGE been implemented */ 
-  double dHEcc;           /**< Poincare H */
-  double dKEcc;           /**< Poincare K */
-  double dPInc;           /**< Poincare P */
-  double dQInc;           /**< Poincare Q */
+  double dHecc;           /**< Poincare H */
+  double dKecc;           /**< Poincare K */
+  double dPinc;           /**< Poincare P */
+  double dQinc;           /**< Poincare Q */
+  double dSinc;          /**< sin(0.5*Inclination) */
+  double dLongA;         /**< Longitude of ascending node */
+  double dArgP;          /**< Argument of pericenter */
+  double dLongP;         /**< Longitude of pericenter */
+  int iGravPerts;        /**< Number of bodies which perturb the body */
+  int *iaGravPerts;      /**< Which bodies are perturbers of the body */
 
   /* LASKAR parameters */
   int bLaskar;
+  double dPrecA;         /**< Precession angle */
+  double dDynEllip;      /**< Dynamical ellipticity */
+  double dYobl;          /**< sin(obliq)*sin(preca) */
+  double dXobl;          /**< sin(obliq)*cos(preca) */
+  double dZobl;           /**< cos(obliq) */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -171,13 +205,17 @@ typedef struct {
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
   //char **saTidePerts;
-  double dTidalQ;	 /**< Boyd's Tidal Q */
+  double dImK2;          /**< Imaginary part of Love's K_2 */
+  double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
+  double dTidePower;     /**< Body's Internal Tidal Power Dissipation */
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
   double *dTidalBeta;    /**< As Defined in \cite HellerEtal2011 */
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
+  double dDeccDtEqtide;  /**< Eccentricity time rate of change */
+  double *daDoblDtEqtide;  /**< Obliquity time rate of change */
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */
@@ -214,7 +252,68 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  int bThermint;
+  /* Interior Thermal Parameters */
+  int bThermint;    /**< Apply Module THERMINT? */
+  double dTMan;            /**< Temperature Mantle AVE */
+  double dTCore;           /**< Temperature Core AVE */
+  double dTUMan;           /**< Temperature UMTBL */
+  double dTLMan;           /**< Temperature LMTBL */
+  double dTCMB;            /**< Temperature CMB */
+  double dTICB;            /**< Temperature ICB */
+  double dBLUMan;          /**< UM TBL thickness */
+  double dBLLMan;          /**< LM TBL thickness */
+  double dTJumpUMan;       /**< Abs Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
+  double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
+  double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
+  double dViscUMan;        /**< Viscosity UMTBL */
+  double dViscLMan;        /**< Viscosity LMTBL */
+  double dShmodUMan;       /**< Shear modulus UMTBL */
+  double dShmodLMan;       /**< Shear modulus LMTBL */
+  double dTsolUMan;        /**< Solidus Temperature UMTBL */
+  double dTliqUMan;        /**< Liquidus Temperature UMTBL */
+  double dTsolLMan;        /**< Solidus Temperature LMTBL */
+  double dTliqLMan;        /**< Liquidus Temperature LMTBL */
+  double dFMeltUMan;       /**< Melt fraction UMTBL */
+  double dFMeltLMan;       /**< Melt fraction LMTBL */
+  double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
+  double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
+  double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
+  double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
+  double dK2Man;           /**< Mantle k2 love number */
+  double dImk2Man;         /**< Mantle Im(k2) love number */
+  /* Time Derivatives & Gradients */
+  double dTDotMan;         /**< Time deriv of mean mantle temp */
+  double dTDotCore;        /**< time deriv of mean core temp */
+  double dHfluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
+  double dHflowUMan;       /**< hflow UMTBL */
+  double dHfluxLMan;       /**< hflux lower mantle thermal boundary layer (UMTBL) */
+  double dHflowLMan;       /**< hflow LMTBL */
+  double dHfluxCMB;        /**< hflux CMB */
+  double dHflowCMB;        /**< hflow CMB */
+  double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
+  double dHflowTidalCore;  /**< hflow tidal dissipation in core */
+  double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
+  double dHflowMeltMan;    /**< Eruptive Melt Hflow from mantle */
+  double dMassICDot;       /**< Mass Growth Rate of IC */
+  double dHflowLatentIC;   /**< latent hflow from solidification of IC */
+  double dPowerGravIC;     /**< latent hflow from solidification of IC */
+  double dHflowICB;        /**< hflow across ICB */
+  double dHfluxSurf;       /**< hflux surface of mantle */
+  double dHflowSurf;       /**< hflow surface of mantle */
+  double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
+  /* Core Variables */
+  double dRIC;             /**< IC radius */
+  double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
+  double dDOC;             /**< OC shell thickness */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dThermConductOC;  /**< Thermal conductivity OC */
+  double dThermConductIC;  /**< Thermal conductivity IC */
+  /* Constants */
+  double dViscRatioMan;    /**< Viscosity Ratio Man */
+  double dEruptEff;        /**< Mantle melt eruption efficiency */
+  double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
 
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
@@ -280,10 +379,24 @@ typedef struct {
 /* SYSTEM contains properties of the system that pertain to
    every BODY */
 
+/* Pointer to Laplace semi-major axis functions in Lagrange */
+typedef double (*fnLaplaceFunction)(double,int);
+
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
+
+  double dTotAngMom;     /**< System's Current Angular Momentum */
+  fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
+  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
+  double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
+  double **dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
+  double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
+  int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
+  double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
+  
   double dTotEnInit;     /**< System's Initial Energy */
+
 } SYSTEM;
 
 /* 
@@ -303,7 +416,7 @@ typedef struct {
       with a Type 0 variable must account for  the evolution with 
       dTimeStep. 
   */
-  int **iaType;        
+  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar quantity with time derivative) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
@@ -325,17 +438,13 @@ typedef struct {
 
 
   /* Number of eqns to modify a parameter */
-  int iNumEcc;          /**< Number of Equations Affecting Eccentricity */
-  int iNumObl;          /**< Number of Equations Affecting Obliquity */
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
   int iNumRadius;
 
   /* These are the variables that the update matrix modifies */
-  int iEcc;             /**< Variable # Corresponding to Eccentricity */ 
-  double dDEccDt;       /**< Total Eccentricity Derivative */
-  int iObl;             /**< Variable # Corresponding to Obliquity */
-  double dDOblDt;       /**< Total Obliquity Derivative */
+  // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
+  // Obliquity is now split into Xobl, Yobl and Zobl to accomedate Laskar
   int iRot;             /**< Variable # Corresponding to Rotation Rate */
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
@@ -345,8 +454,12 @@ typedef struct {
   /* Next comes the identifiers for the module that modifies a variable */
 
   /* EQTIDE */
-  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
-  int *iaOblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Obliquity */
+  //  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
+  int iHeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's h */
+  int iKeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's k */
+  int *iaXoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's X */
+  int *iaYoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Y */
+  int *iaZoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Z */
   int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
   int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
 
@@ -354,13 +467,25 @@ typedef struct {
       semi-major axis' derivative due to EQTIDE. */
   double *pdDsemiDtEqtide; 
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      eccentricity' derivative due to EQTIDE. */
-  double *pdDeccDtEqtide;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains 
+    Poincare's h derivative due to EQTIDE. */
+  double *pdDHeccDtEqtide;
 
-  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the 
-      obliquities' derivatives due to EQTIDE. */
-  double **padDoblDtEqtide;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains 
+    Poincare's k derivative due to EQTIDE. */
+  double *pdDKeccDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+      Laskar's X derivatives due to EQTIDE. */
+  double **padDXoblDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+      Laskar's Y derivatives due to EQTIDE. */
+  double **padDYoblDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+      Laskar's Z derivatives due to EQTIDE. */
+  double **padDZoblDtEqtide;
 
   /*! Points to the elements in UPDATE's daDerivProc matrix that contains the 
       rotation rates' derivatives due to EQTIDE. */
@@ -384,6 +509,7 @@ typedef struct {
   double *pdD238UNumManDt;
   double *pdD235UNumManDt;
 
+  /* RADHEAT CORE */
   int i40KCore;
   int i232ThCore;
   int i238UCore;
@@ -400,18 +526,79 @@ typedef struct {
   double *pdD232ThNumCoreDt;
   double *pdD238UNumCoreDt;
   double *pdD235UNumCoreDt;
+  
+  /* THERMINT */
+  int iTMan;          /**< Variable # Corresponding to Tman */
+  int iNumTMan;       /**< Number of Equations Affecting TMan */
+  double dTDotMan;    /**< TMan time Derivative */
+  double *pdTDotMan;
+  int iTCore;          /**< Variable # Corresponding to Tman */
+  int iNumTCore;       /**< Number of Equations Affecting TCore */
+  double dTDotCore;    /**< TCore time Derivative */
+  double *pdTDotCore;
+  
+  /* LAGRANGE */
+  /* Number of eqns to modify a parameter */
+  int iNumHecc;          /**< Number of Equations Affecting h = e*sin(longp) */
+  int iNumKecc;          /**< Number of Equations Affecting k = e*cos(longp) */
+  int iNumPinc;          /**< Number of Equations Affecting p = s*sin(longa) */
+  int iNumQinc;         /**< Number of Equations Affecting q = s*cos(longa) */
+  
+  int iHecc;             /**< Variable # Corresponding to h = e*sin(longp) */
+  double dDHeccDt;       /**< Total h Derivative */
+  int iKecc;             /**< Variable # Corresponding to k = e*cos(longp) */
+  double dDKeccDt;       /**< Total k Derivative */
+  int iPinc;             /**< Variable # Corresponding to p = s*sin(longa) */
+  double dDPincDt;       /**< Total p Derivative */
+  int iQinc;             /**< Variable # Corresponding to q = s*cos(longa) */
+  double dDQincDt;       /**< Total q Derivative */
+  int *iaHeccLagrange;       /**< Equation # Corresponding to Lagrange's change to h = e*sin(longp) */
+  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp) */
+  int *iaPincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  p = s*sin(longa) */
+  int *iaQincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  q = s*cos(longa) */
+     
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      h = e*sin(varpi) derivative due to LAGRANGE. */
+  double **padDHeccDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      k = e*cos(varpi) derivative due to LAGRANGE. */
+  double **padDKeccDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      p = s*sin(Omega) derivative due to LAGRANGE. */
+  double **padDPincDtLagrange;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      q = s*cos(Omega) derivative due to LAGRANGE. */
+  double **padDQincDtLagrange;
+  
+  /* LASKAR */
+  int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
+  int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
+  int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
+  
+  int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
+  double dDXoblDt;       /**< Total x Derivative */
+  int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
+  double dDYoblDt;       /**< Total y Derivative */
+  int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
+  double dDZoblDt;       /**< Total p Derivative */
+  int *iaXoblLaskar;     /**< Equation # Corresponding to Laskar's change to x = sin(obl)*cos(pA) */
+  int *iaYoblLaskar;     /**< Equation #s Corresponding to Laskar's change to y = sin(obl)*sin(pA) */
+  int *iaZoblLaskar;     /**< Equation #s Corresponding to Laskar's change to z = cos(obl) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      potassium-40's derivative due to RADHEAT. */
-  double *pdD40KNumDt;  
-
+  xi = sin(obliq)*sin(pA) derivative due to LASKAR. */
+  double **padDXoblDtLaskar;
+  
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      thorium-232's derivative due to RADHEAT. */
-  double *pdD232ThNumDt;
-
+      zeta = sin(obliq)*cos(pA) derivative due to LASKAR. */
+  double **padDYoblDtLaskar;
+  
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      uranium-40's derivative due to RADHEAT. */
-  double *pdD238UNumDt;
+      chi = cos(obliq) derivative due to LASKAR. */
+  double **padDZoblDtLaskar;
 
   /* ATMESC */         
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
@@ -460,6 +647,10 @@ typedef struct {
   /* STELLAR */
   // Nothing
 
+  /* THERMINT */
+  int dMinTMan;     /**< Halt at this TMan */
+  int dMinTCore;     /**< Halt at this TCore */
+
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -473,13 +664,14 @@ typedef struct {
  */
 
 typedef struct {
-    int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
-    int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
-    int iAngle;         /**< 0=rad; 1=deg */ 
-    int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */ 
+  int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
+  int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
+  int iAngle;         /**< 0=rad; 1=deg */ 
+  int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */
+  int iTemp;
 } UNITS;
 
-typedef void (*fnAuxPropsModule)(BODY*,UPDATE*,int);
+typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
@@ -506,20 +698,21 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
-  int *iNumMulti;        /**< Number of Multi-module AuxProps functions */
+  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
   int bDiscreteRot;	 /**< Use Discrete Rotation Model (CPL)? */
   int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
+  int *bFixOrbit;        /**< Fix Orbit? */
   double *dMaxLockDiff;  /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
   double *dSyncEcc;     
 
   /* RADHEAT */
   /* Nothing? */
 
-  fnAuxPropsModule **fnAuxProps; /**< Function Pointers to Auxiliary Properties */
-  fnAuxPropsModule **fnAuxPropsMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
+  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
+  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -539,7 +732,6 @@ typedef struct {
   int bOverwrite;         /**< Allow files to be overwritten? */
 } IO;
   
-
 /* The CONTROL struct contains all the parameters that
  * control program flow. */
 /* CONTROL contains all parameters that control program flow, including I/O,
@@ -563,7 +755,12 @@ typedef struct {
 
   fnHaltModule **fnHalt;   /**< Function Pointers to Halt Checks */
   fnForceBehaviorModule **fnForceBehavior; /**< Function Pointers to Force Behaviors */
+  fnForceBehaviorModule **fnForceBehaviorMulti; /**< Function Pointers to Force Behaviors */
+  int *iNumMultiForce;    /**< Number of multi-module ForceBahevior functions */
 
+  /* Things for Lagrange */
+  double dAngNum;         /**< Value used in calculating timestep from angle variable */
+  int bSemiMajChange;         /**< 1 if semi-major axis can change (Lagrange will recalc Laplace coeff functions) */
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -646,7 +843,7 @@ typedef struct {
 } OUTPUT;
 
 
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 
@@ -662,22 +859,31 @@ typedef void (*fnInitializeOptionsModule)(OPTIONS*,fnReadOption*);
 typedef void (*fnInitializeUpdateModule)(BODY*,UPDATE*,int);
 typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
-typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateNumIsotopeModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateOblModule)(BODY*,UPDATE*,int*,int,int);
+//All primary variables need a FinalizeUpdate function
+//typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
+typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);  
+typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);  
-typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
+
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -700,7 +906,7 @@ typedef struct {
       inside the CONTROL struct */
   fnInitializeControlModule **fnInitializeControl;
 
-   /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays 
        inside the UPDATE struct */
   fnInitializeUpdateModule **fnInitializeUpdate;
 
@@ -708,50 +914,60 @@ typedef struct {
       inside the BODY struct */
   fnInitializeBodyModule **fnInitializeBody;
 
-   /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays 
        inside the OUTPUT struct */
   fnInitializeOutputModule **fnInitializeOutput;
 
-   /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays 
        inside the BODY struct */
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
-  /*! These functions assign Equation and Module information regarding 
-      eccentricity in the UPDATE struct. */ 
-  fnFinalizeUpdateEccModule **fnFinalizeUpdateEcc;
-
-  /*! These functions assign Equation and Module information regarding 
-      obliquity in the UPDATE struct. */ 
-  fnFinalizeUpdateOblModule **fnFinalizeUpdateObl;
-
-  /*! These functions assign Equation and Module information regarding 
-      rotation rate in the UPDATE struct. */ 
-  fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
-
-  /*! These functions assign Equation and Module information regarding 
-      semi-major axis in the UPDATE struct. */ 
-  fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
-
-  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;
-
-  /*! These functions assign Equation and Module information regarding 
-  potassium-40 in the UPDATE struct. */ 
-  fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
-  /*! These functions assign Equation and Module information regarding 
-    thorium-232 in the UPDATE struct. */ 
-  fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
-  /*! These functions assign Equation and Module information regarding 
-    uranium-238 in the UPDATE struct. */ 
-
-  fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
-  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+  // Finalize Primary Variable function pointers
+  /*! Function pointers to finalize Core's potassium-40 */ 
   fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
+  /*! Function pointers to finalize Mantle's potassium-40 */ 
+  fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
+  /*! Function pointers to finalize Core's thorium-232 */ 
+  fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
+  /*! Function pointers to finalize Mantle's thorium-232 */ 
   fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
-  fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+  /*! Function pointers to finalize Core's uranium-235 */ 
   fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
-  fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize Mantle's uranium-235 */ 
+  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
+  /*! Function pointers to finalize Core's uranium-238 */ 
+  fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
+  /*! Function pointers to finalize Mantle's uranium-238 */ 
+  fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  /*! Function pointers to finalize Poincare's h */
+  fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
+  /*! Function pointers to finalize Poincare's k */
+  fnFinalizeUpdateKeccModule **fnFinalizeUpdateKecc;
+  /*! Function pointers to finalize Luminosity */
   fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
-    
+  /*! Function pointers to finalize Poincare's p */
+  fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
+  /*! Function pointers to finalize Poincare's q */
+  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
+  /*! Function pointers to finalize Radius */ 
+  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
+  /*! Function pointers to finalize Rotation Rate */ 
+  fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
+  /*! Function pointers to finalize Semi-major Axis */ 
+  fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+  /*! Function pointers to finalize Surface Water */ 
+  fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize Core Temperature */ 
+  fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
+  /*! Function pointers to finalize Mantle Temperature */ 
+  fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
+  /*! Function pointers to finalize Laskar's X */ 
+  fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
+  /*! Function pointers to finalize Laskar's Y */ 
+  fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
+  /*! Function pointers to finalize Laskar's Z */ 
+  fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
+ 
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
 
@@ -777,6 +993,7 @@ typedef struct {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
+
 /* 
  * Other Header Files - These are primarily for function declarations
  */
@@ -801,6 +1018,9 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "atmesc.h"
 #include "stellar.h"
 #include "baraffe2015.h"
+#include "lagrange.h"
+#include "laskar.h"
+#include "thermint.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 
@@ -816,6 +1036,8 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * ADJUST AS NEEDED *       XXX And fix sometime!
  ********************/
 
+// XXX Obsolete?
 #define MODULEOPTEND        1900
 #define MODULEOUTEND        1900
+
 

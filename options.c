@@ -816,6 +816,78 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
   }
 }
 
+int iAssignTempUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
+  if (memcmp(sLower(cTmp),"k",1) == 0) 
+    return 0;
+  else if (memcmp(sLower(cTmp),"c",1) == 0)
+    return 1;
+  else if (memcmp(sLower(cTmp),"f",1) == 0)
+    return 2;
+  else {
+    if (iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are: K, C, F.\n",cName,cTmp);
+    LineExit(cFile,iLine);
+  }
+  assert(0);
+}
+
+void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
+  int iFileNow,lTmp=-1;
+  char cTmp[OPTLEN];
+  /* Temperature Units
+     0=Kelvin
+     1=Celsius
+     2=Farenheit */
+
+  //Copied from ReadUnitMass
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (iFile == 0) {
+    if (lTmp >= 0) {
+      /* This unit is propagated to all other files */
+      /* Now assign the integer value */
+      if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+      control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
+      for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
+	control->Units[iFileNow].iTemp = control->Units[iFile].iTemp;
+	/* Negative sign for lTmp indicated that the parameter was found in another file */
+	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+      }
+    } /* If not set in primary file, do nothing */
+  } else {
+    /* Not in primary file */
+    if (lTmp >= 0) {
+      /* Assigned in body file */
+      /* First check, was it set in primary file? */
+      if (options->iLine[0] != -1) {
+	/* Assigned in primary file */
+	if (control->Io.iVerbose >= VERBERR)
+	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
+	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+	exit(EXIT_INPUT);
+      } else {
+	/* Wasn't assigned in primary */
+	control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      }  
+    } else {
+      /* Not assigned in this file */
+      /* Was it assigned in primary? */
+      if (options->iLine[0] == -1) {
+	/* No, assign default */
+	if (control->Io.iVerbose >= VERBUNITS)
+	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+	control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+      }
+      /* If assigned in primary, nothing to do, as assigned during primary read */
+    }
+  }
+
+}
+
 void ReadSystemName(CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* System Name */
   int lTmp=-1;
@@ -835,8 +907,9 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   char saTmp[MAXARRAY][OPTLEN];
 
   lTmp=malloc(MAXLINES*sizeof(int));
-
+  
   AddOptionStringArray(infile->cIn,options->cName,saTmp,&iNumIndices,&iNumLines,lTmp,control->Io.iVerbose);
+  
   if (lTmp[0] >= 0) {
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
@@ -849,20 +922,22 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
     exit(EXIT_INPUT);
   }
-
+  
   /* With body files identified, must allocate space */
-  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));
+  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));  
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
+  
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<iNumIndices;iIndex++) // Russell changed <= to < b/c iNumIndices+1 is outside the allocated memory of files->Infile
+  for (iIndex=0;iIndex<iNumIndices;iIndex++)  
+
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
-  
+ 
   control->Evolve.iNumBodies=iNumIndices;
   files->Outfile = malloc(iNumIndices*sizeof(OUTFILE));
-
+  
   UpdateFoundOptionMulti(&files->Infile[0],options,lTmp,iNumLines,0);
-
+  
   free(lTmp);
 }
 
@@ -909,6 +984,7 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadUnitTime(control,files,&options[OPT_UNITTIME],iFile);
     ReadUnitAngle(control,files,&options[OPT_UNITANGLE],iFile);
     ReadUnitLength(control,files,&options[OPT_UNITLENGTH],iFile);
+    ReadUnitTemp(control,files,&options[OPT_UNITTEMP],iFile);
     ReadSystemName(control,files,&options[OPT_SYSTEMNAME],system,iFile);
     /* Get Modules first as it helps with verification
        ReadModules is in module.c */
@@ -1192,6 +1268,7 @@ void ReadDigits(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     control->Io.iDigits = iTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
+    // XXX Don't we need to check if it was found in another file already??
     AssignDefaultInt(options,&control->Io.iDigits,files->iNumInputs);
 }
 
@@ -1220,6 +1297,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
   } else
     AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
     
@@ -1487,6 +1565,38 @@ void ReadLogFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     sprintf(files->cLog,"%s.log",system->cName);
   }
 }
+
+/* Longitude of pericenter */
+void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+    
+    body[iFile-1].dLongP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dLongP = options->dDefault;
+}  
 
 /*
  *
@@ -1790,6 +1900,41 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else
     AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
 }
+
+/* Precession parameter */
+
+void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+	if (control->Io.iVerbose >= VERBERR)
+	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+	LineExit(files->Infile[iFile].cIn,lTmp);	
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dPrecA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dPrecA = options->dDefault;
+}  
+
+
 
 /*
  *
@@ -2211,6 +2356,16 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LOGFILE].iType = 3;
   fnRead[OPT_LOGFILE] = &ReadLogFile;
   
+  sprintf(options[OPT_LONGP].cName,"dLongP");
+  sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
+  sprintf(options[OPT_LONGP].cDefault,"0");
+  options[OPT_LONGP].dDefault = 0.0;
+  options[OPT_LONGP].iType = 2;  
+  options[OPT_LONGP].iMultiFile = 1;   
+//   options[OPT_LONGP].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
+  fnRead[OPT_LONGP] = &ReadLongP;
+  
   /*
    *
    *   M
@@ -2306,6 +2461,22 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dNeg = AUCM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
+
+  /*
+   * P
+   */
+
+  sprintf(options[OPT_PRECA].cName,"dPrecA");
+  sprintf(options[OPT_PRECA].cDescr,"Planet's precession parameter");
+  sprintf(options[OPT_PRECA].cDefault,"0");
+  options[OPT_PRECA].dDefault = 0.0;
+  options[OPT_PRECA].iType = 2;  
+  options[OPT_PRECA].iMultiFile = 1; 
+//   options[OPT_LONGA].dNeg = DEGRAD;
+//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  fnRead[OPT_PRECA] = &ReadPrecA;
+  
+
   
   /*
    *
@@ -2413,7 +2584,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_UNITTIME].cDescr,"Time Units: Seconds, Days Years Myr Gyr");
   sprintf(options[OPT_UNITTIME].cDefault,"Seconds");
   options[OPT_UNITTIME].iType = 3;
-  
+
+  sprintf(options[OPT_UNITTEMP].cName,"sUnitTemp");
+  sprintf(options[OPT_UNITTEMP].cDescr,"Temperature Units: Kelvin Celsius Farenheit");
+  sprintf(options[OPT_UNITTEMP].cDefault,"Kelvin");
+  options[OPT_UNITTEMP].iType = 3;
+    
   /*
    *
    *   V
@@ -2453,6 +2629,9 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   InitializeOptionsEqtide(options,fnRead);
   InitializeOptionsRadheat(options,fnRead);
+  InitializeOptionsLagrange(options,fnRead);
+  InitializeOptionsLaskar(options,fnRead);
+  InitializeOptionsThermint(options,fnRead);
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
 

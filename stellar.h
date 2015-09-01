@@ -80,9 +80,9 @@ void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* Stellar functions */
 void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,int,int);
-double fdLuminosity(BODY*,SYSTEM*,int*,int);
+double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
-double fdRadius(BODY*,SYSTEM*,int*,int);
+double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
 
 /* Dummy functions */

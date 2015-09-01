@@ -218,7 +218,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
-  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesStellar;
+  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyStellar;
 
 }
@@ -410,14 +410,14 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 
 /************* STELLAR Functions ************/
 
-double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody) {
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
     return fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dLuminosity;
 }
 
-double fdRadius(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
     return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)

@@ -226,7 +226,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->Evolve.fnAuxProps[iBody][iModule] = &fnPropertiesAtmEsc;
+  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }
@@ -402,7 +402,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
 /************* ATMESC Functions ************/
 
-double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody,int iNumBodies) {
+double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Add other escape regimes
   
   double elim, fxuv, xi, ktide;

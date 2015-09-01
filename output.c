@@ -52,6 +52,49 @@ void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 /*
+ * H
+ */
+
+void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dHecc;
+  strcpy(cUnit,"");
+}
+
+/*
+ * K
+ */
+
+void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dKecc;
+  strcpy(cUnit,"");
+}
+
+/*
+ * L
+ */
+
+void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
+
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
+  }
+  while (*dTmp > 2*PI) {
+    *dTmp -= 2*PI;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}  
+
+/*
  * M
  */
 
@@ -73,7 +116,8 @@ void WriteMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dObliquity;
+  *dTmp = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -99,7 +143,7 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (iBody > 0)
-    *dTmp = body[iBody].dEcc;
+    *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
   else
     *dTmp = -1;
   sprintf(cUnit,"");
@@ -355,6 +399,24 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dXobl;
+  strcpy(cUnit,"");
+}
+
+void WriteYobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dYobl;
+  strcpy(cUnit,"");
+}
+
+void WriteZobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dZobl;
+  strcpy(cUnit,"");
+}
+
 /*
  * End individual write functions
  */
@@ -384,186 +446,233 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DT].iNum = 1;
   fnWrite[OUT_DT] = &WriteDeltaTime;
   
+  /*
+   * H
+   */
 
-    /*
-     * M
-     */
-    
-    sprintf(output[OUT_MASS].cName,"Mass");
-    sprintf(output[OUT_MASS].cDescr,"Mass");
-    output[OUT_MASS].bNeg = 0;
-    output[OUT_MASS].iNum = 1;
-    fnWrite[OUT_MASS] = &WriteMass;
+  sprintf(output[OUT_HECC].cName,"HEcc");
+  sprintf(output[OUT_HECC].cDescr,"Poincare's h (=e*sin(varpi)");
+  output[OUT_HECC].bNeg = 0;
+  output[OUT_HECC].iNum = 1;
+  fnWrite[OUT_HECC] = &WriteHecc;
+  
+  /*
+   * K
+   */
 
+  sprintf(output[OUT_KECC].cName,"KEcc");
+  sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
+  output[OUT_KECC].bNeg = 0;
+  output[OUT_KECC].iNum = 1;
+  fnWrite[OUT_KECC] = &WriteKecc;
 
-    /*
-     *   O
-     */
+  /*
+   * L
+   */
 
-    sprintf(output[OUT_OBL].cName,"Obliquity");
-    sprintf(output[OUT_OBL].cDescr,"Obliquity");
-    output[OUT_OBL].bNeg = 0;
-    output[OUT_OBL].iNum = 1;
-    fnWrite[OUT_OBL] = &WriteObliquity;
+  sprintf(output[OUT_LONGP].cName,"LongP");
+  sprintf(output[OUT_LONGP].cDescr,"Body's Longitude of pericenter in Lagrange");
+  sprintf(output[OUT_LONGP].cNeg,"Deg");
+  output[OUT_LONGP].bNeg = 1;
+  output[OUT_LONGP].dNeg = 1./DEGRAD;
+  output[OUT_LONGP].iNum = 1;
+  fnWrite[OUT_LONGP] = &WriteLongP; 
+  
+  /*
+   * M
+   */
+  
+  sprintf(output[OUT_MASS].cName,"Mass");
+  sprintf(output[OUT_MASS].cDescr,"Mass");
+  output[OUT_MASS].bNeg = 0;
+  output[OUT_MASS].iNum = 1;
+  fnWrite[OUT_MASS] = &WriteMass;
+  
+  
+  /*
+   *   O
+   */
+  
+  sprintf(output[OUT_OBL].cName,"Obliquity");
+  sprintf(output[OUT_OBL].cDescr,"Obliquity");
+  sprintf(output[OUT_OBL].cNeg,"deg");
+  output[OUT_OBL].bNeg = 1;
+  output[OUT_OBL].dNeg = DEGRAD;
+  output[OUT_OBL].iNum = 1;
+  fnWrite[OUT_OBL] = &WriteObliquity;
+  
+  sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
+  sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
+  output[OUT_ORBANGMOM].iNum = 1;
+  fnWrite[OUT_ORBANGMOM] = &WriteOrbAngMom;
+  
+  sprintf(output[OUT_ORBECC].cName,"Eccentricity");
+  sprintf(output[OUT_ORBECC].cDescr,"Orbital Eccentricity");
+  output[OUT_ORBECC].iNum = 1;
+  output[OUT_ORBECC].bNeg = 0;
+  fnWrite[OUT_ORBECC] = &WriteOrbEcc;
+  
+  sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
+  sprintf(output[OUT_ORBEN].cDescr,"Orbital Energy");
+  sprintf(output[OUT_ORBEN].cNeg,"ergs");
+  output[OUT_ORBEN].bNeg = 1;
+  output[OUT_ORBEN].iNum = 1;
+  fnWrite[OUT_ORBEN] = &WriteOrbEnergy;
+  
+  sprintf(output[OUT_ORBMEANMOTION].cName,"MeanMotion");
+  sprintf(output[OUT_ORBMEANMOTION].cDescr,"Orbital Mean Motion");
+  sprintf(output[OUT_ORBMEANMOTION].cNeg,"/day");
+  output[OUT_ORBMEANMOTION].bNeg = 1;
+  output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
+  output[OUT_ORBMEANMOTION].iNum = 1;
+  fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
+  
+  sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
+  sprintf(output[OUT_ORBPER].cDescr,"Orbital Period");
+  sprintf(output[OUT_ORBPER].cNeg,"days");
+  output[OUT_ORBPER].bNeg = 1;
+  output[OUT_ORBPER].dNeg = 1./DAYSEC;
+  output[OUT_ORBPER].iNum = 1;
+  fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
+  
+  sprintf(output[OUT_ORBSEMI].cName,"SemiMajorAxis");
+  sprintf(output[OUT_ORBSEMI].cDescr,"Semi-major Axis");
+  sprintf(output[OUT_ORBSEMI].cNeg,"AU"); 
+  output[OUT_ORBSEMI].bNeg = 1;
+  output[OUT_ORBSEMI].dNeg = 1./AUCM;
+  output[OUT_ORBSEMI].iNum = 1;
+  fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
+  
+  /*
+   * R
+   */
+  
+  sprintf(output[OUT_RADIUS].cName,"Radius");
+  sprintf(output[OUT_RADIUS].cDescr,"Radius");
+  output[OUT_RADIUS].bNeg = 1;
+  sprintf(output[OUT_RADIUS].cNeg,"Solar");
+  output[OUT_RADIUS].dNeg = 1./RSUN;
+  output[OUT_RADIUS].iNum = 1;
+  fnWrite[OUT_RADIUS] = &WriteRadius;
+  
+  sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
+  sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
+  output[OUT_ROTANGMOM].bNeg = 0;
+  output[OUT_ROTANGMOM].iNum = 1;
+  fnWrite[OUT_ROTANGMOM] = &WriteRotAngMom;
+  
+  sprintf(output[OUT_ROTKINENERGY].cName,"RotKinEnergy");
+  sprintf(output[OUT_ROTKINENERGY].cDescr,"Rotational Energy");
+  sprintf(output[OUT_ROTKINENERGY].cNeg,"ergs");
+  output[OUT_ROTKINENERGY].iNum = 1;
+  fnWrite[OUT_ROTKINENERGY] = &WriteRotKinEnergy;
+  
+  sprintf(output[OUT_ROTPER].cName,"RotPer");
+  sprintf(output[OUT_ROTPER].cDescr,"Rotational Period");
+  sprintf(output[OUT_ROTPER].cNeg,"days");
+  output[OUT_ROTPER].bNeg = 1;
+  output[OUT_ROTPER].dNeg = 1./DAYSEC;
+  output[OUT_ROTPER].iNum = 1;
+  fnWrite[OUT_ROTPER] = &WriteRotPer;
+  
+  sprintf(output[OUT_ROTRATE].cName,"RotRate");
+  sprintf(output[OUT_ROTRATE].cDescr,"Rotational Frequency");
+  sprintf(output[OUT_ROTRATE].cNeg,"/day");
+  output[OUT_ROTRATE].bNeg = 1;
+  output[OUT_ROTRATE].dNeg = DAYSEC;
+  output[OUT_ROTRATE].iNum = 1;
+  fnWrite[OUT_ROTRATE] = &WriteRotRate;
+  
+  sprintf(output[OUT_ROTVEL].cName,"RotVel");
+  sprintf(output[OUT_ROTVEL].cDescr,"Rotational Velocity");
+  sprintf(output[OUT_ROTVEL].cNeg,"km/s");
+  output[OUT_ROTVEL].bNeg = 1;
+  output[OUT_ROTVEL].dNeg = 1e-5;
+  output[OUT_ROTVEL].iNum = 1;
+  fnWrite[OUT_ROTVEL] = &WriteRotVel;
+  
+  sprintf(output[OUT_SURFENFLUX].cName,"SurfEnFluxTotal");
+  sprintf(output[OUT_SURFENFLUX].cDescr,"Total Surface Energy Flux");
+  sprintf(output[OUT_SURFENFLUX].cNeg,"W/m^2");
+  output[OUT_SURFENFLUX].bNeg = 1;
+  output[OUT_SURFENFLUX].dNeg = 1e-3;
+  output[OUT_SURFENFLUX].iNum = 1;
+  fnWrite[OUT_SURFENFLUX] = &WriteSurfaceEnergyFlux;
+  
+  sprintf(output[OUT_TIME].cName,"Time");
+  sprintf(output[OUT_TIME].cDescr,"Simulation Time");
+  output[OUT_TIME].bNeg = 1;
+  output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
+  output[OUT_TIME].iNum = 1;
+  fnWrite[OUT_TIME] = &WriteTime;
+  
+  sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
+  sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
+  output[OUT_TOTANGMOM].iNum = 1;
+  fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
+  
+  sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");
+  sprintf(output[OUT_TOTENERGY].cDescr,"Total Energy");
+  sprintf(output[OUT_TOTENERGY].cNeg,"ergs");
+  output[OUT_TOTENERGY].bNeg = 1;
+  output[OUT_TOTENERGY].dNeg = 1;
+  output[OUT_TOTENERGY].iNum = 1;
+  fnWrite[OUT_TOTENERGY] = &WriteTotEnergy;
+  
+  sprintf(output[OUT_POTENERGY].cName,"PotEnergy");
+  sprintf(output[OUT_POTENERGY].cDescr,"Total Potential Energy");
+  sprintf(output[OUT_POTENERGY].cNeg,"ergs");
+  output[OUT_POTENERGY].bNeg = 1;
+  output[OUT_POTENERGY].dNeg = 1;
+  output[OUT_POTENERGY].iNum = 1;
+  fnWrite[OUT_POTENERGY] = &WritePotEnergy;
+  
+  sprintf(output[OUT_KINENERGY].cName,"KinEnergy");
+  sprintf(output[OUT_KINENERGY].cDescr,"Total Kinetic Energy");
+  sprintf(output[OUT_KINENERGY].cNeg,"ergs");
+  output[OUT_KINENERGY].bNeg = 1;
+  output[OUT_KINENERGY].dNeg = 1;
+  output[OUT_KINENERGY].iNum = 1;
+  fnWrite[OUT_KINENERGY] = &WriteKinEnergy;
+  
+  sprintf(output[OUT_ORBKINENERGY].cName,"OrbKinEnergy");
+  sprintf(output[OUT_ORBKINENERGY].cDescr,"Orbital Kinetic Energy");
+  sprintf(output[OUT_ORBKINENERGY].cNeg,"ergs");
+  output[OUT_ORBKINENERGY].bNeg = 1;
+  output[OUT_ORBKINENERGY].dNeg = 1;
+  output[OUT_ORBKINENERGY].iNum = 1;
+  fnWrite[OUT_ORBKINENERGY] = &WriteOrbKinEnergy;
+  
+  sprintf(output[OUT_ORBPOTENERGY].cName,"OrbPotEnergy");
+  sprintf(output[OUT_ORBPOTENERGY].cDescr,"Orbital Potential Energy");
+  sprintf(output[OUT_ORBPOTENERGY].cNeg,"ergs");
+  output[OUT_ORBPOTENERGY].bNeg = 1;
+  output[OUT_ORBPOTENERGY].dNeg = 1;
+  output[OUT_ORBPOTENERGY].iNum = 1;
+  fnWrite[OUT_ORBPOTENERGY] = &WriteOrbPotEnergy;
+  
+  sprintf(output[OUT_ORBENERGY].cName,"OrbEnergy");
+  sprintf(output[OUT_ORBENERGY].cDescr,"Orbital Energy");
+  sprintf(output[OUT_ORBENERGY].cNeg,"ergs");
+  output[OUT_ORBENERGY].bNeg = 1;
+  output[OUT_ORBENERGY].dNeg = 1;
+  output[OUT_ORBENERGY].iNum = 1;
+  fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
 
-
-    sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
-    sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
-    output[OUT_ORBANGMOM].iNum = 1;
-    fnWrite[OUT_ORBANGMOM] = &WriteOrbAngMom;
-
-    sprintf(output[OUT_ORBECC].cName,"Eccentricity");
-    sprintf(output[OUT_ORBECC].cDescr,"Orbital Eccentricity");
-    output[OUT_ORBECC].iNum = 1;
-    output[OUT_ORBECC].bNeg = 0;
-    fnWrite[OUT_ORBECC] = &WriteOrbEcc;
-
-    sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
-    sprintf(output[OUT_ORBEN].cDescr,"Orbital Energy");
-    sprintf(output[OUT_ORBEN].cNeg,"ergs");
-    output[OUT_ORBEN].bNeg = 1;
-    output[OUT_ORBEN].iNum = 1;
-    fnWrite[OUT_ORBEN] = &WriteOrbEnergy;
-
-    sprintf(output[OUT_ORBMEANMOTION].cName,"MeanMotion");
-    sprintf(output[OUT_ORBMEANMOTION].cDescr,"Orbital Mean Motion");
-    sprintf(output[OUT_ORBMEANMOTION].cNeg,"/day");
-    output[OUT_ORBMEANMOTION].bNeg = 1;
-    output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
-    output[OUT_ORBMEANMOTION].iNum = 1;
-    fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
-
-    sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
-    sprintf(output[OUT_ORBPER].cDescr,"Orbital Period");
-    sprintf(output[OUT_ORBPER].cNeg,"days");
-    output[OUT_ORBPER].bNeg = 1;
-    output[OUT_ORBPER].dNeg = 1./DAYSEC;
-    output[OUT_ORBPER].iNum = 1;
-    fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
-
-    sprintf(output[OUT_ORBSEMI].cName,"SemiMajorAxis");
-    sprintf(output[OUT_ORBSEMI].cDescr,"Semi-major Axis");
-    sprintf(output[OUT_ORBSEMI].cNeg,"AU"); 
-    output[OUT_ORBSEMI].bNeg = 1;
-    output[OUT_ORBSEMI].dNeg = 1./AUCM;
-    output[OUT_ORBSEMI].iNum = 1;
-    fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
-
-    /*
-     * R
-     */
-    
-    sprintf(output[OUT_RADIUS].cName,"Radius");
-    sprintf(output[OUT_RADIUS].cDescr,"Radius");
-    output[OUT_RADIUS].bNeg = 1;
-    sprintf(output[OUT_RADIUS].cNeg,"Solar");
-    output[OUT_RADIUS].dNeg = 1./RSUN;
-    output[OUT_RADIUS].iNum = 1;
-    fnWrite[OUT_RADIUS] = &WriteRadius;
-
-    sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
-    sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
-    output[OUT_ROTANGMOM].bNeg = 0;
-    output[OUT_ROTANGMOM].iNum = 1;
-    fnWrite[OUT_ROTANGMOM] = &WriteRotAngMom;
-
-    sprintf(output[OUT_ROTKINENERGY].cName,"RotKinEnergy");
-    sprintf(output[OUT_ROTKINENERGY].cDescr,"Rotational Energy");
-    sprintf(output[OUT_ROTKINENERGY].cNeg,"ergs");
-    output[OUT_ROTKINENERGY].iNum = 1;
-    fnWrite[OUT_ROTKINENERGY] = &WriteRotKinEnergy;
-
-    sprintf(output[OUT_ROTPER].cName,"RotPer");
-    sprintf(output[OUT_ROTPER].cDescr,"Rotational Period");
-    sprintf(output[OUT_ROTPER].cNeg,"days");
-    output[OUT_ROTPER].bNeg = 1;
-    output[OUT_ROTPER].dNeg = 1./DAYSEC;
-    output[OUT_ROTPER].iNum = 1;
-    fnWrite[OUT_ROTPER] = &WriteRotPer;
-
-    sprintf(output[OUT_ROTRATE].cName,"RotRate");
-    sprintf(output[OUT_ROTRATE].cDescr,"Rotational Frequency");
-    sprintf(output[OUT_ROTRATE].cNeg,"/day");
-    output[OUT_ROTRATE].bNeg = 1;
-    output[OUT_ROTRATE].dNeg = DAYSEC;
-    output[OUT_ROTRATE].iNum = 1;
-    fnWrite[OUT_ROTRATE] = &WriteRotRate;
-
-    sprintf(output[OUT_ROTVEL].cName,"RotVel");
-    sprintf(output[OUT_ROTVEL].cDescr,"Rotational Velocity");
-    sprintf(output[OUT_ROTVEL].cNeg,"km/s");
-    output[OUT_ROTVEL].bNeg = 1;
-    output[OUT_ROTVEL].dNeg = 1e-5;
-    output[OUT_ROTVEL].iNum = 1;
-    fnWrite[OUT_ROTVEL] = &WriteRotVel;
-
-    sprintf(output[OUT_SURFENFLUX].cName,"SurfEnFluxTotal");
-    sprintf(output[OUT_SURFENFLUX].cDescr,"Total Surface Energy Flux");
-    sprintf(output[OUT_SURFENFLUX].cNeg,"W/m^2");
-    output[OUT_SURFENFLUX].bNeg = 1;
-    output[OUT_SURFENFLUX].dNeg = 1e-3;
-    output[OUT_SURFENFLUX].iNum = 1;
-    fnWrite[OUT_SURFENFLUX] = &WriteSurfaceEnergyFlux;
-
-    sprintf(output[OUT_TIME].cName,"Time");
-    sprintf(output[OUT_TIME].cDescr,"Simulation Time");
-    output[OUT_TIME].bNeg = 1;
-    output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
-    output[OUT_TIME].iNum = 1;
-    fnWrite[OUT_TIME] = &WriteTime;
-
-    sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
-    sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
-    output[OUT_TOTANGMOM].iNum = 1;
-    fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
-
-    sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");
-    sprintf(output[OUT_TOTENERGY].cDescr,"Total Energy");
-    sprintf(output[OUT_TOTENERGY].cNeg,"ergs");
-    output[OUT_TOTENERGY].bNeg = 1;
-    output[OUT_TOTENERGY].dNeg = 1;
-    output[OUT_TOTENERGY].iNum = 1;
-    fnWrite[OUT_TOTENERGY] = &WriteTotEnergy;
-
-    sprintf(output[OUT_POTENERGY].cName,"PotEnergy");
-    sprintf(output[OUT_POTENERGY].cDescr,"Total Potential Energy");
-    sprintf(output[OUT_POTENERGY].cNeg,"ergs");
-    output[OUT_POTENERGY].bNeg = 1;
-    output[OUT_POTENERGY].dNeg = 1;
-    output[OUT_POTENERGY].iNum = 1;
-    fnWrite[OUT_POTENERGY] = &WritePotEnergy;
-
-    sprintf(output[OUT_KINENERGY].cName,"KinEnergy");
-    sprintf(output[OUT_KINENERGY].cDescr,"Total Kinetic Energy");
-    sprintf(output[OUT_KINENERGY].cNeg,"ergs");
-    output[OUT_KINENERGY].bNeg = 1;
-    output[OUT_KINENERGY].dNeg = 1;
-    output[OUT_KINENERGY].iNum = 1;
-    fnWrite[OUT_KINENERGY] = &WriteKinEnergy;
-
-    sprintf(output[OUT_ORBKINENERGY].cName,"OrbKinEnergy");
-    sprintf(output[OUT_ORBKINENERGY].cDescr,"Orbital Kinetic Energy");
-    sprintf(output[OUT_ORBKINENERGY].cNeg,"ergs");
-    output[OUT_ORBKINENERGY].bNeg = 1;
-    output[OUT_ORBKINENERGY].dNeg = 1;
-    output[OUT_ORBKINENERGY].iNum = 1;
-    fnWrite[OUT_ORBKINENERGY] = &WriteOrbKinEnergy;
-
-    sprintf(output[OUT_ORBPOTENERGY].cName,"OrbPotEnergy");
-    sprintf(output[OUT_ORBPOTENERGY].cDescr,"Orbital Potential Energy");
-    sprintf(output[OUT_ORBPOTENERGY].cNeg,"ergs");
-    output[OUT_ORBPOTENERGY].bNeg = 1;
-    output[OUT_ORBPOTENERGY].dNeg = 1;
-    output[OUT_ORBPOTENERGY].iNum = 1;
-    fnWrite[OUT_ORBPOTENERGY] = &WriteOrbPotEnergy;
-
-    sprintf(output[OUT_ORBENERGY].cName,"OrbEnergy");
-    sprintf(output[OUT_ORBENERGY].cDescr,"Orbital Energy");
-    sprintf(output[OUT_ORBENERGY].cNeg,"ergs");
-    output[OUT_ORBENERGY].bNeg = 1;
-    output[OUT_ORBENERGY].dNeg = 1;
-    output[OUT_ORBENERGY].iNum = 1;
-    fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
+  sprintf(output[OUT_XOBL].cName,"Xobl");
+  sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
+  output[OUT_XOBL].iNum = 1;
+  fnWrite[OUT_XOBL] = &WriteXobl;
+  
+  sprintf(output[OUT_YOBL].cName,"Yobl");
+  sprintf(output[OUT_YOBL].cDescr,"Body's sin(obl)*sin(pA)");
+  output[OUT_YOBL].iNum = 1;
+  fnWrite[OUT_YOBL] = &WriteYobl;
+  
+  sprintf(output[OUT_ZOBL].cName,"Zobl");
+  sprintf(output[OUT_ZOBL].cDescr,"Body's cos(obl)");
+  output[OUT_ZOBL].iNum = 1;
+  fnWrite[OUT_ZOBL] = &WriteZobl;  
 
 }
 
@@ -628,9 +737,9 @@ void LogUnits(FILE *fp) {
 
   fprintf(fp,"Mass Units: ");
   if (units.iMass == 0) {
-    fprintf(fp,"Grams\n");
-  } else if (units.iMass == 1) {
     fprintf(fp,"Kilograms\n");
+  } else if (units.iMass == 1) {
+    fprintf(fp,"Grams\n");
   } else if (units.iMass == 2) {
     fprintf(fp,"Solar\n");
   } else if (units.iMass == 3) {
@@ -645,9 +754,9 @@ void LogUnits(FILE *fp) {
   
   fprintf(fp,"Length Units: ");
   if (units.iLength == 0) {
-    fprintf(fp,"Centimeters\n");
-  } else if (units.iLength == 1) {
     fprintf(fp,"Meters\n");
+  } else if (units.iLength == 1) {
+    fprintf(fp,"Centimeters\n");
   } else if (units.iLength == 2) {
     fprintf(fp,"Kilometers\n");
   } else if (units.iLength == 3) {
@@ -838,10 +947,6 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
-    /* Get auxiliary properties */
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      control->Evolve.fnAuxProps[iBody][iModule](body,update,iBody);
-    
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) {
@@ -963,6 +1068,9 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputRadheat(output,fnWrite);
   InitializeOutputAtmEsc(output,fnWrite);
   InitializeOutputStellar(output,fnWrite);
+  InitializeOutputLagrange(output,fnWrite);
+  InitializeOutputLaskar(output,fnWrite);
+  InitializeOutputThermint(output,fnWrite);
 
 }
 

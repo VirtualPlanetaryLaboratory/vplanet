@@ -33,20 +33,24 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnInitializeOutput = malloc(iNumBodies*sizeof(fnInitializeOutputModule*));
   module->fnFinalizeOutputFunction = malloc(iNumBodies*sizeof(fnFinalizeOutputFunctionModule*));
 
-  module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
-  module->fnFinalizeUpdateObl = malloc(iNumBodies*sizeof(fnFinalizeUpdateOblModule));
+  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
+  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
+  module->fnFinalizeUpdateHecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
+  module->fnFinalizeUpdateKecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
+  module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
+  module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
-  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
-  
-  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
-  module->fnFinalizeUpdate40KNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
-  module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
-  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
+  module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
+  module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
+  module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
   module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
@@ -77,7 +81,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   if (body[iBody].bEqtide)
     iNumModules++;
+  if (body[iBody].bLagrange)
+    iNumModules++;
+  if (body[iBody].bLaskar)
+    iNumModules++;
   if (body[iBody].bRadheat)
+    iNumModules++;
+  if (body[iBody].bThermint)
     iNumModules++;
   if (body[iBody].bAtmEsc)
     iNumModules++;
@@ -104,40 +114,21 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
-  module->fnFinalizeUpdateEcc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccModule));
-  module->fnFinalizeUpdateObl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOblModule));
-  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
-  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
 
-  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
+  // Finalize Primary Variable Functions
+  //module->fnFinalizeUpdateEcc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccModule));
   module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));  
-  
-  module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
-  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
-  
   for(iModule = 0; iModule < iNumModules; iModule++) {
-    module->fnFinalizeUpdateEcc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateObl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;  //PED added man's.
     module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;  //PED added core's.
-    module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
     }
 
@@ -150,9 +141,21 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleEqtide(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
+  if (body[iBody].bLagrange) {
+    AddModuleLagrange(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = LAGRANGE;
+  }
+   if (body[iBody].bLaskar) {
+    AddModuleLaskar(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = LASKAR;
+  }
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
+  }
+  if (body[iBody].bThermint) {
+      AddModuleThermint(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
     AddModuleAtmEsc(module,iBody,iModule);
@@ -188,8 +191,14 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
 	body[iFile-1].bEqtide = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"lagrange",8) == 0) {
+	body[iFile-1].bLagrange = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"laskar",6) == 0) {
+	body[iFile-1].bLaskar = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
 	body[iFile-1].bRadheat = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
+	body[iFile-1].bThermint = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
 	body[iFile-1].bAtmEsc = 1;
 	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
@@ -209,23 +218,21 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
-
 /*
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiLagrangeLaskar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bLaskar) {
     if (!body[iBody].bLagrange) {
       fprintf(stderr,"ERROR: Module LASKAR selected for %s, but LAGRANGE not selected.\n",body[iBody].cName);
       exit(EXIT_INPUT);
-    } else 
-      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesLagrangeLaskar;
+    }
   }
 }
 
-void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModule) {
+void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   /* This will need modification if material can move between layers */
 
@@ -236,26 +243,62 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else
-      control->Evolve.fnAuxPropsMulti[iBody][(*iModule)++] = &PropertiesRadheatThermint;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxRadheatThermint;
+  }
+}
+
+void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  int iEqtide;
+
+  if (body[iBody].bEqtide) {
+    if (!body[iBody].bThermint) 
+      // Set Im(k_2) here
+      body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
+    else { // Thermint and Eqtide called
+      /* When Thermint and Eqtide are called together, care must be taken as 
+	 Im(k_2) must be known in order to calculate TidalZ. As the individual 
+	 module PropsAux are called prior to PropsAuxMulti, we must call the 
+	 "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+	 "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+	 PropsAuxEqtideThermint. */
+      iEqtide = fiGetModuleIntEqtide(module,iBody);
+      control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+    }
+  }
+}
+
+void VerifyModuleMultiEqtideLagrange(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bLagrange) {
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideLagrange;
+    }
   }
 }
 
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
-  int iNumMulti=0;
+  int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 1) {
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
-    control->Evolve.fnAuxPropsMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnAuxPropsModule*));
-
-    // Now verify 
-    VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMulti);
-
-    VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMulti);
-
+    control->Evolve.fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
+    control->fnForceBehaviorMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnForceBehaviorModule*));
   }
 
-  control->Evolve.iNumMulti[iBody] = iNumMulti;
+  /* Now verify. Even if only module is called, we still need to call
+     these functions as some default behavior is set if other modules aren't
+     called. */
+  VerifyModuleMultiLagrangeLaskar(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  
+  VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  
+  VerifyModuleMultiEqtideLagrange(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  
+  control->Evolve.iNumMultiProps[iBody] = iNumMultiProps;
+  control->iNumMultiForce[iBody] = iNumMultiForce;
   if (control->Io.iVerbose >= VERBALL)
     fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
 }
@@ -264,13 +307,54 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dEccSq = body[iBody].dHEcc*body[iBody].dHEcc + body[iBody].dKEcc*body[iBody].dKEcc;
+void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
+    body[iBody].dImK2 = fdImk2Man(body,iBody);
+    PropsAuxCPL(body,update,iBody);
+    body[iBody].dTidePower = fdCPLTidePower(body,iBody);
 }
 
+/* This does not seem to be necessary
+void PropertiesLagrangeLaskar(BODY *body,UPDATE *update,int iBody) {
+  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
+}
+*/
 
-void PropertiesRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
   body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
 }
 
+/*
+ * Force Behavior for multi-module calculations
+ */
+
+void ForceBehaviorEqtideLagrange(BODY *body,EVOLVE *evolve,IO *io,int iFoo,int iBar) {
+  /*  
+  // Insert Russell's code here.
+  printf("Entered  ForceBehaviorEqtideLagrange.\n");
+
+// XXX This function 
+void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
+  double alpha1, dalpha;
+  int j = 0;
+
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+      alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
+  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+      alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
+  }
+    
+  for (j=0;j<LAPLNUM;j++) {
+    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
+    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
+	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+	system->fnLaplaceF[j][0](alpha1, 0);
+		
+	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+	system->fnLaplaceDeriv[j][0](alpha1, 0);
+		
+	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
+    }
+  }
+  */
+} 

@@ -1,17 +1,7 @@
 # Gl581 d
-#saOutputOrder -40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT $
-#
-#  		Time Semim $
-# Damn! I put a $ at the start of this line, but it didn't work!
-#
-#		Ecce Obli$
-#		 -SurfEnFluxEqtide$
-#
-#		 -SurfEnFluxRadheat 
-#=======
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
-saOutputOrder Time Semim Ecce Obli -Rotper -SurfEnFluxEqtide
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA  
 
 # The order of options in a file is unimportant
 # The user selects the ordering of the output
@@ -30,8 +20,11 @@ dEcc            0.38
 dRadius		-1.592
 saTidePerts	star
 #d40KNumMan		-30
-saModules	eqtide#$		
+saModules	eqtide lagrange laskar#$
 #radheat
 #d232ThNumMan	-1
 dMaxLockDiff	0.1
-
+dPrecA		100
+dLongP		77
+dInc		1.5
+dLongA		213

@@ -1339,6 +1339,9 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 void ReadHaltMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
+  /* Russell sez: the above statement is untrue. As coded, this MUST exist in every file when 
+     used at all, else all bodies without this parameter set will have dMaxEcc = 0. XXX */
+     
   int lTmp=-1;
   double dTmp;
   
@@ -1831,20 +1834,24 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
       
       if (count == 1) {
 	/* Unique option */
-	/* If negative, is that allowed? */
-	if (bNeg[i] && !output[iOut].bNeg) {
-	  /* No */
-	  if (iVerbose >= VERBERR) {
-	    fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
-	    if (strlen(saTmp[i]) < strlen(output[iOut].cName)) 
-	      fprintf(stderr,"(= %s) ",output[iOut].cName);
-	    fprintf(stderr,"cannot be negative.\n");
-	  }
-	  LineExit(files->Infile[iFile].cIn,lTmp[0]);
-	} else if (bNeg[i] && output[iOut].bNeg) {
-	  /* Yes */
-	  output[iOut].bDoNeg[iFile-1] = 1;
-	}
+    
+    /* Verify and record negative options */
+    if (bNeg[i]) {
+      // Is the negative option allowed?
+      if (!output[iOut].bNeg) { /* No */
+        if (iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
+          if (strlen(saTmp[i]) < strlen(output[iOut].cName))
+            fprintf(stderr,"(= %s) ",output[iOut].cName);
+          fprintf(stderr,"cannot be negative.\n");
+        }
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
+      } else { // Yes, initialize bDoNeg to true
+        output[iOut].bDoNeg[iFile-1] = 1;
+      }
+    } else { // Negative option not set, initialize bDoNeg to false
+        output[iOut].bDoNeg[iFile-1] = 0;
+    }   
 	files->Outfile[iFile-1].caCol[i][0]='\0';
 	strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
       }

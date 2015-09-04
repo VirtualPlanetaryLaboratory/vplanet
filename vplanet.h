@@ -611,6 +611,7 @@ typedef struct {
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */
   int dMinTCore;     /**< Halt at this TCore */
+  
 } HALT;
 
 /* Units. These can be different for different bodies. If set

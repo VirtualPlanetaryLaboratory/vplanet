@@ -1370,7 +1370,7 @@ void cart2osc(BODY *body, int iNumBodies) {
   int iBody;
   double r, vsq, rdot, mu, *h, hsq, sinwf, coswf, sinf, cosf, sinw, cosw, cosE, f;
   
-  for (iBody=0;iBody<iNumBodies;iBody++) {
+  for (iBody=1;iBody<iNumBodies;iBody++) {
     r = normv(body[iBody].dCartPos);
     vsq = pow(normv(body[iBody].dCartVel),2);
     rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
@@ -1381,7 +1381,10 @@ void cart2osc(BODY *body, int iNumBodies) {
     hsq = pow(normv(h),2);
     
     body[iBody].dSemi = pow((2.0/r - vsq/mu),-1)*AUCM;
-    body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUCM));
+    if (body[iBody].dEcc != 0) {
+      body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUCM));
+    }
+    
     body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
     body[iBody].dLongA = atan2(h[0],-h[1]);
     if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;
@@ -1392,13 +1395,15 @@ void cart2osc(BODY *body, int iNumBodies) {
     sinf = body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))*rdot/(normv(h)*body[iBody].dEcc);
     cosf = (body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))/r - 1.0)/body[iBody].dEcc;
     
-    sinw = sinwf*cosf - coswf*sinf;
-    cosw = sinwf*sinf + coswf*cosf;
-    body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
-    if (body[iBody].dLongP >= 2.*PI) {
-      body[iBody].dLongP -= 2.*PI;
-    } else if (body[iBody].dLongP < 0.0) {
-      body[iBody].dLongP += 2.*PI;
+    if (body[iBody].dEcc != 0) {
+      sinw = sinwf*cosf - coswf*sinf;
+      cosw = sinwf*sinf + coswf*cosf;
+      body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
+      if (body[iBody].dLongP >= 2.*PI) {
+        body[iBody].dLongP -= 2.*PI;
+      } else if (body[iBody].dLongP < 0.0) {
+        body[iBody].dLongP += 2.*PI;
+      }
     }
     
     f = atan2(sinf, cosf);
@@ -2474,42 +2479,45 @@ double fdApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 //-------------------DistOrb's equations in h k p q -------------------------------------
 double fdDistOrbDhDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double sum = 0.0, dMu;
+  double sum = 0.0, dMu, y;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
 
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+  y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += ( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDKecc(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += ( sqrt(y)*fdDdisturbDKecc(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += ( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDKeccPrime(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += ( sqrt(y)*fdDdisturbDKeccPrime(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }
   
   return sum/DAYSEC;
 }
 
 double fdDistOrbDkDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double sum = 0.0, dMu;
+  double sum = 0.0, dMu, y;
   
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+  y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += -( sqrt(y)*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += -( sqrt(y)*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }      
 
   return sum/DAYSEC;
 }
 
 double fdDistOrbDpDt(BODY *body, SYSTEM *system, int *iaBody) {
-    double sum = 0.0, dMu;
+    double sum = 0.0, dMu, y;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+    y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
     
     return sum/DAYSEC;
@@ -2517,13 +2525,14 @@ double fdDistOrbDpDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 
 double fdDistOrbDqDt(BODY *body, SYSTEM *system, int *iaBody) {
-    double sum = 0.0, dMu;
+    double sum = 0.0, dMu, y;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+    y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
    
     return sum/DAYSEC;

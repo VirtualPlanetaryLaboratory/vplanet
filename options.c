@@ -277,8 +277,8 @@ void AddOptionDouble(char cFile[],char cOption[],double *dInput,int *iLine,int i
   char cTmp[OPTLEN],cLine[LINE];
 
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
-  sscanf(cLine,"%s %s",cTmp,cTmp);
-  *dInput = atof(cTmp);
+  if(*iLine >= 0)
+      sscanf(cLine,"%s %lf",cTmp, dInput);
 }
 
 void AddOptionInt(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {

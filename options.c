@@ -285,8 +285,8 @@ void AddOptionInt(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbos
   char cTmp[OPTLEN],cLine[LINE];
 
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
-  sscanf(cLine,"%s %s",cTmp,cTmp);
-  *iInput = atoi(cTmp);
+  if(*iLine >= 0)
+      sscanf(cLine,"%s %d",cTmp,iInput);
 }
 
 void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {
@@ -364,7 +364,7 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
 }
 
 int iGetNumLines(char cFile[]) {
-  int iNumLines;
+  int iNumLines = 0;
   FILE *fp;
   char cLine[LINE];
 
@@ -391,6 +391,8 @@ void InitializeInput(INFILE *input) {
   }
   input->iNumLines = iGetNumLines(input->cIn);
   input->bLineOK = malloc(input->iNumLines*sizeof(int));
+  input->cSpecies[0] = NULL;
+  input->cReactions[0] = NULL;
 
   for (iLine=0;iLine<input->iNumLines;iLine++) {
     /* Initialize bLineOK */

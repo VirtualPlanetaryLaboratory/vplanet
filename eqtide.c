@@ -902,7 +902,7 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 	bFound[iPert] = 0;
 	for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
 	  if (iBodyPert != iBody) {
-	    if (memcmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+	    if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
 	      /* This parameter contains the body # of the "iPert-th" 
 		 tidal perturber */
 	      body[iBody].iaTidePerts[iPert]=iBodyPert;

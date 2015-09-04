@@ -27,8 +27,10 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
     iNumHalts++;
   if (halt->bPosDeDt)
     iNumHalts++;
+/* XXX not implemented yet.
   if (halt->dMinIntEn > 0)
     iNumHalts++;
+*/
 
   for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnCountHalts[iBody][iModule](halt,&iNumHalts);

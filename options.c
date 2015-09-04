@@ -961,6 +961,15 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   ReadBodyFileNames(control,files,&options[OPT_BODYFILES],&input);
   *body = malloc(control->Evolve.iNumBodies*sizeof(BODY));
 
+  /* XXX The following initializetion should be in a separate function */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bLagrange = 0;
+      (*body)[iBody].bLaskar = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+  }
+
   /* Is iVerbose set in primary input? */
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
 

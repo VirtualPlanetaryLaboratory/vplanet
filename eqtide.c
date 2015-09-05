@@ -934,10 +934,13 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 	}
       }
       
-      if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
-	fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
-	ok=0;
+      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+        if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
+	  fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
+	  ok=0;
+        }
       }
+      
       if (!ok)
 	exit(EXIT_INPUT);
     }

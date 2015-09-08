@@ -68,10 +68,10 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 /* Maximum Eccentricity? */
 int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
   // XXX is EccSq defined here
-  if (sqrt(body[iBody].dEccSq) >= halt->dMaxEcc) {
+  if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: e = ");
-      fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
+      printf("HALT: e[%d] = ",iBody);
+      fprintd(stdout,sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)),io->iSciNot,io->iDigits);
       printf(", > max e = ");
       fprintd(stdout,halt->dMaxEcc,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
@@ -85,7 +85,7 @@ int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 /* Minimum Eccentricity? */
 int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   //XXX Is dEccSq defined here?
-  if (sqrt(body[iBody].dEccSq) <= halt->dMinEcc) {
+  if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) <= halt->dMinEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
       fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);

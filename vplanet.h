@@ -11,8 +11,8 @@
 #define EQTIDE        0
 #define RADHEAT       1
 #define ATMESC        2
-#define LAGRANGE      3
-#define LASKAR        4
+#define DISTORB       3
+#define DISTROT       4
 #define STELLAR       5
 #define DYNAMO        6
 #define THERMINT      7
@@ -24,10 +24,10 @@
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
-#define dS0           -0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
+#define dS0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units: Calculations are done in SI */
 
-
+#define cLIGHT        299792458.0 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30
 #define AUCM          1.49598e11 // XXX Change to AUM
@@ -110,21 +110,21 @@
 #define VTMAN     1201
 #define VTCORE    1202
 
-//LAGRANGE
+//DistOrb
 #define VHECC           1301
 #define VKECC           1302
 #define VPINC           1303
 #define VQINC           1304
 
-//LASKAR
+//DISTROT
 #define VXOBL           1401
 #define VYOBL           1402
 #define VZOBL           1403
 
-/* Semi-major axis functions in Lagrange */
+/* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
 
-#define S0            0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
+#define S0            0//0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
 
 /* Now define the structs */
 
@@ -171,8 +171,8 @@ typedef struct {
   double dOrbPeriod;     /**< Body's Orbital Period */
   double dEccSq;         /**< Eccentricity squared */
 
-  /* LAGRANGE parameters */
-  int bLagrange;         /**< Has module LAGRANGE been implemented */ 
+  /* DISTORB parameters */
+  int bDistOrb;         /**< Has module DISTORB been implemented */ 
   double dHecc;           /**< Poincare H */
   double dKecc;           /**< Poincare K */
   double dPinc;           /**< Poincare P */
@@ -181,12 +181,18 @@ typedef struct {
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
+  double dMeanA;         /**< Mean anomaly (currently only used for inv plane calculation) */
+  double dEccA;          /**< Eccentric anomaly (currently only used for inv plane calculation) */
+  double *dCartPos;      /**< Cartesian position of body (currently only used for inv plane calculation) */
+  double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
-
-  /* LASKAR parameters */
-  int bLaskar;
+  int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
+  
+  /* DISTROT parameters */
+  int bDistRot;
   double dPrecA;         /**< Precession angle */
+  double dTrueApA;       /**< True anomaly at equinox (used for invariable plane conversion) */        
   double dDynEllip;      /**< Dynamical ellipticity */
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
@@ -359,7 +365,7 @@ typedef struct {
 /* SYSTEM contains properties of the system that pertain to
    every BODY */
 
-/* Pointer to Laplace semi-major axis functions in Lagrange */
+/* Pointer to Laplace semi-major axis functions in DistOrb */
 typedef double (*fnLaplaceFunction)(double,int);
 
 typedef struct {
@@ -374,6 +380,8 @@ typedef struct {
   double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
   int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
+  double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
+  double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
   
   double dTotEnInit;     /**< System's Initial Energy */
 
@@ -514,7 +522,7 @@ typedef struct {
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
   
-  /* LAGRANGE */
+  /* DISTORB */
   /* Number of eqns to modify a parameter */
   int iNumHecc;          /**< Number of Equations Affecting h = e*sin(longp) */
   int iNumKecc;          /**< Number of Equations Affecting k = e*cos(longp) */
@@ -529,28 +537,28 @@ typedef struct {
   double dDPincDt;       /**< Total p Derivative */
   int iQinc;             /**< Variable # Corresponding to q = s*cos(longa) */
   double dDQincDt;       /**< Total q Derivative */
-  int *iaHeccLagrange;       /**< Equation # Corresponding to Lagrange's change to h = e*sin(longp) */
-  int *iaKeccLagrange;     /**< Equation #s Corresponding to Lagrange's change to k = e*cos(longp) */
-  int *iaPincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  p = s*sin(longa) */
-  int *iaQincLagrange;     /**< Equation #s Corresponding to Lagrange's change to  q = s*cos(longa) */
+  int *iaHeccDistOrb;       /**< Equation # Corresponding to DistOrb's change to h = e*sin(longp) */
+  int *iaKeccDistOrb;     /**< Equation #s Corresponding to DistOrb's change to k = e*cos(longp) */
+  int *iaPincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  p = s*sin(longa) */
+  int *iaQincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  q = s*cos(longa) */
      
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      h = e*sin(varpi) derivative due to LAGRANGE. */
-  double **padDHeccDtLagrange;
+      h = e*sin(varpi) derivative due to DistOrb. */
+  double **padDHeccDtDistOrb;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      k = e*cos(varpi) derivative due to LAGRANGE. */
-  double **padDKeccDtLagrange;
+      k = e*cos(varpi) derivative due to DistOrb. */
+  double **padDKeccDtDistOrb;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      p = s*sin(Omega) derivative due to LAGRANGE. */
-  double **padDPincDtLagrange;
+      p = s*sin(Omega) derivative due to DistOrb. */
+  double **padDPincDtDistOrb;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      q = s*cos(Omega) derivative due to LAGRANGE. */
-  double **padDQincDtLagrange;
+      q = s*cos(Omega) derivative due to DistOrb. */
+  double **padDQincDtDistOrb;
   
-  /* LASKAR */
+  /* DISTROT */
   int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
   int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
   int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
@@ -561,21 +569,21 @@ typedef struct {
   double dDYoblDt;       /**< Total y Derivative */
   int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
   double dDZoblDt;       /**< Total p Derivative */
-  int *iaXoblLaskar;     /**< Equation # Corresponding to Laskar's change to x = sin(obl)*cos(pA) */
-  int *iaYoblLaskar;     /**< Equation #s Corresponding to Laskar's change to y = sin(obl)*sin(pA) */
-  int *iaZoblLaskar;     /**< Equation #s Corresponding to Laskar's change to z = cos(obl) */
+  int *iaXoblDistRot;     /**< Equation # Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
+  int *iaYoblDistRot;     /**< Equation #s Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
+  int *iaZoblDistRot;     /**< Equation #s Corresponding to DistRot's change to z = cos(obl) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      xi = sin(obliq)*sin(pA) derivative due to LASKAR. */
-  double **padDXoblDtLaskar;
+      xi = sin(obliq)*sin(pA) derivative due to DISTROT. */
+  double **padDXoblDtDistRot;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      zeta = sin(obliq)*cos(pA) derivative due to LASKAR. */
-  double **padDYoblDtLaskar;
+      zeta = sin(obliq)*cos(pA) derivative due to DISTROT. */
+  double **padDYoblDtDistRot;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
-      chi = cos(obliq) derivative due to LASKAR. */
-  double **padDZoblDtLaskar;
+      chi = cos(obliq) derivative due to DISTROT. */
+  double **padDZoblDtDistRot;
   
 } UPDATE;
 
@@ -603,6 +611,7 @@ typedef struct {
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */
   int dMinTCore;     /**< Halt at this TCore */
+  
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -710,9 +719,10 @@ typedef struct {
   fnForceBehaviorModule **fnForceBehaviorMulti; /**< Function Pointers to Force Behaviors */
   int *iNumMultiForce;    /**< Number of multi-module ForceBahevior functions */
 
-  /* Things for Lagrange */
+  /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
-  int bSemiMajChange;         /**< 1 if semi-major axis can change (Lagrange will recalc Laplace coeff functions) */
+  int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
+  int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -884,12 +894,17 @@ typedef struct {
   fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
   /*! Function pointers to finalize Core's uranium-235 */ 
   fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+ 
   /*! Function pointers to finalize Mantle's uranium-235 */ 
   fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
   /*! Function pointers to finalize Core's uranium-238 */ 
   fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
   /*! Function pointers to finalize Mantle's uranium-238 */ 
   fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  
+  
+  /*! These functions assign Equation and Module information regarding 
+      DistOrb h,k,p,q variables in the UPDATE struct. */
   /*! Function pointers to finalize Poincare's h */
   fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
   /*! Function pointers to finalize Poincare's k */
@@ -906,6 +921,9 @@ typedef struct {
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
+  
+  /*! These functions assign Equation and Module information regarding 
+      DistRot x,y,z variables in the UPDATE struct. */
   /*! Function pointers to finalize Laskar's X */ 
   fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
   /*! Function pointers to finalize Laskar's Y */ 
@@ -960,9 +978,9 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
-#include "lagrange.h"
-#include "laskar.h"
+#include "distorb.h"
 #include "thermint.h"
+#include "distrot.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

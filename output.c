@@ -1065,8 +1065,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
-  InitializeOutputLagrange(output,fnWrite);
-  InitializeOutputLaskar(output,fnWrite);
+  InitializeOutputDistOrb(output,fnWrite);
+  InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
 
 }

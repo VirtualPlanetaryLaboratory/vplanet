@@ -1,4 +1,4 @@
-/********************** LAGRANGE.C **********************/
+/********************** DISTORB.C **********************/
 /*
  * Russell Deitrick, April 28, 2015
  *
@@ -13,17 +13,16 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
-#include "lagrange.h"
 
-void InitializeControlLagrange(CONTROL *control) {
+void InitializeControlDistOrb(CONTROL *control) {
   /* Not sure if I need anything here yet */
 }
 
-void InitializeModuleLagrange(CONTROL *control,MODULE *module) {
+void InitializeModuleDistOrb(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyLagrange(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dPinc = src[iBody].dPinc;
@@ -33,18 +32,18 @@ void BodyCopyLagrange(BODY *dest,BODY *src,int iTideModel,int iBody) {
     dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
 }
 
-void InitializeBodyLagrange(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+void InitializeBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
 }
 
-void InitializeUpdateTmpBodyLagrange(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+void InitializeUpdateTmpBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
   int iBodyPert;
   
   control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts);
 
 }
 
-/**************** LAGRANGE options ********************/
+/**************** DISTORB options ********************/
 
 /* Inclination */
 
@@ -147,8 +146,52 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
       body[iFile-1].dArgP = options->dDefault;
 }  
 
+void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  double dTmp;
 
-void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	fprintf(stderr,"ERROR: %s must be greater than or equal to 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    system->dDfcrit = dTmp;
+    if (system->dDfcrit > 1 && control->Io.iVerbose >= VERBALL)
+      fprintf(stderr,"WARNING: %s > 1 is not advised (%s:%d).\n",options->cName,files->Infile[iFile].cIn,lTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    AssignDefaultDouble(options,&system->dDfcrit,files->iNumInputs);
+}
+
+void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bGRCorr = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bGRCorr,files->iNumInputs);
+}
+
+void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->bInvPlane = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&control->bInvPlane,files->iNumInputs);
+}
+
+void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_INC].cName,"dInc");
   sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
@@ -179,13 +222,36 @@ void InitializeOptionsLagrange(OPTIONS *options,fnReadOption fnRead[]) {
 //   options[OPT_ARGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_ARGP].cNeg,"Degrees");
   fnRead[OPT_ARGP] = &ReadArgP;
- 
+  
+  sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
+  sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
+  sprintf(options[OPT_DFCRIT].cDefault,"0");
+  options[OPT_DFCRIT].dDefault = 0.0;
+  options[OPT_DFCRIT].iType = 2;  
+  options[OPT_DFCRIT].iMultiFile = 0; 
+  fnRead[OPT_DFCRIT] = &ReadDfCrit;
+  
+  sprintf(options[OPT_GRCORR].cName,"bGRCorr");
+  sprintf(options[OPT_GRCORR].cDescr,"Use general relativity correction");
+  sprintf(options[OPT_GRCORR].cDefault,"0");
+  options[OPT_GRCORR].dDefault = 0;
+  options[OPT_GRCORR].iType = 0;  
+  options[OPT_GRCORR].iMultiFile = 1; 
+  fnRead[OPT_GRCORR] = &ReadGRCorr;
+  
+  sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
+  sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");
+  sprintf(options[OPT_INVPLANE].cDefault,"0");
+  options[OPT_INVPLANE].dDefault = 0;
+  options[OPT_INVPLANE].iType = 0;  
+  options[OPT_INVPLANE].iMultiFile = 0; 
+  fnRead[OPT_INVPLANE] = &ReadInvPlane;
 }
 
-void ReadOptionsLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  for (iOpt=OPTSTARTLAGRANGE;iOpt<OPTENDLAGRANGE;iOpt++) { 
+  for (iOpt=OPTSTARTDISTORB;iOpt<OPTENDDISTORB;iOpt++) { 
       if (options[iOpt].iType != -1) {
 	fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
@@ -193,7 +259,7 @@ void ReadOptionsLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 }
     
 
-/******************* Verify LAGRANGE ******************/
+/******************* Verify DISTORB ******************/
 
 
 /*
@@ -277,43 +343,66 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
 /* In the following, iBody is the current body number that is getting assigned,
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
    body number of the current perturbing body. */
-void InitializeHeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = 2;
-  update[iBody].padDHeccDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]];
-  update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]=2;
-  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
+
+/* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond
+   to all perturbing planets,  iPert = iGravPerts corresponds to the stellar general
+   relativistic correction, if applied. */
+
+void InitializeHeccDistOrb(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 2;
+  update[iBody].padDHeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
-void InitializeKeccLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = 2;
-  update[iBody].padDKeccDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]];
-  update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]=2;
-  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
+void InitializeKeccDistOrb(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 2;
+  update[iBody].padDKeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]][1] = body[iBody].iaGravPerts[iPert];
 }
 
-void InitializePincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = 2;
-  update[iBody].padDPincDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]];
-  update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]=2;
-  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
+void InitializeHeccDistOrbGR(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 2;
+  update[iBody].padDHeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]][1] = 0;
 }
 
-void InitializeQincLagrange(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = 2;
-  update[iBody].padDQincDtLagrange[iPert] = &update[iBody].daDerivProc[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]];
-  update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]=2;
-  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]][1] = body[iBody].iaGravPerts[iPert];
+void InitializeKeccDistOrbGR(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 2;
+  update[iBody].padDKeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]][1] = 0;
 }
 
-void VerifyPerturbersLagrange(BODY *body,int iNumBodies,int iBody) {
+void InitializePincDistOrb(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = 2;
+  update[iBody].padDPincDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]][1] = body[iBody].iaGravPerts[iPert];
+}
+
+void InitializeQincDistOrb(BODY *body,UPDATE *update,int iBody,int iPert) {
+  update[iBody].iaType[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = 2;
+  update[iBody].padDQincDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]];
+  update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]]=2;
+  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]][1] = body[iBody].iaGravPerts[iPert];
+}
+
+void VerifyPerturbersDistOrb(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
@@ -359,9 +448,11 @@ int CombCount(int x, int y, int N) {
 
 
 
-void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
-     
+      
+  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+  
   /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
   if (iBody == 1) {
     system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
@@ -442,28 +533,29 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   if (iBody >= 1) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 2; //will need to change this for zero mass particles in future
-    VerifyPerturbersLagrange(body,control->Evolve.iNumBodies,iBody);
-    control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxLagrange;
+
+    VerifyPerturbersDistOrb(body,control->Evolve.iNumBodies,iBody);
+    control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
     
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
     /* Body updates */
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
       /* h = Ecc*sin(LongP) */
-      InitializeHeccLagrange(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccLagrange[iPert]] = &fdLagrangeDhDt;
+      InitializeHeccDistOrb(body,update,iBody,iPert);
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbDhDt;
       
       /* k = Ecc*cos(LongP) */
-      InitializeKeccLagrange(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccLagrange[iPert]] = &fdLagrangeDkDt;
+      InitializeKeccDistOrb(body,update,iBody,iPert);
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbDkDt;
       
       /* p = s*sin(LongA) */
-      InitializePincLagrange(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincLagrange[iPert]] = &fdLagrangeDpDt;
+      InitializePincDistOrb(body,update,iBody,iPert);
+      fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fdDistOrbDpDt;
       
       /* q = s*cos(LongA) */
-      InitializeQincLagrange(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincLagrange[iPert]] = &fdLagrangeDqDt;
+      InitializeQincDistOrb(body,update,iBody,iPert);
+      fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fdDistOrbDqDt;
       
       jBody = body[iBody].iaGravPerts[iPert];
       
@@ -480,16 +572,28 @@ void VerifyLagrange(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 	    system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
 	}
       }
+    } 
+    if (iBody == control->Evolve.iNumBodies-1) {
+      if (control->bInvPlane) {
+	inv_plane(body, system, control->Evolve.iNumBodies);
+      }
+    }
+    if (body[iBody].bGRCorr) {
+      /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+      InitializeHeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] = &fdApsidalGRDhDt;
+      
+      InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[body[iBody].iGravPerts]] = &fdApsidalGRDkDt;
     }
   }
-  control->fnForceBehavior[iBody][iModule]=&ForceBehaviorLagrange;
-  control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyLagrange;
-  system->dDfcrit = 0.1;
+  control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistOrb;
+  control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyDistOrb;
 }
 
 
-/***************** LAGRANGE Update *****************/
-void InitializeUpdateLagrange(BODY *body,UPDATE *update,int iBody) {
+/***************** DISTORB Update *****************/
+void InitializeUpdateDistOrb(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
     if (update[iBody].iNumHecc == 0)
       update[iBody].iNumVars++;
@@ -506,73 +610,100 @@ void InitializeUpdateLagrange(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumQinc == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumQinc += body[iBody].iGravPerts;
+
+    if (body[iBody].bGRCorr) {
+      update[iBody].iNumHecc += 1;
+      update[iBody].iNumKecc += 1;
+    }
   }
 }
 
-void FinalizeUpdateHeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+
   int iPert;
   
-  update[iBody].padDHeccDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
-  update[iBody].iaHeccLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-    update[iBody].iaModule[iVar][*iEqn] = LAGRANGE;
-    update[iBody].iaHeccLagrange[iPert] = (*iEqn)++;
-  }
+  if (body[iBody].bGRCorr) {
+    update[iBody].padDHeccDtDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
+    update[iBody].iaHeccDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(int));
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
+      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+      update[iBody].iaHeccDistOrb[iPert] = (*iEqn)++;
+    }
+  } else {
+    update[iBody].padDHeccDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
+    update[iBody].iaHeccDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+      update[iBody].iaHeccDistOrb[iPert] = (*iEqn)++;
+    }
+  } 
 }
 
-void FinalizeUpdateKeccLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+
   int iPert;
   
-  update[iBody].padDKeccDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
-  update[iBody].iaKeccLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-    update[iBody].iaModule[iVar][*iEqn] = LAGRANGE;
-    update[iBody].iaKeccLagrange[iPert] = (*iEqn)++;
+  if (body[iBody].bGRCorr) {
+    update[iBody].padDKeccDtDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
+    update[iBody].iaKeccDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(int));
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
+      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+      update[iBody].iaKeccDistOrb[iPert] = (*iEqn)++;
+    }
+  } else {
+    update[iBody].padDKeccDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
+    update[iBody].iaKeccDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+      update[iBody].iaKeccDistOrb[iPert] = (*iEqn)++;
+    }
   }
 }
 
-void FinalizeUpdatePincLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   int iPert;
   
-  update[iBody].padDPincDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
-  update[iBody].iaPincLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
+  update[iBody].padDPincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
+  update[iBody].iaPincDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-    update[iBody].iaModule[iVar][*iEqn] = LAGRANGE;
-    update[iBody].iaPincLagrange[iPert] = (*iEqn)++;
+    update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+    update[iBody].iaPincDistOrb[iPert] = (*iEqn)++;
   }
 }
 
-void FinalizeUpdateQincLagrange(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateQincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   int iPert;
   
-  update[iBody].padDQincDtLagrange = malloc(body[iBody].iGravPerts*sizeof(double*));
-  update[iBody].iaQincLagrange = malloc(body[iBody].iGravPerts*sizeof(int));
+  update[iBody].padDQincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
+  update[iBody].iaQincDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-    update[iBody].iaModule[iVar][*iEqn] = LAGRANGE;
-    update[iBody].iaQincLagrange[iPert] = (*iEqn)++;
+    update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+    update[iBody].iaQincDistOrb[iPert] = (*iEqn)++;
   }
 }
 
 
-/***************** LAGRANGE Halts *****************/
+/***************** DISTORB Halts *****************/
 
-void CountHaltsLagrange(HALT *halt,int *iNumHalts) { 
+void CountHaltsDistOrb(HALT *halt,int *iNumHalts) { 
 }
 
-void VerifyHaltLagrange(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
 }
 
 
-/************* LAGRANGE Outputs ******************/
+/************* DISTORB Outputs ******************/
 
-void WriteBodyDEccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDEccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += 1./sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2))*(body[iBody].dHecc*(*(update[iBody].padDHeccDtLagrange[iPert]))+body[iBody].dKecc*(*(update[iBody].padDKeccDtLagrange[iPert])));
+    dDeriv += 1./sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2))*(body[iBody].dHecc*(*(update[iBody].padDHeccDtDistOrb[iPert]))+body[iBody].dKecc*(*(update[iBody].padDKeccDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
   
@@ -585,14 +716,14 @@ void WriteBodyDEccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   }
 }
 
-void WriteBodyDSincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += 1./sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2))*(body[iBody].dPinc*(*(update[iBody].padDPincDtLagrange[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtLagrange[iPert])));
+    dDeriv += 1./sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
   
@@ -605,14 +736,14 @@ void WriteBodyDSincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }  
   
-void WriteBodyDLongPDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += 1./(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2))*(body[iBody].dKecc*(*(update[iBody].padDHeccDtLagrange[iPert]))-body[iBody].dHecc*(*(update[iBody].padDKeccDtLagrange[iPert])));
+    dDeriv += 1./(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2))*(body[iBody].dKecc*(*(update[iBody].padDHeccDtDistOrb[iPert]))-body[iBody].dHecc*(*(update[iBody].padDKeccDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
   
@@ -625,14 +756,14 @@ void WriteBodyDLongPDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
   }
 }  
 
-void WriteBodyDLongADtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += 1./(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2))*(body[iBody].dQinc*(*(update[iBody].padDPincDtLagrange[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtLagrange[iPert])));
+    dDeriv += 1./(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2))*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
   
@@ -645,14 +776,14 @@ void WriteBodyDLongADtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
   }
 } 
 
-void WriteBodyDIncDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += 2./sqrt((1-(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)))*(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)))*(body[iBody].dPinc*(*(update[iBody].padDPincDtLagrange[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtLagrange[iPert])));
+    dDeriv += 2./sqrt((1-(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)))*(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
   
@@ -733,7 +864,7 @@ void WriteBodyQinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcpy(cUnit,"");
 } 
 
-void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDHeccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -741,7 +872,7 @@ void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += *(update[iBody].padDHeccDtLagrange[iPert]);
+    dDeriv += *(update[iBody].padDHeccDtDistOrb[iPert]);
   
   *dTmp = dDeriv;
   
@@ -754,7 +885,7 @@ void WriteBodyDHeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDKeccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -762,7 +893,7 @@ void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += *(update[iBody].padDKeccDtLagrange[iPert]);
+    dDeriv += *(update[iBody].padDKeccDtDistOrb[iPert]);
   
   *dTmp = dDeriv;
   
@@ -775,7 +906,7 @@ void WriteBodyDKeccDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDPincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -783,7 +914,7 @@ void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += *(update[iBody].padDPincDtLagrange[iPert]);
+    dDeriv += *(update[iBody].padDPincDtDistOrb[iPert]);
   
   *dTmp = dDeriv;
   
@@ -796,7 +927,7 @@ void WriteBodyDPincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDQincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDQincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -804,7 +935,7 @@ void WriteBodyDQincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
-    dDeriv += *(update[iBody].padDQincDtLagrange[iPert]);
+    dDeriv += *(update[iBody].padDQincDtDistOrb[iPert]);
   
   *dTmp = dDeriv;
   
@@ -818,50 +949,50 @@ void WriteBodyDQincDtLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 }
 
 
-void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
+void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_DECCDTLAGRANGE].cName,"DEccDtLagrange");
-  sprintf(output[OUT_DECCDTLAGRANGE].cDescr,"Body's decc/dt in Lagrange");
-  sprintf(output[OUT_DECCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DECCDTLAGRANGE].bNeg = 1;
-  output[OUT_DECCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DECCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DECCDTLAGRANGE] = &WriteBodyDEccDtLagrange;
+  sprintf(output[OUT_DECCDTDISTORB].cName,"DEccDtDistOrb");
+  sprintf(output[OUT_DECCDTDISTORB].cDescr,"Body's decc/dt in DistOrb");
+  sprintf(output[OUT_DECCDTDISTORB].cNeg,"1/year");
+  output[OUT_DECCDTDISTORB].bNeg = 1;
+  output[OUT_DECCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DECCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DECCDTDISTORB] = &WriteBodyDEccDtDistOrb;
   
-  sprintf(output[OUT_DSINCDTLAGRANGE].cName,"DSincDtLagrange");
-  sprintf(output[OUT_DSINCDTLAGRANGE].cDescr,"Body's dsin(.5*Inc)/dt in Lagrange");
-  sprintf(output[OUT_DSINCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DSINCDTLAGRANGE].bNeg = 1;
-  output[OUT_DSINCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DSINCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DSINCDTLAGRANGE] = &WriteBodyDSincDtLagrange;
+  sprintf(output[OUT_DSINCDTDISTORB].cName,"DSincDtDistOrb");
+  sprintf(output[OUT_DSINCDTDISTORB].cDescr,"Body's dsin(.5*Inc)/dt in DistOrb");
+  sprintf(output[OUT_DSINCDTDISTORB].cNeg,"1/year");
+  output[OUT_DSINCDTDISTORB].bNeg = 1;
+  output[OUT_DSINCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DSINCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DSINCDTDISTORB] = &WriteBodyDSincDtDistOrb;
  
-  sprintf(output[OUT_DINCDTLAGRANGE].cName,"DIncDtLagrange");
-  sprintf(output[OUT_DINCDTLAGRANGE].cDescr,"Body's dInc/dt in Lagrange");
-  sprintf(output[OUT_DINCDTLAGRANGE].cNeg,"deg/year");
-  output[OUT_DINCDTLAGRANGE].bNeg = 1;
-  output[OUT_DINCDTLAGRANGE].dNeg = YEARSEC/DEGRAD;
-  output[OUT_DINCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DINCDTLAGRANGE] = &WriteBodyDIncDtLagrange;
+  sprintf(output[OUT_DINCDTDISTORB].cName,"DIncDtDistOrb");
+  sprintf(output[OUT_DINCDTDISTORB].cDescr,"Body's dInc/dt in DistOrb");
+  sprintf(output[OUT_DINCDTDISTORB].cNeg,"deg/year");
+  output[OUT_DINCDTDISTORB].bNeg = 1;
+  output[OUT_DINCDTDISTORB].dNeg = YEARSEC/DEGRAD;
+  output[OUT_DINCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DINCDTDISTORB] = &WriteBodyDIncDtDistOrb;
   
-  sprintf(output[OUT_DLONGPDTLAGRANGE].cName,"DLongPDtLagrange");
-  sprintf(output[OUT_DLONGPDTLAGRANGE].cDescr,"Body's dvarpi/dt in Lagrange");
-  sprintf(output[OUT_DLONGPDTLAGRANGE].cNeg,"deg/yr");
-  output[OUT_DLONGPDTLAGRANGE].bNeg = 1;
-  output[OUT_DLONGPDTLAGRANGE].dNeg = YEARSEC/DEGRAD;
-  output[OUT_DLONGPDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DLONGPDTLAGRANGE] = &WriteBodyDLongPDtLagrange;
+  sprintf(output[OUT_DLONGPDTDISTORB].cName,"DLongPDtDistOrb");
+  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,"Body's dvarpi/dt in DistOrb");
+  sprintf(output[OUT_DLONGPDTDISTORB].cNeg,"deg/yr");
+  output[OUT_DLONGPDTDISTORB].bNeg = 1;
+  output[OUT_DLONGPDTDISTORB].dNeg = YEARSEC/DEGRAD;
+  output[OUT_DLONGPDTDISTORB].iNum = 1;
+  fnWrite[OUT_DLONGPDTDISTORB] = &WriteBodyDLongPDtDistOrb;
   
-  sprintf(output[OUT_DLONGADTLAGRANGE].cName,"DLongADtLagrange");
-  sprintf(output[OUT_DLONGADTLAGRANGE].cDescr,"Body's dOmega/dt in Lagrange");
-  sprintf(output[OUT_DLONGADTLAGRANGE].cNeg,"deg/yr");
-  output[OUT_DLONGADTLAGRANGE].bNeg = 1;
-  output[OUT_DLONGADTLAGRANGE].dNeg = YEARSEC/DEGRAD;
-  output[OUT_DLONGADTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DLONGADTLAGRANGE] = &WriteBodyDLongADtLagrange;
+  sprintf(output[OUT_DLONGADTDISTORB].cName,"DLongADtDistOrb");
+  sprintf(output[OUT_DLONGADTDISTORB].cDescr,"Body's dOmega/dt in DistOrb");
+  sprintf(output[OUT_DLONGADTDISTORB].cNeg,"deg/yr");
+  output[OUT_DLONGADTDISTORB].bNeg = 1;
+  output[OUT_DLONGADTDISTORB].dNeg = YEARSEC/DEGRAD;
+  output[OUT_DLONGADTDISTORB].iNum = 1;
+  fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
   
   sprintf(output[OUT_INC].cName,"Inc");
-  sprintf(output[OUT_INC].cDescr,"Body's Inclination in Lagrange");
+  sprintf(output[OUT_INC].cDescr,"Body's Inclination in DistOrb");
   sprintf(output[OUT_INC].cNeg,"Deg");
   output[OUT_INC].bNeg = 1;
   output[OUT_INC].dNeg = 1./DEGRAD;
@@ -869,12 +1000,12 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_INC] = &WriteBodyInc;
   
   sprintf(output[OUT_SINC].cName,"Sinc");
-  sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in Lagrange");
+  sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
   output[OUT_SINC].iNum = 1;
   fnWrite[OUT_SINC] = &WriteBodySinc;
   
   sprintf(output[OUT_LONGA].cName,"LongA");
-  sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in Lagrange");
+  sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in DistOrb");
   sprintf(output[OUT_LONGA].cNeg,"Deg");
   output[OUT_LONGA].bNeg = 1;
   output[OUT_LONGA].dNeg = 1./DEGRAD;
@@ -882,84 +1013,84 @@ void InitializeOutputLagrange(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LONGA] = &WriteBodyLongA;
   
   sprintf(output[OUT_ARGP].cName,"ArgP");
-  sprintf(output[OUT_ARGP].cDescr,"Body's argument of pericenter in Lagrange");
+  sprintf(output[OUT_ARGP].cDescr,"Body's argument of pericenter in DistOrb");
   sprintf(output[OUT_ARGP].cNeg,"Deg");
   output[OUT_ARGP].bNeg = 1;
   output[OUT_ARGP].dNeg = 1./DEGRAD;
   output[OUT_ARGP].iNum = 1;
   fnWrite[OUT_ARGP] = &WriteBodyArgP; 
-  
+
   sprintf(output[OUT_PINC].cName,"Pinc");
-  sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in Lagrange");
+  sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
   output[OUT_PINC].iNum = 1;
   fnWrite[OUT_PINC] = &WriteBodyPinc;
   
   sprintf(output[OUT_QINC].cName,"Qinc");
-  sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in Lagrange");
+  sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in DistOrb");
   output[OUT_QINC].iNum = 1;
   fnWrite[OUT_QINC] = &WriteBodyQinc;
   
-  sprintf(output[OUT_DHECCDTLAGRANGE].cName,"DHeccDtLagrange");
-  sprintf(output[OUT_DHECCDTLAGRANGE].cDescr,"Body's dh/dt in Lagrange");
-  sprintf(output[OUT_DHECCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DHECCDTLAGRANGE].bNeg = 1;
-  output[OUT_DHECCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DHECCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DHECCDTLAGRANGE] = &WriteBodyDHeccDtLagrange;
+  sprintf(output[OUT_DHECCDTDISTORB].cName,"DHeccDtDistOrb");
+  sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's dh/dt in DistOrb");
+  sprintf(output[OUT_DHECCDTDISTORB].cNeg,"1/year");
+  output[OUT_DHECCDTDISTORB].bNeg = 1;
+  output[OUT_DHECCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DHECCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DHECCDTDISTORB] = &WriteBodyDHeccDtDistOrb;
   
-  sprintf(output[OUT_DKECCDTLAGRANGE].cName,"DKeccDtLagrange");
-  sprintf(output[OUT_DKECCDTLAGRANGE].cDescr,"Body's dk/dt in Lagrange");
-  sprintf(output[OUT_DKECCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DKECCDTLAGRANGE].bNeg = 1;
-  output[OUT_DKECCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DKECCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DKECCDTLAGRANGE] = &WriteBodyDKeccDtLagrange;
+  sprintf(output[OUT_DKECCDTDISTORB].cName,"DKeccDtDistOrb");
+  sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's dk/dt in DistOrb");
+  sprintf(output[OUT_DKECCDTDISTORB].cNeg,"1/year");
+  output[OUT_DKECCDTDISTORB].bNeg = 1;
+  output[OUT_DKECCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DKECCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DKECCDTDISTORB] = &WriteBodyDKeccDtDistOrb;
   
-  sprintf(output[OUT_DPINCDTLAGRANGE].cName,"DPincDtLagrange");
-  sprintf(output[OUT_DPINCDTLAGRANGE].cDescr,"Body's dp/dt in Lagrange");
-  sprintf(output[OUT_DPINCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DPINCDTLAGRANGE].bNeg = 1;
-  output[OUT_DPINCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DPINCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DPINCDTLAGRANGE] = &WriteBodyDPincDtLagrange;
+  sprintf(output[OUT_DPINCDTDISTORB].cName,"DPincDtDistOrb");
+  sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's dp/dt in DistOrb");
+  sprintf(output[OUT_DPINCDTDISTORB].cNeg,"1/year");
+  output[OUT_DPINCDTDISTORB].bNeg = 1;
+  output[OUT_DPINCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DPINCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DPINCDTDISTORB] = &WriteBodyDPincDtDistOrb;
   
-  sprintf(output[OUT_DQINCDTLAGRANGE].cName,"DQincDtLagrange");
-  sprintf(output[OUT_DQINCDTLAGRANGE].cDescr,"Body's dq/dt in Lagrange");
-  sprintf(output[OUT_DQINCDTLAGRANGE].cNeg,"1/year");
-  output[OUT_DQINCDTLAGRANGE].bNeg = 1;
-  output[OUT_DQINCDTLAGRANGE].dNeg = YEARSEC;
-  output[OUT_DQINCDTLAGRANGE].iNum = 1;
-  fnWrite[OUT_DQINCDTLAGRANGE] = &WriteBodyDQincDtLagrange;
+  sprintf(output[OUT_DQINCDTDISTORB].cName,"DQincDtDistOrb");
+  sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's dq/dt in DistOrb");
+  sprintf(output[OUT_DQINCDTDISTORB].cNeg,"1/year");
+  output[OUT_DQINCDTDISTORB].bNeg = 1;
+  output[OUT_DQINCDTDISTORB].dNeg = YEARSEC;
+  output[OUT_DQINCDTDISTORB].iNum = 1;
+  fnWrite[OUT_DQINCDTDISTORB] = &WriteBodyDQincDtDistOrb;
 }
 
-void FinalizeOutputFunctionLagrange(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
-/************ LAGRANGE Logging Functions **************/
-
-void LogOptionsLagrange(CONTROL *control, FILE *fp) {
-
-  fprintf(fp,"-------- LAGRANGE Options -----\n\n");
+void FinalizeOutputFunctionDistOrb(OUTPUT *output,int iBody,int iModule) {
   
 }
 
-void LogLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+
+/************ DISTORB Logging Functions **************/
+
+void LogOptionsDistOrb(CONTROL *control, FILE *fp) {
+
+  fprintf(fp,"-------- DISTORB Options -----\n\n");
+  
+}
+
+void LogDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut;
 
-  fprintf(fp,"\n----- LAGRANGE PARAMETERS ------\n");
-  for (iOut=OUTSTARTLAGRANGE;iOut<OUTBODYSTARTLAGRANGE;iOut++) {
+  fprintf(fp,"\n----- DISTORB PARAMETERS ------\n");
+  for (iOut=OUTSTARTDISTORB;iOut<OUTBODYSTARTDISTORB;iOut++) {
     if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
   }
 }
 
-void LogBodyLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+void LogBodyDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
 
-  fprintf(fp,"----- LAGRANGE PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTBODYSTARTLAGRANGE;iOut<OUTENDLAGRANGE;iOut++) {
+  fprintf(fp,"----- DISTORB PARAMETERS (%s)------\n",body[iBody].cName);
+  for (iOut=OUTBODYSTARTDISTORB;iOut<OUTENDDISTORB;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
@@ -967,43 +1098,402 @@ void LogBodyLagrange(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 /************* MODULE Functions ***********/
 
-void AddModuleLagrange(MODULE *module,int iBody,int iModule) {
+void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = LAGRANGE;
+  module->iaModule[iBody][iModule] = DISTORB;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlLagrange;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyLagrange;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsLagrange;
-  module->fnLogBody[iBody][iModule] = &LogBodyLagrange;
+  module->fnInitializeControl[iBody][iModule] = &InitializeControlDistOrb;
+  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistOrb;
+  module->fnCountHalts[iBody][iModule] = &CountHaltsDistOrb;
+  module->fnLogBody[iBody][iModule] = &LogBodyDistOrb;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsLagrange;
-  module->fnVerify[iBody][iModule] = &VerifyLagrange;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltLagrange;
-//   module->fnVerifyRotation[iBody][iModule] = &VerifyRotationLagrange;
+  module->fnReadOptions[iBody][iModule] = &ReadOptionsDistOrb;
+  module->fnVerify[iBody][iModule] = &VerifyDistOrb;
+  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistOrb;
+//   module->fnVerifyRotation[iBody][iModule] = &VerifyRotationDistOrb;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyLagrange;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateLagrange;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputLagrange;
-  module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateHeccLagrange;
-  module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccLagrange;
-  module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincLagrange;
-  module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincLagrange;
+  module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistOrb;
+  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistOrb;
+  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistOrb;
+  module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateHeccDistOrb;
+  module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistOrb;
+  module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistOrb;
+  module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistOrb;
 
   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionLagrange;
+  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistOrb;
 
 }
 
-/************* Lagrange Functions ************/
+/************* DistOrb Functions ************/
+void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
 
+}
 
+void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+}
 
-void PropsAuxLagrange(BODY *body,UPDATE *update,int iBody) { 
+void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
+  double alpha1, dalpha;
+  int j, iBody, jBody;
   
+  j = 0;
+  for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      if (body[iBody].dSemi < body[jBody].dSemi) {
+	  alpha1 = body[iBody].dSemi/body[jBody].dSemi;
+      } else if (body[iBody].dSemi > body[jBody].dSemi) {
+	  alpha1 = body[jBody].dSemi/body[iBody].dSemi;
+      }
+	
+      for (j=0;j<LAPLNUM;j++) {
+	dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
+	if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
+	    system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
+	    system->fnLaplaceF[j][0](alpha1, 0);
+		    
+	    system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
+	    system->fnLaplaceDeriv[j][0](alpha1, 0);
+		    
+	    system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+	}
+      }
+    }
+  }
 }
 
-void ForceBehaviorLagrange(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+/*
+ * Invariable plane calculations
+ */ 
+
+double xangle1(BODY *body, int iBody) {
+  return cos(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA) - sin(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
 }
+
+double xangle2(BODY *body, int iBody) {
+  return -cos(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA) - sin(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double yangle1(BODY *body, int iBody) {
+  return sin(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA) + cos(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double yangle2(BODY *body, int iBody) {
+  return -sin(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA) + cos(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*pow(body[iBody].dSinc,2));
+}
+
+double zangle1(BODY *body, int iBody) {
+  return sin(body[iBody].dLongP-body[iBody].dLongA)*(2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+}
+
+double zangle2(BODY *body, int iBody) {
+  return cos(body[iBody].dLongP-body[iBody].dLongA)*(2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+}
+
+double xinit(BODY *body, int iBody) {
+  return body[iBody].dSemi/AUCM * (cos(body[iBody].dEccA) - body[iBody].dEcc);
+}
+
+double yinit(BODY *body, int iBody) {
+  return body[iBody].dSemi/AUCM * sqrt(1.0-pow(body[iBody].dEcc,2)) * sin(body[iBody].dEccA);
+}
+
+double vxi(BODY *body, int iBody) {
+  double x, y, mu, n;
+  x = xinit(body, iBody);
+  y = yinit(body, iBody);
+  mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+  n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
+  return -pow(body[iBody].dSemi/AUCM,2)*n*sin(body[iBody].dEccA)/sqrt(pow(x,2)+pow(y,2));
+}
+  
+double vyi(BODY *body, int iBody) {
+  double x, y, mu, n, v;
+  x = xinit(body, iBody);
+  y = yinit(body, iBody);
+  mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+  n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
+  v = pow(body[iBody].dSemi/AUCM,2)*n*sqrt((1.0-pow(body[iBody].dEcc,2))/(pow(x,2)+pow(y,2)))*cos(body[iBody].dEccA);
+  return v;
+}
+
+double signf(double value) {
+  if (value > 0) return 1;
+  if (value < 0) return -1;
+  return 0;
+}
+
+void kepler_eqn(BODY *body, int iBody) {
+  double di1, di2, di3, fi, fi1, fi2, fi3;
+  if (body[iBody].dMeanA == 0) {
+    body[iBody].dEccA = 0;
+  } else {
+    body[iBody].dEccA = body[iBody].dMeanA + signf(sin(body[iBody].dMeanA))*0.85*body[iBody].dEcc;
+    di3 = 1.0;
+    
+    while (di3 > 1e-15) {
+      fi = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA) - body[iBody].dMeanA;
+      fi1 = 1.0 - body[iBody].dEcc*cos(body[iBody].dEccA);
+      fi2 = body[iBody].dEcc*sin(body[iBody].dEccA);
+      fi3 = body[iBody].dEcc*cos(body[iBody].dEccA);
+      di1 = -fi/fi1;
+      di2 = -fi/(fi1+0.5*di1*fi2);
+      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*pow(di2,2)*fi3);
+      body[iBody].dEccA += di3;
+    }
+  }
+}
+
+void osc2cart(BODY *body, int iNumBodies) {
+  int iBody;
+  double xtmp, ytmp, vxtmp, vytmp;
+  
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    body[iBody].dCartPos = malloc(3*sizeof(double));
+    body[iBody].dCartVel = malloc(3*sizeof(double));
+    
+    if (iBody == 0) {
+      body[iBody].dCartPos[0] = 0;
+      body[iBody].dCartPos[1] = 0;
+      body[iBody].dCartPos[2] = 0;
+  
+      body[iBody].dCartVel[0] = 0;
+      body[iBody].dCartVel[1] = 0;
+      body[iBody].dCartVel[2] = 0;
+    } else {
+      kepler_eqn(body, iBody);
+      xtmp = xinit(body, iBody);
+      ytmp = yinit(body, iBody);
+      vxtmp = vxi(body, iBody);
+      vytmp = vyi(body, iBody);
+      
+      body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
+      body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
+      body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+  
+      body[iBody].dCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
+      body[iBody].dCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
+      body[iBody].dCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
+    }
+  }
+}
+
+void astro2bary(BODY *body, int iNumBodies) {
+  int i, iBody;
+  double *xcom, *vcom, mtotal;
+  xcom = malloc(3*sizeof(double));
+  vcom = malloc(3*sizeof(double));
+  mtotal = 0;
+  for (iBody=0;iBody<iNumBodies;iBody++) mtotal += body[iBody].dMass;
+  
+  for (i=0;i<3;i++) {
+    xcom[i] = 0;
+    vcom[i] = 0;
+    for (iBody=1;iBody<iNumBodies;iBody++) {
+      xcom[i] += (body[iBody].dMass*body[iBody].dCartPos[i]/mtotal);
+      vcom[i] += (body[iBody].dMass*body[iBody].dCartVel[i]/mtotal);
+    }
+  }
+  
+  for (i=0;i<3;i++) {
+    for (iBody=0;iBody<iNumBodies;iBody++) {
+      body[iBody].dCartPos[i] -= xcom[i];
+      body[iBody].dCartVel[i] -= vcom[i];
+    }
+  }
+}
+
+void bary2astro(BODY *body, int iNumBodies) {
+  int i, iBody;
+  double xtmp, vtmp;
+  
+  for (i=0;i<3;i++) {
+    xtmp = body[0].dCartPos[i];
+    vtmp = body[0].dCartVel[i];
+    for (iBody=0;iBody<iNumBodies;iBody++) {
+      body[iBody].dCartPos[i] -= xtmp;
+      body[iBody].dCartVel[i] -= vtmp;
+    }
+  }
+}
+
+void cross(double *a, double *b, double *c) {
+  c[0] = a[1]*b[2] - b[1]*a[2];
+  c[1] = a[2]*b[0] - b[2]*a[0];
+  c[2] = a[0]*b[1] - b[0]*a[1];
+}
+
+void angularmom(BODY *body, double *AngMom, int iNumBodies) {
+  double *rxptmp;
+  int i, iBody;
+  
+  osc2cart(body, iNumBodies);
+  astro2bary(body, iNumBodies);
+  
+  rxptmp = malloc(3*sizeof(double));
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, rxptmp);
+    for (i=0;i<3;i++) {
+      AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
+    }
+  }
+}
+
+void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
+  double *xtmp, *vtmp;
+  int iBody;  
+  xtmp = malloc(3*sizeof(double));
+  vtmp = malloc(3*sizeof(double));
+  
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    xtmp[0] = body[iBody].dCartPos[0]*cos(system->dThetaInvP)+body[iBody].dCartPos[1]*sin(system->dThetaInvP);
+    xtmp[1] = -body[iBody].dCartPos[0]*sin(system->dThetaInvP)+body[iBody].dCartPos[1]*cos(system->dThetaInvP);
+    xtmp[2] = body[iBody].dCartPos[2];
+    vtmp[0] = body[iBody].dCartVel[0]*cos(system->dThetaInvP)+body[iBody].dCartVel[1]*sin(system->dThetaInvP);
+    vtmp[1] = -body[iBody].dCartVel[0]*sin(system->dThetaInvP)+body[iBody].dCartVel[1]*cos(system->dThetaInvP);
+    vtmp[2] = body[iBody].dCartVel[2];
+    
+    body[iBody].dCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
+    body[iBody].dCartPos[1] = xtmp[1];
+    body[iBody].dCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
+    body[iBody].dCartVel[0] = vtmp[0]*cos(system->dPhiInvP)-vtmp[2]*sin(system->dPhiInvP);
+    body[iBody].dCartVel[1] = vtmp[1];
+    body[iBody].dCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
+  }
+}
+
+double normv(double *vector) {
+  return sqrt(pow(vector[0],2)+pow(vector[1],2)+pow(vector[2],2));
+}
+
+void cart2osc(BODY *body, int iNumBodies) {
+  int iBody;
+  double r, vsq, rdot, mu, *h, hsq, sinwf, coswf, sinf, cosf, sinw, cosw, cosE, f;
+  
+  for (iBody=1;iBody<iNumBodies;iBody++) {
+    r = normv(body[iBody].dCartPos);
+    vsq = pow(normv(body[iBody].dCartVel),2);
+    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
+	    body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
+    mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
+    h = malloc(3*sizeof(double));
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    hsq = pow(normv(h),2);
+    
+    body[iBody].dSemi = pow((2.0/r - vsq/mu),-1)*AUCM;
+    if (body[iBody].dEcc != 0) {
+      body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUCM));
+    }
+    
+    body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
+    body[iBody].dLongA = atan2(h[0],-h[1]);
+    if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;
+    
+    sinwf = body[iBody].dCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-pow(body[iBody].dSinc,2)));
+    coswf = (body[iBody].dCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*pow(body[iBody].dSinc,2)))/cos(body[iBody].dLongA);
+    
+    sinf = body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))*rdot/(normv(h)*body[iBody].dEcc);
+    cosf = (body[iBody].dSemi/AUCM*(1.0-pow(body[iBody].dEcc,2))/r - 1.0)/body[iBody].dEcc;
+    
+    if (body[iBody].dEcc != 0) {
+      sinw = sinwf*cosf - coswf*sinf;
+      cosw = sinwf*sinf + coswf*cosf;
+      body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
+      if (body[iBody].dLongP >= 2.*PI) {
+        body[iBody].dLongP -= 2.*PI;
+      } else if (body[iBody].dLongP < 0.0) {
+        body[iBody].dLongP += 2.*PI;
+      }
+    }
+    
+    f = atan2(sinf, cosf);
+    if (f >= 2.*PI) {
+      f -= 2.*PI;
+    } else if (f < 0.0) {
+      f += 2.*PI;
+    }
+    cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
+    if (f <= PI) body[iBody].dEccA = acos(cosE);
+    if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
+    
+    body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA);
+    if (body[iBody].dMeanA < 0) body[iBody].dMeanA += 2*PI;
+    if (body[iBody].dMeanA >= 2*PI) body[iBody].dMeanA -= 2*PI;
+  }
+}
+
+
+void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
+  int iBody;
+  double *AngMom;
+  AngMom = malloc(3*sizeof(double));
+  
+  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
+     This angle is invariant under rotations. */
+  for (iBody=1;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bDistRot) {
+      body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
+      while (body[iBody].dTrueApA<0) {
+	body[iBody].dTrueApA += 2*PI;
+      }
+    }
+  }
+  
+  angularmom(body, AngMom, iNumBodies);
+  system->dThetaInvP = atan2(AngMom[1],AngMom[0]);
+  system->dPhiInvP = atan2(sqrt(pow(AngMom[0],2)+pow(AngMom[1],2)),AngMom[2]);
+  
+  rotate_inv(body, system, iNumBodies);
+  bary2astro(body, iNumBodies);
+  cart2osc(body, iNumBodies);
+
+  /* Loop below recalculates precession param for planets with DistRot enabled.*/
+  for (iBody=1;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bDistRot) {
+      body[iBody].dPrecA = 2*PI - (body[iBody].dTrueApA+body[iBody].dLongP);
+      while (body[iBody].dPrecA<0) {
+	body[iBody].dPrecA += 2*PI;
+      }
+      CalcXYZobl(body, iBody);
+    }
+    CalcHK(body, iBody);
+    CalcPQ(body, iBody);
+  }
+}
+
+// void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {
+//   double *xtmp, *vtmp;
+//   int iBody;
+//   
+//   xtmp = malloc(3*sizeof(double));
+//   vtmp = malloc(3*sizeof(double));
+//   
+//   for (iBody=0;iBody<iNumBodies;iBody++) {
+//     xtmp[0] = body[iBody].dCartPos[0]*cos(-system->dPhiInvP)-body[iBody].dCartPos[2]*sin(-system->dPhiInvP);
+//     xtmp[1] = body[iBody].dCartPos[1];
+//     xtmp[2] = body[iBody].dCartPos[0]*sin(-system->dPhiInvP)+body[iBody].dCartPos[2]*cos(-system->dPhiInvP);
+//     vtmp[0] = body[iBody].dCartVel[0]*cos(-system->dPhiInvP)-body[iBody].dCartVel[2]*sin(-system->dPhiInvP);
+//     vtmp[1] = body[iBody].dCartVel[1];
+//     vtmp[2] = body[iBody].dCartVel[0]*sin(-system->dPhiInvP)+body[iBody].dCartVel[2]*cos(-system->dPhiInvP);
+//     
+//     body[iBody].dCartPos[0] = xtmp[0]*cos(-system->dThetaInvP)+xtmp[1]*sin(-system->dThetaInvP);
+//     body[iBody].dCartPos[1] = -xtmp[0]*sin(-system->dThetaInvP)+xtmp[1]*cos(-system->dThetaInvP);
+//     body[iBody].dCartPos[2] = xtmp[2];
+//     body[iBody].dCartVel[0] = vtmp[0]*cos(-system->dThetaInvP)+vtmp[1]*sin(-system->dThetaInvP);
+//     body[iBody].dCartVel[1] = -vtmp[0]*sin(-system->dThetaInvP)+vtmp[1]*cos(-system->dThetaInvP);
+//     body[iBody].dCartVel[2] = vtmp[2];  
+//   }
+// }
+// 
+// void inv2input_plane(BODY *body, SYSTEM *system, int iNumBodies) {
+//   osc2cart(body, iNumBodies);
+//   astro2bary(body, iNumBodies);
+//   rotate_rev(body, system, iNumBodies);
+//   bary2astro(body, iNumBodies);
+//   cart2osc(body, iNumBodies);
+// }
+
+
 
 // 
 /* 
@@ -1972,60 +2462,77 @@ double fdDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
   return y;
 }
 
+//--------Relativistic correction---------------------------------------------------------
+double fdApsidalGRCorrection(BODY *body, int *iaBody) {
+  double n;
+  n = KGAUSS*sqrt((body[0].dMass+body[iaBody[0]].dMass)/MSUN/(pow(body[iaBody[0]].dSemi/AUCM,3)));
+  return 3*pow(n,3)*pow(body[iaBody[0]].dSemi/AUCM,2)/(pow(cLIGHT/AUCM*DAYSEC,2)*(1.0-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2)))/DAYSEC;
+}
 
+double fdApsidalGRDhDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dKecc*fdApsidalGRCorrection(body,iaBody);
+}
 
-//-------------------Lagrange's equations in h k p q -------------------------------------
-double fdLagrangeDhDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double sum = 0.0, dMu;
+double fdApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -body[iaBody[0]].dHecc*fdApsidalGRCorrection(body,iaBody);
+}
+
+//-------------------DistOrb's equations in h k p q -------------------------------------
+double fdDistOrbDhDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double sum = 0.0, dMu, y;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
 
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+  y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += ( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDKecc(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += ( sqrt(y)*fdDdisturbDKecc(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += ( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDKeccPrime(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += ( sqrt(y)*fdDdisturbDKeccPrime(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }
   
   return sum/DAYSEC;
 }
 
-double fdLagrangeDkDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double sum = 0.0, dMu;
+double fdDistOrbDkDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double sum = 0.0, dMu, y;
   
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+  y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += -( sqrt(y)*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += -( sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+    sum += -( sqrt(y)*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }      
 
   return sum/DAYSEC;
 }
 
-double fdLagrangeDpDt(BODY *body, SYSTEM *system, int *iaBody) {
-    double sum = 0.0, dMu;
+double fdDistOrbDpDt(BODY *body, SYSTEM *system, int *iaBody) {
+    double sum = 0.0, dMu, y;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+    y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
     
     return sum/DAYSEC;
 }
 
 
-double fdLagrangeDqDt(BODY *body, SYSTEM *system, int *iaBody) {
-    double sum = 0.0, dMu;
+double fdDistOrbDqDt(BODY *body, SYSTEM *system, int *iaBody) {
+    double sum = 0.0, dMu, y;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
+    y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKecc(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2))));
+      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
    
     return sum/DAYSEC;

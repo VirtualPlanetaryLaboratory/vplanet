@@ -82,8 +82,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
     update[iBody].iNumVars=0;
     
-    /* Hack to get LAGRANGE working. Need iGravPerts for following arrays */
-    if (body[iBody].bLagrange) {
+    /* Hack to get distorb working. Need iGravPerts for following arrays */
+    if (body[iBody].bDistOrb) {
       body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
     }
     

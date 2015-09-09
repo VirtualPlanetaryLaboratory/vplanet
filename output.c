@@ -399,6 +399,13 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // XXX I don't think this will work with just eqtide
+  *dTmp = body[iBody].dK2Man/body[iBody].dImK2;
+  strcpy(cUnit,"");
+}
+
 void WriteXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dXobl;
@@ -658,6 +665,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBENERGY].dNeg = 1;
   output[OUT_ORBENERGY].iNum = 1;
   fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
+
+  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
+  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
+  output[OUT_TIDALQ].bNeg = 0;
+  output[OUT_TIDALQ].iNum = 1;
+  fnWrite[OUT_TIDALQ] = WriteTidalQ;
 
   sprintf(output[OUT_XOBL].cName,"Xobl");
   sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");

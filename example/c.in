@@ -1,7 +1,7 @@
 # Gl581 c's parameters
 sName		c			# Body's name
 saModules	eqtide $#radheat thermint $
-		lagrange laskar # Modules to apply, exact spelling required
+		distorb distrot # Modules to apply, exact spelling required
 
 # Physical Properties
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses

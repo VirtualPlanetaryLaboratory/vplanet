@@ -1736,12 +1736,6 @@ void WriteEnergyFluxEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   }
 }
 
-void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dTidalQ;
-  strcpy(cUnit,"");
-}
-
 void WriteTidalTau(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dTidalTau;
 
@@ -2006,12 +2000,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /*
    * T
    */
-  
-  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
-  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
-  output[OUT_TIDALQ].bNeg = 0;
-  output[OUT_TIDALQ].iNum = 1;
-  fnWrite[OUT_TIDALQ] = WriteTidalQ;
   
   sprintf(output[OUT_TIDALTAU].cName,"TidalTau");
   sprintf(output[OUT_TIDALTAU].cDescr,"Tidal Time Lag");

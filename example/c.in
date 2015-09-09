@@ -1,19 +1,14 @@
 # Gl581 c's parameters
 sName		c			# Body's name
 saModules	eqtide $#radheat thermint $
-		lagrange laskar # Modules to apply, exact spelling required
+		distorb distrot # Modules to apply, exact spelling required
 
 # Physical Properties
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
-<<<<<<< HEAD
-dObliquity	0.  #23.5			
-dRadGyra	 0.5			# Radius of gyration (moment of inertia constant)
-=======
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
->>>>>>> c00d15af2485f69707c3cdf80abd9a7061095eef
 
 # Orbital Properties
 dEcc            0.06			# Eccentricity

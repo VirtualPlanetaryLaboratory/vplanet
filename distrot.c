@@ -50,9 +50,9 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     /* Option was found */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp >= 1) {
-      if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+      if (control->Io.iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
     }
     body[iFile-1].dDynEllip = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -80,7 +80,7 @@ void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 
   for (iOpt=OPTSTARTDISTROT;iOpt<OPTENDDISTROT;iOpt++) { 
       if (options[iOpt].iType != -1) {
-	fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
+        fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
   }
 }
@@ -319,7 +319,7 @@ void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
      dDeriv += dObldx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dObldy*(*(update[iBody].padDYoblDtDistRot[iPert]))\
-	+ dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
+        + dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
  
   *dTmp = dDeriv;
   

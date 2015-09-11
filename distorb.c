@@ -59,13 +59,13 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       if (dTmp < 0 || dTmp > PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -93,13 +93,13 @@ void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -126,13 +126,13 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);	
+        LineExit(files->Infile[iFile].cIn,lTmp);        
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -199,7 +199,8 @@ void ReadOverrideMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     control->Halt[iFile-1].bOverrideMaxEcc = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
+    control->Halt[iFile-1].bOverrideMaxEcc = options->dDefault;
+//     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
 }
 
 void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -374,7 +375,7 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
     
     if (options[OPT_LONGP].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
-	 return;
+         return;
     if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
       body[iBody].dLongP = fdCalcLongP(body[iBody].dLongA,body[iBody].dArgP);    
@@ -386,7 +387,7 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
     
     if (options[OPT_LONGA].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
-	 return;
+         return;
     if (options[OPT_ARGP].iLine[iBody+1] > -1) 
       /* Must get radius from density */
       body[iBody].dLongA = fdCalcLongA(body[iBody].dLongP,body[iBody].dArgP);    
@@ -1304,14 +1305,14 @@ double ABmatrix(BODY *body, int j, int jBody, int kBody) {
   n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(pow(body[jBody].dSemi/AUCM,3)));
   b = fdLaplaceCoeff(alpha, j, 1.5);
   AB = n/4.0*body[kBody].dMass/(body[0].dMass+body[jBody].dMass)*alpha*abar*b;
-  return AB/DAYSEC;  //returns in units of rad/sec
+  return AB*365.25;  //returns in units of rad/year
 }
   
 void HessEigen(double **a, int n, double wr[], double wi[])
 /*Finds all eigenvalues of an upper Hess. matrix a[1..n][1..n]. a can be exactly as output from elmhes, on output it is destroyed. Real and imaginary parts of eigenvalues are returned in wr[1..n], wi[1..n]*/
 {
   int nn, m, l, k, j, its, i, mmin;
-  double z, y, x, w, v, u, t, s, r, q, p, anorm;
+  double z, y, x, w, v, u, t, s, r, q, p, anorm, cond, value;
 
   anorm = fabs(a[0][0]);
   for (i = 1; i <= n-1; i++) 
@@ -1326,12 +1327,13 @@ void HessEigen(double **a, int n, double wr[], double wi[])
       for (l = nn; l >= 1; l--) {
         s = fabs(a[l-1][l-1]) + fabs(a[l][l]);
         if (s == 0.0) s = anorm;
-        if ((float)(fabs(a[l][l-1]) + s) ==(float) s) break;
+        cond = fabs(a[l][l-1])+s;
+        if ((float)cond ==(float) s) break;
       }
       x = a[nn][nn];
       if (l == nn) {
-        wr[nn] = x + t;
-        wi[nn--] = 0.0;
+      wr[nn] = x + t;
+      wi[nn--] = 0.0;
       } else {
         y = a[nn-1][nn-1];
         w = a[nn][nn-1]*a[nn-1][nn];
@@ -1341,7 +1343,7 @@ void HessEigen(double **a, int n, double wr[], double wi[])
           z = sqrt(fabs(q));
           x += t;
           if (q >= 0.0) {
-            z = p+signf(p)*z;
+            z = p+(double)signf(p)*z;
             wr[nn-1] = wr[nn] = x+z;
             if (z) wr[nn] = x-w/z;
             wi[nn-1] = wi[nn] = 0.0;
@@ -1352,12 +1354,12 @@ void HessEigen(double **a, int n, double wr[], double wi[])
           nn -= 2;
         } else {
           if (its == 30) {
-            fprintf(stderr,"Too many iterations in hqr");
+            fprintf(stderr,"Too many iterations in hqr\n");
             exit(EXIT_INPUT);
           }
           if (its == 10 || its == 20) {
             t += x;
-            for (i = 1; i <= nn; i++) a[i][i] -= x;
+            for (i = 0; i <= nn; i++) a[i][i] -= x;
             s = fabs(a[nn][nn-1])+fabs(a[nn-1][nn-2]);
             y = x =0.75*s;
             w = -0.4375*s*s;
@@ -1397,7 +1399,9 @@ void HessEigen(double **a, int n, double wr[], double wi[])
                 r /= x;
               }
             }
-            if (s = signf(p)*sqrt(p*p+q*q+r*r) != 0.0) {
+            value = sqrt(p*p+q*q+r*r);
+            s = (double)signf(p)*value;
+            if (s != 0.0) {
               if (k == m) {
                 if (l != m)
                   a[k][k-1] = -a[k][k-1];
@@ -1447,24 +1451,24 @@ void ElmHess(double **a, int n)
     i = m;
     for (j = m; j <= n-1; j++) {            // finds the pivot
       if (fabs(a[j][m-1]) > fabs(x)) {
-    x = a[j][m-1];
-    i = j;
+        x = a[j][m-1];
+        i = j;
       }
     }
     if (i != m) {                         //interchange rows and columns
       for (j = m-1; j <= n-1; j++) SWAP(a[i][j],a[m][j]);
-    for (j = 0; j <= n-1; j++) SWAP(a[j][i],a[j][m]);
-      }
+      for (j = 0; j <= n-1; j++) SWAP(a[j][i],a[j][m]);
+    }
     if (x) {                              //elimination
       for (i = m+1; i <= n-1; i++) {
-    if ((y = a[i][m-1]) != 0.0) {
-      y /= x;
-      a[i][m-1] = y;
-      for (j = m; j <= n; j++)
-        a[i][j] -= y*a[m][j];
-      for (j = 1; j <= n; j++)
-        a[j][m] += y*a[j][i];
-    }
+        if ((y = a[i][m-1]) != 0.0) {
+          y /= x;
+          a[i][m-1] = y;
+          for (j = m; j <= n-1; j++)
+            a[i][j] -= y*a[m][j];
+          for (j = 0; j <= n-1; j++)
+            a[j][m] += y*a[j][i];
+        }
       }
     }
   }
@@ -1835,8 +1839,8 @@ double vyi(BODY *body, int iBody) {
 }
 
 double signf(double value) {
-  if (value > 0) return 1;
-  if (value < 0) return -1;
+  if (value > 0) return 1.;
+  if (value < 0) return -1.;
   return 0;
 }
 
@@ -1991,7 +1995,7 @@ void cart2osc(BODY *body, int iNumBodies) {
     r = normv(body[iBody].dCartPos);
     vsq = pow(normv(body[iBody].dCartVel),2);
     rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
-	    body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
+            body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
     mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
     h = malloc(3*sizeof(double));
     cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
@@ -2051,7 +2055,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     if (body[iBody].bDistRot) {
       body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
       while (body[iBody].dTrueApA<0) {
-	body[iBody].dTrueApA += 2*PI;
+        body[iBody].dTrueApA += 2*PI;
       }
     }
   }
@@ -2069,7 +2073,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     if (body[iBody].bDistRot) {
       body[iBody].dPrecA = 2*PI - (body[iBody].dTrueApA+body[iBody].dLongP);
       while (body[iBody].dPrecA<0) {
-	body[iBody].dPrecA += 2*PI;
+        body[iBody].dPrecA += 2*PI;
       }
       CalcXYZobl(body, iBody);
     }
@@ -2492,13 +2496,13 @@ double fdDSemiF23Dalpha(double dAxRatio, int iIndexJ) {
 
 /*--------- f24 ----------------------*/
 double fdSemiMajAxF24(double dAxRatio, int iIndexJ) {
-  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ))	\
+  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ))  \
    + 4.*pow(dAxRatio,2) * (1. - iIndexJ) * fdDerivLaplaceCoeff(1,B(iIndexJ))    \
    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ)) );
 }
 
 double fdDSemiF24Dalpha(double dAxRatio, int iIndexJ) {
-  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ))	\
+  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ))     \
    + (8.-14.*iIndexJ+4.*pow(iIndexJ,2))*dAxRatio* fdDerivLaplaceCoeff(1,B(iIndexJ))    \
    + (7.-4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
    +  pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
@@ -3157,29 +3161,29 @@ double fdDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 //-------------------DistOrb's equations in h k p q (2nd order Laplace-Lagrange LL2)--------------------
 double fdDistOrbLL2Hecc(BODY *body, SYSTEM *system, int *iaBody) {
-  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*sin(system->dmEigenValEcc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*sin(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
 }
 
 double fdDistOrbLL2Kecc(BODY *body, SYSTEM *system, int *iaBody) {
-  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValEcc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
 }
 
 double fdDistOrbLL2Pinc(BODY *body, SYSTEM *system, int *iaBody) {
-  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*sin(system->dmEigenValInc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
+  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }
 
 double fdDistOrbLL2Qinc(BODY *body, SYSTEM *system, int *iaBody) {
-  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
+  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }
 
 
 double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
+  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
 }
 
 
 double fdDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*sin(system->dmEigenValInc[0][iaBody[1]-1]*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);    
+  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);    
 }

@@ -197,7 +197,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: No modules input to option %s.\n",options->cName);
+        fprintf(stderr,"ERROR: No modules input to option %s.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
 
@@ -208,19 +208,19 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
        ************************/
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
-	body[iFile-1].bEqtide = 1;
+        body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
-	body[iFile-1].bRadheat = 1;
+        body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
-	body[iFile-1].bDistOrb = 1;
+        body[iFile-1].bDistOrb = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
-	body[iFile-1].bDistRot = 1;
+        body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-	body[iFile-1].bThermint = 1;
+        body[iFile-1].bThermint = 1;
       } else {
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp[0]);
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
@@ -253,7 +253,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
   if (body[iBody].bThermint) {
     if (!body[iBody].bRadheat) {
       if (control->Io.iVerbose > VERBINPUT)
-	fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
+        fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else

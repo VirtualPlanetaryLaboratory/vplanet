@@ -175,9 +175,9 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   if (control->Evolve.bDoBackward) {
     for (iFile=1;iFile<files->iNumInputs;iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-	sprintf(files->Outfile[iFile-1].cOut,"%s.%s.backward",system->cName,body[iFile-1].cName);
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
+        sprintf(files->Outfile[iFile-1].cOut,"%s.%s.backward",system->cName,body[iFile-1].cName);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
   }
@@ -186,9 +186,9 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   if (control->Evolve.bDoForward) {
     for (iFile=1;iFile<files->iNumInputs;iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-	sprintf(files->Outfile[iFile-1].cOut,"%s.%s.forward",system->cName,body[iFile-1].cName);
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
+        sprintf(files->Outfile[iFile-1].cOut,"%s.%s.forward",system->cName,body[iFile-1].cName);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
   }
@@ -197,10 +197,10 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   for (iFile=0;iFile<files->iNumInputs-1;iFile++) {
     if (bFileExists(files->Outfile[iFile].cOut)) {
       if (!control->Io.bOverwrite) {
-	OverwriteExit(options[OPT_OVERWRITE].cName,files->Outfile[iFile].cOut);
+        OverwriteExit(options[OPT_OVERWRITE].cName,files->Outfile[iFile].cOut);
       } 
       if (control->Io.iVerbose >= VERBINPUT) 
-	fprintf(stderr,"WARNING: %s exists.\n",files->Outfile[iFile].cOut);
+        fprintf(stderr,"WARNING: %s exists.\n",files->Outfile[iFile].cOut);
       unlink(files->Outfile[iFile].cOut);
     }
   }
@@ -209,22 +209,22 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   if (!control->Evolve.bDoBackward && !control->Evolve.bDoForward) {
     for (iFile=0;iFile<files->iNumInputs;iFile++) {
       if (options[OPT_ETA].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_ETA].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_ETA].cFile[iFile],options[OPT_ETA].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_ETA].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_ETA].cFile[iFile],options[OPT_ETA].iLine[iFile],control->Io.iVerbose);
 
       if (options[OPT_OUTPUTTIME].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_OUTPUTTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTTIME].cFile[iFile],options[OPT_OUTPUTTIME].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_OUTPUTTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTTIME].cFile[iFile],options[OPT_OUTPUTTIME].iLine[iFile],control->Io.iVerbose);
 
       if (options[OPT_STOPTIME].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_STOPTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_STOPTIME].cFile[iFile],options[OPT_STOPTIME].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_STOPTIME].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_STOPTIME].cFile[iFile],options[OPT_STOPTIME].iLine[iFile],control->Io.iVerbose);
 
       if (options[OPT_TIMESTEP].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_TIMESTEP].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_TIMESTEP].cFile[iFile],options[OPT_TIMESTEP].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_TIMESTEP].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_TIMESTEP].cFile[iFile],options[OPT_TIMESTEP].iLine[iFile],control->Io.iVerbose);
 
       if (options[OPT_VARDT].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_VARDT].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_VARDT].cFile[iFile],options[OPT_VARDT].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_VARDT].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_VARDT].cFile[iFile],options[OPT_VARDT].iLine[iFile],control->Io.iVerbose);
 
       if (options[OPT_OUTPUTORDER].iLine[iFile] > -1) 
-	IntegrationWarning(options[OPT_OUTPUTORDER].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTORDER].cFile[iFile],options[OPT_OUTPUTORDER].iLine[iFile],control->Io.iVerbose);
+        IntegrationWarning(options[OPT_OUTPUTORDER].cName,options[OPT_BACK].cName,options[OPT_FORW].cName,options[OPT_OUTPUTORDER].cFile[iFile],options[OPT_OUTPUTORDER].iLine[iFile],control->Io.iVerbose);
     }
   }     
 
@@ -293,7 +293,7 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char c
 
     if (options[OPT_RADIUS].iLine[iBody] > -1)
       /* Mass and radius were the only two set - Nothing to do */
-	 return;
+      return;
     if (options[OPT_DENSITY].iLine[iBody] > -1) 
       /* Must get radius from density */
       body->dRadius = fdDensityMassToRadius(body->dDensity,body->dMass);

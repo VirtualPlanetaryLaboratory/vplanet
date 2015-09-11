@@ -42,7 +42,7 @@ int CheckComment(char cLine[],int iLen) {
   for (iPos=0;iPos<iLen;iPos++) {
     if (!isspace(cLine[iPos])) {
       if (cLine[iPos] == 35)
-	return 1;
+      return 1;
     } else
       return 0;
   }
@@ -64,16 +64,16 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
     if (!CheckComment(cTmp,iLen)) {
       sscanf(cTmp,"%s",cWord);
       if (memcmp(cWord,cOption,iLen+1) == 0) {
-	/* Parameter Found! */
-	if (bDone) {
-	    if (iVerbose > VERBINPUT) 
-		fprintf(stderr,"Multiple occurences of parameter %s found.\n",cOption);
-	  fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,(*iLine+1),iLineTmp+1);
-	  exit(1);
-	}
-	strcpy(cLine,cTmp);
-	*iLine=iLineTmp;
-	bDone=1;
+        /* Parameter Found! */
+        if (bDone) {
+            if (iVerbose > VERBINPUT) 
+            fprintf(stderr,"Multiple occurences of parameter %s found.\n",cOption);
+          fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,(*iLine+1),iLineTmp+1);
+          exit(1);
+        }
+        strcpy(cLine,cTmp);
+        *iLine=iLineTmp;
+        bDone=1;
       }
     }
     iLineTmp++;
@@ -155,19 +155,19 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) {
-	/* Fill word in */
-	cInput[iWord][iPosStart] = cLine[iPos];
-	iPosStart++;
-	iPos++;
+        /* Fill word in */
+        cInput[iWord][iPosStart] = cLine[iPos];
+        iPosStart++;
+        iPos++;
       } else {
-	/* If at the start of the word, we must decrement iWord
-	   so that when it is incremented at the end of the loop
-	   the correct number of words is returned. If at the end 
-	   of a word, everything should be fine. */
-	if (iPosStart==0) iWord--;
+        /* If at the start of the word, we must decrement iWord
+          so that when it is incremented at the end of the loop
+          the correct number of words is returned. If at the end 
+          of a word, everything should be fine. */
+        if (iPosStart==0) iWord--;
 
-	iPos=strlen(cLine);
-	break;
+        iPos=strlen(cLine);
+        break;
       }
     }
     /* Now advance to next word */
@@ -239,7 +239,7 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
        new string is longer than the old, then vestigial characters 
        can remain after a trailing $. */
     memset(cTmp[iWord+1],'\0',OPTLEN);
-  }	
+  }
   /* Now subtract off OptionName */
   *iNumIndices=iNumWords-1;
   /* Reset first cTmp string */
@@ -251,8 +251,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
     if (memcmp(cLine,"null",4)) {
       GetWords(cLine,cTmp,&iNumWords,&bContinue);
       for (iWord=0;iWord<iNumWords;iWord++) {
-	strcpy(saInput[*iNumIndices+iWord],cTmp[iWord]);
-	memset(cTmp[iWord],'\0',OPTLEN);
+        strcpy(saInput[*iNumIndices+iWord],cTmp[iWord]);
+        memset(cTmp[iWord],'\0',OPTLEN);
       }
       *iNumIndices += iNumWords;
       (*iNumLines)++;
@@ -329,29 +329,29 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
       /* Check for desired parameter */
       sscanf(cLine,"%s",cWord);
       if (memcmp(cWord,cName,iLen) == 0) {
-	/* Parameter Found! */
-	if (bDone) {
-	  fprintf(stderr,"ERROR: Multiple occurences of parameter %s found.\n",cName);
-	  fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,*iLineNum,iLine);
-	  exit(iExit);
-	}
-	bDone=1;
-	*iLineNum=iLine;
+        /* Parameter Found! */
+        if (bDone) {
+          fprintf(stderr,"ERROR: Multiple occurences of parameter %s found.\n",cName);
+          fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,*iLineNum,iLine);
+          exit(iExit);
+        }
+        bDone=1;
+        *iLineNum=iLine;
 
-	iNumOut=0;
-	ok=1;
-	for (iPos=1;iPos<LINE;iPos++) { /* Ignore first character, as it makes conditional well-defined */
-	  /* printf("%d ",cLine[iPos]); */ 
-	  if (ok) {
-	    if (cLine[iPos] == 35) {
-	      /* Pound sign! */
-	      ok=0;
-	      iNumOut++;
-	    }
-	    if (isspace(cLine[iPos]) && !isspace(cLine[iPos-1]))
-	      iNumOut++;
-	  }
-	}
+        iNumOut=0;
+        ok=1;
+        for (iPos=1;iPos<LINE;iPos++) { /* Ignore first character, as it makes conditional well-defined */
+          /* printf("%d ",cLine[iPos]); */ 
+          if (ok) {
+            if (cLine[iPos] == 35) {
+              /* Pound sign! */
+              ok=0;
+              iNumOut++;
+            }
+            if (isspace(cLine[iPos]) && !isspace(cLine[iPos-1]))
+              iNumOut++;
+          }
+        }
       }
     }
     iLine++;
@@ -409,10 +409,10 @@ void InitializeInput(INFILE *input) {
       // Is it a blank line?
       bBlank=0;
       for (iPos=0;iPos<LINE;iPos++) {
-	if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
-	  bBlank=1;	
-	}
-      }	
+        if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
+          bBlank=1;	
+        }
+      }
       if (!bBlank) input->bLineOK[iLine] = 1;
     }
   }
@@ -429,10 +429,10 @@ void Unrecognized(FILES files) {
     iLine=0;
     while (fgets(cLine,LINE,fp) != NULL) {
       if (!files.Infile[iFile].bLineOK[iLine]) {
-	/* Bad line */
-	sscanf(cLine,"%s",cWord);	
-	fprintf(stderr,"ERROR: Unrecognized parameter \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
-	bExit=1;
+        /* Bad line */
+        sscanf(cLine,"%s",cWord);	
+        fprintf(stderr,"ERROR: Unrecognized parameter \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
+        bExit=1;
       }
       iLine++;
     }
@@ -474,7 +474,7 @@ void CheckDuplication(FILES *files,OPTIONS *options,char cFile[],int iLine,int i
     if (options->iLine[iFile] >= 0 && memcmp(files->Infile[iFile].cIn,cFile,strlen(cFile)) != 0) {
       /* Found previously set location */
       if (iVerbose >= VERBERR) 
-	fprintf(stderr,"ERROR: Option %s found in multiple files\n",options->cName);
+        fprintf(stderr,"ERROR: Option %s found in multiple files\n",options->cName);
       fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,options->iLine[iFile]);
       fprintf(stderr,"\t%s, Line: %d\n",cFile,iLine);
       exit(EXIT_INPUT);
@@ -499,7 +499,7 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
     if (iTmp < 0 || iTmp > VERBALL) {
       fprintf(stderr,"ERROR: %s must be in the range [0,%d]\n",options->cName,VERBALL);
       LineExit(files->Infile[iFile].cIn,lTmp);
-    }	
+    }
     if (*iVerbose == VERBALL) {
       fprintf(stderr,"WARNING: -v set at command line, but %s option set.\n",options->cName);
       fprintf(stderr,"iVerbose is set to %d\n",VERBALL);
@@ -551,14 +551,14 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-	fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
       for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
-	control->Units[iFileNow].iMass = control->Units[iFile].iMass;
-	/* Negative sign for lTmp indicated that the parameter was found in another file */
-	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+        control->Units[iFileNow].iMass = control->Units[iFile].iMass;
+        /* Negative sign for lTmp indicated that the parameter was found in another file */
+        /* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
       }
     } /* If not set in primary file, do nothing */
   } else {
@@ -567,25 +567,25 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* Assigned in body file */
       /* First check, was it set in primary file? */
       if (options->iLine[0] != -1) {
-	/* Assigned in primary file */
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
-	exit(EXIT_INPUT);
+        /* Assigned in primary file */
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+        exit(EXIT_INPUT);
       } else {
-	/* Wasn't assigned in primary */
-	control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
-	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+        /* Wasn't assigned in primary */
+        control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }  
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
       if (options->iLine[0] == -1) {
-	/* No, assign default */
-	if (control->Io.iVerbose >= VERBUNITS)
-	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
-	control->Units[iFile].iMass = iAssignMassUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        /* No, assign default */
+        if (control->Io.iVerbose >= VERBUNITS)
+          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+        control->Units[iFile].iMass = iAssignMassUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
     }
@@ -630,13 +630,13 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-	fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
       for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
-	control->Units[iFileNow].iTime = control->Units[iFile].iTime;
-	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+        control->Units[iFileNow].iTime = control->Units[iFile].iTime;
+        /* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
       }
     } /* If not set in primary file, do nothing */
   } else {
@@ -644,24 +644,24 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
     if (lTmp >= 0) {
       /* First check, was it set in primary file? */
       if (options->iLine[0] != -1) {
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
-	fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
-	exit(EXIT_INPUT);
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+        fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+        exit(EXIT_INPUT);
       } else {
-	/* Wasn't assigned in primary */
-	control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
-	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+        /* Wasn't assigned in primary */
+        control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }  
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
       if (options->iLine[0] == -1) {
-	/* No, assign default */
-	if (control->Io.iVerbose >= VERBUNITS)
-	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
-	control->Units[iFile].iTime = iAssignUnitTime(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        /* No, assign default */
+        if (control->Io.iVerbose >= VERBUNITS)
+          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+        control->Units[iFile].iTime = iAssignUnitTime(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
     }      
@@ -696,13 +696,13 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-	fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
       for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
-	control->Units[iFileNow].iAngle = control->Units[iFile].iAngle;
-	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+        control->Units[iFileNow].iAngle = control->Units[iFile].iAngle;
+        /* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
       }
     } /* If not set in primary file, do nothing */
   } else {
@@ -710,24 +710,24 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
     if (lTmp >= 0) {
       /* First check, was it set in primary file? */
       if (options->iLine[0] != -1) {
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
-	fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
-	exit(EXIT_INPUT);
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+        fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+        exit(EXIT_INPUT);
       } else {
-	/* Wasn't assigned in primary */
-	control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
-	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+        /* Wasn't assigned in primary */
+        control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }  
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
       if (options->iLine[0] == -1) {
-	/* No, assign default */
-	if (control->Io.iVerbose >= VERBUNITS)
-	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
-	control->Units[iFile].iAngle = iAssignUnitAngle(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        /* No, assign default */
+        if (control->Io.iVerbose >= VERBUNITS)
+          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+        control->Units[iFile].iAngle = iAssignUnitAngle(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
     }
@@ -783,8 +783,8 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
 
       options->iLine[iFile] = lTmp;
       for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
-	control->Units[iFileNow].iLength = control->Units[iFile].iLength;
-	/* UpdateFoundOption(&files->Infile[iFileNow],options,lTmp,iFile); */
+        control->Units[iFileNow].iLength = control->Units[iFile].iLength;
+        /* UpdateFoundOption(&files->Infile[iFileNow],options,lTmp,iFile); */
       }
     } /* If not set in primary file, do nothing */
   } else {
@@ -792,24 +792,24 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
     if (lTmp >= 0) {
       /* First check, was it set in primary file? */
       if (options->iLine[0] != -1) {
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
-	fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
-	exit(EXIT_INPUT);
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+        fprintf(stderr,"\t%s, Line: %d\n",options->cFile[0],options->iLine[0]);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+        exit(EXIT_INPUT);
       } else {
-	/* Wasn't assigned in primary */
-	control->Units[iFile].iLength = iAssignUnitLength(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
-	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+        /* Wasn't assigned in primary */
+        control->Units[iFile].iLength = iAssignUnitLength(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }  
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
       if (options->iLine[0] == -1) {
-	/* No, assign default */
-	if (control->Io.iVerbose >= VERBUNITS)
-	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
-	control->Units[iFile].iLength = iAssignUnitLength(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        /* No, assign default */
+        if (control->Io.iVerbose >= VERBUNITS)
+          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+        control->Units[iFile].iLength = iAssignUnitLength(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
     }
@@ -846,14 +846,14 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-	  fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
       for (iFileNow=1;iFileNow<files->iNumInputs;iFileNow++) {
-	control->Units[iFileNow].iTemp = control->Units[iFile].iTemp;
-	/* Negative sign for lTmp indicated that the parameter was found in another file */
-	/* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
+        control->Units[iFileNow].iTemp = control->Units[iFile].iTemp;
+        /* Negative sign for lTmp indicated that the parameter was found in another file */
+        /* UpdateFoundOption(&files->Infile[iFileNow],options,-lTmp,iFile); */
       }
     } /* If not set in primary file, do nothing */
   } else {
@@ -862,25 +862,25 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* Assigned in body file */
       /* First check, was it set in primary file? */
       if (options->iLine[0] != -1) {
-	/* Assigned in primary file */
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
-	fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
-	exit(EXIT_INPUT);
+        /* Assigned in primary file */
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s found in primary and body files!\n",options->cName);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[0].cIn,options->iLine[0]);
+        fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,lTmp);
+        exit(EXIT_INPUT);
       } else {
-	/* Wasn't assigned in primary */
-	control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
-	UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+        /* Wasn't assigned in primary */
+        control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }  
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
       if (options->iLine[0] == -1) {
-	/* No, assign default */
-	if (control->Io.iVerbose >= VERBUNITS)
-	  fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
-	control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
+        /* No, assign default */
+        if (control->Io.iVerbose >= VERBUNITS)
+          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+        control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
     }
@@ -913,7 +913,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   if (lTmp[0] >= 0) {
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: No files supplied for option %s.\n",options->cName);
+        fprintf(stderr,"ERROR: No files supplied for option %s.\n",options->cName);
       LineExit(infile->cIn,lTmp[0]);
     }
     files->iNumInputs=iNumIndices+1;
@@ -1124,7 +1124,7 @@ void ReadEta(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Evolve.dEta = dTmp;
@@ -1192,9 +1192,9 @@ void ReadTimeStep(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     /* Option was found */
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);
+      if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     /* Convert timestep to cgs */
     control->Evolve.dTimeStep = dTmp*fdUnitsTime(control->Units[iFile].iTime);
@@ -1257,12 +1257,12 @@ void ReadDigits(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     control->Io.iDigits = iTmp;
     if (control->Io.iDigits < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,options->iLine[iFile]);
     }
     if (control->Io.iDigits > 16) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be less than 17.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be less than 17.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,options->iLine[iFile]);
     }
     control->Io.iDigits = iTmp;
@@ -1292,7 +1292,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp >= 1) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     body[iFile-1].dEcc = dTmp;
@@ -1350,14 +1350,15 @@ void ReadHaltMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     control->Halt[iFile-1].dMaxEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0)
-      AssignDefaultDouble(options,&control->Halt[iFile-1].dMaxEcc,files->iNumInputs);
+      control->Halt[iFile-1].dMaxEcc = options->dDefault;
+//       AssignDefaultDouble(options,&control->Halt[iFile-1].dMaxEcc,files->iNumInputs);
   }
 }
 
@@ -1401,7 +1402,7 @@ void ReadHaltMinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     control->Halt[iFile-1].dMinEcc = dTmp;
@@ -1429,15 +1430,15 @@ void ReadHaltMinObl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > PI) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       } 
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -1462,7 +1463,7 @@ void ReadHaltMinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be larger than 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be larger than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     control->Halt[iFile-1].dMinSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
@@ -1512,8 +1513,8 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
       control->Evolve.iOneStep = RUNGEKUTTA;
     else {
       if (control->Io.iVerbose >= VERBERR) {
-	fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
-	fprintf(stderr,"Options are Euler.\n");
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
+        fprintf(stderr,"Options are Euler.\n");
       }
       LineExit(files->Infile[iFile].cIn,lTmp);	
     } 
@@ -1560,9 +1561,9 @@ void ReadLogFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     /* Assign Default */
     if (iFile == files->iNumInputs-1) {
       for (i=0;i<files->iNumInputs;i++) 
-	if (options->iLine[i] != -1)
-	  /* Was aaigned, return */
-	  return;
+        if (options->iLine[i] != -1)
+          /* Was aaigned, return */
+          return;
     }
     /* Wasn't entered, assign default */
     sprintf(files->cLog,"%s.log",system->cName);
@@ -1580,15 +1581,15 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -1653,8 +1654,8 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       control->iMassRad[iFile]=4;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
-	fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
-	fprintf(stderr,"Options are GS99 (Gorda & Svechnikov 1999), BO06 (Bayless & Orosz 2006), Sotin07 (Sotin et al. 2007), or RH00 (Reid & Hawley 2000).\n");
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
+        fprintf(stderr,"Options are GS99 (Gorda & Svechnikov 1999), BO06 (Bayless & Orosz 2006), Sotin07 (Sotin et al. 2007), or RH00 (Reid & Hawley 2000).\n");
       }
       LineExit(files->Infile[iFile].cIn,lTmp);	
     } 
@@ -1679,7 +1680,7 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     body[iFile-1].dMeanMotion = dTmp;
@@ -1726,15 +1727,15 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > PI) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -1767,69 +1768,69 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
     /* First remove and record negative signs */
     for (i=0;i<iNumIndices;i++) {
       if (saTmp[i][0] == 45) {
-	/* Option is negative */
-	bNeg[i] = 1;
-	/* Now remove negative sign */
-	for (j=0;j<strlen(saTmp[i]);j++) 
-	  saTmp[i][j] = saTmp[i][j+1];
-	saTmp[i][strlen(saTmp[i])] = 0;
+        /* Option is negative */
+        bNeg[i] = 1;
+        /* Now remove negative sign */
+        for (j=0;j<strlen(saTmp[i]);j++) 
+        saTmp[i][j] = saTmp[i][j+1];
+        saTmp[i][strlen(saTmp[i])] = 0;
       } else
-	bNeg[i] = 0;
+        bNeg[i] = 0;
     }
     
     /* Check for ambiguity */
     for (i=0;i<iNumIndices;i++) {
       count=0; /* Number of possibilities */
       for (j=0;j<OPTLEN;j++)
-	cTmp[j]=0;
+        cTmp[j]=0;
       strcpy(cTmp,saTmp[i]);
       for (j=0;j<MODULEOUTEND;j++) {
-	for (k=0;k<OPTLEN;k++)
-	   cOut[k]=0;
-	strcpy(cOut,output[j].cName);
-	iLen1=strlen(cOut);
-	iLen2=strlen(cTmp);
-	/* Check for perfect match */
-	if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
-	  /* Output option found! */
-	  strcpy(cOption[count],output[j].cName);
-	  count = 1;
-	  iOut = j;
-	  j = NUMOUT; /* Poor man's break! */
-	} else {
-	  if (iLen1 < iLen2)
-	    iLen=iLen1;
-	  else
-	    iLen=iLen2;
-	  
-	  if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
-	    /* Output option found! */
-	    strcpy(cOption[count],output[j].cName);
-	    count++;
-	    iOut = j;
-	  }
-	}
+        for (k=0;k<OPTLEN;k++)
+          cOut[k]=0;
+        strcpy(cOut,output[j].cName);
+        iLen1=strlen(cOut);
+        iLen2=strlen(cTmp);
+        /* Check for perfect match */
+        if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
+          /* Output option found! */
+          strcpy(cOption[count],output[j].cName);
+          count = 1;
+          iOut = j;
+          j = NUMOUT; /* Poor man's break! */
+        } else {
+          if (iLen1 < iLen2)
+            iLen=iLen1;
+          else
+            iLen=iLen2;
+          
+          if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
+            /* Output option found! */
+            strcpy(cOption[count],output[j].cName);
+            count++;
+            iOut = j;
+          }
+        }
       }
       
       if (count > 1) {
-	/* More than one possibility */
-	if (iVerbose >= VERBERR) {
-	  fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
-	  for (j=0;j<count;j++) {
-	    fprintf(stderr,"%s",cOption[j]);
-	    if (j < count-1)
-	      fprintf(stderr,", ");
-	  }
-	  fprintf(stderr,".\n");
-	}
-	LineExit(files->Infile[iFile].cIn,lTmp[0]);
+        /* More than one possibility */
+        if (iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
+          for (j=0;j<count;j++) {
+            fprintf(stderr,"%s",cOption[j]);
+            if (j < count-1)
+              fprintf(stderr,", ");
+          }
+          fprintf(stderr,".\n");
+        }
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
       
       if (!count) {
-	/* Option not found */
-	if (iVerbose >= VERBERR) 
-	  fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
-	LineExit(files->Infile[iFile].cIn,lTmp[0]);
+        /* Option not found */
+        if (iVerbose >= VERBERR) 
+          fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
       
       if (count == 1) {
@@ -1852,8 +1853,8 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
     } else { // Negative option not set, initialize bDoNeg to false
         output[iOut].bDoNeg[iFile-1] = 0;
     }   
-	files->Outfile[iFile-1].caCol[i][0]='\0';
-	strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
+        files->Outfile[iFile-1].caCol[i][0]='\0';
+        strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
       }
     }
     files->Outfile[iFile-1].iNumCols = iNumIndices;
@@ -1920,15 +1921,15 @@ void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
-	if (control->Io.iVerbose >= VERBERR)
-	    fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp);	
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);	
       }
       /* Change to radians */
       dTmp *= DEGRAD;
@@ -2007,7 +2008,7 @@ void ReadRotPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dRotPer = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       if (iFile > 0)
-	body[iFile-1].dRotPer = dTmp*fdUnitsTime(control->Units[iFile].iTime);
+        body[iFile-1].dRotPer = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
 }
@@ -2025,7 +2026,7 @@ void ReadRotRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
@@ -2116,7 +2117,7 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     for (iOpt=100;iOpt<NUMOPT;iOpt++) 
       /* OutputOrder is special */
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER) {
-	fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
+        fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
   }
 }

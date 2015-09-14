@@ -232,6 +232,18 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
+void InitializeBodyModules(BODY **body,int iNumBodies) {
+  int iBody;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bDistOrb = 0;
+      (*body)[iBody].bDistRot = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+  }
+}
+
 /*
  * Verify multi-module dependencies
  */

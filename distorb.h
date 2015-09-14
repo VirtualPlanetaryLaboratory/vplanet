@@ -10,6 +10,7 @@
 /* Orbital model */
 #define LL2         1
 #define RD4         0
+#define TEENY				1e-20
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}

@@ -245,14 +245,14 @@ void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   if (body[iBody].bGRCorr) {
     update[iBody].padDXoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaXoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+2;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+2;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaXoblDistRot[iPert] = (*iEqn)++;
     }
   } else {
     update[iBody].padDXoblDtDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaXoblDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+1;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaXoblDistRot[iPert] = (*iEqn)++;
     }
@@ -267,14 +267,14 @@ void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   if (body[iBody].bGRCorr) {
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+2;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+2;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaYoblDistRot[iPert] = (*iEqn)++;
     }
   } else { 
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+1;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaYoblDistRot[iPert] = (*iEqn)++;
     }

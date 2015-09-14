@@ -1538,13 +1538,13 @@ void ludcmp(double **a, int n, int *indx, float *d)
     for (j = 0; j <= n-1; j++)
       if ((temp = fabs(a[i][j])) > big) big = temp;
     if (big == 0.0) {
-       fprintf(stderr,"Singular matrix in routine ludcmp");
-       exit(EXIT_INPUT);
+      fprintf(stderr,"Singular matrix in routine ludcmp");
+      exit(EXIT_INPUT);
     }
     vv[i] = 1.0/big;
   }
   for (j = 0; j <= n-1; j++) {
-    for (i = 0; i < j-1; i++) {
+    for (i = 0; i < j; i++) {
       sum = a[i][j];
       for (k = 0; k < i; k++) sum -= a[i][k]*a[k][j];
       a[i][j] = sum;
@@ -1553,24 +1553,25 @@ void ludcmp(double **a, int n, int *indx, float *d)
     for (i = j; i <= n-1; i++) {
       sum = a[i][j];
       for (k = 0; k < j; k++)
-    sum -= a[i][k]*a[k][j];
+        sum -= a[i][k]*a[k][j];
       a[i][j] = sum;
-      if ( (dum = vv[i]*fabs(sum)) >= big) {
-    big = dum;
-    imax = i;
+      dum = vv[i]*fabs(sum);
+      if (dum >= big) {
+        big = dum;
+        imax = i;
       }
     }
     if (j != imax) {
       for (k = 0; k <= n-1; k++) {
-    dum = a[imax][k];
-    a[imax][k] = a[j][k];
-    a[j][k] = dum;
+        dum = a[imax][k];
+        a[imax][k] = a[j][k];
+        a[j][k] = dum;
       }
       *d = -(*d);
       vv[imax] = vv[j];
     }
     indx[j] = imax;
-    if (a[j][j] == 0.0) a[j][j] = TINY; //if pivot = 0, matrix is singular
+    if (a[j][j] == 0.0) a[j][j] = TEENY; //if pivot = 0, matrix is singular
     if (j != n) {
       dum = 1.0/(a[j][j]);
       for (i = j+1; i <= n-1; i++) a[i][j] *= dum;
@@ -1609,12 +1610,12 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
   double mag;                  // normalization for eigenvector
   
   // Subtracts eigenvalue from diagonal elements
-  for (jj = 0; jj <= pls-1; jj++) {
+  for (jj = 0; jj <= (pls-1); jj++) {
     A[jj][jj] -= lambda;
     soln[jj] = 1.0 / sqrt(pls);
   }
 
-  swap = malloc(pls*sizeof(double));
+  swap = malloc(pls*sizeof(int));
   ludcmp(A, pls, swap, &d);  
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
@@ -1622,11 +1623,11 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
     lubksb(A, pls, swap, soln);
 
     mag = 0.0;
-    for (jj = 0; jj <= pls-1; jj++) {
+    for (jj = 0; jj <= (pls-1); jj++) {
       mag += soln[jj]*soln[jj];
     }
     
-    for (jj = 0; jj <= pls-1; jj++) {
+    for (jj = 0; jj <= (pls-1); jj++) {
       soln[jj] /= sqrt(mag);
     }
    
@@ -3179,11 +3180,11 @@ double fdDistOrbLL2Qinc(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
+  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
 }
 
 
 double fdDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);    
+  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);    
 }

@@ -1055,7 +1055,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
-    output[iOut].bDoNeg = malloc(2*sizeof(int));
+    output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
   }
 
   

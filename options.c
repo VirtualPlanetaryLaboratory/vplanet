@@ -277,16 +277,16 @@ void AddOptionDouble(char cFile[],char cOption[],double *dInput,int *iLine,int i
   char cTmp[OPTLEN],cLine[LINE];
 
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
-  sscanf(cLine,"%s %s",cTmp,cTmp);
-  *dInput = atof(cTmp);
+  if(*iLine >= 0)
+      sscanf(cLine,"%s %lf",cTmp, dInput);
 }
 
 void AddOptionInt(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {
   char cTmp[OPTLEN],cLine[LINE];
 
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
-  sscanf(cLine,"%s %s",cTmp,cTmp);
-  *iInput = atoi(cTmp);
+  if(*iLine >= 0)
+      sscanf(cLine,"%s %d",cTmp,iInput);
 }
 
 void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbose) {
@@ -364,7 +364,7 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
 }
 
 int iGetNumLines(char cFile[]) {
-  int iNumLines;
+  int iNumLines = 0;
   FILE *fp;
   char cLine[LINE];
 
@@ -391,6 +391,8 @@ void InitializeInput(INFILE *input) {
   }
   input->iNumLines = iGetNumLines(input->cIn);
   input->bLineOK = malloc(input->iNumLines*sizeof(int));
+  input->cSpecies[0] = NULL;
+  input->cReactions[0] = NULL;
 
   for (iLine=0;iLine<input->iNumLines;iLine++) {
     /* Initialize bLineOK */
@@ -958,6 +960,15 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   /* First find input files */
   ReadBodyFileNames(control,files,&options[OPT_BODYFILES],&input);
   *body = malloc(control->Evolve.iNumBodies*sizeof(BODY));
+
+  /* XXX The following initializetion should be in a separate function */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bLagrange = 0;
+      (*body)[iBody].bLaskar = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+  }
 
   /* Is iVerbose set in primary input? */
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
@@ -1641,16 +1652,16 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (memcmp(sLower(cTmp),"r",1) == 0) {
       /* Reid & Hawley 2000 */	
-      control->iMassRad[iFile]=1;
+      control->iMassRad[iFile-1]=1;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
-      control->iMassRad[iFile]=2;
+      control->iMassRad[iFile-1]=2;
     } else if (memcmp(sLower(cTmp),"b",1) == 0) {
       /* Bayless & Orosz 2006 */
-      control->iMassRad[iFile]=3;
+      control->iMassRad[iFile-1]=3;
     } else if (memcmp(sLower(cTmp),"s",1) == 0) {
       /* Sotin et al 2007 */
-      control->iMassRad[iFile]=4;
+      control->iMassRad[iFile-1]=4;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
 	fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
@@ -1663,7 +1674,8 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     /* This one is weird, since the default is "none", but if this option
        is not set, then we need to set this variable to 0 for logging
        purposes. */
-    control->iMassRad[iFile] = 0;
+    if (iFile > 0)
+      control->iMassRad[iFile-1] = 0;
   }
 }
 

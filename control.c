@@ -210,7 +210,7 @@ void fprintd(FILE *fp,double x,int iExp,int iDig) {
       fprintf(fp,"%.15e",x);
     if (iDig == 16) 
       fprintf(fp,"%.16e",x);
-  } else {	
+  } else {      
     if (iDig == 0) 
       fprintf(fp,"%.0lf",x);
     if (iDig == 1) 
@@ -400,7 +400,7 @@ void fsUnitsAngMom(UNITS *units,char cUnit[]) {
   strcat(cUnit,"^2/");
   fsUnitsTime(units->iTime,cTmp);
   strcat(cUnit,cTmp);
-}	
+}       
 
 void fsUnitsVel(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
@@ -480,7 +480,7 @@ double fdUnitsEnergyFlux(int iTime,int iMass,int iLength) {
 
   dTmp=fdUnitsPower(iTime,iMass,iLength);  
   return dTmp/(fdUnitsLength(iLength)*fdUnitsLength(iLength));
-}	
+}       
 
 double fdUnitsTemp(double dTemp,int iOldType,int iNewType) {
   if (iOldType == 0) {

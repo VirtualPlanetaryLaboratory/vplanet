@@ -293,6 +293,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
   sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: ll2 [laplace-lagrange (eigen), 2nd order] rd4 [direct dist-fxn, 4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault,"rd4");
+  options[OPT_ORMAXECC].dDefault = RD4;
   options[OPT_ORBITMODEL].iType = 3;
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
   

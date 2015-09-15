@@ -232,6 +232,18 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   free(lTmp);
 }
 
+void InitializeBodyModules(BODY **body,int iNumBodies) {
+  int iBody;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bDistOrb = 0;
+      (*body)[iBody].bDistRot = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+  }
+}
+
 /*
  * Verify multi-module dependencies
  */
@@ -270,11 +282,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
     else { // Thermint and Eqtide called
       /* When Thermint and Eqtide are called together, care must be taken as 
-	 Im(k_2) must be known in order to calculate TidalZ. As the individual 
-	 module PropsAux are called prior to PropsAuxMulti, we must call the 
-	 "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
-	 "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-	 PropsAuxEqtideThermint. */
+         Im(k_2) must be known in order to calculate TidalZ. As the individual 
+         module PropsAux are called prior to PropsAuxMulti, we must call the 
+         "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+         "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+         PropsAuxEqtideThermint. */
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
       control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
@@ -361,13 +373,13 @@ void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
   for (j=0;j<LAPLNUM;j++) {
     dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
     if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceF[j][0](alpha1, 0);
-		
-	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceDeriv[j][0](alpha1, 0);
-		
-	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
+        system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+        system->fnLaplaceF[j][0](alpha1, 0);
+                
+        system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+        system->fnLaplaceDeriv[j][0](alpha1, 0);
+                
+        system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
     }
   }
   */

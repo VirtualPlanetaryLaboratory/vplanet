@@ -27,8 +27,10 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
     iNumHalts++;
   if (halt->bPosDeDt)
     iNumHalts++;
+/* XXX not implemented yet.
   if (halt->dMinIntEn > 0)
     iNumHalts++;
+*/
 
   for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnCountHalts[iBody][iModule](halt,&iNumHalts);
@@ -191,58 +193,58 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int
   if (control->Halt.bMerge) {
     if (!module->iEqtide) {
       if (control->Io.iVerbose > 3)
-	fprintf(stderr,"WARNING: %s set to 1, but no selected module allows merging.\n",options[OPT_HALTMERGE].cName);
+        fprintf(stderr,"WARNING: %s set to 1, but no selected module allows merging.\n",options[OPT_HALTMERGE].cName);
     }
   }
 
   if (control->Halt.bDblSync >= 0) {
     if (!module->iEqtide) {
       if (control->Io.iVerbose > 3)
-	fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMAXECC].cName);
+        fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMAXECC].cName);
     }
   }
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (control->Halt.bTideLock[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
-	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName,body[iBody].cName);
+        if (control->Io.iVerbose > 3)
+          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName,body[iBody].cName);
       }
     }
 
     if (control->Halt.bSync[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
-	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTSYNC].cName,body[iBody].cName);
+        if (control->Io.iVerbose > 3)
+          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTSYNC].cName,body[iBody].cName);
       }
     }
 
     if (control->Halt.bPosDeDt[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
-	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTPOSDEDT].cName,body[iBody].cName);
+        if (control->Io.iVerbose > 3)
+          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTPOSDEDT].cName,body[iBody].cName);
       }
     }
 
     if (control->Halt.bMinEcc[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
-	  fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTMINECC].cName,body[iBody].cName);
+        if (control->Io.iVerbose > 3)
+          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTMINECC].cName,body[iBody].cName);
       }
     }
 
     if (control->Halt.dMinObl[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
-	  fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMINOBL].cName);
+        if (control->Io.iVerbose > 3)
+          fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMINOBL].cName);
       }
     }
     
     if (control->Halt.dMaxEcc[iBody] >= 0) {
       if (!module->iEqtide) {
-	if (control->Io.iVerbose > 3)
+        if (control->Io.iVerbose > 3)
 
-	  fprintf(stderr,"WARNING: %s set to 1, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName);
+          fprintf(stderr,"WARNING: %s set to 1, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName);
       }
     }
   }

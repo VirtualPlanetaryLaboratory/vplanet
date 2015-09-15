@@ -24,12 +24,10 @@ void InitializeModuleDistRot(CONTROL *control,MODULE *module) {
 
 void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
-
   dest[iBody].dXobl = src[iBody].dXobl;
   dest[iBody].dYobl = src[iBody].dYobl;
   dest[iBody].dZobl = src[iBody].dZobl;
   dest[iBody].dDynEllip = src[iBody].dDynEllip;
-
 }
 
 void InitializeBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {

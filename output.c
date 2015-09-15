@@ -1026,7 +1026,6 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     /* Now write the columns */
     fp = fopen(files->Outfile[iBody].cOut,"a");
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
-//     	fprintf(fp,"%.6f",1000.0);
 			fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
       fprintf(fp," ");
     }

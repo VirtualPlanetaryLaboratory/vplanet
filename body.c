@@ -226,7 +226,6 @@ double fdRadToMass(double dMass,double iRelation) {
 
 void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   int iBody,iModule;
-
   /* This subroutine only includes parameters needed for more than 1 module,
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
@@ -239,7 +238,6 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dZobl = src[iBody].dZobl;
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
-
     /* Only orbiting bodies retain these parameters */
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;

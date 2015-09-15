@@ -32,8 +32,6 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
     for (iModule=0;iModule<control->Evolve.iNumMultiProps[iBody];iModule++)
       control->Evolve.fnPropsAuxMulti[iBody][iModule](body,update,iBody);
   }
-
-
 }
 
 /*
@@ -67,14 +65,14 @@ double fdNextOutput(double dTime,double dOutputInterval) {
 */
 
 double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
+  
   int iBody,iVar,iEqn;
   EVOLVE integr;
   double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
-
+ 
   integr = control->Evolve;
 
   // XXXX Change Eqn to Proc?
-
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
@@ -182,25 +180,22 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
   int iBody,iVar,iEqn,iSubStep;
   double dTimeOut,dFoo,dDelta;
-  
   /* Create a copy of BODY array */
   BodyCopy(control->Evolve.tmpBody,body,&control->Evolve);
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-  
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
-    *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
+     *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
   } else
     *dDt = control->Evolve.dTimeStep;
     
   /* XXX Should each eqn be updated separately? Each parameter at a 
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
-
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
@@ -213,6 +208,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
         *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];      
       } else {       
         /* While we're in this loop, move each parameter to the midpoint of the timestep */
@@ -222,7 +219,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* First midpoint derivative.*/
-  
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
   /* Don't need this timestep info, so assign output to dFoo */
@@ -237,6 +233,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
         *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[1][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the midpoint 
@@ -259,6 +257,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){  
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
         *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[2][iBody][iVar];
       } else {   
         /* While we're in this loop, move each parameter to the end of 
@@ -267,7 +267,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       }
     }
   }
-
   /* Full step derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
@@ -285,7 +284,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       }
     }
   }
-
   /* Now do the update -- Note the pointer to the home of the actual variables!!! */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
@@ -352,7 +350,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-
     /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
@@ -361,7 +358,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
         control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,iModule,iBody);
     }
-
 
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {

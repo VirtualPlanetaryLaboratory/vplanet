@@ -28,6 +28,8 @@ void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
   dest[iBody].dPinc = src[iBody].dPinc;
   dest[iBody].dQinc = src[iBody].dQinc;
 
+  dest[iBody].iGravPerts = src[iBody].iGravPerts;
+  dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<src[iBody].iGravPerts;iPert++)
     dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
 }

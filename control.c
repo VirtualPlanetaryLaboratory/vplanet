@@ -210,7 +210,7 @@ void fprintd(FILE *fp,double x,int iExp,int iDig) {
       fprintf(fp,"%.15e",x);
     if (iDig == 16) 
       fprintf(fp,"%.16e",x);
-  } else {      
+  } else {        
     if (iDig == 0) 
       fprintf(fp,"%.0lf",x);
     if (iDig == 1) 

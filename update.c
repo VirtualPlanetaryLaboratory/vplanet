@@ -86,10 +86,12 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     if (body[iBody].bDistOrb) {
       if (control->Evolve.iDistOrbModel == RD4) {
         body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
+        body[iBody].iDistOrbModel = RD4;
       } else if (control->Evolve.iDistOrbModel == LL2) {
         /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs. 
            Number of eigenfrequencies = number of planets. */
         body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
+        body[iBody].iDistOrbModel = LL2;
       }
     }
     

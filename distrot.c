@@ -174,13 +174,6 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
       fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DyDt;
       
-      if (body[iBody].bGRCorr) {
-        InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
-        
-        InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
-      }
     } else if (control->Evolve.iDistOrbModel==LL2) {
       /* Body updates */
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -205,6 +198,13 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       /* y = sin(obl)*sin(pA) */
       InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
       fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DyDt;
+    }
+    if (body[iBody].bGRCorr) {
+      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
+        
+      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
     }
   }
   

@@ -348,6 +348,42 @@ double fdCalcLongA(double dLongP, double dArgP) {
   return Omega;
 }
 
+void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
+  int iFile,iFound=0;
+  char cTmp[8];
+
+  for (iFile=0;iFile<files->iNumInputs;iFile++) {
+    if (options[OPT_ORBITMODEL].iLine[iFile] >= 0)
+      iFound++;
+  }
+
+  if (iFound > 1) {
+    if (control->Io.iVerbose > VERBERR) {
+      fprintf(stderr,"ERROR: Option %s set multiple times.\n",options[OPT_ORBITMODEL].cName);
+      for (iFile=0;iFile<files->iNumInputs;iFile++) {
+        if (options[OPT_ORBITMODEL].iLine[iFile] >= 0)
+          fprintf(stderr,"\tFile %s, Line: %d\n",files->Infile[0].cIn,options[OPT_ORBITMODEL].iLine[iFile]);
+      }
+    }
+    exit(EXIT_INPUT);
+  }
+
+  if (iFound == 0) {
+    strcpy(cTmp,options[OPT_ORBITMODEL].cDefault);
+    if (!memcmp(sLower(cTmp),"ll2",3)) {
+      control->Evolve.iDistOrbModel = LL2;
+    } else if (!memcmp(sLower(cTmp),"rd4",3)) {
+      control->Evolve.iDistOrbModel = RD4;
+    }
+    if (control->Io.iVerbose >= VERBINPUT) 
+      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
+
+    /* Chicanery. Since I only want this set once, I will
+       make it seem like the user set it. */
+    options[OPT_ORBITMODEL].iLine[0] = 1;
+  }  
+}
+
 void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
   if (options[OPT_LONGA].iLine[iBody+1] > -1 && options[OPT_LONGP].iLine[iBody+1] > -1 && options[OPT_ARGP].iLine[iBody+1] == -1) 
@@ -520,6 +556,8 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
 
 void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
+  
+  VerifyOrbitModel(control,files,options);
   
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -695,10 +733,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fdDistOrbLL2Qinc;
     }
     
-    if (body[iBody].bGRCorr) {
-      fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
-      LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
-    }
+    // if (body[iBody].bGRCorr) {
+//       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
+//       LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
+//     }
   }
   
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistOrb;
@@ -726,8 +764,10 @@ void InitializeUpdateDistOrb(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumQinc += body[iBody].iGravPerts;
 
     if (body[iBody].bGRCorr) {
-      update[iBody].iNumHecc += 1;
-      update[iBody].iNumKecc += 1;
+      if (body[iBody].iDistOrbModel == RD4) {
+        update[iBody].iNumHecc += 1;
+        update[iBody].iNumKecc += 1;
+      }
     }
   }
 }
@@ -1310,6 +1350,18 @@ double ABmatrix(BODY *body, int j, int jBody, int kBody) {
   AB = n/4.0*body[kBody].dMass/(body[0].dMass+body[jBody].dMass)*alpha*abar*b;
   return AB*365.25;  //returns in units of rad/year
 }
+
+double GRCorrMatrix(BODY *body, int jBody, int kBody) {
+  double n, GRC;
+  
+  n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(pow(body[jBody].dSemi/AUCM,3)));
+  if (jBody == kBody) {
+    GRC = 3*pow(n,3)*pow(body[jBody].dSemi/AUCM,2)/(pow(cLIGHT/AUCM*DAYSEC,2)* (1.0-pow(body[jBody].dHecc,2)-pow(body[jBody].dKecc,2)));
+    return GRC*365.25; 
+  } else {
+    return 0.0;
+  }
+}
   
 void HessEigen(double **a, int n, double wr[], double wi[])
 /*Finds all eigenvalues of an upper Hess. matrix a[1..n][1..n]. a can be exactly as output from elmhes, on output it is destroyed. Real and imaginary parts of eigenvalues are returned in wr[1..n], wi[1..n]*/
@@ -1683,6 +1735,8 @@ void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
             B[j][k] = ABmatrix(body,1,j+1,k+1);
           }
         }
+        if (body[j+1].bGRCorr)
+          A[j][j] += GRCorrMatrix(body,j+1,j+1);
       }
       
       if (count==0) {

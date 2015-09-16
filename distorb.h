@@ -116,6 +116,7 @@ unsigned long int factorial(unsigned int);
 int Nchoosek(int, int);
 int CombCount(int,int,int);
 double ABmatrix(BODY*,int,int,int);
+double GRCorrMatrix(BODY*,int,int);
 void HessEigen(double**,int,double[],double[]);
 void ElmHess(double**,int);
 void BalanceM(double**,int);

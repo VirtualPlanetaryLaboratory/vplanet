@@ -185,7 +185,10 @@ typedef struct {
   double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
+  int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
+  int *iaEigFreqs;       /**< Indices of eigenfrequencies */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
+  int iDistOrbModel; 
   
   /* DISTROT parameters */
   int bDistRot;

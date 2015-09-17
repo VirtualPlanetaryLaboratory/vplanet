@@ -1376,7 +1376,7 @@ void HessEigen(double **a, int n, double wr[], double wi[])
   
   nn = n-1;
   t = 0.0;
-  while (nn >= 1) {
+  while (nn >= 0) {
     its = 0;
     do { 
       for (l = nn; l >= 1; l--) {
@@ -1387,8 +1387,8 @@ void HessEigen(double **a, int n, double wr[], double wi[])
       }
       x = a[nn][nn];
       if (l == nn) {
-      wr[nn] = x + t;
-      wi[nn--] = 0.0;
+        wr[nn] = x + t;
+        wi[nn--] = 0.0;
       } else {
         y = a[nn-1][nn-1];
         w = a[nn][nn-1]*a[nn-1][nn];

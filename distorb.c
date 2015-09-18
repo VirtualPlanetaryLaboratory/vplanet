@@ -29,7 +29,7 @@ void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
   dest[iBody].dQinc = src[iBody].dQinc;
 
   dest[iBody].iGravPerts = src[iBody].iGravPerts;
-  dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int));
+//   dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<src[iBody].iGravPerts;iPert++)
     dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
 }
@@ -41,7 +41,7 @@ void InitializeBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody,
 void InitializeUpdateTmpBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
   int iBodyPert;
   
-  control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts);
+  control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
 
 }
 

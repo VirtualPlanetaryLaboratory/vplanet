@@ -56,24 +56,21 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
 
     if (iTideModel == CPL) {
       dest[iBody].dTidalQ = src[iBody].dTidalQ;
-      for (iPert=0;iPert<src[iBody].iTidePerts;iPert++)
-        for (iIndex=0;iIndex<10;iIndex++)
+      for (iIndex=0;iIndex<10;iIndex++)
           dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }    
     if (iTideModel == CTL) {
       dest[iBody].dTidalTau = src[iBody].dTidalTau;
       dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
-      for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
-        for (iIndex=0;iIndex<5;iIndex++)
+      for (iIndex=0;iIndex<5;iIndex++)
           dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
-      }
     }
   }
 }
 
 void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   body[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  body[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  body[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double));
 }
 
 void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -83,7 +80,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
   
   control->Evolve.tmpBody[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double));
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));

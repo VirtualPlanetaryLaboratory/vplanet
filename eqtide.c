@@ -778,7 +778,8 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   int iPert,iTideFile,iCol,iFile;
 
   //XXX Is dEccSq set here?
-  if (body[iBody].dEccSq > (2./19) && control->Evolve.bDiscreteRot) {
+  // Body 0 has no orbit parameters see VerifyOrbitEqtide().
+  if (iBody != 0 && body[iBody].dEccSq > (2./19) && control->Evolve.bDiscreteRot) {
     if (control->Io.iVerbose >= VERBINPUT)
       fprintf(stderr,"WARNING: Setting %s to 1 is not advised for eccentricities larger than %.3lf\n",options[OPT_DISCRETEROT].cName,pow(2./19,0.5));
   }
@@ -981,6 +982,7 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 	LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
     } else {
+      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
       CalcHK(body,iBody);
     }
   }

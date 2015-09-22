@@ -1363,7 +1363,7 @@ double GRCorrMatrix(BODY *body, int jBody, int kBody) {
   }
 }
 
-*/ XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (yr???)
+/* XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (1992)
 Cannot release code with these functions as they are proprietary. */  
 
 void HessEigen(double **a, int n, double wr[], double wi[])

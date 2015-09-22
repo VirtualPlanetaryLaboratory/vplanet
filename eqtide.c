@@ -291,7 +291,7 @@ void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (body[iFile-1].dTidalQ < 0) {
+    if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
 	  fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
@@ -370,7 +370,7 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
     /* Now do some initializing */
     body[iFile-1].iTidePerts=iNumIndices;
-    for (iBody=0;iBody<=iNumIndices;iBody++) {
+    for (iBody=0;iBody<iNumIndices;iBody++) {
       memset(body[iFile-1].saTidePerts[iBody],'\0',NAMELEN);
       strcpy(body[iFile-1].saTidePerts[iBody],saTmp[iBody]);
     }
@@ -902,7 +902,7 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 	bFound[iPert] = 0;
 	for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
 	  if (iBodyPert != iBody) {
-	    if (memcmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+	    if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
 	      /* This parameter contains the body # of the "iPert-th" 
 		 tidal perturber */
 	      body[iBody].iaTidePerts[iPert]=iBodyPert;
@@ -934,10 +934,13 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 	}
       }
       
-      if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
-	fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
-	ok=0;
+      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+        if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
+	  fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
+	  ok=0;
+        }
       }
+      
       if (!ok)
 	exit(EXIT_INPUT);
     }
@@ -1733,12 +1736,6 @@ void WriteEnergyFluxEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   }
 }
 
-void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dTidalQ;
-  strcpy(cUnit,"");
-}
-
 void WriteTidalTau(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dTidalTau;
 
@@ -2003,12 +2000,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /*
    * T
    */
-  
-  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
-  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
-  output[OUT_TIDALQ].bNeg = 0;
-  output[OUT_TIDALQ].iNum = 1;
-  fnWrite[OUT_TIDALQ] = WriteTidalQ;
   
   sprintf(output[OUT_TIDALTAU].cName,"TidalTau");
   sprintf(output[OUT_TIDALTAU].cDescr,"Tidal Time Lag");

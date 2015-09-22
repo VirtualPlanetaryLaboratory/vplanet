@@ -1,55 +1,58 @@
-/***************** LAGRANGE.H *********************** 
+/***************** DISTORB.H *********************** 
  *
  * Russell Deitrick, June 24, 2015
  *
  * This header file contains all the subroutines in
- * file lagrange.c.
+ * file distorb.c.
  *
 */
 
-void InitializeControlLagrange(CONTROL*);
-void AddModuleLagrange(MODULE*,int,int);
-void BodyCopyLagrange(BODY*,BODY*,int,int);
-void InitializeBodyLagrange(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyLagrange(BODY*,CONTROL*,UPDATE*,int);
+void InitializeControlDistOrb(CONTROL*);
+void AddModuleDistOrb(MODULE*,int,int);
+void BodyCopyDistOrb(BODY*,BODY*,int,int);
+void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTLAGRANGE        1300 /* Start of LAGRANGE options */
-#define OPTENDLAGRANGE          1400 /* End of LAGRANGE options */
+#define OPTSTARTDISTORB        1300 /* Start of DISTORB options */
+#define OPTENDDISTORB          1400 /* End of DISTORB options */
 
 #define OPT_INC                1301
 #define OPT_LONGA              1302
 #define OPT_ARGP               1304
+#define OPT_DFCRIT             1350
+#define OPT_GRCORR             1351
+#define OPT_INVPLANE           1352
 
 /* Options Functions */
 void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLongA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLongP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsLagrange(OPTIONS*, fnReadOption[]);
-void ReadOptionsLagrange(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void InitializeOptionsDistOrb(OPTIONS*, fnReadOption[]);
+void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Verify Functions */
 void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyLagrange(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Update Functions */
 
-void InitializeUpdateLagrange(BODY*,UPDATE*,int);
-void FinalizeUpdateHeccLagrange(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateKeccLagrange(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdatePincLagrange(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateQincLagrange(BODY*,UPDATE*,int*,int,int);
+void InitializeUpdateDistOrb(BODY*,UPDATE*,int);
+void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
 
-/* LAGRANGE 1300 - 1399 */
+/* DISTORB 1300 - 1399 */
 /* System properties 1300-1319, body properties 1320-1399 */
 
-#define OUTSTARTLAGRANGE        1300 /* Start of LAGRANGE options */
-#define OUTENDLAGRANGE          1400 /* End of LAGRANGE options */
-#define OUTBODYSTARTLAGRANGE    1320 /* Start of LAGRANGE BODY options */
+#define OUTSTARTDISTORB        1300 /* Start of DISTORB options */
+#define OUTENDDISTORB          1400 /* End of DISTORB options */
+#define OUTBODYSTARTDISTORB    1320 /* Start of DISTORB BODY options */
 
 
 #define OUT_INC                 1321
@@ -60,23 +63,23 @@ void FinalizeUpdateQincLagrange(BODY*,UPDATE*,int*,int,int);
 #define OUT_PINC                1333
 #define OUT_QINC                1334
 
-#define OUT_DECCDTLAGRANGE       1340
-#define OUT_DINCDTLAGRANGE       1341
-#define OUT_DSINCDTLAGRANGE      1342
-#define OUT_DLONGADTLAGRANGE     1343
-#define OUT_DLONGPDTLAGRANGE     1344
+#define OUT_DECCDTDISTORB       1340
+#define OUT_DINCDTDISTORB       1341
+#define OUT_DSINCDTDISTORB      1342
+#define OUT_DLONGADTDISTORB     1343
+#define OUT_DLONGPDTDISTORB     1344
 
-#define OUT_DHECCDTLAGRANGE      1351
-#define OUT_DKECCDTLAGRANGE      1352
-#define OUT_DPINCDTLAGRANGE      1353
-#define OUT_DQINCDTLAGRANGE      1354
+#define OUT_DHECCDTDISTORB      1351
+#define OUT_DKECCDTDISTORB      1352
+#define OUT_DPINCDTDISTORB      1353
+#define OUT_DQINCDTDISTORB      1354
 
-void HelpOutputLagrange(OUTPUT*);
-void WriteBodyDEccDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDSincDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDLongPDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDLongADtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDIncDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void HelpOutputDistOrb(OUTPUT*);
+void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDSincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDLongPDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDLongADtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDIncDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodySinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyLongA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -86,22 +89,24 @@ void WriteBodyHecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,cha
 void WriteBodyKecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyPinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyQinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDHeccDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDKeccDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDPincDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDQincDtLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void InitializeOutputLagrange(OUTPUT*,fnWriteOutput[]);
+void WriteBodyDHeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDKeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDPincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDQincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void InitializeOutputDistOrb(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
-void LogOptionsLagrange(CONTROL*,FILE*);
-void LogLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyLagrange(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void LogOptionsDistOrb(CONTROL*,FILE*);
+void LogDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
-/* Lagrange Functions */
-void RecalcLaplace(BODY*, SYSTEM*, int*);
+/* DistOrb Functions */
+void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
 
-void PropsAuxLagrange(BODY*,UPDATE*,int);
-void ForceBehaviorLagrange(BODY*,EVOLVE*,IO*,int,int);
+void inv_plane(BODY*,SYSTEM*,int);
+
+void PropsAuxDistOrb(BODY*,UPDATE*,int);
+void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);
@@ -157,8 +162,12 @@ double fdDSemiF24Dalpha(double, int);
 double fdDSemiF25Dalpha(double, int);
 double fdDSemiF26Dalpha(double, int);
 
-/* Lagrange's equations in h,k,p,q */
-double fdLagrangeDhDt(BODY*, SYSTEM*, int*);
-double fdLagrangeDkDt(BODY*, SYSTEM*, int*);
-double fdLagrangeDpDt(BODY*, SYSTEM*, int*);
-double fdLagrangeDqDt(BODY*, SYSTEM*, int*);
+double fdApsidalGRCorrection(BODY*, int*);
+double fdApsidalGRDhDt(BODY*, SYSTEM*, int*);
+double fdApsidalGRDkDt(BODY*, SYSTEM*, int*);
+
+/* DistOrb's equations in h,k,p,q */
+double fdDistOrbDhDt(BODY*, SYSTEM*, int*);
+double fdDistOrbDkDt(BODY*, SYSTEM*, int*);
+double fdDistOrbDpDt(BODY*, SYSTEM*, int*);
+double fdDistOrbDqDt(BODY*, SYSTEM*, int*);

@@ -10,8 +10,12 @@
 #include <assert.h>
 #include <string.h>
 #include "vplanet.h"
+#include <time.h>
 
 int main(int argc,char *argv[]) {
+  time_t start, end;
+  start = time(NULL);
+  
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
   OUTPUT *output;
@@ -120,5 +124,7 @@ int main(int argc,char *argv[]) {
     }
   }
 
+  end = time(NULL);
+  printf("Runtime = %f s\n", difftime(end,start));
   exit(0);
 }

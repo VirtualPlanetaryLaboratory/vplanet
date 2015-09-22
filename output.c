@@ -399,6 +399,14 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // XXX I don't think this will work with just eqtide
+  //*dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
+  *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  strcpy(cUnit,"");
+}
+
 void WriteXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dXobl;
@@ -658,6 +666,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBENERGY].dNeg = 1;
   output[OUT_ORBENERGY].iNum = 1;
   fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
+
+  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
+  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
+  output[OUT_TIDALQ].bNeg = 0;
+  output[OUT_TIDALQ].iNum = 1;
+  fnWrite[OUT_TIDALQ] = WriteTidalQ;
 
   sprintf(output[OUT_XOBL].cName,"Xobl");
   sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
@@ -1043,7 +1057,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
-    output[iOut].bDoNeg = malloc(2*sizeof(int));
+    output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
   }
 
   
@@ -1068,8 +1082,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputRadheat(output,fnWrite);
   InitializeOutputAtmEsc(output,fnWrite);
   InitializeOutputStellar(output,fnWrite);
-  InitializeOutputLagrange(output,fnWrite);
-  InitializeOutputLaskar(output,fnWrite);
+  InitializeOutputDistOrb(output,fnWrite);
+  InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
 
 }

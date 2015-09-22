@@ -20,7 +20,7 @@ dEcc            0.38
 dRadius		-1.592
 saTidePerts	star
 #d40KNumMan		-30
-saModules	eqtide lagrange laskar#$
+saModules	eqtide distorb distrot#$
 #radheat
 #d232ThNumMan	-1
 dMaxLockDiff	0.1

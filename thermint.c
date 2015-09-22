@@ -1304,7 +1304,7 @@ double fdHflowLatentIC(BODY *body,UPDATE *update,int iBody) {
 }
 double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
-      return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)       
+      return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)
     } else {                    //If no IC.
       return 0;
     }

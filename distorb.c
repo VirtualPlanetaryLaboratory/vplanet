@@ -705,7 +705,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     
     if (iBody == (control->Evolve.iNumBodies-1)) {
       if (control->bInvPlane) {
-          inv_plane(body, system, control->Evolve.iNumBodies);
+        inv_plane(body, system, control->Evolve.iNumBodies);
       }
       
       SolveEigenVal(body, control, system);
@@ -1824,7 +1824,7 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi/body[iBody].dSemi;
       }
-      
+
       for (j=0;j<LAPLNUM;j++) {
         dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
         if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
@@ -2554,13 +2554,13 @@ double fdDSemiF23Dalpha(double dAxRatio, int iIndexJ) {
 
 /*--------- f24 ----------------------*/
 double fdSemiMajAxF24(double dAxRatio, int iIndexJ) {
-  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ))  \
+  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ)) \
    + 4.*pow(dAxRatio,2) * (1. - iIndexJ) * fdDerivLaplaceCoeff(1,B(iIndexJ))    \
    + pow(dAxRatio,3) * fdDerivLaplaceCoeff(2,B(iIndexJ)) );
 }
 
 double fdDSemiF24Dalpha(double dAxRatio, int iIndexJ) {
-  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ))     \
+  return 1./4 * ( (-6. + 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ)) \
    + (8.-14.*iIndexJ+4.*pow(iIndexJ,2))*dAxRatio* fdDerivLaplaceCoeff(1,B(iIndexJ))    \
    + (7.-4.*iIndexJ)*pow(dAxRatio,2) * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
    +  pow(dAxRatio,3) * fdDerivLaplaceCoeff(3,B(iIndexJ)) );

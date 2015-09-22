@@ -32,6 +32,8 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
     for (iModule=0;iModule<control->Evolve.iNumMultiProps[iBody];iModule++)
       control->Evolve.fnPropsAuxMulti[iBody][iModule](body,update,iBody);
   }
+
+
 }
 
 /*
@@ -73,6 +75,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   integr = control->Evolve;
 
   // XXXX Change Eqn to Proc?
+
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
@@ -180,11 +183,13 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
   int iBody,iVar,iEqn,iSubStep;
   double dTimeOut,dFoo,dDelta;
+
   /* Create a copy of BODY array */
   BodyCopy(control->Evolve.tmpBody,body,&control->Evolve);
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
+
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);

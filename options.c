@@ -1380,7 +1380,7 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     /* Merging is not allowed for the central body */
     if (iFile == 1) {
       fprintf(stderr,"ERROR: Cannot set %s for systems with more than 2 bodies.\n",options[OPT_HALTMERGE].cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
 
     control->Halt[iFile-1].bMerge = bTmp;
@@ -1520,7 +1520,7 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
         fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
         fprintf(stderr,"Options are Euler.\n");
       }
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     } 
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } 
@@ -1645,7 +1645,7 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (memcmp(sLower(cTmp),"r",1) == 0) {
-      /* Reid & Hawley 2000 */  
+      /* Reid & Hawley 2000 */
       control->iMassRad[iFile-1]=1;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
@@ -1661,7 +1661,7 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
         fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
         fprintf(stderr,"Options are GS99 (Gorda & Svechnikov 1999), BO06 (Bayless & Orosz 2006), Sotin07 (Sotin et al. 2007), or RH00 (Reid & Hawley 2000).\n");
       }
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     } 
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
@@ -1706,7 +1706,7 @@ void ReadMinValue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be larger than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Evolve.dMinValue = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1989,7 +1989,7 @@ void ReadRadiusGyration(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than zero.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dRadGyra = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -2082,7 +2082,7 @@ void ReadSciNot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     if (iTmp > 16) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be less than 16.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Io.iSciNot = iTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);

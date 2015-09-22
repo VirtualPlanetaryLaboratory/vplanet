@@ -167,7 +167,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 
 void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int iBody) {
   int iModule,iHalt,iHalt0,iHaltNow=0;
-  
+
   if (control->Halt[iBody].bMerge)
     control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
   if (control->Halt[iBody].dMinObl >= 0)

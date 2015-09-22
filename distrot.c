@@ -24,10 +24,12 @@ void InitializeModuleDistRot(CONTROL *control,MODULE *module) {
 
 void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iBody) {
   int iIndex,iPert;
+
   dest[iBody].dXobl = src[iBody].dXobl;
   dest[iBody].dYobl = src[iBody].dYobl;
   dest[iBody].dZobl = src[iBody].dZobl;
   dest[iBody].dDynEllip = src[iBody].dDynEllip;
+
 }
 
 void InitializeBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -202,7 +204,7 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     if (body[iBody].bGRCorr) {
       InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
       fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
-        
+ 
       InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
       fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
     }

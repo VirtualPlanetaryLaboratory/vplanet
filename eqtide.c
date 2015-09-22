@@ -222,7 +222,7 @@ void ReadK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *sy
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dK2 = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -245,7 +245,7 @@ void ReadMaxLockDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be > 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Evolve.dMaxLockDiff[iFile-1] = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -268,7 +268,7 @@ void ReadSyncEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
-        LineExit(files->Infile[iFile-1].cIn,lTmp);      
+        LineExit(files->Infile[iFile-1].cIn,lTmp);
     }
     control->Evolve.dSyncEcc[iFile-1] = dTmp;
     UpdateFoundOption(&files->Infile[iFile-1],options,lTmp,iFile);
@@ -291,7 +291,7 @@ void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
 
     body[iFile-1].dTidalQ = dTmp; 
@@ -625,7 +625,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Time lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALQ].cName,files->Infile[iBody+1].cIn);
+        fprintf(stderr,"ERROR: Time lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALQ].cName,files->Infile[iBody+1].cIn);
       exit(EXIT_INPUT);
     }
     
@@ -1278,7 +1278,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
   else if (control->Evolve.iEqtideModel == CTL) 
     *dTmp = fdCTLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq,body[iBody].dObliquity,body[iBody].dRotRate);
-                 
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

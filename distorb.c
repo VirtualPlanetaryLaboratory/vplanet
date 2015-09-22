@@ -1362,9 +1362,12 @@ double GRCorrMatrix(BODY *body, int jBody, int kBody) {
     return 0.0;
   }
 }
-  
+
+*/ XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (yr???)
+Cannot release code with these functions as they are proprietary. */  
+
 void HessEigen(double **a, int n, double wr[], double wi[])
-/*Finds all eigenvalues of an upper Hess. matrix a[1..n][1..n]. a can be exactly as output from elmhes, on output it is destroyed. Real and imaginary parts of eigenvalues are returned in wr[1..n], wi[1..n]*/
+/*Finds all eigenvalues of an upper Hess. matrix a[0..n-1][0..n-1]. a can be exactly as output from elmhes, on output it is destroyed. Real and imaginary parts of eigenvalues are returned in wr[0..n-1], wi[0..n-1]*/
 {
   int nn, m, l, k, j, its, i, mmin;
   double z, y, x, w, v, u, t, s, r, q, p, anorm, cond, value;
@@ -1534,7 +1537,7 @@ void ElmHess(double **a, int n)
 
 
 void BalanceM(double **a, int n)
-/*Given a matrix a[1..n][1..n], this routine replaces it by a balanced matrix with identical eigenvalues. */
+/*Given a matrix a[0..n-1][0..n-1], this routine replaces it by a balanced matrix with identical eigenvalues. */
 {
   int last, j, i;
   double s, r, g, f, c, sqrdx;
@@ -1580,7 +1583,7 @@ void BalanceM(double **a, int n)
 
 
 void ludcmp(double **a, int n, int *indx, float *d)
-/*Given a matrix a[1...n][1..n] this routine replaces by the LU decomp of a rowwise permutatio of itself. a and n are input. a is output, arranged with U as the upper triangular components and L as the lower triangular components BELOW the diagonal (diagonal elements of L are all = 1). indx[1..n] is an output vector that records the row permutation effected by partial pivoting; d is output as +/- 1 depending on whether the number of row interchanges was even(+) or odd(-). Used in combination with lubksb to solve linear eqns.*/
+/*Given a matrix a[0...n-1][0..n-1] this routine replaces by the LU decomp of a rowwise permutatio of itself. a and n are input. a is output, arranged with U as the upper triangular components and L as the lower triangular components BELOW the diagonal (diagonal elements of L are all = 1). indx[0..n-1] is an output vector that records the row permutation effected by partial pivoting; d is output as +/- 1 depending on whether the number of row interchanges was even(+) or odd(-). Used in combination with lubksb to solve linear eqns.*/
 {
   int i, imax, j, k;
   double big, dum, sum, temp;
@@ -1637,7 +1640,7 @@ void ludcmp(double **a, int n, int *indx, float *d)
 
 
 void lubksb(double **a, int n, int *indx, double b[])
-/*Solves set of n linear eqns A*X = B. a[1..n][1..n] is input as the LU decompostion from ludcmp. indx[1..n] is imput as the permutation vector from ludcmp. b[1..n] is input as the RHS vector B and returns with the soln vector X. a, n, and indx are not modified.*/
+/*Solves set of n linear eqns A*X = B. a[0..n-1][0..n-1] is input as the LU decompostion from ludcmp. indx[0..n-1] is imput as the permutation vector from ludcmp. b[0..n-1] is input as the RHS vector B and returns with the soln vector X. a, n, and indx are not modified.*/
 {
   int i, ii = 0, ip, j;
   double sum;

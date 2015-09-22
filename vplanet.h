@@ -619,10 +619,6 @@ typedef struct {
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
-=======
-      chi = cos(obliq) derivative due to DISTROT. */
-  double **padDZoblDtDistRot;
->>>>>>> d37bfc8d3900b8efe11c0efd28fcfaaefcade80c
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       function that returns these variables due to STELLAR evolution. */

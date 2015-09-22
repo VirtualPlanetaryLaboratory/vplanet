@@ -89,8 +89,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
             // Prevent division by zero
             if (dVarNow != update[iBody].daDerivProc[iVar][0]) {
               dMinNow = dVarNow/(fabs(dVarNow - update[iBody].daDerivProc[iVar][0])/integr.dTimeStep);
-              if (dMinNow < dMin)
+              if (dMinNow < dMin) {
                 dMin = dMinNow;
+              }
             }
           }
         } else {
@@ -101,8 +102,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
               if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
                 dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
-                if (dMinNow < dMin) 
+                if (dMinNow < dMin) {
                   dMin = dMinNow;
+                }
               }
               
             } else {
@@ -110,8 +112,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
               if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
                 dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-                if (dMinNow < dMin) 
+                if (dMinNow < dMin) {
                   dMin = dMinNow;
+                }
               }
             }
           }
@@ -159,7 +162,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-  
+
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);

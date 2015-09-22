@@ -141,13 +141,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
   
-  sprintf(options[OPT_XFRAC].cName,"dAtmXAbsEff");
-  sprintf(options[OPT_XFRAC].cDescr,"X-ray/XUV absorption efficiency (epsilon)");
-  sprintf(options[OPT_XFRAC].cDefault,"0.15");
-  options[OPT_XFRAC].dDefault = 0.15;
-  options[OPT_XFRAC].iType = 2;
-  options[OPT_XFRAC].iMultiFile = 1;
-  fnRead[OPT_XFRAC] = &ReadAtmXAbsEff;
+  sprintf(options[OPT_ATMXABSEFF].cName,"dAtmXAbsEff");
+  sprintf(options[OPT_ATMXABSEFF].cDescr,"X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_ATMXABSEFF].cDefault,"0.15");
+  options[OPT_ATMXABSEFF].dDefault = 0.15;
+  options[OPT_ATMXABSEFF].iType = 2;
+  options[OPT_ATMXABSEFF].iMultiFile = 1;
+  fnRead[OPT_ATMXABSEFF] = &ReadAtmXAbsEff;
 
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
@@ -207,7 +207,11 @@ void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
 }
 
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
-  if (body[iBody].dSurfaceWaterMass < 0)
+  
+  // TODO: The minimum water mass is stored in halt.dMinSurfaceWaterMass
+  // but this function doesn't have access to HALT. Resolve this!
+  
+  if (body[iBody].dSurfaceWaterMass <= 1.e-5*TOMASS)
     // Can't have negative water!
     body[iBody].dSurfaceWaterMass = 0;
 }
@@ -403,7 +407,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 /************* ATMESC Functions ************/
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-  // TODO: Add other escape regimes
+  // TODO: Currently this is just Erkaev's model. Add other escape regimes
   
   double elim, fxuv, xi, ktide;
   
@@ -412,16 +416,14 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
 
-  // DEBUG
-  body[0].dLXUV = body[0].dLuminosity * body[0].dSatXUVFrac;
-  
-  
   fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
          pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
   
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
-  
+
+  //printf(body[iaBody[0]].dSurfaceWaterMass)
+
   return -elim;
 }
 

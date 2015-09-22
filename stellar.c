@@ -190,7 +190,9 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
 }
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
-  /* Nothing */
+  /* Update LXUV
+     TODO: Currently, this is just fixed at the saturation XUV. Add evolution! */
+  body[iBody].dLXUV = body[iBody].dLuminosity * body[iBody].dSatXUVFrac;
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {

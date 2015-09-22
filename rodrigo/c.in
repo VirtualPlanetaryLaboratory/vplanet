@@ -9,6 +9,8 @@ dRotPeriod	  -10			                    # Rotation period, negative -> days
 dObliquity	  23.5			
 dRadGyra	    0.5			                    # Radius of gyration (moment of inertia constant)
 
+dSurfWaterMass -0.01
+
 # Orbital Properties
 dSemi         0.0721			                # Semi-major axis, negative -> AU
 dEcc          0.06			                  # Eccentricity

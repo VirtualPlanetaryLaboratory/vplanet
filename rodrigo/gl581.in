@@ -3,7 +3,7 @@ sName	        star		                    # Body's name
 saModules	    eqtide stellar              # Modules to apply, exact spelling required
 
 # Output
-saOutputOrder Time -Luminosity -Radius
+saOutputOrder Time -Luminosity -Radius -LXUV
 
 # Physical Parameters
 dMass         0.31                        # Mass, negative -> Earth masses
@@ -19,5 +19,5 @@ dRadGyra      0.5                         # Radius of gyration (moment of inerti
 dTidalQ       1e6                         # Tidal phase lag
 dK2           0.299                       # Love number of degree 2
 sTideModel    p2                          # Tidal model, p2=CPL, t8=CTL
-saTidePerts   c                           # Body name(s) of tidal perturbers
+saTidePerts   c d                         # Body name(s) of tidal perturbers
 

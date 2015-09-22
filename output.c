@@ -609,6 +609,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_TIME].cName,"Time");
   sprintf(output[OUT_TIME].cDescr,"Simulation Time");
+  sprintf(output[OUT_TIME].cNeg,"Gyr");
   output[OUT_TIME].bNeg = 1;
   output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_TIME].iNum = 1;

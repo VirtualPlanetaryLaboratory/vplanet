@@ -132,6 +132,7 @@
 
 // STELLAR
 #define VLUMINOSITY     1502
+#define VTEMPERATURE    1503
 
 /* Now define the structs */
 
@@ -324,12 +325,14 @@ typedef struct {
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
+  double dMinSurfaceWaterMass;
   double dXFrac;
   double dAtmXAbsEff;
 
   /* STELLAR Parameters */
   int bStellar;
   double dLuminosity;
+  double dTemperature;
   double dLXUV;
   double dSatXUVFrac;
   int iStellarModel;
@@ -619,10 +622,13 @@ typedef struct {
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
+  int iTemperature;
+  int iNumTemperature;
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       function that returns these variables due to STELLAR evolution. */
   double *pdLuminosityStellar;
+  double *pdTemperatureStellar;
   double *pdRadiusStellar;
 
 } UPDATE;
@@ -650,7 +656,6 @@ typedef struct {
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
-  double dMinSurfaceWaterMass;
   
   /* STELLAR */
   // Nothing
@@ -887,6 +892,7 @@ typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
@@ -973,6 +979,8 @@ typedef struct {
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
   /*! Function pointers to finalize Core Temperature */ 
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
+  /*! Function pointers to finalize Temperature */
+  fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
   

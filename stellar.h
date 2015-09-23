@@ -8,6 +8,7 @@
 */
 
 #define LSUN                          3.846e26      // Solar luminosity (W)
+#define TSUN                          5778.         // Solar TEff (K)
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 
@@ -24,6 +25,7 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_LUMINOSITY          1510 // (Initial) luminosity
 #define OPT_SATXUVFRAC          1511 // Saturation XUV luminosity fraction
 #define OPT_STELLARMODEL        1512 // Luminosity evolution model
+#define OPT_TEMPERATURE         1513 // Stellar effective temperature (initial)
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -53,6 +55,7 @@ void FinalizeUpdateOblStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRotStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateLuminosityStellar(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateTemperatureStellar(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
@@ -64,6 +67,7 @@ void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int);
 /* Body Properties due to stellar evol */
 #define OUT_LUMINOSITY	        1510
 #define OUT_LXUV	              1511
+#define OUT_TEMPERATURE	        1512
 
 void HelpOutputStellar(OUTPUT*);
 void InitializeOutputStellar(OUTPUT*,fnWriteOutput[]);
@@ -71,6 +75,7 @@ void InitializeOutputFunctionStellar(OUTPUT*,int,int);
 void FinalizeOutputFunctionStellar(OUTPUT*,int,int);
 
 void WriteLuminosity(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
@@ -84,6 +89,8 @@ double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
 double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
+double fdTemperature(BODY*,SYSTEM*,int*);
+double fdTemperatureFunctionBaraffe(double, double);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

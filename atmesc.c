@@ -22,6 +22,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;
   dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
+  dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
 }
 
 void InitializeBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -121,13 +122,13 @@ void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      control->Halt[iFile-1].dMinSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dMinSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
-      control->Halt[iFile-1].dMinSurfaceWaterMass = dTmp;
+      body[iFile-1].dMinSurfaceWaterMass = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      control->Halt[iFile-1].dMinSurfaceWaterMass = options->dDefault;
+      body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
 }
 
 void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
@@ -208,11 +209,8 @@ void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
 
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
   
-  // TODO: The minimum water mass is stored in halt.dMinSurfaceWaterMass
-  // but this function doesn't have access to HALT. Resolve this!
-  
-  if (body[iBody].dSurfaceWaterMass <= 1.e-5*TOMASS)
-    // Can't have negative water!
+  if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
+    // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0;
 }
 
@@ -274,7 +272,7 @@ void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   
-  if (body[iBody].dSurfaceWaterMass <= halt->dMinSurfaceWaterMass) {
+  if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's surface water mass =  ",body[iBody].cName);
       fprintd(stdout,body[iBody].dSurfaceWaterMass/TOMASS,io->iSciNot,io->iDigits);

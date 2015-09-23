@@ -20,6 +20,7 @@ void  InitializeControlStellar(CONTROL *control) {
 
 void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
+  dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
@@ -96,6 +97,24 @@ void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dLuminosity = options->dDefault;
 }
 
+void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTemperature = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTemperature = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTemperature = options->dDefault;
+}
+
 /* Halts */
 
 // Nothing for now
@@ -127,6 +146,14 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LUMINOSITY].dNeg = LSUN;
   sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
   fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
+
+  sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
+  sprintf(options[OPT_TEMPERATURE].cDescr,"Initial Effective Temperature");
+  sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
+  options[OPT_TEMPERATURE].dDefault = TSUN;
+  options[OPT_TEMPERATURE].iType = 0;
+  options[OPT_TEMPERATURE].iMultiFile = 1;
+  fnRead[OPT_TEMPERATURE] = &ReadTemperature;
 
 }
 
@@ -189,6 +216,28 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   fnUpdate[iBody][update[iBody].iRadius][0] = &fdRadius;                                 // NOTE: Same here!
 }
 
+void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+
+  // Assign temperature
+  if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    body[iBody].dTemperature = fdTemperatureFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
+      // User specified temperature, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  }
+
+  update[iBody].iaType[update[iBody].iTemperature][0] = 0;
+  update[iBody].iNumBodies[update[iBody].iTemperature][0] = 1;
+  update[iBody].iaBody[update[iBody].iTemperature][0] = malloc(update[iBody].iNumBodies[update[iBody].iTemperature][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iTemperature][0][0] = iBody;
+
+  update[iBody].pdTemperatureStellar = &update[iBody].daDerivProc[update[iBody].iTemperature][0];  // NOTE: This points to the VALUE of the temperature
+  fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperature;                                 // NOTE: Same here!
+}
+
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
   /* Update LXUV
      TODO: Currently, this is just fixed at the saturation XUV. Add evolution! */
@@ -218,6 +267,13 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  
+  if (update[iBody].iNumTemperature > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Since iaType is 0 for dTemperature, cannot have more than one equation affecting it!");
+    exit(EXIT_INPUT);
+  }
+  VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
@@ -241,6 +297,11 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNumRadius++;
   }
+  
+  if (body[iBody].dTemperature > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNumTemperature++;
+  }
 }
 
 void FinalizeUpdateEccStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -255,6 +316,11 @@ void FinalizeUpdateLuminosityStellar(BODY *body,UPDATE*update,int *iEqn,int iVar
 void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iNumRadius = (*iEqn)++;
+}
+
+void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iNumTemperature = (*iEqn)++;
 }
  
 void FinalizeUpdateOblStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -303,6 +369,12 @@ void WriteLuminosity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 }
 
+void WriteTemperature(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dTemperature;
+  // Kelvin only
+  fsUnitsTemp(0,cUnit);
+}
+
 void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dLXUV;
 
@@ -325,6 +397,12 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LUMINOSITY].dNeg = 1./LSUN;
   output[OUT_LUMINOSITY].iNum = 1;
   fnWrite[OUT_LUMINOSITY] = &WriteLuminosity;
+
+  sprintf(output[OUT_TEMPERATURE].cName,"Temperature");
+  sprintf(output[OUT_TEMPERATURE].cDescr,"Effective Temperature");
+  output[OUT_TEMPERATURE].bNeg = 0;
+  output[OUT_TEMPERATURE].iNum = 1;
+  fnWrite[OUT_TEMPERATURE] = &WriteTemperature;
   
   sprintf(output[OUT_LXUV].cName,"LXUV");
   sprintf(output[OUT_LXUV].cDescr,"X-ray/XUV Luminosity");
@@ -404,6 +482,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
   module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
+  module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionStellar;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionStellar;
@@ -424,6 +503,13 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dRadius;
+}
+
+double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
+    return fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+    return body[iaBody[0]].dTemperature;
 }
 
 double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
@@ -473,6 +559,31 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
     exit(EXIT_INT);
   }
 }
+
+double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
+  int iError;
+  double T = fdBaraffe(STELLAR_T, dAge, dMass, 3, &iError);
+  if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
+    return T;
+  else {
+    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
+      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+      fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
+      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_ISNAN)
+      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
+    else if (iError == STELLAR_ERR_FILE)
+      fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_BADORDER)
+      fprintf(stderr,"ERROR: Bad interpolation order in routine fdBaraffe().\n");
+    else
+      fprintf(stderr,"ERROR: Undefined error in fdBaraffe().\n");
+    exit(EXIT_INT);
+  }
+}
+
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!

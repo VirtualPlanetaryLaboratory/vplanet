@@ -1,10 +1,8 @@
 TODO
 ----
 
-*. Just made Radius a primary variable. Verify.
-0. Verify that RungeKutta is working wiht iaType = 0
-1. Adapt Euler to iaType = 0 variables
-2. Add code in ForceBehavior to update dLXUV
+1. Verify that RungeKutta is working with iaType = 0
+2. Adapt Euler to iaType = 0 variables
 3. Add other escape regimes
 4. Log stuff
 

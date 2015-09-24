@@ -226,11 +226,12 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       control->Evolve.iDistOrbModel = RD4;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-    fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are ll2 or rd4.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are ll2 or rd4.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);  
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  }
+  } else
+    AssignDefaultInt(options,&control->Evolve.iDistOrbModel,files->iNumInputs);
 }
 
 
@@ -293,8 +294,8 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
   sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: ll2 [laplace-lagrange (eigen), 2nd order] rd4 [direct dist-fxn, 4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault,"rd4");
-  options[OPT_ORMAXECC].dDefault = RD4;
-  options[OPT_ORBITMODEL].iType = 3;
+  options[OPT_ORBITMODEL].dDefault = RD4;
+  options[OPT_ORBITMODEL].iType = 1;
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
   
   sprintf(options[OPT_ORMAXECC].cName,"bOverrideMaxEcc");

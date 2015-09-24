@@ -609,6 +609,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_TIME].cName,"Time");
   sprintf(output[OUT_TIME].cDescr,"Simulation Time");
+  sprintf(output[OUT_TIME].cNeg,"Gyr");
   output[OUT_TIME].bNeg = 1;
   output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_TIME].iNum = 1;
@@ -701,7 +702,7 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
     output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       /* Initialize them all to return nothing, then they get changed 
-	 from AddModule subroutines */
+      from AddModule subroutines */
       output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
     }
   }
@@ -885,15 +886,15 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
   for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
       if (memcmp(files->Outfile[iBody].caCol[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
- 	/* Match! */
-	dTmp=malloc(output[iOut].iNum*sizeof(double));
-	fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
-	  strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caCol[iFile]);
-	  sprintf(cTmp,"[%s]",cUnit);
-	  strcat(cCol[iFile+iSubOut+iExtra],cTmp);
-	}
-	iExtra += (output[iOut].iNum-1);
+        /* Match! */
+        dTmp=malloc(output[iOut].iNum*sizeof(double));
+        fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+        for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
+          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caCol[iFile]);
+          sprintf(cTmp,"[%s]",cUnit);
+          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+        }
+        iExtra += (output[iOut].iNum-1);
       }
       
     }
@@ -964,7 +965,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
-	WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+        WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 
     }
     /* Log modules */
@@ -1026,14 +1027,14 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-	if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
-	  /* Match! */
-	  dTmp=malloc(output[iOut].iNum*sizeof(double));
-	  fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	  for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
-	    dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
-	  iExtra += (output[iOut].iNum-1);
-	}
+        if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+          /* Match! */
+          dTmp=malloc(output[iOut].iNum*sizeof(double));
+          fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+          for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
+            dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
+          iExtra += (output[iOut].iNum-1);
+        }
       }
     }
 
@@ -1057,6 +1058,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
+    for (iBody=0;iBody<MAXBODIES;iBody++)
+        output[iOut].bDoNeg[iBody] = 0;
   }
 
   

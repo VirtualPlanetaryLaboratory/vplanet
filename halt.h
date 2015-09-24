@@ -10,3 +10,4 @@
 int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
 void InitializeHalts(CONTROL*,MODULE*);
 void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*,int);
+int HaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  

@@ -135,9 +135,9 @@ void Read40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-	body[iFile-1].d40KNumMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
+      body[iFile-1].d40KNumMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
     else
-	body[iFile-1].d40KNumMan = dTmp;   //units of num are num!
+      body[iFile-1].d40KNumMan = dTmp;   //units of num are num!
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -152,9 +152,9 @@ void Read40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-	body[iFile-1].d40KNumCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
+      body[iFile-1].d40KNumCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
     else
-	body[iFile-1].d40KNumCore = dTmp;   //units of num are num!
+      body[iFile-1].d40KNumCore = dTmp;   //units of num are num!
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -433,13 +433,13 @@ void Read235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	  body[iFile-1].d235UNumMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+        body[iFile-1].d235UNumMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	  body[iFile-1].d235UNumMan = dTmp;
+        body[iFile-1].d235UNumMan = dTmp;
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
       if (iFile > 0)
-	  body[iFile-1].d235UNumMan = options->dDefault;
+        body[iFile-1].d235UNumMan = options->dDefault;
 }
 
 void Read235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -488,13 +488,13 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	  body[iFile-1].d235UNumCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+        body[iFile-1].d235UNumCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	  body[iFile-1].d235UNumCore = dTmp;
+        body[iFile-1].d235UNumCore = dTmp;
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
       if (iFile > 0)
-	  body[iFile-1].d235UNumCore = options->dDefault;
+        body[iFile-1].d235UNumCore = options->dDefault;
 }
 
 /* Initiatlize Input Options */
@@ -769,35 +769,35 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_40KMASSMAN].iLine[iBody+1] >= 0) {
-	//  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
-	//      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
-	body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
-	//printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
+      //  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
+      //      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
+      body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
+      //printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
     }
     if (options[OPT_40KNUMMAN].iLine[iBody+1] >= 0) {
-	// Do nothing bc default Num set.
-	//printf("40KNumMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
+      // Do nothing bc default Num set.
+      //printf("40KNumMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
     }
     if (options[OPT_40KPOWERMAN].iLine[iBody+1] >= 0) {
-	body[iBody].d40KNumMan=body[iBody].d40KPowerMan/(ENERGY40K)*(HALFLIFE40K);
-	//printf("40KPowerMan set, .d40KPowerMan=%e, .d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KPowerMan,body[iBody].d40KNumMan,ENUMMAN40K);
-	//      exit(1);
+      body[iBody].d40KNumMan=body[iBody].d40KPowerMan/(ENERGY40K)*(HALFLIFE40K);
+      //printf("40KPowerMan set, .d40KPowerMan=%e, .d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KPowerMan,body[iBody].d40KNumMan,ENUMMAN40K);
+      //      exit(1);
     }  
     body[iBody].d40KConstMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the constant given num and age.
 
     /* Core */
     if (options[OPT_40KMASSCORE].iLine[iBody+1] >= 0) {
-	body[iBody].d40KNumCore=body[iBody].d40KMassCore/(MASS40K);
-	//printf("40KMassCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
+      body[iBody].d40KNumCore=body[iBody].d40KMassCore/(MASS40K);
+      //printf("40KMassCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
     }
     if (options[OPT_40KNUMCORE].iLine[iBody+1] >= 0) {
-	// Do nothing bc default Num set.
-	//printf("40KNumCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
+      // Do nothing bc default Num set.
+      //printf("40KNumCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
     }
     if (options[OPT_40KPOWERCORE].iLine[iBody+1] >= 0) {
-	body[iBody].d40KNumCore=body[iBody].d40KPowerCore/(ENERGY40K)*(HALFLIFE40K);
-	//printf("40KPowerCore set, .d40KPowerCore=%e, .d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KPowerCore,body[iBody].d40KNumCore,ENUMCORE40K);
-	//      exit(1);
+      body[iBody].d40KNumCore=body[iBody].d40KPowerCore/(ENERGY40K)*(HALFLIFE40K);
+      //printf("40KPowerCore set, .d40KPowerCore=%e, .d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KPowerCore,body[iBody].d40KNumCore,ENUMCORE40K);
+      //      exit(1);
     }  
     body[iBody].d40KConstCore = fd40KConstant(body[iBody].d40KNumCore,dAge);  //moved from above.
    
@@ -806,32 +806,32 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
 void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_232THMASSMAN].iLine[iBody+1] >= 0) {
-	body[iBody].d232ThNumMan=body[iBody].d232ThMassMan/(MASS232TH);
-	//printf("232ThMassMan set, body[iBody].d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
+      body[iBody].d232ThNumMan=body[iBody].d232ThMassMan/(MASS232TH);
+      //printf("232ThMassMan set, body[iBody].d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
     }
     if (options[OPT_232THNUMMAN].iLine[iBody+1] >= 0) {
-	//Do nothing, use default.
-	//printf("232ThNumMan set, body[iBody].d232ThKNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
+      //Do nothing, use default.
+      //printf("232ThNumMan set, body[iBody].d232ThKNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
     }
     if (options[OPT_232THPOWERMAN].iLine[iBody+1] >= 0) {
-	body[iBody].d232ThNumMan=body[iBody].d232ThPowerMan/(ENERGY232TH)*(HALFLIFE232TH);
-	//printf("232ThPowerMan set, .d232ThPowerMan=%e, .d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPowerMan,body[iBody].d232ThNumMan,ENUMMAN232TH);
+      body[iBody].d232ThNumMan=body[iBody].d232ThPowerMan/(ENERGY232TH)*(HALFLIFE232TH);
+      //printf("232ThPowerMan set, .d232ThPowerMan=%e, .d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPowerMan,body[iBody].d232ThNumMan,ENUMMAN232TH);
     }
     body[iBody].d232ThConstMan = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
 
     /* Core */
     //    /*
     if (options[OPT_232THMASSCORE].iLine[iBody+1] >= 0) {
-	body[iBody].d232ThNumCore=body[iBody].d232ThMassCore/(MASS232TH);
-	//printf("232ThMassCore set, body[iBody].d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
+      body[iBody].d232ThNumCore=body[iBody].d232ThMassCore/(MASS232TH);
+      //printf("232ThMassCore set, body[iBody].d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
     }
     if (options[OPT_232THNUMCORE].iLine[iBody+1] >= 0) {
-	//Do nothing, use default.
-	//printf("232ThNumCore set, body[iBody].d232ThKNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
+      //Do nothing, use default.
+      //printf("232ThNumCore set, body[iBody].d232ThKNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
     }
     if (options[OPT_232THPOWERCORE].iLine[iBody+1] >= 0) {
-	body[iBody].d232ThNumCore=body[iBody].d232ThPowerCore/(ENERGY232TH)*(HALFLIFE232TH);
-	//printf("232ThPowerCore set, .d232ThPowerCore=%e, .d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThPowerCore,body[iBody].d232ThNumCore,ENUMCORE232TH);
+      body[iBody].d232ThNumCore=body[iBody].d232ThPowerCore/(ENERGY232TH)*(HALFLIFE232TH);
+      //printf("232ThPowerCore set, .d232ThPowerCore=%e, .d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThPowerCore,body[iBody].d232ThNumCore,ENUMCORE232TH);
     }
     body[iBody].d232ThConstCore = fd232ThConstant(body[iBody].d232ThNumCore,dAge);
     //    */
@@ -841,31 +841,31 @@ void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_238UMASSMAN].iLine[iBody+1] >= 0) {
       /*    printf("238UMass not implemented.\n");
-	    exit(1);*/
-	body[iBody].d238UNumMan=body[iBody].d238UMassMan/(MASS238U);
-	//printf("238UMassMan set, body[iBody].d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UNumMan,ENUMMAN238U);
+          exit(1);*/
+      body[iBody].d238UNumMan=body[iBody].d238UMassMan/(MASS238U);
+      //printf("238UMassMan set, body[iBody].d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UNumMan,ENUMMAN238U);
     }
     if (options[OPT_238UNUMMAN].iLine[iBody+1] >= 0) {
       //printf("238UNumMan set, body[iBody].d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UNumMan,ENUMMAN238U);
     }
     if (options[OPT_238UPOWERMAN].iLine[iBody+1] >= 0) {
-	body[iBody].d238UNumMan=body[iBody].d238UPowerMan/(ENERGY238U)*(HALFLIFE238U);
-	//printf("238UPowerMan set, .d238UPowerMan=%e, .d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UPowerMan,body[iBody].d238UNumMan,ENUMMAN238U);
+      body[iBody].d238UNumMan=body[iBody].d238UPowerMan/(ENERGY238U)*(HALFLIFE238U);
+      //printf("238UPowerMan set, .d238UPowerMan=%e, .d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UPowerMan,body[iBody].d238UNumMan,ENUMMAN238U);
     }
     body[iBody].d238UConstMan = fd238UConstant(body[iBody].d238UNumMan,dAge);
     /* Core */
     if (options[OPT_238UMASSCORE].iLine[iBody+1] >= 0) {
       /*    printf("238UMass not implemented.\n");
-	    exit(1);*/
-	body[iBody].d238UNumCore=body[iBody].d238UMassCore/(MASS238U);
-	//printf("238UMassCore set, body[iBody].d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UNumCore,ENUMCORE238U);
+          exit(1);*/
+      body[iBody].d238UNumCore=body[iBody].d238UMassCore/(MASS238U);
+      //printf("238UMassCore set, body[iBody].d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UNumCore,ENUMCORE238U);
     }
     if (options[OPT_238UNUMCORE].iLine[iBody+1] >= 0) {
       //printf("238UNumCore set, body[iBody].d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UNumCore,ENUMCORE238U);
     }
     if (options[OPT_238UPOWERCORE].iLine[iBody+1] >= 0) {
-	body[iBody].d238UNumCore=body[iBody].d238UPowerCore/(ENERGY238U)*(HALFLIFE238U);
-	//printf("238UPowerCore set, .d238UPowerCore=%e, .d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UPowerCore,body[iBody].d238UNumCore,ENUMCORE238U);
+      body[iBody].d238UNumCore=body[iBody].d238UPowerCore/(ENERGY238U)*(HALFLIFE238U);
+      //printf("238UPowerCore set, .d238UPowerCore=%e, .d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UPowerCore,body[iBody].d238UNumCore,ENUMCORE238U);
     }
     body[iBody].d238UConstCore = fd238UConstant(body[iBody].d238UNumCore,dAge);
     
@@ -875,7 +875,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
     /* Mantle */
   if (options[OPT_235UMASSMAN].iLine[iBody+1] >= 0) {
       /*    printf("235UMass not implemented.\n");
-	    exit(1);*/
+          exit(1);*/
       body[iBody].d235UNumMan=body[iBody].d235UMassMan/(MASS235U);
       //printf("235UMassMan set, body[iBody].d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UNumMan,ENUMMAN235U);
   }
@@ -890,7 +890,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
   /* Core */
   if (options[OPT_235UMASSCORE].iLine[iBody+1] >= 0) {
       /*    printf("235UMass not implemented.\n");
-	    exit(1);*/
+          exit(1);*/
       body[iBody].d235UNumCore=body[iBody].d235UMassCore/(MASS235U);
       //printf("235UMassCore set, body[iBody].d235UNumCore=%e, ENUMCORE235U=%e\n",body[iBody].d235UNumCore,ENUMCORE235U);
   }

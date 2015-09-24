@@ -245,6 +245,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
       dest[iBody].dSemi = src[iBody].dSemi;
+      dest[iBody].dRadius = src[iBody].dRadius;
+      dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
     }
     /* Copymodule specific properties */
     for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)

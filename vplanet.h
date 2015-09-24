@@ -96,6 +96,7 @@
 #define VECC         1002
 #define VROT         1003
 #define VOBL         1004
+#define VRADIUS      1005
 
 // RADHEAT
 #define VNUM40KMAN      1101
@@ -123,6 +124,13 @@
 
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
+
+// ATMESC
+#define VSURFACEWATERMASS  1202
+
+// STELLAR
+#define VLUMINOSITY     1502
+#define VTEMPERATURE    1503
 
 /* Now define the structs */
 
@@ -317,6 +325,21 @@ typedef struct {
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
 
+  /* ATMESC Parameters */
+  int bAtmEsc;           /**< Apply Module ATMESC? */
+  double dSurfaceWaterMass;
+  double dMinSurfaceWaterMass;
+  double dXFrac;
+  double dAtmXAbsEff;
+
+  /* STELLAR Parameters */
+  int bStellar;
+  double dLuminosity;
+  double dTemperature;
+  double dLXUV;
+  double dSatXUVFrac;
+  int iStellarModel;
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -436,6 +459,7 @@ typedef struct {
   /* Number of eqns to modify a parameter */
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
+  int iNumRadius;
 
   /* These are the variables that the update matrix modifies */
   // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
@@ -444,6 +468,7 @@ typedef struct {
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
+  int iRadius;
 
   /* Next comes the identifiers for the module that modifies a variable */
 
@@ -502,6 +527,7 @@ typedef struct {
   double *pdD232ThNumManDt;
   double *pdD238UNumManDt;
   double *pdD235UNumManDt;
+
   /* RADHEAT CORE */
   int i40KCore;
   int i232ThCore;
@@ -592,7 +618,27 @@ typedef struct {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       chi = cos(obliq) derivative due to DISTROT. */
   double **padDZoblDtDistRot;
+
+  /* ATMESC */         
+  int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
+  int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      derivative of these variables due to ATMESC. */
+  double *pdDSurfaceWaterMassDtAtmesc;
+
+  /* STELLAR */ 
+  int iLuminosity;           /**< Variable # Corresponding to the luminosity */
+  int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
+  int iTemperature;
+  int iNumTemperature;
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      function that returns these variables due to STELLAR evolution. */
+  double *pdLuminosityStellar;
+  double *pdTemperatureStellar;
+  double *pdRadiusStellar;
+
 } UPDATE;
 
 typedef struct {
@@ -614,7 +660,13 @@ typedef struct {
   int dMin40KPower;     /**< Halt at this Potassium-40 Power */
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower; 
+  int dMin235UPower;
+
+  /* ATMESC */
+  int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  
+  /* STELLAR */
+  // Nothing
 
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */
@@ -847,19 +899,21 @@ typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
 
-
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
-
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
@@ -923,16 +977,24 @@ typedef struct {
   fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
   /*! Function pointers to finalize Poincare's k */
   fnFinalizeUpdateKeccModule **fnFinalizeUpdateKecc;
+  /*! Function pointers to finalize Luminosity */
+  fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
   /*! Function pointers to finalize Poincare's p */
   fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
   /*! Function pointers to finalize Poincare's q */
-  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;  
+  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
+  /*! Function pointers to finalize Radius */ 
+  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
   /*! Function pointers to finalize Rotation Rate */ 
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
   /*! Function pointers to finalize Semi-major Axis */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+  /*! Function pointers to finalize Surface Water */ 
+  fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
   /*! Function pointers to finalize Core Temperature */ 
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
+  /*! Function pointers to finalize Temperature */
+  fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
   
@@ -992,6 +1054,9 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "atmesc.h"
+#include "stellar.h"
+#include "baraffe2015.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

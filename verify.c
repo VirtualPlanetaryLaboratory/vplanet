@@ -127,6 +127,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
     body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
   if (dSemi > 0)
     body[iBody].dSemi = dSemi;
+
+  //XXX Initialize central body parameters.
 }
 
 /*

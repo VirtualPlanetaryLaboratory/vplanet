@@ -73,7 +73,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
 
 void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   body[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  body[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  body[iBody].daDoblDtEqtide = malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
 void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -83,7 +83,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
   
   control->Evolve.tmpBody[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(control->Evolve.iNumBodies*sizeof(int));
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
@@ -2413,7 +2413,7 @@ double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
   dSum = body[iaBody[1]].dTidalZ[iaBody[0]]*(2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][0] - 49./2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][1] + 0.5*body[iaBody[1]].iTidalEpsilon[iaBody[0]][2] + 3*body[iaBody[1]].iTidalEpsilon[iaBody[0]][5]);
 
   // Contribution from Orbiter
-  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(2*body[iaBody[0]].iTidalEpsilon[iaBody[0]][0] - 49./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] + 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]);
+  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] - 49./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] + 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]);
   
   return  -body[iaBody[0]].dSemi*sqrt(body[iaBody[0]].dEccSq)/(8*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }

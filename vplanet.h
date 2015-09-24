@@ -215,6 +215,8 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
   double dDeccDtEqtide;  /**< Eccentricity time rate of change */
   double *daDoblDtEqtide;  /**< Obliquity time rate of change */
+  // XXX dRotRateDtEqtide???, dSemiDtEqtide?
+
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */

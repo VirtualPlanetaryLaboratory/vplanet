@@ -67,10 +67,11 @@ double fdNextOutput(double dTime,double dOutputInterval) {
 */
 
 double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
+  
   int iBody,iVar,iEqn;
   EVOLVE integr;
-  double dVarNow,dMinNow,dMin=HUGE;
-
+  double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
+ 
   integr = control->Evolve;
 
   // XXXX Change Eqn to Proc?
@@ -78,47 +79,77 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
-	for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	  if (update[iBody].iaType[iVar][iEqn] == 0) {
-	    /* The parameter does not require a derivative, but is 
-	       calculated explicitly as a function of age. */
-	    dVarNow=*update[iBody].pdVar[iVar];
-	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-	    
-	    if (control->Evolve.bFirstStep) {
-	      dMin = integr.dTimeStep;
-	      control->Evolve.bFirstStep = 0;
-	    } else {
-	      dMinNow = dVarNow/(fabs(dVarNow - update[iBody].daDerivProc[iVar][iEqn])/integr.dTimeStep);
-	      if (dMinNow < dMin)
-		dMin = dMinNow;
-	    }
-	  } else if (update[iBody].iaType[iVar][iEqn] == 2) {  
-	    // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
-	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
-		dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
-		if (dMinNow < dMin) 
-		  dMin = dMinNow;
-	      }
-	    }
-	  } else {
-	    // The parameter is controlled by a time derivative
-	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
-		dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-		if (dMinNow < dMin) 
-		  dMin = dMinNow;
-	      }
-	    }
-	  }
-	}
+          if (update[iBody].iaType[iVar][0] == 0) {
+            // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+            dVarNow = *update[iBody].pdVar[iVar];
+            for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+            }
+            if (control->Evolve.bFirstStep) {
+              dMin = integr.dTimeStep;
+              control->Evolve.bFirstStep = 0;
+            } else {
+              /* Sum over all equations giving new value of the variable */
+              dVarTotal = 0.;
+              for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
+              }
+              // Prevent division by zero
+              if (dVarNow != dVarTotal) {
+                dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
+                if (dMinNow < dMin)
+                  dMin = dMinNow;
+              }
+            }
+          } else if (update[iBody].iaType[iVar][0] == 3) {
+          /* The parameter does not require a derivative, but is calculated explicitly as a function of age.
+             Also, is a sinusoidal quantity (e.g. h,k,p,q in DistOrb) */
+            dVarNow = *update[iBody].pdVar[iVar];
+            for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+              update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+            }
+            if (control->Evolve.bFirstStep) {
+              dMin = integr.dTimeStep;
+              control->Evolve.bFirstStep = 0;
+            } else {
+              /* Sum over all equations giving new value of the variable */
+              dVarTotal = 0.;
+              for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
+              }
+              // Prevent division by zero
+              if (dVarNow != dVarTotal) {
+                dMinNow = fabs(1.0/((dVarNow - dVarTotal)/integr.dTimeStep));
+                if (dMinNow < dMin)
+                  dMin = dMinNow;
+              }
+            }
+          } else {  
+            for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+              if (update[iBody].iaType[iVar][iEqn] == 2) {
+                // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                  dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+                  if (dMinNow < dMin) 
+                    dMin = dMinNow;
+                }
+              
+              } else {
+                // The parameter is controlled by a time derivative
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                  dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+                  if (dMinNow < dMin) 
+                    dMin = dMinNow;
+                }
+              }
+            }
+          }
       }
     }
   }
-  
+
   return dMin;
 }
  
@@ -137,13 +168,13 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	if (update[iBody].iaType[iVar][iEqn] == 0) 
-	  /* XXX This looks broken */
-	  *(update[iBody].pdVar[iVar]) = update[iBody].daDerivProc[iVar][iEqn];
-	else {
-	  /* Update the parameter in the BODY struct! Be careful! */
-	  *(update[iBody].pdVar[iVar]) += iDir*update[iBody].daDerivProc[iVar][iEqn]*(*dDt);
-	}
+        if (update[iBody].iaType[iVar][iEqn] == 0) 
+          /* XXX This looks broken */
+          *(update[iBody].pdVar[iVar]) = update[iBody].daDerivProc[iVar][iEqn];
+        else {
+          /* Update the parameter in the BODY struct! Be careful! */
+          *(update[iBody].pdVar[iVar]) += iDir*update[iBody].daDerivProc[iVar][iEqn]*(*dDt);
+        }
       }
     }
   }
@@ -152,18 +183,18 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
   int iBody,iVar,iEqn,iSubStep;
   double dTimeOut,dFoo,dDelta;
-  
+
   /* Create a copy of BODY array */
   BodyCopy(control->Evolve.tmpBody,body,&control->Evolve);
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-  
+
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
-    *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
+     *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
   } else
     *dDt = control->Evolve.dTimeStep;
     
@@ -171,19 +202,24 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
 
-
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[0][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	// XXX Set update.dDxDtModule here?
-	control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-
-	//control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        // XXX Set update.dDxDtModule here?
+        control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
-      /* While we're in this loop, move each parameter to the midpoint 
-	 of the timestep */
-      *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[0][iBody][iVar];
+      
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];      
+      } else {       
+        /* While we're in this loop, move each parameter to the midpoint of the timestep */
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[0][iBody][iVar];
+      }
     }
   }
 
@@ -197,11 +233,19 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[1][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
-      /* While we're in this loop, move each parameter to the midpoint 
-	 of the timestep based on the midpoint derivative. */
-      *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[1][iBody][iVar];
+      
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[1][iBody][iVar];
+      } else {
+        /* While we're in this loop, move each parameter to the midpoint 
+        of the timestep based on the midpoint derivative. */
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[1][iBody][iVar];
+      }
     }
   }
 
@@ -213,34 +257,50 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       control->Evolve.daDeriv[2][iBody][iVar] = 0;
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
-      /* While we're in this loop, move each parameter to the end of 
-	 the timestep based on the second midpoint derivative. */
-      *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + *dDt*control->Evolve.daDeriv[2][iBody][iVar];
+      
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){  
+        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
+        // evaluated with higher accuracy
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[2][iBody][iVar];
+      } else {   
+        /* While we're in this loop, move each parameter to the end of 
+        the timestep based on the second midpoint derivative. */
+        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + *dDt*control->Evolve.daDeriv[2][iBody][iVar];
+      }
     }
   }
-
   /* Full step derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
-      control->Evolve.daDeriv[3][iBody][iVar] = 0;
-      for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-	control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+      
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+        // NOTHING!
+      } else {
+        control->Evolve.daDeriv[3][iBody][iVar] = 0;
+        for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+          control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        }
       }
     }
   }
-
   /* Now do the update -- Note the pointer to the home of the actual variables!!! */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] + 
       2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
-
-      *(update[iBody].pdVar[iVar]) += update[iBody].daDeriv[iVar]*(*dDt);
+      
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        *(update[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];
+      } else {
+        *(update[iBody].pdVar[iVar]) += update[iBody].daDeriv[iVar]*(*dDt);
+      }
     }
   }
 }
@@ -295,16 +355,14 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-
     /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-	control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,iBody,iModule);
+        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-	control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,iModule,iBody);
     }
-
 
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {

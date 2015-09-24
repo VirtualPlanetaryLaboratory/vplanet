@@ -255,7 +255,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   
   if (update[iBody].iNumLuminosity > 1) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Since iaType is 0 for dLuminosity, cannot have more than one equation affecting it!");
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dLuminosity for body %d!", iBody);
     exit(EXIT_INPUT);
   }
   VerifyLuminosity(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -263,14 +263,14 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Since iaType is 0 for dRadius, cannot have more than one equation affecting it!");
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
   VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
   
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Since iaType is 0 for dTemperature, cannot have more than one equation affecting it!");
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dTemperature for body %d!", iBody);
     exit(EXIT_INPUT);
   }
   VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);

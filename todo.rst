@@ -1,10 +1,10 @@
 TODO
 ----
 
-1. Verify that RungeKutta is working with iaType = 0
-2. Adapt Euler to iaType = 0 variables
-3. Add other escape regimes
-4. Log stuff
+0. Baraffe routines returned NaN at age = 10 Gyr. Check why. Perhaps make it a halting condition.
+1. Adapt Euler to iaType = 0 variables
+2. Add other escape regimes
+3. Log stuff
 
 NOTES
 -----

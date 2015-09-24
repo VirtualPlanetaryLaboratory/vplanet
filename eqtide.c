@@ -56,24 +56,21 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
 
     if (iTideModel == CPL) {
       dest[iBody].dTidalQ = src[iBody].dTidalQ;
-      for (iPert=0;iPert<src[iBody].iTidePerts;iPert++)
-	for (iIndex=0;iIndex<10;iIndex++)
-	  dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
+      for (iIndex=0;iIndex<10;iIndex++)
+          dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }    
     if (iTideModel == CTL) {
       dest[iBody].dTidalTau = src[iBody].dTidalTau;
       dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
-      for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
-	for (iIndex=0;iIndex<5;iIndex++)
-	  dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
-      }
+      for (iIndex=0;iIndex<5;iIndex++)
+          dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
     }
   }
 }
 
 void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   body[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  body[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  body[iBody].daDoblDtEqtide = malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
 void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -83,7 +80,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
   
   control->Evolve.tmpBody[iBody].iaTidePerts = malloc(body[iBody].iTidePerts*sizeof(int));
-  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
+  control->Evolve.tmpBody[iBody].daDoblDtEqtide = malloc(control->Evolve.iNumBodies*sizeof(int));
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
@@ -224,8 +221,8 @@ void ReadK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *sy
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dK2 = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -248,7 +245,7 @@ void ReadMaxLockDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be > 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Evolve.dMaxLockDiff[iFile-1] = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -271,7 +268,7 @@ void ReadSyncEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
-        LineExit(files->Infile[iFile-1].cIn,lTmp);	
+        LineExit(files->Infile[iFile-1].cIn,lTmp);
     }
     control->Evolve.dSyncEcc[iFile-1] = dTmp;
     UpdateFoundOption(&files->Infile[iFile-1],options,lTmp,iFile);
@@ -293,8 +290,8 @@ void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
 
     body[iFile-1].dTidalQ = dTmp; 
@@ -351,8 +348,8 @@ void ReadTideModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       control->Evolve.iEqtideModel = CTL;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are p2 or t8.\n",options->cName,cTmp);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are p2 or t8.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
@@ -624,11 +621,11 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     if (options[OPT_TIDALTAU].iLine[iBody+1] >= 0) {
       /* Tidal Tau was also set */
       if (control->Io.iVerbose >= VERBINPUT) 
-	fprintf(stderr,"WARNING: Time lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALTAU].cName,body[iBody+1].dTidalTau,options[OPT_TIDALQ].cName);
+      fprintf(stderr,"WARNING: Time lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALTAU].cName,body[iBody+1].dTidalTau,options[OPT_TIDALQ].cName);
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: Time lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALQ].cName,files->Infile[iBody+1].cIn);
+        fprintf(stderr,"ERROR: Time lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALQ].cName,files->Infile[iBody+1].cIn);
       exit(EXIT_INPUT);
     }
     
@@ -644,59 +641,59 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERCONT].cName,strlen(output[OUT_EQROTPERCONT].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTPERCONT].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTPERCONT].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERDISCRETE].cName,strlen(output[OUT_EQROTPERDISCRETE].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTPERDISCRETE].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTPERDISCRETE].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATECONT].cName,strlen(output[OUT_EQROTRATECONT].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTRATECONT].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTRATECONT].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATEDISCRETE].cName,strlen(output[OUT_EQROTRATEDISCRETE].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTRATEDISCRETE].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_EQROTRATEDISCRETE].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_GAMMAORB].cName,strlen(output[OUT_GAMMAORB].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_GAMMAORB].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_GAMMAORB].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_GAMMAROT].cName,strlen(output[OUT_GAMMAROT].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_GAMMAROT].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_GAMMAROT].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }
       
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_TIDALQ].cName,strlen(output[OUT_TIDALQ].cName)) == 0) {
-	if (control->Io.iVerbose >= VERBINPUT) 
-	  fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_TIDALQ].cName);
-	/* Must find file that declares tidel model */
-	iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        if (control->Io.iVerbose >= VERBINPUT) 
+          fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_TIDALQ].cName);
+        /* Must find file that declares tidel model */
+        iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+        DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
       }      
     }
   }
@@ -778,7 +775,8 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   int iPert,iTideFile,iCol,iFile;
 
   //XXX Is dEccSq set here?
-  if (body[iBody].dEccSq > (2./19) && control->Evolve.bDiscreteRot) {
+  // Body 0 has no orbit parameters see VerifyOrbitEqtide().
+  if (iBody != 0 && body[iBody].dEccSq > (2./19) && control->Evolve.bDiscreteRot) {
     if (control->Io.iVerbose >= VERBINPUT)
       fprintf(stderr,"WARNING: Setting %s to 1 is not advised for eccentricities larger than %.3lf\n",options[OPT_DISCRETEROT].cName,pow(2./19,0.5));
   }
@@ -789,11 +787,11 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     if (options[OPT_TIDALQ].iLine[iBody+1] >= 0) {
       /* Tidal Q was also set */
       if (control->Io.iVerbose >= VERBINPUT) 
-	fprintf(stderr,"WARNING: Phase lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALQ].cName,body[iBody+1].dTidalQ,options[OPT_TIDALTAU].cName);
+        fprintf(stderr,"WARNING: Phase lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALQ].cName,body[iBody+1].dTidalQ,options[OPT_TIDALTAU].cName);
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: Phase lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALTAU].cName,files->Infile[iBody+1].cIn);
+        fprintf(stderr,"ERROR: Phase lag model selected, but only %s was set in file %s.\n",options[OPT_TIDALTAU].cName,files->Infile[iBody+1].cIn);
       exit(EXIT_INPUT);
     }
     
@@ -801,14 +799,14 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     
     if (files->Outfile[iBody].iNumCols > 0) {
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
-	
-	if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_TIDALQ].cName,strlen(output[OUT_TIDALQ].cName)) == 0) {
-	  if (control->Io.iVerbose >= VERBINPUT) 
-	    fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_TIDALQ].cName);
-	  /* Must find file that declares tidel model */
-	  iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
-	  DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
-	}
+        
+        if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_TIDALQ].cName,strlen(output[OUT_TIDALQ].cName)) == 0) {
+          if (control->Io.iVerbose >= VERBINPUT) 
+            fprintf(stderr,"ERROR: Time lag model selected; output %s is not allowed.\n",output[OUT_TIDALQ].cName);
+          /* Must find file that declares tidel model */
+          iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine,files->iNumInputs);
+          DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],options[OPT_OUTPUTORDER].cFile[iBody+1],options[OPT_TIDEMODEL].iLine[iTideFile],options[OPT_OUTPUTORDER].iLine[iBody+1]);
+        }
       }
     }
     /* XXX Should re-"null" the outputs */
@@ -899,50 +897,50 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
     
     if (body[iBody].iTidePerts > 0) {
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	bFound[iPert] = 0;
-	for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
-	  if (iBodyPert != iBody) {
-	    if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
-	      /* This parameter contains the body # of the "iPert-th" 
-		 tidal perturber */
-	      body[iBody].iaTidePerts[iPert]=iBodyPert;
-	      bFound[iPert]=1;
-	    }
-	  }
-	}
+        bFound[iPert] = 0;
+        for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
+          if (iBodyPert != iBody) {
+            if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+              /* This parameter contains the body # of the "iPert-th" 
+                 tidal perturber */
+              body[iBody].iaTidePerts[iPert]=iBodyPert;
+              bFound[iPert]=1;
+            }
+          }
+        }
       }
       
       /* Were all tidal perturbers identified? */
       ok=1;
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	if (bFound[iPert] == 0) {
-	  fprintf(stderr,"ERROR: Unknown tidal perturber to body %s: %s\n",body[iBody].cName,body[iBody].saTidePerts[iPert]);
-	  fprintf(stderr,"\tFile: %s, Line: %d\n",options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_TIDEPERTS].iLine[iBody+1]);
-	  ok=0;
-	}
+        if (bFound[iPert] == 0) {
+          fprintf(stderr,"ERROR: Unknown tidal perturber to body %s: %s\n",body[iBody].cName,body[iBody].saTidePerts[iPert]);
+          fprintf(stderr,"\tFile: %s, Line: %d\n",options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_TIDEPERTS].iLine[iBody+1]);
+          ok=0;
+        }
       }
       
       /* Was the same perturber listed multiple times? */
       
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	for (iBodyPert=iPert+1;iBodyPert<body[iBody].iTidePerts;iBodyPert++) {
-	  if (body[iBody].iaTidePerts[iPert] == body[iBody].iaTidePerts[iBodyPert]) {
-	    fprintf(stderr,"ERROR: Body %s listed mulitple times to argument %s.\n",body[iBody].saTidePerts[iPert],options[OPT_TIDEPERTS].cName);
-	    fprintf(stderr,"\tFile: %s, Line: %d\n",options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_TIDEPERTS].iLine[iBody+1]);
-	    ok=0;
-	  }
-	}
+        for (iBodyPert=iPert+1;iBodyPert<body[iBody].iTidePerts;iBodyPert++) {
+          if (body[iBody].iaTidePerts[iPert] == body[iBody].iaTidePerts[iBodyPert]) {
+            fprintf(stderr,"ERROR: Body %s listed mulitple times to argument %s.\n",body[iBody].saTidePerts[iPert],options[OPT_TIDEPERTS].cName);
+            fprintf(stderr,"\tFile: %s, Line: %d\n",options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_TIDEPERTS].iLine[iBody+1]);
+            ok=0;
+          }
+        }
       }
       
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
         if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
-	  fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
-	  ok=0;
+          fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
+          ok=0;
         }
       }
       
       if (!ok)
-	exit(EXIT_INPUT);
+        exit(EXIT_INPUT);
     }
   }
 
@@ -952,15 +950,15 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
     ok=0;
     for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
       for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
-	if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
-	  /* Match */
-	  ok=1;
+        if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
+          /* Match */
+          ok=1;
       }
       if (!ok) {
-	fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
-	fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
-	fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
-	exit(EXIT_INPUT);
+        fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
+        fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
+        fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
+        exit(EXIT_INPUT);
       }
     }
   }
@@ -973,14 +971,15 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iBody == 0) {
       /* Orbital parameters cannot be input for the central body */
       if (options[OPT_ORBECC].iLine[iBody+1] > -1) {
-	fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBECC].cName);
-	LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBECC].iLine[iBody+1]);
+        fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBECC].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBECC].iLine[iBody+1]);
       }
       if (options[OPT_ORBSEMI].iLine[iBody+1] > -1) {
-	fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBSEMI].cName);
-	LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
+        fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBSEMI].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
     } else {
+      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
       CalcHK(body,iBody);
     }
   }
@@ -1011,8 +1010,8 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
     if (control->Io.iVerbose > VERBERR) {
       fprintf(stderr,"ERROR: Option %s set multiple times.\n",options[OPT_TIDEMODEL].cName);
       for (iFile=0;iFile<files->iNumInputs;iFile++) {
-	if (options[OPT_TIDEMODEL].iLine[iFile] >= 0)
-	  fprintf(stderr,"\tFile %s, Line: %d\n",files->Infile[0].cIn,options[OPT_TIDEMODEL].iLine[iFile]);
+        if (options[OPT_TIDEMODEL].iLine[iFile] >= 0)
+          fprintf(stderr,"\tFile %s, Line: %d\n",files->Infile[0].cIn,options[OPT_TIDEMODEL].iLine[iFile]);
       }
     }
     exit(EXIT_INPUT);
@@ -1281,7 +1280,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
   else if (control->Evolve.iEqtideModel == CTL) 
     *dTmp = fdCTLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq,body[iBody].dObliquity,body[iBody].dRotRate);
-		 
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -2247,9 +2246,9 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule)
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
        change this later so the dominant perturber can lock it? */
       if (iBody > 0)
-	iOrbiter = iBody;
+        iOrbiter = iBody;
       else
-	iOrbiter = body[iBody].iaTidePerts[0];
+        iOrbiter = body[iBody].iaTidePerts[0];
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody]) 
@@ -2413,7 +2412,7 @@ double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
   dSum = body[iaBody[1]].dTidalZ[iaBody[0]]*(2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][0] - 49./2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][1] + 0.5*body[iaBody[1]].iTidalEpsilon[iaBody[0]][2] + 3*body[iaBody[1]].iTidalEpsilon[iaBody[0]][5]);
 
   // Contribution from Orbiter
-  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(2*body[iaBody[0]].iTidalEpsilon[iaBody[0]][0] - 49./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] + 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]);
+  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] - 49./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] + 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]);
   
   return  -body[iaBody[0]].dSemi*sqrt(body[iaBody[0]].dEccSq)/(8*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }

@@ -8,6 +8,6 @@ You can override the defaults in `vplot/default.py` with custom values below.
 
 '''
 
-legend_all = False
+legend_all = True
 tight_layout = True
-legend_loc = 'upper right'
+legend_loc = 'best'

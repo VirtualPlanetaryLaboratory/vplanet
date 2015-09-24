@@ -18,6 +18,7 @@ dSemi           0.0721			# Semi-major axis, negative -> AU
 dInc		3
 dLongA		33
 dLongP		100
+sOrbitModel rd4
 
 # DISTROT Parameters
 dPrecA		255

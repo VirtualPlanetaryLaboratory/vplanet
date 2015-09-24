@@ -24,7 +24,7 @@
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
-#define dS0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
+#define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units: Calculations are done in SI */
 
 #define cLIGHT        299792458.0 
@@ -125,8 +125,6 @@
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
 
-#define S0            0//0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
-
 // ATMESC
 #define VSURFACEWATERMASS  1202
 
@@ -195,7 +193,10 @@ typedef struct {
   double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
+  int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
+  int *iaEigFreqs;       /**< Indices of eigenfrequencies */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
+  int iDistOrbModel; 
   
   /* DISTROT parameters */
   int bDistRot;
@@ -223,6 +224,8 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
   double dDeccDtEqtide;  /**< Eccentricity time rate of change */
   double *daDoblDtEqtide;  /**< Obliquity time rate of change */
+  // XXX dRotRateDtEqtide???, dSemiDtEqtide?
+
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */
@@ -405,6 +408,11 @@ typedef struct {
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
   double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
   double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
+  double **dmEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange solution */
+  double **dmEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange solution */
+  double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
+  double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
+  double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
   
   double dTotEnInit;     /**< System's Initial Energy */
 
@@ -427,7 +435,7 @@ typedef struct {
       with a Type 0 variable must account for  the evolution with 
       dTimeStep. 
   */
-  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar quantity with time derivative) */
+  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar/sinusoidal quantity with time derivative, 3 = sinusoidal quantity with explicit function of age) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
@@ -663,6 +671,9 @@ typedef struct {
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */
   int dMinTCore;     /**< Halt at this TCore */
+  
+  /* DISTORB */
+  int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
 
 } HALT;
 
@@ -724,6 +735,9 @@ typedef struct {
   /* RADHEAT */
   /* Nothing? */
 
+  /* DISTORB */
+  int iDistOrbModel;
+  
   fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
   fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */

@@ -39,10 +39,7 @@ void InitializeBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody,
 }
 
 void InitializeUpdateTmpBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  int iBodyPert;
-  
   control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-
 }
 
 /**************** DISTORB options ********************/

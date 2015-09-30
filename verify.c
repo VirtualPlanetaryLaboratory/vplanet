@@ -128,6 +128,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   if (dSemi > 0)
     body[iBody].dSemi = dSemi;
 
+  if (dMeanMotion == 0)
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   //XXX Initialize central body parameters.
 }
 

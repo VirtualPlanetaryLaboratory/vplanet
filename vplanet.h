@@ -180,6 +180,7 @@ typedef struct {
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
   double dMeanA;         /**< Mean anomaly (currently only used for inv plane calculation) */
+  double dTrueL;         /**< True longitude (currently only used for insolation calculation */
   double dEccA;          /**< Eccentric anomaly (currently only used for inv plane calculation) */
   double *dCartPos;      /**< Cartesian position of body (currently only used for inv plane calculation) */
   double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
@@ -362,7 +363,32 @@ typedef struct {
   /* CLIMA Parameters */
   double dArgonPressure;
   double dClimaZenithAngle;
-
+  
+  /* POISE parameters */
+  int iNumLats;              /**< Number of latitude cells */
+  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  double *daLats;            /**< Latitude of each cell (centered) */
+  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
+  double dAstroDist;         /**< Distance between primary and planet */
+  double *daInsol;           /**< Daily insolation at each latitude */
+  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
+  double *daTemp;            /**< Surface temperature in each cell */
+  double dTGlobal;           /**< Global mean temperature at surface */
+  double *daTGrad;           /**< Gradient of temperature (meridional) */
+  double *daAlbedo;          /**< Albedo of each cell */
+  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
+  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
+  double dDiffCoeff;         /**< Diffusion coefficient set by user */
+  double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */
+  double *daFlux;            /**< Meridional surface heat flux */
+  double *daFluxIn;          /**< Incoming surface flux (insolation) */
+  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double *daDivFlux;         /**< Divergence of surface flux */
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

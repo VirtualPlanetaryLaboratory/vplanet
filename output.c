@@ -1086,6 +1086,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
+  InitializeOutputPoise(output,fnWrite);
 
 }
 

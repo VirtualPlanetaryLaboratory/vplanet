@@ -97,6 +97,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     iNumModules++;
   if (body[iBody].bStellar)
     iNumModules++;
+  if (body[iBody].bPoise)
+    iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
   module->iaModule[iBody] = malloc(iNumModules*sizeof(int));
@@ -207,6 +209,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleStellar(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = STELLAR;
   }
+  if (body[iBody].bPoise) {
+    AddModulePoise(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = POISE;
+  }
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iFile){
@@ -245,6 +251,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	      body[iFile-1].bAtmEsc = 1;
 	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
 	      body[iFile-1].bStellar = 1;
+	    } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
+	      body[iFile-1].bPoise = 1;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -269,6 +277,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bDistRot = 0;
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bPoise = 0;
   }
 }
 

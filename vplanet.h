@@ -16,7 +16,7 @@
 #define STELLAR       5
 #define DYNAMO        6
 #define THERMINT      7
-#define EBM           8
+#define POISE         8
 
 /* Fundamental constants */
 
@@ -388,6 +388,7 @@ typedef struct {
   double dClimaZenithAngle;
   
   /* POISE parameters */
+  int bPoise;                /**< Apply POISE module? */
   int iNumLats;              /**< Number of latitude cells */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
@@ -1086,6 +1087,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"
+#include "poise.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

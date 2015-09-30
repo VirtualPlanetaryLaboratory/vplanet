@@ -2647,6 +2647,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsThermint(options,fnRead);
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
+  InitializeOptionsPoise(options,fnRead);
 
 }
  

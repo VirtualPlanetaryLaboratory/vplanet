@@ -55,6 +55,11 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
+  module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -87,6 +92,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat)
     iNumModules++;
   if (body[iBody].bThermint)
+    iNumModules++;
+  if (body[iBody].bAtmEsc)
+    iNumModules++;
+  if (body[iBody].bStellar)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -131,6 +140,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
   
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -154,9 +167,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
-    
+    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
-    }
+  }
 
   /************************
    * ADD NEW MODULES HERE *
@@ -182,6 +198,14 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bThermint) {
       AddModuleThermint(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = THERMINT;
+  }
+  if (body[iBody].bAtmEsc) {
+    AddModuleAtmEsc(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = ATMESC;
+  }
+  if (body[iBody].bStellar) {
+    AddModuleStellar(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = STELLAR;
   }
 }
 
@@ -216,7 +240,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
         body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-        body[iFile-1].bThermint = 1;
+	      body[iFile-1].bThermint = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
+	      body[iFile-1].bAtmEsc = 1;
+	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
+	      body[iFile-1].bStellar = 1;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);

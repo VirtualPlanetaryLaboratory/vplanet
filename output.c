@@ -966,7 +966,6 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-
     }
     /* Log modules */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
@@ -1082,6 +1081,8 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
+  InitializeOutputAtmEsc(output,fnWrite);
+  InitializeOutputStellar(output,fnWrite);
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);

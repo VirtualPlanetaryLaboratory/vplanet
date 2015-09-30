@@ -28,8 +28,10 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     control->fnForceBehavior[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnForceBehaviorModule));
+
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
       module->fnInitializeControl[iBody][iModule](control);
+    
   }
 }
 

@@ -2153,7 +2153,7 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
 
   /* Initialize module control */
   InitializeControl(control,module);
-
+  
   /* Initialize halts XXX Done in verify 
      InitializeHalt(control,module); */
 
@@ -2645,6 +2645,8 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsDistOrb(options,fnRead);
   InitializeOptionsDistRot(options,fnRead);
   InitializeOptionsThermint(options,fnRead);
+  InitializeOptionsAtmEsc(options,fnRead);
+  InitializeOptionsStellar(options,fnRead);
 
 }
  

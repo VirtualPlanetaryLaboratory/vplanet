@@ -1,0 +1,24 @@
+# Planet b parameters
+sName         b                           # Body's name
+saModules     atmesc                     # Modules to apply, exact spelling required
+
+# Physical Properties
+dMass         -10.0                       # Mass, negative -> Earth masses
+dRadius       -2.5                        # Radius, negative -> Earth radii
+dRotPeriod    -30                         # Rotation period, negative -> days
+dObliquity    45.5      
+dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)
+
+# ATMESC Properties
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
+bHaltSurfaceDesiccated    0               # Halt when dry?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+
+# Orbital Properties
+dSemi         0.06721                     # Semi-major axis, negative -> AU
+dEcc          0.0                        # Eccentricity
+
+# Output
+#saOutputOrder Time -SurfWaterMass

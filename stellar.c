@@ -169,11 +169,22 @@ void ReadOptionsStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /******************* Verify STELLAR ******************/
 
 void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
+  
+  // DEPRECATED! Let's get rid of this...
+  
+}
+
+void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+  update[iBody].iaType[update[iBody].iRot][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iRot][0] = 1;
+  update[iBody].iaBody[update[iBody].iRot][0] = malloc(update[iBody].iNumBodies[update[iBody].iRot][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRot][0][0] = iBody;
+
+  update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][0];
+  fnUpdate[iBody][update[iBody].iRot][0] = &fdDRotRateDt; 
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-
 
   // Assign luminosity
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -195,7 +206,6 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
 }
 
 void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-
 
   // Assign radius
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -268,6 +278,8 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   }
   VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
   
+  VerifyRotRate(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dTemperature for body %d!", iBody);
@@ -289,17 +301,26 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {  
   if (body[iBody].dLuminosity > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumLuminosity == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
   }
   
   if (body[iBody].dRadius > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumRadius == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumRadius++;
+  }
+
+  if ((body[iBody].dRotRate > 0) || (body[iBody].dRotPer > 0) || (body[iBody].dRotVel > 0)) {
+    if (update[iBody].iNumRot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumRot++;
   }
   
   if (body[iBody].dTemperature > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumTemperature == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumTemperature++;
   }
 }
@@ -318,16 +339,17 @@ void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int
   update[iBody].iNumRadius = (*iEqn)++;
 }
 
+void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iNumRot = (*iEqn)++;
+}
+
 void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iNumTemperature = (*iEqn)++;
 }
  
 void FinalizeUpdateOblStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
-  /* Nothing */
-}
-
-void FinalizeUpdateRotStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
   /* Nothing */
 }
 
@@ -482,6 +504,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
   module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
+  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionStellar;
@@ -503,6 +526,25 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dRadius;
+}
+
+double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
+  double dRadMinus, dRadPlus, dDRadiusDt;
+  
+  // Delta t = 10 years. TODO: Check this.
+  double eps = 10 * YEARDAY * DAYSEC;
+  
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE) {
+    return 0.;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    // Compute a very simple derivative. NOTE: This won't work if variables like the
+    // stellar mass are changing, too! Perhaps it's better to keep track of the previous
+    // values of the radius and compute the derivative from those? TODO: Check this.
+    dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
+    dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
+    dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
+    return -2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
+  }
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {

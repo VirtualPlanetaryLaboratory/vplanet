@@ -638,6 +638,8 @@ typedef struct {
   double *pdLuminosityStellar;
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
+  
+  double *pdRotRateStellar;
 
 } UPDATE;
 

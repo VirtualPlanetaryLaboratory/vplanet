@@ -1,6 +1,6 @@
 # The host star, Gl 581
 sName		star		# Body's name
-saModules	eqtide		# Modules to apply, exact spelling required
+saModules	eqtide stellar		# Modules to apply, exact spelling required
 
 # Physical Parameters
 dMass		0.31		# Mass, negative -> Earth masses
@@ -27,4 +27,4 @@ saTidePerts	c d		# Body name(s) of tidal perturbers
 
 #iSciNot		12		# Decade to switch between normal/scientific notation
 
-#saOutputOrder	Time ImK2 deltatime
+saOutputOrder	Time -RotPer

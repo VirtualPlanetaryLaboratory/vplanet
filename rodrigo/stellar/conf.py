@@ -4,10 +4,11 @@
 conf.py
 -------
 
-You can override the defaults in `vplot/default.py` with custom values below.
+This is an automatically generated VPLOT config file. You can override the 
+defaults in `vplot/default.py` by setting custom values below.
 
 '''
 
-legend_all = True
+legend_all = False
 tight_layout = True
 legend_loc = 'best'

@@ -301,22 +301,26 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {  
   if (body[iBody].dLuminosity > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumLuminosity == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
   }
   
   if (body[iBody].dRadius > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumRadius == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumRadius++;
   }
 
   if ((body[iBody].dRotRate > 0) || (body[iBody].dRotPer > 0) || (body[iBody].dRotVel > 0)) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumRot == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumRot++;
   }
   
   if (body[iBody].dTemperature > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumTemperature == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumTemperature++;
   }
 }

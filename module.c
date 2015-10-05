@@ -269,6 +269,8 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bDistRot = 0;
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bAtmEsc = 0;
   }
 }
 

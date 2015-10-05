@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         a                           # Body's name
-saModules     atmesc               # Modules to apply, exact spelling required
+saModules     atmesc eqtide              # Modules to apply, exact spelling required
 
 # Physical Properties
 dMass         -5.5                        # Mass, negative -> Earth masses
@@ -20,7 +20,7 @@ dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water cont
 dSemi         0.03721                     # Semi-major axis, negative -> AU
 dEcc          0.0                        # Eccentricity
 
-#saTidePerts star
+saTidePerts star
 
 # Output
 #saOutputOrder Time -SurfWaterMass

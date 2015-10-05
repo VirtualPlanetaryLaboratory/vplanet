@@ -241,7 +241,8 @@ void InitializeModuleAtmEsc(CONTROL *control,MODULE *module) {
 
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
   if (body[iBody].dSurfaceWaterMass > 0) {
-    update[iBody].iNumVars++;
+    if (update[iBody].iNumSurfaceWaterMass == 0)
+      update[iBody].iNumVars++;
     update[iBody].iNumSurfaceWaterMass++;
   }
 }

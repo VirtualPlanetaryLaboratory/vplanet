@@ -1,6 +1,6 @@
 # The host star, Gl 581
 sName	        star		                    # Body's name
-saModules	    stellar eqtide                     # Modules to apply, exact spelling required
+saModules	    eqtide stellar              # Modules to apply, exact spelling required
 
 # Output
 saOutputOrder Time -Luminosity -Radius -RotRate -RotPer
@@ -18,4 +18,4 @@ sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or
 #dTemperature 3000                        # Stellar temperature in K (ignored when `sStellarModel` is set)
 #dLuminosity  -0.01                       # Stellar luminosity in LSUN (ignored when `sStellarModel` is set)
 
-#saTidePerts a
+saTidePerts a

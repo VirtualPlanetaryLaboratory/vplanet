@@ -1076,7 +1076,8 @@ void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       body[iFile-1].dAge = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
 }
 
 /*
@@ -1303,7 +1304,8 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
     
 }
 
@@ -1690,8 +1692,7 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     }
     body[iFile-1].dMeanMotion = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dMeanMotion,files->iNumInputs);
+  }
 }
 
 /* Minimum Value */
@@ -1911,7 +1912,8 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dOrbPeriod = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
 }
 
 /* Precession parameter */
@@ -2034,7 +2036,8 @@ void ReadRotRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
         fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);  
     }
-    body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
+    if (iFile > 0)
+      body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
 }
@@ -2106,7 +2109,8 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       body[iFile-1].dSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
 

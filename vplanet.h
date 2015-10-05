@@ -632,6 +632,8 @@ typedef struct {
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
   int iTemperature;
   int iNumTemperature;
+
+  int iRotStellar;           /**< iEqn number for the evolution of rotation in STELLAR */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       function that returns these variables due to STELLAR evolution. */

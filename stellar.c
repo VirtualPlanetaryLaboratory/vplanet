@@ -175,13 +175,13 @@ void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFi
 }
 
 void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-  update[iBody].iaType[update[iBody].iRot][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iRot][0] = 1;
-  update[iBody].iaBody[update[iBody].iRot][0] = malloc(update[iBody].iNumBodies[update[iBody].iRot][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iRot][0][0] = iBody;
+  update[iBody].iaType[update[iBody].iRot][update[iBody].iRotStellar] = 1;
+  update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar] = 1;
+  update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar] = malloc(update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar][0] = iBody;
 
-  update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][0];
-  fnUpdate[iBody][update[iBody].iRot][0] = &fdDRotRateDt; 
+  update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
+  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt; 
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -315,8 +315,8 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
   if ((body[iBody].dRotRate > 0) || (body[iBody].dRotPer > 0) || (body[iBody].dRotVel > 0)) {
     if (update[iBody].iNumRot == 0)
       update[iBody].iNumVars++;
-    update[iBody].iNumRot++;
   }
+  update[iBody].iNumRot++;
   
   if (body[iBody].dTemperature > 0) {
     if (update[iBody].iNumTemperature == 0)
@@ -341,7 +341,7 @@ void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int
 
 void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
-  update[iBody].iNumRot = (*iEqn)++;
+  update[iBody].iRotStellar = (*iEqn)++;
 }
 
 void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {

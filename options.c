@@ -1076,7 +1076,8 @@ void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       body[iFile-1].dAge = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
 }
 
 /*

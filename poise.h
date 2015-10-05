@@ -61,6 +61,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 
 #define OUT_TGLOBAL          1801 
 
+void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
+
 void HelpOutputPoise(OUTPUT*);
 void InitializeOutputPoise(OUTPUT*,fnWriteOutput[]);
 

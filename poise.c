@@ -659,7 +659,7 @@ void TempGradient(BODY *body, double delta_x, int iBody) {
 void PoiseClimate(BODY *body, int iBody) {
   double delta_t, delta_x, xboundary, Tchange, tmpTglobal;
   double *lambda, **M, **Mcopy, **Mdiff, **invM,  *SourceF, *TempTerms, *tmpTemp, *tmpTempTerms, *Dmidpt; 
-  int Nmax, i, j, n;
+  int Nmax, i, j, n, k;
   
   /* Get cuurent climate parameters */
   Albedo(body, iBody);
@@ -683,7 +683,7 @@ void PoiseClimate(BODY *body, int iBody) {
   /* Setup matrices, source function, temperature terms, global mean */
   for (i=0;i<body[iBody].iNumLats+1;i++) {
     xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
-    lambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(delta_x);
+    lambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
   }
   
   body[iBody].dTGlobal = 0.0;
@@ -698,18 +698,22 @@ void PoiseClimate(BODY *body, int iBody) {
       if (j==i) {
         M[i][j] = (-body[iBody].dPlanckB-lambda[i+1]-lambda[i])/body[iBody].dHeatCapAnn;
         Mdiff[i][j] = (-lambda[i+1]-lambda[i]);
+        Mcopy[i][j] = -1.0/delta_t;
       } else if (j==(i+1)) {
         M[i][j] = lambda[j]/body[iBody].dHeatCapAnn;
         Mdiff[i][j] = lambda[j];
+        Mcopy[i][j] = 0.0;
       } else if (j==(i-1)) {
         M[i][j] = lambda[i]/body[iBody].dHeatCapAnn;
         Mdiff[i][j] = lambda[i];
+        Mcopy[i][j] = 0.0;
       } else {
         M[i][j] = 0.0;
         Mdiff[i][j] = 0.0;
+        Mcopy[i][j] = 0.0;
       }
-      Mcopy[i][j] = M[i][j];
-      TempTerms[i] += M[i][j]*body[iBody].daTemp[i];
+      Mcopy[i][j] += 0.5*M[i][j];
+      TempTerms[i] += M[i][j]*body[iBody].daTemp[j];
     }
     SourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
@@ -718,23 +722,23 @@ void PoiseClimate(BODY *body, int iBody) {
   }
   
   MatrixInvert(Mcopy, invM, body[iBody].iNumLats);
-  
+    
   /* Relaxation to equilibrium */
   n = 1;
   Tchange = 1.0;
   while (fabs(Tchange) > 1e-12) {
+    tmpTglobal = 0.0;
     for (i=0;i<body[iBody].iNumLats;i++) {
       tmpTemp[i] = 0.0;
       tmpTempTerms[i] = SourceF[i];
-      tmpTglobal = 0.0;
       
       for (j=0;j<body[iBody].iNumLats;j++) {
         tmpTemp[i] += -invM[i][j]*(0.5*(TempTerms[j]+SourceF[j])+body[iBody].daTemp[j]/delta_t);
         tmpTempTerms[i] += M[i][j]*body[iBody].daTemp[j];
       }
-      tmpTglobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
-      Tchange = tmpTglobal - body[iBody].dTGlobal;
+      tmpTglobal += tmpTemp[i]/body[iBody].iNumLats;
     }
+    Tchange = tmpTglobal - body[iBody].dTGlobal;
     
     /* Update albedo, source function, temperature, temperature terms, and global mean */
     Albedo(body,iBody);

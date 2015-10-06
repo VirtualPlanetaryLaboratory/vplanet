@@ -768,6 +768,7 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
+  // XXX Looks like issues here -- maybe from Peter?
     if (options[OPT_40KMASSMAN].iLine[iBody+1] >= 0) {
       //  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
       //      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
@@ -907,73 +908,96 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
 void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign40KNum(body,options,dAge,iBody);
   /* Mantle */
-  update[iBody].iaType[update[iBody].i40KMan][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i40KMan][0]=1;
-  update[iBody].iaBody[update[iBody].i40KMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
-  update[iBody].iaBody[update[iBody].i40KMan][0][0]=iBody;
-  update[iBody].pdD40KNumManDt = &update[iBody].daDerivProc[update[iBody].i40KMan][0];
-  fnUpdate[iBody][update[iBody].i40KMan][0] = &fdD40KNumManDt;
+  if (update[iBody].i40KMan >= 0) {
+    update[iBody].iaType[update[iBody].i40KMan][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i40KMan][0]=1;
+    update[iBody].iaBody[update[iBody].i40KMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
+    update[iBody].iaBody[update[iBody].i40KMan][0][0]=iBody;
+    update[iBody].pdD40KNumManDt = &update[iBody].daDerivProc[update[iBody].i40KMan][0];
+    fnUpdate[iBody][update[iBody].i40KMan][0] = &fdD40KNumManDt;
+  }
+
   /* Core */
-  update[iBody].iaType[update[iBody].i40KCore][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i40KCore][0]=1;
-  update[iBody].iaBody[update[iBody].i40KCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KCore][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i40KCore][0][0]=iBody;
-  update[iBody].pdD40KNumCoreDt = &update[iBody].daDerivProc[update[iBody].i40KCore][0];
-  fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
+  if (update[iBody].i40KCore >= 0) {
+    update[iBody].iaType[update[iBody].i40KCore][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i40KCore][0]=1;
+    update[iBody].iaBody[update[iBody].i40KCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KCore][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i40KCore][0][0]=iBody;
+    update[iBody].pdD40KNumCoreDt = &update[iBody].daDerivProc[update[iBody].i40KCore][0];
+    fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
+  }
 }
 
 void Verify232Th(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign232ThNum(body,options,dAge,iBody);
+
   /* Mantle */
-  update[iBody].iaType[update[iBody].i232ThMan][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i232ThMan][0]=1;
-  update[iBody].iaBody[update[iBody].i232ThMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThMan][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i232ThMan][0][0]=iBody;
-  update[iBody].pdD232ThNumManDt = &update[iBody].daDerivProc[update[iBody].i232ThMan][0];
-  fnUpdate[iBody][update[iBody].i232ThMan][0] = &fdD232ThNumManDt;
+  if (update[iBody].i232ThMan >= 0) {
+    update[iBody].iaType[update[iBody].i232ThMan][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i232ThMan][0]=1;
+    update[iBody].iaBody[update[iBody].i232ThMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThMan][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i232ThMan][0][0]=iBody;
+    update[iBody].pdD232ThNumManDt = &update[iBody].daDerivProc[update[iBody].i232ThMan][0];
+    fnUpdate[iBody][update[iBody].i232ThMan][0] = &fdD232ThNumManDt;
+  }
+
   /* Core */
-  update[iBody].iaType[update[iBody].i232ThCore][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i232ThCore][0]=1;
-  update[iBody].iaBody[update[iBody].i232ThCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCore][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i232ThCore][0][0]=iBody;
-  update[iBody].pdD232ThNumCoreDt = &update[iBody].daDerivProc[update[iBody].i232ThCore][0];
-  fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
+  if (update[iBody].i232ThMan >= 0) {
+    update[iBody].iaType[update[iBody].i232ThCore][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i232ThCore][0]=1;
+    update[iBody].iaBody[update[iBody].i232ThCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCore][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i232ThCore][0][0]=iBody;
+    update[iBody].pdD232ThNumCoreDt = &update[iBody].daDerivProc[update[iBody].i232ThCore][0];
+    fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
+  }
 }
 
 void Verify238U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign238UNum(body,options,dAge,iBody);
   /* Mantle */
-  update[iBody].iaType[update[iBody].i238UMan][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i238UMan][0]=1;
-  update[iBody].iaBody[update[iBody].i238UMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UMan][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i238UMan][0][0]=iBody;
-  update[iBody].pdD238UNumManDt = &update[iBody].daDerivProc[update[iBody].i238UMan][0];
-  fnUpdate[iBody][update[iBody].i238UMan][0] = &fdD238UNumManDt;
+
+  if (update[iBody].i238UMan >= 0) {
+    update[iBody].iaType[update[iBody].i238UMan][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i238UMan][0]=1;
+    update[iBody].iaBody[update[iBody].i238UMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UMan][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i238UMan][0][0]=iBody;
+    update[iBody].pdD238UNumManDt = &update[iBody].daDerivProc[update[iBody].i238UMan][0];
+    fnUpdate[iBody][update[iBody].i238UMan][0] = &fdD238UNumManDt;
+  }
+
   /* Core */
-  update[iBody].iaType[update[iBody].i238UCore][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i238UCore][0]=1;
-  update[iBody].iaBody[update[iBody].i238UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UCore][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i238UCore][0][0]=iBody;
-  update[iBody].pdD238UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i238UCore][0];
-  fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
+  if (update[iBody].i238UCore >= 0) {
+    update[iBody].iaType[update[iBody].i238UCore][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i238UCore][0]=1;
+    update[iBody].iaBody[update[iBody].i238UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UCore][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i238UCore][0][0]=iBody;
+    update[iBody].pdD238UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i238UCore][0];
+    fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
+  }
 }
 
 void Verify235U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) { //PED
   Assign235UNum(body,options,dAge,iBody);
+
   /* Mantle */
-  update[iBody].iaType[update[iBody].i235UMan][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i235UMan][0]=1;
-  update[iBody].iaBody[update[iBody].i235UMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UMan][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i235UMan][0][0]=iBody;
-  update[iBody].pdD235UNumManDt = &update[iBody].daDerivProc[update[iBody].i235UMan][0];
-  fnUpdate[iBody][update[iBody].i235UMan][0] = &fdD235UNumManDt;
+  if (update[iBody].i235UMan >= 0) {
+    update[iBody].iaType[update[iBody].i235UMan][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i235UMan][0]=1;
+    update[iBody].iaBody[update[iBody].i235UMan][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UMan][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i235UMan][0][0]=iBody;
+    update[iBody].pdD235UNumManDt = &update[iBody].daDerivProc[update[iBody].i235UMan][0];
+    fnUpdate[iBody][update[iBody].i235UMan][0] = &fdD235UNumManDt;
+  }
+
   /* Core */
-  update[iBody].iaType[update[iBody].i235UCore][0] = 1;
-  update[iBody].iNumBodies[update[iBody].i235UCore][0]=1;
-  update[iBody].iaBody[update[iBody].i235UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCore][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].i235UCore][0][0]=iBody;
-  update[iBody].pdD235UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i235UCore][0];
-  fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
+  if (update[iBody].i235UCore >= 0) {
+    update[iBody].iaType[update[iBody].i235UCore][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i235UCore][0]=1;
+    update[iBody].iaBody[update[iBody].i235UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCore][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i235UCore][0][0]=iBody;
+    update[iBody].pdD235UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i235UCore][0];
+    fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
+  }
 }
 
 /*
@@ -1014,42 +1038,69 @@ void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModu
 }
 
 void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int bRadheat=0;
 
   /* Cannot set 2 or more of Power, Mass and Number for any isotope */
   /* XXX Need a VerifyOneOfThree subroutine */
   /* Radheat is active for this body if this subroutine is called. */
 
-  if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0 ||
-      body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
-    NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody+1);
-    Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
-    bRadheat = 1;
+  if (body[iBody].d40KNumMan == 0 && body[iBody].d40KMassMan == 0 && body[iBody].d40KPowerMan == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 40KMan option provided.\n");
+    exit(EXIT_INPUT);
   }
 
-  if (body[iBody].d232ThNumMan > 0 || body[iBody].d232ThMassMan > 0 || body[iBody].d232ThPowerMan > 0 ||
-      body[iBody].d232ThNumCore > 0 || body[iBody].d232ThMassCore > 0 || body[iBody].d232ThPowerCore > 0) {
-    NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iBody+1);
-    Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    bRadheat = 1;
+  if (body[iBody].d40KNumCore == 0 && body[iBody].d40KMassCore == 0 && body[iBody].d40KPowerCore == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 40KCore option provided.\n");
+    exit(EXIT_INPUT);
   }
 
-  if (body[iBody].d238UNumMan > 0 || body[iBody].d238UMassMan > 0 || body[iBody].d238UPowerMan > 0 ||
-      body[iBody].d238UNumCore > 0 || body[iBody].d238UMassCore > 0 || body[iBody].d238UPowerCore > 0) {
-      NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iBody+1);
-      Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      bRadheat = 1;
+  // 40K set properly
+  NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody+1);
+  Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
+
+  // 232Th
+  if (body[iBody].d232ThNumMan == 0 && body[iBody].d232ThMassMan == 0 && body[iBody].d232ThPowerMan == 0){
+    fprintf(stderr,"ERROR: Radheat called, but no 232ThMan option provided.\n");
+    exit(EXIT_INPUT);
   }
 
-  if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0 ||
-      body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {  //PED
-      NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iBody+1);
-      Verify235U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      bRadheat = 1;
+  if (body[iBody].d232ThNumCore == 0 && body[iBody].d232ThMassCore == 0 && body[iBody].d232ThPowerCore == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 232ThCore option provided.\n");
+    exit(EXIT_INPUT);
   }
 
-  if (!bRadheat && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: RADHEAT called for body %s, but no radiogenic species present.\n",body[iBody].cName);
+  // 232Th set corectly
+  NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iBody+1);
+  Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+
+  // 238U
+  if (body[iBody].d238UNumMan == 0 && body[iBody].d238UMassMan == 0 && body[iBody].d238UPowerMan == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 238UMan option provided.\n");
+    exit(EXIT_INPUT);
+  }
+
+  if (body[iBody].d238UNumCore == 0 && body[iBody].d238UMassCore == 0 && body[iBody].d238UPowerCore == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 238UCore option provided.\n");
+    exit(EXIT_INPUT);
+  }
+
+  // 238U set correctly
+  NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iBody+1);
+  Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+
+  // 235U
+  if (body[iBody].d235UNumMan == 0 && body[iBody].d235UMassMan == 0 && body[iBody].d235UPowerMan == 0) {
+    fprintf(stderr,"ERROR: Radheat called, but no 238UMan option provided.\n");
+    exit(EXIT_INPUT);
+  }
+
+  if (body[iBody].d235UNumCore == 0 && body[iBody].d235UMassCore == 0 && body[iBody].d235UPowerCore == 0) {  //PED
+    fprintf(stderr,"ERROR: Radheat called, but no 238UCore option provided.\n");
+    exit(EXIT_INPUT);
+  }
+
+  // 235U set correctly
+  NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iBody+1);
+  Verify235U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
   control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxRadheat;

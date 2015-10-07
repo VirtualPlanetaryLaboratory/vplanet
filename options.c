@@ -1303,9 +1303,10 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
-    
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
+  }
 }
 
 /*
@@ -1691,8 +1692,10 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     }
     body[iFile-1].dMeanMotion = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dMeanMotion,files->iNumInputs);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dMeanMotion,files->iNumInputs);
+  }
 }
 
 /* Minimum Value */
@@ -1911,8 +1914,10 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dOrbPeriod = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
+  } else {
+    if (iFile > 0) 
+      AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
+    }
 }
 
 /* Precession parameter */
@@ -2106,8 +2111,10 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     else 
       body[iFile-1].dSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
+  }
 }
 
 

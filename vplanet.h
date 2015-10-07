@@ -403,6 +403,7 @@ typedef struct {
   double dTGlobal;           /**< Global mean temperature at surface */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
   double *daAlbedo;          /**< Albedo of each cell */
+  double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dHeatCapAnn;        /**< Surface heat capacity in annual model */
@@ -412,7 +413,6 @@ typedef struct {
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
   double *daDivFlux;         /**< Divergence of surface flux */
-  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -880,9 +880,10 @@ typedef struct {
 
 /* Some output variables must combine output from different modules.
  * These functions do that combining. */
-
+ 
 typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
 
+/* SPOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
 typedef struct {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
@@ -892,6 +893,21 @@ typedef struct {
   double dNeg;           /**< Conversion Factor for Negative Option */
   int iNum;              /**< Number of Columns for Output */
 
+  /* Now add vector output functions */
+  fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
+
+} GRIDOUTPUT; 
+ 
+typedef struct {
+  char cName[OPTLEN];    /**< Output Name */
+  char cDescr[LINE];     /**< Output Description */
+  int bNeg;              /**< Is There a Negative Option? */
+  int *bDoNeg;           /**< Should the Output use "Negative" Units? */
+  char cNeg[NAMELEN];    /**< Units of Negative Option */
+  double dNeg;           /**< Conversion Factor for Negative Option */
+  int iNum;              /**< Number of Columns for Output */
+
+//   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
   /* Now add vector output functions */
   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
 

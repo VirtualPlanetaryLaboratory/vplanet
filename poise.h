@@ -29,6 +29,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ALBEDOZA        1809
 #define OPT_JORMUNGAND      1810
 
+#define OPT_GRIDOUTPUT   1899
+
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
 #define OPT_HEATCLAND       1842
@@ -42,6 +44,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_EBMMODEL        1899*/
 
 /* Options Functions */
+void HelpOptionsPoise(OPTIONS*);
+void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
+void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Verify Functions */
 void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -55,15 +60,40 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 /* POISE 1800 - 1899 */
 /* System properties 1800-1819, body properties 1820-1899 */
 
-#define OUTSTARTPOISE        1800 /* Start of DISTROT options */
-#define OUTENDPOISE          1900 /* End of DISTROT options */
-#define OUTBODYSTARTPOISE    1820 /* Start of DISTROT BODY options */
+#define OUTSTARTPOISE        1800 /* Start of POISE options */
+#define OUTENDPOISE          1900 /* End of POISE options */
+#define OUTBODYSTARTPOISE    1820 /* Start of POISE BODY options */
 
-#define OUT_TGLOBAL          1801 
+#define OUT_TGLOBAL          1821 
+#define OUT_ALBEDOGLOBAL     1822
+#define OUT_GRIDOUTPUT       1899
+
+/* Special output options for latitudinal parameters in POISE */
+#define GROUTSTARTPOISE      1800
+#define GROUTENDPOISE        1900
+
+#define GROUT_TEMPLAT        1831
+#define GROUT_ALBEDOLAT      1832
+#define GROUT_ANNUALINSOL    1833
+#define GROUT_DAILYINSOL     1834
+#define GROUT_FLUXMERID      1835
+#define GROUT_FLUXIN         1836
+#define GROUT_FLUXOUT        1837
+#define GROUT_DIVFLUX        1838
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 
 void HelpOutputPoise(OUTPUT*);
+void WriteTGlobal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteAlbedoGlobal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTempLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteAlbedoLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteAnnualInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDailyInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFluxMerid(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFluxIn(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFluxOut(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDivFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputPoise(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
@@ -74,4 +104,5 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 /* Poise Functions */
 void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,int,int);
+void Albedo(BODY*,int);
 void PoiseClimate(BODY*,int);

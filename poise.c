@@ -170,6 +170,117 @@ void ReadJormungand(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&body[iFile-1].bAlbedoZA,files->iNumInputs);
 }
 
+// void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
+//   int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0;
+//   int k,iOut,*lTmp;
+//   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
+//   int iLen1,iLen2;
+// 
+//   lTmp = malloc(MAXLINES*sizeof(int));
+// 
+//   AddOptionStringArray(files->Infile[iFile].cIn,options[OPT_GRIDOUTPUT].cName,saTmp,&iNumIndices,&files->Infile[iFile].iNumLines,lTmp,iVerbose);
+//   output[OUT_GRIDOUTPUT].GridOutput = malloc(iNumIndices*sizeof(GRIDOUTPUT)); 
+//   if (lTmp[0] >= 0) {
+//     NotPrimaryInput(iFile,options[OPT_GRIDOUTPUT].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
+// 
+//     /* First remove and record negative signs */
+//     for (i=0;i<iNumIndices;i++) {
+//       if (saTmp[i][0] == 45) {
+//         /* Option is negative */
+//         bNeg[i] = 1;
+//         /* Now remove negative sign */
+//         for (j=0;j<strlen(saTmp[i]);j++) 
+//         saTmp[i][j] = saTmp[i][j+1];
+//         saTmp[i][strlen(saTmp[i])] = 0;
+//       } else
+//         bNeg[i] = 0;
+//     }
+//     
+//     /* Check for ambiguity */
+//     for (i=0;i<iNumIndices;i++) {
+//       count=0; /* Number of possibilities */
+//       for (j=0;j<OPTLEN;j++)
+//         cTmp[j]=0;
+//       strcpy(cTmp,saTmp[i]);
+//       for (j=GROUTSTARTPOISE;j<GROUTENDPOISE;j++) {
+//         for (k=0;k<OPTLEN;k++)
+//           cOut[k]=0;
+//         strcpy(cOut,output[OUT_GRIDOUTPUT].GridOutput[j].cName);
+//         iLen1=strlen(cOut);
+//         iLen2=strlen(cTmp);
+//         /* Check for perfect match */
+//         if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
+//           /* Output option found! */
+//           strcpy(cOption[count],output[j].cName);
+//           count = 1;
+//           iOut = j;
+//           j = NUMOUT; /* Poor man's break! */
+//         } else {
+//           if (iLen1 < iLen2)
+//             iLen=iLen1;
+//           else
+//             iLen=iLen2;
+//           
+//           if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
+//             /* Output option found! */
+//             strcpy(cOption[count],output[j].cName);
+//             count++;
+//             iOut = j;
+//           }
+//         }
+//       }
+//       
+//       if (count > 1) {
+//         /* More than one possibility */
+//         if (iVerbose >= VERBERR) {
+//           fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
+//           for (j=0;j<count;j++) {
+//             fprintf(stderr,"%s",cOption[j]);
+//             if (j < count-1)
+//               fprintf(stderr,", ");
+//           }
+//           fprintf(stderr,".\n");
+//         }
+//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
+//       }
+//       
+//       if (!count) {
+//         /* Option not found */
+//         if (iVerbose >= VERBERR) 
+//           fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
+//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
+//       }
+//       
+//       if (count == 1) {
+//         /* Unique option */
+//     
+//     /* Verify and record negative options */
+//     if (bNeg[i]) {
+//       // Is the negative option allowed?
+//       if (!output[iOut].bNeg) { /* No */
+//         if (iVerbose >= VERBERR) {
+//           fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
+//           if (strlen(saTmp[i]) < strlen(output[iOut].cName))
+//             fprintf(stderr,"(= %s) ",output[iOut].cName);
+//           fprintf(stderr,"cannot be negative.\n");
+//         }
+//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
+//       } else { // Yes, initialize bDoNeg to true
+//         output[iOut].bDoNeg[iFile-1] = 1;
+//       }
+//     } else { // Negative option not set, initialize bDoNeg to false
+//         output[iOut].bDoNeg[iFile-1] = 0;
+//     }   
+//         files->Outfile[iFile-1].caCol[i][0]='\0';
+//         strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
+//       }
+//     }
+//     files->Outfile[iFile-1].iNumCols = iNumIndices;
+//     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
+//   }
+//   free(lTmp);
+// }
+
 void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LATCELLNUM].cName,"iLatCellNum");
   sprintf(options[OPT_LATCELLNUM].cDescr,"Number of latitude cells used in climate model");
@@ -250,6 +361,13 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HEATCAPANN].iType = 2;  
   options[OPT_HEATCAPANN].iMultiFile = 1;   
   fnRead[OPT_HEATCAPANN] = &ReadHeatCapAnn;
+  
+//   sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
+//   sprintf(options[OPT_GRIDOUTPUT].cDescr,"Outputs latitudinal params in special files");
+//   sprintf(options[OPT_GRIDOUTPUT].cDefault,"None");
+//   options[OPT_GRIDOUTPUT].iType = 14;
+//   options[OPT_GRIDOUTPUT].iMultiFile = 1;
+   
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -260,6 +378,7 @@ void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
         fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
   }
+//   ReadGridOutput(files,options,output,iBody+1,control->Io.iVerbose);
 }
     
 
@@ -334,6 +453,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   }
   
   body[iBody].dTGlobal = 0.0;
+  body[iBody].dAlbedoGlobal = 0.0;
   body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
   for (i=0;i<=body[iBody].iNumLats;i++) {
     if (i!=body[iBody].iNumLats)
@@ -347,6 +467,12 @@ void InitializeClimateParams(BODY *body, int iBody) {
       body[iBody].daDiffusion[i] += body[iBody].dDiffCoeff*9.*exp(-pow((xboundary/sin(25.*DEGRAD)),6));
     }
   }
+  
+  Albedo(body,iBody);
+  for (i=0;i<body[iBody].iNumLats;i++) {
+    body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i];
+  }
+  body[iBody].dAlbedoGlobal /= body[iBody].iNumLats;
 } 
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -394,6 +520,35 @@ void WriteTGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     fsUnitsTime(0,cUnit);
   }
 }
+
+void WriteAlbedoGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get AlbedoGlobal */
+  *dTmp = body[iBody].dAlbedoGlobal;
+}
+
+void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+
+void WriteAlbedoLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+  
+void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+  
+void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+  
+void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+  
+void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+
+void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}
+  
+void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+}       
   
 void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName,"TGlobal");
@@ -403,7 +558,72 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TGLOBAL].dNeg = 1; //conversion is hardcoded in write function
   output[OUT_TGLOBAL].iNum = 1;
   fnWrite[OUT_TGLOBAL] = &WriteTGlobal;
+  
+  sprintf(output[OUT_ALBEDOGLOBAL].cName,"AlbedoGlobal");
+  sprintf(output[OUT_ALBEDOGLOBAL].cDescr,"Global mean bond albedo from POISE");
+  output[OUT_ALBEDOGLOBAL].bNeg = 0;
+  output[OUT_ALBEDOGLOBAL].iNum = 1;
+  fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
+
 }
+
+// void InitializeGridOutputPoise(GRIDOUTPUT *GridOutput, fnWriteOutput fnWrite[]) {  
+//   /* All options below are output in unique files, although the user should put them at the 
+//      end of the output order line */
+//   sprintf(GridOutput[OUT_TEMPLAT].cName,"TempLat");
+//   sprintf(GridOutput[OUT_TEMPLAT].cDescr,"Surface temperature by latitude.");
+//   sprintf(GridOutput[OUT_TEMPLAT].cNeg,"C");
+//   GridOutput[OUT_TEMPLAT].bNeg = 1;
+//   GridOutput[OUT_TEMPLAT].dNeg = 1; //conversion is hardcoded in write function
+//   GridOutput[OUT_TEMPLAT].iNum = 1;
+//   fnWrite[OUT_TEMPLAT] = &WriteTempLat;  
+//   
+//   sprintf(GridOutput[OUT_ALBEDOLAT].cName,"AlbedoLat");
+//   sprintf(GridOutput[OUT_ALBEDOLAT].cDescr,"Surface albedo by latitude.");
+//   GridOutput[OUT_ALBEDOLAT].bNeg = 0;
+//   GridOutput[OUT_ALBEDOLAT].iNum = 1;
+//   fnWrite[OUT_ALBEDOLAT] = &WriteTempLat;  
+// 
+//   sprintf(GridOutput[OUT_ANNUALINSOL].cName,"AnnualInsol");
+//   sprintf(GridOutput[OUT_ANNUALINSOL].cDescr,"Annual mean insolation by latitude.");
+//   sprintf(GridOutput[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
+//   GridOutput[OUT_ANNUALINSOL].bNeg = 1;
+//   GridOutput[OUT_ANNUALINSOL].dNeg = 1/40.55185; 
+//   GridOutput[OUT_ANNUALINSOL].iNum = 1;
+//   fnWrite[OUT_ANNUALINSOL] = &WriteAnnualInsol; 
+//   
+//   sprintf(GridOutput[OUT_DAILYINSOL].cName,"DailyInsol");
+//   sprintf(GridOutput[OUT_DAILYINSOL].cDescr,"Daily insolation by latitude.");
+//   sprintf(GridOutput[OUT_DAILYINSOL].cNeg,"pirate-ninjas/m^2");
+//   GridOutput[OUT_DAILYINSOL].bNeg = 1;
+//   GridOutput[OUT_DAILYINSOL].dNeg = 1/40.55185; 
+//   GridOutput[OUT_DAILYINSOL].iNum = 1;
+//   fnWrite[OUT_DAILYINSOL] = &WriteDailyInsol; 
+//   
+//   sprintf(GridOutput[OUT_FLUXMERID].cName,"FluxMerid");
+//   sprintf(GridOutput[OUT_FLUXMERID].cDescr,"Meridional flux by latitude");
+//   GridOutput[OUT_FLUXMERID].bNeg = 0;
+//   GridOutput[OUT_FLUXMERID].iNum = 1;
+//   fnWrite[OUT_FLUXMERID] = &WriteFluxMerid;  
+//   
+//   sprintf(GridOutput[OUT_FLUXIN].cName,"FluxIn");
+//   sprintf(GridOutput[OUT_FLUXIN].cDescr,"Incoming flux by latitude");
+//   GridOutput[OUT_FLUXIN].bNeg = 0;
+//   GridOutput[OUT_FLUXIN].iNum = 1;
+//   fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
+//   
+//   sprintf(GridOutput[OUT_FLUXOUT].cName,"FluxOut");
+//   sprintf(GridOutput[OUT_FLUXOUT].cDescr,"Outgoing flux by latitude");
+//   GridOutput[OUT_FLUXOUT].bNeg = 0;
+//   GridOutput[OUT_FLUXOUT].iNum = 1;
+//   fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
+//   
+//   sprintf(GridOutput[OUT_DIVFLUX].cName,"DivFlux");
+//   sprintf(GridOutput[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
+//   GridOutput[OUT_DIVFLUX].bNeg = 0;
+//   GridOutput[OUT_DIVFLUX].iNum = 1;
+//   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
+// }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
   
@@ -757,6 +977,7 @@ void PoiseClimate(BODY *body, int iBody) {
   }
   
   /* Calculate some interesting quantities */
+  body[iBody].dAlbedoGlobal = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
     Dmidpt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
@@ -769,6 +990,7 @@ void PoiseClimate(BODY *body, int iBody) {
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daDivFlux[i] += -Mdiff[i][j]*body[iBody].daTemp[j];
     }
+    body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
   } 
 }
       

@@ -1762,7 +1762,7 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 
 void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
-  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0;
+  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0,iNumGrid=0;
   int k,iOut,*lTmp;
   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
   int iLen1,iLen2;
@@ -1805,6 +1805,8 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
           strcpy(cOption[count],output[j].cName);
           count = 1;
           iOut = j;
+          if (output[j].bGrid == 1)
+            iNumGrid += 1;
           j = NUMOUT; /* Poor man's break! */
         } else {
           if (iLen1 < iLen2)
@@ -1817,6 +1819,8 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
             strcpy(cOption[count],output[j].cName);
             count++;
             iOut = j;
+            if (output[j].bGrid == 1)
+              iNumGrid += 1;
           }
         }
       }
@@ -1845,28 +1849,35 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
       if (count == 1) {
         /* Unique option */
     
-    /* Verify and record negative options */
-    if (bNeg[i]) {
-      // Is the negative option allowed?
-      if (!output[iOut].bNeg) { /* No */
-        if (iVerbose >= VERBERR) {
-          fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
-          if (strlen(saTmp[i]) < strlen(output[iOut].cName))
-            fprintf(stderr,"(= %s) ",output[iOut].cName);
-          fprintf(stderr,"cannot be negative.\n");
+        /* Verify and record negative options */
+        if (bNeg[i]) {
+          // Is the negative option allowed?
+          if (!output[iOut].bNeg) { /* No */
+            if (iVerbose >= VERBERR) {
+              fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
+              if (strlen(saTmp[i]) < strlen(output[iOut].cName))
+                fprintf(stderr,"(= %s) ",output[iOut].cName);
+              fprintf(stderr,"cannot be negative.\n");
+            }
+            LineExit(files->Infile[iFile].cIn,lTmp[0]);
+          } else { // Yes, initialize bDoNeg to true
+            output[iOut].bDoNeg[iFile-1] = 1;
+          }
+        } else { // Negative option not set, initialize bDoNeg to false
+            output[iOut].bDoNeg[iFile-1] = 0;
+        }   
+        if (output[iOut].bGrid == 0) {
+          files->Outfile[iFile-1].caCol[i][0]='\0';
+          strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
+        } else {
+          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-        LineExit(files->Infile[iFile].cIn,lTmp[0]);
-      } else { // Yes, initialize bDoNeg to true
-        output[iOut].bDoNeg[iFile-1] = 1;
-      }
-    } else { // Negative option not set, initialize bDoNeg to false
-        output[iOut].bDoNeg[iFile-1] = 0;
-    }   
-        files->Outfile[iFile-1].caCol[i][0]='\0';
-        strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
       }
     }
-    files->Outfile[iFile-1].iNumCols = iNumIndices;
+ 
+    files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
   }
   free(lTmp);

@@ -96,8 +96,12 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
     dPeriod = body[iBody].dOrbPeriod;
 
   /* Was Semi set and nothing else? */
-  if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) 
+  if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
+    if (body[iBody].bPoise) {
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+    }  
     return;
+  }
   
   /* Was anything set? */
   if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0) {
@@ -415,7 +419,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
 
     /* XXX Only module reference in file -- can this be changed? */
-    if (iBody > 0 && body[iBody].bEqtide /* || other spin/orbit modules */) {
+    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 

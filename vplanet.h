@@ -394,10 +394,11 @@ typedef struct {
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  int iNDays;                /**< Number of days in planet's year */
   double *daLats;            /**< Latitude of each cell (centered) */
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dAstroDist;         /**< Distance between primary and planet */
-  double *daInsol;           /**< Daily insolation at each latitude */
+  double **daInsol;           /**< Daily insolation at each latitude */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
   double *daTemp;            /**< Surface temperature in each cell */
   double dTGlobal;           /**< Global mean temperature at surface */
@@ -412,7 +413,11 @@ typedef struct {
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double dFluxInGlobal;      /**< Global mean of incoming flux */
+  double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
   double *daDivFlux;         /**< Divergence of surface flux */
+  int iWriteLat;             /**< Stores index of latitude to be written in write function */
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -844,6 +849,8 @@ typedef struct {
   int iNumCols;             /**< Number of Columns in Output File */
   char caCol[NUMOUT][OPTLEN];  /**< Output Value Name */
   int bNeg[NUMOUT];         /**< Use Negative Option Units? */
+  int iNumGrid;             /**< Number of grid outputs */
+  char caGrid[NUMOUT][OPTLEN];  /**< Gridded output name */
 } OUTFILE;
 
 
@@ -883,20 +890,20 @@ typedef struct {
  
 typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
 
-/* SPOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
-typedef struct {
-  char cName[OPTLEN];    /**< Output Name */
-  char cDescr[LINE];     /**< Output Description */
-  int bNeg;              /**< Is There a Negative Option? */
-  int *bDoNeg;           /**< Should the Output use "Negative" Units? */
-  char cNeg[NAMELEN];    /**< Units of Negative Option */
-  double dNeg;           /**< Conversion Factor for Negative Option */
-  int iNum;              /**< Number of Columns for Output */
-
-  /* Now add vector output functions */
-  fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
-
-} GRIDOUTPUT; 
+/* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
+// typedef struct {
+//   char cName[OPTLEN];    /**< Output Name */
+//   char cDescr[LINE];     /**< Output Description */
+//   int bNeg;              /**< Is There a Negative Option? */
+//   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
+//   char cNeg[NAMELEN];    /**< Units of Negative Option */
+//   double dNeg;           /**< Conversion Factor for Negative Option */
+//   int iNum;              /**< Number of Columns for Output */
+// 
+//   /* Now add vector output functions */
+//   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
+// 
+// } GRIDOUTPUT; 
  
 typedef struct {
   char cName[OPTLEN];    /**< Output Name */
@@ -906,6 +913,7 @@ typedef struct {
   char cNeg[NAMELEN];    /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
   int iNum;              /**< Number of Columns for Output */
+  int bGrid;             /**< Is output quantity gridded (e.g. a function of latitude)? */
 
 //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
   /* Now add vector output functions */

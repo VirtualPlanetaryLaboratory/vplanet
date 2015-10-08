@@ -438,7 +438,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));   
   body[iBody].daDiffusion = malloc((body[iBody].iNumLats+1)*sizeof(double));
   body[iBody].daAlbedo = malloc(body[iBody].iNumLats*sizeof(double));
-  body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double*));
   body[iBody].daAnnualInsol = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daTGrad = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFlux = malloc(body[iBody].iNumLats*sizeof(double));  
@@ -446,6 +446,8 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));  
     
+  body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
+  
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
   } else {
@@ -459,6 +461,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     if (i!=body[iBody].iNumLats)
       body[iBody].daTemp[i] = 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2))+Toffset;
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
+      body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
       
     body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
     if (body[iBody].bHadley) {
@@ -473,6 +476,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i];
   }
   body[iBody].dAlbedoGlobal /= body[iBody].iNumLats;
+  
+  AnnualInsolation(body, iBody);
+
 } 
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -527,27 +533,118 @@ void WriteAlbedoGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daTemp[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    /* Units already in Celsius (POISE uses Celsius) */
+    strcpy(cUnit,output->cNeg);
+  } else { 
+    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    fsUnitsTime(0,cUnit);
+  }
+}
+
+void WriteLatitude(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daLats[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
 }
 
 void WriteAlbedoLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daAlbedo[body[iBody].iWriteLat];
 }
   
+void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dFluxInGlobal;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
+}  
+  
+void WriteFluxOutGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dFluxOutGlobal;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
+}    
+  
 void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daAnnualInsol[body[iBody].iWriteLat];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
 }
   
 void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  char cOut[NAMELEN];
+  FILE *fp;
+  int iLat,iDay;
+   
+  sprintf(cOut,"%s.%s.DailyInsolInit",system->cName,body[iBody].cName);
+
+  fp = fopen(cOut,"w");
+  for (iDay=0;iDay<body[iBody].iNDays;iDay++) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      fprintd(fp,body[iBody].daInsol[iLat][iDay],control->Io.iSciNot,control->Io.iDigits);
+      fprintf(fp," ");
+    }
+    fprintf(fp,"\n");
+  }
 }
   
 void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daFlux[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
 }
   
 void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
 }
 
 void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
 }
   
 void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daDivFlux[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+  }
 }       
   
 void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
@@ -564,66 +661,94 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOGLOBAL].bNeg = 0;
   output[OUT_ALBEDOGLOBAL].iNum = 1;
   fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
+  
+  sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
+  sprintf(output[OUT_FLUXINGLOBAL].cDescr,"Global mean flux in (insol*(1-albedo)) from POISE");
+  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"pirate-ninjas/m^2");
+  output[OUT_FLUXINGLOBAL].bNeg = 1;
+  output[OUT_FLUXINGLOBAL].dNeg = 1/40.55185;
+  output[OUT_FLUXINGLOBAL].iNum = 1;
+  fnWrite[OUT_FLUXINGLOBAL] = &WriteFluxInGlobal;
+  
+  sprintf(output[OUT_FLUXOUTGLOBAL].cName,"FluxOutGlobal");
+  sprintf(output[OUT_FLUXOUTGLOBAL].cDescr,"Global mean flux out from POISE");
+  sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"pirate-ninjas/m^2");
+  output[OUT_FLUXOUTGLOBAL].bNeg = 1;
+  output[OUT_FLUXOUTGLOBAL].dNeg = 1/40.55185;
+  output[OUT_FLUXOUTGLOBAL].iNum = 1;
+  fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;
+  
+  sprintf(output[OUT_TEMPLAT].cName,"TempLat");
+  sprintf(output[OUT_TEMPLAT].cDescr,"Surface temperature by latitude.");
+  sprintf(output[OUT_TEMPLAT].cNeg,"C");
+  output[OUT_TEMPLAT].bNeg = 1;
+  output[OUT_TEMPLAT].dNeg = 1; //conversion is hardcoded in write function
+  output[OUT_TEMPLAT].iNum = 1;
+  output[OUT_TEMPLAT].bGrid = 1;
+  fnWrite[OUT_TEMPLAT] = &WriteTempLat; 
+  
+  sprintf(output[OUT_LATITUDE].cName,"Latitude");
+  sprintf(output[OUT_LATITUDE].cDescr,"Latitude.");
+  sprintf(output[OUT_LATITUDE].cNeg,"Degrees");
+  output[OUT_LATITUDE].bNeg = 1;
+  output[OUT_LATITUDE].dNeg = 1/DEGRAD; 
+  output[OUT_LATITUDE].iNum = 1;
+  output[OUT_LATITUDE].bGrid = 1;
+  fnWrite[OUT_LATITUDE] = &WriteLatitude; 
 
+  sprintf(output[OUT_ALBEDOLAT].cName,"AlbedoLat");
+  sprintf(output[OUT_ALBEDOLAT].cDescr,"Surface albedo by latitude.");
+  output[OUT_ALBEDOLAT].bNeg = 0;
+  output[OUT_ALBEDOLAT].iNum = 1;
+  output[OUT_ALBEDOLAT].bGrid = 1;
+  fnWrite[OUT_ALBEDOLAT] = &WriteAlbedoLat; 
+  
+  sprintf(output[OUT_ANNUALINSOL].cName,"AnnInsol");
+  sprintf(output[OUT_ANNUALINSOL].cDescr,"Annual insolation by latitude.");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
+  output[OUT_ANNUALINSOL].bNeg = 1;
+  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  output[OUT_ANNUALINSOL].iNum = 1;
+  output[OUT_ANNUALINSOL].bGrid = 1;
+  fnWrite[OUT_ANNUALINSOL] = &WriteAnnualInsol; 
+  
+  sprintf(output[OUT_FLUXMERID].cName,"FluxMerid");
+  sprintf(output[OUT_FLUXMERID].cDescr,"Meridional flux by latitude");
+  sprintf(output[OUT_FLUXMERID].cNeg,"pirate-ninjas/m^2");
+  output[OUT_FLUXMERID].bNeg = 1;
+  output[OUT_FLUXMERID].dNeg = 1/40.55185;
+  output[OUT_FLUXMERID].iNum = 1;
+  output[OUT_FLUXMERID].bGrid = 1;
+  fnWrite[OUT_FLUXMERID] = &WriteFluxMerid;  
+  
+  sprintf(output[OUT_FLUXIN].cName,"FluxIn");
+  sprintf(output[OUT_FLUXIN].cDescr,"Incoming flux by latitude");
+  sprintf(output[OUT_FLUXIN].cNeg,"pirate-ninjas/m^2");
+  output[OUT_FLUXIN].bNeg = 1;
+  output[OUT_FLUXIN].dNeg = 1/40.55185;
+  output[OUT_FLUXIN].iNum = 1;
+  output[OUT_FLUXMERID].bGrid = 1;
+  fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
+  
+  sprintf(output[OUT_FLUXOUT].cName,"FluxOut");
+  sprintf(output[OUT_FLUXOUT].cDescr,"Outgoing flux by latitude");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
+  output[OUT_ANNUALINSOL].bNeg = 1;
+  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  output[OUT_FLUXOUT].iNum = 1;
+  output[OUT_FLUXOUT].bGrid = 1;
+  fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
+  
+  sprintf(output[OUT_DIVFLUX].cName,"DivFlux");
+  sprintf(output[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^3");
+  output[OUT_ANNUALINSOL].bNeg = 1;
+  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  output[OUT_DIVFLUX].iNum = 1;
+  output[OUT_DIVFLUX].bGrid = 1;
+  fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
+  
 }
-
-// void InitializeGridOutputPoise(GRIDOUTPUT *GridOutput, fnWriteOutput fnWrite[]) {  
-//   /* All options below are output in unique files, although the user should put them at the 
-//      end of the output order line */
-//   sprintf(GridOutput[OUT_TEMPLAT].cName,"TempLat");
-//   sprintf(GridOutput[OUT_TEMPLAT].cDescr,"Surface temperature by latitude.");
-//   sprintf(GridOutput[OUT_TEMPLAT].cNeg,"C");
-//   GridOutput[OUT_TEMPLAT].bNeg = 1;
-//   GridOutput[OUT_TEMPLAT].dNeg = 1; //conversion is hardcoded in write function
-//   GridOutput[OUT_TEMPLAT].iNum = 1;
-//   fnWrite[OUT_TEMPLAT] = &WriteTempLat;  
-//   
-//   sprintf(GridOutput[OUT_ALBEDOLAT].cName,"AlbedoLat");
-//   sprintf(GridOutput[OUT_ALBEDOLAT].cDescr,"Surface albedo by latitude.");
-//   GridOutput[OUT_ALBEDOLAT].bNeg = 0;
-//   GridOutput[OUT_ALBEDOLAT].iNum = 1;
-//   fnWrite[OUT_ALBEDOLAT] = &WriteTempLat;  
-// 
-//   sprintf(GridOutput[OUT_ANNUALINSOL].cName,"AnnualInsol");
-//   sprintf(GridOutput[OUT_ANNUALINSOL].cDescr,"Annual mean insolation by latitude.");
-//   sprintf(GridOutput[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
-//   GridOutput[OUT_ANNUALINSOL].bNeg = 1;
-//   GridOutput[OUT_ANNUALINSOL].dNeg = 1/40.55185; 
-//   GridOutput[OUT_ANNUALINSOL].iNum = 1;
-//   fnWrite[OUT_ANNUALINSOL] = &WriteAnnualInsol; 
-//   
-//   sprintf(GridOutput[OUT_DAILYINSOL].cName,"DailyInsol");
-//   sprintf(GridOutput[OUT_DAILYINSOL].cDescr,"Daily insolation by latitude.");
-//   sprintf(GridOutput[OUT_DAILYINSOL].cNeg,"pirate-ninjas/m^2");
-//   GridOutput[OUT_DAILYINSOL].bNeg = 1;
-//   GridOutput[OUT_DAILYINSOL].dNeg = 1/40.55185; 
-//   GridOutput[OUT_DAILYINSOL].iNum = 1;
-//   fnWrite[OUT_DAILYINSOL] = &WriteDailyInsol; 
-//   
-//   sprintf(GridOutput[OUT_FLUXMERID].cName,"FluxMerid");
-//   sprintf(GridOutput[OUT_FLUXMERID].cDescr,"Meridional flux by latitude");
-//   GridOutput[OUT_FLUXMERID].bNeg = 0;
-//   GridOutput[OUT_FLUXMERID].iNum = 1;
-//   fnWrite[OUT_FLUXMERID] = &WriteFluxMerid;  
-//   
-//   sprintf(GridOutput[OUT_FLUXIN].cName,"FluxIn");
-//   sprintf(GridOutput[OUT_FLUXIN].cDescr,"Incoming flux by latitude");
-//   GridOutput[OUT_FLUXIN].bNeg = 0;
-//   GridOutput[OUT_FLUXIN].iNum = 1;
-//   fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
-//   
-//   sprintf(GridOutput[OUT_FLUXOUT].cName,"FluxOut");
-//   sprintf(GridOutput[OUT_FLUXOUT].cDescr,"Outgoing flux by latitude");
-//   GridOutput[OUT_FLUXOUT].bNeg = 0;
-//   GridOutput[OUT_FLUXOUT].iNum = 1;
-//   fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
-//   
-//   sprintf(GridOutput[OUT_DIVFLUX].cName,"DivFlux");
-//   sprintf(GridOutput[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
-//   GridOutput[OUT_DIVFLUX].bNeg = 0;
-//   GridOutput[OUT_DIVFLUX].iNum = 1;
-//   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
-// }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
   
@@ -701,7 +826,7 @@ double true2eccA(double TrueA, double Ecc) {
   }
 } 
 
-void DailyInsolation(BODY *body, int iBody) {
+void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
   
@@ -717,28 +842,28 @@ void DailyInsolation(BODY *body, int iBody) {
       /* Northern summer */
       if (body[iBody].daLats[j] >= (PI/2.-delta)) { 
         /* white night/no sunset */
-        body[iBody].daInsol[j] = Sconst*sin(body[iBody].daLats[j])*sin_delta/pow(body[iBody].dAstroDist,2);
+        body[iBody].daInsol[j][iDay] = Sconst*sin(body[iBody].daLats[j])*sin_delta/pow(body[iBody].dAstroDist,2);
       } else if (-body[iBody].daLats[j] >= (PI/2.-delta) && body[iBody].daLats[j] < 0.0) {
         /* polar darkness/no sunrise */
-        body[iBody].daInsol[j] = 0.0;
+        body[iBody].daInsol[j][iDay] = 0.0;
       } else {
         /* regular day/night cycle */
         HA = acos(-tan(body[iBody].daLats[j])*tan_delta);
-        body[iBody].daInsol[j] = Sconst * (HA*sin(body[iBody].daLats[j])*sin_delta + \
+        body[iBody].daInsol[j][iDay] = Sconst * (HA*sin(body[iBody].daLats[j])*sin_delta + \
             cos(body[iBody].daLats[j])*cos_delta*sin(HA)) / (PI*pow(body[iBody].dAstroDist,2));
       }
     } else {
       /* Southern summer */
       if (-body[iBody].daLats[j] >= (PI/2.+delta) && body[iBody].daLats[j] < 0.0) { 
         /* white night/no sunset */
-        body[iBody].daInsol[j] = Sconst*sin(body[iBody].daLats[j])*sin_delta/pow(body[iBody].dAstroDist,2);
+        body[iBody].daInsol[j][iDay] = Sconst*sin(body[iBody].daLats[j])*sin_delta/pow(body[iBody].dAstroDist,2);
       } else if (body[iBody].daLats[j] >= (PI/2.+delta)) {
         /* polar darkness/no sunrise */
-        body[iBody].daInsol[j] = 0.0;
+        body[iBody].daInsol[j][iDay] = 0.0;
       } else {
         /* regular day/night cycle */
         HA = acos(-tan(body[iBody].daLats[j])*tan_delta);
-        body[iBody].daInsol[j] = Sconst * (HA*sin(body[iBody].daLats[j])*sin_delta + \
+        body[iBody].daInsol[j][iDay] = Sconst * (HA*sin(body[iBody].daLats[j])*sin_delta + \
             cos(body[iBody].daLats[j])*cos_delta*sin(HA)) / (PI*pow(body[iBody].dAstroDist,2));
       }
     }
@@ -746,13 +871,12 @@ void DailyInsolation(BODY *body, int iBody) {
 }
           
 void AnnualInsolation(BODY *body, int iBody) {
-  int ndays, i, j;
+  int i, j;
   double LongP, TrueA, EccA, MeanL;
   
-  ndays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   LongP = body[iBody].dLongP + PI; //Pericenter, relative to direction of primary at spring equinox
 
-  body[iBody].dTrueL = PI/4;        //starts the year at the (northern) winter solstice
+  body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice
   TrueA = body[iBody].dTrueL - LongP;
   while (TrueA < 0.0) TrueA += 2*PI;
   body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
@@ -763,32 +887,34 @@ void AnnualInsolation(BODY *body, int iBody) {
   for (j=0;j<body[iBody].iNumLats;j++)
     body[iBody].daAnnualInsol[j] = 0.0;
   
-  for (i=0;i<=ndays;i++) {
+  for (i=0;i<=body[iBody].iNDays;i++) {
     if (i!=0) {
-      MeanL = MeanL + 2*PI*i/ndays;
+      MeanL = MeanL + 2*PI/body[iBody].iNDays;
       /* This will only work for the secular orbital model. 
          Will need to be changed when/if resonances are added. */
       body[iBody].dMeanA = MeanL - LongP;
       kepler_eqn(body, iBody);
       EccA = body[iBody].dEccA;
+      while (EccA >= 2*PI) EccA -= 2*PI;
+      while (EccA < 0.0) EccA += 2*PI;
       if (EccA > PI) {
         TrueA = 2*PI - acos((cos(EccA) - body[iBody].dEcc)/(1.0 - body[iBody].dEcc*cos(EccA)));
       } else {
         TrueA = acos((cos(EccA) - body[iBody].dEcc)/(1.0 - body[iBody].dEcc*cos(EccA)));
       }      
-      body[iBody].dTrueL = TrueA + LongP;
+      body[iBody].dTrueL = TrueA + LongP;     
     }
     
     while (body[iBody].dTrueL > 2*PI) body[iBody].dTrueL -= 2*PI;
     while (body[iBody].dTrueL < 0.0) body[iBody].dTrueL += 2*PI;
-      
+          
     // planet-star distance (units of semi-major axis):  
     body[iBody].dAstroDist = (1.0 - pow(body[iBody].dEcc,2))/(1.0+body[iBody].dEcc*cos(TrueA)); 
     
-    DailyInsolation(body, iBody);
+    DailyInsolation(body, iBody, i);
     
     for (j=0;j<body[iBody].iNumLats;j++) {
-      body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j]/((double)ndays);
+      body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);
     }
   }
 }
@@ -977,6 +1103,8 @@ void PoiseClimate(BODY *body, int iBody) {
   }
   
   /* Calculate some interesting quantities */
+  body[iBody].dFluxInGlobal = 0.0;
+  body[iBody].dFluxOutGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
@@ -985,6 +1113,9 @@ void PoiseClimate(BODY *body, int iBody) {
                             Dmidpt[i]*body[iBody].daTGrad[i];
     body[iBody].daFluxIn[i] = (1.0 - body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i];
     body[iBody].daFluxOut[i] = body[iBody].dPlanckA + body[iBody].dPlanckB*body[iBody].daTemp[i];                       
+    
+    body[iBody].dFluxInGlobal += body[iBody].daFluxIn[i]/body[iBody].iNumLats;
+    body[iBody].dFluxOutGlobal += body[iBody].daFluxOut[i]/body[iBody].iNumLats;
     
     body[iBody].daDivFlux[i] = 0.0;
     for (j=0;j<body[iBody].iNumLats;j++) {

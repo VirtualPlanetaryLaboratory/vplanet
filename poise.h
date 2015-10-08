@@ -66,20 +66,19 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 
 #define OUT_TGLOBAL          1821 
 #define OUT_ALBEDOGLOBAL     1822
+#define OUT_FLUXINGLOBAL     1823
+#define OUT_FLUXOUTGLOBAL    1824
 #define OUT_GRIDOUTPUT       1899
 
-/* Special output options for latitudinal parameters in POISE */
-#define GROUTSTARTPOISE      1800
-#define GROUTENDPOISE        1900
-
-#define GROUT_TEMPLAT        1831
-#define GROUT_ALBEDOLAT      1832
-#define GROUT_ANNUALINSOL    1833
-#define GROUT_DAILYINSOL     1834
-#define GROUT_FLUXMERID      1835
-#define GROUT_FLUXIN         1836
-#define GROUT_FLUXOUT        1837
-#define GROUT_DIVFLUX        1838
+#define OUT_LATITUDE         1830
+#define OUT_TEMPLAT          1831
+#define OUT_ALBEDOLAT        1832
+#define OUT_ANNUALINSOL      1833
+#define OUT_DAILYINSOL       1834
+#define OUT_FLUXMERID        1835
+#define OUT_FLUXIN           1836
+#define OUT_FLUXOUT          1837
+#define OUT_DIVFLUX          1838
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 
@@ -105,4 +104,6 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,int,int);
 void Albedo(BODY*,int);
+void AnnualInsolation(BODY*,int);
+
 void PoiseClimate(BODY*,int);

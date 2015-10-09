@@ -1306,6 +1306,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
   } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
+  // XXX This comment has no content.
 }
 
 /*

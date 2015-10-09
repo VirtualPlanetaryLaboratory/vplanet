@@ -714,9 +714,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_FLUXMERID].cName,"FluxMerid");
   sprintf(output[OUT_FLUXMERID].cDescr,"Meridional flux by latitude");
-  sprintf(output[OUT_FLUXMERID].cNeg,"pirate-ninjas/m^2");
+  sprintf(output[OUT_FLUXMERID].cNeg,"PW");
   output[OUT_FLUXMERID].bNeg = 1;
-  output[OUT_FLUXMERID].dNeg = 1/40.55185;
+  output[OUT_FLUXMERID].dNeg = 1e-15;
   output[OUT_FLUXMERID].iNum = 1;
   output[OUT_FLUXMERID].bGrid = 1;
   fnWrite[OUT_FLUXMERID] = &WriteFluxMerid;  
@@ -741,7 +741,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_DIVFLUX].cName,"DivFlux");
   sprintf(output[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^3");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
   output[OUT_ANNUALINSOL].bNeg = 1;
   output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
   output[OUT_DIVFLUX].iNum = 1;

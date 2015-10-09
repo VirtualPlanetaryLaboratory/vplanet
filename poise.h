@@ -29,8 +29,6 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ALBEDOZA        1809
 #define OPT_JORMUNGAND      1810
 
-#define OPT_GRIDOUTPUT   1899
-
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
 #define OPT_HEATCLAND       1842
@@ -68,7 +66,6 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ALBEDOGLOBAL     1822
 #define OUT_FLUXINGLOBAL     1823
 #define OUT_FLUXOUTGLOBAL    1824
-#define OUT_GRIDOUTPUT       1899
 
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831

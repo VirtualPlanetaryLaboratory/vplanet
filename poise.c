@@ -579,6 +579,8 @@ void WriteFluxOutGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }    
   
@@ -589,6 +591,8 @@ void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -616,6 +620,8 @@ void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -626,6 +632,8 @@ void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
 
@@ -636,6 +644,8 @@ void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -646,6 +656,8 @@ void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }       
   
@@ -876,7 +888,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL;
   
-  LongP = body[iBody].dLongP + PI; //Pericenter, relative to direction of primary at spring equinox
+  LongP = body[iBody].dLongP; //Pericenter, relative to direction of primary at spring equinox
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice
   TrueA = body[iBody].dTrueL - LongP;

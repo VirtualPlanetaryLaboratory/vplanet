@@ -1835,6 +1835,7 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
             system->fnLaplaceDeriv[j][0](alpha1, 0);
                 
             system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+            printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
         }
       }
     }

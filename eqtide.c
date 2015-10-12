@@ -2240,7 +2240,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 

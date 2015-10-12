@@ -555,7 +555,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
 }
 
 /* Equations used to calculate obliquity/spin evolution */

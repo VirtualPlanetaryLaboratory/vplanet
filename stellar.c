@@ -254,7 +254,7 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
   body[iBody].dLXUV = body[iBody].dLuminosity * body[iBody].dSatXUVFrac;
 }
 
-void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
   // Nothing
 }
 

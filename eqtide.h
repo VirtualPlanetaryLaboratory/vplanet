@@ -179,7 +179,7 @@ void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,int,int);
+void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 
 /******************** CPL Functions ********************/
 

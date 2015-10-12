@@ -10,4 +10,4 @@ void PropsAuxEqtideThermint(BODY*,UPDATE*,int);
 void PropsAuxDistOrbDistRot(BODY*,UPDATE*,int);
 void PropsAuxRadheatThermint(BODY*,UPDATE*,int);
 
-void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,int,int);
+void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);

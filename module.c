@@ -392,7 +392,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
   /*  
   // Insert Russell's code here.
   printf("Entered  ForceBehaviorEqtideLagrange.\n");

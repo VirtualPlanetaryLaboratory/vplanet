@@ -393,32 +393,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  */
 
 void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iFoo,int iBar) {
-  /*  
-  // Insert Russell's code here.
-  printf("Entered  ForceBehaviorEqtideLagrange.\n");
+  RecalcLaplace(body,evolve,system);
 
-// XXX This function 
-void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
-  double alpha1, dalpha;
-  int j = 0;
-
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
-  }
-    
-  for (j=0;j<LAPLNUM;j++) {
-    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
-    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-        system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-        system->fnLaplaceF[j][0](alpha1, 0);
-                
-        system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-        system->fnLaplaceDeriv[j][0](alpha1, 0);
-                
-        system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
-    }
-  }
-  */
+//   printf("Entered  ForceBehaviorEqtideDistOrb.\n");
 } 

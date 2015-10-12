@@ -1306,7 +1306,6 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
   } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
-  // XXX This comment has no content.
 }
 
 /*
@@ -2199,6 +2198,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_AGE].cName,"dAge");
   sprintf(options[OPT_AGE].cDescr,"System Age");
   sprintf(options[OPT_AGE].cDefault,"0");
+  options[OPT_AGE].dDefault = 0;
   options[OPT_AGE].iType = 2;
   options[OPT_AGE].dNeg = 1e9*YEARSEC;
   sprintf(options[OPT_AGE].cNeg,"Gyr");

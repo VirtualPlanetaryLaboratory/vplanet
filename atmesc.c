@@ -4,6 +4,7 @@
  *
  * Subroutines that control the integration of the 
  * atmospheric escape model.
+ *
 */
 // NOTE: Still need to edit module.c, update.c
 
@@ -428,4 +429,5 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
+  return 0;
 }

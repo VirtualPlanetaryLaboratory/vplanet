@@ -567,6 +567,8 @@ void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }  
   
@@ -811,7 +813,7 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
   PoiseClimate(body,iBody);
 }
 

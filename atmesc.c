@@ -208,7 +208,7 @@ void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
 }
 
-void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
   
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
     // Let's desiccate this planet.

@@ -374,7 +374,7 @@ double fdHflowSurfMan(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
 
-void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,int,int);
+void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

@@ -77,7 +77,7 @@ void LogAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* AtmEsc functions */
-void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,int,int);
+void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */

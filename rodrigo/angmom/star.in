@@ -1,0 +1,21 @@
+# The host star, Gl 581
+sName	        star		                    # Body's name
+saModules	    eqtide stellar              # Modules to apply, exact spelling required
+
+# Output
+saOutputOrder Time -Luminosity -Radius -RotRate -RotPer
+
+# Physical Parameters
+dMass         1.0                        # Mass, solar masses
+dObliquity    0		
+dRotPeriod    -200.
+dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)
+
+# STELLAR Parameters
+sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
+#dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
+#dRadius      0.002                       # Stellar radius in AU (ignored when `sStellarModel` is set)
+#dTemperature 3000                        # Stellar temperature in K (ignored when `sStellarModel` is set)
+#dLuminosity  -0.01                       # Stellar luminosity in LSUN (ignored when `sStellarModel` is set)
+
+saTidePerts a

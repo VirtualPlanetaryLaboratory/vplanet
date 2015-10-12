@@ -1303,10 +1303,9 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
-  } else {
+  } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
-  }
 }
 
 /*
@@ -2046,10 +2045,9 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dOrbPeriod = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else {
-    if (iFile > 0) 
+  } else
+    if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dOrbPeriod,files->iNumInputs);
-    }
 }
 
 /* Precession parameter */
@@ -2172,7 +2170,8 @@ void ReadRotRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
         fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);  
     }
-    body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
+    if (iFile > 0)
+      body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
 }
@@ -2243,10 +2242,9 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     else 
       body[iFile-1].dSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else {
+  } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
-  }
 }
 
 

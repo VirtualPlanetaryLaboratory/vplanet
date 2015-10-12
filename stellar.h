@@ -89,6 +89,7 @@ double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
 double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
+double fdDRotRateDt(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 

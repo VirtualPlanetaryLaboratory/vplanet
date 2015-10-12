@@ -519,6 +519,8 @@ double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody) {
     return fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dLuminosity;
+  else
+    return 0;
 }
 
 double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
@@ -526,6 +528,8 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dRadius;
+  else
+    return 0;
 }
 
 double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -544,7 +548,8 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
     dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
     dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
     return -2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
-  }
+  } else
+    return 0;
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
@@ -552,6 +557,8 @@ double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
     return fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
     return body[iaBody[0]].dTemperature;
+  else
+    return 0;
 }
 
 double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
@@ -629,4 +636,5 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
+  return 0;
 }

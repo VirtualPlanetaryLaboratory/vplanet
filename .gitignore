@@ -5,3 +5,4 @@ vplanet.dSYM
 *.log
 .stellar/
 *.pyc
+todo.rst

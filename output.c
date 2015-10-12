@@ -1012,10 +1012,10 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 }
 
 void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput *fnWrite,double dTime,double dDt){
-  int iBody,iCol,iOut,iSubOut,iExtra=0;
-  double dCol[NUMOPT],*dTmp;
+  int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat;
+  double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN];
+  char cUnit[OPTLEN], cPoiseGrid[NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the 
@@ -1026,13 +1026,15 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-        if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
-          /* Match! */
-          dTmp=malloc(output[iOut].iNum*sizeof(double));
-          fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-          for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
-            dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
-          iExtra += (output[iOut].iNum-1);
+        if (output[iOut].bGrid == 0) {
+          if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+            /* Match! */
+            dTmp=malloc(output[iOut].iNum*sizeof(double));
+            fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
+              dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
+            iExtra += (output[iOut].iNum-1);
+          }
         }
       }
     }
@@ -1045,6 +1047,41 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
     fprintf(fp,"\n");
     fclose(fp);
+    
+    /* Grid outputs, currently only set up for POISE */
+    if (body[iBody].bPoise) {
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+        for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
+          for (iOut=0;iOut<MODULEOUTEND;iOut++) {
+            if (output[iOut].bGrid == 1) {
+              if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+                dTmp = malloc(1*sizeof(double));
+                body[iBody].iWriteLat = iLat;
+                fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+                dGrid[iGrid]=*dTmp;
+              }
+            }
+          }
+        }
+        /* Now write the columns */
+  
+        sprintf(cPoiseGrid,"%s.%s.Climate",system->cName,body[iBody].cName);
+    
+        if (control->Evolve.dTime == 0 && iLat == 0) {
+          WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+          fp = fopen(cPoiseGrid,"w");      
+        } else {
+          fp = fopen(cPoiseGrid,"a");
+        }
+      
+        for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid+iExtra;iGrid++) {
+          fprintd(fp,dGrid[iGrid],control->Io.iSciNot,control->Io.iDigits);
+          fprintf(fp," ");
+        }
+        fprintf(fp,"\n");
+        fclose(fp);
+      }
+    }
   }
 }
 
@@ -1053,6 +1090,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   for (iOut=0;iOut<MODULEOUTEND;iOut++) {
     sprintf(output[iOut].cName,"null");
+    output[iOut].bGrid = 0;
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
@@ -1086,6 +1124,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
+  InitializeOutputPoise(output,fnWrite);
 
 }
 

@@ -128,6 +128,7 @@ void ScaleEigenVec(BODY*,CONTROL*,SYSTEM*);
 
 void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
 
+void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);

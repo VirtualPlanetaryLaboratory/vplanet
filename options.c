@@ -1306,7 +1306,6 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
   } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
-  // XXX This comment has no content.
 }
 
 /*
@@ -1692,6 +1691,9 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     }
     body[iFile-1].dMeanMotion = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dMeanMotion,files->iNumInputs);
   }
 }
 
@@ -1759,7 +1761,7 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 
 void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
-  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0;
+  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0,iNumGrid=0;
   int k,iOut,*lTmp;
   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
   int iLen1,iLen2;
@@ -1802,6 +1804,8 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
           strcpy(cOption[count],output[j].cName);
           count = 1;
           iOut = j;
+          if (output[j].bGrid == 1)
+            iNumGrid += 1;
           j = NUMOUT; /* Poor man's break! */
         } else {
           if (iLen1 < iLen2)
@@ -1814,6 +1818,8 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
             strcpy(cOption[count],output[j].cName);
             count++;
             iOut = j;
+            if (output[j].bGrid == 1)
+              iNumGrid += 1;
           }
         }
       }
@@ -1842,29 +1848,157 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
       if (count == 1) {
         /* Unique option */
     
-    /* Verify and record negative options */
-    if (bNeg[i]) {
-      // Is the negative option allowed?
-      if (!output[iOut].bNeg) { /* No */
-        if (iVerbose >= VERBERR) {
-          fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
-          if (strlen(saTmp[i]) < strlen(output[iOut].cName))
-            fprintf(stderr,"(= %s) ",output[iOut].cName);
-          fprintf(stderr,"cannot be negative.\n");
+        /* Verify and record negative options */
+        if (bNeg[i]) {
+          // Is the negative option allowed?
+          if (!output[iOut].bNeg) { /* No */
+            if (iVerbose >= VERBERR) {
+              fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
+              if (strlen(saTmp[i]) < strlen(output[iOut].cName))
+                fprintf(stderr,"(= %s) ",output[iOut].cName);
+              fprintf(stderr,"cannot be negative.\n");
+            }
+            LineExit(files->Infile[iFile].cIn,lTmp[0]);
+          } else { // Yes, initialize bDoNeg to true
+            output[iOut].bDoNeg[iFile-1] = 1;
+          }
+        } else { // Negative option not set, initialize bDoNeg to false
+            output[iOut].bDoNeg[iFile-1] = 0;
+        }   
+        if (output[iOut].bGrid == 0) {
+          files->Outfile[iFile-1].caCol[i][0]='\0';
+          strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
+        } else {
+          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-        LineExit(files->Infile[iFile].cIn,lTmp[0]);
-      } else { // Yes, initialize bDoNeg to true
-        output[iOut].bDoNeg[iFile-1] = 1;
-      }
-    } else { // Negative option not set, initialize bDoNeg to false
-        output[iOut].bDoNeg[iFile-1] = 0;
-    }   
-        files->Outfile[iFile-1].caCol[i][0]='\0';
-        strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
       }
     }
-    files->Outfile[iFile-1].iNumCols = iNumIndices;
+ 
+    files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
+  }
+  free(lTmp);
+}
+
+void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
+  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0,iNumGrid=0;
+  int k,iOut,*lTmp;
+  char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
+  int iLen1,iLen2;
+
+  lTmp = malloc(MAXLINES*sizeof(int));
+
+  AddOptionStringArray(files->Infile[iFile].cIn,options[OPT_GRIDOUTPUT].cName,saTmp,&iNumIndices,&files->Infile[iFile].iNumLines,lTmp,iVerbose);
+
+  if (lTmp[0] >= 0) {
+    NotPrimaryInput(iFile,options[OPT_GRIDOUTPUT].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
+
+    /* First remove and record negative signs */
+    for (i=0;i<iNumIndices;i++) {
+      if (saTmp[i][0] == 45) {
+        /* Option is negative */
+        bNeg[i] = 1;
+        /* Now remove negative sign */
+        for (j=0;j<strlen(saTmp[i]);j++) 
+        saTmp[i][j] = saTmp[i][j+1];
+        saTmp[i][strlen(saTmp[i])] = 0;
+      } else
+        bNeg[i] = 0;
+    }
+    
+    /* Check for ambiguity */
+    for (i=0;i<iNumIndices;i++) {
+      count=0; /* Number of possibilities */
+      for (j=0;j<OPTLEN;j++)
+        cTmp[j]=0;
+      strcpy(cTmp,saTmp[i]);
+      for (j=0;j<MODULEOUTEND;j++) {
+        for (k=0;k<OPTLEN;k++)
+          cOut[k]=0;
+        strcpy(cOut,output[j].cName);
+        iLen1=strlen(cOut);
+        iLen2=strlen(cTmp);
+        /* Check for perfect match */
+        if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
+          /* Output option found! */
+          strcpy(cOption[count],output[j].cName);
+          count = 1;
+          iOut = j;
+          if (output[j].bGrid == 1)
+            iNumGrid += 1;
+          j = NUMOUT; /* Poor man's break! */
+        } else {
+          if (iLen1 < iLen2)
+            iLen=iLen1;
+          else
+            iLen=iLen2;
+          
+          if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
+            /* Output option found! */
+            strcpy(cOption[count],output[j].cName);
+            count++;
+            iOut = j;
+            if (output[j].bGrid == 1)
+              iNumGrid += 1;
+          }
+        }
+      }
+      
+      if (count > 1) {
+        /* More than one possibility */
+        if (iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
+          for (j=0;j<count;j++) {
+            fprintf(stderr,"%s",cOption[j]);
+            if (j < count-1)
+              fprintf(stderr,", ");
+          }
+          fprintf(stderr,".\n");
+        }
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
+      }
+      
+      if (!count) {
+        /* Option not found */
+        if (iVerbose >= VERBERR) 
+          fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
+      }
+      
+      if (count == 1) {
+        /* Unique option */
+    
+        /* Verify and record negative options */
+        if (bNeg[i]) {
+          // Is the negative option allowed?
+          if (!output[iOut].bNeg) { /* No */
+            if (iVerbose >= VERBERR) {
+              fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
+              if (strlen(saTmp[i]) < strlen(output[iOut].cName))
+                fprintf(stderr,"(= %s) ",output[iOut].cName);
+              fprintf(stderr,"cannot be negative.\n");
+            }
+            LineExit(files->Infile[iFile].cIn,lTmp[0]);
+          } else { // Yes, initialize bDoNeg to true
+            output[iOut].bDoNeg[iFile-1] = 1;
+          }
+        } else { // Negative option not set, initialize bDoNeg to false
+            output[iOut].bDoNeg[iFile-1] = 0;
+        }   
+        if (output[iOut].bGrid == 0) {
+          files->Outfile[iFile-1].caCol[i][0]='\0';
+          strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
+        } else {
+          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
+        }
+      }
+    }
+ 
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
   }
   free(lTmp);
 }
@@ -2125,7 +2259,7 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     /* Start at 100 because 0-99 are reserved for initial options */
     for (iOpt=100;iOpt<NUMOPT;iOpt++) 
       /* OutputOrder is special */
-      if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER) {
+      if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
   }
@@ -2168,8 +2302,12 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
   ReadOptionsModules(*body,control,files,module,options,system,fnRead);
 
   /* Read in output order -- merge into ReadGeneralOptions? */
-  for (iFile=1;iFile<files->iNumInputs;iFile++)
+  for (iFile=1;iFile<files->iNumInputs;iFile++) {
     ReadOutputOrder(files,options,output,iFile,control->Io.iVerbose);
+    if ((*body)[iFile-1].bPoise) {
+      ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
+    }
+  }
 
   /* Any unrecognized options? */
   Unrecognized(*files);
@@ -2199,6 +2337,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_AGE].cName,"dAge");
   sprintf(options[OPT_AGE].cDescr,"System Age");
   sprintf(options[OPT_AGE].cDefault,"0");
+  options[OPT_AGE].dDefault = 0;
   options[OPT_AGE].iType = 2;
   options[OPT_AGE].dNeg = 1e9*YEARSEC;
   sprintf(options[OPT_AGE].cNeg,"Gyr");
@@ -2426,6 +2565,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTORDER].iType = 14;
   options[OPT_OUTPUTORDER].iMultiFile = 1;
   
+  sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
+  sprintf(options[OPT_GRIDOUTPUT].cDescr,"Gridded Output Parameter(s)");
+  sprintf(options[OPT_GRIDOUTPUT].cDefault,"None");
+  options[OPT_GRIDOUTPUT].iType = 14;
+  options[OPT_GRIDOUTPUT].iMultiFile = 1;
   
   sprintf(options[OPT_OUTSCINOT].cName,"iSciNot");
   sprintf(options[OPT_OUTSCINOT].cDescr,"Logarithm to Change from Standard to Scientific Notation");
@@ -2651,6 +2795,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsThermint(options,fnRead);
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
+  InitializeOptionsPoise(options,fnRead);
 
 }
  

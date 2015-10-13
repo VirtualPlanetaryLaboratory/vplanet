@@ -1,7 +1,8 @@
 # Gl581 c's parameters
 sName		c			# Body's name
 saModules	eqtide radheat thermint $
-		distorb distrot # Modules to apply, exact spelling required
+		distorb distrot $
+		atmesc poise
 
 # Physical Properties
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
@@ -56,14 +57,23 @@ d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 d238UNumCore	-1
 
 # THERMINT inputs.
-#dTMan  3000.0  #2500.0
-#dTCore 6000.0
-#dViscRatioMan 5.0  #5.6
-#dEruptEff 0.2
-#dViscRef  1e8
+dTMan  3000.0  #2500.0
+dTCore 6000.0
+dViscRatioMan 5.0  #5.6
+dEruptEff 0.2
+dViscRef  1e8
+
+# ATMESC inputs
+dXFrac		1
+dAtmXAbsEff	0.3
+dSurfWaterMass	-1
+
+# POISE
+iLatCellNum	151
 
 # Output
-saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA DeltaT
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
+	      TMan Tcore -Tglobal FluxOutGlobal RadPowerT DeltaT
 
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $

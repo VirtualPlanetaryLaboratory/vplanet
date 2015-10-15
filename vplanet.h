@@ -197,8 +197,9 @@ typedef struct {
   int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
   int *iaEigFreqs;       /**< Indices of eigenfrequencies */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
-  int iDistOrbModel; 
-  
+  int iDistOrbModel;     /**< Which orbital model to use (RD4 or LL2) */
+  double dSemiPrev;      /**< Semi-major axis at which LL2 eigensolution was calc'd */
+    
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */

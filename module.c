@@ -393,7 +393,9 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  */
 
 void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
-  RecalcLaplace(body,evolve,system);
-
-//   printf("Entered  ForceBehaviorEqtideDistOrb.\n");
+  if (evolve->iDistOrbModel == RD4) {
+    RecalcLaplace(body,evolve,system);
+  } else if (evolve->iDistOrbModel == LL2) {
+    RecalcEigenVals(body,evolve,system);
+  }
 } 

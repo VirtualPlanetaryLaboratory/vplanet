@@ -123,10 +123,11 @@ void BalanceM(double**,int);
 void ludcmp(double**,int,int*,float*);
 void lubksb(double**,int,int*,double[]);
 void FindEigenVec(double**,double,int,double*);
-void SolveEigenVal(BODY*,CONTROL*,SYSTEM*);
-void ScaleEigenVec(BODY*,CONTROL*,SYSTEM*);
+void SolveEigenVal(BODY*,EVOLVE*,SYSTEM*);
+void ScaleEigenVec(BODY*,EVOLVE*,SYSTEM*);
 
 void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
+void RecalcEigenVals(BODY*,EVOLVE*,SYSTEM*);
 
 void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
@@ -202,6 +203,8 @@ double fdDistOrbLL2Hecc(BODY*, SYSTEM*, int*);
 double fdDistOrbLL2Kecc(BODY*, SYSTEM*, int*);
 double fdDistOrbLL2Pinc(BODY*, SYSTEM*, int*);
 double fdDistOrbLL2Qinc(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2DhDt(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2DkDt(BODY*, SYSTEM*, int*);
 double fdDistOrbLL2DpDt(BODY*, SYSTEM*, int*);
 double fdDistOrbLL2DqDt(BODY*, SYSTEM*, int*);
 

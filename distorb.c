@@ -507,7 +507,11 @@ void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
 }
 
 void InitializeHeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 3;
+  if (body[iBody].bEqtide) {
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 2;
+  } else {
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 3;
+  }
   update[iBody].padDHeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]];
   update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]=2;
   update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]*sizeof(int));
@@ -516,7 +520,11 @@ void InitializeHeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 }
 
 void InitializeKeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 3;
+  if (body[iBody].bEqtide) {
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 2;
+  } else {
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 3;
+  }
   update[iBody].padDKeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]];
   update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]=2;
   update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]*sizeof(int));
@@ -549,6 +557,17 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
+  }
+}
+
+void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
+  int iBody;
+  
+  for (iBody=2;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bGRCorr != body[1].bGRCorr) {
+      fprintf(stderr,"ERROR: bGRCorr must be the same for all planets in DistOrb LL2 model\n");
+      exit(EXIT_INPUT);
+    }
   }
 }
 
@@ -701,13 +720,16 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
     
+    body[iBody].dSemiPrev = body[iBody].dSemiPrev;
+        
     if (iBody == (control->Evolve.iNumBodies-1)) {
+      VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
       if (control->bInvPlane) {
         inv_plane(body, system, control->Evolve.iNumBodies);
       }
       
-      SolveEigenVal(body, control, system);
-      ScaleEigenVec(body, control, system);
+      SolveEigenVal(body,&control->Evolve,system);
+      ScaleEigenVec(body,&control->Evolve,system);
     }
     
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 1; 
@@ -716,11 +738,16 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* h = Ecc*sin(LongP) */
         InitializeHeccDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2Hecc;
         
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2Kecc;
+        if (body[iBody].bEqtide) {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2DhDt;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2DkDt;
+        } else {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2Hecc;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2Kecc;
+        }
         
         /* p = s*sin(LongA) */
         InitializePincDistOrbLL2(body,update,iBody,iPert);
@@ -1689,45 +1716,45 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
   }
 }  
   
-void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
+void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   /* This solves the eigenvalue problem and provides an explicit solution 
        to the orbital evolution */
     double **A,**B,*S,*T,parity,*Asoln,*Bsoln;
     int j, k, count, *rowswap, i,iBody;
     
-    A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-    Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+    A = malloc((evolve->iNumBodies-1)*sizeof(double*));
+    B = malloc((evolve->iNumBodies-1)*sizeof(double*));
+    Asoln = malloc((evolve->iNumBodies-1)*sizeof(double));
+    Bsoln = malloc((evolve->iNumBodies-1)*sizeof(double));
 
     system->dmEigenValEcc = malloc(2*sizeof(double*));
-    system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+    system->dmEigenVecEcc = malloc((evolve->iNumBodies-1)*sizeof(double*));
     system->dmEigenValInc = malloc(2*sizeof(double*));
-    system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+    system->dmEigenVecInc = malloc((evolve->iNumBodies-1)*sizeof(double*));
     system->dmEigenPhase = malloc(2*sizeof(double*));
-    rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
+    rowswap = malloc((evolve->iNumBodies-1)*sizeof(int));
     
-    for (iBody=0;iBody<(control->Evolve.iNumBodies-1);iBody++) {
-      A[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      B[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenVecEcc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenVecInc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+    for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
+      A[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      B[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenVecEcc[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenVecInc[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
     }
     
     for (i=0;i<2;i++) {
-      system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenPhase[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+      system->dmEigenValEcc[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenValInc[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenPhase[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
     }
     
     /*First pass through calculates matrices and eigenvalues. Each subsequent pass redefines the matrices
       because they are destroyed by eigenvalue routines, then calculates eigenvectors. */
-    for (count=0;count<(control->Evolve.iNumBodies);count++) {
+    for (count=0;count<(evolve->iNumBodies);count++) {
       /* Calculate the initial matrix */
-      for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+      for (j=0;j<(evolve->iNumBodies-1);j++) {
         A[j][j] = 0.0;
         B[j][j] = 0.0;
-        for (k=0;k<(control->Evolve.iNumBodies-1);k++) {
+        for (k=0;k<(evolve->iNumBodies-1);k++) {
           if (j!=k) {
             A[j][j] += ABmatrix(body,1,j+1,k+1);
             A[j][k] = -ABmatrix(body,2,j+1,k+1);            
@@ -1740,19 +1767,19 @@ void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
       }
       
       if (count==0) {
-        BalanceM(A, (control->Evolve.iNumBodies-1)); //balance matrix
-        ElmHess(A, (control->Evolve.iNumBodies-1));  //reduce to upper Hess form
+        BalanceM(A, (evolve->iNumBodies-1)); //balance matrix
+        ElmHess(A, (evolve->iNumBodies-1));  //reduce to upper Hess form
                 
-        BalanceM(B, (control->Evolve.iNumBodies-1)); //balance matrix
-        ElmHess(B, (control->Evolve.iNumBodies-1));  //reduce to upper Hess form
+        BalanceM(B, (evolve->iNumBodies-1)); //balance matrix
+        ElmHess(B, (evolve->iNumBodies-1));  //reduce to upper Hess form
         
-        HessEigen(A, (control->Evolve.iNumBodies-1), system->dmEigenValEcc[0], system->dmEigenValEcc[1]);
-        HessEigen(B, (control->Evolve.iNumBodies-1), system->dmEigenValInc[0], system->dmEigenValInc[1]);
+        HessEigen(A, (evolve->iNumBodies-1), system->dmEigenValEcc[0], system->dmEigenValEcc[1]);
+        HessEigen(B, (evolve->iNumBodies-1), system->dmEigenValInc[0], system->dmEigenValInc[1]);
       } else {
-        FindEigenVec(A,system->dmEigenValEcc[0][count-1],(control->Evolve.iNumBodies-1),Asoln);
-        FindEigenVec(B,system->dmEigenValInc[0][count-1],(control->Evolve.iNumBodies-1),Bsoln);
+        FindEigenVec(A,system->dmEigenValEcc[0][count-1],(evolve->iNumBodies-1),Asoln);
+        FindEigenVec(B,system->dmEigenValInc[0][count-1],(evolve->iNumBodies-1),Bsoln);
       
-        for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+        for (j=0;j<(evolve->iNumBodies-1);j++) {
           system->dmEigenVecEcc[j][count-1] = Asoln[j];
           system->dmEigenVecInc[j][count-1] = Bsoln[j];
         }
@@ -1760,49 +1787,49 @@ void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
     }
 }
 
-void ScaleEigenVec(BODY *body, CONTROL *control, SYSTEM *system) {
+void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   double **etmp, **itmp, *h0, *k0, *p0, *q0, *S, *T;
   int i, j, *rowswap, count;
   float parity;
   
-  etmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-  itmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-  rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
-  h0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  k0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  p0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  q0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+  etmp = malloc((evolve->iNumBodies-1)*sizeof(double*));
+  itmp = malloc((evolve->iNumBodies-1)*sizeof(double*));
+  rowswap = malloc((evolve->iNumBodies-1)*sizeof(int));
+  h0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  k0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  p0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  q0 = malloc((evolve->iNumBodies-1)*sizeof(double));
 
   
-  for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
-    etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-    itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+  for (i=0;i<(evolve->iNumBodies-1);i++) {
+    etmp[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+    itmp[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
     h0[i] = body[i+1].dHecc;
     k0[i] = body[i+1].dKecc;
     p0[i] = body[i+1].dPinc;
     q0[i] = body[i+1].dQinc;
   
-    for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+    for (j=0;j<(evolve->iNumBodies-1);j++) {
       etmp[i][j] = system->dmEigenVecEcc[i][j];
       itmp[i][j] = system->dmEigenVecInc[i][j];
     }
   }
     
-  ludcmp(etmp,(control->Evolve.iNumBodies-1),rowswap,&parity);
-  lubksb(etmp,(control->Evolve.iNumBodies-1),rowswap,h0);
-  lubksb(etmp,(control->Evolve.iNumBodies-1),rowswap,k0);
+  ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
+  lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
+  lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
   
-  ludcmp(itmp,(control->Evolve.iNumBodies-1),rowswap,&parity);
-  lubksb(itmp,(control->Evolve.iNumBodies-1),rowswap,p0);
-  lubksb(itmp,(control->Evolve.iNumBodies-1),rowswap,q0);
+  ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
+  lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
+  lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
       
-  S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
+  S = malloc((evolve->iNumBodies-1)*sizeof(double));
+  T = malloc((evolve->iNumBodies-1)*sizeof(double));
+  for (i=0;i<(evolve->iNumBodies-1);i++) {
     S[i] = sqrt(h0[i]*h0[i] + k0[i]*k0[i]);
     T[i] = sqrt(p0[i]*p0[i] + q0[i]*q0[i]);
     
-    for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+    for (j=0;j<(evolve->iNumBodies-1);j++) {
       system->dmEigenVecEcc[j][i] *= S[i];
       system->dmEigenVecInc[j][i] *= T[i];
     }
@@ -1839,6 +1866,29 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
         }
       }
     }
+  }
+}
+
+void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
+  int iBody;
+  double delSemiTmp, delSemi=0;
+  
+  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+    if (body[iBody].dSemiPrev!=0) {
+      delSemiTmp = fabs(body[iBody].dSemi - body[iBody].dSemiPrev)/body[iBody].dSemiPrev;
+      if (delSemiTmp > delSemi) {
+        delSemi = delSemiTmp;
+      }
+    }
+  }
+  
+  if (delSemi >= system->dDfcrit) {
+    SolveEigenVal(body,evolve,system);
+    ScaleEigenVec(body,evolve,system);
+    for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+      body[iBody].dSemiPrev = body[iBody].dSemi;
+    }
+//     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
   }
 }
 
@@ -3235,6 +3285,13 @@ double fdDistOrbLL2Qinc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }
 
+double fdDistOrbLL2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+}
+
+double fdDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*sin(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+}
 
 double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */

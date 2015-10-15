@@ -42,7 +42,7 @@ helpstr = \
   -b BODIES [BODIES ...]    Bodies to plot; should match names of .in files in cwd
   -x XAXIS                  Parameter to plot on the x-axis
   -y YAXIS [YAXIS ...]      Parameter(s) to plot on the y-axis
-  -a ALPHA                  Parameter to control line alpha
+  -a AAXIS                  Parameter to control the alpha (transparancy) axis
   
 \x1b[1mversion:\x1b[0m 0.1
 
@@ -177,6 +177,10 @@ def GetOutput(bodies = []):
   
   output = Output()
   descr = GetParamDescriptions()
+  
+  # Ensure bodies is a list
+  if type(bodies) is str:
+    bodies = [bodies]
   
   # Get the log file
   lf = [f for f in os.listdir('.') if f.endswith('.log')]

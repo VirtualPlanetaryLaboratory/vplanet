@@ -35,7 +35,7 @@ def AlphaMap(r = 0, g = 0, b = 0):
     
   return LinearSegmentedColormap('AlphaMap', cdict)
 
-def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
+def SimplePlot(conf, output, xaxis, yaxis, aaxis = None):
   '''
 
   '''
@@ -49,29 +49,47 @@ def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
     raise Exception('Parameter not understood: %s.' % xaxis)
 
   # The array of y-axis parameters
+  # Ensure it's a list
+  if type(yaxis) is str:
+    yaxis = [yaxis]
+    
   if len(yaxis) == 0:
     # User didn't specify any; let's plot all of them
-    yarr = list(set(param_names) - set([x]))
+    yarr = list(sorted(set(param_names) - set([x])))
   else:
     yarr = []
     for yn in yaxis:
       y = param_names[np.argmax(np.array([name.lower().startswith(yn.lower()) for name in param_names]))]  
       if not y.lower().startswith(yn.lower()):
-        raise Exception('Parameter not understood: %s.' % yn)
+        raise Exception('Parameter not found: %s.' % yn)
       yarr.append(y)
 
   # The alpha parameter
-  if alpha is not None:
-    a = param_names[np.argmax(np.array([name.lower().startswith(alpha.lower()) for name in param_names]))]  
-    if not a.lower().startswith(alpha.lower()):
-      raise Exception('Parameter not understood: %s.' % alpha)
+  if aaxis is not None and aaxis != 'None':
+    a = param_names[np.argmax(np.array([name.lower().startswith(aaxis.lower()) for name in param_names]))]  
+    if not a.lower().startswith(aaxis.lower()):
+      raise Exception('Parameter not found: %s.' % aaxis)
 
-  # We will only plot up to a maximum of ``conf.maxplots``  
-  if len(yarr) > conf.maxplots:
-    yarr = yarr[:conf.maxplots]
-
+  # We will only plot up to a maximum of ``conf.maxrows`` if columns are off
+  if (not conf.columns) and len(yarr) > conf.maxrows:
+    yarr = yarr[:conf.maxrows]
+    rows = conf.maxrows
+  elif conf.columns and len(yarr) > conf.maxrows:
+    columns = int(np.ceil(float(len(yarr)) / conf.maxrows))
+    rows = conf.maxrows
+  else:
+    columns = 1
+    rows = len(yarr)
+  
+  # Correct for border cases
+  if len(yarr) <= (columns * (rows - 1)):
+    rows -= 1
+  elif len(yarr) <= ((columns - 1) * rows):
+    columns -= 1
+    
   # Set up the plot
-  fig, ax = pl.subplots(len(yarr), 1, figsize = (conf.figwidth, (0.5 + len(yarr)) * conf.figheight))
+  fig, ax = pl.subplots(rows, columns, figsize = (conf.figwidth, conf.figheight))
+  ax = np.atleast_1d(ax).flatten()
   if not hasattr(ax, '__len__'):
     ax = [ax]
   if conf.tight_layout:
@@ -94,7 +112,7 @@ def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
       # Get indices of the parameters
       xi = np.where(x == np.array([param.name for param in body.params]))[0]
       yi = np.where(y == np.array([param.name for param in body.params]))[0]
-      if alpha is not None:
+      if aaxis is not None and aaxis != 'None':
         ai = np.where(a == np.array([param.name for param in body.params]))[0]
       else:
         ai = []
@@ -133,7 +151,7 @@ def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
         ax[i].plot(xpts, ypts, conf.line_styles[b], label = label, lw = conf.linewidth)
       else:
                 
-        # Let's get fancy: make the curve opacity proportional to the `alpha` parameter
+        # Let's get fancy: make the curve opacity proportional to the `aaxis` parameter
         apts = body.params[ai].array
         
         # Make logarithmic if necessary
@@ -183,7 +201,7 @@ def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
           ax[i].set_yscale('log')
     
     # Tighten things up a bit
-    if i < len(yarr) - 1:
+    if i < len(yarr) - columns:
       if conf.tight_layout:
         ax[i].set_xticklabels([])
       ax[i].set_xlabel('')
@@ -214,10 +232,10 @@ def SimplePlot(conf, output, xaxis, yaxis, alpha = None):
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(prog = 'VPLOT', add_help = False)
   parser.add_argument("-h", "--help", nargs = '?', default = False, const = 1, help = 'Display the help')
-  parser.add_argument("-b", "--bodies", nargs = '*', default = [], help = 'Bodies to plot; should match names of .in files')
-  parser.add_argument("-x", "--xaxis", default = 'Time', help = 'Parameter to plot on the x-axis')
-  parser.add_argument("-y", "--yaxis", nargs = '*', default = [], help = 'Parameter(s) to plot on the y-axis')
-  parser.add_argument("-a", "--alpha", default = None, help = 'Parameter to control line alpha')
+  parser.add_argument("-b", "--bodies", nargs = '*', default = None, help = 'Bodies to plot; should match names of .in files')
+  parser.add_argument("-x", "--xaxis", default = None, help = 'Parameter to plot on the x-axis')
+  parser.add_argument("-y", "--yaxis", nargs = '*', default = None, help = 'Parameter(s) to plot on the y-axis')
+  parser.add_argument("-a", "--aaxis", default = None, help = 'Parameter to control line alpha')
   args = parser.parse_args()
 
   # Help?
@@ -229,11 +247,23 @@ if __name__ == '__main__':
     quit()
 
   # Initialize
-  output = GetOutput(args.bodies)
   conf = GetConf()
   
+  # Assign defaults
+  if args.bodies is None:
+    args.bodies = conf.bodies
+  if args.xaxis is None:
+    args.xaxis = conf.xaxis
+  if args.yaxis is None:
+    args.yaxis = conf.yaxis
+  if args.aaxis is None:
+    args.aaxis = conf.aaxis
+  
+  # Get output params
+  output = GetOutput(args.bodies)
+  
   # Plot
-  fig = SimplePlot(conf, output, args.xaxis, args.yaxis, args.alpha)
+  fig = SimplePlot(conf, output, args.xaxis, args.yaxis, args.aaxis)
 
   # Show or save?
   if conf.interactive:

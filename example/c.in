@@ -1,6 +1,6 @@
 # Gl581 c's parameters
 sName		c			# Body's name
-saModules	eqtide $#radheat thermint $
+saModules	eqtide radheat thermint $
 		distorb distrot # Modules to apply, exact spelling required
 
 # Physical Properties

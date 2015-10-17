@@ -564,9 +564,11 @@ void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   *dTmp = body[iBody].dFluxInGlobal;
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
+    // Negative option is SI
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }  
   
@@ -574,9 +576,11 @@ void WriteFluxOutGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   *dTmp = body[iBody].dFluxOutGlobal;
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
+    // Negative option is SI
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }    
   
@@ -614,6 +618,8 @@ void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -624,6 +630,8 @@ void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
 
@@ -634,6 +642,8 @@ void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -644,6 +654,8 @@ void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }       
   
@@ -664,17 +676,25 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
   sprintf(output[OUT_FLUXINGLOBAL].cDescr,"Global mean flux in (insol*(1-albedo)) from POISE");
+  /* Sadly, Russell, we must set the negative option to W/m^2.
   sprintf(output[OUT_FLUXINGLOBAL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_FLUXINGLOBAL].bNeg = 1;
   output[OUT_FLUXINGLOBAL].dNeg = 1/40.55185;
+  */
+  output[OUT_FLUXINGLOBAL].bNeg = 1;
+  output[OUT_FLUXINGLOBAL].dNeg = 1; // Just in case
+  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXINGLOBAL].iNum = 1;
   fnWrite[OUT_FLUXINGLOBAL] = &WriteFluxInGlobal;
   
   sprintf(output[OUT_FLUXOUTGLOBAL].cName,"FluxOutGlobal");
   sprintf(output[OUT_FLUXOUTGLOBAL].cDescr,"Global mean flux out from POISE");
+  /* Here, too
   sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_FLUXOUTGLOBAL].bNeg = 1;
   output[OUT_FLUXOUTGLOBAL].dNeg = 1/40.55185;
+  */
+  output[OUT_FLUXOUTGLOBAL].bNeg = 1;
+  output[OUT_FLUXOUTGLOBAL].dNeg = 1;
+  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum = 1;
   fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;
   

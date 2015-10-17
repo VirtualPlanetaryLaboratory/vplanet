@@ -55,6 +55,11 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
+  module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -87,6 +92,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bRadheat)
     iNumModules++;
   if (body[iBody].bThermint)
+    iNumModules++;
+  if (body[iBody].bAtmEsc)
+    iNumModules++;
+  if (body[iBody].bStellar)
+    iNumModules++;
+  if (body[iBody].bPoise)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -131,6 +142,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
   
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -154,9 +169,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
-    
+    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
-    }
+  }
 
   /************************
    * ADD NEW MODULES HERE *
@@ -183,6 +201,18 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
       AddModuleThermint(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = THERMINT;
   }
+  if (body[iBody].bAtmEsc) {
+    AddModuleAtmEsc(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = ATMESC;
+  }
+  if (body[iBody].bStellar) {
+    AddModuleStellar(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = STELLAR;
+  }
+  if (body[iBody].bPoise) {
+    AddModulePoise(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = POISE;
+  }
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iFile){
@@ -197,7 +227,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: No modules input to option %s.\n",options->cName);
+        fprintf(stderr,"ERROR: No modules input to option %s.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
 
@@ -208,19 +238,25 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
        ************************/
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
-	body[iFile-1].bEqtide = 1;
+        body[iFile-1].bEqtide = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
-	body[iFile-1].bRadheat = 1;
+        body[iFile-1].bRadheat = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
-	body[iFile-1].bDistOrb = 1;
+        body[iFile-1].bDistOrb = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
-	body[iFile-1].bDistRot = 1;
+        body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-	body[iFile-1].bThermint = 1;
+	      body[iFile-1].bThermint = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
+	      body[iFile-1].bAtmEsc = 1;
+	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
+	      body[iFile-1].bStellar = 1;
+	    } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
+	      body[iFile-1].bPoise = 1;
       } else {
-	if (control->Io.iVerbose >= VERBERR)
-	  fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
-	LineExit(files->Infile[iFile].cIn,lTmp[0]);
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
@@ -230,6 +266,20 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   }
 
   free(lTmp);
+}
+
+void InitializeBodyModules(BODY **body,int iNumBodies) {
+  int iBody;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bDistOrb = 0;
+      (*body)[iBody].bDistRot = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bPoise = 0;
+      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bAtmEsc = 0;  }
 }
 
 /*
@@ -253,7 +303,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
   if (body[iBody].bThermint) {
     if (!body[iBody].bRadheat) {
       if (control->Io.iVerbose > VERBINPUT)
-	fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
+        fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else
@@ -270,11 +320,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
     else { // Thermint and Eqtide called
       /* When Thermint and Eqtide are called together, care must be taken as 
-	 Im(k_2) must be known in order to calculate TidalZ. As the individual 
-	 module PropsAux are called prior to PropsAuxMulti, we must call the 
-	 "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
-	 "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-	 PropsAuxEqtideThermint. */
+         Im(k_2) must be known in order to calculate TidalZ. As the individual 
+         module PropsAux are called prior to PropsAuxMulti, we must call the 
+         "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+         "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+         PropsAuxEqtideThermint. */
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
       control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
@@ -342,7 +392,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
   /*  
   // Insert Russell's code here.
   printf("Entered  ForceBehaviorEqtideLagrange.\n");
@@ -361,13 +411,13 @@ void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
   for (j=0;j<LAPLNUM;j++) {
     dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
     if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-	system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceF[j][0](alpha1, 0);
-		
-	system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-	system->fnLaplaceDeriv[j][0](alpha1, 0);
-		
-	system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
+        system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+        system->fnLaplaceF[j][0](alpha1, 0);
+                
+        system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
+        system->fnLaplaceDeriv[j][0](alpha1, 0);
+                
+        system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
     }
   }
   */

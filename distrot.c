@@ -50,9 +50,9 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     /* Option was found */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp >= 1) {
-      if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
+      if (control->Io.iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
     }
     body[iFile-1].dDynEllip = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -80,7 +80,7 @@ void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 
   for (iOpt=OPTSTARTDISTROT;iOpt<OPTENDDISTROT;iOpt++) { 
       if (options[iOpt].iType != -1) {
-	fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
+        fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
   }
 }
@@ -150,34 +150,61 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesDistRot;
     
     CalcXYZobl(body, iBody);
-    /* Body updates */
-    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-      /* x = sin(obl)*cos(pA) */
-      InitializeXoblDistRot(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotDxDt;
-      
-      /* y = sin(obl)*sin(pA) */
-      InitializeYoblDistRot(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotDyDt;
-      
-      /* z = cos(obl) */
-      InitializeZoblDistRot(body,update,iBody,iPert);
-      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotDzDt;
-        
-    }
-    /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
-    /* x = sin(obl)*cos(pA) */
-    InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotDxDt;
-      
-    /* y = sin(obl)*sin(pA) */
-    InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotDyDt;
     
+    if (control->Evolve.iDistOrbModel==RD4) {
+      /* Body updates */
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        /* x = sin(obl)*cos(pA) */
+        InitializeXoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotRD4DxDt;
+        
+        /* y = sin(obl)*sin(pA) */
+        InitializeYoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotRD4DyDt;
+        
+        /* z = cos(obl) */
+        InitializeZoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotRD4DzDt;
+          
+      }
+      /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+      /* x = sin(obl)*cos(pA) */
+      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DxDt;
+        
+      /* y = sin(obl)*sin(pA) */
+      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DyDt;
+      
+    } else if (control->Evolve.iDistOrbModel==LL2) {
+      /* Body updates */
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        /* x = sin(obl)*cos(pA) */
+        InitializeXoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotLL2DxDt;
+        
+        /* y = sin(obl)*sin(pA) */
+        InitializeYoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotLL2DyDt;
+        
+        /* z = cos(obl) */
+        InitializeZoblDistRot(body,update,iBody,iPert);
+        fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotLL2DzDt;
+          
+      }
+      /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+      /* x = sin(obl)*cos(pA) */
+      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DxDt;
+        
+      /* y = sin(obl)*sin(pA) */
+      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DyDt;
+    }
     if (body[iBody].bGRCorr) {
       InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
       fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
-      
+ 
       InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
       fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
     }
@@ -218,14 +245,14 @@ void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   if (body[iBody].bGRCorr) {
     update[iBody].padDXoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaXoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+2;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+2;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaXoblDistRot[iPert] = (*iEqn)++;
     }
   } else {
     update[iBody].padDXoblDtDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaXoblDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+1;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaXoblDistRot[iPert] = (*iEqn)++;
     }
@@ -240,14 +267,14 @@ void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   if (body[iBody].bGRCorr) {
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+2;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+2;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaYoblDistRot[iPert] = (*iEqn)++;
     }
   } else { 
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(int));
-    for (iPert=0;iPert<=body[iBody].iGravPerts+1;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaYoblDistRot[iPert] = (*iEqn)++;
     }
@@ -292,7 +319,7 @@ void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
      dDeriv += dObldx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dObldy*(*(update[iBody].padDYoblDtDistRot[iPert]))\
-	+ dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
+        + dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
  
   *dTmp = dDeriv;
   
@@ -528,7 +555,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
 }
 
 /* Equations used to calculate obliquity/spin evolution */
@@ -543,16 +570,28 @@ double fdCentralTorqueR(BODY *body, int iBody) {
   return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*cos(obliq)/DAYSEC;
 }
 
-double fdObliquityC(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dQinc*fdDistOrbDpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbDqDt(body,system,iaBody);
+double fdObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
 }
 
-double fdObliquityA(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbDqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityC(body,system,iaBody) );
+double fdObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
 }
 
-double fdObliquityB(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbDpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityC(body,system,iaBody) );
+double fdObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+}
+
+double fdObliquityCLL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dQinc*fdDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbLL2DqDt(body,system,iaBody);
+}
+
+double fdObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbLL2DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCLL2(body,system,iaBody) );
+}
+
+double fdObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCLL2(body,system,iaBody) );
 }
 
 //----------Relativistic correction-------------------------------------
@@ -568,35 +607,65 @@ double fdAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -body[iaBody[0]].dXobl*fdAxialGRCorrection(body,iaBody);
 }
 
-//--------------Obliquity/spin evolution---------------------------------------------------------------
+//--------------Obliquity/spin evolution--------------------------------------------------------------
 
-double fdDistRotDyDt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
     return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
-    return -fdObliquityB(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityC(body,system,iaBody);
+    return -fdObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCRD4(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotDxDt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
     return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
-    return fdObliquityA(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityC(body,system,iaBody);
+    return fdObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCRD4(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotDzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fdObliquityB(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityA(body,system,iaBody);
+double fdDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fdObliquityBRD4(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityARD4(body,system,iaBody);
 }
 
+
+double fdDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double y;
+  
+  if (iaBody[1] == 0) {
+    return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+  } else if (iaBody[1] >= 1) {
+    y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+    return -fdObliquityBLL2(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCLL2(body,system,iaBody);
+  }
+  assert(0);
+  return 0;
+}
+
+double fdDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double y;
+  
+  if (iaBody[1] == 0) {
+    return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+  } else if (iaBody[1] >= 1) {
+    y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+    return fdObliquityALL2(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCLL2(body,system,iaBody);
+  }
+  assert(0);
+  return 0;
+}
+
+double fdDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fdObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityALL2(body,system,iaBody);
+}

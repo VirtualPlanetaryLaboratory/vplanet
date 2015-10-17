@@ -27,16 +27,16 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_DISCRETEROT         1005
 #define OPT_FIXORBIT            1007
 #define OPT_FORCEEQSPIN         1010 
-#define OPT_HALTDBLSYNC	        1015
+#define OPT_HALTDBLSYNC         1015
 #define OPT_HALTTIDELOCK        1020
 #define OPT_HALTSYNCROT         1025
 #define OPT_K2                  1027 /* Change to LOVEK2 */
 #define OPT_MAXLOCKDIFF         1030
 #define OPT_SYNCECC             1035
-#define OPT_TIDEMODEL		1040
-#define OPT_TIDEPERTS		1042
-#define OPT_TIDALTAU		1045
-#define OPT_TIDALQ		1050
+#define OPT_TIDEMODEL           1040
+#define OPT_TIDEPERTS           1042
+#define OPT_TIDALTAU            1045
+#define OPT_TIDALQ              1050
 
 
 
@@ -94,11 +94,11 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
 #define OUTBODYSTARTEQTIDE      1050
 #define OUTENDEQTIDE            1100
 
-#define OUT_DSEMIDTEQTIDE	1010
-#define OUT_DECCDTEQTIDE	1012
-#define OUT_DMMDTEQTIDE	        1015
-#define OUT_DORBPERDTEQTIDE	1017
-#define OUT_DORBEPSILON		1020
+#define OUT_DSEMIDTEQTIDE       1010
+#define OUT_DECCDTEQTIDE        1012
+#define OUT_DMMDTEQTIDE         1015
+#define OUT_DORBPERDTEQTIDE     1017
+#define OUT_DORBEPSILON         1020
 #define OUT_ECCTIMEEQTIDE       1023
 #define OUT_SEMITIMEEQTIDE      1025
 #define OUT_DHECCDTEQTIDE       1028
@@ -109,32 +109,32 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
 
 /* Body Properties due to tidal evolution */
 
-#define OUT_BODYDSEMIDTEQTIDE	1052
-#define OUT_BODYDECCDTEQTIDE	1054
+#define OUT_BODYDSEMIDTEQTIDE   1052
+#define OUT_BODYDECCDTEQTIDE    1054
 
-#define OUT_DOBLDTEQTIDE	1056
-#define OUT_DROTPERDTEQTIDE	1058
-#define OUT_DROTRATEDTEQTIDE	1060
+#define OUT_DOBLDTEQTIDE        1056
+#define OUT_DROTPERDTEQTIDE     1058
+#define OUT_DROTRATEDTEQTIDE    1060
 #define OUT_EQROTRATEEQTIDE     1062
 #define OUT_EQROTRATEDISCRETE   1064
 #define OUT_EQROTPERDISCRETE    1066
-#define OUT_EQROTRATECONT	1068
-#define OUT_EQROTPERCONT	1070
-#define OUT_EQROTPER	        1072
-#define OUT_EQROTRATE	        1074
+#define OUT_EQROTRATECONT       1068
+#define OUT_EQROTPERCONT        1070
+#define OUT_EQROTPER            1072
+#define OUT_EQROTRATE           1074
 
-#define OUT_GAMMAROT	        1078
+#define OUT_GAMMAROT            1078
 #define OUT_GAMMAORB            1080
 
 #define OUT_IMK2                1082
 
 #define OUT_TIDALQ              1084
-#define OUT_TIDALTAU		1086
+#define OUT_TIDALTAU            1086
 #define OUT_TIDELOCK            1088
 #define OUT_ROTRATETIMEEQTIDE   1090
 #define OUT_OBLTIMEEQTIDE       1092
-#define OUT_POWEREQTIDE	        1094
-#define OUT_ENFLUXEQTIDE	1096
+#define OUT_POWEREQTIDE         1094
+#define OUT_ENFLUXEQTIDE        1096
 
 void HelpOutputEqtide(OUTPUT*);
 void WriteBodyDsemiDtEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -179,7 +179,7 @@ void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,int,int);
+void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 
 /******************** CPL Functions ********************/
 

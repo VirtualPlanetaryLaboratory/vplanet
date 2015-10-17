@@ -1,0 +1,8 @@
+.DS_Store
+vplanet
+vplanet.dSYM
+*.forward
+*.log
+.stellar/
+*.pyc
+todo.rst

@@ -77,12 +77,16 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRot Functions */
 void PropertiesDistRot(BODY*,UPDATE*,int);
-void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,int,int);
+void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 void CalcXYZobl(BODY*, int);
 
 /* DistRot's equations */
-double fdDistRotDxDt(BODY*, SYSTEM*, int*);
-double fdDistRotDyDt(BODY*, SYSTEM*, int*);
-double fdDistRotDzDt(BODY*, SYSTEM*, int*);
+double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);
+double fdDistRotRD4DyDt(BODY*, SYSTEM*, int*);
+double fdDistRotRD4DzDt(BODY*, SYSTEM*, int*);
 double fdAxialGRDyDt(BODY*, SYSTEM*, int*);
 double fdAxialGRDxDt(BODY*, SYSTEM*, int*);
+
+double fdDistRotLL2DxDt(BODY*, SYSTEM*, int*);
+double fdDistRotLL2DyDt(BODY*, SYSTEM*, int*);
+double fdDistRotLL2DzDt(BODY*, SYSTEM*, int*);

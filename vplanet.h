@@ -16,7 +16,7 @@
 #define STELLAR       5
 #define DYNAMO        6
 #define THERMINT      7
-#define EBM           8
+#define POISE         8
 
 /* Fundamental constants */
 
@@ -24,7 +24,7 @@
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
-#define dS0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
+#define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 /* Units: Calculations are done in SI */
 
 #define cLIGHT        299792458.0 
@@ -96,6 +96,7 @@
 #define VECC         1002
 #define VROT         1003
 #define VOBL         1004
+#define VRADIUS      1005
 
 // RADHEAT
 #define VNUM40KMAN      1101
@@ -124,7 +125,12 @@
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
 
-#define S0            0//0.422e-6   /* solar torque correction from Laskar 1986 (may mean jack shit here) */
+// ATMESC
+#define VSURFACEWATERMASS  1202
+
+// STELLAR
+#define VLUMINOSITY     1502
+#define VTEMPERATURE    1503
 
 /* Now define the structs */
 
@@ -182,12 +188,16 @@ typedef struct {
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
   double dMeanA;         /**< Mean anomaly (currently only used for inv plane calculation) */
+  double dTrueL;         /**< True longitude (currently only used for insolation calculation */
   double dEccA;          /**< Eccentric anomaly (currently only used for inv plane calculation) */
   double *dCartPos;      /**< Cartesian position of body (currently only used for inv plane calculation) */
   double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
+  int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
+  int *iaEigFreqs;       /**< Indices of eigenfrequencies */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
+  int iDistOrbModel; 
   
   /* DISTROT parameters */
   int bDistRot;
@@ -215,6 +225,8 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
   double dDeccDtEqtide;  /**< Eccentricity time rate of change */
   double *daDoblDtEqtide;  /**< Obliquity time rate of change */
+  // XXX dRotRateDtEqtide???, dSemiDtEqtide?
+
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */
@@ -314,6 +326,21 @@ typedef struct {
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
 
+  /* ATMESC Parameters */
+  int bAtmEsc;           /**< Apply Module ATMESC? */
+  double dSurfaceWaterMass;
+  double dMinSurfaceWaterMass;
+  double dXFrac;
+  double dAtmXAbsEff;
+
+  /* STELLAR Parameters */
+  int bStellar;
+  double dLuminosity;
+  double dTemperature;
+  double dLXUV;
+  double dSatXUVFrac;
+  int iStellarModel;
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -359,7 +386,38 @@ typedef struct {
   /* CLIMA Parameters */
   double dArgonPressure;
   double dClimaZenithAngle;
-
+  
+  /* POISE parameters */
+  int bPoise;                /**< Apply POISE module? */
+  int iNumLats;              /**< Number of latitude cells */
+  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  int iNDays;                /**< Number of days in planet's year */
+  double *daLats;            /**< Latitude of each cell (centered) */
+  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
+  double dAstroDist;         /**< Distance between primary and planet */
+  double **daInsol;           /**< Daily insolation at each latitude */
+  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
+  double *daTemp;            /**< Surface temperature in each cell */
+  double dTGlobal;           /**< Global mean temperature at surface */
+  double *daTGrad;           /**< Gradient of temperature (meridional) */
+  double *daAlbedo;          /**< Albedo of each cell */
+  double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
+  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
+  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
+  double dDiffCoeff;         /**< Diffusion coefficient set by user */
+  double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */
+  double *daFlux;            /**< Meridional surface heat flux */
+  double *daFluxIn;          /**< Incoming surface flux (insolation) */
+  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double dFluxInGlobal;      /**< Global mean of incoming flux */
+  double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
+  double *daDivFlux;         /**< Divergence of surface flux */
+  int iWriteLat;             /**< Stores index of latitude to be written in write function */
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -382,6 +440,11 @@ typedef struct {
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
   double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
   double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
+  double **dmEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange solution */
+  double **dmEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange solution */
+  double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
+  double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
+  double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
   
   double dTotEnInit;     /**< System's Initial Energy */
 
@@ -404,7 +467,7 @@ typedef struct {
       with a Type 0 variable must account for  the evolution with 
       dTimeStep. 
   */
-  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar quantity with time derivative) */
+  int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar/sinusoidal quantity with time derivative, 3 = sinusoidal quantity with explicit function of age) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
@@ -428,6 +491,7 @@ typedef struct {
   /* Number of eqns to modify a parameter */
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
+  int iNumRadius;
 
   /* These are the variables that the update matrix modifies */
   // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
@@ -436,6 +500,7 @@ typedef struct {
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
+  int iRadius;
 
   /* Next comes the identifiers for the module that modifies a variable */
 
@@ -494,6 +559,7 @@ typedef struct {
   double *pdD232ThNumManDt;
   double *pdD238UNumManDt;
   double *pdD235UNumManDt;
+
   /* RADHEAT CORE */
   int i40KCore;
   int i232ThCore;
@@ -584,7 +650,31 @@ typedef struct {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       chi = cos(obliq) derivative due to DISTROT. */
   double **padDZoblDtDistRot;
+
+  /* ATMESC */         
+  int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
+  int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      derivative of these variables due to ATMESC. */
+  double *pdDSurfaceWaterMassDtAtmesc;
+
+  /* STELLAR */ 
+  int iLuminosity;           /**< Variable # Corresponding to the luminosity */
+  int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
+  int iTemperature;
+  int iNumTemperature;
+
+  int iRotStellar;           /**< iEqn number for the evolution of rotation in STELLAR */
+  
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+      function that returns these variables due to STELLAR evolution. */
+  double *pdLuminosityStellar;
+  double *pdTemperatureStellar;
+  double *pdRadiusStellar;
+  
+  double *pdRotRateStellar;
+
 } UPDATE;
 
 typedef struct {
@@ -606,12 +696,21 @@ typedef struct {
   int dMin40KPower;     /**< Halt at this Potassium-40 Power */
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower; 
+  int dMin235UPower;
+
+  /* ATMESC */
+  int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  
+  /* STELLAR */
+  // Nothing
 
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */
   int dMinTCore;     /**< Halt at this TCore */
   
+  /* DISTORB */
+  int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
+
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -672,6 +771,9 @@ typedef struct {
   /* RADHEAT */
   /* Nothing? */
 
+  /* DISTORB */
+  int iDistOrbModel;
+  
   fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
   fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
@@ -699,7 +801,7 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,int,int);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -751,6 +853,8 @@ typedef struct {
   int iNumCols;             /**< Number of Columns in Output File */
   char caCol[NUMOUT][OPTLEN];  /**< Output Value Name */
   int bNeg[NUMOUT];         /**< Use Negative Option Units? */
+  int iNumGrid;             /**< Number of grid outputs */
+  char caGrid[NUMOUT][OPTLEN];  /**< Gridded output name */
 } OUTFILE;
 
 
@@ -787,9 +891,24 @@ typedef struct {
 
 /* Some output variables must combine output from different modules.
  * These functions do that combining. */
-
+ 
 typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
 
+/* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
+// typedef struct {
+//   char cName[OPTLEN];    /**< Output Name */
+//   char cDescr[LINE];     /**< Output Description */
+//   int bNeg;              /**< Is There a Negative Option? */
+//   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
+//   char cNeg[NAMELEN];    /**< Units of Negative Option */
+//   double dNeg;           /**< Conversion Factor for Negative Option */
+//   int iNum;              /**< Number of Columns for Output */
+// 
+//   /* Now add vector output functions */
+//   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
+// 
+// } GRIDOUTPUT; 
+ 
 typedef struct {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
@@ -798,7 +917,9 @@ typedef struct {
   char cNeg[NAMELEN];    /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
   int iNum;              /**< Number of Columns for Output */
+  int bGrid;             /**< Is output quantity gridded (e.g. a function of latitude)? */
 
+//   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
   /* Now add vector output functions */
   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
 
@@ -833,19 +954,21 @@ typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
 
-
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
-
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
@@ -909,16 +1032,24 @@ typedef struct {
   fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
   /*! Function pointers to finalize Poincare's k */
   fnFinalizeUpdateKeccModule **fnFinalizeUpdateKecc;
+  /*! Function pointers to finalize Luminosity */
+  fnFinalizeUpdateLuminosityModule **fnFinalizeUpdateLuminosity;
   /*! Function pointers to finalize Poincare's p */
   fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
   /*! Function pointers to finalize Poincare's q */
-  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;  
+  fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
+  /*! Function pointers to finalize Radius */ 
+  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
   /*! Function pointers to finalize Rotation Rate */ 
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
   /*! Function pointers to finalize Semi-major Axis */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
+  /*! Function pointers to finalize Surface Water */ 
+  fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
   /*! Function pointers to finalize Core Temperature */ 
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
+  /*! Function pointers to finalize Temperature */
+  fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
   
@@ -978,9 +1109,13 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 /* module files */
 #include "eqtide.h"
 #include "radheat.h"
+#include "atmesc.h"
+#include "stellar.h"
+#include "baraffe2015.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"
+#include "poise.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

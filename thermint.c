@@ -232,8 +232,8 @@ void VerifyRotationThermint(BODY *body,CONTROL *control,OPTIONS *options,char cF
 void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     /*    if (options[OPT_TMAN].iLine[iBody+1] >= 0) {
-	body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
-	printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
+        body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
+        printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
     }
     body[iBody].dTMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the constant given num and age.
     */
@@ -319,7 +319,7 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
 }
 
-void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
   if (body[iBody].dTCore < 0.5)
@@ -1202,17 +1202,17 @@ double fdDepthMeltMan(BODY *body,int iBody) {
     //    return root(type,body,iBody,guess1,guess2,tol,nmax);
     double depthmeltman=cubicroot(type,body,iBody);
     if (depthmeltman < body[iBody].dBLUMan) {        //if solidus intersects adiabat within UMTBL then recompute it.
-	depthmeltman=cubicroot(1,body,iBody);        //type=1 to find intersection within UMTBL.
+      depthmeltman=cubicroot(1,body,iBody);        //type=1 to find intersection within UMTBL.
     }
     return depthmeltman;
 }
 /* Get TDepthMeltMan */
 double fdTDepthMeltMan(BODY *body,int iBody) {
     if (body[iBody].dDepthMeltMan==0) {    //if no melt layer found.
-	    return 0;
-	} else {                         //if yes melt layer found.
-	    return fdSolidusMan(body[iBody].dDepthMeltMan);
-	}
+          return 0;
+      } else {                         //if yes melt layer found.
+          return fdSolidusMan(body[iBody].dDepthMeltMan);
+      }
 }
 /* Get TJumpMeltMan */ 
 double fdTJumpMeltMan(BODY *body,int iBody) {
@@ -1237,9 +1237,9 @@ double fdImk2Man(BODY *body,int iBody) {
 double fdRIC(BODY *body,int iBody) {
     double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
     if (numerator>0) {    //IC Found.
-	return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
+        return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
     } else {
-	return 0;        //no IC.
+        return 0;        //no IC.
     }
 }
 
@@ -1280,33 +1280,33 @@ double fdHflowMeltMan(BODY *body,int iBody) {
 }
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
     if (body[iBody].dRIC>0) {   //If IC exists.
-	double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
-	return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)	
+      double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
+      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
     } else {                    //If no IC.
-	return 0;
-    }	
+      return 0;
+    }
 }
 double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
-	double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
-	return areaic*(EDENSIC)*(*(update[iBody].pdTDotCore))/(ADJUMPC2CMB)*body[iBody].dDRICDTCMB;  //DB14 (31)
+      double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
+      return areaic*(EDENSIC)*(*(update[iBody].pdTDotCore))/(ADJUMPC2CMB)*body[iBody].dDRICDTCMB;  //DB14 (31)
     } else {                    //If no IC.
-	return 0;
+      return 0;
     }
 }
 
 double fdHflowLatentIC(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
-	return body[iBody].dMassICDot*(SPECLATENTICB);  //DB14 (26)
+      return body[iBody].dMassICDot*(SPECLATENTICB);  //DB14 (26)
     } else {                    //If no IC.
-	return 0;
+      return 0;
     }
 }
 double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
-	return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)	
+      return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)
     } else {                    //If no IC.
-	return 0;
+      return 0;
     }
 }
 
@@ -1338,17 +1338,17 @@ double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol
     double fguess1=0.0;  //current value of f(guess1).
     int count=0.0;
     while (count <= nmax) {
-	mid=(guess1+guess2)/2.0;                            //bisection method from wikipedia.
-	if (type == 0) {                                    //use fdSolTempDiffMan
-	    fmid=fdSolTempDiffMan(mid,body,iBody);          //function at mid.
-	    fguess1=fdSolTempDiffMan(guess1,body,iBody);    //function at guess1.
-	}
-	if (fmid==0 || (guess2-guess1)/2.0<=tol) {          //solution found.
-	    return mid;
-	}
-	count++;             //increment count by 1.
-	if (fmid/fabs(fmid)==fguess1/fabs(fguess1)) {guess2=mid;}
-	else {guess1=mid;}
+      mid=(guess1+guess2)/2.0;                            //bisection method from wikipedia.
+      if (type == 0) {                                    //use fdSolTempDiffMan
+          fmid=fdSolTempDiffMan(mid,body,iBody);          //function at mid.
+          fguess1=fdSolTempDiffMan(guess1,body,iBody);    //function at guess1.
+      }
+      if (fmid==0 || (guess2-guess1)/2.0<=tol) {          //solution found.
+          return mid;
+      }
+      count++;             //increment count by 1.
+      if (fmid/fabs(fmid)==fguess1/fabs(fguess1)) {guess2=mid;}
+      else {guess1=mid;}
     }
     printf("method failed (nmax exceeded)\n");
     return 0;
@@ -1357,26 +1357,26 @@ double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol
 double cubicroot(int type,BODY *body,int iBody) {
     double a=0,b=0,c=0,d=0;  //coefficients of cubic polynomial.    
     if (type==0){     //type=0 is melt intersection in adiabatic part of mantle, away from TBL's.
-	a=ASOLIDUS;
-	b=BSOLIDUS;
-	c=CSOLIDUS+ADGRADMAN;
-	d=DSOLIDUS-body[iBody].dTUMan-(ADGRADMAN)*((ERMAN)-body[iBody].dBLUMan);
+      a=ASOLIDUS;
+      b=BSOLIDUS;
+      c=CSOLIDUS+ADGRADMAN;
+      d=DSOLIDUS-body[iBody].dTUMan-(ADGRADMAN)*((ERMAN)-body[iBody].dBLUMan);
     }
     if (type==1){    //type=1 is melt intersection within UM TBL.
-	a=ASOLIDUS;
-	b=BSOLIDUS;
-	c=CSOLIDUS+body[iBody].dTJumpUMan/body[iBody].dBLUMan;
-	d=DSOLIDUS-TSURF-body[iBody].dTJumpUMan/body[iBody].dBLUMan*(ERMAN);
-    }	
+      a=ASOLIDUS;
+      b=BSOLIDUS;
+      c=CSOLIDUS+body[iBody].dTJumpUMan/body[iBody].dBLUMan;
+      d=DSOLIDUS-TSURF-body[iBody].dTJumpUMan/body[iBody].dBLUMan*(ERMAN);
+    }   
     double delta0=pow(b,2.0)-3.0*a*c;                                             //cubic root component (wikip)
     double delta1=2.0*cube(b)-9.0*a*b*c+27.0*pow(a,2.0)*d;                        //cubic root component (wikip)
     double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
     if (pow(delta1,2.0)-4.0*cube(delta0) < 0) {
-	//	printf("imaginary cubic root!\n");
-	//	exit(1);
-	return 0;       //imaginary root implies no intersection, no melt layer?
+      //        printf("imaginary cubic root!\n");
+      //        exit(1);
+      return 0;       //imaginary root implies no intersection, no melt layer?
     }
-    double root=-1.0/(3.0*a)*(b+croot+delta0/croot);	                          //real cubic root, radius of layer.
+    double root=-1.0/(3.0*a)*(b+croot+delta0/croot);                              //real cubic root, radius of layer.
     return ERMAN-root;                                                            //Return depth.
 }
 double fdSolidusMan(double depth) {

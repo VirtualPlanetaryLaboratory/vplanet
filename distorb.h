@@ -7,6 +7,14 @@
  *
 */
 
+/* Orbital model */
+#define LL2         1
+#define RD4         0
+#define TEENY				1e-20
+
+#define RADIX 2.0   //factor used by matrix solver in LL2 solution
+#define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
+
 void InitializeControlDistOrb(CONTROL*);
 void AddModuleDistOrb(MODULE*,int,int);
 void BodyCopyDistOrb(BODY*,BODY*,int,int);
@@ -24,6 +32,8 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_DFCRIT             1350
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352
+#define OPT_ORMAXECC           1353
+#define OPT_ORBITMODEL         1399
 
 /* Options Functions */
 void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -53,7 +63,6 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int);
 #define OUTSTARTDISTORB        1300 /* Start of DISTORB options */
 #define OUTENDDISTORB          1400 /* End of DISTORB options */
 #define OUTBODYSTARTDISTORB    1320 /* Start of DISTORB BODY options */
-
 
 #define OUT_INC                 1321
 #define OUT_SINC                1322
@@ -101,12 +110,29 @@ void LogDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistOrb Functions */
+double signf(double);
+double fdLaplaceCoeff(double,int,double);
+unsigned long int factorial(unsigned int);
+int Nchoosek(int, int);
+int CombCount(int,int,int);
+double ABmatrix(BODY*,int,int,int);
+double GRCorrMatrix(BODY*,int,int);
+void HessEigen(double**,int,double[],double[]);
+void ElmHess(double**,int);
+void BalanceM(double**,int);
+void ludcmp(double**,int,int*,float*);
+void lubksb(double**,int,int*,double[]);
+void FindEigenVec(double**,double,int,double*);
+void SolveEigenVal(BODY*,CONTROL*,SYSTEM*);
+void ScaleEigenVec(BODY*,CONTROL*,SYSTEM*);
+
 void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
 
+void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,int,int);
+void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);
@@ -167,7 +193,15 @@ double fdApsidalGRDhDt(BODY*, SYSTEM*, int*);
 double fdApsidalGRDkDt(BODY*, SYSTEM*, int*);
 
 /* DistOrb's equations in h,k,p,q */
-double fdDistOrbDhDt(BODY*, SYSTEM*, int*);
-double fdDistOrbDkDt(BODY*, SYSTEM*, int*);
-double fdDistOrbDpDt(BODY*, SYSTEM*, int*);
-double fdDistOrbDqDt(BODY*, SYSTEM*, int*);
+double fdDistOrbRD4DhDt(BODY*, SYSTEM*, int*);
+double fdDistOrbRD4DkDt(BODY*, SYSTEM*, int*);
+double fdDistOrbRD4DpDt(BODY*, SYSTEM*, int*);
+double fdDistOrbRD4DqDt(BODY*, SYSTEM*, int*);
+
+double fdDistOrbLL2Hecc(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2Kecc(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2Pinc(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2Qinc(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2DpDt(BODY*, SYSTEM*, int*);
+double fdDistOrbLL2DqDt(BODY*, SYSTEM*, int*);
+

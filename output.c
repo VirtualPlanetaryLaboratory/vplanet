@@ -399,6 +399,14 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // XXX I don't think this will work with just eqtide
+  //*dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
+  *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  strcpy(cUnit,"");
+}
+
 void WriteXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dXobl;
@@ -601,6 +609,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_TIME].cName,"Time");
   sprintf(output[OUT_TIME].cDescr,"Simulation Time");
+  sprintf(output[OUT_TIME].cNeg,"Gyr");
   output[OUT_TIME].bNeg = 1;
   output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_TIME].iNum = 1;
@@ -659,6 +668,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBENERGY].iNum = 1;
   fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
 
+  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
+  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
+  output[OUT_TIDALQ].bNeg = 0;
+  output[OUT_TIDALQ].iNum = 1;
+  fnWrite[OUT_TIDALQ] = WriteTidalQ;
+
   sprintf(output[OUT_XOBL].cName,"Xobl");
   sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
   output[OUT_XOBL].iNum = 1;
@@ -687,7 +702,7 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
     output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       /* Initialize them all to return nothing, then they get changed 
-	 from AddModule subroutines */
+      from AddModule subroutines */
       output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
     }
   }
@@ -871,15 +886,15 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
   for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
       if (memcmp(files->Outfile[iBody].caCol[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
- 	/* Match! */
-	dTmp=malloc(output[iOut].iNum*sizeof(double));
-	fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
-	  strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caCol[iFile]);
-	  sprintf(cTmp,"[%s]",cUnit);
-	  strcat(cCol[iFile+iSubOut+iExtra],cTmp);
-	}
-	iExtra += (output[iOut].iNum-1);
+        /* Match! */
+        dTmp=malloc(output[iOut].iNum*sizeof(double));
+        fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+        for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
+          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caCol[iFile]);
+          sprintf(cTmp,"[%s]",cUnit);
+          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+        }
+        iExtra += (output[iOut].iNum-1);
       }
       
     }
@@ -950,8 +965,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
-	WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-
+        WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
     /* Log modules */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
@@ -998,10 +1012,10 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 }
 
 void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput *fnWrite,double dTime,double dDt){
-  int iBody,iCol,iOut,iSubOut,iExtra=0;
-  double dCol[NUMOPT],*dTmp;
+  int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat;
+  double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN];
+  char cUnit[OPTLEN], cPoiseGrid[NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the 
@@ -1012,14 +1026,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-	if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
-	  /* Match! */
-	  dTmp=malloc(output[iOut].iNum*sizeof(double));
-	  fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	  for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
-	    dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
-	  iExtra += (output[iOut].iNum-1);
-	}
+        if (output[iOut].bGrid == 0) {
+          if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+            /* Match! */
+            dTmp=malloc(output[iOut].iNum*sizeof(double));
+            fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
+              dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
+            iExtra += (output[iOut].iNum-1);
+          }
+        }
       }
     }
 
@@ -1031,6 +1047,41 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
     fprintf(fp,"\n");
     fclose(fp);
+    
+    /* Grid outputs, currently only set up for POISE */
+    if (body[iBody].bPoise) {
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+        for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
+          for (iOut=0;iOut<MODULEOUTEND;iOut++) {
+            if (output[iOut].bGrid == 1) {
+              if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+                dTmp = malloc(1*sizeof(double));
+                body[iBody].iWriteLat = iLat;
+                fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+                dGrid[iGrid]=*dTmp;
+              }
+            }
+          }
+        }
+        /* Now write the columns */
+  
+        sprintf(cPoiseGrid,"%s.%s.Climate",system->cName,body[iBody].cName);
+    
+        if (control->Evolve.dTime == 0 && iLat == 0) {
+          WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+          fp = fopen(cPoiseGrid,"w");      
+        } else {
+          fp = fopen(cPoiseGrid,"a");
+        }
+      
+        for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid+iExtra;iGrid++) {
+          fprintd(fp,dGrid[iGrid],control->Io.iSciNot,control->Io.iDigits);
+          fprintf(fp," ");
+        }
+        fprintf(fp,"\n");
+        fclose(fp);
+      }
+    }
   }
 }
 
@@ -1039,10 +1090,13 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   for (iOut=0;iOut<MODULEOUTEND;iOut++) {
     sprintf(output[iOut].cName,"null");
+    output[iOut].bGrid = 0;
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
-    output[iOut].bDoNeg = malloc(2*sizeof(int));
+    output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
+    for (iBody=0;iBody<MAXBODIES;iBody++)
+        output[iOut].bDoNeg[iBody] = 0;
   }
 
   
@@ -1065,9 +1119,12 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputEqtide(output,fnWrite);
   InitializeOutputRadheat(output,fnWrite);
+  InitializeOutputAtmEsc(output,fnWrite);
+  InitializeOutputStellar(output,fnWrite);
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
+  InitializeOutputPoise(output,fnWrite);
 
 }
 

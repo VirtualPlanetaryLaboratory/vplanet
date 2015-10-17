@@ -318,7 +318,7 @@ double fdRadPowerCore(BODY*,UPDATE*,int);
 double fdRadPowerTotal(BODY*,UPDATE*,int);
 double fdRadPower(double,double,double); // XXX
 
-void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,int,int);
+void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);

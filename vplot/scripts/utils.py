@@ -15,13 +15,13 @@ import re
 import imp
 import defaults
 
-# Default string to include in ``conf.py file`` when creating one
+# Default string to include in ``vplot_config.py file`` when creating one
 confstr = \
 """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-conf.py
--------
+vplot_config.py
+---------------
 
 This is an automatically generated VPLOT config file. You can override the 
 defaults in `vplot/default.py` by setting custom values below.
@@ -46,7 +46,7 @@ helpstr = \
   
 \x1b[1mversion:\x1b[0m 0.1
 
-\x1b[1mconf.py options:\x1b[0m
+\x1b[1mvplot_config.py options:\x1b[0m
 %s
 
 \x1b[1mType `vplot -h OPTION_NAME` for info on any option\x1b[0m
@@ -147,10 +147,10 @@ def GetConf():
   '''
   # Load user inputs into conf
   try:
-    conf = imp.load_source("conf", "conf.py") 
+    conf = imp.load_source("conf", "vplot_config.py") 
   except IOError:
-    # Create a conf.py file in the output directory
-    with open("conf.py", 'w') as f:
+    # Create a vplot_config.py file in the output directory
+    with open("vplot_config.py", 'w') as f:
       print(confstr, file = f)
       
       # Add each option in the default file

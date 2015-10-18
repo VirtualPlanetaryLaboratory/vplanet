@@ -22,4 +22,4 @@ dSemi         0.03721                     # Semi-major axis, negative -> AU
 dEcc          0.0                        # Eccentricity
 
 # Output
-saOutputOrder Time -SurfWaterMass -EnvelopeMass
+saOutputOrder Time -SurfWaterMass -EnvelopeMass Mass

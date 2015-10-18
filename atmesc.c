@@ -221,7 +221,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ENVELOPEMASS].iType = 2;
   options[OPT_ENVELOPEMASS].iMultiFile = 1;
   options[OPT_ENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth Masses");
+  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
@@ -247,11 +247,11 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
   sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
-  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth Masses");
+  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth");
   options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
   options[OPT_MINENVELOPEMASS].iType = 2;
   options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth Masses");
+  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
 }
@@ -473,7 +473,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
-  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth Masses");
+  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");
   output[OUT_ENVELOPEMASS].bNeg = 1;
   output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
   output[OUT_ENVELOPEMASS].iNum = 1;

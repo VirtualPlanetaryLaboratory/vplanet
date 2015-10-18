@@ -97,6 +97,7 @@
 #define VROT         1003
 #define VOBL         1004
 #define VRADIUS      1005
+#define VMASS        1006
 
 // RADHEAT
 #define VNUM40KMAN      1101
@@ -495,6 +496,7 @@ typedef struct {
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
   int iNumRadius;
+  int iNumMass;
 
   /* These are the variables that the update matrix modifies */
   // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
@@ -504,6 +506,7 @@ typedef struct {
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
   int iRadius;
+  int iMass;
 
   /* Next comes the identifiers for the module that modifies a variable */
 
@@ -664,6 +667,7 @@ typedef struct {
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
   double *pdDEnvelopeMassDtAtmesc;
+  double *pdDMassDtAtmesc;
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
@@ -965,6 +969,7 @@ typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
@@ -1048,6 +1053,8 @@ typedef struct {
   fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
   /*! Function pointers to finalize Radius */ 
   fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
+  /*! Function pointers to finalize Mass */ 
+  fnFinalizeUpdateMassModule **fnFinalizeUpdateMass; 
   /*! Function pointers to finalize Rotation Rate */ 
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
   /*! Function pointers to finalize Semi-major Axis */ 

@@ -293,6 +293,17 @@ void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,f
   fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
 }
 
+void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) { 
+
+  update[iBody].iaType[update[iBody].iMass][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iMass][0] = 1;
+  update[iBody].iaBody[update[iBody].iMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iMass][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iMass][0][0] = iBody;
+
+  update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
+  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+}
+
 void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
 }
@@ -321,6 +332,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   
   if (body[iBody].dEnvelopeMass > 0) {
     VerifyEnvelopeMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyMassAtmEsc(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bAtmEsc = 1;
   }
   
@@ -350,6 +362,10 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumEnvelopeMass == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumEnvelopeMass++;
+    
+    if (update[iBody].iNumMass == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumMass++;
   }
   
 }
@@ -366,6 +382,11 @@ void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumEnvelopeMass = (*iEqn)++;
+}
+
+void FinalizeUpdateMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumMass = (*iEqn)++;
 }
       
 void FinalizeUpdateOblAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {

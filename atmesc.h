@@ -59,6 +59,7 @@ void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int);
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int);
 
 /* Output Functinos */
 

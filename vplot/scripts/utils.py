@@ -244,8 +244,18 @@ def GetOutput(bodies = []):
     outputorder = re.search(r'- BODY: %s -(.*?)Output Order:(.*?)\n' % body.name, 
                             logfile, re.DOTALL).groups()[1]
     
+    # This workaround takes care of units that contain spaces
+    while True:
+      foo = re.search('\[[A-Za-z0-9]+ [A-Za-z0-9]+\]', outputorder)
+      if foo is not None:
+        tmp = foo.group().replace(' ', '_')
+        outputorder = outputorder.replace(foo.group(), tmp)
+      else:
+        break
+    outputorder = outputorder.split()
+    
     params = []
-    for j, param in enumerate(outputorder.split()):
+    for j, param in enumerate(outputorder):
     
       # Get the name and units
       name, unit = re.search('(.*?)\[(.*?)\]', param).groups()

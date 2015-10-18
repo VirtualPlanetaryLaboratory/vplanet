@@ -21,9 +21,11 @@ void  InitializeControlAtmEsc(CONTROL *control) {
 
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
+  dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;
   dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
+  dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
 }
 
 void InitializeBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -77,6 +79,23 @@ void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dAtmXAbsEff = options->dDefault;
 }
 
+void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dEnvelopeMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dEnvelopeMass = options->dDefault;
+}
 
 void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -132,6 +151,40 @@ void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
       body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
 }
 
+void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bEnvelopeGone = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bSurfaceDesiccated,files->iNumInputs); 
+  }
+}
+
+void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dMinEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dMinEnvelopeMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dMinEnvelopeMass = options->dDefault;
+}
+
 void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
@@ -160,12 +213,28 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
   sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
+  
+  sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
+  sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
+  sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
+  options[OPT_ENVELOPEMASS].dDefault = 0;
+  options[OPT_ENVELOPEMASS].iType = 2;
+  options[OPT_ENVELOPEMASS].iMultiFile = 1;
+  options[OPT_ENVELOPEMASS].dNeg = MEARTH;
+  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth Masses");
+  fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
   sprintf(options[OPT_HALTDESICCATED].cDefault,"0");
   options[OPT_HALTDESICCATED].iType = 0;
   fnRead[OPT_HALTDESICCATED] = &ReadHaltMinSurfaceWaterMass;
+  
+  sprintf(options[OPT_HALTENVELOPEGONE].cName,"bHaltEnvelopeGone");
+  sprintf(options[OPT_HALTENVELOPEGONE].cDescr,"Halt When Envelope Evaporates?");
+  sprintf(options[OPT_HALTENVELOPEGONE].cDefault,"0");
+  options[OPT_HALTENVELOPEGONE].iType = 0;
+  fnRead[OPT_HALTENVELOPEGONE] = &ReadHaltMinEnvelopeMass;
 
   sprintf(options[OPT_MINSURFACEWATERMASS].cName,"dMinSurfWaterMass");
   sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Minimum Surface Water Mass");
@@ -175,6 +244,15 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
   sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
+  
+  sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
+  sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
+  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth Masses");
+  options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
+  options[OPT_MINENVELOPEMASS].iType = 2;
+  options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
+  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth Masses");
+  fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
 }
 
@@ -204,6 +282,17 @@ void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
 }
 
+void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  update[iBody].iaType[update[iBody].iEnvelopeMass][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0] = 1;
+  update[iBody].iaBody[update[iBody].iEnvelopeMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
+
+  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+}
+
 void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
 }
@@ -213,6 +302,11 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int i
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0;
+  
+  if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)
+    // Let's remove its envelope.
+    body[iBody].dEnvelopeMass = 0;
+  
 }
 
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -222,6 +316,11 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    bAtmEsc = 1;
+  }
+  
+  if (body[iBody].dEnvelopeMass > 0) {
+    VerifyEnvelopeMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bAtmEsc = 1;
   }
   
@@ -246,6 +345,13 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
       update[iBody].iNumVars++;
     update[iBody].iNumSurfaceWaterMass++;
   }
+  
+  if (body[iBody].dEnvelopeMass > 0) {
+    if (update[iBody].iNumEnvelopeMass == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumEnvelopeMass++;
+  }
+  
 }
 
 void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -255,6 +361,11 @@ void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iB
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumSurfaceWaterMass = (*iEqn)++;
+}
+
+void FinalizeUpdateEnvelopeMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumEnvelopeMass = (*iEqn)++;
 }
       
 void FinalizeUpdateOblAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
@@ -285,8 +396,23 @@ int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *
   return 0;
 } 
 
+int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  
+  if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's envelope mass =  ",body[iBody].cName);
+      fprintd(stdout,body[iBody].dEnvelopeMass/MEARTH,io->iSciNot,io->iDigits);
+      printf("Earth Masses.\n");
+    }
+    return 1;
+  }
+  return 0;
+} 
+
 void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
   if (halt->bSurfaceDesiccated)
+    (*iHalt)++;
+  if (halt->bEnvelopeGone)
     (*iHalt)++;
 }
 
@@ -294,6 +420,9 @@ void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 
   if (control->Halt[iBody].bSurfaceDesiccated)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltSurfaceDesiccated;
+  
+  if (control->Halt[iBody].bEnvelopeGone)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnvelopeGone;
 }
 
 /************* ATMESC Outputs ******************/
@@ -319,6 +448,19 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 }
 
+void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dEnvelopeMass;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+
+}
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -328,6 +470,14 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SURFACEWATERMASS].dNeg = 1./TOMASS;
   output[OUT_SURFACEWATERMASS].iNum = 1;
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
+  
+  sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
+  sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
+  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth Masses");
+  output[OUT_ENVELOPEMASS].bNeg = 1;
+  output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
+  output[OUT_ENVELOPEMASS].iNum = 1;
+  fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
 }
 
@@ -398,6 +548,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
+  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
@@ -423,6 +574,26 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 
   //printf(body[iaBody[0]].dSurfaceWaterMass)
+
+  return -elim;
+}
+
+double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
+  // TODO: Currently this is just Erkaev's model. Add other escape regimes
+  // TODO: Planet mass currently not changing
+  
+  double elim, fxuv, xi, ktide;
+  
+  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
+       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
+  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+	else ktide = 0;
+
+  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
+         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
+  
+  elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
+         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 
   return -elim;
 }

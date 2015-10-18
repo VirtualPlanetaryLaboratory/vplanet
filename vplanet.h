@@ -127,6 +127,7 @@
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
+#define VENVELOPEMASS  1202
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -330,6 +331,8 @@ typedef struct {
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
   double dMinSurfaceWaterMass;
+  double dEnvelopeMass;
+  double dMinEnvelopeMass;
   double dXFrac;
   double dAtmXAbsEff;
 
@@ -654,10 +657,13 @@ typedef struct {
   /* ATMESC */         
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
+  int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
+  int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
+  double *pdDEnvelopeMassDtAtmesc;
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
@@ -700,6 +706,7 @@ typedef struct {
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  int bEnvelopeGone;              /**< Halt if evaporated?*/
   
   /* STELLAR */
   // Nothing
@@ -961,6 +968,7 @@ typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
@@ -1046,6 +1054,8 @@ typedef struct {
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
   /*! Function pointers to finalize Surface Water */ 
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize Envelope Mass */ 
+  fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */ 
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
   /*! Function pointers to finalize Temperature */

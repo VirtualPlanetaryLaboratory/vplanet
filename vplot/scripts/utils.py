@@ -149,9 +149,18 @@ def GetConf():
   try:
     conf = imp.load_source("conf", "conf.py") 
   except IOError:
-    # Create an empty conf.py file in the output directory
+    # Create a conf.py file in the output directory
     with open("conf.py", 'w') as f:
       print(confstr, file = f)
+      
+      # Add each option in the default file
+      for param in dir(defaults):
+        if not param.startswith('_'):
+          value = defaults.__dict__[param]
+          if type(value) is str:
+            value = '"%s"' % value
+          print(param, '=', value, file = f)
+          
     return defaults                                       
 
   for key, val in list(conf.__dict__.items()):

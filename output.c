@@ -492,7 +492,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_MASS].cName,"Mass");
   sprintf(output[OUT_MASS].cDescr,"Mass");
-  output[OUT_MASS].bNeg = 0;
+  sprintf(output[OUT_MASS].cNeg,"Earth");
+  output[OUT_MASS].bNeg = 1;
+  output[OUT_MASS].dNeg = 1./MEARTH;
   output[OUT_MASS].iNum = 1;
   fnWrite[OUT_MASS] = &WriteMass;
   

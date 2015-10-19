@@ -359,7 +359,7 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     /* Nothing set, print warning and return */
     if (iVerbose >= VERBINPUT) 
       fprintf(stderr,"WARNING: No rotational information set in file %s. Defaulting to %s = %s.\n",cFile,options[OPT_ROTRATE].cName,options[OPT_ROTRATE].cDefault);
-    /* Default value assigned in options, so nothing to do */
+    body[iBody].dRotRate = options[OPT_ROTRATE].dDefault;
     return;
   }
 

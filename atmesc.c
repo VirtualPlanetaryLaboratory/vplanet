@@ -336,6 +336,13 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     bAtmEsc = 1;
   }
   
+  // Ensure envelope mass is physical
+  if (body[iBody].dEnvelopeMass > body[iBody].dMass) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: %s cannot be grater than %s in file %s.\n",options[OPT_ENVELOPEMASS].cName,options[OPT_MASS].cName,files->Infile[iBody+1].cIn);
+    exit(EXIT_INPUT);
+  }
+  
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
@@ -581,6 +588,10 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Currently this is just Erkaev's model. Add other escape regimes
   
+  // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
+  if (body[iaBody[0]].dEnvelopeMass > 0)
+    return 0;
+  
   double elim, fxuv, xi, ktide;
   
   xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
@@ -594,14 +605,15 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 
-  //printf(body[iaBody[0]].dSurfaceWaterMass)
-
   return -elim;
 }
 
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Currently this is just Erkaev's model. Add other escape regimes
-  // TODO: Planet mass currently not changing
+  
+  // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
+  if (body[iaBody[0]].dEnvelopeMass <= 0)
+    return 0;
   
   double elim, fxuv, xi, ktide;
   

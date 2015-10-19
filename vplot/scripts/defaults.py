@@ -5,8 +5,8 @@ defaults.py
 -----------
 
 These are the default config values used by VPLOT. You can override these by placing
-a file named `conf.py` in the VPLANET output directory and setting custom values for
-these parameters.
+a file named `vplot_config.py` in the VPLANET output directory and setting custom 
+values for these parameters.
 
 '''
 

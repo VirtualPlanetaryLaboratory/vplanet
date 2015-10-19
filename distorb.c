@@ -1687,7 +1687,7 @@ void ludcmp(double **a, int n, int *indx, float *d)
       for (i = j+1; i <= n-1; i++) a[i][j] *= dum;
     }
   }
-  //free_dvector(vv,1,n);
+  free(vv);
 }
 
 
@@ -1742,13 +1742,14 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
     }
    
   }
+  free(swap);
 }  
   
 void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   /* This solves the eigenvalue problem and provides an explicit solution 
        to the orbital evolution */
-    double **A,**B,*S,*T,parity,*Asoln,*Bsoln;
-    int j, k, count, *rowswap, i,iBody;
+    double **A,**B,parity,*Asoln,*Bsoln;
+    int j, k, count, i,iBody;
     
     A = malloc((evolve->iNumBodies-1)*sizeof(double*));
     B = malloc((evolve->iNumBodies-1)*sizeof(double*));
@@ -1760,7 +1761,6 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
     system->dmEigenValInc = malloc(2*sizeof(double*));
     system->dmEigenVecInc = malloc((evolve->iNumBodies-1)*sizeof(double*));
     system->dmEigenPhase = malloc(2*sizeof(double*));
-    rowswap = malloc((evolve->iNumBodies-1)*sizeof(int));
     
     for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
       A[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
@@ -1813,6 +1813,14 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         }
       }
     }
+    free(Asoln);
+    free(Bsoln);
+    for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
+      free(A[iBody]);
+      free(B[iBody]);
+    }
+    free(A);
+    free(B);
 }
 
 void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
@@ -1865,11 +1873,25 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
     system->dmEigenPhase[0][i] = atan2(h0[i],k0[i]);
     system->dmEigenPhase[1][i] = atan2(p0[i],q0[i]);
   }
+  
+  for (i=0;i<evolve->iNumBodies-1;i++) {
+    free(etmp[i]);
+    free(itmp[i]);
+  }
+  free(etmp);
+  free(itmp);
+  free(h0);
+  free(k0);
+  free(p0);
+  free(q0);
+  free(S);
+  free(T);
+  free(rowswap);
 }
 
 void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
   double alpha1, dalpha;
-  int j, iBody, jBody;
+  int j, iBody, jBody, done=0;
   
   j = 0;
   for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
@@ -1881,16 +1903,16 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
       }
 
       for (j=0;j<LAPLNUM;j++) {
-        dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
-        if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
-            system->fnLaplaceF[j][0](alpha1, 0);
+          dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
+          if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
+              system->fnLaplaceF[j][0](alpha1, 0);
                 
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
-            system->fnLaplaceDeriv[j][0](alpha1, 0);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
+              system->fnLaplaceDeriv[j][0](alpha1, 0);
                 
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
-            printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+              printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
         }
       }
     }
@@ -1898,17 +1920,8 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
 }
 
 void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
-  int iBody, jBody, j;
-  double alpha1, dalpha; //delSemiTmp, delSemi=0;
-  
-  // for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
-//     if (body[iBody].dSemiPrev!=0) {
-//       delSemiTmp = fabs(body[iBody].dSemi - body[iBody].dSemiPrev)/body[iBody].dSemiPrev;
-//       if (delSemiTmp > delSemi) {
-//         delSemi = delSemiTmp;
-//       }
-//     }
-//   }
+  int iBody, jBody, j, done = 0;
+  double alpha1, dalpha=-1, dalphaTmp;
 
   for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
     for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
@@ -1917,28 +1930,29 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi/body[iBody].dSemi;
       }
-      
       for (j=0;j<2;j++) {
-        dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
-        if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
-          SolveEigenVal(body,evolve,system);
-          ScaleEigenVec(body,evolve,system);
-          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = fdDerivLaplaceCoeff(1,alpha1,j+1,1.5);
-          system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
-          printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
+        dalphaTmp = fabs((alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0])*system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j]);
+        if (dalphaTmp > dalpha) {
+          dalpha = dalphaTmp;
         }
       }
     }
-  }  
-   
- //  if (delSemi >= system->dDfcrit) {
-//     SolveEigenVal(body,evolve,system);
-//     ScaleEigenVec(body,evolve,system);
-//     for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
-//       body[iBody].dSemiPrev = body[iBody].dSemi;
-//     }
+  }
+  
+  if (dalpha > system->dDfcrit) {
+    SolveEigenVal(body,evolve,system);
+    ScaleEigenVec(body,evolve,system);
+    for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+      for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+        for (j=0;j<2;j++) {
+          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = fdDerivLaplaceCoeff(1,alpha1,j+1,1.5);
+          system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+        }
+      }
+    }
 //     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
-//   }
+  }  
+
 }
 
 /*

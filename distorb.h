@@ -112,6 +112,7 @@ void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 /* DistOrb Functions */
 double signf(double);
 double fdLaplaceCoeff(double,int,double);
+double fdDerivLaplaceCoeff(int,double,int,double);
 unsigned long int factorial(unsigned int);
 int Nchoosek(int, int);
 int CombCount(int,int,int);

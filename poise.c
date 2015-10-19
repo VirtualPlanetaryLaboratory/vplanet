@@ -458,10 +458,11 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].dAlbedoGlobal = 0.0;
   body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
   for (i=0;i<=body[iBody].iNumLats;i++) {
-    if (i!=body[iBody].iNumLats)
+    if (i!=body[iBody].iNumLats) {
       body[iBody].daTemp[i] = 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2))+Toffset;
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
       body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
+    }  
       
     body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
     if (body[iBody].bHadley) {

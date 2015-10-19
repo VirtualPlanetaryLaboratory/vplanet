@@ -720,7 +720,35 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
     
-    body[iBody].dSemiPrev = body[iBody].dSemiPrev;
+    /* Conditions for recalc'ing eigenvalues */
+    if (iBody == 1) {
+      system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
+      system->dmAlpha0 = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+      system->dmLaplaceD = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+      for (j=0;j<Nchoosek(control->Evolve.iNumBodies-1,2);j++) {
+        system->dmLaplaceD[j] = malloc(2*sizeof(double));
+        system->dmAlpha0[j] = malloc(1*sizeof(double));
+      }
+      for (j=1;j<(control->Evolve.iNumBodies);j++) {
+        system->imLaplaceN[j] = malloc((control->Evolve.iNumBodies)*sizeof(int));
+      }
+    }
+
+    for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
+        if (body[iBody].dSemi < body[jBody].dSemi) {  
+            system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[iBody].dSemi/body[jBody].dSemi;
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,1,1.5);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,2,1.5);
+        } else if (body[iBody].dSemi > body[jBody].dSemi) {
+            system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1); 
+            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[jBody].dSemi/body[iBody].dSemi;
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,1,1.5);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,2,1.5);
+        }
+    }
+    
+//     body[iBody].dSemiPrev = body[iBody].dSemiPrev;
         
     if (iBody == (control->Evolve.iNumBodies-1)) {
       VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
@@ -1870,26 +1898,47 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
 }
 
 void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
-  int iBody;
-  double delSemiTmp, delSemi=0;
+  int iBody, jBody, j;
+  double alpha1, dalpha; //delSemiTmp, delSemi=0;
   
-  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
-    if (body[iBody].dSemiPrev!=0) {
-      delSemiTmp = fabs(body[iBody].dSemi - body[iBody].dSemiPrev)/body[iBody].dSemiPrev;
-      if (delSemiTmp > delSemi) {
-        delSemi = delSemiTmp;
+  // for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+//     if (body[iBody].dSemiPrev!=0) {
+//       delSemiTmp = fabs(body[iBody].dSemi - body[iBody].dSemiPrev)/body[iBody].dSemiPrev;
+//       if (delSemiTmp > delSemi) {
+//         delSemi = delSemiTmp;
+//       }
+//     }
+//   }
+
+  for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      if (body[iBody].dSemi < body[jBody].dSemi) {
+        alpha1 = body[iBody].dSemi/body[jBody].dSemi;
+      } else if (body[iBody].dSemi > body[jBody].dSemi) {
+        alpha1 = body[jBody].dSemi/body[iBody].dSemi;
+      }
+      
+      for (j=0;j<2;j++) {
+        dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
+        if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
+          SolveEigenVal(body,evolve,system);
+          ScaleEigenVec(body,evolve,system);
+          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = fdDerivLaplaceCoeff(1,alpha1,j+1,1.5);
+          system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+          printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
+        }
       }
     }
-  }
-  
-  if (delSemi >= system->dDfcrit) {
-    SolveEigenVal(body,evolve,system);
-    ScaleEigenVec(body,evolve,system);
-    for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
-      body[iBody].dSemiPrev = body[iBody].dSemi;
-    }
+  }  
+   
+ //  if (delSemi >= system->dDfcrit) {
+//     SolveEigenVal(body,evolve,system);
+//     ScaleEigenVec(body,evolve,system);
+//     for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+//       body[iBody].dSemiPrev = body[iBody].dSemi;
+//     }
 //     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
-  }
+//   }
 }
 
 /*

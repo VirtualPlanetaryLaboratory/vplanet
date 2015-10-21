@@ -44,7 +44,7 @@ helpstr = \
   -y YAXIS [YAXIS ...]      Parameter(s) to plot on the y-axis
   -a AAXIS                  Parameter to control the alpha (transparancy) axis
   
-\x1b[1mversion:\x1b[0m 0.1
+\x1b[1mversion:\x1b[0m 0.1.1
 
 \x1b[1mvplot_config.py options:\x1b[0m
 %s

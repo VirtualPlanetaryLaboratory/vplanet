@@ -314,7 +314,37 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   double dTimeOut;
   double dDt,dFoo;
   double dEqSpinRate;
-
+  
+/* test matrix math */
+  double **a, **alpha, **beta;
+  int i, j;
+  a = malloc(4*sizeof(double*));
+  alpha = malloc(4*sizeof(double*));
+  beta = malloc(4*sizeof(double*));
+  for (i=0;i<4;i++) {
+    a[i] = malloc(4*sizeof(double));
+    alpha[i] = malloc(4*sizeof(double));
+    beta[i] = malloc(4*sizeof(double));
+  }
+  
+  a[0][0] = 3.;
+  a[0][1] = 2.;
+  a[0][2] = 5.;
+  a[0][3] = 10.;
+  a[1][0] = 1.;
+  a[1][1] = 5.;
+  a[1][2] = 6.;
+  a[1][3] = 2.;
+  a[2][0] = 7.;
+  a[2][1] = 9.;
+  a[2][2] = 11.;
+  a[2][3] = 3.;
+  a[3][0] = 4.;
+  a[3][1] = 5.;
+  a[3][2] = 2.;
+  a[3][3] = 4.;
+  LUDecomp(a,alpha,beta,4);
+  
   control->Evolve.nSteps=0;
 
   if (control->Evolve.bDoForward)

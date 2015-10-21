@@ -122,6 +122,7 @@ void HessEigen(double**,int,double[],double[]);
 void ElmHess(double**,int);
 void BalanceM(double**,int);
 void ludcmp(double**,int,int*,float*);
+void LUDecomp(double**,double**,double**,int);
 void lubksb(double**,int,int*,double[]);
 void FindEigenVec(double**,double,int,double*);
 void SolveEigenVal(BODY*,EVOLVE*,SYSTEM*);

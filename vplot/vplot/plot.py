@@ -114,6 +114,11 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
   else:
     fig.subplots_adjust(hspace = 0.25)
   
+  # Hide empty subplots
+  empty = range(len(yarr), rows*columns)
+  for i in empty:
+    ax[i].set_visible(False)
+  
   # Loop over all parameters (one subplot per each)
   for i, y in enumerate(yarr):
   

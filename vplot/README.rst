@@ -1,17 +1,17 @@
 VPLOT
 -----
-A suite of plotting routines for VPLANET.
+A suite of plotting routines for ``VPLANET``.
 
 Installation
 ============
 Clone the repository and run the ``setup`` script. 
-It's seriously that easy. You can also create a ``conf.py`` file in the 
-``VPLANET`` output directory to specify custom settings. 
+It's seriously that easy. You can also edit the ``vplot_config.py`` to specify custom 
+settings. This file is automatically created in the *cwd* when you run ``vplot``.
 Type ``vplot -h`` for the complete list of options.
 
 Examples
 ========
-Run VPLANET on the built-in example files, and ``cd`` into the ``example``
+Run ``vplanet`` on the built-in example files, and ``cd`` into the ``examples/gl581``
 directory.
 
 Run
@@ -26,14 +26,21 @@ to produce the following plot:
    :alt: example
    :align: center
 
-If you have the ``stellar`` module installed, run ``VPLANET`` on the built-in example
-and type
+To produce the evolutionary sequence for M dwarfs, ``cd`` into ``examples/main_seq``
+directory and run
 
 .. code-block:: bash  
   
    vplot
 
-to produce the evolutionary sequence for M dwarfs:
+to produce the evolutionary sequence for M dwarfs. If you want a main-sequence-like
+plot, try running
+
+.. code-block:: bash  
+  
+   vplot -x Temperature -y Luminosity
+
+You'll see something like this:
 
 .. image:: img/mdwarfs.png?raw=True
    :alt: mdwarfs
@@ -55,9 +62,9 @@ Quick-and-dirty docs
       -y YAXIS [YAXIS ...]      Parameter(s) to plot on the y-axis
       -a ALPHA                  Parameter to control line alpha
 
-    version: 0.1
+    version: 0.1.1
 
-    conf.py options:
+    vplot_config.py options:
       figheight, figname, figwidth, interactive, legend_all, legend_fontsize, legend_loc, 
       line_styles, linewidth, maxplots, maxylabelsize, short_labels, skip_xzero_log, 
       tight_layout, title, xlabel_fontsize, xlog, xticklabel_fontsize, ylabel_fontsize, 

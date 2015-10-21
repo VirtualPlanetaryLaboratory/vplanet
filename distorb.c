@@ -1703,7 +1703,7 @@ void RowSwap(double **matrix, int size, int i, int j) {
 }  
   
 void LUDecomp(double **amat, double **copy, int size) {
-  double *scale, sumk, scaletmp;
+  double *scale, sumk, scaletmp, dummy;
   int i, j, k, swapi;
   
   scale = malloc(size*sizeof(double));
@@ -1711,7 +1711,7 @@ void LUDecomp(double **amat, double **copy, int size) {
     scale[i] = 0.0;
     for (j=0;j<size;j++) {
       if (fabs(amat[i][j]) > scale[i]) {
-        scale[i] = fabs(amat[i][j]);
+        scale[i] = 1.0/fabs(amat[i][j]);
       }
     }
     if (scale[i] == 0.0) {
@@ -1719,7 +1719,8 @@ void LUDecomp(double **amat, double **copy, int size) {
       exit(EXIT_INPUT);
     }
     for (j=0;j<size;j++) {
-      copy[i][j] = amat[i][j]/scale[i];
+//       copy[i][j] = amat[i][j]/scale[i];
+      copy[i][j] = amat[i][j];
     }
   }
   
@@ -1727,21 +1728,25 @@ void LUDecomp(double **amat, double **copy, int size) {
     scaletmp = 0.0;
     for (i=0;i<size;i++) {
       sumk = 0.0;
-      for (k=0;k<i;k++) {
-        sumk += alpha[i][k]*beta[k][j];
-      }
+      if (i<j) {
+        for (k=0;k<i;k++) {
+          sumk += copy[i][k]*copy[k][j];
+        }
+      } else {
+        for (k=0;k<j;k++) {
+          sumk += copy[i][k]*copy[k][j];
+        }
+      } 
       copy[i][j] -= sumk;
     
       if (i>=j) {
-        if (copy[i][j] >= scaletmp) {
-          scaletmp = copy[i][j];
+        if (scale[i]*copy[i][j] >= scaletmp) {
+          scaletmp = scale[i]*copy[i][j];
           swapi = i;
         }
     
         if (swapi != j) {
-          RowSwap(amat,size,swapi,j);
-          RowSwap(beta,size,swapi,j);
-          RowSwap(alpha,size,swapi,j);
+          RowSwap(copy,size,swapi,j);
           dummy=scale[j];
           scale[j]=scale[swapi];
           scale[swapi]=dummy;
@@ -1752,6 +1757,10 @@ void LUDecomp(double **amat, double **copy, int size) {
     for (i=j+1;i<size;i++) { 
         copy[i][j] /= copy[j][j];
     }
+    
+    // for (i=0;i<size;i++) {
+//       copy[i][j] *= scale[i];
+//     }
   }
   free(scale);
 }
@@ -1778,7 +1787,6 @@ void lubksb(double **a, int n, int *indx, double b[])
   }
 }  
 
-  
 void FindEigenVec(double **A, double lambda, int pls, double *soln)
 {
   int jj, *swap, i, iter = 5;  // iter = # of iterations of inverse routine

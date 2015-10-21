@@ -1719,7 +1719,6 @@ void LUDecomp(double **amat, double **copy, int size) {
       exit(EXIT_INPUT);
     }
     for (j=0;j<size;j++) {
-//       copy[i][j] = amat[i][j]/scale[i];
       copy[i][j] = amat[i][j];
     }
   }
@@ -1757,10 +1756,6 @@ void LUDecomp(double **amat, double **copy, int size) {
     for (i=j+1;i<size;i++) { 
         copy[i][j] /= copy[j][j];
     }
-    
-    // for (i=0;i<size;i++) {
-//       copy[i][j] *= scale[i];
-//     }
   }
   free(scale);
 }
@@ -1787,6 +1782,26 @@ void lubksb(double **a, int n, int *indx, double b[])
   }
 }  
 
+void LUSolve(double **lumat, double *rhs, double *soln, int *swapi, int size) {
+  int i, j;
+  
+  for (i=0;i<size;i++) {
+    if (swapi[i] != i) {
+      dummy = rhs[i];
+      rhs[i] = rhs[swapi[i]];
+      rhs[swapi[i]] = dummy;
+    }
+  }
+  
+  for (i=0;i<size;i++) {
+    sumj = 0.0;
+    for (j=0,j<i;j++) {
+      sumj += lumat[i][j]*soln[j];
+    }
+    soln[i] = rhs[i] - sumj; //diagonals of L matrix are all = 1, so division is unnecessary
+  }
+
+}
 void FindEigenVec(double **A, double lambda, int pls, double *soln)
 {
   int jj, *swap, i, iter = 5;  // iter = # of iterations of inverse routine

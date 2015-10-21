@@ -101,5 +101,5 @@ for a fully customized plot:
    :align: center
    :width: 800px
 
-Take a look at the `plotme.py script <examples/gl581/plotme.py>`_ for an idea of how to manipulate the figure returned by the 
+Take a look at the `plotme.py script <../examples/gl581/plotme.py>`_ for an idea of how to manipulate the figure returned by the 
 call to ``vplot.Plot()``.

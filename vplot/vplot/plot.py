@@ -249,7 +249,7 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
 
-  return fig
+  return fig, ax
   
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(prog = 'VPLOT', add_help = False)
@@ -272,7 +272,7 @@ if __name__ == '__main__':
   conf = GetConf()
   
   # Plot
-  fig = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
+  fig, _ = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
 
   # Show or save?
   if conf.interactive:

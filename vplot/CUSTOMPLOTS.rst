@@ -7,7 +7,8 @@ you get a rather nasty-looking plot:
 .. image:: img/gl581_ugly.jpg?raw=True
    :alt: example
    :align: center
-   :width: 600px
+   :width: 800px
 
 You can change the number of columns and the size of the figure in ``vplot_config.py``,
 but sometimes you want a little more control over the layout and appearance of the plot.
+As of version ``0.1.1``, you can manipulate ``vplot`` figures within ``python``.

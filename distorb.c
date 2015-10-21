@@ -1690,6 +1690,71 @@ void ludcmp(double **a, int n, int *indx, float *d)
   free(vv);
 }
 
+void RowSwap(double **matrix, int size, int i, int j) {
+  /* swap the ith and jth rows in matrix of size size*/
+  int k;
+  double dummy;
+  
+  for (k=0;k<size;k++) {
+    dummy = matrix[i][k];
+    matrix[i][k] = matrix[j][k];
+    matrix[j][k] = dummy;
+  }
+}  
+  
+void LUDecomp(double **amat, double **copy, int size) {
+  double *scale, sumk, scaletmp;
+  int i, j, k, swapi;
+  
+  scale = malloc(size*sizeof(double));
+  for (i=0;i<size;i++) {
+    scale[i] = 0.0;
+    for (j=0;j<size;j++) {
+      if (fabs(amat[i][j]) > scale[i]) {
+        scale[i] = fabs(amat[i][j]);
+      }
+    }
+    if (scale[i] == 0.0) {
+      fprintf(stderr,"Singular matrix in routine LUDecomp");
+      exit(EXIT_INPUT);
+    }
+    for (j=0;j<size;j++) {
+      copy[i][j] = amat[i][j]/scale[i];
+    }
+  }
+  
+  for (j=0;j<size;j++) {
+    scaletmp = 0.0;
+    for (i=0;i<size;i++) {
+      sumk = 0.0;
+      for (k=0;k<i;k++) {
+        sumk += alpha[i][k]*beta[k][j];
+      }
+      copy[i][j] -= sumk;
+    
+      if (i>=j) {
+        if (copy[i][j] >= scaletmp) {
+          scaletmp = copy[i][j];
+          swapi = i;
+        }
+    
+        if (swapi != j) {
+          RowSwap(amat,size,swapi,j);
+          RowSwap(beta,size,swapi,j);
+          RowSwap(alpha,size,swapi,j);
+          dummy=scale[j];
+          scale[j]=scale[swapi];
+          scale[swapi]=dummy;
+        }
+      }
+    }
+    
+    for (i=j+1;i<size;i++) { 
+        copy[i][j] /= copy[j][j];
+    }
+  }
+  free(scale);
+}
 
 void lubksb(double **a, int n, int *indx, double b[])
 /*Solves set of n linear eqns A*X = B. a[0..n-1][0..n-1] is input as the LU decompostion from ludcmp. indx[0..n-1] is imput as the permutation vector from ludcmp. b[0..n-1] is input as the RHS vector B and returns with the soln vector X. a, n, and indx are not modified.*/

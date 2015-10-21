@@ -7,3 +7,5 @@ vplanet.dSYM
 *.pyc
 todo.rst
 vplot_config.py
+*.Climate
+*.DailyInsolInit

@@ -1869,6 +1869,8 @@ void LUDecomp(double **amat, double **copy, int *swap, int size) {
   
   for (j=0;j<size;j++) {
     scaletmp = 0.0;
+    swapi = j;
+
     for (i=0;i<size;i++) {
       sumk = 0.0;
       if (i<j) {
@@ -1881,20 +1883,19 @@ void LUDecomp(double **amat, double **copy, int *swap, int size) {
         }
       } 
       copy[i][j] -= sumk;
-    
+      
       if (i>=j) {
         if (fabs(scale[i]*copy[i][j]) >= scaletmp) {
           scaletmp = fabs(scale[i]*copy[i][j]);
           swapi = i;
         }
-    
-        if (swapi != j) {
+      }
+    }  
+    if (swapi != j) {
           RowSwap(copy,size,swapi,j);
           dummy=scale[j];
           scale[j]=scale[swapi];
           scale[swapi]=dummy;
-        }
-      }
     }
     
     if (copy[j][j] == 0) {
@@ -1963,7 +1964,7 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
 {
   int jj, *swap, *swap2, i, iter = 5;  // iter = # of iterations of inverse routine
   float d;                     // parity for LU factorization
-  double mag, mag2, **Acopy, *rhs, *soln2;                  // normalization for eigenvector
+  double mag, **Acopy;                  // normalization for eigenvector
   
   Acopy = malloc(pls*sizeof(double*));
   // Subtracts eigenvalue from diagonal elements
@@ -2114,11 +2115,11 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   }
     
   
-  ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
+//   ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
   // lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
 //   lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
 
-  // LUDecomp(system->dmEigenVecEcc,etmp,rowswap,(evolve->iNumBodies-1));
+  LUDecomp(system->dmEigenVecEcc,etmp,rowswap,(evolve->iNumBodies-1));
   LUSolve(etmp,h0,rowswap,(evolve->iNumBodies-1));
   LUSolve(etmp,k0,rowswap,(evolve->iNumBodies-1));
 

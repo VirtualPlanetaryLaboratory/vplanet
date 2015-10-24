@@ -1854,7 +1854,7 @@ void LUDecomp(double **amat, double **copy, int *swap, int size) {
     scale[i] = 0.0;
     for (j=0;j<size;j++) {
       if (fabs(amat[i][j]) > scale[i]) {
-        scale[i] = 1.0/fabs(amat[i][j]);
+        scale[i] = fabs(amat[i][j]);
       }
     }
     if (scale[i] == 0.0) {
@@ -1864,6 +1864,7 @@ void LUDecomp(double **amat, double **copy, int *swap, int size) {
     for (j=0;j<size;j++) {
       copy[i][j] = amat[i][j];
     }
+    scale[i] = 1.0/scale[i];
   }
   
   for (j=0;j<size;j++) {
@@ -1965,8 +1966,6 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
   double mag, mag2, **Acopy, *rhs, *soln2;                  // normalization for eigenvector
   
   Acopy = malloc(pls*sizeof(double*));
-  rhs = malloc(pls*sizeof(double));
-  soln2 = malloc(pls*sizeof(double));
   // Subtracts eigenvalue from diagonal elements
   for (jj = 0; jj <= (pls-1); jj++) {
     A[jj][jj] -= lambda;
@@ -1975,12 +1974,9 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
     for (i=0;i<pls;i++) {
       Acopy[jj][i] = A[jj][i];
     }
-    rhs[jj] = soln[jj];
-    soln2[jj] = soln[jj];
   }
 
   swap = malloc(pls*sizeof(int));
-  swap2 = malloc(pls*sizeof(int));
   LUDecomp(A, Acopy, swap, pls);
 //   ludcmp(A, pls, swap, &d);  
 
@@ -2091,7 +2087,7 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 }
 
 void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
-  double **etmp, **itmp, *h0, *k0, *p0, *q0, *h0cp, *k0cp, *p0cp, *q0cp, *S, *T;
+  double **etmp, **itmp, *h0, *k0, *p0, *q0, *S, *T;
   int i, j, *rowswap, count;
   float parity;
   
@@ -2102,10 +2098,6 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   k0 = malloc((evolve->iNumBodies-1)*sizeof(double));
   p0 = malloc((evolve->iNumBodies-1)*sizeof(double));
   q0 = malloc((evolve->iNumBodies-1)*sizeof(double));
-  h0cp = malloc((evolve->iNumBodies-1)*sizeof(double));
-  k0cp = malloc((evolve->iNumBodies-1)*sizeof(double));
-  p0cp = malloc((evolve->iNumBodies-1)*sizeof(double));
-  q0cp = malloc((evolve->iNumBodies-1)*sizeof(double));
   
   for (i=0;i<(evolve->iNumBodies-1);i++) {
     etmp[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
@@ -2121,21 +2113,23 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
     }
   }
     
+  
   ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
-  lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
-  lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
+  // lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
+//   lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
 
   // LUDecomp(system->dmEigenVecEcc,etmp,rowswap,(evolve->iNumBodies-1));
-//   LUSolve(etmp,h0,rowswap,(evolve->iNumBodies-1));
-//   LUSolve(etmp,k0,rowswap,(evolve->iNumBodies-1));
+  LUSolve(etmp,h0,rowswap,(evolve->iNumBodies-1));
+  LUSolve(etmp,k0,rowswap,(evolve->iNumBodies-1));
 
-  ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
-  lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
-  lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
   
-  // LUDecomp(system->dmEigenVecInc,itmp,rowswap,(evolve->iNumBodies-1));
-//   LUSolve(itmp,p0,rowswap,(evolve->iNumBodies-1));
-//   LUSolve(itmp,q0,rowswap,(evolve->iNumBodies-1));
+  ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
+//   lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
+//   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
+ 
+  //LUDecomp(system->dmEigenVecInc,itmp,rowswap,(evolve->iNumBodies-1));
+  LUSolve(itmp,p0,rowswap,(evolve->iNumBodies-1));
+  LUSolve(itmp,q0,rowswap,(evolve->iNumBodies-1));
       
   S = malloc((evolve->iNumBodies-1)*sizeof(double));
   T = malloc((evolve->iNumBodies-1)*sizeof(double));
@@ -2162,10 +2156,6 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   free(k0);
   free(p0);
   free(q0);
-  free(h0cp);
-  free(k0cp);
-  free(p0cp);
-  free(q0cp);
   free(S);
   free(T);
   free(rowswap);

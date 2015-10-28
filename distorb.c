@@ -755,6 +755,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       if (control->bInvPlane) {
         inv_plane(body, system, control->Evolve.iNumBodies);
       }
+      system->dmEigenValEcc = malloc(2*sizeof(double*));
+      system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenValInc = malloc(2*sizeof(double*));
+      system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenPhase = malloc(2*sizeof(double*));
       
       SolveEigenVal(body,&control->Evolve,system);
       ScaleEigenVec(body,&control->Evolve,system);
@@ -2014,13 +2019,7 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
     B = malloc((evolve->iNumBodies-1)*sizeof(double*));
     Asoln = malloc((evolve->iNumBodies-1)*sizeof(double));
     Bsoln = malloc((evolve->iNumBodies-1)*sizeof(double));
-
-    system->dmEigenValEcc = malloc(2*sizeof(double*));
-    system->dmEigenVecEcc = malloc((evolve->iNumBodies-1)*sizeof(double*));
-    system->dmEigenValInc = malloc(2*sizeof(double*));
-    system->dmEigenVecInc = malloc((evolve->iNumBodies-1)*sizeof(double*));
-    system->dmEigenPhase = malloc(2*sizeof(double*));
-    
+       
     for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
       A[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
       B[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
@@ -2124,11 +2123,11 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   LUSolve(etmp,k0,rowswap,(evolve->iNumBodies-1));
 
   
-  ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
+  //ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
  
-  //LUDecomp(system->dmEigenVecInc,itmp,rowswap,(evolve->iNumBodies-1));
+  LUDecomp(system->dmEigenVecInc,itmp,rowswap,(evolve->iNumBodies-1));
   LUSolve(itmp,p0,rowswap,(evolve->iNumBodies-1));
   LUSolve(itmp,q0,rowswap,(evolve->iNumBodies-1));
       

@@ -481,11 +481,23 @@ void InitializeClimateParams(BODY *body, int iBody) {
   AnnualInsolation(body, iBody);
 
 } 
+
+void VerifyAstro(BODY *body, int iBody) {
+  if (body[iBody].bEqtide == 0) {
+    if (body[iBody].bDistOrb == 0) {
+      CalcHK(body, iBody);
+    }
+    if (body[iBody].bDistRot == 0) {
+      CalcXYZobl(body,iBody);
+    }
+  }
+}
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  VerifyAstro(body,iBody);
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
@@ -497,6 +509,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyPoise;
+
 }
 
 
@@ -589,7 +602,6 @@ void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   *dTmp = body[iBody].daAnnualInsol[body[iBody].iWriteLat];
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
@@ -618,7 +630,6 @@ void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   *dTmp = body[iBody].daFlux[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
@@ -630,7 +641,6 @@ void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
@@ -642,7 +652,6 @@ void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
@@ -654,7 +663,6 @@ void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   *dTmp = body[iBody].daDivFlux[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
@@ -728,7 +736,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_ANNUALINSOL].cName,"AnnInsol");
   sprintf(output[OUT_ANNUALINSOL].cDescr,"Annual insolation by latitude.");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"W/m^2");
   output[OUT_ANNUALINSOL].bNeg = 1;
   output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
   output[OUT_ANNUALINSOL].iNum = 1;
@@ -746,27 +754,27 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_FLUXIN].cName,"FluxIn");
   sprintf(output[OUT_FLUXIN].cDescr,"Incoming flux by latitude");
-  sprintf(output[OUT_FLUXIN].cNeg,"pirate-ninjas/m^2");
+  sprintf(output[OUT_FLUXIN].cNeg,"W/m^2");
   output[OUT_FLUXIN].bNeg = 1;
-  output[OUT_FLUXIN].dNeg = 1/40.55185;
+  output[OUT_FLUXIN].dNeg = 1;
   output[OUT_FLUXIN].iNum = 1;
-  output[OUT_FLUXMERID].bGrid = 1;
+  output[OUT_FLUXIN].bGrid = 1;
   fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
   
   sprintf(output[OUT_FLUXOUT].cName,"FluxOut");
   sprintf(output[OUT_FLUXOUT].cDescr,"Outgoing flux by latitude");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_ANNUALINSOL].bNeg = 1;
-  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  sprintf(output[OUT_FLUXOUT].cNeg,"W/m^2");
+  output[OUT_FLUXOUT].bNeg = 1;
+  output[OUT_FLUXOUT].dNeg = 1;
   output[OUT_FLUXOUT].iNum = 1;
   output[OUT_FLUXOUT].bGrid = 1;
   fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
   
   sprintf(output[OUT_DIVFLUX].cName,"DivFlux");
   sprintf(output[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_ANNUALINSOL].bNeg = 1;
-  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  sprintf(output[OUT_DIVFLUX].cNeg,"W/m^2");
+  output[OUT_DIVFLUX].bNeg = 1;
+  output[OUT_DIVFLUX].dNeg = 1;
   output[OUT_DIVFLUX].iNum = 1;
   output[OUT_DIVFLUX].bGrid = 1;
   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 

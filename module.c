@@ -56,9 +56,11 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -145,7 +147,9 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -172,7 +176,9 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
   }
 

@@ -6,22 +6,22 @@ utils.py
 
 '''
 
-from __future__ import print_function
+from __future__ import print_function, absolute_import
+import vplot.defaults as defaults
 import os
 import subprocess
 import sys
 import numpy as np; np.seterr(divide='ignore')
 import re
 import imp
-import defaults
 
-# Default string to include in ``conf.py file`` when creating one
+# Default string to include in ``vplot_config.py file`` when creating one
 confstr = \
 """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-conf.py
--------
+vplot_config.py
+---------------
 
 This is an automatically generated VPLOT config file. You can override the 
 defaults in `vplot/default.py` by setting custom values below.
@@ -44,9 +44,9 @@ helpstr = \
   -y YAXIS [YAXIS ...]      Parameter(s) to plot on the y-axis
   -a AAXIS                  Parameter to control the alpha (transparancy) axis
   
-\x1b[1mversion:\x1b[0m 0.1
+\x1b[1mversion:\x1b[0m 0.1.1
 
-\x1b[1mconf.py options:\x1b[0m
+\x1b[1mvplot_config.py options:\x1b[0m
 %s
 
 \x1b[1mType `vplot -h OPTION_NAME` for info on any option\x1b[0m
@@ -56,7 +56,6 @@ def ShowHelp(param = None):
   '''
   
   '''
-  import defaults
   if param is not None:
     try:
       docstring = defaults._Docs().__dict__[param]
@@ -147,11 +146,20 @@ def GetConf():
   '''
   # Load user inputs into conf
   try:
-    conf = imp.load_source("conf", "conf.py") 
+    conf = imp.load_source("conf", "vplot_config.py") 
   except IOError:
-    # Create an empty conf.py file in the output directory
-    with open("conf.py", 'w') as f:
+    # Create a vplot_config.py file in the output directory
+    with open("vplot_config.py", 'w') as f:
       print(confstr, file = f)
+      
+      # Add each option in the default file
+      for param in dir(defaults):
+        if not param.startswith('_'):
+          value = defaults.__dict__[param]
+          if type(value) is str:
+            value = '"%s"' % value
+          print(param, '=', value, file = f)
+          
     return defaults                                       
 
   for key, val in list(conf.__dict__.items()):
@@ -235,8 +243,18 @@ def GetOutput(bodies = []):
     outputorder = re.search(r'- BODY: %s -(.*?)Output Order:(.*?)\n' % body.name, 
                             logfile, re.DOTALL).groups()[1]
     
+    # This workaround takes care of units that contain spaces
+    while True:
+      foo = re.search('\[[A-Za-z0-9]+ [A-Za-z0-9]+\]', outputorder)
+      if foo is not None:
+        tmp = foo.group().replace(' ', '_')
+        outputorder = outputorder.replace(foo.group(), tmp)
+      else:
+        break
+    outputorder = outputorder.split()
+    
     params = []
-    for j, param in enumerate(outputorder.split()):
+    for j, param in enumerate(outputorder):
     
       # Get the name and units
       name, unit = re.search('(.*?)\[(.*?)\]', param).groups()

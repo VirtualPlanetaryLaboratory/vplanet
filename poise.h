@@ -30,7 +30,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_JORMUNGAND      1810
 #define OPT_CALCAB          1811
 #define OPT_TGLOBALEST      1812
-#define OPT_PCO2           1813
+#define OPT_PCO2            1813
+#define OPT_MEPDIFF         1814
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
@@ -105,5 +106,7 @@ void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
 void Albedo(BODY*,int);
 void AnnualInsolation(BODY*,int);
+double dOLRdTwk97(BODY*,int);
+double OLRwk97(BODY*,int);
 
 void PoiseClimate(BODY*,int);

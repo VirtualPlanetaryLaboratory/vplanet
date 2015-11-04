@@ -392,6 +392,7 @@ typedef struct {
   int bPoise;                /**< Apply POISE module? */
   int iNumLats;              /**< Number of latitude cells */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
@@ -408,6 +409,7 @@ typedef struct {
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dHeatCapAnn;        /**< Surface heat capacity in annual model */
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
   double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */

@@ -76,6 +76,36 @@ void ReadPlanckB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dPlanckB = options->dDefault;
 }
 
+void ReadTGlobalEst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dTGlobal = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTGlobal = options->dDefault;
+}
+
+void ReadPCO2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dpCO2 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dpCO2 = options->dDefault;
+}
+
 void ReadDiffusion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -131,6 +161,18 @@ void ReadHadley(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&body[iFile-1].bHadley,files->iNumInputs);
+}
+
+void ReadCalcAB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bCalcAB = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bCalcAB,files->iNumInputs);
 }
 
 void ReadColdStart(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -306,6 +348,30 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PLANCKB].iMultiFile = 1;   
   fnRead[OPT_PLANCKB] = &ReadPlanckB;
   
+  sprintf(options[OPT_TGLOBALEST].cName,"dTGlobalEst");
+  sprintf(options[OPT_TGLOBALEST].cDescr,"Estimate of initial global temperature");
+  sprintf(options[OPT_TGLOBALEST].cDefault,"288");
+  options[OPT_TGLOBALEST].dDefault = 288.0;
+  options[OPT_TGLOBALEST].iType = 2;  
+  options[OPT_TGLOBALEST].iMultiFile = 1;   
+  fnRead[OPT_TGLOBALEST] = &ReadTGlobalEst;
+  
+  sprintf(options[OPT_PCO2].cName,"dpCO2");
+  sprintf(options[OPT_PCO2].cDescr,"Partial pressure of CO2 in atmosphere");
+  sprintf(options[OPT_PCO2].cDefault,"3.3e-4");
+  options[OPT_PCO2].dDefault = 3.3e-4;
+  options[OPT_PCO2].iType = 2;  
+  options[OPT_PCO2].iMultiFile = 1;   
+  fnRead[OPT_PCO2] = &ReadPCO2;
+  
+  sprintf(options[OPT_CALCAB].cName,"bCalcAB");
+  sprintf(options[OPT_CALCAB].cDescr,"Calculate A and B in OLR function, from (T & pCO2)");
+  sprintf(options[OPT_CALCAB].cDefault,"0");
+  options[OPT_CALCAB].dDefault = 0;
+  options[OPT_CALCAB].iType = 0;  
+  options[OPT_CALCAB].iMultiFile = 1;   
+  fnRead[OPT_CALCAB] = &ReadCalcAB;
+  
   sprintf(options[OPT_DIFFUSION].cName,"dDiffusion");
   sprintf(options[OPT_DIFFUSION].cDescr,"Heat diffusion coefficient");
   sprintf(options[OPT_DIFFUSION].cDefault,"0.44");
@@ -418,6 +484,14 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
   }
 }
 
+void VerifyOLR(BODY *body, OPTIONS *options, int iBody) {
+  
+  if (body[iBody].bCalcAB) {
+    
+  
+  
+
+
 void InitializeLatGrid(BODY *body, int iBody) {
   double delta_x, SinLat;
   int i;
@@ -498,6 +572,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyAstro(body,iBody);
+  VerifyOLR(body,iBody);
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
@@ -948,6 +1023,35 @@ void AnnualInsolation(BODY *body, int iBody) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);
     }
   }
+}
+
+double OLRwk97(BODY *body, int iBody){
+  double phi, Int, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal;
+  Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
+      + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
+      - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
+      + 9.173169e-3*pow(phi,3)*T - 7.775195e-5*pow(phi,3)*pow(T,2) \
+      - 1.679112e-7*phi*pow(T,3) + 6.590999e-8*pow(phi,2)*pow(T,3) \
+      + 1.528125e-7*pow(phi,3)*pow(T,3) - 3.367567e-2*pow(phi,4) - 1.631909e-4*pow(phi,4)*T \
+      + 3.663871e-6*pow(phi,4)*pow(T,2) - 9.255646e-9*pow(phi,4)*pow(T,3);
+  return Int;
+}
+  
+double dOLRdTwk97(BODY *body, int iBody){
+  double phi, dI, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal;
+  dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
+       + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
+       - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
+       + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
+       + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
+       + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
+  return dI;
 }
 
 void Albedo(BODY *body, int iBody) {

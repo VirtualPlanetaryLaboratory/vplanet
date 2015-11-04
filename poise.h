@@ -28,6 +28,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_FIXICELAT       1808
 #define OPT_ALBEDOZA        1809
 #define OPT_JORMUNGAND      1810
+#define OPT_CALCAB          1811
+#define OPT_TGLOBALEST      1812
+#define OPT_PCO2           1813
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841

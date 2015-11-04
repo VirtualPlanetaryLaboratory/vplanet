@@ -487,6 +487,10 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
 void VerifyOLR(BODY *body, OPTIONS *options, int iBody) {
   
   if (body[iBody].bCalcAB) {
+    body[iBody].dPlanckB = dOLRdTwk97(body[iBody].dpCO2,body[iBody].dTGlobal);
+    body[iBody].dPlanckA = OLRwk97(body[iBody].dpCO2,body[iBody].dTGlobal) - \
+        body[iBody].dPlanckB*(body[iBody].dTGlobal - 273.15);
+  }
     
   
   

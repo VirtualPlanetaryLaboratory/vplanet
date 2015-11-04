@@ -397,6 +397,7 @@ typedef struct {
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
   int iNDays;                /**< Number of days in planet's year */
+  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
   double *daLats;            /**< Latitude of each cell (centered) */
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dAstroDist;         /**< Distance between primary and planet */

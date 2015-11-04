@@ -212,116 +212,18 @@ void ReadJormungand(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&body[iFile-1].bAlbedoZA,files->iNumInputs);
 }
 
-// void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
-//   int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0;
-//   int k,iOut,*lTmp;
-//   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
-//   int iLen1,iLen2;
-// 
-//   lTmp = malloc(MAXLINES*sizeof(int));
-// 
-//   AddOptionStringArray(files->Infile[iFile].cIn,options[OPT_GRIDOUTPUT].cName,saTmp,&iNumIndices,&files->Infile[iFile].iNumLines,lTmp,iVerbose);
-//   output[OUT_GRIDOUTPUT].GridOutput = malloc(iNumIndices*sizeof(GRIDOUTPUT)); 
-//   if (lTmp[0] >= 0) {
-//     NotPrimaryInput(iFile,options[OPT_GRIDOUTPUT].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
-// 
-//     /* First remove and record negative signs */
-//     for (i=0;i<iNumIndices;i++) {
-//       if (saTmp[i][0] == 45) {
-//         /* Option is negative */
-//         bNeg[i] = 1;
-//         /* Now remove negative sign */
-//         for (j=0;j<strlen(saTmp[i]);j++) 
-//         saTmp[i][j] = saTmp[i][j+1];
-//         saTmp[i][strlen(saTmp[i])] = 0;
-//       } else
-//         bNeg[i] = 0;
-//     }
-//     
-//     /* Check for ambiguity */
-//     for (i=0;i<iNumIndices;i++) {
-//       count=0; /* Number of possibilities */
-//       for (j=0;j<OPTLEN;j++)
-//         cTmp[j]=0;
-//       strcpy(cTmp,saTmp[i]);
-//       for (j=GROUTSTARTPOISE;j<GROUTENDPOISE;j++) {
-//         for (k=0;k<OPTLEN;k++)
-//           cOut[k]=0;
-//         strcpy(cOut,output[OUT_GRIDOUTPUT].GridOutput[j].cName);
-//         iLen1=strlen(cOut);
-//         iLen2=strlen(cTmp);
-//         /* Check for perfect match */
-//         if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
-//           /* Output option found! */
-//           strcpy(cOption[count],output[j].cName);
-//           count = 1;
-//           iOut = j;
-//           j = NUMOUT; /* Poor man's break! */
-//         } else {
-//           if (iLen1 < iLen2)
-//             iLen=iLen1;
-//           else
-//             iLen=iLen2;
-//           
-//           if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
-//             /* Output option found! */
-//             strcpy(cOption[count],output[j].cName);
-//             count++;
-//             iOut = j;
-//           }
-//         }
-//       }
-//       
-//       if (count > 1) {
-//         /* More than one possibility */
-//         if (iVerbose >= VERBERR) {
-//           fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
-//           for (j=0;j<count;j++) {
-//             fprintf(stderr,"%s",cOption[j]);
-//             if (j < count-1)
-//               fprintf(stderr,", ");
-//           }
-//           fprintf(stderr,".\n");
-//         }
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       }
-//       
-//       if (!count) {
-//         /* Option not found */
-//         if (iVerbose >= VERBERR) 
-//           fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       }
-//       
-//       if (count == 1) {
-//         /* Unique option */
-//     
-//     /* Verify and record negative options */
-//     if (bNeg[i]) {
-//       // Is the negative option allowed?
-//       if (!output[iOut].bNeg) { /* No */
-//         if (iVerbose >= VERBERR) {
-//           fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
-//           if (strlen(saTmp[i]) < strlen(output[iOut].cName))
-//             fprintf(stderr,"(= %s) ",output[iOut].cName);
-//           fprintf(stderr,"cannot be negative.\n");
-//         }
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       } else { // Yes, initialize bDoNeg to true
-//         output[iOut].bDoNeg[iFile-1] = 1;
-//       }
-//     } else { // Negative option not set, initialize bDoNeg to false
-//         output[iOut].bDoNeg[iFile-1] = 0;
-//     }   
-//         files->Outfile[iFile-1].caCol[i][0]='\0';
-//         strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
-//       }
-//     }
-//     files->Outfile[iFile-1].iNumCols = iNumIndices;
-//     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
-//   }
-//   free(lTmp);
-// }
+void ReadMEPDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bMEPDiff = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bMEPDiff,files->iNumInputs);
+}
 
 void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LATCELLNUM].cName,"iLatCellNum");
@@ -382,8 +284,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_HADLEY].cName,"bHadley");
   sprintf(options[OPT_HADLEY].cDescr,"Enable Hadley circulation");
-  sprintf(options[OPT_HADLEY].cDefault,"1");
-  options[OPT_HADLEY].dDefault = 1;
+  sprintf(options[OPT_HADLEY].cDefault,"0");
+  options[OPT_HADLEY].dDefault = 0;
   options[OPT_HADLEY].iType = 0;  
   options[OPT_HADLEY].iMultiFile = 1;   
   fnRead[OPT_HADLEY] = &ReadHadley;
@@ -414,11 +316,19 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_JORMUNGAND].cName,"bJormungand");
   sprintf(options[OPT_JORMUNGAND].cDescr,"With dFixIceLat, fixes ice latitude with cold equator");
-  sprintf(options[OPT_ALBEDOZA].cDefault,"0");
-  options[OPT_ALBEDOZA].dDefault = 0;
-  options[OPT_ALBEDOZA].iType = 0;  
-  options[OPT_ALBEDOZA].iMultiFile = 1;   
-  fnRead[OPT_ALBEDOZA] = &ReadJormungand;
+  sprintf(options[OPT_JORMUNGAND].cDefault,"0");
+  options[OPT_JORMUNGAND].dDefault = 0;
+  options[OPT_JORMUNGAND].iType = 0;  
+  options[OPT_JORMUNGAND].iMultiFile = 1;   
+  fnRead[OPT_JORMUNGAND] = &ReadJormungand;
+  
+  sprintf(options[OPT_MEPDIFF].cName,"bMEPDiff");
+  sprintf(options[OPT_MEPDIFF].cDescr,"Calculate diffusion from max entropy production (D=B/4)");
+  sprintf(options[OPT_MEPDIFF].cDefault,"0");
+  options[OPT_MEPDIFF].dDefault = 0;
+  options[OPT_MEPDIFF].iType = 0;  
+  options[OPT_MEPDIFF].iMultiFile = 1;   
+  fnRead[OPT_MEPDIFF] = &ReadMEPDiff;
   
   sprintf(options[OPT_HEATCAPANN].cName,"dHeatCapAnn");
   sprintf(options[OPT_HEATCAPANN].cDescr,"Surface heat capacity in annual model");
@@ -484,17 +394,26 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
   }
 }
 
-void VerifyOLR(BODY *body, OPTIONS *options, int iBody) {
-  
+void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
   if (body[iBody].bCalcAB) {
-    body[iBody].dPlanckB = dOLRdTwk97(body[iBody].dpCO2,body[iBody].dTGlobal);
-    body[iBody].dPlanckA = OLRwk97(body[iBody].dpCO2,body[iBody].dTGlobal) - \
-        body[iBody].dPlanckB*(body[iBody].dTGlobal - 273.15);
+    if (options[OPT_PLANCKA].iLine[iBody+1] > -1 || options[OPT_PLANCKB].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s or %s when setting bCalcAB = 1 in File:%s\n", options[OPT_PLANCKA].cName, options[OPT_PLANCKB].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+    /* Calculate A and B from Williams & Kasting 1997 result */
+    body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
+    body[iBody].dPlanckA = OLRwk97(body,iBody) \
+      - body[iBody].dPlanckB*(body[iBody].dTGlobal - 273.15);
+      
+  } else {
+    if (options[OPT_PCO2].iLine[iBody+1] > -1 || options[OPT_TGLOBALEST].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Cannot set %s or %s unless setting bCalcAB = 1 in File:%s\n", options[OPT_PCO2].cName, options[OPT_TGLOBALEST].cName, cFile);
+      exit(EXIT_INPUT);
+    }
   }
-    
-  
-  
-
+}
 
 void InitializeLatGrid(BODY *body, int iBody) {
   double delta_x, SinLat;
@@ -541,8 +460,13 @@ void InitializeClimateParams(BODY *body, int iBody) {
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
       body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
     }  
-      
-    body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
+    
+    if (body[iBody].bMEPDiff) {   
+      body[iBody].daDiffusion[i] = body[iBody].dPlanckB/4.0;   
+    } else {
+      body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
+    }
+    
     if (body[iBody].bHadley) {
       // XXX not self-consistent with rotation rate!
       xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
@@ -570,13 +494,29 @@ void VerifyAstro(BODY *body, int iBody) {
     }
   }
 }
+
+void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
+  if (body[iBody].bMEPDiff) {
+    if (options[OPT_DIFFUSION].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s when setting bMEPDiff = 1 in File:%s\n", options[OPT_DIFFUSION].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+    if (body[iBody].bHadley) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set both bHadley = 1 and bMEPDiff = 1 in File:%s\n", cFile);
+      exit(EXIT_INPUT);
+    }
+  }
+}
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyAstro(body,iBody);
-  VerifyOLR(body,iBody);
+  VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
@@ -1152,7 +1092,7 @@ void PoiseClimate(BODY *body, int iBody) {
   
   delta_t = 1.5/body[iBody].iNumLats;
   delta_x = 2.0/body[iBody].iNumLats;
-  Nmax = 1000;
+  Nmax = 2000;
   
   lambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
   M = malloc(body[iBody].iNumLats*sizeof(double*));

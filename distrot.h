@@ -78,7 +78,6 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 /* DistRot Functions */
 void PropertiesDistRot(BODY*,UPDATE*,int);
 void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
-void CalcXYZobl(BODY*, int);
 
 /* DistRot's equations */
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);

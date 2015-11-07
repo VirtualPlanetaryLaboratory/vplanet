@@ -312,10 +312,11 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadius++;
   }
 
-  if ((body[iBody].dRotRate > 0) || (body[iBody].dRotPer > 0) || (body[iBody].dRotVel > 0)) {
-    if (update[iBody].iNumRot == 0)
-      update[iBody].iNumVars++;
-  }
+  // NOTE: Rory and I decided to ALWAYS track the rotation evolution of the star,
+  // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
+  // to its default value, and we track angular momentum conservation from there.
+  if (update[iBody].iNumRot == 0)
+    update[iBody].iNumVars++;
   update[iBody].iNumRot++;
   
   if (body[iBody].dTemperature > 0) {

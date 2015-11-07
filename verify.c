@@ -94,7 +94,7 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   
   if (options[OPT_ORBSEMI].iLine[iFile] == -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] > -1) 
     dPeriod = body[iBody].dOrbPeriod;
-
+  
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
     if (body[iBody].bPoise) {
@@ -135,6 +135,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   if (dMeanMotion == 0)
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   //XXX Initialize central body parameters.
+  
+  
 }
 
 /*
@@ -359,7 +361,7 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     /* Nothing set, print warning and return */
     if (iVerbose >= VERBINPUT) 
       fprintf(stderr,"WARNING: No rotational information set in file %s. Defaulting to %s = %s.\n",cFile,options[OPT_ROTRATE].cName,options[OPT_ROTRATE].cDefault);
-    /* Default value assigned in options, so nothing to do */
+    body[iBody].dRotRate = options[OPT_ROTRATE].dDefault;
     return;
   }
 

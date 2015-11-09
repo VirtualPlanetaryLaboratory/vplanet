@@ -439,6 +439,8 @@ typedef struct {
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
 
   double dTotAngMom;     /**< System's Current Angular Momentum */
+  
+  /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
   double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
@@ -453,6 +455,21 @@ typedef struct {
   double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
   double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
   double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
+  double **A;
+  double **B;
+  double *Asoln;
+  double *Bsoln;
+  double **etmp;
+  double **itmp;
+  double *h0;
+  double *k0;
+  double *p0;
+  double *q0;
+  double *S;
+  double *T;
+  int *rowswap;
+  double **Acopy;
+  double *scale;
   
   double dTotEnInit;     /**< System's Initial Energy */
 

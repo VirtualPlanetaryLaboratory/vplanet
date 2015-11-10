@@ -797,15 +797,6 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
         system->etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-        system->h0[i] = body[i+1].dHecc;
-        system->k0[i] = body[i+1].dKecc;
-        system->p0[i] = body[i+1].dPinc;
-        system->q0[i] = body[i+1].dQinc;
-  
-        for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
-          system->etmp[i][j] = system->dmEigenVecEcc[i][j];
-          system->itmp[i][j] = system->dmEigenVecInc[i][j];
-        }
       }
       system->S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
       system->T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
@@ -2132,6 +2123,17 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   int i, j, count;
   float parity;  
   
+  for (i=0;i<(evolve->iNumBodies-1);i++) {
+        system->h0[i] = body[i+1].dHecc;
+        system->k0[i] = body[i+1].dKecc;
+        system->p0[i] = body[i+1].dPinc;
+        system->q0[i] = body[i+1].dQinc;
+  
+        for (j=0;j<(evolve->iNumBodies-1);j++) {
+          system->etmp[i][j] = system->dmEigenVecEcc[i][j];
+          system->itmp[i][j] = system->dmEigenVecInc[i][j];
+        }
+  }
 //   ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
   // lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
 //   lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);

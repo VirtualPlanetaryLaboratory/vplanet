@@ -163,7 +163,7 @@ void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bSurfaceDesiccated,files->iNumInputs); 
+      AssignDefaultInt(options,&control->Halt[iFile-1].bEnvelopeGone,files->iNumInputs); 
   }
 }
 

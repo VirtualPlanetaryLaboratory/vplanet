@@ -507,7 +507,11 @@ void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
 }
 
 void InitializeHeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 3;
+  if (body[iBody].bEqtide) {
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 2;
+  } else {
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = 3;
+  }
   update[iBody].padDHeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]];
   update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]=2;
   update[iBody].iaBody[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]]*sizeof(int));
@@ -516,7 +520,11 @@ void InitializeHeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 }
 
 void InitializeKeccDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
-  update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 3;
+  if (body[iBody].bEqtide) {
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 2;
+  } else {
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = 3;
+  }
   update[iBody].padDKeccDtDistOrb[iPert] = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]];
   update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]=2;
   update[iBody].iaBody[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]]*sizeof(int));
@@ -549,6 +557,17 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
+  }
+}
+
+void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
+  int iBody;
+  
+  for (iBody=2;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bGRCorr != body[1].bGRCorr) {
+      fprintf(stderr,"ERROR: bGRCorr must be the same for all planets in DistOrb LL2 model\n");
+      exit(EXIT_INPUT);
+    }
   }
 }
 
@@ -701,13 +720,49 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
     
+    /* Conditions for recalc'ing eigenvalues */
+    if (iBody == 1) {
+      system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
+      system->dmAlpha0 = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+      system->dmLaplaceD = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+      for (j=0;j<Nchoosek(control->Evolve.iNumBodies-1,2);j++) {
+        system->dmLaplaceD[j] = malloc(2*sizeof(double));
+        system->dmAlpha0[j] = malloc(1*sizeof(double));
+      }
+      for (j=1;j<(control->Evolve.iNumBodies);j++) {
+        system->imLaplaceN[j] = malloc((control->Evolve.iNumBodies)*sizeof(int));
+      }
+    }
+
+    for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
+        if (body[iBody].dSemi < body[jBody].dSemi) {  
+            system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[iBody].dSemi/body[jBody].dSemi;
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,1,1.5);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,2,1.5);
+        } else if (body[iBody].dSemi > body[jBody].dSemi) {
+            system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1); 
+            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[jBody].dSemi/body[iBody].dSemi;
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,1,1.5);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,2,1.5);
+        }
+    }
+    
+//     body[iBody].dSemiPrev = body[iBody].dSemiPrev;
+        
     if (iBody == (control->Evolve.iNumBodies-1)) {
+      VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
       if (control->bInvPlane) {
         inv_plane(body, system, control->Evolve.iNumBodies);
       }
+      system->dmEigenValEcc = malloc(2*sizeof(double*));
+      system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenValInc = malloc(2*sizeof(double*));
+      system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenPhase = malloc(2*sizeof(double*));
       
-      SolveEigenVal(body, control, system);
-      ScaleEigenVec(body, control, system);
+      SolveEigenVal(body,&control->Evolve,system);
+      ScaleEigenVec(body,&control->Evolve,system);
     }
     
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 1; 
@@ -716,11 +771,16 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* h = Ecc*sin(LongP) */
         InitializeHeccDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2Hecc;
         
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2Kecc;
+        if (body[iBody].bEqtide) {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2DhDt;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2DkDt;
+        } else {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2Hecc;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2Kecc;
+        }
         
         /* p = s*sin(LongA) */
         InitializePincDistOrbLL2(body,update,iBody,iPert);
@@ -1294,7 +1354,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
-
 }
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
@@ -1362,139 +1421,210 @@ double GRCorrMatrix(BODY *body, int jBody, int kBody) {
 }
 
 /* XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (1992)
-Cannot release code with these functions as they are proprietary. */  
+Cannot release code with these functions as they are proprietary.
+They will need to be phased out as my new routines are tested and confirmed to work ok. HessEigen has variables renamed from "hqr" but is not fully replaced yet. */  
 
-void HessEigen(double **a, int n, double wr[], double wi[])
-/*Finds all eigenvalues of an upper Hess. matrix a[0..n-1][0..n-1]. a can be exactly as output from elmhes, on output it is destroyed. Real and imaginary parts of eigenvalues are returned in wr[0..n-1], wi[0..n-1]*/
+void HessEigen(double **amat, int origsize, double real[], double imag[])
+/*Finds all eigenvalues of an upper Hess. matrix amat */
 {
-  int nn, m, l, k, j, its, i, mmin;
-  double z, y, x, w, v, u, t, s, r, q, p, anorm, cond, value;
+  int size, m, smallsub, k, j, iterations, i, mmin;
+  double radic, ulcorner, lrcorner, hhvector, v, u, exshift, s, r, q, p, anorm, cond, value;
+  //s, r, q, and p are defined in numerical recipes eqns 11.6.23, 11.6.25
 
-  anorm = fabs(a[0][0]);
-  for (i = 1; i <= n-1; i++) 
-    for (j = (i-1); j <= n-1; j++)
-      anorm += fabs(a[i][j]);
+  anorm = fabs(amat[0][0]);
+  for (i = 1; i <= origsize-1; i++) 
+    for (j = (i-1); j <= origsize-1; j++)
+      anorm += fabs(amat[i][j]);
   
-  nn = n-1;
-  t = 0.0;
-  while (nn >= 0) {
-    its = 0;
+  size = origsize-1;
+  exshift = 0.0;
+  while (size >= 0) {
+    iterations = 0;
     do { 
-      for (l = nn; l >= 1; l--) {
-        s = fabs(a[l-1][l-1]) + fabs(a[l][l]);
+      for (smallsub = size; smallsub >= 1; smallsub--) {
+        s = fabs(amat[smallsub-1][smallsub-1]) + fabs(amat[smallsub][smallsub]);
         if (s == 0.0) s = anorm;
-        cond = fabs(a[l][l-1])+s;
+        cond = fabs(amat[smallsub][smallsub-1])+s;
         if ((float)cond ==(float) s) break;
       }
-      x = a[nn][nn];
-      if (l == nn) {
-        wr[nn] = x + t;
-        wi[nn--] = 0.0;
+      lrcorner = amat[size][size];
+      if (smallsub == size) {
+        real[size] = lrcorner + exshift;
+        imag[size--] = 0.0;
       } else {
-        y = a[nn-1][nn-1];
-        w = a[nn][nn-1]*a[nn-1][nn];
-        if (l == (nn-1)) {
-          p = 0.5*(y-x);
-          q = p*p + w;
-          z = sqrt(fabs(q));
-          x += t;
+        ulcorner = amat[size-1][size-1];
+        hhvector = amat[size][size-1]*amat[size-1][size];
+        if (smallsub == (size-1)) {
+          p = 0.5*(ulcorner-lrcorner);
+          q = p*p + hhvector;
+          radic = sqrt(fabs(q));
+          lrcorner += exshift;
           if (q >= 0.0) {
-            z = p+(double)signf(p)*z;
-            wr[nn-1] = wr[nn] = x+z;
-            if (z) wr[nn] = x-w/z;
-            wi[nn-1] = wi[nn] = 0.0;
+            radic = p+(double)signf(p)*radic;
+            real[size-1] = real[size] = lrcorner+radic;
+            if (radic) real[size] = lrcorner-hhvector/radic;
+            imag[size-1] = imag[size] = 0.0;
           } else {
-            wr[nn-1] = wr[nn] = x + p;
-            wi[nn-1] = -(wi[nn] = z);
+            real[size-1] = real[size] = lrcorner + p;
+            imag[size-1] = -(imag[size] = radic);
           }
-          nn -= 2;
+          size -= 2;
         } else {
-          if (its == 30) {
-            fprintf(stderr,"Too many iterations in hqr\n");
+          if (iterations == 30) {
+            fprintf(stderr,"Too many iterations in HessEigen routine\n");
             exit(EXIT_INPUT);
           }
-          if (its == 10 || its == 20) {
-            t += x;
-            for (i = 0; i <= nn; i++) a[i][i] -= x;
-            s = fabs(a[nn][nn-1])+fabs(a[nn-1][nn-2]);
-            y = x =0.75*s;
-            w = -0.4375*s*s;
+          if (iterations == 10 || iterations == 20) {
+            exshift += lrcorner;
+            for (i = 0; i <= size; i++) amat[i][i] -= lrcorner;
+            s = fabs(amat[size][size-1])+fabs(amat[size-1][size-2]);
+            ulcorner = lrcorner = 0.75*s;
+            hhvector = -0.4375*s*s;
           }
-          ++its;
+          ++iterations;
         
 
-          for (m = (nn-2); m >= l; m--) {
-            z = a[m][m];
-            r = x-z;
-            s = y-z;
-            p = (r*s-w)/a[m+1][m] + a[m][m+1];
-            q = a[m+1][m+1] - z - r - s;
-            r = a[m+2][m+1];
+          for (m = (size-2); m >= smallsub; m--) {
+            radic = amat[m][m];
+            r = lrcorner-radic;
+            s = ulcorner-radic;
+            p = (r*s-hhvector)/amat[m+1][m] + amat[m][m+1];
+            q = amat[m+1][m+1] - radic - r - s;
+            r = amat[m+2][m+1];
             s = fabs(p) + fabs(q) + fabs(r);
             p /= s;
             q /= s;
             r /= s;
-            if (m == l) break;
-            u = fabs(a[m][m-1])*(fabs(q) + fabs(r));
-            v = fabs(p)*(fabs(a[m-1][m-1]) + fabs(z) + fabs(a[m+1][m+1]));
+            if (m == smallsub) break;
+            u = fabs(amat[m][m-1])*(fabs(q) + fabs(r));
+            v = fabs(p)*(fabs(amat[m-1][m-1]) + fabs(radic) + fabs(amat[m+1][m+1]));
             if ((float)(u + v) ==(float) v) break;
           }
-          for (i = m+2; i <= nn; i++) {
-            a[i][i-2] = 0.0;
-            if (i != (m+2)) a[i][i-3] = 0.0;
+          for (i = m+2; i <= size; i++) {
+            amat[i][i-2] = 0.0;
+            if (i != (m+2)) amat[i][i-3] = 0.0;
           }
-          for (k = m; k <= nn-1; k++) {
+          for (k = m; k <= size-1; k++) {
             if (k != m) {
-              p = a[k][k-1];
-              q = a[k+1][k-1];
+              p = amat[k][k-1];
+              q = amat[k+1][k-1];
               r =0.0;
-              if (k != (nn-1)) r = a[k+2][k-1];
-              if ((x = fabs(p) + fabs(q) + fabs(r)) != 0.0) {
-                p /= x;
-                q /= x;
-                r /= x;
+              if (k != (size-1)) r = amat[k+2][k-1];
+              if ((lrcorner = fabs(p) + fabs(q) + fabs(r)) != 0.0) {
+                p /= lrcorner;
+                q /= lrcorner;
+                r /= lrcorner;
               }
             }
             value = sqrt(p*p+q*q+r*r);
             s = (double)signf(p)*value;
             if (s != 0.0) {
               if (k == m) {
-                if (l != m)
-                  a[k][k-1] = -a[k][k-1];
+                if (smallsub != m)
+                  amat[k][k-1] = -amat[k][k-1];
               } else
-                a[k][k-1] = -s*x;
+                amat[k][k-1] = -s*lrcorner;
               p += s;
-              x = p/s;
-              y = q/s;
-              z = r/s;
+              lrcorner = p/s;
+              ulcorner = q/s;
+              radic = r/s;
               q /= p;
               r /= p;
-              for (j = k; j <= nn; j++) {
-                p = a[k][j] + q*a[k+1][j];
-                if (k != (nn-1)) {
-                  p += r*a[k+2][j];
-                  a[k+2][j] -= p*z;
+              for (j = k; j <= size; j++) {
+                p = amat[k][j] + q*amat[k+1][j];
+                if (k != (size-1)) {
+                  p += r*amat[k+2][j];
+                  amat[k+2][j] -= p*radic;
                 }
-                a[k+1][j] -= p*y;
-                a[k][j] -= p*x;
+                amat[k+1][j] -= p*ulcorner;
+                amat[k][j] -= p*lrcorner;
               }
-              mmin = nn < k+3 ? nn : k+3;
-              for (i = l; i <= mmin; i++) {
-                p = x*a[i][k] + y*a[i][k+1];
-                if (k != (nn-1)) {
-                  p += z*a[i][k+2];
-                  a[i][k+2] -= p*r;
+              mmin = size < k+3 ? size : k+3;
+              for (i = smallsub; i <= mmin; i++) {
+                p = lrcorner*amat[i][k] + ulcorner*amat[i][k+1];
+                if (k != (size-1)) {
+                  p += radic*amat[i][k+2];
+                  amat[i][k+2] -= p*r;
                 }
-                a[i][k+1] -= p*q;
-                a[i][k] -= p;
+                amat[i][k+1] -= p*q;
+                amat[i][k] -= p;
               }
             }
           }
         }
       }
-    } while (l < nn-1);
+    } while (smallsub < size-1);
   }
 }
+
+// void Eigen2x2(double **matrix, double *real, double *imag, int *size, int *smallsub) {
+//   double a, b , c, d, radic;
+//   
+//   d = matrix[*size-1][*size-1];
+//   if (*smallsub == *size-1) {
+//     real[*size-1] = d;
+//     imag[*size-1] = 0.0;
+//     *size -= 1;   //destroy last row and column of matrix
+//   } else if (*smallsub == *size-2) {
+//     a = matrix[*size-2][*size-2];
+//     b = matrix[*size-1][*size-2];
+//     c = matrix[*size-2][*size-1];
+//     radic = 0.25*pow(a+d,2)-(a*d-b*c);
+//     if (radic >= 0.0) {
+//       real[*size-1] = 0.5*(a+d) + sqrt(radic);
+//       real[*size-2] = 0.5*(a+d) - sqrt(radic);
+//       imag[*size-1] = 0.0;
+//       imag[*size-2] = 0.0;
+//     } else {
+//       real[*size-1] = 0.5*(a+d);
+//       real[*size-2] = 0.5*(a+d);
+//       imag[*size-1] = sqrt(fabs(radic));
+//       imag[*size-2] = -sqrt(fabs(radic));
+//     }
+//     *size -= 2; //destroy last two rows and columns of matrix
+//   }
+// }
+
+// void QR4Hess(double **matrix, double *real, double *imag, int size) {
+//   /* XXX algorithm is not finished!!! do not eat...er, use */
+//   int i, j, smallsub, sizeprev;
+//   double norm;
+//   
+//   norm = 0.0;
+//   for (i=0;i<size;i++) {
+//     for (j=0;j<size;j++) {
+//       norm += pow(matrix[i][j],2);
+//     }
+//   }
+//   norm = sqrt(norm);
+//   
+//   for (i=size-1;i>0;i--) {
+//     cond = (fabs(matrix[i][i-1])+norm);
+//     if ((float)cond == (float)norm) {
+//       smallsub = i;  //row containing a small sub diagonal
+//       break;
+//     }
+//   }
+//   
+//   sizeprev = size;
+//   Eigen2x2(matrix, real, imag, &size, &smallsub);
+//   
+//   while (size>0) {
+//     if (size==sizeprev) {
+//       for (m=(size-3);m>=smallsub;m--) {
+//         p = ( (matrix[size-1][size-1]-matrix[m][m])*(matrix[size-2][size-2]-matrix[m][m]) \
+//             - matrix[size-2][size-1]*matrix[size-1][size-2] )/matrix[m+1][m] + \
+//               matrix[m][m+1];
+//         q = matrix[m+1][m+1] - matrix[m][m] - (matrix[size-1][size-1]-matrix[m][m]) - \
+//             (matrix[size-2][size-2]-matrix[m][m]);
+//         r = matrix[m+2][m+1];      
+//       }
+//     } else { 
+//       Eigen2x2(matrix,real,imag,&size);
+//     }  
+//   }  
+//   
+// }
 
 void ElmHess(double **a, int n)
 /*Reduction to Hessenberg by elimination. On output, Hess. matrix is in elements a[i][j] with i <= j+1. Elements with i > j+1 are to be thought of as zero but are returned with random values */
@@ -1579,6 +1709,88 @@ void BalanceM(double **a, int n)
   }
 }
 
+void RowSwap(double **matrix, int size, int i, int j) {
+  /* swap the ith and jth rows in matrix of size size*/
+  int k;
+  double dummy;
+  
+  for (k=0;k<size;k++) {
+    dummy = matrix[i][k];
+    matrix[i][k] = matrix[j][k];
+    matrix[j][k] = dummy;
+  }
+}  
+
+void ColSwap(double **matrix, int size, int i, int j) {
+  /* swap the ith and jth rows in matrix of size size*/
+  int k;
+  double dummy;
+  
+  for (k=0;k<size;k++) {
+    dummy = matrix[k][i];
+    matrix[k][i] = matrix[k][j];
+    matrix[k][j] = dummy;
+  }
+}  
+
+void HessReduce(double **a, int size) {
+  int r, rp, rmax, i, j;
+  double max, n;
+  
+  for (r=0;r<size;r++) { 
+    max = 0;
+    for (rp=r+1;rp<size;rp++) {
+      if (fabs(a[rp][r])>max) {
+        max = fabs(a[rp][r]);
+        rmax = rp;
+      }
+    }
+    if (max) {
+      RowSwap(a,size,rmax,r+1);
+      ColSwap(a,size,rmax,r+1);
+      
+      for (i=r+2;i<size;i++) {
+        n = a[i][r]/a[r+1][r];
+        
+        for (j=0;j<size;j++) {
+          a[i][j] -= n*a[r+1][j];
+        }
+        for (j=0;j<size;j++) {
+          a[j][r+1] += n*a[j][i];
+        }
+      }
+    }
+  }
+}
+
+void BalanceMatrix(double **a, int size) {
+  int i, j, end = 0;
+  double rownorm, colnorm, factor;
+  
+  while (end == 0) {
+    for (i=0;i<size;i++) {
+      rownorm = 0.0;
+      colnorm = 0.0;
+      for (j=0;j<size;j++) {
+        rownorm += pow(a[i][j],2);
+        colnorm += pow(a[j][i],2);
+      }
+      rownorm = pow(rownorm,0.5);
+      colnorm = pow(colnorm,0.5);
+    
+      factor = sqrt(rownorm/colnorm);
+    
+      for (j=0;j<size;j++) {
+        a[i][j] /= factor;
+        a[j][i] *= factor;
+      }
+    
+      if ((pow(factor*colnorm,2)+pow(rownorm/factor,2)) > 0.95*(pow(colnorm,2)+pow(rownorm,2))) {
+        end = 1;
+      }
+    }
+  }
+}    
 
 void ludcmp(double **a, int n, int *indx, float *d)
 /*Given a matrix a[0...n-1][0..n-1] this routine replaces by the LU decomp of a rowwise permutatio of itself. a and n are input. a is output, arranged with U as the upper triangular components and L as the lower triangular components BELOW the diagonal (diagonal elements of L are all = 1). indx[0..n-1] is an output vector that records the row permutation effected by partial pivoting; d is output as +/- 1 depending on whether the number of row interchanges was even(+) or odd(-). Used in combination with lubksb to solve linear eqns.*/
@@ -1633,9 +1845,74 @@ void ludcmp(double **a, int n, int *indx, float *d)
       for (i = j+1; i <= n-1; i++) a[i][j] *= dum;
     }
   }
-  //free_dvector(vv,1,n);
+  free(vv);
 }
 
+
+  
+void LUDecomp(double **amat, double **copy, int *swap, int size) {
+  double *scale, sumk, scaletmp, dummy;
+  int i, j, k, swapi;
+  
+  scale = malloc(size*sizeof(double));
+  for (i=0;i<size;i++) {
+    scale[i] = 0.0;
+    for (j=0;j<size;j++) {
+      if (fabs(amat[i][j]) > scale[i]) {
+        scale[i] = fabs(amat[i][j]);
+      }
+    }
+    if (scale[i] == 0.0) {
+      fprintf(stderr,"Singular matrix in routine LUDecomp");
+      exit(EXIT_INPUT);
+    }
+    for (j=0;j<size;j++) {
+      copy[i][j] = amat[i][j];
+    }
+    scale[i] = 1.0/scale[i];
+  }
+  
+  for (j=0;j<size;j++) {
+    scaletmp = 0.0;
+    swapi = j;
+
+    for (i=0;i<size;i++) {
+      sumk = 0.0;
+      if (i<j) {
+        for (k=0;k<i;k++) {
+          sumk += copy[i][k]*copy[k][j];
+        }
+      } else {
+        for (k=0;k<j;k++) {
+          sumk += copy[i][k]*copy[k][j];
+        }
+      } 
+      copy[i][j] -= sumk;
+      
+      if (i>=j) {
+        if (fabs(scale[i]*copy[i][j]) >= scaletmp) {
+          scaletmp = fabs(scale[i]*copy[i][j]);
+          swapi = i;
+        }
+      }
+    }  
+    if (swapi != j) {
+          RowSwap(copy,size,swapi,j);
+          dummy=scale[j];
+          scale[j]=scale[swapi];
+          scale[swapi]=dummy;
+    }
+    
+    if (copy[j][j] == 0) {
+      copy[j][j] = TEENY;
+    }
+    for (i=j+1;i<size;i++) { 
+      copy[i][j] /= copy[j][j];
+    }
+    swap[j] = swapi;
+  }
+  free(scale);
+}
 
 void lubksb(double **a, int n, int *indx, double b[])
 /*Solves set of n linear eqns A*X = B. a[0..n-1][0..n-1] is input as the LU decompostion from ludcmp. indx[0..n-1] is imput as the permutation vector from ludcmp. b[0..n-1] is input as the RHS vector B and returns with the soln vector X. a, n, and indx are not modified.*/
@@ -1658,25 +1935,62 @@ void lubksb(double **a, int n, int *indx, double b[])
     b[i] = sum/a[i][i] ;
   }
 }  
+
+void LUSolve(double **lumat, double *soln, int *swap, int size) {
+  int i, j;
+  double dummy, sumj;
   
+  for (i=0;i<size;i++) {
+    if (swap[i] != i) {
+      dummy = soln[i];
+      soln[i] = soln[swap[i]];
+      soln[swap[i]] = dummy;
+    }
+  }
+  
+  for (i=0;i<size;i++) {
+    sumj = 0.0;
+    for (j=0;j<i;j++) {
+      sumj += lumat[i][j]*soln[j];
+    }
+    soln[i] = soln[i] - sumj; //diagonals of L matrix are all = 1, so division is unnecessary
+  }
+  
+  for (i=(size-1);i>=0;i--) {
+    sumj = 0.0;
+    for (j=i+1;j<size;j++) {
+      sumj += lumat[i][j]*soln[j];
+    }
+    soln[i] = (soln[i] - sumj)/lumat[i][i];
+  }
+}
+
 void FindEigenVec(double **A, double lambda, int pls, double *soln)
 {
-  int jj, *swap, i, iter = 5;  // iter = # of iterations of inverse routine
+  int jj, *swap, *swap2, i, iter = 5;  // iter = # of iterations of inverse routine
   float d;                     // parity for LU factorization
-  double mag;                  // normalization for eigenvector
+  double mag, **Acopy;                  // normalization for eigenvector
   
+  Acopy = malloc(pls*sizeof(double*));
   // Subtracts eigenvalue from diagonal elements
   for (jj = 0; jj <= (pls-1); jj++) {
     A[jj][jj] -= lambda;
     soln[jj] = 1.0 / sqrt(pls);
+    Acopy[jj] = malloc(pls*sizeof(double));
+    for (i=0;i<pls;i++) {
+      Acopy[jj][i] = A[jj][i];
+    }
   }
 
   swap = malloc(pls*sizeof(int));
-  ludcmp(A, pls, swap, &d);  
+  LUDecomp(A, Acopy, swap, pls);
+//   ludcmp(A, pls, swap, &d);  
+
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
   for (i = 1; i <= iter; i++) {  
-    lubksb(A, pls, swap, soln);
+//     lubksb(A, pls, swap, soln);
+    LUSolve(Acopy,soln,swap,pls);
 
     mag = 0.0;
     for (jj = 0; jj <= (pls-1); jj++) {
@@ -1688,47 +2002,45 @@ void FindEigenVec(double **A, double lambda, int pls, double *soln)
     }
    
   }
+  free(swap);
+  for (jj=0;jj<pls;jj++) {
+    free(Acopy[jj]);
+  }
+  free(Acopy);
 }  
   
-void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
+void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   /* This solves the eigenvalue problem and provides an explicit solution 
        to the orbital evolution */
-    double **A,**B,*S,*T,parity,*Asoln,*Bsoln;
-    int j, k, count, *rowswap, i,iBody;
+    double **A,**B,parity,*Asoln,*Bsoln;
+    int j, k, count, i,iBody;
     
-    A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-    Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-
-    system->dmEigenValEcc = malloc(2*sizeof(double*));
-    system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    system->dmEigenValInc = malloc(2*sizeof(double*));
-    system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-    system->dmEigenPhase = malloc(2*sizeof(double*));
-    rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
-    
-    for (iBody=0;iBody<(control->Evolve.iNumBodies-1);iBody++) {
-      A[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      B[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenVecEcc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenVecInc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+    A = malloc((evolve->iNumBodies-1)*sizeof(double*));
+    B = malloc((evolve->iNumBodies-1)*sizeof(double*));
+    Asoln = malloc((evolve->iNumBodies-1)*sizeof(double));
+    Bsoln = malloc((evolve->iNumBodies-1)*sizeof(double));
+       
+    for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
+      A[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      B[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenVecEcc[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenVecInc[iBody] = malloc((evolve->iNumBodies-1)*sizeof(double));
     }
     
     for (i=0;i<2;i++) {
-      system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->dmEigenPhase[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+      system->dmEigenValEcc[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenValInc[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+      system->dmEigenPhase[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
     }
     
     /*First pass through calculates matrices and eigenvalues. Each subsequent pass redefines the matrices
       because they are destroyed by eigenvalue routines, then calculates eigenvectors. */
-    for (count=0;count<(control->Evolve.iNumBodies);count++) {
+    for (count=0;count<(evolve->iNumBodies);count++) {
       /* Calculate the initial matrix */
-      for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+      for (j=0;j<(evolve->iNumBodies-1);j++) {
         A[j][j] = 0.0;
         B[j][j] = 0.0;
-        for (k=0;k<(control->Evolve.iNumBodies-1);k++) {
+        for (k=0;k<(evolve->iNumBodies-1);k++) {
           if (j!=k) {
             A[j][j] += ABmatrix(body,1,j+1,k+1);
             A[j][k] = -ABmatrix(body,2,j+1,k+1);            
@@ -1741,69 +2053,91 @@ void SolveEigenVal(BODY *body, CONTROL *control, SYSTEM *system) {
       }
       
       if (count==0) {
-        BalanceM(A, (control->Evolve.iNumBodies-1)); //balance matrix
-        ElmHess(A, (control->Evolve.iNumBodies-1));  //reduce to upper Hess form
+        BalanceMatrix(A, (evolve->iNumBodies-1)); //balance matrix
+        HessReduce(A, (evolve->iNumBodies-1));  //reduce to upper Hess form
                 
-        BalanceM(B, (control->Evolve.iNumBodies-1)); //balance matrix
-        ElmHess(B, (control->Evolve.iNumBodies-1));  //reduce to upper Hess form
+        BalanceMatrix(B, (evolve->iNumBodies-1)); //balance matrix
+        HessReduce(B, (evolve->iNumBodies-1));  //reduce to upper Hess form
+       //  BalanceM(B, (evolve->iNumBodies-1)); //balance matrix
+//         ElmHess(B, (evolve->iNumBodies-1));  //reduce to upper Hess form
         
-        HessEigen(A, (control->Evolve.iNumBodies-1), system->dmEigenValEcc[0], system->dmEigenValEcc[1]);
-        HessEigen(B, (control->Evolve.iNumBodies-1), system->dmEigenValInc[0], system->dmEigenValInc[1]);
+        HessEigen(A, (evolve->iNumBodies-1), system->dmEigenValEcc[0], system->dmEigenValEcc[1]);
+        HessEigen(B, (evolve->iNumBodies-1), system->dmEigenValInc[0], system->dmEigenValInc[1]);
+        // for (i=1;i<(evolve->iNumBodies-1);i++) {
+//           printf("s%d = %f\n",i,system->dmEigenValInc[0][i]*YEARSEC);
+//         }
       } else {
-        FindEigenVec(A,system->dmEigenValEcc[0][count-1],(control->Evolve.iNumBodies-1),Asoln);
-        FindEigenVec(B,system->dmEigenValInc[0][count-1],(control->Evolve.iNumBodies-1),Bsoln);
+        FindEigenVec(A,system->dmEigenValEcc[0][count-1],(evolve->iNumBodies-1),Asoln);
+        FindEigenVec(B,system->dmEigenValInc[0][count-1],(evolve->iNumBodies-1),Bsoln);
       
-        for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+        for (j=0;j<(evolve->iNumBodies-1);j++) {
           system->dmEigenVecEcc[j][count-1] = Asoln[j];
           system->dmEigenVecInc[j][count-1] = Bsoln[j];
         }
       }
     }
+    free(Asoln);
+    free(Bsoln);
+    for (iBody=0;iBody<(evolve->iNumBodies-1);iBody++) {
+      free(A[iBody]);
+      free(B[iBody]);
+    }
+    free(A);
+    free(B);
 }
 
-void ScaleEigenVec(BODY *body, CONTROL *control, SYSTEM *system) {
+void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   double **etmp, **itmp, *h0, *k0, *p0, *q0, *S, *T;
   int i, j, *rowswap, count;
   float parity;
   
-  etmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-  itmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-  rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
-  h0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  k0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  p0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  q0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-
+  etmp = malloc((evolve->iNumBodies-1)*sizeof(double*));
+  itmp = malloc((evolve->iNumBodies-1)*sizeof(double*));
+  rowswap = malloc((evolve->iNumBodies-1)*sizeof(int));
+  h0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  k0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  p0 = malloc((evolve->iNumBodies-1)*sizeof(double));
+  q0 = malloc((evolve->iNumBodies-1)*sizeof(double));
   
-  for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
-    etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-    itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+  for (i=0;i<(evolve->iNumBodies-1);i++) {
+    etmp[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
+    itmp[i] = malloc((evolve->iNumBodies-1)*sizeof(double));
     h0[i] = body[i+1].dHecc;
     k0[i] = body[i+1].dKecc;
     p0[i] = body[i+1].dPinc;
     q0[i] = body[i+1].dQinc;
   
-    for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+    for (j=0;j<(evolve->iNumBodies-1);j++) {
       etmp[i][j] = system->dmEigenVecEcc[i][j];
       itmp[i][j] = system->dmEigenVecInc[i][j];
     }
   }
     
-  ludcmp(etmp,(control->Evolve.iNumBodies-1),rowswap,&parity);
-  lubksb(etmp,(control->Evolve.iNumBodies-1),rowswap,h0);
-  lubksb(etmp,(control->Evolve.iNumBodies-1),rowswap,k0);
   
-  ludcmp(itmp,(control->Evolve.iNumBodies-1),rowswap,&parity);
-  lubksb(itmp,(control->Evolve.iNumBodies-1),rowswap,p0);
-  lubksb(itmp,(control->Evolve.iNumBodies-1),rowswap,q0);
+//   ludcmp(etmp,(evolve->iNumBodies-1),rowswap,&parity);
+  // lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
+//   lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
+
+  LUDecomp(system->dmEigenVecEcc,etmp,rowswap,(evolve->iNumBodies-1));
+  LUSolve(etmp,h0,rowswap,(evolve->iNumBodies-1));
+  LUSolve(etmp,k0,rowswap,(evolve->iNumBodies-1));
+
+  
+  //ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
+//   lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
+//   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
+ 
+  LUDecomp(system->dmEigenVecInc,itmp,rowswap,(evolve->iNumBodies-1));
+  LUSolve(itmp,p0,rowswap,(evolve->iNumBodies-1));
+  LUSolve(itmp,q0,rowswap,(evolve->iNumBodies-1));
       
-  S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
+  S = malloc((evolve->iNumBodies-1)*sizeof(double));
+  T = malloc((evolve->iNumBodies-1)*sizeof(double));
+  for (i=0;i<(evolve->iNumBodies-1);i++) {
     S[i] = sqrt(h0[i]*h0[i] + k0[i]*k0[i]);
     T[i] = sqrt(p0[i]*p0[i] + q0[i]*q0[i]);
     
-    for (j=0;j<(control->Evolve.iNumBodies-1);j++) {
+    for (j=0;j<(evolve->iNumBodies-1);j++) {
       system->dmEigenVecEcc[j][i] *= S[i];
       system->dmEigenVecInc[j][i] *= T[i];
     }
@@ -1811,11 +2145,25 @@ void ScaleEigenVec(BODY *body, CONTROL *control, SYSTEM *system) {
     system->dmEigenPhase[0][i] = atan2(h0[i],k0[i]);
     system->dmEigenPhase[1][i] = atan2(p0[i],q0[i]);
   }
+  
+  for (i=0;i<evolve->iNumBodies-1;i++) {
+    free(etmp[i]);
+    free(itmp[i]);
+  }
+  free(etmp);
+  free(itmp);
+  free(h0);
+  free(k0);
+  free(p0);
+  free(q0);
+  free(S);
+  free(T);
+  free(rowswap);
 }
 
 void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
   double alpha1, dalpha;
-  int j, iBody, jBody;
+  int j, iBody, jBody, done=0;
   
   j = 0;
   for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
@@ -1827,19 +2175,56 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
       }
 
       for (j=0;j<LAPLNUM;j++) {
-        dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
-        if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
-            system->fnLaplaceF[j][0](alpha1, 0);
+          dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j]);
+          if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j])) {
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = 
+              system->fnLaplaceF[j][0](alpha1, 0);
                 
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
-            system->fnLaplaceDeriv[j][0](alpha1, 0);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = 
+              system->fnLaplaceDeriv[j][0](alpha1, 0);
                 
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+              printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
         }
       }
     }
   }
+}
+
+void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
+  int iBody, jBody, j, done = 0;
+  double alpha1, dalpha=-1, dalphaTmp;
+
+  for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      if (body[iBody].dSemi < body[jBody].dSemi) {
+        alpha1 = body[iBody].dSemi/body[jBody].dSemi;
+      } else if (body[iBody].dSemi > body[jBody].dSemi) {
+        alpha1 = body[jBody].dSemi/body[iBody].dSemi;
+      }
+      for (j=0;j<2;j++) {
+        dalphaTmp = fabs((alpha1 - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0])*system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j]);
+        if (dalphaTmp > dalpha) {
+          dalpha = dalphaTmp;
+        }
+      }
+    }
+  }
+  
+  if (dalpha > system->dDfcrit) {
+    SolveEigenVal(body,evolve,system);
+    ScaleEigenVec(body,evolve,system);
+    for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
+      for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+        for (j=0;j<2;j++) {
+          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = fdDerivLaplaceCoeff(1,alpha1,j+1,1.5);
+          system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
+        }
+      }
+    }
+//     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
+  }  
+
 }
 
 /*
@@ -3235,6 +3620,13 @@ double fdDistOrbLL2Qinc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }
 
+double fdDistOrbLL2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+}
+
+double fdDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -system->dmEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*sin(system->dmEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[0][iaBody[1]-1]);
+}
 
 double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */

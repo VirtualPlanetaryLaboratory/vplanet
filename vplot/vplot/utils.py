@@ -6,14 +6,14 @@ utils.py
 
 '''
 
-from __future__ import print_function
+from __future__ import print_function, absolute_import
+import vplot.defaults as defaults
 import os
 import subprocess
 import sys
 import numpy as np; np.seterr(divide='ignore')
 import re
 import imp
-import defaults
 
 # Default string to include in ``vplot_config.py file`` when creating one
 confstr = \
@@ -44,7 +44,7 @@ helpstr = \
   -y YAXIS [YAXIS ...]      Parameter(s) to plot on the y-axis
   -a AAXIS                  Parameter to control the alpha (transparancy) axis
   
-\x1b[1mversion:\x1b[0m 0.1
+\x1b[1mversion:\x1b[0m 0.1.1
 
 \x1b[1mvplot_config.py options:\x1b[0m
 %s
@@ -56,7 +56,6 @@ def ShowHelp(param = None):
   '''
   
   '''
-  import defaults
   if param is not None:
     try:
       docstring = defaults._Docs().__dict__[param]

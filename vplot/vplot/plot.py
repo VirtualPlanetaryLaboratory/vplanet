@@ -6,14 +6,16 @@ plot.py
 
 '''
 
-from __future__ import print_function
-from utils import ShowHelp, GetConf, GetOutput
+from __future__ import print_function, absolute_import
+from vplot.utils import ShowHelp, GetConf, GetOutput
 import matplotlib.pyplot as pl
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ColorConverter
 import argparse
 import numpy as np; np.seterr(divide = 'ignore')
+
+__all__ = ['Plot']
 
 def AlphaMap(r = 0, g = 0, b = 0):
   '''
@@ -35,10 +37,25 @@ def AlphaMap(r = 0, g = 0, b = 0):
     
   return LinearSegmentedColormap('AlphaMap', cdict)
 
-def SimplePlot(conf, output, xaxis, yaxis, aaxis = None):
+def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
   '''
 
   '''
+  
+  # Assign defaults
+  if conf is None:
+    conf = GetConf()
+  if bodies is None:
+    bodies = conf.bodies
+  if xaxis is None:
+    xaxis = conf.xaxis
+  if yaxis is None:
+    yaxis = conf.yaxis
+  if aaxis is None:
+    aaxis = conf.aaxis
+  
+  # Output object
+  output = GetOutput(bodies)
   
   # Names of all available params
   param_names = list(set([param.name for body in output.bodies for param in body.params]))
@@ -96,6 +113,11 @@ def SimplePlot(conf, output, xaxis, yaxis, aaxis = None):
     fig.subplots_adjust(hspace = 0.1) 
   else:
     fig.subplots_adjust(hspace = 0.25)
+  
+  # Hide empty subplots
+  empty = range(len(yarr), rows*columns)
+  for i in empty:
+    ax[i].set_visible(False)
   
   # Loop over all parameters (one subplot per each)
   for i, y in enumerate(yarr):
@@ -227,7 +249,7 @@ def SimplePlot(conf, output, xaxis, yaxis, aaxis = None):
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
 
-  return fig
+  return fig, ax
   
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(prog = 'VPLOT', add_help = False)
@@ -249,21 +271,8 @@ if __name__ == '__main__':
   # Initialize
   conf = GetConf()
   
-  # Assign defaults
-  if args.bodies is None:
-    args.bodies = conf.bodies
-  if args.xaxis is None:
-    args.xaxis = conf.xaxis
-  if args.yaxis is None:
-    args.yaxis = conf.yaxis
-  if args.aaxis is None:
-    args.aaxis = conf.aaxis
-  
-  # Get output params
-  output = GetOutput(args.bodies)
-  
   # Plot
-  fig = SimplePlot(conf, output, args.xaxis, args.yaxis, args.aaxis)
+  fig, _ = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
 
   # Show or save?
   if conf.interactive:

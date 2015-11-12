@@ -139,7 +139,6 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
     
     body[iFile-1].dArgP = dTmp; 
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-    printf(" ");
   } else 
     if (iFile > 0)
       body[iFile-1].dArgP = options->dDefault;
@@ -201,6 +200,52 @@ void ReadOverrideMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     control->Halt[iFile-1].bOverrideMaxEcc = options->dDefault;
 //     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
 }
+
+void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    body[iFile-1].bEigenSet = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    body[iFile-1].bEigenSet = options->dDefault;
+//     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
+} 
+
+void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    
+    dTmp *= DEGRAD/3600./YEARSEC;
+    
+    body[iFile-1].dEigenvalue = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dEigenvalue = options->dDefault;
+}  
+
+void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    
+    body[iFile-1].dEigenvector = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dEigenvector = options->dDefault;
+}  
 
 void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -302,6 +347,30 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORMAXECC].iType = 0;  
   options[OPT_ORMAXECC].iMultiFile = 0; 
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
+  
+  sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
+  sprintf(options[OPT_EIGENSET].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENSET].cDefault,"0");
+  options[OPT_EIGENSET].dDefault = 0;
+  options[OPT_EIGENSET].iType = 0;  
+  options[OPT_EIGENSET].iMultiFile = 0; 
+  fnRead[OPT_EIGENSET] = &ReadEigenSet;
+  
+  sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
+  sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENVALUE].cDefault,"0");
+  options[OPT_EIGENVALUE].dDefault = 0;
+  options[OPT_EIGENVALUE].iType = 0;  
+  options[OPT_EIGENVALUE].iMultiFile = 0; 
+  fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
+  
+  sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
+  sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
+  options[OPT_EIGENVECTOR].dDefault = 0;
+  options[OPT_EIGENVECTOR].iType = 0;  
+  options[OPT_EIGENVECTOR].iMultiFile = 0; 
+  fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -720,88 +789,97 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
     
-    /* Conditions for recalc'ing eigenvalues */
-    if (iBody == 1) {
-      system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
-      system->dmAlpha0 = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
-      system->dmLaplaceD = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
-      for (j=0;j<Nchoosek(control->Evolve.iNumBodies-1,2);j++) {
-        system->dmLaplaceD[j] = malloc(2*sizeof(double));
-        system->dmAlpha0[j] = malloc(1*sizeof(double));
-      }
-      for (j=1;j<(control->Evolve.iNumBodies);j++) {
-        system->imLaplaceN[j] = malloc((control->Evolve.iNumBodies)*sizeof(int));
-      }
-    }
-
-    for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
-        if (body[iBody].dSemi < body[jBody].dSemi) {  
-            system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[iBody].dSemi/body[jBody].dSemi;
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,1,1.5);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,2,1.5);
-        } else if (body[iBody].dSemi > body[jBody].dSemi) {
-            system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1); 
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[jBody].dSemi/body[iBody].dSemi;
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,1,1.5);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,2,1.5);
+    if (body[iBody].bEigenSet == 1) {
+      system->dmEigenValEcc = malloc(2*sizeof(double*));
+      system->dmEigenValInc = malloc(2*sizeof(double*));
+      system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+      system->dmEigenPhase = malloc(2*sizeof(double*))
+      
+    } else {
+      /* Conditions for recalc'ing eigenvalues */
+      if (iBody == 1) {
+        system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
+        system->dmAlpha0 = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+        system->dmLaplaceD = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+        for (j=0;j<Nchoosek(control->Evolve.iNumBodies-1,2);j++) {
+          system->dmLaplaceD[j] = malloc(2*sizeof(double));
+          system->dmAlpha0[j] = malloc(1*sizeof(double));
         }
-    }
+        for (j=1;j<(control->Evolve.iNumBodies);j++) {
+          system->imLaplaceN[j] = malloc((control->Evolve.iNumBodies)*sizeof(int));
+        }
+      }
+
+      for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
+          if (body[iBody].dSemi < body[jBody].dSemi) {  
+              system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[iBody].dSemi/body[jBody].dSemi;
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,1,1.5);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[iBody].dSemi/body[jBody].dSemi,2,1.5);
+          } else if (body[iBody].dSemi > body[jBody].dSemi) {
+              system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1); 
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][0] = body[jBody].dSemi/body[iBody].dSemi;
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,1,1.5);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,2,1.5);
+          }
+      }
     
 //     body[iBody].dSemiPrev = body[iBody].dSemiPrev;
         
-    if (iBody == (control->Evolve.iNumBodies-1)) {
-      VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
-      if (control->bInvPlane) {
-        inv_plane(body, system, control->Evolve.iNumBodies);
-      }
-      system->dmEigenValEcc = malloc(2*sizeof(double*));
-      system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->dmEigenValInc = malloc(2*sizeof(double*));
-      system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->dmEigenPhase = malloc(2*sizeof(double*));
+      if (iBody == (control->Evolve.iNumBodies-1)) {
+        VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
+        if (control->bInvPlane) {
+          inv_plane(body, system, control->Evolve.iNumBodies);
+        }
+        system->dmEigenValEcc = malloc(2*sizeof(double*));
+        system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->dmEigenValInc = malloc(2*sizeof(double*));
+        system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->dmEigenPhase = malloc(2*sizeof(double*));
       
-      system->A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->Acopy = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->Acopy = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
        
-      for (iBody=0;iBody<(control->Evolve.iNumBodies-1);iBody++) {
-         system->A[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->B[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->dmEigenVecEcc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->dmEigenVecInc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->Acopy[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      }
+        for (iBody=0;iBody<(control->Evolve.iNumBodies-1);iBody++) {
+           system->A[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->B[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecEcc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecInc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->Acopy[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        }
     
-      for (i=0;i<2;i++) {
-         system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-         system->dmEigenPhase[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      }
-      system->scale = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
+        for (i=0;i<2;i++) {
+           system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenPhase[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        }
+        system->scale = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
 
         
-      SolveEigenVal(body,&control->Evolve,system);
+        SolveEigenVal(body,&control->Evolve,system);
       
-      system->etmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->itmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
-      system->h0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->k0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->p0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->q0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->etmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->itmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
+        system->h0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->k0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->p0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->q0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
   
-      for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
-        system->etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-        system->itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      }
-      system->S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      system->T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
+          system->etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+          system->itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        }
+        system->S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
       
-      ScaleEigenVec(body,&control->Evolve,system);
+        ScaleEigenVec(body,&control->Evolve,system);
+      }
     }
     
     body[iBody].iGravPerts = control->Evolve.iNumBodies - 1; 

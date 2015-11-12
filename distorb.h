@@ -33,6 +33,9 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352
 #define OPT_ORMAXECC           1353
+#define OPT_EIGENSET           1370
+#define OPT_EIGENVALUE				 1371
+#define OPT_EIGENVECTOR				 1372
 #define OPT_ORBITMODEL         1399
 
 /* Options Functions */

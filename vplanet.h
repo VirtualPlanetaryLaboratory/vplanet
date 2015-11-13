@@ -432,7 +432,18 @@ typedef struct {
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
   double *daDivFlux;         /**< Divergence of surface flux */
   int iWriteLat;             /**< Stores index of latitude to be written in write function */
-  
+  double **dMClim;
+  double **dMEuler;
+  double **dMEulerCopy;
+  double **dInvM;
+  double *dUnitV;
+  double **dMDiff;
+  double *daLambda;
+  double *daSourceF;
+  double *daTempTerms;
+  double *daTmpTemp
+  double *daTmpTempTerms;
+  double *daDMidPt;
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

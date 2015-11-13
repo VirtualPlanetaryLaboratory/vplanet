@@ -1987,27 +1987,25 @@ void ludcmp(double **a, int n, int *indx, float *d)
   free(vv);
 }
 
-
-  
-void LUDecomp(SYSTEM *system, double **amat, double **copy, int size) {
+void LUDecomp(double **amat, double **copy, double *scale, double *rowswap, int size) {
   double sumk, scaletmp, dummy;
   int i, j, k, swapi;
   
   for (i=0;i<size;i++) {
-    system->scale[i] = 0.0;
+    scale[i] = 0.0;
     for (j=0;j<size;j++) {
-      if (fabs(amat[i][j]) > system->scale[i]) {
-        system->scale[i] = fabs(amat[i][j]);
+      if (fabs(amat[i][j]) > scale[i]) {
+        scale[i] = fabs(amat[i][j]);
       }
     }
-    if (system->scale[i] == 0.0) {
+    if (scale[i] == 0.0) {
       fprintf(stderr,"Singular matrix in routine LUDecomp");
       exit(EXIT_INPUT);
     }
     for (j=0;j<size;j++) {
       copy[i][j] = amat[i][j];
     }
-    system->scale[i] = 1.0/system->scale[i];
+    scale[i] = 1.0/scale[i];
   }
   
   for (j=0;j<size;j++) {
@@ -2028,17 +2026,17 @@ void LUDecomp(SYSTEM *system, double **amat, double **copy, int size) {
       copy[i][j] -= sumk;
       
       if (i>=j) {
-        if (fabs(system->scale[i]*copy[i][j]) >= scaletmp) {
-          scaletmp = fabs(system->scale[i]*copy[i][j]);
+        if (fabs(scale[i]*copy[i][j]) >= scaletmp) {
+          scaletmp = fabs(scale[i]*copy[i][j]);
           swapi = i;
         }
       }
     }  
     if (swapi != j) {
           RowSwap(copy,size,swapi,j);
-          dummy=system->scale[j];
-          system->scale[j]=system->scale[swapi];
-          system->scale[swapi]=dummy;
+          dummy=scale[j];
+          scale[j]=scale[swapi];
+          scale[swapi]=dummy;
     }
     
     if (copy[j][j] == 0) {
@@ -2047,7 +2045,7 @@ void LUDecomp(SYSTEM *system, double **amat, double **copy, int size) {
     for (i=j+1;i<size;i++) { 
       copy[i][j] /= copy[j][j];
     }
-    system->rowswap[j] = swapi;
+    rowswap[j] = swapi;
   }
 }
 
@@ -2117,7 +2115,7 @@ void FindEigenVecEcc(SYSTEM *system, int count, int pls) {
     }
   }
 
-  LUDecomp(system, system->A, system->Acopy, pls);
+  LUDecomp(system->A, system->Acopy, system->scale, system->rowswap, pls);
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
   for (i = 1; i <= iter; i++) {  
@@ -2150,7 +2148,7 @@ void FindEigenVecInc(SYSTEM *system, int count, int pls) {
     }
   }
 
-  LUDecomp(system, system->B, system->Acopy, pls);
+  LUDecomp(system->B, system->Acopy, system->scale, system->rowswap, pls);
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
   for (i = 1; i <= iter; i++) {  
@@ -2238,7 +2236,7 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   // lubksb(etmp,(evolve->iNumBodies-1),rowswap,h0);
 //   lubksb(etmp,(evolve->iNumBodies-1),rowswap,k0);
 
-  LUDecomp(system,system->dmEigenVecEcc,system->etmp,(evolve->iNumBodies-1));
+  LUDecomp(system->dmEigenVecEcc,system->etmp,system->scale,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->etmp,system->h0,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->etmp,system->k0,system->rowswap,(evolve->iNumBodies-1));
 
@@ -2247,7 +2245,7 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
  
-  LUDecomp(system,system->dmEigenVecInc,system->itmp,(evolve->iNumBodies-1));
+  LUDecomp(system->dmEigenVecInc,system->itmp,system->scale,system-rowswap,(evolve->iNumBodies-1));
   LUSolve(system->itmp,system->p0,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->itmp,system->q0,system->rowswap,(evolve->iNumBodies-1));
       

@@ -1988,6 +1988,7 @@ void ludcmp(double **a, int n, int *indx, float *d)
 }
 
 void LUDecomp(double **amat, double **copy, double *scale, int *rowswap, int size) {
+
   double sumk, scaletmp, dummy;
   int i, j, k, swapi;
   
@@ -2246,6 +2247,7 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
  
   LUDecomp(system->dmEigenVecInc,system->itmp,system->scale,system->rowswap,(evolve->iNumBodies-1));
+
   LUSolve(system->itmp,system->p0,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->itmp,system->q0,system->rowswap,(evolve->iNumBodies-1));
       

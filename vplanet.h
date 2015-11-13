@@ -446,7 +446,9 @@ typedef struct {
   double *daDMidPt;
   double *scale;
   int *rowswap;
-  
+  int bIceSheets;
+  double *daIceMass;
+
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

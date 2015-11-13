@@ -457,6 +457,18 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));  
+  
+  body[iBody].daLambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMDiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
+  body[iBody].dMEuler = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMEulerCopy = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dInvM = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].daSourceF = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
     
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   
@@ -478,6 +490,11 @@ void InitializeClimateParams(BODY *body, int iBody) {
       body[iBody].daTemp[i] = 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2))+Toffset;
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
       body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
+      body[iBody].dMClim[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMDiff[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEuler[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEulerCopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dInvM[i] = malloc(body[iBody].iNumLats*sizeof(double));
     }  
     
     if (body[iBody].bMEPDiff) {   
@@ -547,7 +564,6 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyPoise;
-
 }
 
 
@@ -817,6 +833,8 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DIVFLUX].bGrid = 1;
   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
   
+  
+  
 }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
@@ -1065,15 +1083,16 @@ void Albedo(BODY *body, int iBody) {
 //   }
 // }
 
-void MatrixInvert(double **Mcopy, double **invM, int n) {
-  double *unitv;
+void MatrixInvert(BODY *body, int iBody) {
+  double *unitv, n = body[iBody].iNumLats;
   int i, j, *rowswap;
   float parity;
   
-  unitv = malloc(n*sizeof(double));
-  rowswap = malloc(n*sizeof(int));
-  
-  ludcmp(Mcopy,n,rowswap,&parity);
+  // unitv = malloc(n*sizeof(double));
+//   rowswap = malloc(n*sizeof(int));
+//   
+//   ludcmp(Mcopy,n,rowswap,&parity);
+  LUDecomp(body[iBody].dMEuler,body[iBody].dMEulerCopy,body[iBody].scale,body[iBody].rowswap,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
       if (j==i) {
@@ -1082,11 +1101,15 @@ void MatrixInvert(double **Mcopy, double **invM, int n) {
         unitv[j] = 0.0;
       }
     }
-    lubksb(Mcopy,n,rowswap,unitv);
+
+//     lubksb(Mcopy,n,rowswap,unitv);
+    LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
     for (j=0;j<n;j++) {
-      invM[j][i] = unitv[j];
+      body[iBody].dInvM[j][i] = unitv[j];
     }
   }
+//   free(unitv);
+//   free(rowswap);
 }
 
 void TempGradient(BODY *body, double delta_x, int iBody) {
@@ -1113,59 +1136,44 @@ void PoiseClimate(BODY *body, int iBody) {
   delta_x = 2.0/body[iBody].iNumLats;
   Nmax = 2000;
   
-  lambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
-  M = malloc(body[iBody].iNumLats*sizeof(double*));
-  Mdiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
-  Mcopy = malloc(body[iBody].iNumLats*sizeof(double*));
-  invM = malloc(body[iBody].iNumLats*sizeof(double*));
-  SourceF = malloc(body[iBody].iNumLats*sizeof(double));
-  TempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-  tmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
-  tmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-  Dmidpt = malloc(body[iBody].iNumLats*sizeof(double));
-  
   /* Setup matrices, source function, temperature terms, global mean */
   for (i=0;i<body[iBody].iNumLats+1;i++) {
     xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
-    lambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
+    body[iBody].daLambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
   }
   
   body[iBody].dTGlobal = 0.0;
   for (i=0;i<body[iBody].iNumLats;i++) {
-    M[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    Mdiff[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    Mcopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    invM[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    TempTerms[i] = 0.0;
+    body[iBody].daTempTerms[i] = 0.0;
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       if (j==i) {
-        M[i][j] = (-body[iBody].dPlanckB-lambda[i+1]-lambda[i])/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = (-lambda[i+1]-lambda[i]);
-        Mcopy[i][j] = -1.0/delta_t;
+        body[iBody].dMClim[i][j] = (-body[iBody].dPlanckB-body[iBody].daLambda[i+1]-body[iBody].daLambda[i])/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = (-body[iBody].daLambda[i+1]-body[iBody].daLambda[i]);
+        body[iBody].dMEuler[i][j] = -1.0/delta_t;
       } else if (j==(i+1)) {
-        M[i][j] = lambda[j]/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = lambda[j];
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambda[j]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = body[iBody].daLambda[j];
+        body[iBody].dMEuler[i][j] = 0.0;
       } else if (j==(i-1)) {
-        M[i][j] = lambda[i]/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = lambda[i];
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambda[i]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = body[iBody].daLambda[i];
+        body[iBody].dMEuler[i][j] = 0.0;
       } else {
-        M[i][j] = 0.0;
-        Mdiff[i][j] = 0.0;
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = 0.0;
+        body[iBody].dMDiff[i][j] = 0.0;
+        body[iBody].dMEuler[i][j] = 0.0;
       }
-      Mcopy[i][j] += 0.5*M[i][j];
-      TempTerms[i] += M[i][j]*body[iBody].daTemp[j];
+      body[iBody].dMEuler[i][j] += 0.5*body[iBody].dMClim[i][j];
+      body[iBody].daTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
     }
-    SourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
+    body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
-    TempTerms[i] += SourceF[i];
+    body[iBody].daTempTerms[i] += body[iBody].daSourceF[i];
     body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
   
-  MatrixInvert(Mcopy, invM, body[iBody].iNumLats);
+  MatrixInvert(body,iBody);
     
   /* Relaxation to equilibrium */
   n = 1;
@@ -1173,24 +1181,24 @@ void PoiseClimate(BODY *body, int iBody) {
   while (fabs(Tchange) > 1e-12) {
     tmpTglobal = 0.0;
     for (i=0;i<body[iBody].iNumLats;i++) {
-      tmpTemp[i] = 0.0;
-      tmpTempTerms[i] = SourceF[i];
+      body[iBody].daTmpTemp[i] = 0.0;
+      body[iBody].daTmpTempTerms[i] = body[iBody].daSourceF[i];
       
       for (j=0;j<body[iBody].iNumLats;j++) {
-        tmpTemp[i] += -invM[i][j]*(0.5*(TempTerms[j]+SourceF[j])+body[iBody].daTemp[j]/delta_t);
-        tmpTempTerms[i] += M[i][j]*body[iBody].daTemp[j];
+        body[iBody].daTmpTemp[i] += -body[iBody].dInvM[i][j]*(0.5*(body[iBody].daTempTerms[j]+body[iBody].daSourceF[j])+body[iBody].daTemp[j]/delta_t);
+        body[iBody].daTmpTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
       }
-      tmpTglobal += tmpTemp[i]/body[iBody].iNumLats;
+      tmpTglobal += body[iBody].daTmpTemp[i]/body[iBody].iNumLats;
     }
     Tchange = tmpTglobal - body[iBody].dTGlobal;
     
     /* Update albedo, source function, temperature, temperature terms, and global mean */
     Albedo(body,iBody);
     for (i=0;i<body[iBody].iNumLats;i++) {
-      SourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
+      body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
-      body[iBody].daTemp[i] = tmpTemp[i];
-      TempTerms[i] = tmpTempTerms[i];
+      body[iBody].daTemp[i] = body[iBody].daTmpTemp[i];
+      body[iBody].daTempTerms[i] = body[iBody].daTmpTempTerms[i];
       body[iBody].dTGlobal = tmpTglobal;
     }
     if (n >= Nmax) {
@@ -1206,9 +1214,9 @@ void PoiseClimate(BODY *body, int iBody) {
   body[iBody].dAlbedoGlobal = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
-    Dmidpt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
+    body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
     body[iBody].daFlux[i] = -2.*PI*pow(body[iBody].dRadius,2)*sqrt(1.0-pow(sin(body[iBody].daLats[i]),2)) * \
-                            Dmidpt[i]*body[iBody].daTGrad[i];
+                            body[iBody].daDMidPt[i]*body[iBody].daTGrad[i];
     body[iBody].daFluxIn[i] = (1.0 - body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i];
     body[iBody].daFluxOut[i] = body[iBody].dPlanckA + body[iBody].dPlanckB*body[iBody].daTemp[i];                       
     
@@ -1217,7 +1225,7 @@ void PoiseClimate(BODY *body, int iBody) {
     
     body[iBody].daDivFlux[i] = 0.0;
     for (j=0;j<body[iBody].iNumLats;j++) {
-      body[iBody].daDivFlux[i] += -Mdiff[i][j]*body[iBody].daTemp[j];
+      body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
   } 

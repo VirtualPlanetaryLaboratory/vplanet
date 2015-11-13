@@ -204,6 +204,8 @@ typedef struct {
   double dEigenvalue; 
   double dEigenvector;
   int bEigenSet;
+  double *dLOrb;
+  double *dLOrbTmp;
     
   /* DISTROT parameters */
   int bDistRot;
@@ -213,6 +215,8 @@ typedef struct {
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
   double dZobl;           /**< cos(obliq) */
+  double *dLRot;
+  double *dLRotTmp;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -473,6 +477,7 @@ typedef struct {
   int *rowswap;
   double **Acopy;
   double *scale;
+  double *dLOrb;
   
   double dTotEnInit;     /**< System's Initial Energy */
 

@@ -862,7 +862,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
-  PoiseClimate(body,iBody);
+  PoiseClimate(body,system,iBody);
 }
 
 double true2eccA(double TrueA, double Ecc) {
@@ -1046,26 +1046,28 @@ void Albedo(BODY *body, int iBody) {
 //   }
 // }
 
-void MatrixInvert(double **Mcopy, double **invM, int n) {
+void MatrixInvert(SYSTEM *system, BODY *body, int n) {
   double *unitv;
   int i, j, *rowswap;
   float parity;
   
-  unitv = malloc(n*sizeof(double));
-  rowswap = malloc(n*sizeof(int));
-  
-  ludcmp(Mcopy,n,rowswap,&parity);
+  // unitv = malloc(n*sizeof(double));
+//   rowswap = malloc(n*sizeof(int));
+//   
+//   ludcmp(Mcopy,n,rowswap,&parity);
+  LUDecomp(system,body[iBody].dMclim,body[iBody].dMcopy,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
       if (j==i) {
-        unitv[j] = 1.0;
+        body[iBody].dUnitV[j] = 1.0;
       } else {
-        unitv[j] = 0.0;
+        body[iBody].dUnitV[j] = 0.0;
       }
     }
-    lubksb(Mcopy,n,rowswap,unitv);
+//     lubksb(Mcopy,n,rowswap,unitv);
+    LUSolve(body[iBody].dMcopy,body[iBody].dUnitV,system->rowswap, n)
     for (j=0;j<n;j++) {
-      invM[j][i] = unitv[j];
+      body[iBody].dinvM[j][i] = unitv[j];
     }
   }
   free(unitv);
@@ -1083,7 +1085,7 @@ void TempGradient(BODY *body, double delta_x, int iBody) {
                           body[iBody].daTemp[body[iBody].iNumLats-2])/(delta_x);
 }  
     
-void PoiseClimate(BODY *body, int iBody) {
+void PoiseClimate(BODY *body, SYSTEM *system, int iBody) {
   double delta_t, delta_x, xboundary, Tchange, tmpTglobal;
   double *lambda, **M, **Mcopy, **Mdiff, **invM,  *SourceF, *TempTerms, *tmpTemp, *tmpTempTerms, *Dmidpt; 
   int Nmax, i, j, n, k;
@@ -1148,7 +1150,7 @@ void PoiseClimate(BODY *body, int iBody) {
     body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
   
-  MatrixInvert(Mcopy, invM, body[iBody].iNumLats);
+  MatrixInvert(system, Mcopy, invM, body[iBody].iNumLats);
     
   /* Relaxation to equilibrium */
   n = 1;

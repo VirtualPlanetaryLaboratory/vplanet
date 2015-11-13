@@ -644,6 +644,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   int i, j=0, iPert=0, jBody=0;
   
   VerifyOrbitModel(control,files,options);
+  body[iBody].dLOrb = malloc(3*sizeof(double));
+  body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+  if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
   
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */

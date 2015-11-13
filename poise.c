@@ -1068,6 +1068,8 @@ void MatrixInvert(double **Mcopy, double **invM, int n) {
       invM[j][i] = unitv[j];
     }
   }
+  free(unitv);
+  free(rowswap);
 }
 
 void TempGradient(BODY *body, double delta_x, int iBody) {

@@ -790,11 +790,30 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcPQ(body,iBody);
     
     if (body[iBody].bEigenSet == 1) {
+      /* XXX really stupid hack */
       system->dmEigenValEcc = malloc(2*sizeof(double*));
       system->dmEigenValInc = malloc(2*sizeof(double*));
       system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
       system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
-      system->dmEigenPhase = malloc(2*sizeof(double*))
+      system->dmEigenPhase = malloc(2*sizeof(double*));
+      
+      system->dmEigenValEcc[0] = malloc(1*sizeof(double));
+      system->dmEigenValInc[0] = malloc(1*sizeof(double));
+      system->dmEigenVecEcc[0] = malloc(1*sizeof(double));
+      system->dmEigenVecInc[0] = malloc(1*sizeof(double));
+      system->dmEigenPhase[0] = malloc(1*sizeof(double));
+      system->dmEigenPhase[1] = malloc(1*sizeof(double));
+            
+      system->dmEigenValEcc[0][0] = 0.0;
+      //system->dmEigenValInc[0][0] = -0.000123627489;
+      system->dmEigenValInc[0][0] = -0.000119874715;
+      system->dmEigenVecEcc[0][0] = 0.0;
+      //system->dmEigenVecInc[0][0] = 0.00506143322;
+      system->dmEigenVecInc[0][0] = 0.0036367199;
+      
+      system->dmEigenPhase[0][0] = 0.0;
+//       system->dmEigenPhase[1][0] = atan2(body[iBody].dHecc,body[iBody].dKecc);
+      system->dmEigenPhase[1][0] = 2.6348951757;
       
     } else {
       /* Conditions for recalc'ing eigenvalues */

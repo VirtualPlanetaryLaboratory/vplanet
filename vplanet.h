@@ -441,9 +441,12 @@ typedef struct {
   double *daLambda;
   double *daSourceF;
   double *daTempTerms;
-  double *daTmpTemp
+  double *daTmpTemp;
   double *daTmpTempTerms;
   double *daDMidPt;
+  double *scale;
+  int *rowswap;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

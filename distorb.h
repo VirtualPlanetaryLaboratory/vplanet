@@ -125,7 +125,7 @@ void HessEigen(double**,int,double[],double[]);
 void ElmHess(double**,int);
 void BalanceM(double**,int);
 void ludcmp(double**,int,int*,float*);
-void LUDecomp(double**,double**,double*,double*,int);
+void LUDecomp(double**,double**,double*,int*,int);
 void LUSolve(double**,double*,int*,int);
 void BalanceMatrix(double**,int);
 void lubksb(double**,int,int*,double[]);
@@ -139,6 +139,7 @@ void RecalcEigenVals(BODY*,EVOLVE*,SYSTEM*);
 
 void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
+void cross(double*,double*,double*);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);

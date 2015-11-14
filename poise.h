@@ -109,4 +109,4 @@ void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
 
-void PoiseClimate(BODY*,SYSTEM*,int);
+void PoiseClimate(BODY*,int);

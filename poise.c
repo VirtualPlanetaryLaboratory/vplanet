@@ -454,6 +454,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].rowswap = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].dUnitV = malloc(3*sizeof(double));
     
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   
@@ -1062,7 +1065,7 @@ void Albedo(BODY *body, int iBody) {
 //   }
 // }
 
-void MatrixInvert(BODY *body) {
+void MatrixInvert(BODY *body, int iBody) {
   double *unitv, n = body[iBody].iNumLats;
   int i, j, *rowswap;
   float parity;
@@ -1081,9 +1084,9 @@ void MatrixInvert(BODY *body) {
       }
     }
 //     lubksb(Mcopy,n,rowswap,unitv);
-    LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n)
+    LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
     for (j=0;j<n;j++) {
-      body[iBody].dInvM[j][i] = unitv[j];
+      body[iBody].dInvM[j][i] = body[iBody].dUnitV[j];
     }
   }
 //   free(unitv);
@@ -1151,7 +1154,7 @@ void PoiseClimate(BODY *body, int iBody) {
     body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
   
-  MatrixInvert(body);
+  MatrixInvert(body,iBody);
     
   /* Relaxation to equilibrium */
   n = 1;
@@ -1203,7 +1206,7 @@ void PoiseClimate(BODY *body, int iBody) {
     
     body[iBody].daDivFlux[i] = 0.0;
     for (j=0;j<body[iBody].iNumLats;j++) {
-      body[iBody].daDivFlux[i] += -Mdiff[i][j]*body[iBody].daTemp[j];
+      body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
   } 

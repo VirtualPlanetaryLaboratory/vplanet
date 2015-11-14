@@ -32,6 +32,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TGLOBALEST      1812
 #define OPT_PCO2            1813
 #define OPT_MEPDIFF         1814
+#define OPT_ICESHEETS       1815
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
@@ -80,6 +81,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_FLUXIN           1836
 #define OUT_FLUXOUT          1837
 #define OUT_DIVFLUX          1838
+#define OUT_ICEMASS          1839
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 

@@ -23,7 +23,13 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
 }
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
-  /* Not needed for annual model? */
+  int iLat;
+  
+  dest[iBody].iNumLats = src[iBody].iNumLats;
+  for (iLat=0;iLat<src[iBody].iNumLats;iLat++) {
+    dest[iBody].daIceMass[iLat] = src[iBody].daIceMass[iLat];
+    dest[iBody].daTemp[iLat] = src[iBody].daTemp[iLat];
+  }
 }
 
 void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -545,9 +551,18 @@ void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int 
     }
   }
 }
+    
+void InitializeIceMassPoise(BODY *body,UPDATE *update,int iBody,int iLat) {
+  update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = 2;
+  update[iBody].padDIceMassDtPoise[iPert] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]];
+  update[iBody].iNumBodies[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]]=2;
+  update[iBody].iaBody[update[iBody].iIceMass][update[iBody].iaIceMassPoise[iLat]] = malloc(2*sizeof(int));
+  update[iBody].iaBody[update[iBody].iIceMass][update[iBody].iaIceMassPoise[iLat]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iIceMass][update[iBody].iaIceMassPoise[iLat]][1] = iLat;
+}    
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j=0, iPert=0, jBody=0;
+  int i, j=0, iLat=0;
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyAstro(body,iBody);
@@ -558,8 +573,13 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   InitializeLatGrid(body, iBody);
   InitializeClimateParams(body, iBody);
   
-  /* POISE annual has no primary variables! 
-     The climate simulation is done in entirely in ForceBehavior. */  
+  /* POISE annual has one primary variable! 
+     The climate simulation is done almost entirely in ForceBehavior. */
+  for (iLat=0;iLat<body[iBody].iNumLat;iLat++) {
+    InitializeIceMassPoise(body,update,iBody,iLat);
+    fnUpdate[iBody][update[iBody].iIceMass][update[iBody].iaIceMass[iLat]] = &fdDIceMassDt;   
+  }
+  
   control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesPoise;
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
@@ -569,8 +589,23 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
 /***************** POISE Update *****************/
 void InitializeUpdatePoise(BODY *body,UPDATE *update,int iBody) {
-
+  update[iBody].iNumVars += body[iBody].iNumLats;
+  update[iBody].iNumIceMass = 1;
+  body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizof(double));
+  update[iBody].iaIceMass = malloc(body[iBody].iNumLats*sizeof(int));
 } 
+
+void FinalizeUpdateIceMassPoise(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+  int i, iLat;
+  
+  update[iBody].padDIceMassDtPoise = malloc(body[iBody].iNumLats*sizeof(double*));
+  update[iBody].iaIceMassPoise = malloc(body[iBody].iNumLats*sizeof(int));
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    update[iBody].iaModule[iVar][0] = POISE;
+    update[iBody].iaIceMassPoise[iLat] = *iEqn;
+  }
+  (*iEqn)++;
+}
 
 /***************** POISE Halts *****************/
 
@@ -888,7 +923,8 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyPoise;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
-
+  module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
+  
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionPoise;
 
 }
@@ -1230,7 +1266,12 @@ void PoiseClimate(BODY *body, int iBody) {
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
   } 
 }
-      
+
+void fdDIceMassDt(BODY *body, SYSTEM *system, int iaBody) {
+  double Tice = 273.0;
+  
+  return SIGMA*(pow(Tice,4.0) - pow(body[iBody].daTemp[iaBody[1]],4.0))/LFICE;
+}
   
   
 

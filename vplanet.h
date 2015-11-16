@@ -45,6 +45,8 @@
 #define MSAT          5.6851e26
 #define DEGRAD        0.017453292519444445
 #define ATOMMASS      1.660538921e-27
+#define SIGMA         5.670367e-8
+#define LFICE         3.34e5
 
 /* Exit Status */
 
@@ -133,6 +135,9 @@
 // STELLAR
 #define VLUMINOSITY     1502
 #define VTEMPERATURE    1503
+
+// POISE
+#define VICEMASS        1851
 
 /* Now define the structs */
 
@@ -729,7 +734,14 @@ typedef struct {
   double *pdRadiusStellar;
   
   double *pdRotRateStellar;
-
+  
+  /* POISE */
+  int *iaIceMass;  /**< Variable number of ice mass of each latitude */
+  int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
+  double **padDIceMassDtPoise;
+  
+  
+  
 } UPDATE;
 
 typedef struct {

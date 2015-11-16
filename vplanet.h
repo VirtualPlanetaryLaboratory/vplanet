@@ -739,10 +739,10 @@ typedef struct {
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
   double **padDIceMassDtPoise;
-  
-  
-  
+  int *iaIceMassPoise;
+  int iIceMass;
 } UPDATE;
+
 
 typedef struct {
   int iNumHalts;       /**< Total Number of Halts */
@@ -1012,31 +1012,32 @@ typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
 //All primary variables need a FinalizeUpdate function
 //typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
-typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);  
-typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int); 
+typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);  
+typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1129,12 +1130,13 @@ typedef struct {
   
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */
-  /*! Function pointers to finalize Laskar's X */ 
+  /*! Function pointers to finalize distrot's X */ 
   fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
-  /*! Function pointers to finalize Laskar's Y */ 
+  /*! Function pointers to finalize distrot's Y */ 
   fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
-  /*! Function pointers to finalize Laskar's Z */ 
+  /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
+  fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
@@ -1154,6 +1156,7 @@ typedef struct {
   /*! These functions adds subroutines to the output functions that require
       module-specific values. */ 
   fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
+  
   
 } MODULE;
 

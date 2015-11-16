@@ -969,7 +969,7 @@ void InitializeUpdateDistOrb(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
 
   int iPert;
@@ -991,7 +991,7 @@ void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   } 
 }
 
-void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
 
   int iPert;
@@ -1013,7 +1013,7 @@ void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   }
 }
 
-void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
   
   update[iBody].padDPincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
@@ -1024,7 +1024,7 @@ void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   }
 }
 
-void FinalizeUpdateQincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateQincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
   
   update[iBody].padDQincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
@@ -3737,7 +3737,6 @@ double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
 }
-
 
 double fdDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */

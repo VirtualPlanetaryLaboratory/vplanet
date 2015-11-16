@@ -84,6 +84,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEMASS          1839
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
+void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
+
 
 void HelpOutputPoise(OUTPUT*);
 void WriteTGlobal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -112,3 +114,4 @@ double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
 
 void PoiseClimate(BODY*,int);
+double fdDIceMassDt(BODY*,SYSTEM*,int*);

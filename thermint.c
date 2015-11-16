@@ -358,12 +358,12 @@ void InitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = TMAN;
   update[iBody].iNumTMan = (*iEqn)++;
 }
 
-void FinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = TCORE;
   update[iBody].iNumTCore = (*iEqn)++;
 }

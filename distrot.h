@@ -33,9 +33,9 @@ void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 /* Update Functions */
 
 void InitializeUpdateDistRot(BODY*,UPDATE*,int);
-void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 

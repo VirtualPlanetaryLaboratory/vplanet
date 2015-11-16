@@ -53,10 +53,10 @@ void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 /* Update Functions */
 
 void InitializeUpdateDistOrb(BODY*,UPDATE*,int);
-void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 

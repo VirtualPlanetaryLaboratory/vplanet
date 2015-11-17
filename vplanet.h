@@ -47,6 +47,7 @@
 #define ATOMMASS      1.660538921e-27
 #define SIGMA         5.670367e-8
 #define LFICE         3.34e5
+#define RHOICE        916.7   //density of ice kg/m^3
 
 /* Exit Status */
 
@@ -453,6 +454,8 @@ typedef struct {
   int *rowswap;
   int bIceSheets;
   double *daIceMass;
+  double dInitIceLat;
+  double dInitIceHeight;
 
 } BODY;
 

@@ -33,6 +33,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_PCO2            1813
 #define OPT_MEPDIFF         1814
 #define OPT_ICESHEETS       1815
+#define OPT_INITICELAT      1816
+#define OPT_INITICEHEIGHT   1817
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
@@ -114,4 +116,4 @@ double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
 
 void PoiseClimate(BODY*,int);
-double fdDIceMassDt(BODY*,SYSTEM*,int*);
+double fdPoiseDIceMassDt(BODY*,SYSTEM*,int*);

@@ -1,8 +1,9 @@
 # Gl581 c's parameters
 sName		c			# Body's name
-saModules	eqtide radheat thermint $
-		distorb distrot $
-		atmesc poise
+#saModules	eqtide radheat thermint $
+#		distorb distrot $
+#		atmesc poise
+saModules eqtide distorb distrot
 
 # Physical Properties
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
@@ -34,47 +35,47 @@ saTidePerts	star			# Body name(s) of tidal perturbers
 
 # RADHEAT Parameters
 # Initialize 40K
-d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
+#d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
 #d40KMassMan    -1
 #d40KPowerMan   -1
 #d40KNumCore     -2			# Numer of potassium-40 atoms, negative -> Earth
 #d40KPowerCore   -1
-d40KMassCore   -1
+#d40KMassCore   -1
 # 232Th
-d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
 #d232ThMassMan  -1
 #d232ThPowerMan -1
-d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
 # 235U
-d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+#d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 #d235UMassMan    -1
 #d235UPowerMan    -1
-d235UNumCore	-1
+# d235UNumCore	-1
 # 238U
-d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
-#d238UMassMan    -1
-#d238UPowerMan    -1
-d238UNumCore	-1
-
-# THERMINT inputs.
-dTMan  3000.0  #2500.0
-dTCore 6000.0
-dViscRatioMan 5.0  #5.6
-dEruptEff 0.2
-dViscRef  1e8
-
-# ATMESC inputs
-dXFrac		1
-dAtmXAbsEff	0.3
-dSurfWaterMass	-1
-
-# POISE
-iLatCellNum	151
+# d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+# #d238UMassMan    -1
+# #d238UPowerMan    -1
+# d238UNumCore	-1
+# 
+# # THERMINT inputs.
+# dTMan  3000.0  #2500.0
+# dTCore 6000.0
+# dViscRatioMan 5.0  #5.6
+# dEruptEff 0.2
+# dViscRef  1e8
+# 
+# # ATMESC inputs
+# dXFrac		1
+# dAtmXAbsEff	0.3
+# dSurfWaterMass	-1
+# 
+# # POISE
+# iLatCellNum	151
 
 # Output
-saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
-	      TMan Tcore -Tglobal -FluxOutGlobal -RadPowerT DeltaT
-
+# saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
+# 	      TMan Tcore -Tglobal -FluxOutGlobal -RadPowerT DeltaT
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

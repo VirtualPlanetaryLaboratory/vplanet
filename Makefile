@@ -6,3 +6,4 @@ debug:
 
 opt:
 	-gcc -O2 -g -o vplanet *.c -lm
+

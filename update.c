@@ -110,11 +110,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     // The second dimension of the Update matrix is the variables
     (*fnUpdate)[iBody]=malloc(update[iBody].iNumVars*sizeof(fnUpdateVariable*));
     update[iBody].iaVar = malloc(update[iBody].iNumVars*sizeof(int));
-    update[iBody].iNumEqns = malloc(update[iBody].iNumVars*sizeof(double));
+    update[iBody].iNumEqns = malloc(update[iBody].iNumVars*sizeof(int));
     update[iBody].iaType = malloc(update[iBody].iNumVars*sizeof(int*));
     update[iBody].iaModule = malloc(update[iBody].iNumVars*sizeof(int*));
     update[iBody].pdVar = malloc(update[iBody].iNumVars*sizeof(double*));
-    update[iBody].daDeriv = malloc(update[iBody].iNumVars*sizeof(double*));
+    update[iBody].daDeriv = malloc(update[iBody].iNumVars*sizeof(double));
     update[iBody].daDerivProc = malloc(update[iBody].iNumVars*sizeof(double*));
     update[iBody].iNumBodies = malloc(update[iBody].iNumVars*sizeof(int*));
     update[iBody].iaBody = malloc(update[iBody].iNumVars*sizeof(int**));
@@ -925,10 +925,10 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     
     // POISE's ice mass
     update[iBody].iIceMass = -1;
-    if (update[iBody].iNumIceMass) {
-      /* XXX hack to get ice sheets working, since tmpBody doesn't get initialized until verify */
-      control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
-      body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
+    /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
+    control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
+    if (update[iBody].iNumIceMass) { 
       update[iBody].iIceMass = iVar;
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         update[iBody].iaIceMass[iLat] = iVar;

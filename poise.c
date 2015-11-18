@@ -535,9 +535,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
   } else {
     Toffset = 0.0;
   }
-  
-  // if (body[iBody].bIceSheets) {
-//     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+ //  
+//   if (body[iBody].bIceSheets) {
+//     body[iBody].daIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
 //   }
   
   body[iBody].dTGlobal = 0.0;
@@ -557,6 +557,10 @@ void InitializeClimateParams(BODY *body, int iBody) {
       if (body[iBody].bIceSheets) {
         if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
           body[iBody].daIceMass[i] = body[iBody].dInitIceHeight*RHOICE;
+//           body[iBody].daIceHeight[i] = body[iBody].dInitIceHeight;
+        } else {
+          body[iBody].daIceMass[i] = 0.0;
+//           body[iBody].daIceHeight[i] = 0.0;
         }
       }
     }  
@@ -652,7 +656,7 @@ void InitializeUpdatePoise(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].bIceSheets) {
     update[iBody].iNumVars += body[iBody].iNumLats;
     update[iBody].iNumIceMass = 1;
-    body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+//     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
     update[iBody].iaIceMass = malloc(body[iBody].iNumLats*sizeof(int));
     update[iBody].padDIceMassDtPoise = malloc(body[iBody].iNumLats*sizeof(double*));
     update[iBody].iaIceMassPoise = malloc(body[iBody].iNumLats*sizeof(int));
@@ -827,6 +831,17 @@ void WriteIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     //fsUnitsEnergyFlux(units,cUnit);
   }
 }    
+
+void WriteIceHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat]/RHOICE;
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}  
   
 void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName,"TGlobal");
@@ -946,6 +961,14 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEMASS].bGrid = 1;
   fnWrite[OUT_ICEMASS] = &WriteIceMass; 
   
+  sprintf(output[OUT_ICEHEIGHT].cName,"IceHeight");
+  sprintf(output[OUT_ICEHEIGHT].cDescr,"Height of ice sheets");
+  sprintf(output[OUT_ICEHEIGHT].cNeg,"m");
+  output[OUT_ICEHEIGHT].bNeg = 1;
+  output[OUT_ICEHEIGHT].dNeg = 1;
+  output[OUT_ICEHEIGHT].iNum = 1;
+  output[OUT_ICEHEIGHT].bGrid = 1;
+  fnWrite[OUT_ICEHEIGHT] = &WriteIceHeight; 
 }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
@@ -1209,9 +1232,8 @@ void Albedo(BODY *body, int iBody) {
 // }
 
 void MatrixInvert(BODY *body, int iBody) {
-  double *unitv, n = body[iBody].iNumLats;
-  int i, j, *rowswap;
-  float parity;
+  double n = body[iBody].iNumLats;
+  int i, j;
   
   // unitv = malloc(n*sizeof(double));
 //   rowswap = malloc(n*sizeof(int));

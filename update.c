@@ -88,7 +88,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
     update[iBody].iNumVars=0;
     
-    /* Hack to get distorb working. Need iGravPerts for following arrays */
+    /* XXX Hack to get distorb working. Need iGravPerts for following arrays */
     if (body[iBody].bDistOrb) {
       if (control->Evolve.iDistOrbModel == RD4) {
         body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;

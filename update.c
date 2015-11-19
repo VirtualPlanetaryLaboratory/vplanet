@@ -12,7 +12,7 @@ void InitializeUpdateBodyPerts(CONTROL *control,UPDATE *update,int iBody) {
 
   for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
     for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-      control->Evolve.tmpUpdate[iBody].iaBody[iVar][iEqn] = malloc(update[iBody].iNumBodies[iVar][iEqn]);
+      control->Evolve.tmpUpdate[iBody].iaBody[iVar][iEqn] = malloc(update[iBody].iNumBodies[iVar][iEqn]*sizeof(int));
     }
   }
 }

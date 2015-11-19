@@ -526,7 +526,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].rowswap =  malloc(body[iBody].iNumLats*sizeof(int));
   body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
-  body[iBody].dUnitV = malloc(3*sizeof(double));
+  body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
     
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   
@@ -1116,7 +1116,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   for (j=0;j<body[iBody].iNumLats;j++)
     body[iBody].daAnnualInsol[j] = 0.0;
   
-  for (i=0;i<=body[iBody].iNDays;i++) {
+  for (i=0;i<body[iBody].iNDays;i++) {
     if (i!=0) {
       MeanL = MeanL + 2*PI/body[iBody].iNDays;
       /* This will only work for the secular orbital model. 
@@ -1234,12 +1234,13 @@ void Albedo(BODY *body, int iBody) {
 void MatrixInvert(BODY *body, int iBody) {
   double n = body[iBody].iNumLats;
   int i, j;
+  float parity;
   
   // unitv = malloc(n*sizeof(double));
 //   rowswap = malloc(n*sizeof(int));
-//   
-//   ludcmp(Mcopy,n,rowswap,&parity);
-  LUDecomp(body[iBody].dMEuler,body[iBody].dMEulerCopy,body[iBody].scale,body[iBody].rowswap,n);
+// 
+  ludcmp(body[iBody].dMEuler,n,body[iBody].rowswap,&parity);
+//   LUDecomp(body[iBody].dMEuler,body[iBody].dMEulerCopy,body[iBody].scale,body[iBody].rowswap,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
       if (j==i) {
@@ -1249,8 +1250,8 @@ void MatrixInvert(BODY *body, int iBody) {
       }
     }
 
-//     lubksb(Mcopy,n,rowswap,unitv);
-    LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
+    lubksb(body[iBody].dMEuler,n,body[iBody].rowswap,body[iBody].dUnitV);
+//     LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
     for (j=0;j<n;j++) {
       body[iBody].dInvM[j][i] = body[iBody].dUnitV[j];
     }

@@ -33,6 +33,9 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352
 #define OPT_ORMAXECC           1353
+#define OPT_EIGENSET           1370
+#define OPT_EIGENVALUE				 1371
+#define OPT_EIGENVECTOR				 1372
 #define OPT_ORBITMODEL         1399
 
 /* Options Functions */
@@ -50,10 +53,10 @@ void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 /* Update Functions */
 
 void InitializeUpdateDistOrb(BODY*,UPDATE*,int);
-void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -122,11 +125,14 @@ void HessEigen(double**,int,double[],double[]);
 void ElmHess(double**,int);
 void BalanceM(double**,int);
 void ludcmp(double**,int,int*,float*);
-void LUDecomp(double**,double**,int*,int);
+
+void LUDecomp(double**,double**,double*,int*,int);
+
 void LUSolve(double**,double*,int*,int);
 void BalanceMatrix(double**,int);
 void lubksb(double**,int,int*,double[]);
-void FindEigenVec(double**,double,int,double*);
+void FindEigenVecEcc(SYSTEM*,int,int);
+void FindEigenVecInc(SYSTEM*,int,int);
 void SolveEigenVal(BODY*,EVOLVE*,SYSTEM*);
 void ScaleEigenVec(BODY*,EVOLVE*,SYSTEM*);
 
@@ -135,6 +141,7 @@ void RecalcEigenVals(BODY*,EVOLVE*,SYSTEM*);
 
 void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
+void cross(double*,double*,double*);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);

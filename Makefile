@@ -3,6 +3,3 @@ default:
 
 debug:
 	-gcc -g -o vplanet *.c -lm -Wno-div-by-zero
-
-opt:
-	-gcc -O2 -g -o vplanet *.c -lm

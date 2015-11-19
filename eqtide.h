@@ -80,11 +80,11 @@ void InitializeModuleEqtide(CONTROL*,MODULE*);
 /* Update Functions */
 
 void InitializeUpdateEqtide(BODY*,UPDATE*,int);
-void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 

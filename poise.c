@@ -472,9 +472,10 @@ void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbo
       exit(EXIT_INPUT);
     }
     /* Calculate A and B from Williams & Kasting 1997 result */
+    body[iBody].dTGlobal -= 273.15;
     body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
     body[iBody].dPlanckA = OLRwk97(body,iBody) \
-      - body[iBody].dPlanckB*(body[iBody].dTGlobal - 273.15);
+      - body[iBody].dPlanckB*(body[iBody].dTGlobal);
       
   } else {
     if (options[OPT_PCO2].iLine[iBody+1] > -1 || options[OPT_TGLOBALEST].iLine[iBody+1] > -1) {
@@ -1033,10 +1034,12 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iLat;
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     if (body[iBody].daIceMass[iLat] < 0) {
+      body[iBody].daIceMass[iLat] = 0.0;
+    } else if (body[iBody].daIceMass[iLat] < 10 && update[iBody].daDeriv[update[iBody].iaIceMass[iLat]] < 0) {
       body[iBody].daIceMass[iLat] = 0.0;
     }
   }
@@ -1152,7 +1155,7 @@ double OLRwk97(BODY *body, int iBody){
   double phi, Int, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal;
+  T = body[iBody].dTGlobal+273.15;
   Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
       + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
       - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
@@ -1167,7 +1170,7 @@ double dOLRdTwk97(BODY *body, int iBody){
   double phi, dI, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal;
+  T = body[iBody].dTGlobal+273.15;
   dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
        + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
        - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
@@ -1279,6 +1282,11 @@ void PoiseClimate(BODY *body, int iBody) {
   /* Get cuurent climate parameters */
   Albedo(body, iBody);
   AnnualInsolation(body, iBody);
+  if (body[iBody].bCalcAB) {
+    body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
+    body[iBody].dPlanckA = OLRwk97(body,iBody) \
+      - body[iBody].dPlanckB*(body[iBody].dTGlobal);
+  }
   
   delta_t = 1.5/body[iBody].iNumLats;
   delta_x = 2.0/body[iBody].iNumLats;

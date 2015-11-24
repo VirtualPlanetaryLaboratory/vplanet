@@ -110,7 +110,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 
 /* Poise Functions */
 void PropertiesPoise(BODY*,UPDATE*,int);
-void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void Albedo(BODY*,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);

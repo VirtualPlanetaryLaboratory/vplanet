@@ -545,7 +545,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
   for (i=0;i<=body[iBody].iNumLats;i++) {
     if (i!=body[iBody].iNumLats) {
-      body[iBody].daTemp[i] = 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2))+Toffset;
+      body[iBody].daTemp[i] = 20.*(1.0-1.5*pow(sin(body[iBody].daLats[i]),2))+Toffset;
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
       body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
       body[iBody].dMClim[i] = malloc(body[iBody].iNumLats*sizeof(double));

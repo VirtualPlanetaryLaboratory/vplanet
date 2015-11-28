@@ -358,10 +358,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,iBody,iModule);
+        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iModule,iBody);
     }
 
     /* Halt? */

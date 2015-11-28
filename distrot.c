@@ -671,7 +671,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 }
 
 void RotateVector(double *v1, double *v2, double theta, int axis) {

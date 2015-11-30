@@ -502,6 +502,7 @@ void InitializeLatGrid(BODY *body, int iBody) {
 void InitializeClimateParams(BODY *body, int iBody) {
   int i;
   double Toffset, xboundary;
+  body[iBody].dIceMassTot = 0.0;
   
   body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));   
   body[iBody].daDiffusion = malloc((body[iBody].iNumLats+1)*sizeof(double));
@@ -558,6 +559,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
       if (body[iBody].bIceSheets) {
         if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
           body[iBody].daIceMass[i] = body[iBody].dInitIceHeight*RHOICE;
+          body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
 //           body[iBody].daIceHeight[i] = body[iBody].dInitIceHeight;
         } else {
           body[iBody].daIceMass[i] = 0.0;
@@ -748,6 +750,18 @@ void WriteFluxOutGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
   }
+} 
+
+void WriteTotIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dIceMassTot;
+
+  if (output->bDoNeg[iBody]) {
+    // Negative option is SI
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
 }    
   
 void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -858,6 +872,13 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOGLOBAL].bNeg = 0;
   output[OUT_ALBEDOGLOBAL].iNum = 1;
   fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
+  
+  sprintf(output[OUT_TOTICEMASS].cName,"TotIceMass");
+  sprintf(output[OUT_TOTICEMASS].cDescr,"Global total ice mass in ice sheets");
+  sprintf(output[OUT_TOTICEMASS].cNeg,"kg");
+  output[OUT_TOTICEMASS].bNeg = 1;
+  output[OUT_TOTICEMASS].iNum = 1;
+  fnWrite[OUT_TOTICEMASS] = &WriteTotIceMass;
   
   sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
   sprintf(output[OUT_FLUXINGLOBAL].cDescr,"Global mean flux in (insol*(1-albedo)) from POISE");
@@ -1368,6 +1389,7 @@ void PoiseClimate(BODY *body, int iBody) {
   body[iBody].dFluxInGlobal = 0.0;
   body[iBody].dFluxOutGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
+  body[iBody].dIceMassTot = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
     body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
@@ -1384,11 +1406,14 @@ void PoiseClimate(BODY *body, int iBody) {
       body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
+    body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
+
   } 
 }
 
 double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
   double Tice = 273.0;
+  
   if (body[iaBody[0]].daTemp[iaBody[1]]>0.0) {
     if (body[iaBody[0]].daIceMass[iaBody[1]] > 0.0) {
       /* Ice melting */
@@ -1398,10 +1423,16 @@ double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
     }
   } else {
     if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
+      /* no precip once planet is frozen */
       return 0.0;
     } else {
-      /* Ice deposits at fixed rate */
-      return 5.0e-5;
+      if (body[iaBody[0]].dIceMassTot >= MOCEAN) {
+        /* ice growth limited by mass of water available (really, really stupid) */
+        return 0.0;
+      } else {
+        /* Ice deposits at fixed rate */
+        return 5.0e-5;
+      }
     }
   } 
 }

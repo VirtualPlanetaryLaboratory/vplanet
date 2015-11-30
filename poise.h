@@ -85,6 +85,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_DIVFLUX          1838
 #define OUT_ICEMASS          1839
 #define OUT_ICEHEIGHT        1840
+#define OUT_TOTICEMASS			 1841
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

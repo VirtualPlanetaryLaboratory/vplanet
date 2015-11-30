@@ -311,8 +311,8 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
-  sprintf(options[OPT_DFCRIT].cDefault,"0");
-  options[OPT_DFCRIT].dDefault = 0.0;
+  sprintf(options[OPT_DFCRIT].cDefault,"0.1");
+  options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;  
   options[OPT_DFCRIT].iMultiFile = 0; 
   fnRead[OPT_DFCRIT] = &ReadDfCrit;

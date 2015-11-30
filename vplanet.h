@@ -455,6 +455,7 @@ typedef struct {
   int *rowswap;
   int bIceSheets;
   double *daIceMass;
+  double dIceMassTot;
 //   double *daIceHeight;
   double dInitIceLat;
   double dInitIceHeight;

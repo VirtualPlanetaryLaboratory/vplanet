@@ -21,6 +21,7 @@ dInc		3
 dLongA		33
 dLongP		100
 sOrbitModel rd4
+#dDfcrit     0.1
 
 # DISTROT Parameters
 dPrecA		255

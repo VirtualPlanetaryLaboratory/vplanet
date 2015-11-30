@@ -14,6 +14,7 @@
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
+#define STELLAR_MODEL_CONST           3
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
@@ -30,6 +31,7 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_STELLARMODEL        1512 // Luminosity evolution model
 #define OPT_TEMPERATURE         1513 // Stellar effective temperature (initial)
 #define OPT_WINDMODEL           1514 // Wind model
+#define OPT_HALTENDBARAFFEFGRID 1515 // Halt when we reach the end of the Baraffe grid?
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -40,7 +42,7 @@ void ReadOptionsStellar(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 #define STELLARHALTSYSEND       5
 #define STELLARHALTBODYEND      5
 
-int fbHaltSurfaceDesiccated(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsStellar(HALT*,int*);
 
 /* Verify Functions */

@@ -141,7 +141,21 @@ void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
 /* Halts */
 
-// Nothing for now
+void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bEndBaraffeGrid = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bEndBaraffeGrid,files->iNumInputs); 
+  }
+}
 
 void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
@@ -185,6 +199,12 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TEMPERATURE].iType = 0;
   options[OPT_TEMPERATURE].iMultiFile = 1;
   fnRead[OPT_TEMPERATURE] = &ReadTemperature;
+
+  sprintf(options[OPT_HALTENDBARAFFEFGRID].cName,"bHaltEndBaraffeGrid");
+  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,"Halt when we reach the end of the Baraffe+15 grid?");
+  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault,"1");
+  options[OPT_HALTENDBARAFFEFGRID].iType = 0;
+  fnRead[OPT_HALTENDBARAFFEFGRID] = &ReadHaltEndBaraffeGrid;
 
 }
 
@@ -280,9 +300,24 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
 }
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
-  /* Update LXUV
-     TODO: Currently, this is just fixed at the saturation XUV. Add evolution! */
-  body[iBody].dLXUV = body[iBody].dLuminosity * body[iBody].dSatXUVFrac;
+
+  // TODO TODO TODO: Fix kink! Check saturation criteria.
+  
+  // Update LXUV
+  double dPer, dLXRay, dLEUV;
+  dPer = 2 * PI / body[iBody].dRotRate;
+  // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
+  dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
+
+  if (log10(dLXRay / body[iBody].dLuminosity) > log10(body[iBody].dSatXUVFrac)){
+    // Saturated regime (Reiners, Schussler & Passegger 2014)
+    dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
+  }
+  // Sanz-Forcada et al. (2011), eqn (3)
+  dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+  // Based on Miles Timpe's thesis:
+  body[iBody].dLXUV = dLEUV + dLXRay;
+
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
@@ -392,12 +427,26 @@ void FinalizeUpdateSemiStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 /***************** STELLAR Halts *****************/
 
+int fbHaltEndBaraffeGrid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].iStellarModel == STELLAR_MODEL_CONST) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s reached the edge of the luminosity grid at ", body[iBody].cName);
+      fprintd(stdout, body[iBody].dAge/YEARSEC,io->iSciNot,io->iDigits);
+      printf(" years.\n");
+    }
+    return 1;
+  }
+  return 0;
+}
+
 void CountHaltsStellar(HALT *halt,int *iHalt) {
-  // Nothing
+  if (halt->bEndBaraffeGrid)
+    (*iHalt)++;
 }
 
 void VerifyHaltStellar(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-  // Nothing
+  if (control->Halt[iBody].bEndBaraffeGrid)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltEndBaraffeGrid;
 }
 
 /************* STELLAR Outputs ******************/
@@ -547,18 +596,26 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 /************* STELLAR Functions ************/
 
 double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody) {
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
-    return fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
-  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+  double foo;
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    foo = fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
     return body[iaBody[0]].dLuminosity;
   else
     return 0;
 }
 
 double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
-    return fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
-  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+  double foo;
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    foo = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
     return body[iaBody[0]].dRadius;
   else
     return 0;
@@ -606,9 +663,13 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE)
-    return fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
-  else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE)
+  double foo;
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    foo = fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
     return body[iaBody[0]].dTemperature;
   else
     return 0;
@@ -619,15 +680,11 @@ double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
   double L = fdBaraffe(STELLAR_L, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
     return L;
+  else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN)
+    return NAN;
   else {
-    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
-      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+    if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
       fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
-      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_ISNAN)
-      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
     else if (iError == STELLAR_ERR_FILE)
       fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
     else if (iError == STELLAR_ERR_BADORDER)
@@ -643,15 +700,11 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
   double R = fdBaraffe(STELLAR_R, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
     return R;
+  else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN)
+    return NAN;
   else {
-    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
-      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+    if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
       fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
-      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_ISNAN)
-      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
     else if (iError == STELLAR_ERR_FILE)
       fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
     else if (iError == STELLAR_ERR_BADORDER)
@@ -667,15 +720,11 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
   double T = fdBaraffe(STELLAR_T, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
     return T;
+  else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN)
+    return NAN;
   else {
-    if (iError == STELLAR_ERR_WAY_OUTOFBOUNDS)
-      fprintf(stderr,"ERROR: Interpolation way out of bounds in routine fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+    if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
       fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI)
-      fprintf(stderr,"ERROR: Out of bounds (high) in fdBaraffe().\n");
-    else if (iError == STELLAR_ERR_ISNAN)
-      fprintf(stderr,"ERROR: Routine fdBaraffe() returned NaN.\n");
     else if (iError == STELLAR_ERR_FILE)
       fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
     else if (iError == STELLAR_ERR_BADORDER)

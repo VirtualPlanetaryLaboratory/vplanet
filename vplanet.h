@@ -775,7 +775,7 @@ typedef struct {
   int bEnvelopeGone;              /**< Halt if evaporated?*/
   
   /* STELLAR */
-  // Nothing
+  int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */

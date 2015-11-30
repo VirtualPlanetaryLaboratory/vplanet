@@ -1397,8 +1397,12 @@ double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
       return 0.0;
     }
   } else {
-    /* Ice deposits at fixed rate */
-    return 5.0e-5;
+    if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
+      return 0.0;
+    } else {
+      /* Ice deposits at fixed rate */
+      return 5.0e-5;
+    }
   } 
 }
   

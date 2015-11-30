@@ -48,6 +48,7 @@
 #define SIGMA         5.670367e-8
 #define LFICE         3.34e5
 #define RHOICE        916.7   //density of ice kg/m^3
+#define MOCEAN        1.4e21  //mass of earth ocean in kg
 
 /* Exit Status */
 

@@ -1,0 +1,17 @@
+# The host star, Gl 581
+sName	        star		                    # Body's name
+saModules	    stellar                     # Modules to apply, exact spelling required
+
+# Output
+saOutputOrder Time -Luminosity -Radius -RotPer
+
+# Physical Parameters
+dMass         0.5                         # Mass, solar masses
+dObliquity    0		
+dRotPeriod    -8.5                       # Rotation period, negative -> days
+dRadGyra      0.4                         # Radius of gyration (moment of inertia constant)
+
+# STELLAR Parameters
+sStellarModel baraffe                     # Stellar evolution model: `baraffe` or `none`
+sWindModel    reiners                     # Stellar wind model: `reiners` or `none`
+dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity

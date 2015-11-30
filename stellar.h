@@ -7,10 +7,13 @@
  *
 */
 
-#define LSUN                          3.846e26      // Solar luminosity (W)
-#define TSUN                          5778.         // Solar TEff (K)
+#define LSUN                          3.846e26          // Solar luminosity (W)
+#define TSUN                          5778.             // Solar TEff (K)
+#define RM12OMEGACRIT                 8.56e-6           // Critical angular velocity (1/s) from Reiners & Mohanty (2012)
+#define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)                       
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
+#define STELLAR_MODEL_REINERS         2
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
@@ -26,6 +29,7 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SATXUVFRAC          1511 // Saturation XUV luminosity fraction
 #define OPT_STELLARMODEL        1512 // Luminosity evolution model
 #define OPT_TEMPERATURE         1513 // Stellar effective temperature (initial)
+#define OPT_WINDMODEL           1514 // Wind model
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);

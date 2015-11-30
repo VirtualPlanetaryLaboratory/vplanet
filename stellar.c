@@ -23,6 +23,7 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
+  dest[iBody].iWindModel = src[iBody].iWindModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
 }
 
@@ -77,6 +78,29 @@ void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   } else 
     if (iFile > 0)
       body[iFile-1].iStellarModel = STELLAR_MODEL_BARAFFE;
+}
+
+void ReadWindModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"re",2)) {
+      body[iFile-1].iWindModel = STELLAR_MODEL_REINERS;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iWindModel = STELLAR_MODEL_NONE;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iWindModel = STELLAR_MODEL_REINERS;
 }
 
 void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -136,6 +160,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STELLARMODEL].iType = 3;
   options[OPT_STELLARMODEL].iMultiFile = 1;
   fnRead[OPT_STELLARMODEL] = &ReadStellarModel;
+
+  sprintf(options[OPT_WINDMODEL].cName,"sWindModel");
+  sprintf(options[OPT_WINDMODEL].cDescr,"Wind Angular Momentum Loss Model");
+  sprintf(options[OPT_WINDMODEL].cDefault,"REINERS");
+  options[OPT_WINDMODEL].iType = 3;
+  options[OPT_WINDMODEL].iMultiFile = 1;
+  fnRead[OPT_WINDMODEL] = &ReadWindModel;
 
   sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
   sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
@@ -534,23 +565,44 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
-  double dRadMinus, dRadPlus, dDRadiusDt;
   
-  // Delta t = 10 years. TODO: Check this.
-  double eps = 10 * YEARDAY * DAYSEC;
+  double dDRadiusDt = 0;
+  double dDJDt = 0;
   
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE) {
-    return 0.;
-  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+  // First, let's calculate dR/dt due to contraction/expansion
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
     // Compute a very simple derivative. NOTE: This won't work if variables like the
     // stellar mass are changing, too! Perhaps it's better to keep track of the previous
     // values of the radius and compute the derivative from those? TODO: Check this.
+    
+    // Delta t = 10 years. TODO: Check this.
+    double eps = 10 * YEARDAY * DAYSEC;
+    double dRadMinus, dRadPlus;
+    
     dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
     dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
     dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
-    return -2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
-  } else
-    return 0;
+  }
+  
+  // Now, let's calculate dJ/dt due to magnetic braking
+  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
+  // Note that we force dJ/dt = 0 in the first 1e6 years, since the stellar rotation
+  // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
+    if (body[iaBody[0]].dAge > 1.e6 * YEARSEC) {
+      if (body[iaBody[0]].dRotRate >= RM12OMEGACRIT) {
+        dDJDt = -RM12CONST * body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 16. / 3.) 
+                          * pow(body[iaBody[0]].dMass, -2. / 3);
+      } else {
+        dDJDt = -RM12CONST * pow(body[iaBody[0]].dRotRate / RM12OMEGACRIT, 4.) * body[iaBody[0]].dRotRate
+                          * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
+      }
+    }
+  }
+  
+  return 2.5 * dDJDt / (body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius) 
+             - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
+
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {

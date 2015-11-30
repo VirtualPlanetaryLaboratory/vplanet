@@ -345,6 +345,7 @@ typedef struct {
   double dLXUV;
   double dSatXUVFrac;
   int iStellarModel;
+  int iWindModel;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */

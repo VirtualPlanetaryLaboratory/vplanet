@@ -1043,6 +1043,12 @@ void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int 
     body[iBody].d235UNumCore = 0;
 }
 
+void RadheatExit(FILES *files,char cSpecies[16],int iFile) {
+  fprintf(stderr,"ERROR: Radheat called, but no %s option provided.\n",cSpecies);
+  fprintf(stderr,"\tFile: %s\n",files->Infile[iFile].cIn);
+  exit(EXIT_INPUT);
+}
+
 void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iFile=iBody+1;
 
@@ -1050,15 +1056,11 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* XXX Need a VerifyOneOfThree subroutine */
   /* Radheat is active for this body if this subroutine is called. */
 
-  if (options[OPT_40KNUMMAN].iLine[iFile] == -1 && options[OPT_40KMASSMAN].iLine[iFile] == -1 && options[OPT_40KPOWERMAN].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 40KMan option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_40KNUMMAN].iLine[iFile] == -1 && options[OPT_40KMASSMAN].iLine[iFile] == -1 && options[OPT_40KPOWERMAN].iLine[iFile] == -1)
+    RadheatExit(files,"40KMan",iFile);
 
-  if (options[OPT_40KNUMCORE].iLine[iFile] == -1 && options[OPT_40KMASSCORE].iLine[iFile] == -1 && options[OPT_40KPOWERCORE].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 40KCore option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_40KNUMCORE].iLine[iFile] == -1 && options[OPT_40KMASSCORE].iLine[iFile] == -1 && options[OPT_40KPOWERCORE].iLine[iFile] == -1)
+    RadheatExit(files,"40KCore",iFile);
 
   // XXX This looks like it's insufficient to capture all the permutations
   NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody);
@@ -1067,15 +1069,11 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
 
   // 232Th
-  if (options[OPT_232THNUMMAN].iLine[iFile] == -1 && options[OPT_232THMASSMAN].iLine[iFile] == -1 && options[OPT_232THPOWERMAN].iLine[iFile] == -1){
-    fprintf(stderr,"ERROR: Radheat called, but no 232ThMan option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_232THNUMMAN].iLine[iFile] == -1 && options[OPT_232THMASSMAN].iLine[iFile] == -1 && options[OPT_232THPOWERMAN].iLine[iFile] == -1)
+    RadheatExit(files,"232ThMan",iFile);
 
-  if (options[OPT_232THNUMCORE].iLine[iFile] == -1 && options[OPT_232THMASSCORE].iLine[iFile] == -1 && options[OPT_232THPOWERCORE].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 232ThCore option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_232THNUMCORE].iLine[iFile] == -1 && options[OPT_232THMASSCORE].iLine[iFile] == -1 && options[OPT_232THPOWERCORE].iLine[iFile] == -1)
+    RadheatExit(files,"232ThCore",iFile);
 
   // XXX Also insufficient?
   NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iFile);
@@ -1084,15 +1082,11 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   // 238U
-  if (options[OPT_238UNUMMAN].iLine[iFile] == -1 && options[OPT_238UMASSMAN].iLine[iFile] == -1 && options[OPT_238UPOWERMAN].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 238UMan option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_238UNUMMAN].iLine[iFile] == -1 && options[OPT_238UMASSMAN].iLine[iFile] == -1 && options[OPT_238UPOWERMAN].iLine[iFile] == -1)
+    RadheatExit(files,"238UMan",iFile);
 
-  if (options[OPT_238UNUMCORE].iLine[iFile] == -1 && options[OPT_238UMASSCORE].iLine[iFile] == -1 && options[OPT_238UPOWERCORE].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 238UCore option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_238UNUMCORE].iLine[iFile] == -1 && options[OPT_238UMASSCORE].iLine[iFile] == -1 && options[OPT_238UPOWERCORE].iLine[iFile] == -1)
+    RadheatExit(files,"238UCore",iFile);
 
   // XXX Still insufficient?
   NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iFile);
@@ -1101,15 +1095,11 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   // 235U
-  if (options[OPT_235UNUMMAN].iLine[iFile] == -1 && options[OPT_235UMASSMAN].iLine[iFile] == -1 && options[OPT_235UPOWERMAN].iLine[iFile] == -1) {
-    fprintf(stderr,"ERROR: Radheat called, but no 238UMan option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_235UNUMMAN].iLine[iFile] == -1 && options[OPT_235UMASSMAN].iLine[iFile] == -1 && options[OPT_235UPOWERMAN].iLine[iFile] == -1)
+    RadheatExit(files,"235UMan",iFile);
 
-  if (options[OPT_235UNUMCORE].iLine[iFile] == -1 && options[OPT_235UMASSCORE].iLine[iFile] == -1 && options[OPT_235UPOWERCORE].iLine[iFile] == -1) {  //PED
-    fprintf(stderr,"ERROR: Radheat called, but no 238UCore option provided.\n");
-    exit(EXIT_INPUT);
-  }
+  if (options[OPT_235UNUMCORE].iLine[iFile] == -1 && options[OPT_235UMASSCORE].iLine[iFile] == -1 && options[OPT_235UPOWERCORE].iLine[iFile] == -1)
+    RadheatExit(files,"235UCore",iFile);
 
   // Insufficient?
   NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iFile);
@@ -1170,36 +1160,36 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
 }
 
 //PED: Combine these into ..HeatMan?  and ..HeatCore?
-void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD40KMAN;
   update[iBody].iNum40KMan = (*iEqn)++;
 }
-void FinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD232THMAN;
   update[iBody].iNum232ThMan = (*iEqn)++;
 }
-void FinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD238UMAN;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
-void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
+void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RAD235UMAN;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
 
-void FinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
     update[iBody].iaModule[iVar][*iEqn] = RAD40KCORE;
     update[iBody].iNum40KCore = (*iEqn)++;
 }
-void FinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD232THCORE;
   update[iBody].iNum232ThCore = (*iEqn)++;
 }
-void FinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD238UCORE;
   update[iBody].iNum238UCore = (*iEqn)++;
 }
-void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {  //PED
+void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
   update[iBody].iNum235UCore = (*iEqn)++;
 }

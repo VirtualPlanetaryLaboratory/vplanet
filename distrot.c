@@ -151,6 +151,9 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     
     CalcXYZobl(body, iBody);
     
+    body[iBody].dLRot = malloc(3*sizeof(double));
+    body[iBody].dLRotTmp = malloc(3*sizeof(double));
+    
     if (control->Evolve.iDistOrbModel==RD4) {
       /* Body updates */
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -237,7 +240,7 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
   
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
@@ -259,7 +262,7 @@ void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   }
 }
 
-void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
   
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
@@ -281,7 +284,7 @@ void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   }
 }
 
-void FinalizeUpdateZoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateZoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
   
   update[iBody].padDZoblDtDistRot = malloc((body[iBody].iGravPerts)*sizeof(double*));
@@ -438,6 +441,108 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }  
   
+void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double h, inc, longa, Lnorm=0.0, obliq, eqnode;
+  int i, jBody;
+  
+  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  
+  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+        body[jBody].dSemi/AUCM* (1.-pow(body[jBody].dHecc,2)-pow(body[jBody].dKecc,2)));
+    body[jBody].dLOrb[0] = 0.0;
+    body[jBody].dLOrb[1] = 0.0;
+    body[jBody].dLOrb[2] = h;
+  
+    inc = 2*asin(sqrt(pow(body[jBody].dPinc,2)+pow(body[jBody].dQinc,2)));
+    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
+    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
+    for (i=0;i<3;i++)
+      system->dLOrb[i] += body[jBody].dLOrb[i];
+  }
+  Lnorm = sqrt(pow(system->dLOrb[0],2)+pow(system->dLOrb[1],2)+pow(system->dLOrb[2],2));
+  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
+  
+  Lnorm = sqrt(pow(body[iBody].dLOrb[0],2)+pow(body[iBody].dLOrb[1],2)+pow(body[iBody].dLOrb[2],2));
+  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
+  
+  body[iBody].dLRot[0] = 0.0;
+  body[iBody].dLRot[1] = 0.0;
+  body[iBody].dLRot[2] = 1.0;
+  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+
+  inc = 2*asin(sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)));
+  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
+  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
+  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
+  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
+
+  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
+  Lnorm = sqrt(pow(body[iBody].dLRotTmp[0],2)+pow(body[iBody].dLRotTmp[1],2)+pow(body[iBody].dLRotTmp[2],2));
+  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
+  
+  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
+  Lnorm = sqrt(pow(body[iBody].dLOrbTmp[0],2)+pow(body[iBody].dLOrbTmp[1],2)+pow(body[iBody].dLOrbTmp[2],2));
+  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
+  
+  cross(body[iBody].dLOrbTmp,body[iBody].dLRotTmp,system->dLOrb);
+  *dTmp = sqrt(pow(system->dLOrb[0],2)+pow(system->dLOrb[1],2)+pow(system->dLOrb[2],2));
+}  
+  
+void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double h, inc, longa, Lnorm=0.0, obliq, eqnode;
+  int i, jBody;
+  
+  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  
+  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+        body[jBody].dSemi/AUCM* (1.-pow(body[jBody].dHecc,2)-pow(body[jBody].dKecc,2)));
+    body[jBody].dLOrb[0] = 0.0;
+    body[jBody].dLOrb[1] = 0.0;
+    body[jBody].dLOrb[2] = h;
+  
+    inc = 2*asin(sqrt(pow(body[jBody].dPinc,2)+pow(body[jBody].dQinc,2)));
+    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
+    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
+    for (i=0;i<3;i++)
+      system->dLOrb[i] += body[jBody].dLOrb[i];
+  }
+  Lnorm = sqrt(pow(system->dLOrb[0],2)+pow(system->dLOrb[1],2)+pow(system->dLOrb[2],2));
+  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
+  
+  Lnorm = sqrt(pow(body[iBody].dLOrb[0],2)+pow(body[iBody].dLOrb[1],2)+pow(body[iBody].dLOrb[2],2));
+  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
+  
+  body[iBody].dLRot[0] = 0.0;
+  body[iBody].dLRot[1] = 0.0;
+  body[iBody].dLRot[2] = 1.0;
+  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+
+  inc = 2*asin(sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)));
+  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
+  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
+  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
+  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
+
+  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
+  Lnorm = sqrt(pow(body[iBody].dLRotTmp[0],2)+pow(body[iBody].dLRotTmp[1],2)+pow(body[iBody].dLRotTmp[2],2));
+  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
+  
+  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
+  Lnorm = sqrt(pow(body[iBody].dLOrbTmp[0],2)+pow(body[iBody].dLOrbTmp[1],2)+pow(body[iBody].dLOrbTmp[2],2));
+  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
+  
+  *dTmp = 0.0;
+  for (i=0;i<3;i++) *dTmp += body[iBody].dLRotTmp[i]*body[iBody].dLOrbTmp[i];  
+}  
+  
 void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DOBLDTDISTROT].cName,"DOblDtDistRot");
@@ -488,6 +593,17 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECA].iNum = 1;
   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
+  sprintf(output[OUT_CASS1].cName,"CassiniOne");
+  sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");
+  output[OUT_CASS1].bNeg = 0;
+  output[OUT_CASS1].iNum = 1;
+  fnWrite[OUT_CASS1] = &WriteBodyCassOne;
+  
+  sprintf(output[OUT_CASS2].cName,"CassiniTwo");
+  sprintf(output[OUT_CASS2].cDescr,"Second Cassini parameter (alignment of Cassini state vectors");
+  output[OUT_CASS2].bNeg = 0;
+  output[OUT_CASS2].iNum = 1;
+  fnWrite[OUT_CASS2] = &WriteBodyCassTwo;
 }
 
 void FinalizeOutputFunctionDistRot(OUTPUT *output,int iBody,int iModule) {
@@ -556,6 +672,22 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+}
+
+void RotateVector(double *v1, double *v2, double theta, int axis) {
+  if (axis == 0) {
+    v2[0] = v1[0];
+    v2[1] = cos(theta)*v1[1] - sin(theta)*v1[2];
+    v2[2] = sin(theta)*v1[1] + cos(theta)*v1[2];
+  } else if (axis == 1) {
+    v2[0] = cos(theta)*v1[0] + sin(theta)*v1[2];
+    v2[1] = v1[1];
+    v2[2] = -sin(theta)*v1[0] + cos(theta)*v1[2];
+  } else if (axis == 2) {
+    v2[0] = cos(theta)*v1[0] - sin(theta)*v1[1];
+    v2[1] = sin(theta)*v1[0] + cos(theta)*v1[1];
+    v2[2] = v1[2];
+  }
 }
 
 /* Equations used to calculate obliquity/spin evolution */

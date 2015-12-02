@@ -87,6 +87,36 @@ void ReadPlanckB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dPlanckB = options->dDefault;
 }
 
+void ReadSurfAlbedo(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dSurfAlbedo = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSurfAlbedo = options->dDefault;
+}
+
+void ReadIceAlbedo(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dIceAlbedo = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dIceAlbedo = options->dDefault;
+}
+
 void ReadTGlobalEst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -303,6 +333,22 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PLANCKB].iType = 2;  
   options[OPT_PLANCKB].iMultiFile = 1;   
   fnRead[OPT_PLANCKB] = &ReadPlanckB;
+  
+  sprintf(options[OPT_ICEALBEDO].cName,"dIceAlbedo");
+  sprintf(options[OPT_ICEALBEDO].cDescr,"Albedo of ice");
+  sprintf(options[OPT_ICEALBEDO].cDefault,"0.6");
+  options[OPT_ICEALBEDO].dDefault = 0.6;
+  options[OPT_ICEALBEDO].iType = 2;  
+  options[OPT_ICEALBEDO].iMultiFile = 1;   
+  fnRead[OPT_ICEALBEDO] = &ReadIceAlbedo;
+  
+  sprintf(options[OPT_SURFALBEDO].cName,"dSurfAlbedo");
+  sprintf(options[OPT_SURFALBEDO].cDescr,"Albedo of (ice-free) surface");
+  sprintf(options[OPT_SURFALBEDO].cDefault,"0.3");
+  options[OPT_SURFALBEDO].dDefault = 0.3;
+  options[OPT_SURFALBEDO].iType = 2;  
+  options[OPT_SURFALBEDO].iMultiFile = 1;   
+  fnRead[OPT_SURFALBEDO] = &ReadSurfAlbedo;
   
   sprintf(options[OPT_TGLOBALEST].cName,"dTGlobalEst");
   sprintf(options[OPT_TGLOBALEST].cDescr,"Estimate of initial global temperature");
@@ -1211,16 +1257,16 @@ void Albedo(BODY *body, int iBody) {
        if (body[iBody].bJormungand) {
           /* Cold equator */
           if (fabs(body[iBody].daLats[i]) < body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = 0.6;
+            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = 0.3;
+            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
           }
        } else {
           /* Cold poles */
           if (fabs(body[iBody].daLats[i]) > body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = 0.6;
+            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = 0.3;
+            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
           }
        }
     } else if (body[iBody].bAlbedoZA) {
@@ -1228,15 +1274,15 @@ void Albedo(BODY *body, int iBody) {
        body[iBody].daAlbedo[i] = 0.31+0.04*(3*pow(sin(body[iBody].daLats[i]),2)-1);
     } else if (body[iBody].bIceSheets) {
        if (body[iBody].daIceMass[i] > 0) {
-          body[iBody].daAlbedo[i] = 0.6;
+          body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
        } else {
-          body[iBody].daAlbedo[i] = 0.3;
+          body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
        }
     } else {
        if (body[iBody].daTemp[i] <= -10.0) {
-         body[iBody].daAlbedo[i] = 0.6;
+         body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
        } else {
-         body[iBody].daAlbedo[i] = 0.3;
+         body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
        }
     }
   }

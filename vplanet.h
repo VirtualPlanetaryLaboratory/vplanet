@@ -370,7 +370,7 @@ typedef struct {
   double dAtmHeight;
   double dInsolation;   /* Orbit-averaged Insolation */
   double dSurfPressure;
-  double dSurfAlbedo;   /* Bolometric, ultimately will be array */
+  //double dSurfAlbedo;   /* Bolometric, ultimately will be array */
   int iResolveSeasons;  /* ISEASON in PHOTOCHEM.f */
   double dPhotoZenithAngle;
   int iVaryZenithAngle; /* IZYO2 in PHOTOCHEM.f */
@@ -459,6 +459,8 @@ typedef struct {
 //   double *daIceHeight;
   double dInitIceLat;
   double dInitIceHeight;
+  double dIceAlbedo;
+  double dSurfAlbedo;
 
 } BODY;
 

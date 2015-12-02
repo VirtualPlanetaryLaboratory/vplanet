@@ -32,3 +32,4 @@ dPlanckA          195
 #bCalcAB          1
 #dTGlobalEst      288
 #dpCO2            8e-4
+dSurfAlbedo       0.4

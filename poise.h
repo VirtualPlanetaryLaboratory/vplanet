@@ -35,6 +35,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICESHEETS       1815
 #define OPT_INITICELAT      1816
 #define OPT_INITICEHEIGHT   1817
+#define OPT_ICEALBEDO       1818
+#define OPT_SURFALBEDO      1819
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841

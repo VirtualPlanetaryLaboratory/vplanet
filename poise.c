@@ -27,6 +27,7 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
   
   if (src[iBody].bIceSheets) {
     dest[iBody].iNumLats = src[iBody].iNumLats;
+    dest[iBody].dIceMassTot = src[iBody].dIceMassTot;
     for (iLat=0;iLat<src[iBody].iNumLats;iLat++) {
       dest[iBody].daIceMass[iLat] = src[iBody].daIceMass[iLat];
       dest[iBody].daTemp[iLat] = src[iBody].daTemp[iLat];

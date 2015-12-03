@@ -1036,6 +1036,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
+	    free(dTmp);
+	    dTmp = NULL;
           }
         }
       }
@@ -1052,12 +1054,12 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
+      dTmp = malloc(1*sizeof(double));
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
           for (iOut=0;iOut<MODULEOUTEND;iOut++) {
             if (output[iOut].bGrid == 1) {
               if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
-                dTmp = malloc(1*sizeof(double));
                 body[iBody].iWriteLat = iLat;
                 fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
                 dGrid[iGrid]=*dTmp;
@@ -1083,6 +1085,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         fprintf(fp,"\n");
         fclose(fp);
       }
+      free(dTmp);
     }
   }
 }

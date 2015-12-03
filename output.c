@@ -743,6 +743,7 @@ void WriteLogEntry(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     fprintd(fp,dTmp[j],control->Io.iSciNot,control->Io.iDigits);
     fprintf(fp," ");
   }
+  free(dTmp);
   fprintf(fp,"\n");
 }
 
@@ -897,6 +898,7 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
           strcat(cCol[iFile+iSubOut+iExtra],cTmp);
         }
         iExtra += (output[iOut].iNum-1);
+	free(dTmp);
       }
       
     }

@@ -461,6 +461,8 @@ typedef struct {
   double dInitIceHeight;
   double dIceAlbedo;
   double dSurfAlbedo;
+  double dIceCreep;
+  double dIceDepRate;
 
 } BODY;
 

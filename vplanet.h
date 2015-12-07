@@ -48,6 +48,7 @@
 #define SIGMA         5.670367e-8
 #define LFICE         3.34e5
 #define RHOICE        916.7   //density of ice kg/m^3
+#define MOCEAN        1.4e21  //mass of earth ocean in kg
 
 /* Exit Status */
 
@@ -369,7 +370,7 @@ typedef struct {
   double dAtmHeight;
   double dInsolation;   /* Orbit-averaged Insolation */
   double dSurfPressure;
-  double dSurfAlbedo;   /* Bolometric, ultimately will be array */
+  //double dSurfAlbedo;   /* Bolometric, ultimately will be array */
   int iResolveSeasons;  /* ISEASON in PHOTOCHEM.f */
   double dPhotoZenithAngle;
   int iVaryZenithAngle; /* IZYO2 in PHOTOCHEM.f */
@@ -454,9 +455,14 @@ typedef struct {
   int *rowswap;
   int bIceSheets;
   double *daIceMass;
+  double dIceMassTot;
 //   double *daIceHeight;
   double dInitIceLat;
   double dInitIceHeight;
+  double dIceAlbedo;
+  double dSurfAlbedo;
+  double dIceCreep;
+  double dIceDepRate;
 
 } BODY;
 
@@ -873,7 +879,7 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 

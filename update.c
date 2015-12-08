@@ -933,7 +933,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         update[iBody].iaIceMass[iLat] = iVar;
         update[iBody].iaVar[iVar] = VICEMASS;
-        update[iBody].iNumEqns[iVar] = 1;
+        update[iBody].iNumEqns[iVar] = update[iBody].iNumIceMass;
         update[iBody].pdVar[iVar] = &body[iBody].daIceMass[iLat];
         update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
         update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));

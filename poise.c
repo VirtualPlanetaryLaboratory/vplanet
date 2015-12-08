@@ -712,13 +712,22 @@ void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int 
   }
 }
     
-void InitializeIceMassPoise(BODY *body,UPDATE *update,int iBody,int iLat) {
-  update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = 4;
-  update[iBody].padDIceMassDtPoise[iLat] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]];
-  update[iBody].iNumBodies[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]]=2;
-  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = malloc(2*sizeof(int));
-  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]][1] = iLat;
+void InitializeIceMassDepMelt(BODY *body,UPDATE *update,int iBody,int iLat) {
+  update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = 1;
+  update[iBody].padDIceMassDtPoise[iLat] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]];
+  update[iBody].iNumBodies[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]]=2;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = malloc(2*sizeof(int));
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]][1] = iLat;
+}
+
+void InitializeIceMassFlow(BODY *body,UPDATE *update,int iBody,int iLat) {
+  update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = 4;
+  update[iBody].padDIceMassDtPoise[iLat] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]];
+  update[iBody].iNumBodies[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]]=2;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = malloc(2*sizeof(int));
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]][1] = iLat;
 }    
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -737,8 +746,10 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
      The climate simulation is done almost entirely in ForceBehavior. */
   if (body[iBody].bIceSheets) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      InitializeIceMassPoise(body,update,iBody,iLat);
-      fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = &fdPoiseDIceMassDt;   
+      InitializeIceMassDepMelt(body,update,iBody,iLat);
+      fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fdPoiseDIceMassDtDepMelt;
+      InitializeIceMassFlow(body,update,iBody,iLat);
+      fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = &fdPoiseDIceMassDtFlow;    
     }
   }
   
@@ -753,17 +764,21 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 void InitializeUpdatePoise(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].bIceSheets) {
     update[iBody].iNumVars += body[iBody].iNumLats;
-    update[iBody].iNumIceMass = 1;
+    update[iBody].iNumIceMass = 2;
 //     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
     update[iBody].iaIceMass = malloc(body[iBody].iNumLats*sizeof(int));
     update[iBody].padDIceMassDtPoise = malloc(body[iBody].iNumLats*sizeof(double*));
-    update[iBody].iaIceMassPoise = malloc(body[iBody].iNumLats*sizeof(int));
+    update[iBody].iaIceMassDepMelt = malloc(body[iBody].iNumLats*sizeof(int));
+    update[iBody].iaIceMassFlow = malloc(body[iBody].iNumLats*sizeof(int));
   }
 } 
 
 void FinalizeUpdateIceMassPoise(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iLat) {
   update[iBody].iaModule[iVar][0] = POISE;
-  update[iBody].iaIceMassPoise[iLat] = *iEqn;
+  update[iBody].iaIceMassDepMelt[iLat] = *iEqn;
+  (*iEqn)++;
+  update[iBody].iaModule[iVar][1] = POISE;
+  update[iBody].iaIceMassFlow[iLat] = *iEqn;
   (*iEqn)++;
 }
 
@@ -1509,7 +1524,7 @@ void PoiseClimate(BODY *body, int iBody) {
   } 
 }
 
-double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   double Tice = 273.0, dTmp = 0;
   
   /* first, calculate melting/accumulation */
@@ -1534,8 +1549,13 @@ double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
       }
     }
   }
+  return dTmp;
+}
+
+double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
+  double dTmp = 0;
   
-  /* next, ice dynamics (can be shut off by setting dIceCreep = 0) */
+  /* ice dynamics (can be shut off by setting dIceCreep = 0) */
   if (iaBody[1] == 0) {
     dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
   } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {

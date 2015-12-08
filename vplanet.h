@@ -749,7 +749,8 @@ typedef struct {
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
   double **padDIceMassDtPoise;
-  int *iaIceMassPoise;
+  int *iaIceMassDepMelt;
+  int *iaIceMassFlow;
   int iIceMass;
 } UPDATE;
 

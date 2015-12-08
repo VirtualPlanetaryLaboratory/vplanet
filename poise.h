@@ -122,4 +122,5 @@ double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
 
 void PoiseClimate(BODY*,int);
-double fdPoiseDIceMassDt(BODY*,SYSTEM*,int*);
+double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
+double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);

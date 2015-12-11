@@ -408,6 +408,7 @@ typedef struct {
   
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
+  int bClimateModel;
   int iNumLats;              /**< Number of latitude cells */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
@@ -463,7 +464,32 @@ typedef struct {
   double dSurfAlbedo;
   double dIceCreep;
   double dIceDepRate;
+  
+  /* additional stuff for seasonal model */
+  double *daTempLand;         /**< Temperature over land (by latitude) */
+  double *daTempWater;        /**< Temperature over ocean (by lat) */
+  double *daAlbedoLand;
+  double *daAlbedoWater;
+  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dFrzTSeaIce;         /**< Freezing temperature of sea water */
+  double dHeatCapLand;        /**< Heat capacity of land */
+  double dHeatCapWater;       /**< Heat capacity of water */
+  double *daLandFrac;         /**< Fraction of cell which is land */
+  double *daWaterFrac;        /**< Fraction of cell which is water */
+  double dNuLandWater;        /**< Land-ocean interaction term */
+  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  int iNStepInYear;        /**< Number of time steps in a year */  
+  int iNumYears;           /**< Number of years to run seasonal model */
+  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceLW;     /**< Combined source function what matrix operates on */
+  double **dMLand;
+  double **dMWater;
+  double *daTGlobalTmp;
 
+ 
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

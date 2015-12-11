@@ -13,6 +13,10 @@ void BodyCopyPoise(BODY*,BODY*,int,int);
 void InitializeBodyPoise(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 
+/* Climate model */
+#define ANN         0
+#define SEA         1
+
 /* Options Info */
 
 #define OPTSTARTPOISE       1800 /* Start of POISE options */
@@ -40,17 +44,19 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICECREEP        1820
 #define OPT_ICEDEPRATE      1821
 
-/*#define OPT_LANDGEOM        1840
-#define OPT_ICEMODEL        1841
-#define OPT_HEATCLAND       1842
-#define OPT_HEATCWATER      1843
-#define OPT_TFREEZE         1844
-#define OPT_LATENTHEAT      1845
-#define OPT_CONDUCTIVITY    1846
-#define OPT_MLDEPTH         1847
-#define OPT_NU              1848 
+//#define OPT_LANDGEOM      1840
+//#define OPT_ICEMODEL      1841
+#define OPT_HEATCAPLAND     1842
+#define OPT_HEATCAPWATER    1843
+#define OPT_FRZTSEAICE      1844
+//#define OPT_LATENTHEAT    1845
+//#define OPT_CONDUCTIVITY  1846
+#define OPT_MIXINGDEPTH     1847
+#define OPT_NULANDWATER     1848 
+#define OPT_NSTEPINYEAR     1849
+#define OPT_NUMYEARS        1850 
 
-#define OPT_EBMMODEL        1899*/
+#define OPT_CLIMATEMODEL    1899
 
 /* Options Functions */
 void HelpOptionsPoise(OPTIONS*);
@@ -117,10 +123,13 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void Albedo(BODY*,int);
+void AlbedoSeasonal(BODY*,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
 
-void PoiseClimate(BODY*,int);
+void PoiseAnnual(BODY*,int);
+void PoiseSeasonal(BODY*,int);
+
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);

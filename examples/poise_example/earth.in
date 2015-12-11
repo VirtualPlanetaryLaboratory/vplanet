@@ -9,7 +9,7 @@ dSemi        1.00000011
 #dSemi        1.7
 dEcc         0.01672
 dInc         5e-5
-dLongP       282.7    #pericenter, wrt Earth's position at spring equinox     
+dLongP       282.07    #pericenter, wrt Earth's position at spring equinox     
 #note that this is the typical value +180, since that one is solar position
 dLongA       348.73936
 # bGRCorr      0
@@ -20,17 +20,20 @@ dDynEllip    3.28e-3
 dPrecA       0.0
 #bOverrideMaxEcc  1
 #dHaltMaxEcc     0.4
-iLatCellNum      151
+iLatCellNum      50
 bMEPDiff         0
 bIceSheets       1
 dInitIceLat      70.
 dInitIceHeight   50.
 #bHadley          1
 dDiffusion        0.44
-dPlanckA          160
+#dPlanckA          160
 #dPlanckB         1.5
 #bCalcAB          1
 #dTGlobalEst      288
 #dpCO2            8e-4
 dSurfAlbedo       0.4
 #dIceCreep         1e-15
+bClimateModel     sea
+iNumYears         4
+iNStepInYear      60

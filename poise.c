@@ -914,6 +914,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].daAlbedoWater = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTmpTemp = malloc(2*body[iBody].iNumLats*sizeof(double));
     body[iBody].daTGlobalTmp = malloc(body[iBody].iNDays*sizeof(double));
+    body[iBody].daSeaIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
     
     InitializeLandWater(body,iBody);
     body[iBody].dLatFHeatCp = 83.5;  //CC sez this is about right
@@ -923,6 +924,12 @@ void InitializeClimateParams(BODY *body, int iBody) {
       if (i!=body[iBody].iNumLats) {
         body[iBody].daTempLand[i] = 7.5 + 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2)) + Toffset;
         body[iBody].daTempWater[i] = 7.5 + 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2)) + Toffset;
+        if (body[iBody].daTempWater[i] < body[iBody].dFrzTSeaIce) {
+          body[iBody].daSeaIceHeight[i] = 2.0;
+        } else {
+          body[iBody].daSeaIceHeight[i] = 0.0;
+        }
+        
         body[iBody].dTGlobal += (body[iBody].daLandFrac[i]*body[iBody].daTempLand[i]+ \
                  body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i])/body[iBody].iNumLats;
         body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
@@ -953,6 +960,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     }  
   }
   
+  AlbedoSeasonal(body,iBody);
   AnnualInsolation(body, iBody);   
   PoiseSeasonal(body,iBody);
     
@@ -1635,10 +1643,10 @@ void AlbedoSeasonal(BODY *body, int iBody) {
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     body[iBody].daAlbedoLand[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.+0.05;
     body[iBody].daAlbedoWater[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.-0.05;
-    if (body[iBody].daTempLand[iLat] <= body[iBody].dFrzTSeaIce) {
+    if (body[iBody].daTempLand[iLat] < body[iBody].dFrzTSeaIce) {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
     }
-    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+    if (body[iBody].daTempWater[iLat] < body[iBody].dFrzTSeaIce) {
       body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
     }
   }  
@@ -1815,6 +1823,16 @@ void PoiseAnnual(BODY *body, int iBody) {
 
   } 
 }
+
+void SeaIce(BODY *body, int iBody) {
+  int iLat;
+  
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+      
+  
+  
+}  
 
 void PoiseSeasonal(BODY *body, int iBody) {
   int i, j, nstep, nyear, day;

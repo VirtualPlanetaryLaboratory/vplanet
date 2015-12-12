@@ -488,6 +488,7 @@ typedef struct {
   double **dMLand;
   double **dMWater;
   double *daTGlobalTmp;
+  double dSeaIceConduct;
 
  
 } BODY;

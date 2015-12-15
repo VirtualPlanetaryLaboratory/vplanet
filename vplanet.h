@@ -489,6 +489,13 @@ typedef struct {
   double **dMWater;
   double *daTGlobalTmp;
   double dSeaIceConduct;
+  double *daSeaIceK;
+  double *daFluxSeaIce;
+  double **dMInit;
+  double dCw_dt;
+  int bSeaIceModel;
+  double dSeasDeltat;
+  double dSeasDeltax;
 
  
 } BODY;

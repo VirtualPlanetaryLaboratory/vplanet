@@ -50,11 +50,12 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HEATCAPWATER    1843
 #define OPT_FRZTSEAICE      1844
 //#define OPT_LATENTHEAT    1845
-//#define OPT_CONDUCTIVITY  1846
+#define OPT_ICECONDUCT      1846
 #define OPT_MIXINGDEPTH     1847
 #define OPT_NULANDWATER     1848 
 #define OPT_NSTEPINYEAR     1849
 #define OPT_NUMYEARS        1850 
+#define OPT_SEAICEMODEL     1851
 
 #define OPT_CLIMATEMODEL    1899
 
@@ -130,6 +131,9 @@ double OLRwk97(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
+void SeaIce(BODY*,int,int);
+void MatrixSeasonal(BODY*,int);
+void SourceFSeas(BODY*,int,int);
 
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);

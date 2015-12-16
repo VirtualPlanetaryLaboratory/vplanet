@@ -131,7 +131,7 @@ double OLRwk97(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
-void SeaIce(BODY*,int,int);
+void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
 

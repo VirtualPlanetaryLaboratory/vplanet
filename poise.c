@@ -851,10 +851,15 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double*));
   body[iBody].daAnnualInsol = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daLambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  body[iBody].daAlbedo = malloc(body[iBody].iNumLats*sizeof(double)); 
 //   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   body[iBody].iNDays = 360;
   body[iBody].dMDiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
-  body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));   
+  body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].daFlux = malloc(body[iBody].iNumLats*sizeof(double));  
+  body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));   
 
 
   if (body[iBody].bColdStart) {
@@ -866,13 +871,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].dTGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
   
-  if (body[iBody].bClimateModel == ANN) {
-    body[iBody].daAlbedo = malloc(body[iBody].iNumLats*sizeof(double));   
+  if (body[iBody].bClimateModel == ANN) {      
     body[iBody].daTGrad = malloc(body[iBody].iNumLats*sizeof(double)); 
-    body[iBody].daFlux = malloc(body[iBody].iNumLats*sizeof(double));  
-    body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
-    body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
-    body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));  
+ 
     body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*));
     
     body[iBody].dMEuler = malloc(body[iBody].iNumLats*sizeof(double*));
@@ -944,6 +945,10 @@ void InitializeClimateParams(BODY *body, int iBody) {
     
     body[iBody].daTempLand = malloc(body[iBody].iNumLats*sizeof(double)); 
     body[iBody].daTempWater = malloc(body[iBody].iNumLats*sizeof(double)); 
+    body[iBody].daFluxOutLand = malloc(body[iBody].iNumLats*sizeof(double)); 
+    body[iBody].daFluxOutWater = malloc(body[iBody].iNumLats*sizeof(double)); 
+    body[iBody].daFluxInLand = malloc(body[iBody].iNumLats*sizeof(double)); 
+    body[iBody].daFluxInWater = malloc(body[iBody].iNumLats*sizeof(double)); 
     body[iBody].daSeaIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].dMEuler = malloc(2*body[iBody].iNumLats*sizeof(double*));
     body[iBody].dMEulerCopy = malloc(2*body[iBody].iNumLats*sizeof(double*));
@@ -959,11 +964,19 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].dUnitV = malloc(2*body[iBody].iNumLats*sizeof(double));
     body[iBody].daAlbedoLand = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daAlbedoWater = malloc(body[iBody].iNumLats*sizeof(double));
+    //body[iBody].daAlbedoGlobalTmp = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTmpTemp = malloc(2*body[iBody].iNumLats*sizeof(double));
-    body[iBody].daTGlobalTmp = malloc(body[iBody].iNDays*sizeof(double));
+    //body[iBody].daTGlobalTmp = malloc(body[iBody].iNDays*sizeof(double));
     body[iBody].daSeaIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daSeaIceK = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daFluxSeaIce = malloc(body[iBody].iNumLats*sizeof(double));
+    
+    body[iBody].daTempAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daAlbedoAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daFluxAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daFluxInAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daDivFluxAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daFluxOutAnnual = malloc(body[iBody].iNumLats*sizeof(double));
     
     InitializeLandWater(body,iBody);
     body[iBody].dLatFHeatCp = 83.5;  //CC sez this is about right
@@ -1009,15 +1022,15 @@ void InitializeClimateParams(BODY *body, int iBody) {
         body[iBody].daDiffusion[i] += body[iBody].dDiffCoeff*9.*exp(-pow((xboundary/sin(25.*DEGRAD)),6));
       }
     }  
+
+    AlbedoSeasonal(body,iBody);
+    body[iBody].dAlbedoGlobal = body[iBody].dAlbedoGlobal*body[iBody].iNStepInYear;
+    AnnualInsolation(body, iBody); 
+    MatrixSeasonal(body, iBody);
+    SourceFSeas(body,iBody,0);
+    SeaIce(body,iBody);  
+    //PoiseSeasonal(body,iBody);  
   }
-  
-  AlbedoSeasonal(body,iBody);
-  AnnualInsolation(body, iBody); 
-  MatrixSeasonal(body, iBody);
-  SourceFSeas(body,iBody,0);
-  SeaIce(body,iBody,0);  
-  PoiseSeasonal(body,iBody);
-    
 } 
 
 void VerifyAstro(BODY *body, int iBody) {
@@ -1145,7 +1158,11 @@ void WriteAlbedoGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daTemp[body[iBody].iWriteLat];
+  if (body[iBody].bClimateModel == ANN) {
+    *dTmp = body[iBody].daTemp[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daTempAnnual[body[iBody].iWriteLat];
+  }
   
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
@@ -1169,7 +1186,11 @@ void WriteLatitude(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void WriteAlbedoLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daAlbedo[body[iBody].iWriteLat];
+  if (body[iBody].bClimateModel == ANN) {
+    *dTmp = body[iBody].daAlbedo[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daAlbedoAnnual[body[iBody].iWriteLat];
+  }
 }
   
 void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1234,6 +1255,7 @@ void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     }
     fprintf(fp,"\n");
   }
+  fclose(fp);
 }
   
 void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1248,7 +1270,11 @@ void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
   
 void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
+  if (body[iBody].bClimateModel == ANN) {
+    *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daFluxInAnnual[body[iBody].iWriteLat];
+  }
   
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
@@ -1259,7 +1285,11 @@ void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 }
 
 void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
+  if (body[iBody].bClimateModel == ANN) {
+    *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daFluxOutAnnual[body[iBody].iWriteLat];
+  }
   
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
@@ -1691,20 +1721,7 @@ void Albedo(BODY *body, int iBody) {
   }
 }
 
-void AlbedoSeasonal(BODY *body, int iBody) {
-  int iLat;
-  
-  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daAlbedoLand[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.+0.05;
-    body[iBody].daAlbedoWater[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.-0.05;
-    if (body[iBody].daTempLand[iLat] <= body[iBody].dFrzTSeaIce) {
-      body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
-    }
-    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
-      body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
-    }
-  }  
-}
+
 
 // void DiagMatrix(double *v, double **M, int n, int offset) {
 //   /* Construct a square diagonal nxn matrix from vector v
@@ -1878,7 +1895,28 @@ void PoiseAnnual(BODY *body, int iBody) {
   } 
 }
 
-void SeaIce(BODY *body, int iBody, int nstep) {
+void AlbedoSeasonal(BODY *body, int iBody) {
+  int iLat;
+  
+  body[iBody].dAlbedoGlobalTmp = 0;
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    body[iBody].daAlbedoLand[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.+0.05;
+    body[iBody].daAlbedoWater[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.-0.05;
+    if (body[iBody].daTempLand[iLat] <= body[iBody].dFrzTSeaIce) {
+      body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
+    }
+    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+      body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
+    }
+    body[iBody].daAlbedo[iLat] = body[iBody].daLandFrac[iLat]*body[iBody].daAlbedoLand[iLat]+ \
+                              body[iBody].daWaterFrac[iLat]*body[iBody].daAlbedoWater[iLat];
+    body[iBody].dAlbedoGlobalTmp += body[iBody].daAlbedo[iLat]/body[iBody].iNumLats;
+  }  
+  body[iBody].dAlbedoGlobal += \
+            body[iBody].dAlbedoGlobalTmp/(body[iBody].iNStepInYear);
+}
+
+void SeaIce(BODY *body, int iBody) {
   int i, j;
   double nhicearea=0, shicearea=0, nhtotarea=0, shtotarea=0, nhfw, shfw, nhdW, shdW, Cw_dt;
   Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
@@ -1967,10 +2005,10 @@ void SeaIce(BODY *body, int iBody, int nstep) {
       
     body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
                             body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
-    body[iBody].daTGlobalTmp[nstep] += body[iBody].daTemp[i]/body[iBody].iNumLats;
+    body[iBody].dTGlobalTmp += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
   body[iBody].dTGlobal += \
-          body[iBody].daTGlobalTmp[nstep]/(body[iBody].iNumYears*body[iBody].iNStepInYear);
+          body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
 }  
 
 void MatrixSeasonal(BODY *body, int iBody) {
@@ -2047,20 +2085,34 @@ void PoiseSeasonal(BODY *body, int iBody) {
   AnnualInsolation(body,iBody);
   
   /* main loop */
-  body[iBody].dTGlobal = 0.0;
   for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
+    body[iBody].dTGlobal = 0.0;
+    body[iBody].dAlbedoGlobal = 0.0;
+    body[iBody].dFluxOutGlobal = 0.0;
+    
+    for (i=0;i<body[iBody].iNumLats;i++) {
+        //start of year, reset annual averages to zero 
+        body[iBody].daTempAnnual[i] = 0.0;
+        body[iBody].daAlbedoAnnual[i] = 0.0;
+        body[iBody].daFluxAnnual[i] = 0.0;
+        body[iBody].daFluxInAnnual[i] = 0.0;
+        body[iBody].daDivFluxAnnual[i] = 0.0;
+        body[iBody].daFluxOutAnnual[i] = 0.0;
+    }
+    
     for (nstep=0;nstep<body[iBody].iNStepInYear;nstep++) {
-      body[iBody].daTGlobalTmp[nstep] = 0.0;
+      body[iBody].dTGlobalTmp = 0.0;
+      body[iBody].dFluxOutGlobalTmp = 0.0;
       day = floor(body[iBody].dSeasDeltat*nstep*body[iBody].iNDays);
       
       SourceFSeas(body, iBody, day);
             
       if (body[iBody].bSeaIceModel == 1) {
-        SeaIce(body,iBody,nstep);
+        SeaIce(body,iBody);
         for (i=0;i<body[iBody].iNumLats;i++) {
           if (body[iBody].daSeaIceHeight[i] > 0) {
             // adjust height of present sea ice
-            body[iBody].daSeaIceHeight[i] -= body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce \
+            body[iBody].daSeaIceHeight[i] -=body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce\
                                        * body[iBody].daFluxSeaIce[i];
             if (body[iBody].daSeaIceHeight[i] < 0) body[iBody].daSeaIceHeight[i] = 0;                           
           } else {
@@ -2071,8 +2123,33 @@ void PoiseSeasonal(BODY *body, int iBody) {
                     * (body[iBody].daTempWater[i] - body[iBody].dFrzTSeaIce);
             }
           }
+          //calculate fluxes by latitude and global average 
+          body[iBody].daFluxOutLand[i] = body[iBody].dPlanckA \
+                                  + body[iBody].dPlanckB*body[iBody].daTempLand[i];
+          body[iBody].daFluxOutWater[i] = body[iBody].dPlanckA \
+                                  + body[iBody].dPlanckB*body[iBody].daTempWater[i];
+          body[iBody].daFluxOut[i] = body[iBody].daLandFrac[i]*body[iBody].daFluxOutLand[i] + \
+                                  body[iBody].daWaterFrac[i]*body[iBody].daFluxOutWater[i];
+          body[iBody].dFluxOutGlobalTmp += body[iBody].daFluxOut[i]/body[iBody].iNumLats;
+          
+          body[iBody].daFluxInLand[i] = (1.0-body[iBody].daAlbedoLand[i])\
+                                          *body[iBody].daInsol[i][day];
+          body[iBody].daFluxInWater[i] = (1.0-body[iBody].daAlbedoWater[i])\
+                                          *body[iBody].daInsol[i][day];
+          body[iBody].daFluxIn[i] = body[iBody].daLandFrac[i]*body[iBody].daFluxInLand[i] + \
+                                  body[iBody].daWaterFrac[i]*body[iBody].daFluxInWater[i];
+          body[iBody].dFluxInGlobalTmp += body[iBody].daFluxIn[i]/body[iBody].iNumLats;
+          
+          // annual averages by latitude
+          body[iBody].daTempAnnual[i] += body[iBody].daTemp[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAnnual[i] += body[iBody].daAlbedo[i]/body[iBody].iNStepInYear;
+          body[iBody].daFluxInAnnual[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
+          body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
         }
-        printf("stuff\n");
+        body[iBody].dFluxOutGlobal += \
+              body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
+        body[iBody].dFluxInGlobal += \
+              body[iBody].dFluxInGlobalTmp/(body[iBody].iNStepInYear);
       } else {  
         for (i=0;i<2*body[iBody].iNumLats;i++) {
           body[iBody].daTmpTemp[i] = 0.0;
@@ -2081,14 +2158,41 @@ void PoiseSeasonal(BODY *body, int iBody) {
           }
         }
         for (i=0;i<body[iBody].iNumLats;i++) {
+          //calculate temperature and fluxes by latitude and global average 
           body[iBody].daTempLand[i] = body[iBody].daTmpTemp[2*i];
           body[iBody].daTempWater[i] = body[iBody].daTmpTemp[2*i+1];
           body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
                                   body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
-          body[iBody].daTGlobalTmp[nstep] += body[iBody].daTemp[i]/body[iBody].iNumLats;
+          body[iBody].dTGlobalTmp += body[iBody].daTemp[i]/body[iBody].iNumLats;
+          
+          body[iBody].daFluxOutLand[i] = body[iBody].dPlanckA \
+                                  + body[iBody].dPlanckB*body[iBody].daTempLand[i];
+          body[iBody].daFluxOutWater[i] = body[iBody].dPlanckA \
+                                  + body[iBody].dPlanckB*body[iBody].daTempWater[i];
+          body[iBody].daFluxOut[i] = body[iBody].daLandFrac[i]*body[iBody].daFluxOutLand[i] + \
+                                  body[iBody].daWaterFrac[i]*body[iBody].daFluxOutWater[i];
+          body[iBody].dFluxOutGlobalTmp += body[iBody].daFluxOut[i]/body[iBody].iNumLats;
+          
+          body[iBody].daFluxInLand[i] = (1.0-body[iBody].daAlbedoLand[i])\
+                                          *body[iBody].daInsol[i][day];
+          body[iBody].daFluxInWater[i] = (1.0-body[iBody].daAlbedoWater[i])\
+                                          *body[iBody].daInsol[i][day];
+          body[iBody].daFluxIn[i] = body[iBody].daLandFrac[i]*body[iBody].daFluxInLand[i] + \
+                                  body[iBody].daWaterFrac[i]*body[iBody].daFluxInWater[i];
+          body[iBody].dFluxInGlobalTmp += body[iBody].daFluxIn[i]/body[iBody].iNumLats;
+          
+          // annual averages by latitude
+          body[iBody].daTempAnnual[i] += body[iBody].daTemp[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAnnual[i] += body[iBody].daAlbedo[i]/body[iBody].iNStepInYear;
+          body[iBody].daFluxInAnnual[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
+          body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
         }
         body[iBody].dTGlobal += \
-              body[iBody].daTGlobalTmp[nstep]/(body[iBody].iNumYears*body[iBody].iNStepInYear);
+              body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
+        body[iBody].dFluxOutGlobal += \
+              body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
+        body[iBody].dFluxInGlobal += \
+              body[iBody].dFluxInGlobalTmp/(body[iBody].iNStepInYear);
       }
       AlbedoSeasonal(body,iBody);
     }

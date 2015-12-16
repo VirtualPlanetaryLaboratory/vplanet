@@ -470,6 +470,8 @@ typedef struct {
   double *daTempWater;        /**< Temperature over ocean (by lat) */
   double *daAlbedoLand;
   double *daAlbedoWater;
+  double *daFluxOutLand;
+  double *daFluxOutWater;
   double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
   double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
   double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
@@ -487,7 +489,12 @@ typedef struct {
   double *daSourceLW;     /**< Combined source function what matrix operates on */
   double **dMLand;
   double **dMWater;
-  double *daTGlobalTmp;
+  double dTGlobalTmp;
+  double dAlbedoGlobalTmp;
+  double dFluxOutGlobalTmp;
+  double dFluxInGlobalTmp;
+  double *daFluxInLand;
+  double *daFluxInWater;
   double dSeaIceConduct;
   double *daSeaIceK;
   double *daFluxSeaIce;
@@ -496,7 +503,12 @@ typedef struct {
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
-
+  double *daTempAnnual;
+  double *daAlbedoAnnual;
+  double *daFluxAnnual;
+  double *daFluxOutAnnual;
+  double *daFluxInAnnual;
+  double *daDivFluxAnnual;
  
 } BODY;
 

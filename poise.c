@@ -1697,10 +1697,10 @@ void AlbedoSeasonal(BODY *body, int iBody) {
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     body[iBody].daAlbedoLand[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.+0.05;
     body[iBody].daAlbedoWater[iLat] = 0.313+0.08*(3.*pow(sin(body[iBody].daLats[iLat]),2)-1.)/2.-0.05;
-    if (body[iBody].daTempLand[iLat] < body[iBody].dFrzTSeaIce) {
+    if (body[iBody].daTempLand[iLat] <= body[iBody].dFrzTSeaIce) {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
     }
-    if (body[iBody].daTempWater[iLat] < body[iBody].dFrzTSeaIce) {
+    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
       body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
     }
   }  
@@ -1880,7 +1880,7 @@ void PoiseAnnual(BODY *body, int iBody) {
 
 void SeaIce(BODY *body, int iBody, int nstep) {
   int i, j;
-  double nhicearea, shicearea, nhtotarea, shtotarea, nhfw, shfw, nhdW, shdW, Cw_dt;
+  double nhicearea=0, shicearea=0, nhtotarea=0, shtotarea=0, nhfw, shfw, nhdW, shdW, Cw_dt;
   Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
   
   for (i=0;i<2*body[iBody].iNumLats;i++) {

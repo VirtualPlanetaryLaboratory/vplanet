@@ -2237,9 +2237,9 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   double Tice = 273.0, dTmp = 0;
   
   /* first, calculate melting/accumulation */
-  if (body[iBody].daTemp[iLat]>0.0) {
+  if (body[iBody].daTempLand[iLat]>0.0) {
     /* Ice melting */
-    dTmp += SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTemp[iLat]+273.15),4.0))/LFICE;
+    dTmp += SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
   } else {
     if (body[iBody].dAlbedoGlobal == 0.6) {
       /* no precip once planet is frozen */

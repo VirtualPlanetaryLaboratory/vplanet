@@ -135,5 +135,7 @@ void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
 
+double IceMassBalance(BODY*,int,int);
+
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);

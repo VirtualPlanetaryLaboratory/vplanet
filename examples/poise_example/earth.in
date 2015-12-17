@@ -24,7 +24,7 @@ dPrecA       0.0
 #dHaltMaxEcc     0.4
 iLatCellNum      50
 bMEPDiff         0
-bIceSheets       0
+bIceSheets       1
 dInitIceLat      70.
 dInitIceHeight   50.
 #bHadley          1
@@ -35,7 +35,7 @@ dDiffusion        0.44
 #dTGlobalEst      288
 #dpCO2            8e-4
 dSurfAlbedo       0.4
-#dIceCreep         1e-15
+dIceCreep         0
 bClimateModel     sea
 iNumYears         4
 iNStepInYear      60

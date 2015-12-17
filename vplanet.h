@@ -509,6 +509,8 @@ typedef struct {
   double *daFluxOutAnnual;
   double *daFluxInAnnual;
   double *daDivFluxAnnual;
+  double **daIceBalance;
+  double *daIceBalanceAnnual;
  
 } BODY;
 

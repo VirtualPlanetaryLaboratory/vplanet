@@ -817,6 +817,12 @@ void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbo
   }
 }
 
+void VerifyNStepSeasonal(BODY *body, int iBody) {
+  if (body[iBody].iNStepInYear > body[iBody].iNDays) {
+    body[iBody].iNStepInYear = body[iBody].iNDays;
+  }
+}
+
 void InitializeLatGrid(BODY *body, int iBody) {
   double delta_x, SinLat;
   int i;
@@ -940,6 +946,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   } else if (body[iBody].bClimateModel == SEA) {
     /* oh yeah, seasonal model, oh yeah! 
     'tis the season to model ice sheets, fa la la la la, la la la la */
+    VerifyNStepSeasonal(body,iBody);
     body[iBody].dSeasDeltax = 2.0/body[iBody].iNumLats;
     body[iBody].dSeasDeltat = 1./body[iBody].iNStepInYear;
     
@@ -980,6 +987,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     
     body[iBody].daIceBalance = malloc(body[iBody].iNumLats*sizeof(double*));
     body[iBody].daIceBalanceAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daIceMassTmp = malloc(body[iBody].iNumLats*sizeof(double));
     
     InitializeLandWater(body,iBody);
     body[iBody].dLatFHeatCp = 83.5;  //CC sez this is about right
@@ -1012,6 +1020,17 @@ void InitializeClimateParams(BODY *body, int iBody) {
         body[iBody].dMInit[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
         body[iBody].dMEulerCopy[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
         body[iBody].dInvM[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
+        
+        if (body[iBody].bIceSheets) {
+          if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
+            body[iBody].daIceMass[i] = body[iBody].dInitIceHeight*RHOICE;
+            body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
+  //           body[iBody].daIceHeight[i] = body[iBody].dInitIceHeight;
+          } else {
+            body[iBody].daIceMass[i] = 0.0;
+  //           body[iBody].daIceHeight[i] = 0.0;
+          }
+        }
       }
       
       if (body[iBody].bMEPDiff) {   
@@ -1033,7 +1052,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     MatrixSeasonal(body, iBody);
     SourceFSeas(body,iBody,0);
     SeaIce(body,iBody);  
-    //PoiseSeasonal(body,iBody);  
+    PoiseSeasonal(body,iBody);  
   }
 } 
 
@@ -1535,6 +1554,9 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
     body[iBody].dMeanMotion = \
           fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
     body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion);
+    if (body[iBody].bClimateModel == SEA) {
+      VerifyNStepSeasonal(body,iBody);
+    }
   }
 }
 
@@ -2094,6 +2116,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
   AlbedoSeasonal(body,iBody);
   AnnualInsolation(body,iBody);
   
+  h = 2*PI/body[iBody].dMeanMotion/body[iBody].iNStepInYear;
+
   /* main loop */
   for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
     body[iBody].dTGlobal = 0.0;
@@ -2108,7 +2132,13 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].daFluxInAnnual[i] = 0.0;
         body[iBody].daDivFluxAnnual[i] = 0.0;
         body[iBody].daFluxOutAnnual[i] = 0.0;
-        body[iBody].daIceBalanceAnnual[i] = 0.0;
+        if (nyear == 0) {
+          //reset ice sheet stuff only on first year
+          body[iBody].daIceBalanceAnnual[i] = 0.0;
+          if (body[iBody].bIceSheets) {
+            body[iBody].daIceMassTmp[i] = body[iBody].daIceMass[i];
+          }
+        }
     }
     
     for (nstep=0;nstep<body[iBody].iNStepInYear;nstep++) {
@@ -2158,14 +2188,17 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
           
           // ice growth/ablation
-          if (body[iBody].bIceSheets) {
-            body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+          if (body[iBody].bIceSheets) {  
+              //calculate derivative of ice mass density and take an euler step
+              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
           }
         }
         body[iBody].dFluxOutGlobal += \
               body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxInGlobal += \
               body[iBody].dFluxInGlobalTmp/(body[iBody].iNStepInYear);
+              
       } else {  
         for (i=0;i<2*body[iBody].iNumLats;i++) {
           body[iBody].daTmpTemp[i] = 0.0;
@@ -2204,8 +2237,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
           
           // ice growth/ablation
-          if (body[iBody].bIceSheets) {
-            body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+          if (body[iBody].bIceSheets) {  
+              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
           }
         }
         body[iBody].dTGlobal += \
@@ -2218,39 +2252,44 @@ void PoiseSeasonal(BODY *body, int iBody) {
       
       AlbedoSeasonal(body,iBody);
     }
-  }
-  
-  if (body[iBody].bIceSheets) {
-    for (nstep=1;nstep<body[iBody].iNStepInYear;nstep++) {
-      for (i=0;i<body[iBody].iNumLats;i++) {
-        //trapezoid rule
-        h = 2*PI/body[iBody].dMeanMotion/body[iBody].iNStepInYear;
-        body[iBody].daIceBalanceAnnual[i] += h/2.*(body[iBody].daIceBalance[i][nstep]\
-                                             + body[iBody].daIceBalance[i][nstep-1]);
+    if (body[iBody].bIceSheets) {
+      for (nstep=1;nstep<body[iBody].iNStepInYear;nstep++) {
+        for (i=0;i<body[iBody].iNumLats;i++) {
+          //trapezoid rule
+          //h = 2*PI/body[iBody].dMeanMotion/body[iBody].iNStepInYear;
+          body[iBody].daIceBalanceAnnual[i] += h/2.*(body[iBody].daIceBalance[i][nstep]\
+                         + body[iBody].daIceBalance[i][nstep-1])/body[iBody].iNumYears;
+          //above gets yearly average over NumYears
+          //body[iBody].daIceMass[i] = body[iBody].daIceMassTmp[i];
+        }
       }
-    }
-  }   
+    }   
+  }
   printf("stuff\n");  
 }
 
 double IceMassBalance(BODY *body, int iBody, int iLat) {
-  double Tice = 273.0, dTmp = 0;
+  double Tice = 273.0, dTmp;
   
   /* first, calculate melting/accumulation */
   if (body[iBody].daTempLand[iLat]>0.0) {
     /* Ice melting */
-    dTmp += SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
+    if (body[iBody].daIceMassTmp[iLat] > 0.0) {
+      dTmp = SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
+    } else {
+      dTmp = 0.0;
+    }
   } else {
     if (body[iBody].dAlbedoGlobal == 0.6) {
       /* no precip once planet is frozen */
-      dTmp += 0.0;
+      dTmp = 0.0;
     } else {
       if (body[iBody].dIceMassTot >= MOCEAN) {
         /* ice growth limited by mass of water available (really, really stupid) */
-        dTmp += 0.0;
+        dTmp = 0.0;
       } else {
         /* Ice deposits at fixed rate */
-        dTmp += body[iBody].dIceDepRate;
+        dTmp = body[iBody].dIceDepRate;
       }
     }
   }
@@ -2258,28 +2297,39 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
 }
 
 double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
-  double Tice = 273.0, dTmp = 0;
+  double Tice = 273.0, dTmp;
   
-  /* first, calculate melting/accumulation */
-  if (body[iaBody[0]].daTemp[iaBody[1]]>0.0) {
-    if (body[iaBody[0]].daIceMass[iaBody[1]] > 0.0) {
-      /* Ice melting */
-      dTmp += SIGMA*(pow(Tice,4.0) - pow((body[iaBody[0]].daTemp[iaBody[1]]+273.15),4.0))/LFICE;
+  if (body[iaBody[0]].bClimateModel == ANN) {
+    /* first, calculate melting/accumulation */
+    if (body[iaBody[0]].daTemp[iaBody[1]]>0.0) {
+      if (body[iaBody[0]].daIceMass[iaBody[1]] > 0.0) {
+        /* Ice melting */
+        dTmp = SIGMA*(pow(Tice,4.0) - pow((body[iaBody[0]].daTemp[iaBody[1]]+273.15),4.0))/LFICE;
+      } else {
+        dTmp = 0.0;
+      }
     } else {
-      dTmp += 0.0;
+      if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
+        /* no precip once planet is frozen */
+        dTmp = 0.0;
+      } else {
+        if (body[iaBody[0]].dIceMassTot >= MOCEAN) {
+          /* ice growth limited by mass of water available (really, really stupid) */
+          dTmp = 0.0;
+        } else {
+          /* Ice deposits at fixed rate */
+          dTmp = body[iaBody[0]].dIceDepRate;
+        }
+      }
     }
   } else {
-    if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
-      /* no precip once planet is frozen */
-      dTmp += 0.0;
+    if (body[iaBody[0]].daIceMass[iaBody[1]] <= 0 && \
+             body[iaBody[0]].daIceBalanceAnnual[iaBody[1]] < 0.0) {
+      //if no ice present and derivative is negative, return 0
+      dTmp = 0.0;
     } else {
-      if (body[iaBody[0]].dIceMassTot >= MOCEAN) {
-        /* ice growth limited by mass of water available (really, really stupid) */
-        dTmp += 0.0;
-      } else {
-        /* Ice deposits at fixed rate */
-        dTmp += body[iaBody[0]].dIceDepRate;
-      }
+      //ice derivative is calculated in PoiseSeasonal
+      dTmp = body[iaBody[0]].daIceBalanceAnnual[iaBody[1]];
     }
   }
   return dTmp;

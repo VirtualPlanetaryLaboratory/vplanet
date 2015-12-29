@@ -84,6 +84,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ALBEDOGLOBAL     1822
 #define OUT_FLUXINGLOBAL     1823
 #define OUT_FLUXOUTGLOBAL    1824
+#define OUT_TOTICEMASS       1825
 
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831
@@ -96,7 +97,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_DIVFLUX          1838
 #define OUT_ICEMASS          1839
 #define OUT_ICEHEIGHT        1840
-#define OUT_TOTICEMASS			 1841
+#define OUT_DICEMASSDT       1841
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -109,6 +110,7 @@ void WriteTempLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char
 void WriteAlbedoLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteAnnualInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDailyInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSeasonalTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFluxMerid(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFluxIn(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFluxOut(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -124,7 +126,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void Albedo(BODY*,int);
-void AlbedoSeasonal(BODY*,int);
+void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);

@@ -512,6 +512,9 @@ typedef struct {
   double **daIceBalance;
   double *daIceBalanceAnnual;
   double *daIceMassTmp;
+  double **daTempDaily;
+  double *daDeclination;           /**< Daily solar declination */
+
  
 } BODY;
 
@@ -797,7 +800,7 @@ typedef struct {
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
-  double **padDIceMassDtPoise;
+  double ***padDIceMassDtPoise;
   int *iaIceMassDepMelt;
   int *iaIceMassFlow;
   int iIceMass;

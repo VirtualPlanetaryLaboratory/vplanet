@@ -129,7 +129,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               if (update[iBody].iaType[iVar][iEqn] == 2) {
                 // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
                   dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
@@ -147,6 +148,19 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   dMinNow = pow(2.0/body[iBody].iNumLats,2)/(2*body[iBody].dIceCreep);
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
+                }
+              } else if (update[iBody].iaType[iVar][iEqn] == 9) {
+                // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                  dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+                  if (dMinNow < dMin) {
+                    if (dMinNow < 5*YEARSEC/control->Evolve.dEta) {
+                      dMin = 5*YEARSEC/control->Evolve.dEta;
+                    } else {
+                      dMin = dMinNow;
+                    }
+                  }
                 }
               } else {
                 // The parameter is controlled by a time derivative

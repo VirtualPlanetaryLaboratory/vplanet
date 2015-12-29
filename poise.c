@@ -1655,7 +1655,7 @@ void DailyInsolation(BODY *body, int iBody, int iDay) {
   cos_delta = sqrt(1.0-pow(sin_delta,2));
   tan_delta = sin_delta/cos_delta;
   delta = asin(sin_delta);
-  body[iBody].daDeclination[iDay];
+  body[iBody].daDeclination[iDay] = delta;
   
   for (j=0;j<body[iBody].iNumLats;j++) {
     if (delta > 0.0) {

@@ -32,9 +32,11 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
     dest[iBody].dIceDepRate = src[iBody].dIceDepRate;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bClimateModel = src[iBody].bClimateModel;
+    dest[iBody].bIceSheets = src[iBody].bIceSheets;
     for (iLat=0;iLat<src[iBody].iNumLats;iLat++) {
       dest[iBody].daIceMass[iLat] = src[iBody].daIceMass[iLat];
       dest[iBody].daTemp[iLat] = src[iBody].daTemp[iLat];
+      dest[iBody].daLats[iLat] = src[iBody].daLats[iLat];
       dest[iBody].daIceBalanceAnnual[iLat] = src[iBody].daIceBalanceAnnual[iLat];
     }
   }
@@ -47,6 +49,12 @@ void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int
 //   control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daIceBalanceAnnual = malloc(body[iBody].iNumLats*sizeof(double));
+  
+  control->Evolve.tmpBody[iBody].daLats = malloc(body[iBody].iNumLats*sizeof(double));
+
+  control->Evolve.tmpBody[iBody].daIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
+  control->Evolve.tmpBody[iBody].daDIceHeightDy = malloc(body[iBody].iNumLats*sizeof(double));
+  control->Evolve.tmpBody[iBody].daIceFlow = malloc(body[iBody].iNumLats*sizeof(double));
 }
 
 /**************** POISE options ********************/
@@ -870,7 +878,10 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));   
-
+  body[iBody].daIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daIceFlow = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDIceHeightDy = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDeclination = malloc(body[iBody].iNDays*sizeof(double));
 
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -982,7 +993,6 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].daSeaIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daSeaIceK = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daFluxSeaIce = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daDeclination = malloc(body[iBody].iNDays*sizeof(double));
     
     body[iBody].daTempAnnual = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daAlbedoAnnual = malloc(body[iBody].iNumLats*sizeof(double));
@@ -1600,12 +1610,40 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 /************* POISE Functions ***********/
 
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
+  double deltax;
+  int iLat;
+  
   if (body[iBody].bEqtide) {
     body[iBody].dMeanMotion = \
           fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
     body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion);
     if (body[iBody].bClimateModel == SEA) {
       VerifyNStepSeasonal(body,iBody);
+    }
+  }
+  
+  if (body[iBody].bIceSheets) {
+    deltax = 2.0/body[iBody].iNumLats;
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
+      if (iLat == 0) {
+        body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
+            (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
+            (body[iBody].dRadius*pow(deltax,2));  
+      } else if (iLat == (body[iBody].iNumLats-1)) {
+        body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
+            (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
+            (body[iBody].dRadius*pow(deltax,2));
+      } else {
+        body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
+            (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat-1]) / \
+            (2*body[iBody].dRadius*pow(deltax,2));
+      }
+      body[iBody].daIceFlow[iLat] = pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
+            body[iBody].daDIceHeightDy[iLat] * pow(body[iBody].daIceHeight[iLat],nGLEN+1);
+      if (body[iBody].daIceFlow[iLat] != body[iBody].daIceFlow[iLat]) {
+        printf("stop");
+      }
     }
   }
 }
@@ -2415,22 +2453,58 @@ double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   }
   return dTmp;
 }
-
-double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
-  double dTmp = 0;
+// 
+// double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
+//   double dTmp = 0;
+//   
+//   /* ice dynamics (can be shut off by setting dIceCreep = 0) */
+//   if (iaBody[1] == 0) {
+//     dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
+//   } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
+//     dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+//   } else {
+//     dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
+//     dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+//   }
+//   
+//   return dTmp;
+// }
   
-  /* ice dynamics (can be shut off by setting dIceCreep = 0) */
-  if (iaBody[1] == 0) {
-    dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
-  } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
-    dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
+  double dTmp, deltax, deltay, Tice = 270, Aice, grav, dfdy;
+  
+  /* get deltay in meters at this latitude */
+  deltax = 2.0/body[iaBody[0]].iNumLats;
+  deltay = body[iaBody[0]].dRadius*deltax/cos(body[iaBody[0]].daLats[iaBody[1]]);
+  
+  /* deformability of ice, dependent on temperature */
+  if (Tice < 263) {
+    Aice = a1ICE * exp(-Q1ICE/(RGAS*Tice));
   } else {
-    dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
-    dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+    Aice = a2ICE * exp(-Q2ICE/(RGAS*Tice));
   }
+  
+  grav = BIGG*body[iaBody[0]].dMass/pow(body[iaBody[0]].dRadius,2);
+  
+  /* calculate dy terms (daIceFlow is calc'd in PropertiesPoise) */
+  if (iaBody[1] == 0) {
+    dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]+1] - \
+          body[iaBody[0]].daIceFlow[iaBody[1]])/deltay;
+  } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
+    dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]] - \
+          body[iaBody[0]].daIceFlow[iaBody[1]-1])/deltay;
+  } else {
+    dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]+1]- \
+          body[iaBody[0]].daIceFlow[iaBody[1]-1])/deltay/2.0;
+  }
+  
+  if (dfdy != dfdy) {
+    printf("stop");
+  }
+  /* calculate change in height and convert to mass */
+  dTmp = (2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0)*dfdy)*RHOICE;
   
   return dTmp;
 }
-  
   
 

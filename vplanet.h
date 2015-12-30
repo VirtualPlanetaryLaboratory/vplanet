@@ -49,6 +49,12 @@
 #define LFICE         3.34e5
 #define RHOICE        916.7   //density of ice kg/m^3
 #define MOCEAN        1.4e21  //mass of earth ocean in kg
+#define a1ICE         3.615e-13  //coeff of ice deformability at T<263K (Pa^-3 s^-1)
+#define a2ICE         1.733e3    //coeff of ice deformability at T>=263K (Pa^-3 s^-1)
+#define Q1ICE         6e4        //energy in ice deformation at T<263K (J/mol)
+#define Q2ICE         13.9e4     //energy in ice deformation at T>=263 (J/mol)
+#define RGAS          8.3144598  //gas constant in J K^-1 mol^-1
+#define nGLEN         3.0  //Glen's law coefficient
 
 /* Exit Status */
 
@@ -456,6 +462,7 @@ typedef struct {
   int *rowswap;
   int bIceSheets;
   double *daIceMass;
+  double *daIceHeight;
   double dIceMassTot;
 //   double *daIceHeight;
   double dInitIceLat;
@@ -514,8 +521,9 @@ typedef struct {
   double *daIceMassTmp;
   double **daTempDaily;
   double *daDeclination;           /**< Daily solar declination */
+  double *daDIceHeightDy;
+  double *daIceFlow;
 
- 
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

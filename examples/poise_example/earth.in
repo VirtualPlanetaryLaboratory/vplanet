@@ -26,8 +26,8 @@ dPrecA       0.0
 iLatCellNum      50
 bMEPDiff         0
 bIceSheets       1
-dInitIceLat      70.
-dInitIceHeight   50.
+dInitIceLat      90.
+dInitIceHeight   0.
 #bHadley          1
 dDiffusion        0.44
 #dPlanckA          160

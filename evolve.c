@@ -145,9 +145,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 //                   } else { 
 //                     dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
 //                   }
-                  dMinNow = pow(body[iBody].dRadius*2.0/body[iBody].iNumLats/ \
+                  dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats/ \
                     cos(body[iBody].daLats[iVar-update[iBody].iIceMass]),2)/ \
-                    (2*update[iBody].daDerivProc[iVar][iEqn]/RHOICE);
+                    (2*update[iBody].daDerivProc[iVar][iEqn]/RHOICE));
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
                 }

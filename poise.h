@@ -56,6 +56,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_NSTEPINYEAR     1849
 #define OPT_NUMYEARS        1850 
 #define OPT_SEAICEMODEL     1851
+#define OPT_ALBEDOLAND      1852
+#define OPT_ALBEDOWATER     1853
 
 #define OPT_CLIMATEMODEL    1899
 
@@ -98,6 +100,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEMASS          1839
 #define OUT_ICEHEIGHT        1840
 #define OUT_DICEMASSDT       1841
+#define OUT_ICEFLOW          1842
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

@@ -523,6 +523,9 @@ typedef struct {
   double *daDeclination;           /**< Daily solar declination */
   double *daDIceHeightDy;
   double *daIceFlow;
+  double dAlbedoLand;
+  double dAlbedoWater;
+  double *daIceFlowMid;
 
 } BODY;
 

@@ -138,16 +138,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               } else if (update[iBody].iaType[iVar][iEqn] == 4) {
                 // unique type for ice sheets to prevent small amounts of ice -> dDt -> 0
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-                if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
-                  // if (*(update[iBody].pdVar[iVar])/RHOICE < 0.01) {
-//                     //if ice is < 1 cm thick, treat timestep as if it is 1 cm
-//                     dMinNow = fabs(0.01/update[iBody].daDerivProc[iVar][iEqn]);
-//                   } else { 
-//                     dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-//                   }
-                  dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats/ \
-                    cos(body[iBody].daLats[iVar-update[iBody].iIceMass]),2)/ \
-                    (2*update[iBody].daDerivProc[iVar][iEqn]/RHOICE));
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
+                  dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
+                    (2*body[iBody].daIceFlow[iVar-update[iBody].iIceMass+1]));
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
                 }

@@ -4,12 +4,12 @@ saModules    distorb distrot poise
 dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
-dObliquity   23.44    #no Moons yet in vplanet....
+dObliquity   23.682    #no Moons yet in vplanet....
 dSemi        1.00000011
 #dSemi        1.7
-dEcc         0.01672
+dEcc         0.036851
 dInc         5e-5
-dLongP       282.07    #pericenter, wrt Earth's position at spring equinox     
+dLongP       8.99    #pericenter, wrt Earth's position at spring equinox     
 #note that this is the typical value +180, since that one is solar position
 dLongA       348.73936
 # bGRCorr      0

@@ -1706,7 +1706,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
     deltax = 2.0/body[iBody].iNumLats;
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
       if (!isfinite(body[iBody].daIceMass[iLat])) {
-        printf("stop");
+        printf("stop here\n");
       }
       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
     }
@@ -1756,16 +1756,18 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
       body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
           pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
           pow(body[iBody].daIceHeight[iLat],nGLEN+2);
-          
+    }
+    
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
       if (iLat == 0) {
         body[iBody].daIceFlowMid[iLat] = body[iBody].daIceFlow[iLat]/2.0;
       } else if (iLat == body[iBody].iNumLats-1) {
         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-           body[iBody].daIceFlow[iLat+1])/2.0;
+           body[iBody].daIceFlow[iLat-1])/2.0;
         body[iBody].daIceFlowMid[iLat+1] = body[iBody].daIceFlow[iLat]/2.0;
       } else {
         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-           body[iBody].daIceFlow[iLat+1])/2.0;
+           body[iBody].daIceFlow[iLat-1])/2.0;
       }    
     }
   }
@@ -2465,7 +2467,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
               body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
           }
           
-          body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTemp[i];
+          body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLand[i];
         }
         body[iBody].dTGlobal += \
               body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
@@ -2640,20 +2642,23 @@ double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {
 //           body[iaBody[0]].daIceFlow[iaBody[1]-1])/deltay/2.0;
 //   }
   if (iaBody[1] == 0) {
-    dfdy = body[iaBody[0]].daIceFlow[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
-      -body[iaBody[0]].daIceHeight[iaBody[1]]) - body[iaBody[0]].daIceFlow[iaBody[1]] *\
-      (body[iaBody[0]].daIceHeight[iaBody[1]])/pow(deltay,2);
+    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
+      -body[iaBody[0]].daIceHeight[iaBody[1]]) - body[iaBody[0]].daIceFlowMid[iaBody[1]] *\
+      (body[iaBody[0]].daIceHeight[iaBody[1]]))/pow(deltay,2);
   } else if (iaBody[1] == (body[iaBody[0]].iNumLats-1)) {
-    dfdy = body[iaBody[0]].daIceFlow[iaBody[1]+1]*(-body[iaBody[0]].daIceHeight[iaBody[1]])\
-      - body[iaBody[0]].daIceFlow[iaBody[1]] * (body[iaBody[0]].daIceHeight[iaBody[1]] -\
-      body[iaBody[0]].daIceHeight[iaBody[1]-1])/pow(deltay,2);
+    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(-body[iaBody[0]].daIceHeight[iaBody[1]])\
+      - body[iaBody[0]].daIceFlowMid[iaBody[1]] * (body[iaBody[0]].daIceHeight[iaBody[1]] -\
+      body[iaBody[0]].daIceHeight[iaBody[1]-1]))/pow(deltay,2);
   } else {
-    dfdy = body[iaBody[0]].daIceFlow[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
-      -body[iaBody[0]].daIceHeight[iaBody[1]]) - body[iaBody[0]].daIceFlow[iaBody[1]] *\
+    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
+      -body[iaBody[0]].daIceHeight[iaBody[1]]) - body[iaBody[0]].daIceFlowMid[iaBody[1]] *\
       (body[iaBody[0]].daIceHeight[iaBody[1]] - \
-      body[iaBody[0]].daIceHeight[iaBody[1]-1])/pow(deltay,2);
+      body[iaBody[0]].daIceHeight[iaBody[1]-1]))/pow(deltay,2);
   }
   
+  // if (iaBody[1] == 35) {
+//     printf("ok");
+//   }
   /* convert to mass */
   dTmp = dfdy*RHOICE;
   

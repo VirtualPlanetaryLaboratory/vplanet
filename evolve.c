@@ -140,7 +140,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
                 if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
                   dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
-                    (2*body[iBody].daIceFlow[iVar-update[iBody].iIceMass+1]));
+                    (2*body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]));
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
                 }
@@ -406,9 +406,9 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     control->Evolve.dTime += dDt;
     control->Evolve.nSteps++;
     
-    if (control->Evolve.dTime >= 6440*YEARSEC) {
-      printf("stop");
-    }
+    // if (control->Evolve.dTime >= 360*YEARSEC) {
+//       printf("stop\n");
+//     }
         
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {

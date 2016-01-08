@@ -932,6 +932,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daIceFlowMid = malloc((body[iBody].iNumLats+1)*sizeof(double));
   body[iBody].daDIceHeightDy = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daDeclination = malloc(body[iBody].iNDays*sizeof(double));
+  body[iBody].daTGrad = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
+
 
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -943,7 +946,6 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].dAlbedoGlobal = 0.0;
   
   if (body[iBody].bClimateModel == ANN) {      
-    body[iBody].daTGrad = malloc(body[iBody].iNumLats*sizeof(double)); 
  
     body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*));
     
@@ -954,7 +956,6 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].daTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].rowswap =  malloc(body[iBody].iNumLats*sizeof(int));
     body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
@@ -1369,6 +1370,24 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
   fclose(fp);
 }
+  
+void WriteSeasonalIceBalance(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  char cOut[NAMELEN];
+  FILE *fp;
+  int iLat,iDay;
+   
+  sprintf(cOut,"%s.%s.SeasonalIceBalance",system->cName,body[iBody].cName);
+
+  fp = fopen(cOut,"w");
+  for (iDay=0;iDay<body[iBody].iNStepInYear;iDay++) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      fprintd(fp,body[iBody].daIceBalance[iLat][iDay],control->Io.iSciNot,control->Io.iDigits);
+      fprintf(fp," ");
+    }
+    fprintf(fp,"\n");
+  }
+  fclose(fp);
+}  
   
 void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].daFlux[body[iBody].iWriteLat];
@@ -2419,6 +2438,20 @@ void PoiseSeasonal(BODY *body, int iBody) {
               body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
           }
         }
+        
+        TempGradient(body, body[iBody].dSeasDeltax, iBody);
+        for (i=0;i<body[iBody].iNumLats;i++) {
+          body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
+          body[iBody].daFlux[i] = -2.*PI*pow(body[iBody].dRadius,2)*sqrt(1.0-pow(sin(body[iBody].daLats[i]),2)) * \
+                            body[iBody].daDMidPt[i]*body[iBody].daTGrad[i];
+          body[iBody].daDivFlux[i] = 0.0;
+          for (j=0;j<body[iBody].iNumLats;j++) {
+            body[iBody].daDivFlux[i] += body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
+            /* CC puts a minus sign here, so that a positive number is flux out of a cell.
+               I prefer the opposite. ;) */
+          }
+        }
+        
         body[iBody].dFluxOutGlobal += \
               body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxInGlobal += \
@@ -2469,6 +2502,20 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLand[i];
         }
+        
+        TempGradient(body, body[iBody].dSeasDeltax, iBody);
+        for (i=0;i<body[iBody].iNumLats;i++) {
+          body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
+          body[iBody].daFlux[i] = -2.*PI*pow(body[iBody].dRadius,2)*sqrt(1.0-pow(sin(body[iBody].daLats[i]),2)) * \
+                            body[iBody].daDMidPt[i]*body[iBody].daTGrad[i];
+          body[iBody].daDivFlux[i] = 0.0;
+          for (j=0;j<body[iBody].iNumLats;j++) {
+            body[iBody].daDivFlux[i] += body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
+            /* CC puts a minus sign here, so that a positive number is flux out of a cell.
+               I prefer the opposite. ;) */
+          }
+        }
+
         body[iBody].dTGlobal += \
               body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxOutGlobal += \

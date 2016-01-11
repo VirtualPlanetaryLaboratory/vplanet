@@ -230,6 +230,8 @@ typedef struct {
   double dZobl;           /**< cos(obliq) */
   double *dLRot;
   double *dLRotTmp;
+  int bForcePrecRate;
+  double dPrecRate;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -526,6 +528,7 @@ typedef struct {
   double dAlbedoLand;
   double dAlbedoWater;
   double *daIceFlowMid;
+  double *daXBoundary;
 
 } BODY;
 

@@ -62,6 +62,35 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     
 }
 
+void ReadForcePrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bForcePrecRate = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bForcePrecRate,files->iNumInputs);
+}
+
+void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    
+    body[iFile-1].dPrecRate = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultDouble(options,&body[iFile-1].dPrecRate,files->iNumInputs);
+    
+}
+
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
@@ -70,9 +99,24 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DYNELLIP].dDefault = 0.0;
   options[OPT_DYNELLIP].iType = 2;  
   options[OPT_DYNELLIP].iMultiFile = 1;   
-//   options[OPT_LONGP].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   fnRead[OPT_DYNELLIP] = &ReadDynEllip;
+  
+  sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
+  sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
+  sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
+  options[OPT_FORCEPRECRATE].dDefault = 0;
+  options[OPT_FORCEPRECRATE].iType = 0;  
+  options[OPT_FORCEPRECRATE].iMultiFile = 1; 
+  fnRead[OPT_FORCEPRECRATE] = &ReadForcePrecRate;
+  
+  sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
+  sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (rad/s)");
+  sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12");
+  options[OPT_PRECRATE].dDefault = 7.7261e-12;
+  options[OPT_PRECRATE].iType = 2;  
+  options[OPT_PRECRATE].iMultiFile = 1;   
+  fnRead[OPT_PRECRATE] = &ReadPrecRate;
+  
 }
 
 void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -668,7 +712,11 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
 /************* DISTROT Functions ***********/
 
-void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {  
+void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
+  if (body[iBody].bForcePrecRate) {
+    body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+    body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
+  }
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -745,10 +793,20 @@ double fdDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+    if (body[iaBody[0]].bForcePrecRate == 0) {
+      return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+    } else {
+      return body[iaBody[0]].dXobl*body[iaBody[0]].dPrecRate;
+    }
   } else if (iaBody[1] >= 1) {
-    y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
-    return -fdObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCRD4(body,system,iaBody);
+    if (body[iaBody[0]].bForcePrecRate == 0) {
+      y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+      return -fdObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCRD4(body,system,iaBody);
+    } else {
+      return cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA) * \
+        (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
+        fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
+    }
   }
   assert(0);
   return 0;
@@ -758,10 +816,20 @@ double fdDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+    if (body[iaBody[0]].bForcePrecRate == 0) {
+      return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+    } else {
+      return -body[iaBody[0]].dYobl*body[iaBody[0]].dPrecRate;
+    }
   } else if (iaBody[1] >= 1) {
-    y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
-    return fdObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCRD4(body,system,iaBody);
+    if (body[iaBody[0]].bForcePrecRate == 0) {
+      y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+      return fdObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCRD4(body,system,iaBody);
+    } else {
+      return cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dPrecA) * \
+        (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
+        fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
+    }
   }
   assert(0);
   return 0;

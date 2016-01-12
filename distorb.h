@@ -136,7 +136,7 @@ void FindEigenVecInc(SYSTEM*,int,int);
 void SolveEigenVal(BODY*,EVOLVE*,SYSTEM*);
 void ScaleEigenVec(BODY*,EVOLVE*,SYSTEM*);
 
-void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*);
+void RecalcLaplace(BODY*,EVOLVE*,SYSTEM*,int);
 void RecalcEigenVals(BODY*,EVOLVE*,SYSTEM*);
 
 void kepler_eqn(BODY*, int);

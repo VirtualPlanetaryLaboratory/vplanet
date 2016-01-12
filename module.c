@@ -403,7 +403,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
 
 void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
-    RecalcLaplace(body,evolve,system);
+    RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   }

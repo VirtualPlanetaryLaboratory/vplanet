@@ -2266,7 +2266,7 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   }
 }
 
-void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
+void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
   double alpha1, dalpha;
   int j, iBody, jBody, done=0;
   
@@ -2289,7 +2289,8 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system) {
               system->fnLaplaceDeriv[j][0](alpha1, 0);
                 
               system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
-              printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
+	      if (iVerbose > VERBPROG)
+		printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
         }
       }
     }

@@ -2158,7 +2158,6 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
 void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
   body[iBody].dEcc = sqrt(body[iBody].dEccSq);
-  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
   // LongP is needed for Hecc and Kecc calculations
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   // PrecA is needed for Xobl,Yobl,Zobl calculations
@@ -2172,6 +2171,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
 
+  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {

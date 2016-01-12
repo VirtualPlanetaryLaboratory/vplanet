@@ -16,21 +16,32 @@
  * ENERGY values are Rory's (from Wikipedia?).  They seem ok.
  */
 
-// XXX Still cgs!
+// PD NOTE: NUM is the fundamental parameter, pow and mass should reflect num.
+// Changing the concentration requires changing all of these: pow, num, and mass.
 
 // 40K
 #define RAD40KMAN        10
-#define HALFLIFE40K      5.6860542e+16  //[seconds]  really =tau_half/ln(2)=1/lambda
+#define HALFLIFE40K      3.78e16  //5.43607e16  //=1.2G/ln(2)
+//5.6860542e+16  //[seconds]  really =tau_half/ln(2)=1/lambda
 #define ENERGY40K        2.13371243669e-13 // [W] -- weighting both Ar and Ca decay chains
 #define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
+
 #define EMASSMAN40K      8.2845415e+17  //kg  mass in Earths mantle of 40K at 4.5 Ga (t=0)
 #define ENUMMAN40K       1.2483906e+43  //[num] number of 40K atoms in E mantle at 4.5Ga
 #define EPOWERMAN40K     4.6846309e+13  //
+// Relations: P=p*M, [P]=W, [p]=W/kg, [M]=kg
+// M=N*m ,[N]=number, [m]=kg/1 atom
+// p=e/(m*tau) ,[e]=J, [tau]=s
 
 #define RAD40KCORE       11
-#define EMASSCORE40K     2.0162503e+17  // kg
-#define ENUMCORE40K      3.0382705e+42  // num 40K
-#define EPOWERCORE40K    1.1401220e+13  // [W]
+//** Default for 1 TW after 4.5 Gyr. */
+//#define EMASSCORE40K     4.977105e17
+//#define ENUMCORE40K      7.5e42
+//#define EPOWERCORE40K    4.267e13  //gives 1 TW after 4.5G using tau_k40=1.2 G.
+//** Default for 1.5 TW after 4.5 Gyr. */
+#define EMASSCORE40K     7.4656e17
+#define ENUMCORE40K      1.125e43
+#define EPOWERCORE40K    6.4005e13  
 
 //232TH
 #define RAD232THMAN      12

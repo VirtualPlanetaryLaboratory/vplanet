@@ -23,6 +23,7 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   /* Constants */
   dest[iBody].dViscRatioMan = src[iBody].dViscRatioMan;
   dest[iBody].dViscRef = src[iBody].dViscRef;
+  dest[iBody].dTrefLind = src[iBody].dTrefLind;
   dest[iBody].dEruptEff = src[iBody].dEruptEff;
   /* Aux Props Variables */
   dest[iBody].dTUMan=src[iBody].dTUMan;
@@ -32,15 +33,20 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dTJumpLMan=src[iBody].dTJumpLMan;
   dest[iBody].dSignTJumpUMan=src[iBody].dSignTJumpUMan;
   dest[iBody].dSignTJumpLMan=src[iBody].dSignTJumpLMan;
+  dest[iBody].dViscUManArr=src[iBody].dViscUManArr;
   dest[iBody].dViscUMan=src[iBody].dViscUMan;
   dest[iBody].dViscLMan=src[iBody].dViscLMan;
   dest[iBody].dBLUMan=src[iBody].dBLUMan;
   dest[iBody].dBLLMan=src[iBody].dBLLMan;
   dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
   dest[iBody].dTsolUMan=src[iBody].dTsolUMan;
+  dest[iBody].dTsolLMan=src[iBody].dTsolLMan;
   dest[iBody].dTliqUMan=src[iBody].dTliqUMan;
+  dest[iBody].dTliqLMan=src[iBody].dTliqLMan;
   dest[iBody].dFMeltUMan=src[iBody].dFMeltUMan;
+  dest[iBody].dFMeltLMan=src[iBody].dFMeltLMan;
   dest[iBody].dMeltfactorUMan=src[iBody].dMeltfactorUMan;
+  dest[iBody].dMeltfactorLMan=src[iBody].dMeltfactorLMan;
   dest[iBody].dDepthMeltMan=src[iBody].dDepthMeltMan;
   dest[iBody].dTDepthMeltMan=src[iBody].dTDepthMeltMan;
   dest[iBody].dTJumpMeltMan=src[iBody].dTJumpMeltMan;
@@ -140,6 +146,22 @@ void ReadViscRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dViscRef = options->dDefault;
 }
 
+void ReadTrefLind(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dTrefLind = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dTrefLind = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dTrefLind = options->dDefault;
+}
+
 void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
@@ -183,12 +205,12 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
    /* ViscRatioMan */
   sprintf(options[OPT_VISCRATIOMAN].cName,"dViscRatioMan");
   sprintf(options[OPT_VISCRATIOMAN].cDescr,"ViscRatioMan");
-  sprintf(options[OPT_VISCRATIOMAN].cDefault,"Default=1");
+  sprintf(options[OPT_VISCRATIOMAN].cDefault,"Default is VISCJUMPULM");
   options[OPT_VISCRATIOMAN].iType = 2;
   options[OPT_VISCRATIOMAN].iMultiFile = 1;
-  options[OPT_VISCRATIOMAN].dNeg = 1.0;
-  options[OPT_VISCRATIOMAN].dDefault = 1.0; 
-  sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default=1");
+  options[OPT_VISCRATIOMAN].dNeg = VISCJUMPULM;
+  options[OPT_VISCRATIOMAN].dDefault = VISCJUMPULM; 
+  sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default");
   fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
    /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
@@ -196,19 +218,29 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cDefault,"Default=1");
   options[OPT_VISCREF].iType = 2;
   options[OPT_VISCREF].iMultiFile = 1;
-  options[OPT_VISCREF].dNeg = 6e7;
-  options[OPT_VISCREF].dDefault = 6e7; 
-  sprintf(options[OPT_VISCREF].cNeg,"Default=7e7");
+  options[OPT_VISCREF].dNeg = VISCREF;
+  options[OPT_VISCREF].dDefault = VISCREF; 
+  sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
+   /* TrefLind */
+  sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
+  sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
+  sprintf(options[OPT_TREFLIND].cDefault,"Default in thermint.h");
+  options[OPT_TREFLIND].iType = 2;
+  options[OPT_TREFLIND].iMultiFile = 1;
+  options[OPT_TREFLIND].dNeg = 1;
+  options[OPT_TREFLIND].dDefault = TREFLIND; 
+  sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
+  fnRead[OPT_TREFLIND] = &ReadTrefLind;
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
-  sprintf(options[OPT_ERUPTEFF].cDefault,"Default=1");
+  sprintf(options[OPT_ERUPTEFF].cDefault,"Default is ERUPTEFF");
   options[OPT_ERUPTEFF].iType = 2;
   options[OPT_ERUPTEFF].iMultiFile = 1;
-  options[OPT_ERUPTEFF].dNeg = 0.1;
-  options[OPT_ERUPTEFF].dDefault = 0.0; 
-  sprintf(options[OPT_ERUPTEFF].cNeg,"Default=0");
+  options[OPT_ERUPTEFF].dNeg = ERUPTEFF;
+  options[OPT_ERUPTEFF].dDefault = ERUPTEFF; 
+  sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
   fnRead[OPT_ERUPTEFF] = &ReadEruptEff;
 
 }
@@ -277,10 +309,13 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dSignTJumpLMan=fdSignTJumpLMan(body,iBody);
   //  body[iBody].dViscRatioMan=fdViscRatioMan(body,iBody);
   if (body[iBody].dMeltfactorUMan==0)
-      body[iBody].dMeltfactorUMan=1.;  //need to initialize this so that visc=visc/meltfactor doesn't crash it.
+      body[iBody].dMeltfactorUMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
+  if (body[iBody].dMeltfactorUMan==0)
+      body[iBody].dMeltfactorUMan=1.;  //initialize.
   /* Loop through melt calculation once to get dependence of visc on melt. */
   int i=0, nloop=1;
   for (i=0;i<nloop;i++) {
+      body[iBody].dViscUManArr=fdViscUManArr(body,iBody);
       body[iBody].dViscUMan=fdViscUMan(body,iBody);
       body[iBody].dViscLMan=fdViscLMan(body,iBody);
       body[iBody].dBLUMan=fdBLUMan(body,iBody);
@@ -290,9 +325,10 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
       body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
       body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
       body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
-      //body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
-      //body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
-      //body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
+      body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
+      body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
+      body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
+      body[iBody].dMeltfactorLMan=fdMeltfactorLMan(body,iBody);
   }
   body[iBody].dDepthMeltMan=fdDepthMeltMan(body,iBody);
   body[iBody].dTDepthMeltMan=fdTDepthMeltMan(body,iBody);
@@ -414,7 +450,7 @@ void VerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody,i
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
 }
 
-/************* RADHEAT Outputs ******************/
+/************* THERMINT Outputs ******************/
 
 void HelpOutputThermint(OUTPUT *output) {
   int iOut;
@@ -505,8 +541,16 @@ void WriteTCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   } else { }
 }
 
+void WriteViscUManArr(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get ViscUManArr */
+    *dTmp = body[iBody].dViscUManArr;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 void WriteViscUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get TUMan */
+  /* Get ViscUMan */
     *dTmp = body[iBody].dViscUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -566,6 +610,13 @@ void WriteFMeltLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 void WriteMeltfactorUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMeltfactorUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMeltfactorLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMeltfactorLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -722,7 +773,6 @@ void WriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
       */
   }
 }
-
 void WriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TDotCore */
   *dTmp = (*(update[iBody].pdTDotCore));
@@ -736,6 +786,16 @@ void WriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
       */
   }
 }
+/** Write Constants. */
+void WriteTrefLind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dTrefLind;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+
 
 void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /* TMan */  
@@ -818,6 +878,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCUMAN].dNeg = 1; 
   output[OUT_VISCUMAN].iNum = 1;
   fnWrite[OUT_VISCUMAN] = &WriteViscUMan;
+  /* ViscUManArr Arrhenius Only */
+  sprintf(output[OUT_VISCUMANARR].cName,"ViscUManArr");
+  sprintf(output[OUT_VISCUMANARR].cDescr,"Upper Mantle Arrhenius Viscosity");
+  sprintf(output[OUT_VISCUMANARR].cNeg,"m^2/s");
+  output[OUT_VISCUMANARR].bNeg = 1;
+  output[OUT_VISCUMANARR].dNeg = 1; 
+  output[OUT_VISCUMANARR].iNum = 1;
+  fnWrite[OUT_VISCUMANARR] = &WriteViscUManArr;
   /* ViscLMan */
   sprintf(output[OUT_VISCLMAN].cName,"ViscLMan");
   sprintf(output[OUT_VISCLMAN].cDescr,"Lower Mantle Viscosity");
@@ -882,6 +950,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTFACTORUMAN].dNeg = 1; 
   output[OUT_MELTFACTORUMAN].iNum = 1;
   fnWrite[OUT_MELTFACTORUMAN] = &WriteMeltfactorUMan;
+  /* MeltfactorLMan */
+  sprintf(output[OUT_MELTFACTORLMAN].cName,"MeltfactorLMan");
+  sprintf(output[OUT_MELTFACTORLMAN].cDescr,"Melt Factor Lower Mantle");
+  sprintf(output[OUT_MELTFACTORLMAN].cNeg,"nd");
+  output[OUT_MELTFACTORLMAN].bNeg = 1;
+  output[OUT_MELTFACTORLMAN].dNeg = 1; 
+  output[OUT_MELTFACTORLMAN].iNum = 1;
+  fnWrite[OUT_MELTFACTORLMAN] = &WriteMeltfactorLMan;
   /* DepthMeltMan */
   sprintf(output[OUT_DEPTHMELTMAN].cName,"DepthMeltMan");
   sprintf(output[OUT_DEPTHMELTMAN].cDescr,"Depth to base of UM Melt Region");
@@ -1053,6 +1129,16 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TDOTCORE].dNeg = 1; // default units are K. 
   output[OUT_TDOTCORE].iNum = 1;
   fnWrite[OUT_TDOTCORE] = &WriteTDotCore;
+  /* Constants */
+  /* TrefLind */
+  sprintf(output[OUT_TREFLIND].cName,"TrefLind");
+  sprintf(output[OUT_TREFLIND].cDescr,"Core Liquidus Lindeman Reference");
+  sprintf(output[OUT_TREFLIND].cNeg,"K");
+  output[OUT_TREFLIND].bNeg = 1;
+  output[OUT_TREFLIND].dNeg = 1; 
+  output[OUT_TREFLIND].iNum = 1;
+  fnWrite[OUT_TREFLIND] = &WriteTrefLind;
+
 }
 
 void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
@@ -1092,6 +1178,8 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e EVOLCORE=%e EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);
   fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e STIFFNESS=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC,STIFFNESS);
   fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e THERMDIFFUMAN=%e cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
+  fprintf(fp,"TrefLind=%e ViscRef=%e \n",body[iBody].dTrefLind,body[iBody].dViscRef);
+  //  fprintf(fp,"TrefLind=%e \n",(TREFLIND));
 }
 
 void AddModuleThermint(MODULE *module,int iBody,int iModule) {
@@ -1150,12 +1238,18 @@ double fdSignTJumpUMan(BODY *body,int iBody) {
 double fdSignTJumpLMan(BODY *body,int iBody) {
     return (body[iBody].dTCMB-body[iBody].dTLMan)/fabs(body[iBody].dTCMB-body[iBody].dTLMan);
 }
+/* Get ViscUManArr Arrhenius law only */
+double fdViscUManArr(BODY *body,int iBody) {  
+  return body[iBody].dViscRef*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan));
+}
 /* Get ViscUMan */
 double fdViscUMan(BODY *body,int iBody) {
-  return body[iBody].dViscRef*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
+  //  return body[iBody].dViscRef*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
+  return body[iBody].dViscUManArr/body[iBody].dMeltfactorUMan;
 }
 double fdViscLMan(BODY *body,int iBody) {
-    return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //this could be switched to be visc(TLMan).
+  //    return body[iBody].dViscUMan*body[iBody].dViscRatioMan;  //w/o meltfactorLMan.
+  return body[iBody].dViscUManArr*body[iBody].dViscRatioMan/body[iBody].dMeltfactorLMan;   //w/ meltfactorLMan
 }
 /* Get ViscRatioMan */
 double fdViscRatioMan(BODY *body,int iBody) {
@@ -1174,11 +1268,25 @@ double fdShmodUMan(BODY *body,int iBody) {
 double fdTsolUMan(BODY *body,int iBody) {
     return fdSolidusMan(body[iBody].dBLUMan);
 }
+double fdTsolLMan(BODY *body,int iBody) {
+  return fdSolidusMan(ERADIUS-ERCORE-body[iBody].dBLLMan);  //Solidus fn of depth: z_LM=R-R_c-delta_LM
+}
 double fdTliqUMan(BODY *body,int iBody) {
     return body[iBody].dTsolUMan+DTLIQMAN;  //approx constant offset btwn sol and liq.
 }
+double fdTliqLMan(BODY *body,int iBody) {
+    return body[iBody].dTsolLMan+DTLIQMAN;  //approx constant offset btwn sol and liq.
+}
 double fdFMeltUMan(BODY *body,int iBody) {
     double fmelt=(body[iBody].dTUMan-body[iBody].dTsolUMan)/(body[iBody].dTliqUMan-body[iBody].dTsolUMan);
+    double fmelt2=min(fmelt,1.0);  //require fmelt<1
+    fmelt2=max(fmelt2,0.0); //require fmelt>0
+    double min1=min(1.0,2.0);  //test min
+    double max1=max(1.0,2.0);  //test max
+    return fmelt2;
+}
+double fdFMeltLMan(BODY *body,int iBody) {
+    double fmelt=(body[iBody].dTLMan-body[iBody].dTsolLMan)/(body[iBody].dTliqLMan-body[iBody].dTsolLMan);
     double fmelt2=min(fmelt,1.0);  //require fmelt<1
     fmelt2=max(fmelt2,0.0); //require fmelt>0
     double min1=min(1.0,2.0);  //test min
@@ -1192,6 +1300,14 @@ double fdMeltfactorUMan(BODY *body,int iBody) {
     double meltexp=(MELTB)*(MELTPHISTAR);
     return (1.0+pow(bigphi,(MELTDELTA)))/pow(1.0-bigf,meltexp);
 }
+double fdMeltfactorLMan(BODY *body,int iBody) {
+    /* Melt factor used in viscosity and shmod.  For fmelt=1, this should give 1.20428. */
+    double bigphi=body[iBody].dFMeltLMan/(MELTPHISTAR);
+    double bigf=(1.0-(MELTXI))*erf(sqrt(PI)/(2.0*(1.0-(MELTXI)))*bigphi*(1.0+pow(bigphi,(MELTGAMMA))));
+    double meltexp=(MELTB)*(MELTPHISTAR);
+    return (1.0+pow(bigphi,(MELTDELTA)))/pow(1.0-bigf,meltexp);
+}
+
 /* Get DepthMeltMan */ 
 double fdDepthMeltMan(BODY *body,int iBody) {
     //    double guess1=body[iBody].dBLUMan;  //lower bound of depth to bottom of UM melt layer.
@@ -1235,7 +1351,8 @@ double fdImk2Man(BODY *body,int iBody) {
 }
 /* Inner Core Size */
 double fdRIC(BODY *body,int iBody) {
-    double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
+  //    double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
+    double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
     if (numerator>0) {    //IC Found.
         return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
     } else {
@@ -1281,7 +1398,8 @@ double fdHflowMeltMan(BODY *body,int iBody) {
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
     if (body[iBody].dRIC>0) {   //If IC exists.
       double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
-      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
+      //      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
+      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
     } else {                    //If no IC.
       return 0;
     }
@@ -1327,7 +1445,11 @@ double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
 
 
 
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
 /*********************************   MATH   *********************************/
+/****************************************************************************/
 /* MATH FUNCTIONS */
 double cube(double x) {
   return pow(x,3);

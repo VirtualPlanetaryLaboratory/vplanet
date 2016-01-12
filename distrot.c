@@ -29,6 +29,8 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iBody) {
   dest[iBody].dYobl = src[iBody].dYobl;
   dest[iBody].dZobl = src[iBody].dZobl;
   dest[iBody].dDynEllip = src[iBody].dDynEllip;
+  dest[iBody].bForcePrecRate = src[iBody].bForcePrecRate;
+  dest[iBody].dPrecRate = src[iBody].dPrecRate;
 
 }
 
@@ -713,10 +715,10 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 /************* DISTROT Functions ***********/
 
 void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].bForcePrecRate) {
-    body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
-    body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
-  }
+  // if (body[iBody].bForcePrecRate) {
+//     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+//     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
+//   }
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -799,14 +801,14 @@ double fdDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
       return body[iaBody[0]].dXobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-    if (body[iaBody[0]].bForcePrecRate == 0) {
+//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
       return -fdObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCRD4(body,system,iaBody);
-    } else {
-      return cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA) * \
-        (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-        fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-    }
+    // } else {
+//       return cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA) * \
+//         (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
+//         fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
+//     }
   }
   assert(0);
   return 0;
@@ -822,14 +824,14 @@ double fdDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
       return -body[iaBody[0]].dYobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-    if (body[iaBody[0]].bForcePrecRate == 0) {
+//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
       return fdObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCRD4(body,system,iaBody);
-    } else {
-      return cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dPrecA) * \
-        (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-        fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-    }
+    // } else {
+//       return cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dPrecA) * \
+//         (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
+//         fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
+//     }
   }
   assert(0);
   return 0;

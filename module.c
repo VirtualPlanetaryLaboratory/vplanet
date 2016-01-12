@@ -10,7 +10,7 @@
 #include <string.h>
 #include "vplanet.h"
 
-void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
@@ -54,11 +54,14 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateIceMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
   
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -142,10 +145,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateIceMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIceMassModule));
   module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -169,10 +175,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
   }
 
@@ -392,33 +401,10 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
-  /*  
-  // Insert Russell's code here.
-  printf("Entered  ForceBehaviorEqtideLagrange.\n");
-
-// XXX This function 
-void RecalcLaplace(BODY *body, SYSTEM *system, int *iaBody) {
-  double alpha1, dalpha;
-  int j = 0;
-
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      alpha1 = body[iaBody[1]].dSemi/body[iaBody[0]].dSemi;
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iFoo,int iBar) {
+  if (evolve->iDistOrbModel == RD4) {
+    RecalcLaplace(body,evolve,system);
+  } else if (evolve->iDistOrbModel == LL2) {
+    RecalcEigenVals(body,evolve,system);
   }
-    
-  for (j=0;j<LAPLNUM;j++) {
-    dalpha = fabs(alpha1 - system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]);
-    if (dalpha > system->dDfcrit/system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j]) {
-        system->dmLaplaceC[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-        system->fnLaplaceF[j][0](alpha1, 0);
-                
-        system->dmLaplaceD[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = 
-        system->fnLaplaceDeriv[j][0](alpha1, 0);
-                
-        system->dmAlpha0[system->imLaplaceN[iaBody[0]][iaBody[1]]][j] = alpha1;
-    }
-  }
-  */
 } 

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
-python $(dirname $0)/scripts/plot.py $@
+python $(dirname $0)/../vplot/plot.py $@

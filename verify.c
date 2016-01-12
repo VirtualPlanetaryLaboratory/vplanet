@@ -94,7 +94,7 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   
   if (options[OPT_ORBSEMI].iLine[iFile] == -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] > -1) 
     dPeriod = body[iBody].dOrbPeriod;
-
+  
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
     if (body[iBody].bPoise) {
@@ -135,6 +135,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   if (dMeanMotion == 0)
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   //XXX Initialize central body parameters.
+  
+  
 }
 
 /*
@@ -359,7 +361,7 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     /* Nothing set, print warning and return */
     if (iVerbose >= VERBINPUT) 
       fprintf(stderr,"WARNING: No rotational information set in file %s. Defaulting to %s = %s.\n",cFile,options[OPT_ROTRATE].cName,options[OPT_ROTRATE].cDefault);
-    /* Default value assigned in options, so nothing to do */
+    body[iBody].dRotRate = options[OPT_ROTRATE].dDefault;
     return;
   }
 
@@ -394,17 +396,11 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
-  InitializeUpdate(body,control,module,update,fnUpdate);
-  InitializeHalts(control,module);
-  InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      // Must initialize entire body struct before verifying modules
-      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
-      module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
-    }
-  }
+  /* First we must determine all the primary variables. The user may not
+     input them, but instead a redundant variable. Yet these need to be
+     defined before we can call InitializeUpdate. */
+
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
@@ -413,7 +409,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody+1,files->Infile[iBody+1].cIn,control->Io.iVerbose);
 
-    VerifyHalts(body,control,module,options,iBody);
     /* Verify Modules */
 
     VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
@@ -423,6 +418,24 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 
+  }
+
+  InitializeUpdate(body,control,module,update,fnUpdate);
+  InitializeHalts(control,module);
+  InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    VerifyHalts(body,control,module,options,iBody);
+
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      // Must initialize entire body struct before verifying modules
+      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
+      module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
+    }
+  }
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
     
@@ -433,7 +446,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
       InitializeUpdateBodyPerts(control,update,iBody);
       InitializeUpdateTmpBody(body,control,module,update,iBody);
     }
+
   }
-  
 }
 

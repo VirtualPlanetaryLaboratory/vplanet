@@ -355,7 +355,7 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
 }
 
-void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
   if (body[iBody].dTCore < 0.5)
@@ -394,12 +394,12 @@ void InitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = TMAN;
   update[iBody].iNumTMan = (*iEqn)++;
 }
 
-void FinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = TCORE;
   update[iBody].iNumTCore = (*iEqn)++;
 }

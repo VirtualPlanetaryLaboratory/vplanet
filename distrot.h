@@ -33,9 +33,9 @@ void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 /* Update Functions */
 
 void InitializeUpdateDistRot(BODY*,UPDATE*,int);
-void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -51,6 +51,8 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int);
 #define OUT_XOBL                1422
 #define OUT_YOBL                1423
 #define OUT_ZOBL                1424
+#define OUT_CASS1               1430
+#define OUT_CASS2               1431
 
 #define OUT_DOBLDTDISTROT        1440
 #define OUT_DPRECADTDISTROT     1441
@@ -77,8 +79,8 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRot Functions */
 void PropertiesDistRot(BODY*,UPDATE*,int);
-void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
-void CalcXYZobl(BODY*, int);
+void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);

@@ -1105,19 +1105,19 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iHeccEqtide=*iEqn;
   (*iEqn)++;
 }
 
-void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iKeccEqtide=*iEqn;
   (*iEqn)++;
 }
 
-void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1128,7 +1128,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDYoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1139,7 +1139,7 @@ void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDZoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1150,7 +1150,7 @@ void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDrotDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1161,7 +1161,7 @@ void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iB
   }
 }
 
-void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iSemiEqtide = *iEqn;
   (*iEqn)++;
@@ -2240,7 +2240,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 

@@ -198,14 +198,14 @@ void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
 void InitializeUpdateRadheat(BODY*,UPDATE*,int);
-void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -329,7 +329,7 @@ double fdRadPowerCore(BODY*,UPDATE*,int);
 double fdRadPowerTotal(BODY*,UPDATE*,int);
 double fdRadPower(double,double,double); // XXX
 
-void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);

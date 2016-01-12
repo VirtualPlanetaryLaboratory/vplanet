@@ -45,6 +45,10 @@
 #define MSAT          5.6851e26
 #define DEGRAD        0.017453292519444445
 #define ATOMMASS      1.660538921e-27
+#define SIGMA         5.670367e-8
+#define LFICE         3.34e5
+#define RHOICE        916.7   //density of ice kg/m^3
+#define MOCEAN        1.4e21  //mass of earth ocean in kg
 
 /* Exit Status */
 
@@ -97,6 +101,7 @@
 #define VROT         1003
 #define VOBL         1004
 #define VRADIUS      1005
+#define VMASS        1006
 
 // RADHEAT
 #define VNUM40KMAN      1101
@@ -127,10 +132,14 @@
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
+#define VENVELOPEMASS  1202
 
 // STELLAR
 #define VLUMINOSITY     1502
 #define VTEMPERATURE    1503
+
+// POISE
+#define VICEMASS        1851
 
 /* Now define the structs */
 
@@ -197,8 +206,14 @@ typedef struct {
   int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
   int *iaEigFreqs;       /**< Indices of eigenfrequencies */
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
-  int iDistOrbModel; 
-  
+  int iDistOrbModel;     /**< Which orbital model to use (RD4 or LL2) */
+  double dSemiPrev;      /**< Semi-major axis at which LL2 eigensolution was calc'd */
+  double dEigenvalue; 
+  double dEigenvector;
+  int bEigenSet;
+  double *dLOrb;
+  double *dLOrbTmp;
+    
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
@@ -207,6 +222,8 @@ typedef struct {
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
   double dZobl;           /**< cos(obliq) */
+  double *dLRot;
+  double *dLRotTmp;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -333,6 +350,8 @@ typedef struct {
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
   double dMinSurfaceWaterMass;
+  double dEnvelopeMass;
+  double dMinEnvelopeMass;
   double dXFrac;
   double dAtmXAbsEff;
 
@@ -354,7 +373,7 @@ typedef struct {
   double dAtmHeight;
   double dInsolation;   /* Orbit-averaged Insolation */
   double dSurfPressure;
-  double dSurfAlbedo;   /* Bolometric, ultimately will be array */
+  //double dSurfAlbedo;   /* Bolometric, ultimately will be array */
   int iResolveSeasons;  /* ISEASON in PHOTOCHEM.f */
   double dPhotoZenithAngle;
   int iVaryZenithAngle; /* IZYO2 in PHOTOCHEM.f */
@@ -394,10 +413,12 @@ typedef struct {
   int bPoise;                /**< Apply POISE module? */
   int iNumLats;              /**< Number of latitude cells */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
   int iNDays;                /**< Number of days in planet's year */
+  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
   double *daLats;            /**< Latitude of each cell (centered) */
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dAstroDist;         /**< Distance between primary and planet */
@@ -410,6 +431,7 @@ typedef struct {
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dHeatCapAnn;        /**< Surface heat capacity in annual model */
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
   double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */
@@ -420,7 +442,31 @@ typedef struct {
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
   double *daDivFlux;         /**< Divergence of surface flux */
   int iWriteLat;             /**< Stores index of latitude to be written in write function */
-  
+  double **dMClim;
+  double **dMEuler;
+  double **dMEulerCopy;
+  double **dInvM;
+  double *dUnitV;
+  double **dMDiff;
+  double *daLambda;
+  double *daSourceF;
+  double *daTempTerms;
+  double *daTmpTemp;
+  double *daTmpTempTerms;
+  double *daDMidPt;
+  double *scale;
+  int *rowswap;
+  int bIceSheets;
+  double *daIceMass;
+  double dIceMassTot;
+//   double *daIceHeight;
+  double dInitIceLat;
+  double dInitIceHeight;
+  double dIceAlbedo;
+  double dSurfAlbedo;
+  double dIceCreep;
+  double dIceDepRate;
+
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -434,6 +480,8 @@ typedef struct {
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
 
   double dTotAngMom;     /**< System's Current Angular Momentum */
+  
+  /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
   double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
@@ -448,6 +496,22 @@ typedef struct {
   double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
   double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
   double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
+  double **A;
+  double **B;
+  double *Asoln;
+  double *Bsoln;
+  double **etmp;
+  double **itmp;
+  double *h0;
+  double *k0;
+  double *p0;
+  double *q0;
+  double *S;
+  double *T;
+  int *rowswap;
+  double **Acopy;
+  double *scale;
+  double *dLOrb;
   
   double dTotEnInit;     /**< System's Initial Energy */
 
@@ -495,6 +559,7 @@ typedef struct {
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
   int iNumRadius;
+  int iNumMass;
 
   /* These are the variables that the update matrix modifies */
   // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
@@ -504,6 +569,7 @@ typedef struct {
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
   int iRadius;
+  int iMass;
 
   /* Next comes the identifiers for the module that modifies a variable */
 
@@ -657,10 +723,14 @@ typedef struct {
   /* ATMESC */         
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
+  int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
+  int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
+  double *pdDEnvelopeMassDtAtmesc;
+  double *pdDMassDtAtmesc;
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
@@ -677,8 +747,15 @@ typedef struct {
   double *pdRadiusStellar;
   
   double *pdRotRateStellar;
-
+  
+  /* POISE */
+  int *iaIceMass;  /**< Variable number of ice mass of each latitude */
+  int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
+  double **padDIceMassDtPoise;
+  int *iaIceMassPoise;
+  int iIceMass;
 } UPDATE;
+
 
 typedef struct {
   int iNumHalts;       /**< Total Number of Halts */
@@ -703,6 +780,7 @@ typedef struct {
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  int bEnvelopeGone;              /**< Halt if evaporated?*/
   
   /* STELLAR */
   // Nothing
@@ -804,7 +882,7 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -947,29 +1025,32 @@ typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
 //All primary variables need a FinalizeUpdate function
 //typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int); 
-typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int);  
-typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int);
-typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int); 
+typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);  
+typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1043,12 +1124,16 @@ typedef struct {
   fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
   /*! Function pointers to finalize Radius */ 
   fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
+  /*! Function pointers to finalize Mass */ 
+  fnFinalizeUpdateMassModule **fnFinalizeUpdateMass; 
   /*! Function pointers to finalize Rotation Rate */ 
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
   /*! Function pointers to finalize Semi-major Axis */ 
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
   /*! Function pointers to finalize Surface Water */ 
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize Envelope Mass */ 
+  fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */ 
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
   /*! Function pointers to finalize Temperature */
@@ -1058,12 +1143,13 @@ typedef struct {
   
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */
-  /*! Function pointers to finalize Laskar's X */ 
+  /*! Function pointers to finalize distrot's X */ 
   fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
-  /*! Function pointers to finalize Laskar's Y */ 
+  /*! Function pointers to finalize distrot's Y */ 
   fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
-  /*! Function pointers to finalize Laskar's Z */ 
+  /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
+  fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
@@ -1083,6 +1169,7 @@ typedef struct {
   /*! These functions adds subroutines to the output functions that require
       module-specific values. */ 
   fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
+  
   
 } MODULE;
 

@@ -134,7 +134,19 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
                 }
-              
+              } else if (update[iBody].iaType[iVar][iEqn] == 4) {
+                // unique type for ice sheets to prevent small amounts of ice -> dDt -> 0
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                  if (*(update[iBody].pdVar[iVar])/RHOICE < 0.01) {
+                    //if ice is < 1 cm thick, treat timestep as if it is 1 cm
+                    dMinNow = fabs(0.01/update[iBody].daDerivProc[iVar][iEqn]);
+                  } else { 
+                    dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+                  }
+                  if (dMinNow < dMin) 
+                    dMin = dMinNow;
+                }
               } else {
                 // The parameter is controlled by a time derivative
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
@@ -314,7 +326,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   double dTimeOut;
   double dDt,dFoo;
   double dEqSpinRate;
-
+  
   control->Evolve.nSteps=0;
 
   if (control->Evolve.bDoForward)
@@ -358,10 +370,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,iBody,iModule);
+        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iModule,iBody);
     }
 
     /* Halt? */

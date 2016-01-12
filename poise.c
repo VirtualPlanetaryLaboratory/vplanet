@@ -23,13 +23,26 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
 }
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
-  /* Not needed for annual model? */
+  int iLat;
+  
+  if (src[iBody].bIceSheets) {
+    dest[iBody].iNumLats = src[iBody].iNumLats;
+    dest[iBody].dIceMassTot = src[iBody].dIceMassTot;
+    dest[iBody].dIceCreep = src[iBody].dIceCreep;
+    dest[iBody].dIceDepRate = src[iBody].dIceDepRate;
+    for (iLat=0;iLat<src[iBody].iNumLats;iLat++) {
+      dest[iBody].daIceMass[iLat] = src[iBody].daIceMass[iLat];
+      dest[iBody].daTemp[iLat] = src[iBody].daTemp[iLat];
+    }
+  }
 }
 
 void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 }
 
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+//   control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));
 }
 
 /**************** POISE options ********************/
@@ -74,6 +87,66 @@ void ReadPlanckB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   } else
     if (iFile > 0)
       body[iFile-1].dPlanckB = options->dDefault;
+}
+
+void ReadSurfAlbedo(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dSurfAlbedo = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSurfAlbedo = options->dDefault;
+}
+
+void ReadIceAlbedo(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dIceAlbedo = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dIceAlbedo = options->dDefault;
+}
+
+void ReadTGlobalEst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dTGlobal = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTGlobal = options->dDefault;
+}
+
+void ReadPCO2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dpCO2 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dpCO2 = options->dDefault;
 }
 
 void ReadDiffusion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -121,6 +194,36 @@ void ReadHeatCapAnn(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dHeatCapAnn = options->dDefault;
 }
 
+void ReadIceCreep(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dIceCreep = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dIceCreep = options->dDefault;
+}
+
+void ReadIceDepRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dIceDepRate = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dIceDepRate = options->dDefault;
+}
+
 void ReadHadley(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -131,6 +234,18 @@ void ReadHadley(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&body[iFile-1].bHadley,files->iNumInputs);
+}
+
+void ReadCalcAB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bCalcAB = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bCalcAB,files->iNumInputs);
 }
 
 void ReadColdStart(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -170,116 +285,61 @@ void ReadJormungand(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&body[iFile-1].bAlbedoZA,files->iNumInputs);
 }
 
-// void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
-//   int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0;
-//   int k,iOut,*lTmp;
-//   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
-//   int iLen1,iLen2;
-// 
-//   lTmp = malloc(MAXLINES*sizeof(int));
-// 
-//   AddOptionStringArray(files->Infile[iFile].cIn,options[OPT_GRIDOUTPUT].cName,saTmp,&iNumIndices,&files->Infile[iFile].iNumLines,lTmp,iVerbose);
-//   output[OUT_GRIDOUTPUT].GridOutput = malloc(iNumIndices*sizeof(GRIDOUTPUT)); 
-//   if (lTmp[0] >= 0) {
-//     NotPrimaryInput(iFile,options[OPT_GRIDOUTPUT].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
-// 
-//     /* First remove and record negative signs */
-//     for (i=0;i<iNumIndices;i++) {
-//       if (saTmp[i][0] == 45) {
-//         /* Option is negative */
-//         bNeg[i] = 1;
-//         /* Now remove negative sign */
-//         for (j=0;j<strlen(saTmp[i]);j++) 
-//         saTmp[i][j] = saTmp[i][j+1];
-//         saTmp[i][strlen(saTmp[i])] = 0;
-//       } else
-//         bNeg[i] = 0;
-//     }
-//     
-//     /* Check for ambiguity */
-//     for (i=0;i<iNumIndices;i++) {
-//       count=0; /* Number of possibilities */
-//       for (j=0;j<OPTLEN;j++)
-//         cTmp[j]=0;
-//       strcpy(cTmp,saTmp[i]);
-//       for (j=GROUTSTARTPOISE;j<GROUTENDPOISE;j++) {
-//         for (k=0;k<OPTLEN;k++)
-//           cOut[k]=0;
-//         strcpy(cOut,output[OUT_GRIDOUTPUT].GridOutput[j].cName);
-//         iLen1=strlen(cOut);
-//         iLen2=strlen(cTmp);
-//         /* Check for perfect match */
-//         if ( (iLen1 == iLen2) && (memcmp(sLower(cTmp),sLower(cOut),strlen(cOut)) == 0)) {
-//           /* Output option found! */
-//           strcpy(cOption[count],output[j].cName);
-//           count = 1;
-//           iOut = j;
-//           j = NUMOUT; /* Poor man's break! */
-//         } else {
-//           if (iLen1 < iLen2)
-//             iLen=iLen1;
-//           else
-//             iLen=iLen2;
-//           
-//           if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
-//             /* Output option found! */
-//             strcpy(cOption[count],output[j].cName);
-//             count++;
-//             iOut = j;
-//           }
-//         }
-//       }
-//       
-//       if (count > 1) {
-//         /* More than one possibility */
-//         if (iVerbose >= VERBERR) {
-//           fprintf(stderr,"ERROR: Output option \"%s\" is ambiguous. Options are ",saTmp[i]);
-//           for (j=0;j<count;j++) {
-//             fprintf(stderr,"%s",cOption[j]);
-//             if (j < count-1)
-//               fprintf(stderr,", ");
-//           }
-//           fprintf(stderr,".\n");
-//         }
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       }
-//       
-//       if (!count) {
-//         /* Option not found */
-//         if (iVerbose >= VERBERR) 
-//           fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       }
-//       
-//       if (count == 1) {
-//         /* Unique option */
-//     
-//     /* Verify and record negative options */
-//     if (bNeg[i]) {
-//       // Is the negative option allowed?
-//       if (!output[iOut].bNeg) { /* No */
-//         if (iVerbose >= VERBERR) {
-//           fprintf(stderr,"ERROR: Output option %s ",saTmp[i]);
-//           if (strlen(saTmp[i]) < strlen(output[iOut].cName))
-//             fprintf(stderr,"(= %s) ",output[iOut].cName);
-//           fprintf(stderr,"cannot be negative.\n");
-//         }
-//         LineExit(files->Infile[iFile].cIn,lTmp[0]);
-//       } else { // Yes, initialize bDoNeg to true
-//         output[iOut].bDoNeg[iFile-1] = 1;
-//       }
-//     } else { // Negative option not set, initialize bDoNeg to false
-//         output[iOut].bDoNeg[iFile-1] = 0;
-//     }   
-//         files->Outfile[iFile-1].caCol[i][0]='\0';
-//         strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
-//       }
-//     }
-//     files->Outfile[iFile-1].iNumCols = iNumIndices;
-//     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
-//   }
-//   free(lTmp);
-// }
+void ReadMEPDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bMEPDiff = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bMEPDiff,files->iNumInputs);
+}
+
+void ReadIceSheets(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bIceSheets = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bIceSheets,files->iNumInputs);
+}
+
+void ReadInitIceLat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dInitIceLat = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dInitIceLat = options->dDefault;
+}
+
+void ReadInitIceHeight(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dInitIceHeight = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dInitIceHeight = options->dDefault;
+}
 
 void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LATCELLNUM].cName,"iLatCellNum");
@@ -306,6 +366,46 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PLANCKB].iMultiFile = 1;   
   fnRead[OPT_PLANCKB] = &ReadPlanckB;
   
+  sprintf(options[OPT_ICEALBEDO].cName,"dIceAlbedo");
+  sprintf(options[OPT_ICEALBEDO].cDescr,"Albedo of ice");
+  sprintf(options[OPT_ICEALBEDO].cDefault,"0.6");
+  options[OPT_ICEALBEDO].dDefault = 0.6;
+  options[OPT_ICEALBEDO].iType = 2;  
+  options[OPT_ICEALBEDO].iMultiFile = 1;   
+  fnRead[OPT_ICEALBEDO] = &ReadIceAlbedo;
+  
+  sprintf(options[OPT_SURFALBEDO].cName,"dSurfAlbedo");
+  sprintf(options[OPT_SURFALBEDO].cDescr,"Albedo of (ice-free) surface");
+  sprintf(options[OPT_SURFALBEDO].cDefault,"0.3");
+  options[OPT_SURFALBEDO].dDefault = 0.3;
+  options[OPT_SURFALBEDO].iType = 2;  
+  options[OPT_SURFALBEDO].iMultiFile = 1;   
+  fnRead[OPT_SURFALBEDO] = &ReadSurfAlbedo;
+  
+  sprintf(options[OPT_TGLOBALEST].cName,"dTGlobalEst");
+  sprintf(options[OPT_TGLOBALEST].cDescr,"Estimate of initial global temperature");
+  sprintf(options[OPT_TGLOBALEST].cDefault,"288");
+  options[OPT_TGLOBALEST].dDefault = 288.0;
+  options[OPT_TGLOBALEST].iType = 2;  
+  options[OPT_TGLOBALEST].iMultiFile = 1;   
+  fnRead[OPT_TGLOBALEST] = &ReadTGlobalEst;
+  
+  sprintf(options[OPT_PCO2].cName,"dpCO2");
+  sprintf(options[OPT_PCO2].cDescr,"Partial pressure of CO2 in atmosphere");
+  sprintf(options[OPT_PCO2].cDefault,"3.3e-4");
+  options[OPT_PCO2].dDefault = 3.3e-4;
+  options[OPT_PCO2].iType = 2;  
+  options[OPT_PCO2].iMultiFile = 1;   
+  fnRead[OPT_PCO2] = &ReadPCO2;
+  
+  sprintf(options[OPT_CALCAB].cName,"bCalcAB");
+  sprintf(options[OPT_CALCAB].cDescr,"Calculate A and B in OLR function, from (T & pCO2)");
+  sprintf(options[OPT_CALCAB].cDefault,"0");
+  options[OPT_CALCAB].dDefault = 0;
+  options[OPT_CALCAB].iType = 0;  
+  options[OPT_CALCAB].iMultiFile = 1;   
+  fnRead[OPT_CALCAB] = &ReadCalcAB;
+  
   sprintf(options[OPT_DIFFUSION].cName,"dDiffusion");
   sprintf(options[OPT_DIFFUSION].cDescr,"Heat diffusion coefficient");
   sprintf(options[OPT_DIFFUSION].cDefault,"0.44");
@@ -316,8 +416,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_HADLEY].cName,"bHadley");
   sprintf(options[OPT_HADLEY].cDescr,"Enable Hadley circulation");
-  sprintf(options[OPT_HADLEY].cDefault,"1");
-  options[OPT_HADLEY].dDefault = 1;
+  sprintf(options[OPT_HADLEY].cDefault,"0");
+  options[OPT_HADLEY].dDefault = 0;
   options[OPT_HADLEY].iType = 0;  
   options[OPT_HADLEY].iMultiFile = 1;   
   fnRead[OPT_HADLEY] = &ReadHadley;
@@ -348,11 +448,19 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_JORMUNGAND].cName,"bJormungand");
   sprintf(options[OPT_JORMUNGAND].cDescr,"With dFixIceLat, fixes ice latitude with cold equator");
-  sprintf(options[OPT_ALBEDOZA].cDefault,"0");
-  options[OPT_ALBEDOZA].dDefault = 0;
-  options[OPT_ALBEDOZA].iType = 0;  
-  options[OPT_ALBEDOZA].iMultiFile = 1;   
-  fnRead[OPT_ALBEDOZA] = &ReadJormungand;
+  sprintf(options[OPT_JORMUNGAND].cDefault,"0");
+  options[OPT_JORMUNGAND].dDefault = 0;
+  options[OPT_JORMUNGAND].iType = 0;  
+  options[OPT_JORMUNGAND].iMultiFile = 1;   
+  fnRead[OPT_JORMUNGAND] = &ReadJormungand;
+  
+  sprintf(options[OPT_MEPDIFF].cName,"bMEPDiff");
+  sprintf(options[OPT_MEPDIFF].cDescr,"Calculate diffusion from max entropy production (D=B/4)");
+  sprintf(options[OPT_MEPDIFF].cDefault,"0");
+  options[OPT_MEPDIFF].dDefault = 0;
+  options[OPT_MEPDIFF].iType = 0;  
+  options[OPT_MEPDIFF].iMultiFile = 1;   
+  fnRead[OPT_MEPDIFF] = &ReadMEPDiff;
   
   sprintf(options[OPT_HEATCAPANN].cName,"dHeatCapAnn");
   sprintf(options[OPT_HEATCAPANN].cDescr,"Surface heat capacity in annual model");
@@ -362,12 +470,45 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HEATCAPANN].iMultiFile = 1;   
   fnRead[OPT_HEATCAPANN] = &ReadHeatCapAnn;
   
-//   sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
-//   sprintf(options[OPT_GRIDOUTPUT].cDescr,"Outputs latitudinal params in special files");
-//   sprintf(options[OPT_GRIDOUTPUT].cDefault,"None");
-//   options[OPT_GRIDOUTPUT].iType = 14;
-//   options[OPT_GRIDOUTPUT].iMultiFile = 1;
-   
+  sprintf(options[OPT_ICECREEP].cName,"dIceCreep");
+  sprintf(options[OPT_ICECREEP].cDescr,"Creep rate coefficient of ice sheets (dynamics)");
+  sprintf(options[OPT_ICECREEP].cDefault,"0");
+  options[OPT_ICECREEP].dDefault = 0;
+  options[OPT_ICECREEP].iType = 2;  
+  options[OPT_ICECREEP].iMultiFile = 1;   
+  fnRead[OPT_ICECREEP] = &ReadIceCreep;
+  
+  sprintf(options[OPT_ICEDEPRATE].cName,"dIceDepRate");
+  sprintf(options[OPT_ICEDEPRATE].cDescr,"Deposition rate of ice/snow to form ice sheets");
+  sprintf(options[OPT_ICEDEPRATE].cDefault,"5e-6");
+  options[OPT_ICEDEPRATE].dDefault = 5e-6;
+  options[OPT_ICEDEPRATE].iType = 2;  
+  options[OPT_ICEDEPRATE].iMultiFile = 1;   
+  fnRead[OPT_ICEDEPRATE] = &ReadIceDepRate;
+  
+  sprintf(options[OPT_ICESHEETS].cName,"bIceSheets");
+  sprintf(options[OPT_ICESHEETS].cDescr,"Include ice sheets");
+  sprintf(options[OPT_ICESHEETS].cDefault,"0");
+  options[OPT_ICESHEETS].dDefault = 0;
+  options[OPT_ICESHEETS].iType = 0;  
+  options[OPT_ICESHEETS].iMultiFile = 1;   
+  fnRead[OPT_ICESHEETS] = &ReadIceSheets;
+
+  sprintf(options[OPT_INITICELAT].cName,"dInitIceLat");
+  sprintf(options[OPT_INITICELAT].cDescr,"Sets initial ice sheet latitude");
+  sprintf(options[OPT_INITICELAT].cDefault,"90");
+  options[OPT_INITICELAT].dDefault = 90.0;
+  options[OPT_INITICELAT].iType = 2;  
+  options[OPT_INITICELAT].iMultiFile = 1;   
+  fnRead[OPT_INITICELAT] = &ReadInitIceLat;  
+  
+  sprintf(options[OPT_INITICEHEIGHT].cName,"dInitIceHeight");
+  sprintf(options[OPT_INITICEHEIGHT].cDescr,"Sets initial ice sheet height");
+  sprintf(options[OPT_INITICEHEIGHT].cDefault,"50");
+  options[OPT_INITICEHEIGHT].dDefault = 50.0;
+  options[OPT_INITICEHEIGHT].iType = 2;  
+  options[OPT_INITICEHEIGHT].iMultiFile = 1;   
+  fnRead[OPT_INITICEHEIGHT] = &ReadInitIceHeight;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -418,6 +559,28 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
   }
 }
 
+void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
+  if (body[iBody].bCalcAB) {
+    if (options[OPT_PLANCKA].iLine[iBody+1] > -1 || options[OPT_PLANCKB].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s or %s when setting bCalcAB = 1 in File:%s\n", options[OPT_PLANCKA].cName, options[OPT_PLANCKB].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+    /* Calculate A and B from Williams & Kasting 1997 result */
+    body[iBody].dTGlobal -= 273.15;
+    body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
+    body[iBody].dPlanckA = OLRwk97(body,iBody) \
+      - body[iBody].dPlanckB*(body[iBody].dTGlobal);
+      
+  } else {
+    if (options[OPT_PCO2].iLine[iBody+1] > -1 || options[OPT_TGLOBALEST].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Cannot set %s or %s unless setting bCalcAB = 1 in File:%s\n", options[OPT_PCO2].cName, options[OPT_TGLOBALEST].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+  }
+}
+
 void InitializeLatGrid(BODY *body, int iBody) {
   double delta_x, SinLat;
   int i;
@@ -434,6 +597,7 @@ void InitializeLatGrid(BODY *body, int iBody) {
 void InitializeClimateParams(BODY *body, int iBody) {
   int i;
   double Toffset, xboundary;
+  body[iBody].dIceMassTot = 0.0;
   
   body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));   
   body[iBody].daDiffusion = malloc((body[iBody].iNumLats+1)*sizeof(double));
@@ -445,6 +609,21 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daDivFlux = malloc(body[iBody].iNumLats*sizeof(double));  
+  
+  body[iBody].daLambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMDiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
+  body[iBody].dMEuler = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMEulerCopy = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dInvM = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].daSourceF = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].rowswap =  malloc(body[iBody].iNumLats*sizeof(int));
+  body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
     
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   
@@ -453,17 +632,43 @@ void InitializeClimateParams(BODY *body, int iBody) {
   } else {
     Toffset = 0.0;
   }
+ //  
+//   if (body[iBody].bIceSheets) {
+//     body[iBody].daIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
+//   }
   
   body[iBody].dTGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
   body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
   for (i=0;i<=body[iBody].iNumLats;i++) {
-    if (i!=body[iBody].iNumLats)
-      body[iBody].daTemp[i] = 20.*(1.0-2*pow(sin(body[iBody].daLats[i]),2))+Toffset;
+    if (i!=body[iBody].iNumLats) {
+      body[iBody].daTemp[i] = 20.*(1.0-1.5*pow(sin(body[iBody].daLats[i]),2))+Toffset;
       body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
       body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
+      body[iBody].dMClim[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMDiff[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEuler[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEulerCopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dInvM[i] = malloc(body[iBody].iNumLats*sizeof(double));
       
-    body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
+      if (body[iBody].bIceSheets) {
+        if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
+          body[iBody].daIceMass[i] = body[iBody].dInitIceHeight*RHOICE;
+          body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
+//           body[iBody].daIceHeight[i] = body[iBody].dInitIceHeight;
+        } else {
+          body[iBody].daIceMass[i] = 0.0;
+//           body[iBody].daIceHeight[i] = 0.0;
+        }
+      }
+    }  
+    
+    if (body[iBody].bMEPDiff) {   
+      body[iBody].daDiffusion[i] = body[iBody].dPlanckB/4.0;   
+    } else {
+      body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
+    }
+    
     if (body[iBody].bHadley) {
       // XXX not self-consistent with rotation rate!
       xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
@@ -480,18 +685,63 @@ void InitializeClimateParams(BODY *body, int iBody) {
   AnnualInsolation(body, iBody);
 
 } 
+
+void VerifyAstro(BODY *body, int iBody) {
+  if (body[iBody].bEqtide == 0) {
+    if (body[iBody].bDistOrb == 0) {
+      CalcHK(body, iBody);
+    }
+    if (body[iBody].bDistRot == 0) {
+      CalcXYZobl(body,iBody);
+    }
+  }
+}
+
+void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
+  if (body[iBody].bMEPDiff) {
+    if (options[OPT_DIFFUSION].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s when setting bMEPDiff = 1 in File:%s\n", options[OPT_DIFFUSION].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+    if (body[iBody].bHadley) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set both bHadley = 1 and bMEPDiff = 1 in File:%s\n", cFile);
+      exit(EXIT_INPUT);
+    }
+  }
+}
+    
+void InitializeIceMassPoise(BODY *body,UPDATE *update,int iBody,int iLat) {
+  update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = 4;
+  update[iBody].padDIceMassDtPoise[iLat] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]];
+  update[iBody].iNumBodies[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]]=2;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = malloc(2*sizeof(int));
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]][1] = iLat;
+}    
       
 void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j=0, iPert=0, jBody=0;
+  int i, j=0, iLat=0;
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  VerifyAstro(body,iBody);
+  VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
   InitializeClimateParams(body, iBody);
   
-  /* POISE annual has no primary variables! 
-     The climate simulation is done in entirely in ForceBehavior. */  
+  /* POISE annual has one primary variable! 
+     The climate simulation is done almost entirely in ForceBehavior. */
+  if (body[iBody].bIceSheets) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      InitializeIceMassPoise(body,update,iBody,iLat);
+      fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassPoise[iLat]] = &fdPoiseDIceMassDt;   
+    }
+  }
+  
   control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesPoise;
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
@@ -501,8 +751,21 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
 /***************** POISE Update *****************/
 void InitializeUpdatePoise(BODY *body,UPDATE *update,int iBody) {
-
+  if (body[iBody].bIceSheets) {
+    update[iBody].iNumVars += body[iBody].iNumLats;
+    update[iBody].iNumIceMass = 1;
+//     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+    update[iBody].iaIceMass = malloc(body[iBody].iNumLats*sizeof(int));
+    update[iBody].padDIceMassDtPoise = malloc(body[iBody].iNumLats*sizeof(double*));
+    update[iBody].iaIceMassPoise = malloc(body[iBody].iNumLats*sizeof(int));
+  }
 } 
+
+void FinalizeUpdateIceMassPoise(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iLat) {
+  update[iBody].iaModule[iVar][0] = POISE;
+  update[iBody].iaIceMassPoise[iLat] = *iEqn;
+  (*iEqn)++;
+}
 
 /***************** POISE Halts *****************/
 
@@ -564,9 +827,11 @@ void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   *dTmp = body[iBody].dFluxInGlobal;
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
+    // Negative option is SI
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }  
   
@@ -574,9 +839,23 @@ void WriteFluxOutGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   *dTmp = body[iBody].dFluxOutGlobal;
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
+    // Negative option is SI
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+} 
+
+void WriteTotIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dIceMassTot;
+
+  if (output->bDoNeg[iBody]) {
+    // Negative option is SI
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
   }
 }    
   
@@ -584,9 +863,10 @@ void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   *dTmp = body[iBody].daAnnualInsol[body[iBody].iWriteLat];
 
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -611,9 +891,10 @@ void WriteFluxMerid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   *dTmp = body[iBody].daFlux[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -621,9 +902,10 @@ void WriteFluxIn(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
 
@@ -631,9 +913,10 @@ void WriteFluxOut(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }
   
@@ -641,11 +924,34 @@ void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   *dTmp = body[iBody].daDivFlux[body[iBody].iWriteLat];
   
   if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
   }
 }       
+
+void WriteIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    //*dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
+    //fsUnitsEnergyFlux(units,cUnit);
+  }
+}    
+
+void WriteIceHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat]/RHOICE;
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}  
   
 void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName,"TGlobal");
@@ -662,19 +968,34 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOGLOBAL].iNum = 1;
   fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
   
+  sprintf(output[OUT_TOTICEMASS].cName,"TotIceMass");
+  sprintf(output[OUT_TOTICEMASS].cDescr,"Global total ice mass in ice sheets");
+  sprintf(output[OUT_TOTICEMASS].cNeg,"kg");
+  output[OUT_TOTICEMASS].bNeg = 1;
+  output[OUT_TOTICEMASS].iNum = 1;
+  fnWrite[OUT_TOTICEMASS] = &WriteTotIceMass;
+  
   sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
   sprintf(output[OUT_FLUXINGLOBAL].cDescr,"Global mean flux in (insol*(1-albedo)) from POISE");
+  /* Sadly, Russell, we must set the negative option to W/m^2.
   sprintf(output[OUT_FLUXINGLOBAL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_FLUXINGLOBAL].bNeg = 1;
   output[OUT_FLUXINGLOBAL].dNeg = 1/40.55185;
+  */
+  output[OUT_FLUXINGLOBAL].bNeg = 1;
+  output[OUT_FLUXINGLOBAL].dNeg = 1; // Just in case
+  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXINGLOBAL].iNum = 1;
   fnWrite[OUT_FLUXINGLOBAL] = &WriteFluxInGlobal;
   
   sprintf(output[OUT_FLUXOUTGLOBAL].cName,"FluxOutGlobal");
   sprintf(output[OUT_FLUXOUTGLOBAL].cDescr,"Global mean flux out from POISE");
+  /* Here, too
   sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_FLUXOUTGLOBAL].bNeg = 1;
   output[OUT_FLUXOUTGLOBAL].dNeg = 1/40.55185;
+  */
+  output[OUT_FLUXOUTGLOBAL].bNeg = 1;
+  output[OUT_FLUXOUTGLOBAL].dNeg = 1;
+  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum = 1;
   fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;
   
@@ -705,7 +1026,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_ANNUALINSOL].cName,"AnnInsol");
   sprintf(output[OUT_ANNUALINSOL].cDescr,"Annual insolation by latitude.");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
+  sprintf(output[OUT_ANNUALINSOL].cNeg,"W/m^2");
   output[OUT_ANNUALINSOL].bNeg = 1;
   output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
   output[OUT_ANNUALINSOL].iNum = 1;
@@ -723,31 +1044,48 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_FLUXIN].cName,"FluxIn");
   sprintf(output[OUT_FLUXIN].cDescr,"Incoming flux by latitude");
-  sprintf(output[OUT_FLUXIN].cNeg,"pirate-ninjas/m^2");
+  sprintf(output[OUT_FLUXIN].cNeg,"W/m^2");
   output[OUT_FLUXIN].bNeg = 1;
-  output[OUT_FLUXIN].dNeg = 1/40.55185;
+  output[OUT_FLUXIN].dNeg = 1;
   output[OUT_FLUXIN].iNum = 1;
-  output[OUT_FLUXMERID].bGrid = 1;
+  output[OUT_FLUXIN].bGrid = 1;
   fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
   
   sprintf(output[OUT_FLUXOUT].cName,"FluxOut");
   sprintf(output[OUT_FLUXOUT].cDescr,"Outgoing flux by latitude");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_ANNUALINSOL].bNeg = 1;
-  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  sprintf(output[OUT_FLUXOUT].cNeg,"W/m^2");
+  output[OUT_FLUXOUT].bNeg = 1;
+  output[OUT_FLUXOUT].dNeg = 1;
   output[OUT_FLUXOUT].iNum = 1;
   output[OUT_FLUXOUT].bGrid = 1;
   fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
   
   sprintf(output[OUT_DIVFLUX].cName,"DivFlux");
   sprintf(output[OUT_DIVFLUX].cDescr,"Divergence of flux by latitude");
-  sprintf(output[OUT_ANNUALINSOL].cNeg,"pirate-ninjas/m^2");
-  output[OUT_ANNUALINSOL].bNeg = 1;
-  output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
+  sprintf(output[OUT_DIVFLUX].cNeg,"W/m^2");
+  output[OUT_DIVFLUX].bNeg = 1;
+  output[OUT_DIVFLUX].dNeg = 1;
   output[OUT_DIVFLUX].iNum = 1;
   output[OUT_DIVFLUX].bGrid = 1;
   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
   
+  sprintf(output[OUT_ICEMASS].cName,"IceMass");
+  sprintf(output[OUT_ICEMASS].cDescr,"Mass of ice sheets/area by latitude");
+  sprintf(output[OUT_ICEMASS].cNeg,"kg/m^2");
+  output[OUT_ICEMASS].bNeg = 1;
+  output[OUT_ICEMASS].dNeg = 1;
+  output[OUT_ICEMASS].iNum = 1;
+  output[OUT_ICEMASS].bGrid = 1;
+  fnWrite[OUT_ICEMASS] = &WriteIceMass; 
+  
+  sprintf(output[OUT_ICEHEIGHT].cName,"IceHeight");
+  sprintf(output[OUT_ICEHEIGHT].cDescr,"Height of ice sheets");
+  sprintf(output[OUT_ICEHEIGHT].cNeg,"m");
+  output[OUT_ICEHEIGHT].bNeg = 1;
+  output[OUT_ICEHEIGHT].dNeg = 1;
+  output[OUT_ICEHEIGHT].iNum = 1;
+  output[OUT_ICEHEIGHT].bGrid = 1;
+  fnWrite[OUT_ICEHEIGHT] = &WriteIceHeight; 
 }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
@@ -801,7 +1139,8 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyPoise;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
-
+  module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
+  
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionPoise;
 
 }
@@ -811,7 +1150,18 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+  int iLat;
+  if (body[iBody].bIceSheets) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      if (body[iBody].daIceMass[iLat] < 0) {
+        body[iBody].daIceMass[iLat] = 0.0;
+      } else if (body[iBody].daIceMass[iLat] < 10 && update[iBody].daDeriv[update[iBody].iaIceMass[iLat]] < 0) {
+        body[iBody].daIceMass[iLat] = 0.0;
+      }
+    }
+  }
+
   PoiseClimate(body,iBody);
 }
 
@@ -874,7 +1224,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL;
   
-  LongP = body[iBody].dLongP + PI; //Pericenter, relative to direction of primary at spring equinox
+  LongP = body[iBody].dLongP; //Pericenter, relative to direction of primary at spring equinox
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice
   TrueA = body[iBody].dTrueL - LongP;
@@ -887,7 +1237,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   for (j=0;j<body[iBody].iNumLats;j++)
     body[iBody].daAnnualInsol[j] = 0.0;
   
-  for (i=0;i<=body[iBody].iNDays;i++) {
+  for (i=0;i<body[iBody].iNDays;i++) {
     if (i!=0) {
       MeanL = MeanL + 2*PI/body[iBody].iNDays;
       /* This will only work for the secular orbital model. 
@@ -915,8 +1265,38 @@ void AnnualInsolation(BODY *body, int iBody) {
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);
+      
     }
   }
+}
+
+double OLRwk97(BODY *body, int iBody){
+  double phi, Int, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal+273.15;
+  Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
+      + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
+      - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
+      + 9.173169e-3*pow(phi,3)*T - 7.775195e-5*pow(phi,3)*pow(T,2) \
+      - 1.679112e-7*phi*pow(T,3) + 6.590999e-8*pow(phi,2)*pow(T,3) \
+      + 1.528125e-7*pow(phi,3)*pow(T,3) - 3.367567e-2*pow(phi,4) - 1.631909e-4*pow(phi,4)*T \
+      + 3.663871e-6*pow(phi,4)*pow(T,2) - 9.255646e-9*pow(phi,4)*pow(T,3);
+  return Int;
+}
+  
+double dOLRdTwk97(BODY *body, int iBody){
+  double phi, dI, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal+273.15;
+  dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
+       + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
+       - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
+       + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
+       + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
+       + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
+  return dI;
 }
 
 void Albedo(BODY *body, int iBody) {
@@ -928,26 +1308,32 @@ void Albedo(BODY *body, int iBody) {
        if (body[iBody].bJormungand) {
           /* Cold equator */
           if (fabs(body[iBody].daLats[i]) < body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = 0.6;
+            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = 0.3;
+            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
           }
        } else {
           /* Cold poles */
           if (fabs(body[iBody].daLats[i]) > body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = 0.6;
+            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = 0.3;
+            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
           }
        }
     } else if (body[iBody].bAlbedoZA) {
        /* Use albedo based on zenith angle */
        body[iBody].daAlbedo[i] = 0.31+0.04*(3*pow(sin(body[iBody].daLats[i]),2)-1);
+    } else if (body[iBody].bIceSheets) {
+       if (body[iBody].daIceMass[i] > 0) {
+          body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
+       } else {
+          body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
+       }
     } else {
        if (body[iBody].daTemp[i] <= -10.0) {
-         body[iBody].daAlbedo[i] = 0.6;
+         body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
        } else {
-         body[iBody].daAlbedo[i] = 0.3;
+         body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
        }
     }
   }
@@ -967,28 +1353,33 @@ void Albedo(BODY *body, int iBody) {
 //   }
 // }
 
-void MatrixInvert(double **Mcopy, double **invM, int n) {
-  double *unitv;
-  int i, j, *rowswap;
+void MatrixInvert(BODY *body, int iBody) {
+  double n = body[iBody].iNumLats;
+  int i, j;
   float parity;
   
-  unitv = malloc(n*sizeof(double));
-  rowswap = malloc(n*sizeof(int));
-  
-  ludcmp(Mcopy,n,rowswap,&parity);
+  // unitv = malloc(n*sizeof(double));
+//   rowswap = malloc(n*sizeof(int));
+// 
+  ludcmp(body[iBody].dMEuler,n,body[iBody].rowswap,&parity);
+//   LUDecomp(body[iBody].dMEuler,body[iBody].dMEulerCopy,body[iBody].scale,body[iBody].rowswap,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
       if (j==i) {
-        unitv[j] = 1.0;
+        body[iBody].dUnitV[j] = 1.0;
       } else {
-        unitv[j] = 0.0;
+        body[iBody].dUnitV[j] = 0.0;
       }
     }
-    lubksb(Mcopy,n,rowswap,unitv);
+
+    lubksb(body[iBody].dMEuler,n,body[iBody].rowswap,body[iBody].dUnitV);
+//     LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
     for (j=0;j<n;j++) {
-      invM[j][i] = unitv[j];
+      body[iBody].dInvM[j][i] = body[iBody].dUnitV[j];
     }
   }
+//   free(unitv);
+//   free(rowswap);
 }
 
 void TempGradient(BODY *body, double delta_x, int iBody) {
@@ -1010,64 +1401,54 @@ void PoiseClimate(BODY *body, int iBody) {
   /* Get cuurent climate parameters */
   Albedo(body, iBody);
   AnnualInsolation(body, iBody);
+  if (body[iBody].bCalcAB) {
+    body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
+    body[iBody].dPlanckA = OLRwk97(body,iBody) \
+      - body[iBody].dPlanckB*(body[iBody].dTGlobal);
+  }
   
   delta_t = 1.5/body[iBody].iNumLats;
   delta_x = 2.0/body[iBody].iNumLats;
-  Nmax = 1000;
-  
-  lambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
-  M = malloc(body[iBody].iNumLats*sizeof(double*));
-  Mdiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
-  Mcopy = malloc(body[iBody].iNumLats*sizeof(double*));
-  invM = malloc(body[iBody].iNumLats*sizeof(double*));
-  SourceF = malloc(body[iBody].iNumLats*sizeof(double));
-  TempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-  tmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
-  tmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-  Dmidpt = malloc(body[iBody].iNumLats*sizeof(double));
+  Nmax = 2000;
   
   /* Setup matrices, source function, temperature terms, global mean */
   for (i=0;i<body[iBody].iNumLats+1;i++) {
     xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
-    lambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
+    body[iBody].daLambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
   }
   
   body[iBody].dTGlobal = 0.0;
   for (i=0;i<body[iBody].iNumLats;i++) {
-    M[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    Mdiff[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    Mcopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    invM[i] = malloc(body[iBody].iNumLats*sizeof(double));
-    TempTerms[i] = 0.0;
+    body[iBody].daTempTerms[i] = 0.0;
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       if (j==i) {
-        M[i][j] = (-body[iBody].dPlanckB-lambda[i+1]-lambda[i])/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = (-lambda[i+1]-lambda[i]);
-        Mcopy[i][j] = -1.0/delta_t;
+        body[iBody].dMClim[i][j] = (-body[iBody].dPlanckB-body[iBody].daLambda[i+1]-body[iBody].daLambda[i])/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = (-body[iBody].daLambda[i+1]-body[iBody].daLambda[i]);
+        body[iBody].dMEuler[i][j] = -1.0/delta_t;
       } else if (j==(i+1)) {
-        M[i][j] = lambda[j]/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = lambda[j];
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambda[j]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = body[iBody].daLambda[j];
+        body[iBody].dMEuler[i][j] = 0.0;
       } else if (j==(i-1)) {
-        M[i][j] = lambda[i]/body[iBody].dHeatCapAnn;
-        Mdiff[i][j] = lambda[i];
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambda[i]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiff[i][j] = body[iBody].daLambda[i];
+        body[iBody].dMEuler[i][j] = 0.0;
       } else {
-        M[i][j] = 0.0;
-        Mdiff[i][j] = 0.0;
-        Mcopy[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = 0.0;
+        body[iBody].dMDiff[i][j] = 0.0;
+        body[iBody].dMEuler[i][j] = 0.0;
       }
-      Mcopy[i][j] += 0.5*M[i][j];
-      TempTerms[i] += M[i][j]*body[iBody].daTemp[j];
+      body[iBody].dMEuler[i][j] += 0.5*body[iBody].dMClim[i][j];
+      body[iBody].daTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
     }
-    SourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
+    body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
-    TempTerms[i] += SourceF[i];
+    body[iBody].daTempTerms[i] += body[iBody].daSourceF[i];
     body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
   
-  MatrixInvert(Mcopy, invM, body[iBody].iNumLats);
+  MatrixInvert(body,iBody);
     
   /* Relaxation to equilibrium */
   n = 1;
@@ -1075,24 +1456,24 @@ void PoiseClimate(BODY *body, int iBody) {
   while (fabs(Tchange) > 1e-12) {
     tmpTglobal = 0.0;
     for (i=0;i<body[iBody].iNumLats;i++) {
-      tmpTemp[i] = 0.0;
-      tmpTempTerms[i] = SourceF[i];
+      body[iBody].daTmpTemp[i] = 0.0;
+      body[iBody].daTmpTempTerms[i] = body[iBody].daSourceF[i];
       
       for (j=0;j<body[iBody].iNumLats;j++) {
-        tmpTemp[i] += -invM[i][j]*(0.5*(TempTerms[j]+SourceF[j])+body[iBody].daTemp[j]/delta_t);
-        tmpTempTerms[i] += M[i][j]*body[iBody].daTemp[j];
+        body[iBody].daTmpTemp[i] += -body[iBody].dInvM[i][j]*(0.5*(body[iBody].daTempTerms[j]+body[iBody].daSourceF[j])+body[iBody].daTemp[j]/delta_t);
+        body[iBody].daTmpTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
       }
-      tmpTglobal += tmpTemp[i]/body[iBody].iNumLats;
+      tmpTglobal += body[iBody].daTmpTemp[i]/body[iBody].iNumLats;
     }
     Tchange = tmpTglobal - body[iBody].dTGlobal;
     
     /* Update albedo, source function, temperature, temperature terms, and global mean */
     Albedo(body,iBody);
     for (i=0;i<body[iBody].iNumLats;i++) {
-      SourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
+      body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
-      body[iBody].daTemp[i] = tmpTemp[i];
-      TempTerms[i] = tmpTempTerms[i];
+      body[iBody].daTemp[i] = body[iBody].daTmpTemp[i];
+      body[iBody].daTempTerms[i] = body[iBody].daTmpTempTerms[i];
       body[iBody].dTGlobal = tmpTglobal;
     }
     if (n >= Nmax) {
@@ -1106,11 +1487,12 @@ void PoiseClimate(BODY *body, int iBody) {
   body[iBody].dFluxInGlobal = 0.0;
   body[iBody].dFluxOutGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
+  body[iBody].dIceMassTot = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
-    Dmidpt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
+    body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
     body[iBody].daFlux[i] = -2.*PI*pow(body[iBody].dRadius,2)*sqrt(1.0-pow(sin(body[iBody].daLats[i]),2)) * \
-                            Dmidpt[i]*body[iBody].daTGrad[i];
+                            body[iBody].daDMidPt[i]*body[iBody].daTGrad[i];
     body[iBody].daFluxIn[i] = (1.0 - body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i];
     body[iBody].daFluxOut[i] = body[iBody].dPlanckA + body[iBody].dPlanckB*body[iBody].daTemp[i];                       
     
@@ -1119,12 +1501,52 @@ void PoiseClimate(BODY *body, int iBody) {
     
     body[iBody].daDivFlux[i] = 0.0;
     for (j=0;j<body[iBody].iNumLats;j++) {
-      body[iBody].daDivFlux[i] += -Mdiff[i][j]*body[iBody].daTemp[j];
+      body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
+    body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
+
   } 
 }
-      
+
+double fdPoiseDIceMassDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double Tice = 273.0, dTmp = 0;
+  
+  /* first, calculate melting/accumulation */
+  if (body[iaBody[0]].daTemp[iaBody[1]]>0.0) {
+    if (body[iaBody[0]].daIceMass[iaBody[1]] > 0.0) {
+      /* Ice melting */
+      dTmp += SIGMA*(pow(Tice,4.0) - pow((body[iaBody[0]].daTemp[iaBody[1]]+273.15),4.0))/LFICE;
+    } else {
+      dTmp += 0.0;
+    }
+  } else {
+    if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
+      /* no precip once planet is frozen */
+      dTmp += 0.0;
+    } else {
+      if (body[iaBody[0]].dIceMassTot >= MOCEAN) {
+        /* ice growth limited by mass of water available (really, really stupid) */
+        dTmp += 0.0;
+      } else {
+        /* Ice deposits at fixed rate */
+        dTmp += body[iaBody[0]].dIceDepRate;
+      }
+    }
+  }
+  
+  /* next, ice dynamics (can be shut off by setting dIceCreep = 0) */
+  if (iaBody[1] == 0) {
+    dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
+  } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
+    dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+  } else {
+    dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
+    dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
+  }
+  
+  return dTmp;
+}
   
   
 

@@ -144,7 +144,7 @@ void inv_plane(BODY*,SYSTEM*,int);
 void cross(double*,double*,double*);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

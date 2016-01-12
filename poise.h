@@ -35,6 +35,10 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICESHEETS       1815
 #define OPT_INITICELAT      1816
 #define OPT_INITICEHEIGHT   1817
+#define OPT_ICEALBEDO       1818
+#define OPT_SURFALBEDO      1819
+#define OPT_ICECREEP        1820
+#define OPT_ICEDEPRATE      1821
 
 /*#define OPT_LANDGEOM        1840
 #define OPT_ICEMODEL        1841
@@ -85,6 +89,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_DIVFLUX          1838
 #define OUT_ICEMASS          1839
 #define OUT_ICEHEIGHT        1840
+#define OUT_TOTICEMASS			 1841
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -110,7 +115,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 
 /* Poise Functions */
 void PropertiesPoise(BODY*,UPDATE*,int);
-void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void Albedo(BODY*,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);

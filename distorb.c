@@ -311,8 +311,8 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
-  sprintf(options[OPT_DFCRIT].cDefault,"0");
-  options[OPT_DFCRIT].dDefault = 0.0;
+  sprintf(options[OPT_DFCRIT].cDefault,"0.1");
+  options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;  
   options[OPT_DFCRIT].iMultiFile = 0; 
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
@@ -1495,7 +1495,7 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
 }
 
-void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 }
 
 /* Factorial function. Nuff sed. */
@@ -1527,7 +1527,11 @@ int CombCount(int x, int y, int N) {
     x = 1.3;
   }
   */
-  return N*(x-1) + (y-1) - Nchoosek(x+1, 2);
+  if (x < y) {
+    return N*(x-1) + (y-1) - Nchoosek(x+1, 2);
+  } else {
+    return N*(y-1) + (x-1) - Nchoosek(y+1, 2);
+  }
 } 
 
 double ABmatrix(BODY *body, int j, int jBody, int kBody) {
@@ -2290,7 +2294,7 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
                 
               system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = alpha1;
 	      if (iVerbose > VERBPROG)
-		printf("Laplace functions recalculated at %f years\n",evolve->dTime/YEARSEC);
+		printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
         }
       }
     }

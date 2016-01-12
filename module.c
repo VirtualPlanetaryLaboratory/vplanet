@@ -401,7 +401,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {

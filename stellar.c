@@ -320,7 +320,7 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
 
 }
 
-void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   // Nothing
 }
 

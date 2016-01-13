@@ -3,6 +3,7 @@
 
 from __future__ import print_function, absolute_import
 from .plot import *
+from .utils import GetOutput
 
 __version__ = "0.1.1"
 __author__ = "Rodrigo Luger (rodluger@uw.edu)"

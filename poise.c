@@ -28,7 +28,6 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
   if (src[iBody].bIceSheets) {
     dest[iBody].iNumLats = src[iBody].iNumLats;
     dest[iBody].dIceMassTot = src[iBody].dIceMassTot;
-    dest[iBody].dIceCreep = src[iBody].dIceCreep;
     dest[iBody].dIceDepRate = src[iBody].dIceDepRate;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].dIceAlbedo = src[iBody].dIceAlbedo;
@@ -211,20 +210,6 @@ void ReadHeatCapAnn(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dHeatCapAnn = options->dDefault;
 }
 
-void ReadIceCreep(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].dIceCreep = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dIceCreep = options->dDefault;
-}
 
 void ReadIceDepRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -674,14 +659,6 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HEATCAPANN].iMultiFile = 1;   
   fnRead[OPT_HEATCAPANN] = &ReadHeatCapAnn;
   
-  sprintf(options[OPT_ICECREEP].cName,"dIceCreep");
-  sprintf(options[OPT_ICECREEP].cDescr,"Creep rate coefficient of ice sheets (dynamics)");
-  sprintf(options[OPT_ICECREEP].cDefault,"0");
-  options[OPT_ICECREEP].dDefault = 0;
-  options[OPT_ICECREEP].iType = 2;  
-  options[OPT_ICECREEP].iMultiFile = 1;   
-  fnRead[OPT_ICECREEP] = &ReadIceCreep;
-  
   sprintf(options[OPT_ICEDEPRATE].cName,"dIceDepRate");
   sprintf(options[OPT_ICEDEPRATE].cDescr,"Deposition rate of ice/snow to form ice sheets");
   sprintf(options[OPT_ICEDEPRATE].cDefault,"2.9e-5");
@@ -825,36 +802,59 @@ void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 
 /******************* Verify POISE ******************/
 void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
-  /* If all of bColdstart, dFixIceLat, and bAlbedoZA are set, exit */
-  if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
-    if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Only one of %s, %s, and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_FIXICELAT].cName, options[OPT_ALBEDOZA].cName, cFile);
-    exit(EXIT_INPUT);
-  }
+  if (body[iBody].bClimateModel == ANN) {
+    /* If all of bColdstart, dFixIceLat, and bAlbedoZA are set, exit */
+    if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Only one of %s, %s, and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_FIXICELAT].cName, options[OPT_ALBEDOZA].cName, cFile);
+      exit(EXIT_INPUT);
+    }
     
-  /* Any two of bColdstart, dFixIceLat, and bAlbedoZA are set, exit */ 
-  if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] == -1) {
-    if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_FIXICELAT].cName, cFile);
-    exit(EXIT_INPUT);
-  }
+    /* Any two of bColdstart, dFixIceLat, and bAlbedoZA are set, exit */ 
+    if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] == -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_FIXICELAT].cName, cFile);
+      exit(EXIT_INPUT);
+    }
 
-  if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] == -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
-    if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_ALBEDOZA].cName, cFile);
-    exit(EXIT_INPUT);
-  } 
+    if (options[OPT_COLDSTART].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] == -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_COLDSTART].cName, options[OPT_ALBEDOZA].cName, cFile);
+      exit(EXIT_INPUT);
+    } 
   
-  if (options[OPT_COLDSTART].iLine[iBody+1] == -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
-    if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_FIXICELAT].cName, options[OPT_ALBEDOZA].cName, cFile);
-    exit(EXIT_INPUT);
-  } 
+    if (options[OPT_COLDSTART].iLine[iBody+1] == -1 && options[OPT_FIXICELAT].iLine[iBody+1] > -1 && options[OPT_ALBEDOZA].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Only one of %s and %s can be set in File: %s\n", options[OPT_FIXICELAT].cName, options[OPT_ALBEDOZA].cName, cFile);
+      exit(EXIT_INPUT);
+    } 
   
-  /* If bJormungand is set, is dFixIceLat also set? If not, exit */
-  if (options[OPT_JORMUNGAND].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] == -1) {
+    /* If bJormungand is set, is dFixIceLat also set? If not, exit */
+    if (options[OPT_JORMUNGAND].iLine[iBody+1] > -1 && options[OPT_FIXICELAT].iLine[iBody+1] == -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: If %s is set, %s must also be set in File: %s\n", options[OPT_JORMUNGAND].cName, options[OPT_FIXICELAT].cName, cFile);
+      exit(EXIT_INPUT);
+    }
+    
+    if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] == -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s or %s for annual model in file %s\nPlease use option %s\n", options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName, cFile, options[OPT_SURFALBEDO]);
+      exit(EXIT_INPUT);
+    }
+    
+  } else if (body[iBody].bClimateModel == SEA) {
+    if (options[OPT_SURFALBEDO].iLine[iBody+1] > -1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: Cannot set %s for seasonal model in file %s\nPlease use options %s and %s\n",  options[OPT_SURFALBEDO], cFile, options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName);
+      exit(EXIT_INPUT);
+    }
+  }
+}
+
+void VerifyIceSheets(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
+  if (body[iBody].bClimate == ANN) {
     if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: If %s is set, %s must also be set in File: %s\n", options[OPT_JORMUNGAND].cName, options[OPT_FIXICELAT].cName, cFile);
+      fprintf(stderr,"ERROR: Cannot set %s in annual model in File:%s\n", options[OPT_ICESHEETS].cName, options[OPT_PLANCKB].cName, cFile);
     exit(EXIT_INPUT);
   }
 }
@@ -961,11 +961,6 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].rowswap =  malloc(body[iBody].iNumLats*sizeof(int));
     body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
-      
-   //  
-  //   if (body[iBody].bIceSheets) {
-  //     body[iBody].daIceHeight = malloc(body[iBody].iNumLats*sizeof(double));
-  //   }
   
     
     body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
@@ -1194,6 +1189,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   /* POISE annual has one primary variable! 
      The climate simulation is done almost entirely in ForceBehavior. */
   if (body[iBody].bIceSheets) {
+    VerifyIceSheets(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
       InitializeIceMassDepMelt(body,update,iBody,iLat);
       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fdPoiseDIceMassDtDepMelt;
@@ -1214,7 +1210,6 @@ void InitializeUpdatePoise(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].bIceSheets) {
     update[iBody].iNumVars += body[iBody].iNumLats;
     update[iBody].iNumIceMass = 2;
-//     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
     update[iBody].iaIceMass = malloc(body[iBody].iNumLats*sizeof(int));
     update[iBody].padDIceMassDtPoise = malloc(body[iBody].iNumLats*sizeof(double**));
     update[iBody].iaIceMassDepMelt = malloc(body[iBody].iNumLats*sizeof(int));
@@ -1657,9 +1652,7 @@ void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
 /************ POISE Logging Functions **************/
 
 void LogOptionsPoise(CONTROL *control, FILE *fp) {
-
   fprintf(fp,"-------- POISE Options -----\n\n");
-  
 }
 
 void LogPoise(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
@@ -1733,40 +1726,10 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].bIceSheets) {
     deltax = 2.0/body[iBody].iNumLats;
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      if (!isfinite(body[iBody].daIceMass[iLat])) {
-        printf("stop here\n");
-      }
       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
     }
     
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      /* calculate derivatives to 4th order accuracy */
-      // if (iLat == 0) {
-//         body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
-//             (-25./12*body[iBody].daIceHeight[iLat]+4.0*body[iBody].daIceHeight[iLat+1] - \
-//             3.0*body[iBody].daIceHeight[iLat+2]+4./3*body[iBody].daIceHeight[iLat+3] - \
-//             0.25*body[iBody].daIceHeight[iLat+4]) / (body[iBody].dRadius*deltax);
-//       } else if (iLat == 1) {
-//         body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
-//             (-1./3*body[iBody].daIceHeight[iLat-1]-0.5*body[iBody].daIceHeight[iLat] + \
-//             body[iBody].daIceHeight[iLat+1]-1./6*body[iBody].daIceHeight[iLat+2]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else if (iLat == (body[iBody].iNumLats-2)) {
-//         body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
-//             (1./3*body[iBody].daIceHeight[iLat+1]+0.5*body[iBody].daIceHeight[iLat] - \
-//             body[iBody].daIceHeight[iLat-1]+1./6*body[iBody].daIceHeight[iLat-2]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else if (iLat == (body[iBody].iNumLats-1)) {
-//         body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
-//             (25./12*body[iBody].daIceHeight[iLat]-4.0*body[iBody].daIceHeight[iLat-1] + \
-//             3.0*body[iBody].daIceHeight[iLat-2]-4./3*body[iBody].daIceHeight[iLat-3] + \
-//             0.25*body[iBody].daIceHeight[iLat-4]) / (body[iBody].dRadius*deltax);
-//       } else {
-//         body[iBody].daDIceHeightDy[iLat] = cos(body[iBody].daLats[iLat]) * \
-//             (-body[iBody].daIceHeight[iLat+2]+8.0*body[iBody].daIceHeight[iLat+1] - \
-//             8.0*body[iBody].daIceHeight[iLat-1]+body[iBody].daIceHeight[iLat-2]) / \
-//             (12.*body[iBody].dRadius*deltax);
-//       }
       /* calculate derivative to 2nd order accuracy */
       if (iLat == 0) {
         body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) * \
@@ -2001,22 +1964,6 @@ void Albedo(BODY *body, int iBody) {
     }
   }
 }
-
-
-
-// void DiagMatrix(double *v, double **M, int n, int offset) {
-//   /* Construct a square diagonal nxn matrix from vector v
-//      Diagonal can be offset  */
-//   int i;
-//    
-//   for (i=0;i<(n-abs(offset));i++) {
-//     if (offset >= 0) {
-//       M[i][i+offset] = v[i];
-//     } else {
-//       M[i+offset][i] = v[i];
-//     }
-//   }
-// }
 
 void MatrixInvert(BODY *body, int iBody) {
   double n = body[iBody].iNumLats;
@@ -2447,6 +2394,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
               //calculate derivative of ice mass density and take an euler step
               body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
               body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+              if (body[iBody].daIceMassTmp[i] < 0.0) {
+                 body[iBody].daIceMassTmp[i] = 0.0;
+              } //don't let ice mass become negative
           }
         }
         
@@ -2553,7 +2503,6 @@ void PoiseSeasonal(BODY *body, int iBody) {
                          + body[iBody].daIceBalance[i][nstep-1])/ \
                          (body[iBody].iNumYears*2*PI/body[iBody].dMeanMotion);
           //above gets yearly average over NumYears
-          //body[iBody].daIceMass[i] = body[iBody].daIceMassTmp[i];
         }
         if (nyear != (body[iBody].iNumYears-1)) {
           body[iBody].daIceBalanceAnnual[i] += h/2.*(body[iBody].daIceBalance[i][nstep-1])/ \
@@ -2570,12 +2519,8 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   /* first, calculate melting/accumulation */
   if (body[iBody].daTempLand[iLat]>0.0) {
     /* Ice melting */
-//     if (body[iBody].daIceMassTmp[iLat] > 0.0) {
-      /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
-      dTmp = 2.3*SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
-    // } else {
-//       dTmp = 0.0;
-//     }
+    /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
+    dTmp = 2.3*SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
   } else {
     if (body[iBody].dAlbedoGlobal == 0.6) {
       /* no precip once planet is frozen */
@@ -2639,71 +2584,15 @@ double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   }
   return dTmp;
 }
-// 
-// double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
-//   double dTmp = 0;
-//   
-//   /* ice dynamics (can be shut off by setting dIceCreep = 0) */
-//   if (iaBody[1] == 0) {
-//     dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
-//   } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
-//     dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
-//   } else {
-//     dTmp += body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]+1] - body[iaBody[0]].daIceMass[iaBody[1]]);
-//     dTmp -= body[iaBody[0]].dIceCreep*(body[iaBody[0]].daIceMass[iaBody[1]] - body[iaBody[0]].daIceMass[iaBody[1]-1]);
-//   }
-//   
-//   return dTmp;
-// }
-  
+
 double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {  
   double dTmp, deltax, deltayL, deltayR, dfdy;
   
-  /* get deltay in meters at this latitude */
+  /* get deltay in meters at this latitude's edges */
   deltax = 2.0/body[iaBody[0]].iNumLats;
   deltayL = body[iaBody[0]].dRadius*deltax/sqrt(1.0-pow(body[iaBody[0]].daXBoundary[iaBody[1]],2));
   deltayR = body[iaBody[0]].dRadius*deltax/sqrt(1.0-pow(body[iaBody[0]].daXBoundary[iaBody[1]+1],2));
 
-  
-  /* calculate dy terms (daIceFlow is calc'd in PropertiesPoise) */
-  // if (iaBody[1] == 0) {
-//     dfdy = (-25./12*body[iaBody[0]].daIceFlow[iaBody[1]] + \
-//         4.0*body[iaBody[0]].daIceFlow[iaBody[1]+1] - \
-//         3.0*body[iaBody[0]].daIceFlow[iaBody[1]+2] + \
-//         4./3*body[iaBody[0]].daIceFlow[iaBody[1]+3] - \
-//         0.25*body[iaBody[0]].daIceFlow[iaBody[1]+4])/deltay;
-//   } else if (iaBody[1] == 1) {
-//     dfdy = (-1./3*body[iaBody[0]].daIceFlow[iaBody[1]-1] - \
-//         0.5*body[iaBody[0]].daIceFlow[iaBody[1]] + \
-//         body[iaBody[0]].daIceFlow[iaBody[1]+1] - \
-//         1./6*body[iaBody[0]].daIceFlow[iaBody[1]+2])/deltay;
-//   } else if (iaBody[1] == (body[iaBody[0]].iNumLats-2)) {
-//     dfdy = (1./3*body[iaBody[0]].daIceFlow[iaBody[1]+1] + \
-//         0.5*body[iaBody[0]].daIceFlow[iaBody[1]] - \
-//         body[iaBody[0]].daIceFlow[iaBody[1]-1] + \
-//         1./6*body[iaBody[0]].daIceFlow[iaBody[1]-2])/deltay;
-//   } else if (iaBody[1] == (body[iaBody[0]].iNumLats-1)) {
-//     dfdy = (25./12*body[iaBody[0]].daIceFlow[iaBody[1]] - \
-//         4.0*body[iaBody[0]].daIceFlow[iaBody[1]-1] + \
-//         3.0*body[iaBody[0]].daIceFlow[iaBody[1]-2] - \
-//         4./3*body[iaBody[0]].daIceFlow[iaBody[1]-3] + \
-//         0.25*body[iaBody[0]].daIceFlow[iaBody[1]-4])/deltay;
-//   } else {
-//     dfdy = (-body[iaBody[0]].daIceFlow[iaBody[1]+2] + \
-//         8.0*body[iaBody[0]].daIceFlow[iaBody[1]+1] - \
-//         8.0*body[iaBody[0]].daIceFlow[iaBody[1]-1] + \
-//         body[iaBody[0]].daIceFlow[iaBody[1]-2])/(12*deltay);
-//   }
-  // if (iaBody[1] == 0) {
-//     dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]+1] - \
-//           body[iaBody[0]].daIceFlow[iaBody[1]])/deltay;
-//   } else if (iaBody[1] == (body[iaBody[0]].iNumLats - 1)) {
-//     dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]] - \
-//           body[iaBody[0]].daIceFlow[iaBody[1]-1])/deltay;
-//   } else {
-//     dfdy = (body[iaBody[0]].daIceFlow[iaBody[1]+1]- \
-//           body[iaBody[0]].daIceFlow[iaBody[1]-1])/deltay/2.0;
-//   }
   if (iaBody[1] == 0) {
     dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
       -body[iaBody[0]].daIceHeight[iaBody[1]]))/pow(deltayR,2);
@@ -2717,9 +2606,6 @@ double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {
       body[iaBody[0]].daIceHeight[iaBody[1]-1]))/pow(deltayL,2);
   }
   
-  // if (iaBody[1] == 35) {
-//     printf("ok");
-//   }
   /* convert to mass */
   dTmp = dfdy*RHOICE;
   

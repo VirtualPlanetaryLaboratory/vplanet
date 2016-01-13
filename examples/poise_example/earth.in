@@ -36,7 +36,6 @@ dPlanckA          190
 #dTGlobalEst      288
 #dpCO2            8e-4
 dSurfAlbedo       0.4
-dIceCreep         1e-11
 bClimateModel     sea
 iNumYears         4
 iNStepInYear      60

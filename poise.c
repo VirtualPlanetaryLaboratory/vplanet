@@ -5,6 +5,11 @@
  * Subroutines that control the energy balance model for climate 
 */
 
+/* lines where something like iBody == 0 occurs
+ * ~1389
+ *
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>

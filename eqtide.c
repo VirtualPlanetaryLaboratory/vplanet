@@ -6,8 +6,26 @@
  * model. Also includes subroutines that switch between
  * the two models.
 */ 
-//testing a change
 
+
+/* lines where something like if iBody == 0 count occurs
+ * ~779
+ * ~790
+ * ~975
+ * ~1098
+ * ~1186
+ * ~1280
+ * ~1304
+ * ~1370
+ * ~2200
+ * ~2210
+ * ~2260
+ * ~2306
+ * ~2480
+ * ~2493
+ * ~2681
+ * ~2696
+ */
 
 #include <stdio.h>
 #include <math.h>

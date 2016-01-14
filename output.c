@@ -5,6 +5,14 @@
  * Subroutines for output and logging.
 */
 
+/* where something like iBody == 0 occurs
+ * ~145
+ * ~169
+ * ~186
+ * ~200
+ * ~378
+ * ~400
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

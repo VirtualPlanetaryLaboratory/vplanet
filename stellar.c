@@ -7,6 +7,14 @@
 */
 // NOTE: Still need to edit module.c, update.c
 
+/* lines where something like iBody == 0 occurs
+ * ~50
+ * ~82
+ * ~115
+ * ~219
+ * ~479
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>

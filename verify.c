@@ -5,6 +5,13 @@
  * Validate the options. This will become a mess!
  */
 
+/* Lines where something like iBody == 0 occurs
+ * ~84
+ * ~345
+ * ~415
+ * ~423
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

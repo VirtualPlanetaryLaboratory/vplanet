@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
+/* lines where something like iBody == 0 occurs
+ * ~18
+ */
+
 void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
 }
 

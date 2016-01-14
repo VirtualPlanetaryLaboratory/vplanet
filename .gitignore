@@ -9,3 +9,4 @@ todo.rst
 vplot_config.py
 *.Climate
 *.DailyInsolInit
+*.txt

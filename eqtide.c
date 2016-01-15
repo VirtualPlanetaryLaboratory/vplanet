@@ -1105,19 +1105,19 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iHeccEqtide=*iEqn;
   (*iEqn)++;
 }
 
-void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iKeccEqtide=*iEqn;
   (*iEqn)++;
 }
 
-void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1128,7 +1128,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDYoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1139,7 +1139,7 @@ void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDZoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1150,7 +1150,7 @@ void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   }
 }
 
-void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
   update[iBody].padDrotDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
@@ -1161,7 +1161,7 @@ void FinalizeUpdateRotEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iB
   }
 }
 
-void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iSemiEqtide = *iEqn;
   (*iEqn)++;
@@ -2158,7 +2158,6 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
 void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
   body[iBody].dEcc = sqrt(body[iBody].dEccSq);
-  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
   // LongP is needed for Hecc and Kecc calculations
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   // PrecA is needed for Xobl,Yobl,Zobl calculations
@@ -2172,6 +2171,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
 
+  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -2185,7 +2185,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
     fdaChi(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
 
-    body[iBody].daDoblDtEqtide[iPert] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
+    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iIndex]]);
 
     if (iBody > 0) 
       PropsAuxOrbiter(body,update,iBody);
@@ -2236,11 +2236,11 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
 }
 
 /*
- * Alter the simulation is a specific way. Possibilities are 
+ * Alter the simulation in a specific way. Possibilities are 
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
@@ -2291,7 +2291,7 @@ double fdCPLTidePower(BODY *body,int iBody) {
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     if (iBody == 0) 
-      iOrbiter = iPert;
+      iOrbiter = body[iBody].iaTidePerts[iPert];
     else
       iOrbiter = iBody;
     iIndex = body[iBody].iaTidePerts[iPert];

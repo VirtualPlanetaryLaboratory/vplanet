@@ -10,7 +10,7 @@
 #include <string.h>
 #include "vplanet.h"
 
-void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody) {
+void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
@@ -54,6 +54,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateIceMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
   
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
   module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
@@ -144,6 +145,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateIceMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIceMassModule));
   module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
@@ -173,6 +175,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
@@ -398,9 +401,9 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
-    RecalcLaplace(body,evolve,system);
+    RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   }

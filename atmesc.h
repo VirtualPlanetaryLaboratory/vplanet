@@ -52,14 +52,14 @@ void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
 void InitializeUpdateAtmEsc(BODY*,UPDATE*,int);
-void FinalizeUpdateEccAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateNumIsotopeAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateEccAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateNumIsotopeAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -86,7 +86,7 @@ void LogAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* AtmEsc functions */
-void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 

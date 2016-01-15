@@ -49,14 +49,14 @@ void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
 void InitializeUpdateStellar(BODY*,UPDATE*,int);
-void FinalizeUpdateEccStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateNumIsotopeStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateLuminosityStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateTemperatureStellar(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateEccStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateNumIsotopeStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateLuminosityStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateTemperatureStellar(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -84,7 +84,7 @@ void LogStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Stellar functions */
-void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
 double fdRadius(BODY*,SYSTEM*,int*);

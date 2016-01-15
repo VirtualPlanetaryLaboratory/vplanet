@@ -743,6 +743,7 @@ void WriteLogEntry(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     fprintd(fp,dTmp[j],control->Io.iSciNot,control->Io.iDigits);
     fprintf(fp," ");
   }
+  free(dTmp);
   fprintf(fp,"\n");
 }
 
@@ -897,6 +898,7 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
           strcat(cCol[iFile+iSubOut+iExtra],cTmp);
         }
         iExtra += (output[iOut].iNum-1);
+	free(dTmp);
       }
       
     }
@@ -1020,9 +1022,9 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   char cUnit[OPTLEN], cPoiseGrid[NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
-     1 column, we search the input list sequentially, adding iExtra to the 
+     1 column, we search the input list sequentially, adding iExtra to the
      total number of columns as we go. The calls to fnWrite return the column
-     value in the correct units, and output.iNum already contains the 
+     value in the correct units, and output.iNum already contains the
      number of columns. */
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -1036,6 +1038,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
+	    free(dTmp);
+	    dTmp = NULL;
           }
         }
       }
@@ -1049,15 +1053,15 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
     fprintf(fp,"\n");
     fclose(fp);
-    
+   
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
+      dTmp = malloc(1*sizeof(double));
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
           for (iOut=0;iOut<MODULEOUTEND;iOut++) {
             if (output[iOut].bGrid == 1) {
               if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
-                dTmp = malloc(1*sizeof(double));
                 body[iBody].iWriteLat = iLat;
                 fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
                 dGrid[iGrid]=*dTmp;
@@ -1066,16 +1070,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
           }
         }
         /* Now write the columns */
-  
+ 
         sprintf(cPoiseGrid,"%s.%s.Climate",system->cName,body[iBody].cName);
-    
+   
         if (control->Evolve.dTime == 0 && iLat == 0) {
           WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-          fp = fopen(cPoiseGrid,"w");      
+          fp = fopen(cPoiseGrid,"w");     
         } else {
           fp = fopen(cPoiseGrid,"a");
         }
-      
+     
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid+iExtra;iGrid++) {
           fprintd(fp,dGrid[iGrid],control->Io.iSciNot,control->Io.iDigits);
           fprintf(fp," ");
@@ -1083,6 +1087,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         fprintf(fp,"\n");
         fclose(fp);
       }
+      free(dTmp);
     }
   }
 }

@@ -7,10 +7,11 @@ sUnitLength   au
 sUnitTime     y
 sUnitAngle    d
 bDoLog        1
+#saBodyFiles   sun.in earth.in
 saBodyFiles   sun.in earth.in jupiter.in 
 #saBodyFiles   sun.in jupiter.in saturn.in george.in
 bDoForward    1
 bVarDt        1
 dEta          0.1
 dStopTime     100000
-dOutputTime   1000
+dOutputTime   100

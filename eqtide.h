@@ -80,11 +80,11 @@ void InitializeModuleEqtide(CONTROL*,MODULE*);
 /* Update Functions */
 
 void InitializeUpdateEqtide(BODY*,UPDATE*,int);
-void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int);
-void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int);
+void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -179,7 +179,7 @@ void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,int,int);
+void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 
 /******************** CPL Functions ********************/
 

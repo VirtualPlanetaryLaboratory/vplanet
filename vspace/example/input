@@ -1,5 +1,5 @@
 srcfolder  ../../examples/poise_example
-destfolder  ../../newtrials
+destfolder  newtrials
 trialname  examples
 
 file    earth.in
@@ -7,7 +7,6 @@ dRadius   [-1,-2,-0.5]
 dEcc   [0.1, 0.2, n3]    
             
 file   jupiter.in
-dSemi   5
 dMass   [1e-6,1e-3,l3]
 
 file   sun.in

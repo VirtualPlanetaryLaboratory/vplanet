@@ -4,10 +4,10 @@ saModules    distorb distrot poise
 dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
-dObliquity   22.708 #23.682    #no Moons yet in vplanet....
+dObliquity   23.5 #23.682    #no Moons yet in vplanet....
 dSemi        1.00000011
 #dSemi        1.7
-dEcc         0.025103 #0.036851
+dEcc         0.0167 #0.036851
 dInc         5e-5
 dLongP       13.467 #8.99    #pericenter, wrt Earth's position at spring equinox     
 #note that this is the typical value +180, since that one is solar position
@@ -23,22 +23,24 @@ dDynEllip    3.28e-3
 dPrecA       0.0
 #bOverrideMaxEcc  1
 #dHaltMaxEcc     0.4
-iLatCellNum      50
-bMEPDiff         0
+iLatCellNum      150
+#bMEPDiff         1
 bIceSheets       1
 dInitIceLat      90.
-dInitIceHeight   50.
+dInitIceHeight   0.
 #bHadley          1
-dDiffusion        0.44
-dPlanckA          190
+dDiffusion        0.58
+#dPlanckA          250
 #dPlanckB         1.5
-#bCalcAB          1
-#dTGlobalEst      288
-#dpCO2            8e-4
-dSurfAlbedo       0.4
-dIceCreep         1e-11
+bCalcAB          1
+dTGlobalInit      14.85
+dpCO2            0.001
+#dSurfAlbedo       0.4
 bClimateModel     sea
 iNumYears         4
 iNStepInYear      60
 bSeaIceModel      0
 dIceDepRate       3e-5
+dIceAlbedo        0.6
+dHeatCapLand      1.53
+dMixingDepth      70

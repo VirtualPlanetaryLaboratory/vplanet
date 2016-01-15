@@ -41,11 +41,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_INITICEHEIGHT   1817
 #define OPT_ICEALBEDO       1818
 #define OPT_SURFALBEDO      1819
-#define OPT_ICECREEP        1820
-#define OPT_ICEDEPRATE      1821
+#define OPT_ICEDEPRATE      1820
 
 //#define OPT_LANDGEOM      1840
-//#define OPT_ICEMODEL      1841
 #define OPT_HEATCAPLAND     1842
 #define OPT_HEATCAPWATER    1843
 #define OPT_FRZTSEAICE      1844
@@ -134,6 +132,8 @@ void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int);
 double OLRwk97(BODY*,int);
+double dOLRdThm16(BODY*,int,int);
+double OLRhm16(BODY*,int,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);

@@ -471,7 +471,6 @@ typedef struct {
   double dInitIceHeight;
   double dIceAlbedo;
   double dSurfAlbedo;
-  double dIceCreep;
   double dIceDepRate;
   
   /* additional stuff for seasonal model */
@@ -529,6 +528,9 @@ typedef struct {
   double dAlbedoWater;
   double *daIceFlowMid;
   double *daXBoundary;
+  double *daPlanckA;
+  double *daPlanckB;
+  double dTGlobalInit;
 
 } BODY;
 

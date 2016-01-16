@@ -302,6 +302,7 @@ typedef struct {
   double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
   double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
   double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
+  double dViscUManArr;     /**< Viscosity UMTBL Arrhenius Law */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dShmodUMan;       /**< Shear modulus UMTBL */
@@ -313,6 +314,7 @@ typedef struct {
   double dFMeltUMan;       /**< Melt fraction UMTBL */
   double dFMeltLMan;       /**< Melt fraction LMTBL */
   double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
+  double dMeltfactorLMan;  /**< Melt Phase Factor for Rheology */
   double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
   double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
   double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
@@ -350,6 +352,7 @@ typedef struct {
   double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
+  double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
 
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */

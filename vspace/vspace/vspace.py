@@ -99,9 +99,10 @@ if flist == []:
 if not os.path.exists(src):
   raise IOError("Source folder '%s' does not exist"%src)
   
-dest_parent = '/'.join(dest.split("/")[0:-1])
-if not os.path.exists(dest_parent):
-  raise IOError("Destination's parent folder '%s' does not exist"%dest_parent)
+if re.search('\/',dest) != None:
+  dest_parent = '/'.join(dest.split("/")[0:-1])
+  if not os.path.exists(dest_parent):
+    raise IOError("Destination's parent folder '%s' does not exist"%dest_parent)
 elif not os.path.exists(dest):
   os.system('mkdir '+dest)
 
@@ -131,6 +132,11 @@ if numvars == 0:
           dlines[j] = slines[k]
           if dlines[j][-1] != '\n' and j < (len(dlines)-1):
            dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+        elif dlines[j].split()[0] == 'rm':
+          #remove an option by placing a comment!
+          if dlines[j].split()[1] == spref[k]:
+            dlines[j] = '#'+dlines[j]
+            sflag[k] = 1
   
       fOut.write(dlines[j])  #write to the copied file
     
@@ -181,6 +187,11 @@ elif numvars >= 1:
                 dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
             if dlines[j][-1] != '\n' and j < (len(dlines)-1):
               dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+          elif slines[k].split()[0] == 'rm':
+            #remove an option by placing a comment!
+            if dlines[j].split()[0] == slines[k].split()[1]:
+              dlines[j] = '#'+dlines[j]
+              sflag[k] = 1
               
         fOut.write(dlines[j])  #write to the copied file
       

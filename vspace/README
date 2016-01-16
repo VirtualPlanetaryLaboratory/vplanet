@@ -52,6 +52,12 @@ trialname, these will be number like so:
     default0/
     default1/
     default2/
+
+You can additionally remove options from a source file by the following syntax:
+  
+    rm <option name>
+    
+For the time being, this merely comments out the matching line.
     
 How to generate a parameter space
 =================================

@@ -1,0 +1,110 @@
+VSPACE
+------
+A quick way to generate a parameter space for ``VPLANET``.
+
+Installation
+============
+Navigate to the vspace directory and run ``python setup.py``. All this does is put some 
+path info in your shell files.
+
+Examples
+========
+Run vspace on the command line by typing:
+
+    vspace <input file>
+
+An input file is necessary. Take a look at the ``input`` file in the examples directory. 
+This file will contain a list of files to be copied (from some source directory to a 
+destination directory) and all the VPLANET options you wish to change or add to each file. 
+
+You will need to provide a directory that contains template/example input files (such as 
+any directory in vplanet/examples) in the following syntax:
+  
+    srcfolder <path of directory>
+    
+Additionally, you will need to provide the path of a destination directory. This is where
+your suite of initial conditions will live:
+  
+    destfolder <path of directory>
+    
+Then, provide a list of the files you wish to be copied and used by VPLANET, and all 
+options you wish to change, in the following format:
+    
+    file <name of file in srcfolder>
+    <option name> <value>
+    <option name> <value>
+    ...
+    
+    file <another file in srcfolder>
+    <option name> <value>
+    ...
+    
+Notice that each file is given a separate line starting with ``file``. All options below
+that up to the next instance of ``file`` will belong to the previous entry. 
+
+Finally, it is advisable to provide a prefix for the generated directories: 
+
+    trialname <some descriptive name for your simulations>
+    
+This defaults to ``default``. As an example, if you generate 3 trials, with the default 
+trialname, these will be number like so:
+    
+    default0/
+    default1/
+    default2/
+
+You can additionally remove options from a source file by the following syntax:
+  
+    rm <option name>
+    
+For the time being, this merely comments out the matching line.
+    
+How to generate a parameter space
+=================================
+To generate trials that explore a parameter space, simply provide a range of values for 
+the desired option instead of a single value. These should have 3 entries, surrounded by
+square brackets ``[]``, in the following manner:
+  
+    <option name> [start, end, spacing]
+  
+For example, to generate trials changing ``dSemi`` from 1 to 2 with spacings of 0.1:
+  
+    dSemi  [1, 2, 0.1]
+    
+Alternatively, you can provide the number of trials instead of the spacing by putting an
+``n`` before the 3rd numerical entry. For example,
+
+    dSemi  [1, 2, n10]
+    
+would generate ten trials, equally spaced, from 1 to 2. You can also changed to 
+logarithmic spacing by using ``l`` instead of ``n``:
+  
+    dSemi  [1, 2, l10]
+    
+would generate ten trials, logarithmically spaced, from 1 to 2. 
+
+Minus options are allowed, but if you are providing the spacing, rather than using the 
+``n`` or ``l`` option, either provide a negative spacing or swap the start and end values.
+Use:
+
+    dRadius  [-1, -2, -0.1]
+
+or,
+
+    dRadius  [-2, -1, 0.1]
+    
+rather than ``dRadius [-1, -2, 0.1]``. VSPACE will not check whether a minus option is 
+allowed by VPLANET, so make sure you check ``vplanet -h``. 
+
+You can vary more than one parameter at a time! For example, in your input file you might 
+have,
+
+    dSemi  [1, 2, n10]
+    dEcc   [0.1, 0.2, n10]
+    
+would generate initial conditions for every possible combination of ``dSemi`` and 
+``dEcc``, resulting in a total of 100 trials. You can do this for as many parameters as 
+you like, so you have the power to generate a large number of files very quickly. Use this
+wisely: test with small numbers first to ensure that files end up in the correct locations
+and that initial conditions are indeed output with the desired values.  
+      

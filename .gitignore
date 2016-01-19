@@ -1,3 +1,4 @@
+*.txt
 .DS_Store
 vplanet
 vplanet.dSYM
@@ -9,4 +10,7 @@ todo.rst
 vplot_config.py
 *.Climate
 *.DailyInsolInit
+<<<<<<< HEAD
 *.txt
+=======
+>>>>>>> russell_deux

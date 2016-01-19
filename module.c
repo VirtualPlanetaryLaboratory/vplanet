@@ -102,6 +102,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     iNumModules++;
   if (body[iBody].bPoise)
     iNumModules++;
+  if (body[iBody].bBinary)
+    iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
   module->iaModule[iBody] = malloc(iNumModules*sizeof(int));
@@ -221,6 +223,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bPoise) {
     AddModulePoise(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = POISE;
+  }
+  if (body[iBody].bBinary) {
+    AddModuleBinary(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = BINARY;
   }
 }
 

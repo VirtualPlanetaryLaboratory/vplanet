@@ -552,10 +552,11 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   }
 }
 
-void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
+void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = ATMESC;
+  module->iaModule[iBody][iModule] = BINARY;
 
+  /*
   module->fnInitializeControl[iBody][iModule] = &InitializeControlAtmEsc;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyAtmEsc;
 
@@ -573,6 +574,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
+  */
 
 }
 

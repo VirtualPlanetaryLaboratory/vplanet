@@ -17,6 +17,8 @@
 #define DYNAMO        6
 #define THERMINT      7
 #define POISE         8
+// Benjamin's module 9
+#define BINARY        10
 
 /* Fundamental constants */
 
@@ -465,6 +467,9 @@ typedef struct {
   double dSurfAlbedo;
   double dIceCreep;
   double dIceDepRate;
+
+  /* BINARY parameters */
+  int bBinary;            /**< Apply BINARY module? */
 
 } BODY;
 

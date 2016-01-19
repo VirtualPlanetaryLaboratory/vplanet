@@ -12,7 +12,7 @@
 
 void InitializeModuleBinary(CONTROL *control,MODULE *module);
 void InitializeControlBinary(CONTROL*);
-void AddModuleAtmEsc(MODULE*,int,int);
+void AddModuleBinary(MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);

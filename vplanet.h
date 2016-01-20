@@ -975,6 +975,7 @@ typedef struct {
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
+  int bOutputLapl;     /**< 1 = output laplace functions and related data */
 } CONTROL;
 
 /* The INFILE struct contains all the information 

@@ -1093,33 +1093,64 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       free(dTmp);
     }
     
-    if (body[iBody].bDistOrb && body[iBody].bEqtide) {
+    if (control->bOutputLapl) {
       for (iBody=1;iBody<(control->Evolve.iNumBodies-1);iBody++) {
-        /* open body file to write laplace functions and related */
-        for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
-          sprintf(cLaplaceFunc,"%s.%s.Laplace",body[iBody].cName,body[jBody].cName);
-          if (control->Evolve.dTime == 0) {
-            fp = fopen(cLaplaceFunc,"w");
-          } else {
-            fp = fopen(cLaplaceFunc,"a");
-          }
-          if (body[iBody].dSemi < body[jBody].dSemi) {
-            for (j=0;j<LAPLNUM;j++) {       
-              /* output alpha, laplace func, derivatives for each internal/external pair. 
-              external/internal pairs are duplicates and so not output. this can create a 
-              large amount of data for systems with lots of planets (78 columns/planet pair) */
-              fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
-              fprintf(fp," ");
+        if (body[iBody].bDistOrb && body[iBody].bEqtide) {
+          if (control->Evolve.iDistOrbModel == RD4) {
+            /* open body file to write laplace functions and related */
+            for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+              sprintf(cLaplaceFunc,"%s.%s.Laplace",body[iBody].cName,body[jBody].cName);
+              if (control->Evolve.dTime == 0) {
+                fp = fopen(cLaplaceFunc,"w");
+              } else {
+                fp = fopen(cLaplaceFunc,"a");
+              }
+              if (body[iBody].dSemi < body[jBody].dSemi) {
+                for (j=0;j<LAPLNUM;j++) {       
+                  /* output alpha, laplace func, derivatives for each internal/external pair. 
+                  external/internal pairs are duplicates and so not output. this can create a 
+                  large amount of data for systems with lots of planets (78 columns/planet pair) */
+                  fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                  fprintf(fp," ");
                  
-              fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
-              fprintf(fp," ");
+                  fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                  fprintf(fp," ");
               
-              fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
-              fprintf(fp," ");
+                  fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                  fprintf(fp," ");
+                }
+              }
+              fprintf(fp,"\n");
+              fclose(fp);
+            }
+          }   
+        } else if (body[iBody].bDistOrb) {
+          if (control->Evolve.dTime == 0) {
+            if (control->Evolve.iDistOrbModel == RD4) {
+              /* open body file to write laplace functions and related */
+              for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+                sprintf(cLaplaceFunc,"%s.%s.Laplace",body[iBody].cName,body[jBody].cName);
+                fp = fopen(cLaplaceFunc,"w");
+                if (body[iBody].dSemi < body[jBody].dSemi) {
+                  for (j=0;j<LAPLNUM;j++) {       
+                    /* output alpha, laplace func, derivatives for each internal/external pair. 
+                    external/internal pairs are duplicates and so not output. this can create a 
+                    large amount of data for systems with lots of planets (78 columns/planet pair) */
+                    fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                    fprintf(fp," ");
+                 
+                    fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                    fprintf(fp," ");
+              
+                    fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                    fprintf(fp," ");
+                  }
+                }
+                fprintf(fp,"\n");
+                fclose(fp);
+              }
             }
           }
-          fprintf(fp,"\n");
-          fclose(fp);
         }
       }
     }

@@ -141,8 +141,13 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                 if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
                   dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
                     (2*body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]));
-                  if (dMinNow < dMin) 
-                    dMin = dMinNow;
+                  if (dMinNow < dMin) {
+                    if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
+                        dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
+                    } else {
+                        dMin = dMinNow;
+                    }
+                  }
                 }
               } else if (update[iBody].iaType[iVar][iEqn] == 9) {
                 // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast

@@ -52,6 +52,33 @@ helpstr = \
 \x1b[1mType `vplot -h OPTION_NAME` for info on any option\x1b[0m
 """ % ', '.join(sorted([k for k in defaults.__dict__.keys() if not k.startswith('_')]))
 
+class array(np.ndarray):
+  '''
+  A custom subclass of numpy ndarray with some extra
+  attributes.
+  
+  '''
+  
+  def __new__(cls, input_array, unit = None, description = None):
+    # Input array is an already formed ndarray instance
+    # We first cast to be our class type
+    obj = np.asarray(input_array).view(cls)
+    # add the new attribute to the created instance
+    obj.unit = unit
+    obj.description = description
+    # Finally, we must return the newly created object:
+    return obj
+
+  def __array_finalize__(self, obj):
+    # see InfoArray.__array_finalize__ for comments
+    if obj is None: return
+    self.unit = getattr(obj, 'unit', None)
+    self.description = getattr(obj, 'description', None)
+
+  def __array_wrap__(self, out_arr, context = None):
+    # Call the parent
+    return np.ndarray.__array_wrap__(self, out_arr, context)
+
 def ShowHelp(param = None):
   '''
   
@@ -106,33 +133,6 @@ class Param(object):
       return "%s (%s)" % (lbl, self.unit)
     else:
       return lbl
-
-class array(np.ndarray):
-  '''
-  A custom subclass of numpy ndarray with some extra
-  attributes.
-  
-  '''
-  
-  def __new__(cls, input_array, unit = None, description = None):
-    # Input array is an already formed ndarray instance
-    # We first cast to be our class type
-    obj = np.asarray(input_array).view(cls)
-    # add the new attribute to the created instance
-    obj.unit = unit
-    obj.description = description
-    # Finally, we must return the newly created object:
-    return obj
-
-  def __array_finalize__(self, obj):
-    # see InfoArray.__array_finalize__ for comments
-    if obj is None: return
-    self.unit = getattr(obj, 'unit', None)
-    self.description = getattr(obj, 'description', None)
-
-  def __array_wrap__(self, out_arr, context = None):
-    # Call the parent
-    return np.ndarray.__array_wrap__(self, out_arr, context)
 
 def GetParamDescriptions():
   '''

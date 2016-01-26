@@ -76,8 +76,8 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
-#define VISCREF          7e7 //6e7           //[m2/s] reference kinematic mantle viscosity
-#define VISCJUMPULM      5.6  //2.0           //[nd] viscosity jump from upper to lower mantle
+#define VISCREF          6e7           //[m2/s] reference kinematic mantle viscosity, def ViscRef.
+#define VISCJUMPULM      2.1           //[nd] viscosity jump from upper to lower mantle, def ViscRatioMan.
 #define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
@@ -94,8 +94,9 @@
 #define DTLIQMAN         +500.0        //[K] mantle liquidus offset, T_liq=T_sol+DTLIQMAN
 #define DVLIQDTM         +8e17         //[m3/K] change in mantle liquid volume with T_m approximated (Driscoll&B 2015)
 #define DLIND            7000.0*KM     //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
-#define TREFLIND         5600.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
+#define TREFLIND         5430.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
 #define DVLIQDTEMP       8e17          //[m^3/K] approximation of mantle DV_liq/DT.
+#define ERUPTEFF         0.1           //[nd] Default eruption efficiency.
 /* ADIABATIC PROPERTIES */
 #define ADGRADMAN        (0.5)/(KM)    //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
 #define DADCORE          6340.0*KM     //[m] liq iron core adiabatic length scale (DB15 eq A22)
@@ -138,11 +139,13 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_FMELTUMAN       1725   //Melt fraction UMTBL
 #define OPT_FMELTLMAN       1726   //Melt fraction LMTBL
 #define OPT_MELTFACTORUMAN  1727   //Melt fraction UMTBL
-#define OPT_DEPTHMELTMAN    1728   //Depth to base of UM melt region.
-#define OPT_TDEPTHMELTMAN   1729   //Temp at base of UM melt region.
-#define OPT_TJUMPMELTMAN    1730   //Temp jump across UM melt region.
-#define OPT_K2MAN           1731   //Mantle k2 love number
-#define OPT_IMK2MAN         1732   //Mantle Im(k2) love number
+#define OPT_MELTFACTORLMAN  1728   //Melt fraction LMTBL
+#define OPT_DEPTHMELTMAN    1729   //Depth to base of UM melt region.
+#define OPT_TDEPTHMELTMAN   1730   //Temp at base of UM melt region.
+#define OPT_TJUMPMELTMAN    1731   //Temp jump across UM melt region.
+#define OPT_K2MAN           1732   //Mantle k2 love number
+#define OPT_IMK2MAN         1733   //Mantle Im(k2) love number
+#define OPT_VISCUMANARR     1736   //Viscosity UM Arrhenius
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1740   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1741   //time deriv of mean core temp
@@ -173,6 +176,7 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
 #define OPT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OPT_VISCREF         1792   //Reference Viscosity
+#define OPT_TREFLIND        1793   //Reference Temperature Lindemann Core Liquidus
 
 #define OPT_HALTMINTMAN     1798
 #define OPT_HALTMINTCORE    1799
@@ -183,6 +187,7 @@ void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRatioMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -240,11 +245,13 @@ void PropsAuxThermint(BODY*,UPDATE*,int);
 #define OUT_FMELTUMAN       1727   //Melt fraction UMTBL
 #define OUT_FMELTLMAN       1728   //Melt fraction LMTBL
 #define OUT_MELTFACTORUMAN  1729   //Melt factor UMTBL
-#define OUT_DEPTHMELTMAN    1730   //Depth to base of UM melt region.
-#define OUT_TDEPTHMELTMAN   1731   //Temp at base of UM melt region.
-#define OUT_TJUMPMELTMAN    1732   //Temp jump across UM melt region.
-#define OUT_K2MAN           1733   //Mantle k2 love number
-#define OUT_IMK2MAN         1734   //Mantle Im(k2) love number
+#define OUT_MELTFACTORLMAN  1730   //Melt factor LMTBL
+#define OUT_DEPTHMELTMAN    1731   //Depth to base of UM melt region.
+#define OUT_TDEPTHMELTMAN   1732   //Temp at base of UM melt region.
+#define OUT_TJUMPMELTMAN    1733   //Temp jump across UM melt region.
+#define OUT_K2MAN           1734   //Mantle k2 love number
+#define OUT_IMK2MAN         1735   //Mantle Im(k2) love number
+#define OUT_VISCUMANARR     1736   //Viscosity UM Arrhenius
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1740   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1741   //time deriv of mean core temp
@@ -276,6 +283,7 @@ void PropsAuxThermint(BODY*,UPDATE*,int);
 #define OUT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
 #define OUT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OUT_VISCREF         1792   //Reference Viscosity
+#define OUT_TREFLIND        1793   //Reference Lindeman Temperature
 
 
 void HelpOutputThermint(OUTPUT*);
@@ -293,6 +301,7 @@ void WriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double
 void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteViscUManArr(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -300,6 +309,7 @@ void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFMeltLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteMeltfactorUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMeltfactorLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTJumpMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -338,6 +348,7 @@ double fdTJumpUMan(BODY*,int);
 double fdTJumpLMan(BODY*,int);
 double fdSignTJumpUMan(BODY*,int);
 double fdSignTJumpLMan(BODY*,int);
+double fdViscUManArr(BODY*,int);
 double fdViscUMan(BODY*,int);
 double fdViscLMan(BODY*,int);
 double fdViscRatioMan(BODY*,int);
@@ -346,7 +357,9 @@ double fdBLLMan(BODY*,int);
 double fdShmodUMan(BODY*,int);
 double fdShmodLMan(BODY*,int);
 double fdFMeltUMan(BODY*,int);
+double fdFMeltLMan(BODY*,int);
 double fdMeltfactorUMan(BODY*,int);
+double fdMeltfactorLMan(BODY*,int);
 double fdTsolUMan(BODY*,int);  //solidus temp at UMBL
 double fdTliqUMan(BODY*,int);  //liquidus at UMBL
 double fdTsolLMan(BODY*,int);

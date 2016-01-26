@@ -15,7 +15,7 @@ dLongA       348.73936
 # bGRCorr      0
 saOutputOrder    Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal -TotIceMass DeltaTime
 #saOutputOrder     Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal
-saGridOutput     -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt -IceFlow
+saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt -IceFlow
 #saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
 #bInvPlane    1
 #dMeanA       27

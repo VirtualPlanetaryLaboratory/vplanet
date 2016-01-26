@@ -99,6 +99,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEHEIGHT        1840
 #define OUT_DICEMASSDT       1841
 #define OUT_ICEFLOW          1842
+#define OUT_TIMELAT          1843
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

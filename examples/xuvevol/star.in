@@ -6,9 +6,9 @@ saModules	    stellar                     # Modules to apply, exact spelling req
 saOutputOrder Time -Luminosity -Radius -RotPer -LXUV
 
 # Physical Parameters
-dMass         0.5                         # Mass, solar masses
+dMass         0.1                         # Mass, solar masses
 dObliquity    0		
-dRotPeriod    -8.5                       # Rotation period, negative -> days
+dRotPeriod    -500                       # Rotation period, negative -> days
 dRadGyra      0.4                         # Radius of gyration (moment of inertia constant)
 
 # STELLAR Parameters

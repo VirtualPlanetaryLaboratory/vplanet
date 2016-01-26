@@ -1651,14 +1651,14 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEFLOW].bGrid = 1;
   fnWrite[OUT_ICEFLOW] = &WriteDIceMassDtFlow; 
   
-  sprintf(output[OUT_TIMELAT].cName,"Time");
-  sprintf(output[OUT_TIMELAT].cDescr,"time, printed for each latitude");
-  sprintf(output[OUT_TIMELAT].cNeg,"Gyr");
-  output[OUT_TIMELAT].bNeg = 1;
-  output[OUT_TIMELAT].dNeg = 1./(YEARSEC*1e9);
-  output[OUT_TIMELAT].iNum = 1;
-  output[OUT_TIMELAT].bGrid = 1;
-  fnWrite[OUT_TIMELAT] = &WriteTime; 
+  // sprintf(output[OUT_TIMELAT].cName,"Time");
+//   sprintf(output[OUT_TIMELAT].cDescr,"time, printed for each latitude");
+//   sprintf(output[OUT_TIMELAT].cNeg,"Gyr");
+//   output[OUT_TIMELAT].bNeg = 1;
+//   output[OUT_TIMELAT].dNeg = 1./(YEARSEC*1e9);
+//   output[OUT_TIMELAT].iNum = 1;
+//   output[OUT_TIMELAT].bGrid = 1;
+//   fnWrite[OUT_TIMELAT] = &WriteTime; 
   
 }
 

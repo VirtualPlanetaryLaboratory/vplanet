@@ -615,6 +615,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIME].bNeg = 1;
   output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_TIME].iNum = 1;
+  output[OUT_TIME].bGrid = 2;
   fnWrite[OUT_TIME] = &WriteTime;
   
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
@@ -1030,7 +1031,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-        if (output[iOut].bGrid == 0) {
+        if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
           if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
             /* Match! */
             dTmp=malloc(output[iOut].iNum*sizeof(double));
@@ -1060,7 +1061,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
           for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-            if (output[iOut].bGrid == 1) {
+            if (output[iOut].bGrid == 1 || output[iOut].bGrid == 2) {
               if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
                 body[iBody].iWriteLat = iLat;
                 fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);

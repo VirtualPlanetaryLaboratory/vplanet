@@ -261,14 +261,17 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
         body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-	      body[iFile-1].bThermint = 1;
+	body[iFile-1].bThermint = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
-	      body[iFile-1].bAtmEsc = 1;
-	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
-	      body[iFile-1].bStellar = 1;
-	    } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
-	      body[iFile-1].bPoise = 1;
-      } else {
+        body[iFile-1].bAtmEsc = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
+	body[iFile-1].bStellar = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
+	body[iFile-1].bPoise = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
+        body[iFile-1].bBinary = 1;
+      }
+        else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
@@ -294,7 +297,8 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bThermint = 0;
       (*body)[iBody].bPoise = 0;
       (*body)[iBody].bStellar = 0;
-      (*body)[iBody].bAtmEsc = 0;  }
+      (*body)[iBody].bAtmEsc = 0;
+      (*body)[iBody].bBinary = 0; }
 }
 
 /*

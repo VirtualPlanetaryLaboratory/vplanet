@@ -1143,6 +1143,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
+  InitializeOutputBinary(output,fnWrite);
 
 }
 

@@ -167,8 +167,6 @@ typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   char cType[OPTLEN];    /**< Type of object N/I */
 
-  int iBodyType; /**< Body's type: 0 for star, 1 for planet  */
-
   /* Body Properties */
   double dAge;           /**< Body's Age */
   double dMass;		 /**< Body's Mass */
@@ -223,7 +221,12 @@ typedef struct {
   int bEigenSet;
   double *dLOrb;
   double *dLOrbTmp;
-    
+
+  /* BINARY parameters */
+  int iBodyType;        /**< Body's type: 0 for star, 1 for planet  */
+  double *dCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
+  double *dCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
+
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */

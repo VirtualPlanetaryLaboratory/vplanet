@@ -485,6 +485,11 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 }
 
+void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
+{
+  //TODO
+}
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -503,6 +508,11 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENVELOPEMASS].iNum = 1;
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
+}
+
+void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule)
+{
+  //TODO
 }
 
 void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule) {
@@ -529,6 +539,10 @@ void LogBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
   */
 }
 
+void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+  //TODO
+}
+
 void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;  
   fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
@@ -536,19 +550,6 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-    /*
-    fprintf(fp,"40K Constant: ");
-    fprintd(fp,body[iBody].d40KConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"232Th Constant: ");
-    fprintd(fp,body[iBody].d232ThConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"238U Constant: ");
-    fprintd(fp,body[iBody].d238UConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-    */
   }
 }
 

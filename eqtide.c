@@ -1138,6 +1138,8 @@ void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
+  /* Change iTidePerts to iNumBodies XXX */
+
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -1149,6 +1151,8 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
+  /* Change iTidePerts to iNumBodies XXX */
+
   update[iBody].padDYoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaYoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -1159,6 +1163,8 @@ void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
+
+  /* Change iTidePerts to iNumBodies XXX */
 
   update[iBody].padDZoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaZoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
@@ -2203,10 +2209,13 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
     fdaChi(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
 
-    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iIndex]]);
-
     if (iBody > 0) 
       PropsAuxOrbiter(body,update,iBody);
+  }
+
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+    iIndex = body[iBody].iaTidePerts[iPert];
+    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iIndex]]);
   }
 }
 
@@ -2296,6 +2305,8 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
 /*
  ************************ CPL Functions ******************
 */
+
+/* XXX Add intermediate parameters! They will be optimized away */
 
 /* Auxiliary Parameters */
 
@@ -2402,21 +2413,19 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
  */
 
 double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
+  int iB0=iaBody[0],iB1=iaBody[1];
+
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[0] = central body */
 
   double dSum=0;
 
-    /* Old sum
-     dSum += body[iaBody[iBody]].dTidalZ*(4*body[iaBody[iBody]].iTidalEpsilon[0] + body[1].dEcc*body[1].dEcc*(-20*body[iaBody[iBody]].iTidalEpsilon[0] + 147./2*body[iaBody[iBody]].iTidalEpsilon[1] + 0.5*body[iaBody[iBody]].iTidalEpsilon[2] - 3*body[iaBody[iBody]].iTidalEpsilon[5]) - 4*sin(dPsi[iBody])*sin(dPsi[iBody])*(body[iaBody[iBody]].iTidalEpsilon[0]-body[iaBody[iBody]].iTidalEpsilon[8]));
-    */
-
   // Contribution from orbiter
-  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(4*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + body[iaBody[0]].dEccSq*(-20*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + 147./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] - 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]) - 4*sin(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dObliquity)*(body[iaBody[0]].iTidalEpsilon[iaBody[1]][0]-body[iaBody[0]].iTidalEpsilon[iaBody[1]][8]));
+  dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
   // Contribution from central body
-  dSum += body[iaBody[1]].dTidalZ[iaBody[0]]*(4*body[iaBody[1]].iTidalEpsilon[iaBody[0]][0] + body[iaBody[0]].dEccSq*(-20*body[iaBody[1]].iTidalEpsilon[iaBody[0]][0] + 147./2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][1] + 0.5*body[iaBody[1]].iTidalEpsilon[iaBody[0]][2] - 3*body[iaBody[1]].iTidalEpsilon[iaBody[0]][5]) - 4*sin(body[iaBody[1]].dObliquity)*sin(body[iaBody[1]].dObliquity)*(body[iaBody[1]].iTidalEpsilon[iaBody[0]][0]-body[iaBody[1]].iTidalEpsilon[iaBody[0]][8]));
+  dSum += body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
   
-  return body[iaBody[0]].dSemi*body[iaBody[0]].dSemi/(4*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
+  return body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
 }
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. 
@@ -2425,14 +2434,15 @@ double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
   double dSum;
+  int iB0=iaBody[0],iB1=iaBody[1];
 
   // Contribution from Central Body
-  dSum = body[iaBody[1]].dTidalZ[iaBody[0]]*(2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][0] - 49./2*body[iaBody[1]].iTidalEpsilon[iaBody[0]][1] + 0.5*body[iaBody[1]].iTidalEpsilon[iaBody[0]][2] + 3*body[iaBody[1]].iTidalEpsilon[iaBody[0]][5]);
+  dSum = body[iB1].dTidalZ[iB0]*(2*body[iB1].iTidalEpsilon[iB0][0] - 49./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] + 3*body[iB1].iTidalEpsilon[iB0][5]);
 
   // Contribution from Orbiter
-  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] - 49./2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + 0.5*body[iaBody[0]].iTidalEpsilon[iaBody[1]][2] + 3*body[iaBody[0]].iTidalEpsilon[iaBody[1]][5]);
+  dSum += body[iB0].dTidalZ[iB1]*(2*body[iB0].iTidalEpsilon[iB1][0] - 49./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] + 3*body[iB0].iTidalEpsilon[iB1][5]);
   
-  return  -body[iaBody[0]].dSemi*sqrt(body[iaBody[0]].dEccSq)/(8*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
+  return  -body[iB0].dSemi*sqrt(body[iB0].dEccSq)/(8*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
 }
 
 double fdCPLDHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -2471,6 +2481,8 @@ double fdCPLDeccDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
 }  
 
 double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
+  int iB0=iaBody[0],iB1=iaBody[1];
+
   /* Don't know if this is the central body or orbiter, but orbital
      info stored in body[iOrbter], so must figure this out. 
      Is there a faster way to do this? Note that forcing iaBody[0]
@@ -2478,27 +2490,27 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
      derivatives need this determination. */
   int iOrbiter;
 
-  if (bPrimary(body,iaBody[0]))
-    iOrbiter = iaBody[1];
+  if (bPrimary(body,iB0))
+    iOrbiter = iB1;
   else
-    iOrbiter = iaBody[0];
+    iOrbiter = iB0;
 
   /* Note if tidally locked, ForceBehavior should fix the rotation
      rate and override this derivative. XXX This derivative should
      be removed from the update matrix in that case*/
 
-  return -body[iaBody[0]].dTidalZ[iaBody[1]]/(8*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion)*(4*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + body[iOrbiter].dEccSq*(-20*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0] + 49*body[iaBody[0]].iTidalEpsilon[iaBody[1]][1] + body[iaBody[0]].iTidalEpsilon[iaBody[1]][2]) + 2*sin(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dObliquity)*(-2*body[iaBody[0]].iTidalEpsilon[iaBody[1]][0]+body[iaBody[0]].iTidalEpsilon[iaBody[1]][8]+body[iaBody[0]].iTidalEpsilon[iaBody[1]][9]));
+  return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
 }
 
 double fdCPLDoblDt(BODY *body,int *iaBody) {
-  int iOrbiter;
+  int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
 
-  if (bPrimary(body,iaBody[0]))
-    iOrbiter = iaBody[1];
+  if (bPrimary(body,iB0))
+    iOrbiter = iB1;
   else
-    iOrbiter = iaBody[0];
+    iOrbiter = iB0;
 
-  return body[iaBody[0]].dTidalZ[iaBody[1]]*sin(body[iaBody[0]].dObliquity)/(4*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion*body[iaBody[0]].dRotRate) * (body[iaBody[0]].iTidalEpsilon[iaBody[1]][0]*(1-body[iaBody[0]].dTidalChi[iaBody[1]]) + (body[iaBody[0]].iTidalEpsilon[iaBody[1]][8]-body[iaBody[0]].iTidalEpsilon[iaBody[1]][9])*(1 + body[iaBody[0]].dTidalChi[iaBody[1]]));
+  return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
 }
 
 double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {

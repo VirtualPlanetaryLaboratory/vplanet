@@ -74,6 +74,7 @@ void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_LUMINOSITY	        1510
 #define OUT_LXUV	              1511
 #define OUT_TEMPERATURE	        1512
+#define OUT_LXUVFRAC            1513
 
 void HelpOutputStellar(OUTPUT*);
 void InitializeOutputStellar(OUTPUT*,fnWriteOutput[]);
@@ -83,6 +84,7 @@ void FinalizeOutputFunctionStellar(OUTPUT*,int,int);
 void WriteLuminosity(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteLXUVFrac(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL*,FILE*);

@@ -306,17 +306,20 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
   // Update LXUV
   double dPer, dLXRay, dLEUV;
   dPer = 2 * PI / body[iBody].dRotRate;
+  
   // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
   dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
 
-  if (log10(dLXRay / body[iBody].dLuminosity) > log10(body[iBody].dSatXUVFrac)){
+  if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
     // Saturated regime (Reiners, Schussler & Passegger 2014)
     dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
   }
+  
   // Sanz-Forcada et al. (2011), eqn (3)
   dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+  
   // Based on Miles Timpe's thesis:
-  body[iBody].dLXUV = dLEUV + dLXRay;
+  body[iBody].dLXUV = dLXRay + dLEUV;
 
 }
 
@@ -491,6 +494,11 @@ void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 }
 
+void WriteLXUVFrac(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
+  strcpy(cUnit,"");
+}
+
 void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_LUMINOSITY].cName,"Luminosity");
@@ -515,6 +523,11 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUV].iNum = 1;
   fnWrite[OUT_LXUV] = &WriteLXUV;
 
+  sprintf(output[OUT_LXUVFRAC].cName,"LXUVFrac");
+  sprintf(output[OUT_LXUVFRAC].cDescr,"X-ray/XUV Luminosity Fraction");
+  output[OUT_LXUVFRAC].bNeg = 0;
+  output[OUT_LXUVFRAC].iNum = 1;
+  fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
 }
 
 void FinalizeOutputFunctionStellar(OUTPUT *output,int iBody,int iModule) {

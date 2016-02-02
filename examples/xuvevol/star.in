@@ -3,7 +3,7 @@ sName	        star		                    # Body's name
 saModules	    stellar                     # Modules to apply, exact spelling required
 
 # Output
-saOutputOrder Time -Luminosity -Radius -RotPer -LXUV
+saOutputOrder Time -Luminosity -Radius -RotPer -LXUV LXUVFrac
 
 # Physical Parameters
 dMass         0.1                         # Mass, solar masses

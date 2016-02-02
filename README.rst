@@ -8,7 +8,7 @@ Once a *VPLANET* run is complete, open up Python in the run directory and type
    import vplot
    output = vplot.GetOutput()
 
-to get an object that contains all the output information contained in the *.forward* and *.Climate* files in the `cwd`. For instance, to access the array of obliquity of `Earth` in `poise_example`, simply type
+to get an object that contains all the output information contained in the *.forward* and *.Climate* files in the *cwd*. For instance, to access the array of obliquity of *Earth* in *poise_example*, simply type
 
 .. code-block:: python
    

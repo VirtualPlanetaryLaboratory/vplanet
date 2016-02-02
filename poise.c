@@ -843,14 +843,14 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
     
     if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] == -1) {
       if (iVerbose >= VERBERR) 
-        fprintf(stderr,"ERROR: Cannot set %s or %s for annual model in file %s\nPlease use option %s\n", options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName, cFile, options[OPT_SURFALBEDO]);
+        fprintf(stderr,"ERROR: Cannot set %s or %s for annual model in file %s\nPlease use option %s\n", options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName, cFile, options[OPT_SURFALBEDO].cName);
       exit(EXIT_INPUT);
     }
     
   } else if (body[iBody].bClimateModel == SEA) {
     if (options[OPT_SURFALBEDO].iLine[iBody+1] > -1) {
       if (iVerbose >= VERBERR) 
-        fprintf(stderr,"ERROR: Cannot set %s for seasonal model in file %s\nPlease use options %s and %s\n",  options[OPT_SURFALBEDO], cFile, options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName);
+        fprintf(stderr,"ERROR: Cannot set %s for seasonal model in file %s\nPlease use options %s and %s\n",  options[OPT_SURFALBEDO].cName, cFile, options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName);
       exit(EXIT_INPUT);
     }
   }
@@ -859,7 +859,7 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
 void VerifyIceSheets(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
   if (body[iBody].bClimateModel == ANN) {
     if (iVerbose >= VERBERR) 
-      fprintf(stderr,"ERROR: Cannot set %s in annual model in File:%s\n", options[OPT_ICESHEETS].cName, options[OPT_PLANCKB].cName, cFile);
+      fprintf(stderr,"ERROR: Cannot set %s in annual model in File:%s\n", options[OPT_ICESHEETS].cName, cFile);
     exit(EXIT_INPUT);
   }
 }
@@ -1655,6 +1655,16 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEFLOW].iNum = 1;
   output[OUT_ICEFLOW].bGrid = 1;
   fnWrite[OUT_ICEFLOW] = &WriteDIceMassDtFlow; 
+  
+  // sprintf(output[OUT_TIMELAT].cName,"Time");
+//   sprintf(output[OUT_TIMELAT].cDescr,"time, printed for each latitude");
+//   sprintf(output[OUT_TIMELAT].cNeg,"Gyr");
+//   output[OUT_TIMELAT].bNeg = 1;
+//   output[OUT_TIMELAT].dNeg = 1./(YEARSEC*1e9);
+//   output[OUT_TIMELAT].iNum = 1;
+//   output[OUT_TIMELAT].bGrid = 1;
+//   fnWrite[OUT_TIMELAT] = &WriteTime; 
+  
 }
 
 void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {

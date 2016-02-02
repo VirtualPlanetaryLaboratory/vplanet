@@ -623,6 +623,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIME].bNeg = 1;
   output[OUT_TIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_TIME].iNum = 1;
+  output[OUT_TIME].bGrid = 2;
   fnWrite[OUT_TIME] = &WriteTime;
   
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
@@ -918,6 +919,36 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
   fprintf(fp, "\n");
 }
 
+void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+  int iFile,iOut,iSubOut,iExtra=0;
+  char cCol[NUMOUT][OPTLEN];
+  double *dTmp;
+  char cUnit[48],cTmp[48];
+  
+  for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
+    for (iOut=0;iOut<MODULEOUTEND;iOut++) {
+      if (memcmp(files->Outfile[iBody].caGrid[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+        /* Match! */
+        dTmp=malloc(output[iOut].iNum*sizeof(double));
+        fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+        for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
+          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caGrid[iFile]);
+          sprintf(cTmp,"[%s]",cUnit);
+          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+        }
+        iExtra += (output[iOut].iNum-1);
+	free(dTmp);
+      }
+      
+    }
+  }
+
+  fprintf(fp,"Grid Output Order:");
+  for (iFile=0;iFile<(files->Outfile[iBody].iNumGrid + iExtra);iFile++)
+    fprintf(fp," %s",cCol[iFile]);
+  fprintf(fp, "\n");
+}
+
 void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE *fp) {
   int iFile,iModule;
 
@@ -984,6 +1015,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
       module->fnLogBody[iBody][iModule](body,control,output,system,update,fnWrite,fp,iBody);
     
     LogOutputOrder(body,control,files,output,system,update,fnWrite,fp,iBody);
+    LogGridOutput(body,control,files,output,system,update,fnWrite,fp,iBody);
   }
 }
 
@@ -1024,10 +1056,10 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 }
 
 void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput *fnWrite,double dTime,double dDt){
-  int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat;
+  int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat,jBody,j;
   double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[NAMELEN];
+  char cUnit[OPTLEN], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the
@@ -1038,7 +1070,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-        if (output[iOut].bGrid == 0) {
+        if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
           if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
             /* Match! */
             dTmp=malloc(output[iOut].iNum*sizeof(double));
@@ -1068,7 +1100,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid;iGrid++) {
           for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-            if (output[iOut].bGrid == 1) {
+            if (output[iOut].bGrid == 1 || output[iOut].bGrid == 2) {
               if (memcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
                 body[iBody].iWriteLat = iLat;
                 fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
@@ -1099,6 +1131,68 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         fclose(fp);
       }
       free(dTmp);
+    }
+    
+    if (control->bOutputLapl) {
+      for (iBody=1;iBody<(control->Evolve.iNumBodies-1);iBody++) {
+        if (body[iBody].bDistOrb && body[iBody].bEqtide) {
+          if (control->Evolve.iDistOrbModel == RD4) {
+            /* open body file to write laplace functions and related */
+            for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+              sprintf(cLaplaceFunc,"%s.%s.Laplace",body[iBody].cName,body[jBody].cName);
+              if (control->Evolve.dTime == 0) {
+                fp = fopen(cLaplaceFunc,"w");
+              } else {
+                fp = fopen(cLaplaceFunc,"a");
+              }
+              if (body[iBody].dSemi < body[jBody].dSemi) {
+                for (j=0;j<LAPLNUM;j++) {       
+                  /* output alpha, laplace func, derivatives for each internal/external pair. 
+                  external/internal pairs are duplicates and so not output. this can create a 
+                  large amount of data for systems with lots of planets (78 columns/planet pair) */
+                  fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                  fprintf(fp," ");
+                 
+                  fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                  fprintf(fp," ");
+              
+                  fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                  fprintf(fp," ");
+                }
+              }
+              fprintf(fp,"\n");
+              fclose(fp);
+            }
+          }   
+        } else if (body[iBody].bDistOrb) {
+          if (control->Evolve.dTime == 0) {
+            if (control->Evolve.iDistOrbModel == RD4) {
+              /* open body file to write laplace functions and related */
+              for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+                sprintf(cLaplaceFunc,"%s.%s.Laplace",body[iBody].cName,body[jBody].cName);
+                fp = fopen(cLaplaceFunc,"w");
+                if (body[iBody].dSemi < body[jBody].dSemi) {
+                  for (j=0;j<LAPLNUM;j++) {       
+                    /* output alpha, laplace func, derivatives for each internal/external pair. 
+                    external/internal pairs are duplicates and so not output. this can create a 
+                    large amount of data for systems with lots of planets (78 columns/planet pair) */
+                    fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                    fprintf(fp," ");
+                 
+                    fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                    fprintf(fp," ");
+              
+                    fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                    fprintf(fp," ");
+                  }
+                }
+                fprintf(fp,"\n");
+                fclose(fp);
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

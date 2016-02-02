@@ -911,6 +911,36 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
   fprintf(fp, "\n");
 }
 
+void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+  int iFile,iOut,iSubOut,iExtra=0;
+  char cCol[NUMOUT][OPTLEN];
+  double *dTmp;
+  char cUnit[48],cTmp[48];
+  
+  for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
+    for (iOut=0;iOut<MODULEOUTEND;iOut++) {
+      if (memcmp(files->Outfile[iBody].caGrid[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+        /* Match! */
+        dTmp=malloc(output[iOut].iNum*sizeof(double));
+        fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+        for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
+          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caGrid[iFile]);
+          sprintf(cTmp,"[%s]",cUnit);
+          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+        }
+        iExtra += (output[iOut].iNum-1);
+	free(dTmp);
+      }
+      
+    }
+  }
+
+  fprintf(fp,"Grid Output Order:");
+  for (iFile=0;iFile<(files->Outfile[iBody].iNumGrid + iExtra);iFile++)
+    fprintf(fp," %s",cCol[iFile]);
+  fprintf(fp, "\n");
+}
+
 void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE *fp) {
   int iFile,iModule;
 
@@ -977,6 +1007,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
       module->fnLogBody[iBody][iModule](body,control,output,system,update,fnWrite,fp,iBody);
     
     LogOutputOrder(body,control,files,output,system,update,fnWrite,fp,iBody);
+    LogGridOutput(body,control,files,output,system,update,fnWrite,fp,iBody);
   }
 }
 

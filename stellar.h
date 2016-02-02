@@ -7,10 +7,14 @@
  *
 */
 
-#define LSUN                          3.846e26      // Solar luminosity (W)
-#define TSUN                          5778.         // Solar TEff (K)
+#define LSUN                          3.846e26          // Solar luminosity (W)
+#define TSUN                          5778.             // Solar TEff (K)
+#define RM12OMEGACRIT                 8.56e-6           // Critical angular velocity (1/s) from Reiners & Mohanty (2012)
+#define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)                       
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
+#define STELLAR_MODEL_REINERS         2
+#define STELLAR_MODEL_CONST           3
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
@@ -26,6 +30,8 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SATXUVFRAC          1511 // Saturation XUV luminosity fraction
 #define OPT_STELLARMODEL        1512 // Luminosity evolution model
 #define OPT_TEMPERATURE         1513 // Stellar effective temperature (initial)
+#define OPT_WINDMODEL           1514 // Wind model
+#define OPT_HALTENDBARAFFEFGRID 1515 // Halt when we reach the end of the Baraffe grid?
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -36,7 +42,7 @@ void ReadOptionsStellar(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 #define STELLARHALTSYSEND       5
 #define STELLARHALTBODYEND      5
 
-int fbHaltSurfaceDesiccated(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsStellar(HALT*,int*);
 
 /* Verify Functions */
@@ -68,6 +74,7 @@ void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_LUMINOSITY	        1510
 #define OUT_LXUV	              1511
 #define OUT_TEMPERATURE	        1512
+#define OUT_LXUVFRAC            1513
 
 void HelpOutputStellar(OUTPUT*);
 void InitializeOutputStellar(OUTPUT*,fnWriteOutput[]);
@@ -77,6 +84,7 @@ void FinalizeOutputFunctionStellar(OUTPUT*,int,int);
 void WriteLuminosity(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteLXUVFrac(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL*,FILE*);

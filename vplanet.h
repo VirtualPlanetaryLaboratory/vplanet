@@ -542,9 +542,6 @@ typedef struct {
   double *daPlanckB;
   double dTGlobalInit;
 
-  /* BINARY parameters */
-  int bBinary;            /**< Apply BINARY module? */
-
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

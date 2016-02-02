@@ -165,7 +165,7 @@ typedef struct {
 /* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
-  char cType[OPTLEN];    /**< Type of object N/I */
+  int iBodyType;        /**< Body's type: 0 for planet, 1 for star, defaults to planet  */
 
   /* Body Properties */
   double dAge;           /**< Body's Age */
@@ -223,9 +223,14 @@ typedef struct {
   double *dLOrbTmp;
 
   /* BINARY parameters */
-  int iBodyType;        /**< Body's type: 0 for star, 1 for planet  */
+  int bBinary;          /** Apply BINARY module? */
   double *dCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
   double *dCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
+  double dFreeEcc;      /**< CBP's free eccentricity */
+  double dFreeInc;      /**< CBP's free inclination */
+  double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
+  double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
+  double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
 
   /* DISTROT parameters */
   int bDistRot;

@@ -19,13 +19,15 @@ void  InitializeControlBinary(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
+  /*
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;
   dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
   dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
+  */
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -37,50 +39,9 @@ void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,in
 }
 
 /**************** BINARY options ********************/
-
-void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
-      if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
-    }
-    body[iFile-1].dXFrac = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dXFrac = options->dDefault;
-}
-
-
-void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
-      if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);	
-    }
-    body[iFile-1].dAtmXAbsEff = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dAtmXAbsEff = options->dDefault;
-}
+/*
 
 void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
 
@@ -96,98 +57,12 @@ void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].dEnvelopeMass = options->dDefault;
 }
+*/
 
-void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dSurfaceWaterMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dSurfaceWaterMass = options->dDefault;
-}
-
-/* Halts */
-
-void ReadHaltMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    control->Halt[iFile-1].bSurfaceDesiccated = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else {
-    if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bSurfaceDesiccated,files->iNumInputs); 
-  }
-}
-
-void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dMinSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dMinSurfaceWaterMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
-}
-
-void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    control->Halt[iFile-1].bEnvelopeGone = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else {
-    if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bEnvelopeGone,files->iNumInputs); 
-  }
-}
-
-void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dMinEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dMinEnvelopeMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMinEnvelopeMass = options->dDefault;
-}
-
-void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
+void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
+  /*
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
   sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/XUV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
@@ -253,24 +128,24 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
   sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
+  */
 
 }
 
-void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
+  /*
   for (iOpt=OPTSTARTATMESC;iOpt<OPTENDATMESC;iOpt++) {
     if (options[iOpt].iType != -1) 
       fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
+  */
 }
     
 /******************* Verify BINARY ******************/
 
-void VerifyRotationBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
+/*
 void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   update[iBody].iaType[update[iBody].iSurfaceWaterMass][0] = 1;
@@ -315,11 +190,13 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dEnvelopeMass = 0;
   
 }
+*/
 
-void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+
+void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  /*
   int bAtmEsc=0;
 
-  /* AtmEsc is active for this body if this subroutine is called. */
   
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -345,6 +222,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
+  */
 
 }
 
@@ -354,6 +232,7 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 
 /**************** BINARY Update ****************/
 
+/*
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
   if (body[iBody].dSurfaceWaterMass > 0) {
     if (update[iBody].iNumSurfaceWaterMass == 0)
@@ -374,7 +253,6 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
 }
 
 void FinalizeUpdateEccBinary(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  /* Nothing */
 }
 
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -391,22 +269,12 @@ void FinalizeUpdateMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iB
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumMass = (*iEqn)++;
 }
-      
-void FinalizeUpdateOblBinary(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  /* Nothing */
-}
 
-void FinalizeUpdateRotBinary(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  /* Nothing */
-}
-
-void FinalizeUpdateSemiBinary(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  /* Nothing */
-}
-
+*/      
 
 /***************** BINARY Halts *****************/
 
+/*
 int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
@@ -440,18 +308,23 @@ void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
     (*iHalt)++;
 }
 
-void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+*/
 
+void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+
+/*
   if (control->Halt[iBody].bSurfaceDesiccated)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltSurfaceDesiccated;
   
   if (control->Halt[iBody].bEnvelopeGone)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnvelopeGone;
+*/
 }
 
 /************* BINARY Outputs ******************/
 
-void HelpOutputAtmEsc(OUTPUT *output) {
+void HelpOutputBinary(OUTPUT *output) {
+  /*
   int iOut;
 
   printf("\n ------ ATMESC output ------\n");
@@ -469,9 +342,9 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass,cUnit);
   }
-
+*/
 }
-
+/*
 void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dEnvelopeMass;
 
@@ -484,12 +357,14 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 
 }
+*/
 
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
   //TODO
 }
 
+/*
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -509,14 +384,10 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
 }
+*/
 
-void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule)
-{
-  //TODO
-}
-
-void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
+void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
+  //output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
 }
 
 /************ BINARY Logging Functions **************/
@@ -543,6 +414,7 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   //TODO
 }
 
+/*
 void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;  
   fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
@@ -552,6 +424,7 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
 }
+*/
 
 void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
@@ -581,6 +454,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
 /************* BINARY Functions ************/
 
+/*
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Currently this is just Erkaev's model. Add other escape regimes
   
@@ -626,8 +500,4 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   return -elim;
 }
-
-double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  // This is silly, but necessary!
-  return 0;
-}
+*/

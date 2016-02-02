@@ -3,6 +3,7 @@ sName		earth			# Body's name
 saModules	eqtide radheat thermint atmesc
 
 # Physical Properties
+iBodyType       0                               # Type of body 0 -> Planet
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days

@@ -1080,6 +1080,28 @@ void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
 }
 
+/* Body Type */
+
+void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+    /* This parameter cannot exist in primary file */
+    int lTmp=-1;
+    int iTmp;
+
+    AddOptionInt(files->Infile[iFile].cIn,options->cName,&iTmp,&lTmp,control->Io.iVerbose);
+    if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (iTmp < 0) {
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);  
+    } else
+        body[iFile-1].iBodyType = iTmp;
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+    } else
+      if (iFile > 0)
+        body[iFile-1].iBodyType = options->dDefault;
+}
+
 /*
  *
  * B
@@ -2654,7 +2676,15 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MASS].dNeg = MEARTH;
   sprintf(options[OPT_MASS].cNeg,"Earth masses");
   fnRead[OPT_MASS] = &ReadMass;
-  
+ 
+  sprintf(options[OPT_BODYTYPE].cName,"iBodyType");
+  sprintf(options[OPT_BODYTYPE].cDescr,"BodyType");
+  sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
+  options[OPT_BODYTYPE].dDefault = 0;
+  options[OPT_BODYTYPE].iType = 2;
+  options[OPT_BODYTYPE].iMultiFile = 1;
+  fnRead[OPT_BODYTYPE] = &ReadBodyType;
+
   sprintf(options[OPT_MASSRAD].cName,"sMassRad");
   sprintf(options[OPT_MASSRAD].cDescr,"Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
   sprintf(options[OPT_MASSRAD].cDefault,"None");
@@ -2796,6 +2826,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
+  InitializeOptionsBinary(options,fnRead);
 
 }
  

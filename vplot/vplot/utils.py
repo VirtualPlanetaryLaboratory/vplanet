@@ -52,6 +52,33 @@ helpstr = \
 \x1b[1mType `vplot -h OPTION_NAME` for info on any option\x1b[0m
 """ % ', '.join(sorted([k for k in defaults.__dict__.keys() if not k.startswith('_')]))
 
+class array(np.ndarray):
+  '''
+  A custom subclass of numpy ndarray with some extra
+  attributes.
+  
+  '''
+  
+  def __new__(cls, input_array, unit = None, description = None):
+    # Input array is an already formed ndarray instance
+    # We first cast to be our class type
+    obj = np.asarray(input_array).view(cls)
+    # add the new attribute to the created instance
+    obj.unit = unit
+    obj.description = description
+    # Finally, we must return the newly created object:
+    return obj
+
+  def __array_finalize__(self, obj):
+    # see InfoArray.__array_finalize__ for comments
+    if obj is None: return
+    self.unit = getattr(obj, 'unit', None)
+    self.description = getattr(obj, 'description', None)
+
+  def __array_wrap__(self, out_arr, context = None):
+    # Call the parent
+    return np.ndarray.__array_wrap__(self, out_arr, context)
+
 def ShowHelp(param = None):
   '''
   
@@ -78,11 +105,13 @@ class Body(object):
   '''
   
   '''
-  def __init__(self, name = "", infile = "", fwfile = "", params = []):
+  def __init__(self, name = "", infile = "", fwfile = "", climfile = "", params = [], gridparams = []):
     self.name = name
     self.infile = infile
     self.fwfile = fwfile
+    self.climfile = climfile
     self.params = params
+    self.gridparams = gridparams
 
 class Param(object):
   '''
@@ -178,13 +207,12 @@ def GetConf():
 
   return conf
 
-def GetOutput(bodies = []):
+def GetArrays(bodies = []):
   '''
   
   '''
   
   output = Output()
-  descr = GetParamDescriptions()
   
   # Ensure bodies is a list
   if type(bodies) is str:
@@ -231,17 +259,47 @@ def GetOutput(bodies = []):
       raise Exception('Unable to retrieve `sName` from %s.' % body.infile)
     body.name = infile[j].split()[1]
     body.fwfile = '%s.%s.forward' % (output.sysname, body.name)
+    body.climfile = '%s.%s.Climate' % (output.sysname, body.name)
+    if not os.path.exists(body.climfile):
+      body.climfile = ""
     
-    # Grab the arrays
+    # Grab the forward arrays
     try:
       with open(body.fwfile, 'r') as f:
         fwfile = f.readlines()
     except IOError:
       raise Exception('Unable to open %s.' % body.fwfile)
-
+                       
     # Now grab the output order
-    outputorder = re.search(r'- BODY: %s -(.*?)Output Order:(.*?)\n' % body.name, 
+    outputorder = re.search(r'- BODY: %s -(.*?)\nOutput Order:(.*?)\n' % body.name, 
                             logfile, re.DOTALL).groups()[1]
+    body.params = GetParams(outputorder, fwfile)
+
+    if body.climfile != "":
+      # Grab the climate arrays...
+      try:
+        with open(body.climfile, 'r') as f:
+          climfile = f.readlines()
+      except IOError:
+        raise Exception('Unable to open %s.' % body.climfile)
+
+      # ... and the grid order
+      gridorder = re.search(r'- BODY: %s -(.*?)\nGrid Output Order:(.*?)\n' % body.name, 
+                              logfile, re.DOTALL).groups()[1]
+      body.gridparams = GetParams(gridorder, climfile)
+      
+  # Final check
+  if len([param.name for body in output.bodies for param in body.params]) == 0:
+    raise Exception("There don't seem to be any parameters to be plotted...")
+  
+  return output
+
+def GetParams(outputorder, file):
+    '''
+    
+    '''
+    
+    descr = GetParamDescriptions()
     
     # This workaround takes care of units that contain spaces
     while True:
@@ -261,15 +319,48 @@ def GetOutput(bodies = []):
 
       # Grab the values in the fwfile
       array = []
-      for line in fwfile:
+      for line in file:
         array.append(float(line.split()[j]))
       array = np.array(array)
       params.append(Param(name = name, unit = unit, descr = descr[name], array = array))
     
-    body.params = params
+    return params
+    
+def GetOutput():
+  '''
   
-  # Final check
-  if len([param.name for body in output.bodies for param in body.params]) == 0:
-    raise Exception("There don't seem to be any parameters to be plotted...")
+  '''
   
+  output = GetArrays()
+  
+  for body in output.bodies:
+    setattr(output, body.name, body)
+    
+    # Forward file params
+    for param in getattr(output, body.name).params:
+      description = param.descr
+      unit = param.unit
+      setattr(getattr(output, body.name), param.name, 
+              array(param.array, unit = unit, description = description))
+    
+    # Grid params
+    if len(getattr(output, body.name).gridparams):
+      iTime = np.argmax([param.name == 'Time' for param in getattr(output, body.name).gridparams])
+      Time = getattr(output, body.name).gridparams[iTime].array
+      
+      # Get 2d array dimensions
+      J = np.where(Time[1:] > Time[:-1])[0][0] + 1
+      I, r = divmod(len(Time), J)
+      assert r == 0, "Irregular time grid; VPLOT is confused!"
+    
+      for param in getattr(output, body.name).gridparams:
+        description = param.descr
+        unit = param.unit
+        name = param.name
+        arr = array(param.array.reshape(I, J), unit = unit, description = description)
+        setattr(getattr(output, body.name), name, arr)
+    
+  del output.bodies
+    
   return output
+  

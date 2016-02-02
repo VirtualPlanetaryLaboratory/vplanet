@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
+python $(dirname $0)/../vspace/vspace.py $@

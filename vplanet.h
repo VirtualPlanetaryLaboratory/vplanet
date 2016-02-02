@@ -49,6 +49,12 @@
 #define LFICE         3.34e5
 #define RHOICE        916.7   //density of ice kg/m^3
 #define MOCEAN        1.4e21  //mass of earth ocean in kg
+#define a1ICE         3.615e-13  //coeff of ice deformability at T<263K (Pa^-3 s^-1)
+#define a2ICE         1.733e3    //coeff of ice deformability at T>=263K (Pa^-3 s^-1)
+#define Q1ICE         6e4        //energy in ice deformation at T<263K (J/mol)
+#define Q2ICE         13.9e4     //energy in ice deformation at T>=263 (J/mol)
+#define RGAS          8.3144598  //gas constant in J K^-1 mol^-1
+#define nGLEN         3.0  //Glen's law coefficient
 
 /* Exit Status */
 
@@ -224,6 +230,8 @@ typedef struct {
   double dZobl;           /**< cos(obliq) */
   double *dLRot;
   double *dLRotTmp;
+  int bForcePrecRate;
+  double dPrecRate;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -412,6 +420,7 @@ typedef struct {
   
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
+  int bClimateModel;
   int iNumLats;              /**< Number of latitude cells */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
@@ -459,14 +468,73 @@ typedef struct {
   int *rowswap;
   int bIceSheets;
   double *daIceMass;
+  double *daIceHeight;
   double dIceMassTot;
 //   double *daIceHeight;
   double dInitIceLat;
   double dInitIceHeight;
   double dIceAlbedo;
   double dSurfAlbedo;
-  double dIceCreep;
   double dIceDepRate;
+  
+  /* additional stuff for seasonal model */
+  double *daTempLand;         /**< Temperature over land (by latitude) */
+  double *daTempWater;        /**< Temperature over ocean (by lat) */
+  double *daAlbedoLand;
+  double *daAlbedoWater;
+  double *daFluxOutLand;
+  double *daFluxOutWater;
+  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dFrzTSeaIce;         /**< Freezing temperature of sea water */
+  double dHeatCapLand;        /**< Heat capacity of land */
+  double dHeatCapWater;       /**< Heat capacity of water */
+  double *daLandFrac;         /**< Fraction of cell which is land */
+  double *daWaterFrac;        /**< Fraction of cell which is water */
+  double dNuLandWater;        /**< Land-ocean interaction term */
+  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  int iNStepInYear;        /**< Number of time steps in a year */  
+  int iNumYears;           /**< Number of years to run seasonal model */
+  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceLW;     /**< Combined source function what matrix operates on */
+  double **dMLand;
+  double **dMWater;
+  double dTGlobalTmp;
+  double dAlbedoGlobalTmp;
+  double dFluxOutGlobalTmp;
+  double dFluxInGlobalTmp;
+  double *daFluxInLand;
+  double *daFluxInWater;
+  double dSeaIceConduct;
+  double *daSeaIceK;
+  double *daFluxSeaIce;
+  double **dMInit;
+  double dCw_dt;
+  int bSeaIceModel;
+  double dSeasDeltat;
+  double dSeasDeltax;
+  double *daTempAnnual;
+  double *daAlbedoAnnual;
+  double *daFluxAnnual;
+  double *daFluxOutAnnual;
+  double *daFluxInAnnual;
+  double *daDivFluxAnnual;
+  double **daIceBalance;
+  double *daIceBalanceAnnual;
+  double *daIceMassTmp;
+  double **daTempDaily;
+  double *daDeclination;           /**< Daily solar declination */
+  double *daDIceHeightDy;
+  double *daIceFlow;
+  double dAlbedoLand;
+  double dAlbedoWater;
+  double *daIceFlowMid;
+  double *daXBoundary;
+  double *daPlanckA;
+  double *daPlanckB;
+  double dTGlobalInit;
 
 } BODY;
 
@@ -752,8 +820,9 @@ typedef struct {
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
-  double **padDIceMassDtPoise;
-  int *iaIceMassPoise;
+  double ***padDIceMassDtPoise;
+  int *iaIceMassDepMelt;
+  int *iaIceMassFlow;
   int iIceMass;
 } UPDATE;
 
@@ -907,6 +976,7 @@ typedef struct {
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
+  int bOutputLapl;     /**< 1 = output laplace functions and related data */
 } CONTROL;
 
 /* The INFILE struct contains all the information 

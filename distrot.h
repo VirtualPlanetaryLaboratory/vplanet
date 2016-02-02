@@ -16,9 +16,11 @@ void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 /* Options Info */
 
 #define OPTSTARTDISTROT        1400 /* Start of DISTROT options */
-#define OPTENDDISTROT        1500 /* End of DISTROT options */
+#define OPTENDDISTROT          1500 /* End of DISTROT options */
 
 #define OPT_DYNELLIP              1402
+#define OPT_FORCEPRECRATE         1403
+#define OPT_PRECRATE              1404
 
 
 /* Options Functions */

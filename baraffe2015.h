@@ -14,7 +14,6 @@
 // Grid interpolation errors
 #define STELLAR_ERR_LINEAR						 1    
 #define STELLAR_ERR_NONE						   0          
-#define STELLAR_ERR_WAY_OUTOFBOUNDS		-1
 #define STELLAR_ERR_OUTOFBOUNDS_LO		-2
 #define STELLAR_ERR_OUTOFBOUNDS_HI		-3
 #define STELLAR_ERR_ISNAN							-4

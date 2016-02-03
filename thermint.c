@@ -333,9 +333,7 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dDepthMeltMan=fdDepthMeltMan(body,iBody);
   body[iBody].dTDepthMeltMan=fdTDepthMeltMan(body,iBody);
   body[iBody].dTJumpMeltMan=fdTJumpMeltMan(body,iBody);
-  /* Tides */
-  body[iBody].dK2Man=fdK2Man(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+
   /* Heat Flows */
   /* Mantle */
   body[iBody].dHfluxUMan=fdHfluxUMan(body,iBody);
@@ -344,7 +342,6 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dHflowUMan=fdHflowUMan(body,iBody);
   body[iBody].dHflowLMan=fdHflowLMan(body,iBody);
   body[iBody].dHflowCMB=fdHflowCMB(body,iBody);
-  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   /* Core */

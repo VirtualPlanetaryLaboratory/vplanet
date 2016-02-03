@@ -189,6 +189,18 @@ void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     AssignDefaultInt(options,&control->bInvPlane,files->iNumInputs);
 }
 
+void ReadOutputLapl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->bOutputLapl = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&control->bOutputLapl,files->iNumInputs);
+}
+
 void ReadOverrideMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -371,6 +383,14 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENVECTOR].iType = 0;  
   options[OPT_EIGENVECTOR].iMultiFile = 0; 
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
+  
+  sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
+  sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data");
+  sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
+  options[OPT_OUTPUTLAPL].dDefault = 0;
+  options[OPT_OUTPUTLAPL].iType = 0;  
+  options[OPT_OUTPUTLAPL].iMultiFile = 0; 
+  fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

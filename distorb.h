@@ -36,6 +36,7 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_EIGENSET           1370
 #define OPT_EIGENVALUE				 1371
 #define OPT_EIGENVECTOR				 1372
+#define OPT_OUTPUTLAPL         1398
 #define OPT_ORBITMODEL         1399
 
 /* Options Functions */

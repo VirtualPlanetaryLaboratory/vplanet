@@ -33,8 +33,10 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
 
 int fiGetLowerBound(double val, const double *arr, int dim){
 	int i;
-	if ((val < arr[0]) || (val > arr[dim-1])){
-			return STELLAR_ERR_WAY_OUTOFBOUNDS;
+	if (val < arr[0]){
+		return STELLAR_ERR_OUTOFBOUNDS_LO;
+	} else if (val > arr[dim-1]) {
+	  return STELLAR_ERR_OUTOFBOUNDS_HI;
 	} else {
 			for (i=0;i<dim-2;i++){
 				if (val < arr[i+1]) break;

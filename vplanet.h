@@ -232,6 +232,7 @@ typedef struct {
   double *dLRotTmp;
   int bForcePrecRate;
   double dPrecRate;
+  int bCalcDynEllip;
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */

@@ -103,7 +103,7 @@ if re.search('\/',dest) != None:
   dest_parent = '/'.join(dest.split("/")[0:-1])
   if not os.path.exists(dest_parent):
     raise IOError("Destination's parent folder '%s' does not exist"%dest_parent)
-elif not os.path.exists(dest):
+if not os.path.exists(dest):
   os.system('mkdir '+dest)
 
 if numvars == 0:  

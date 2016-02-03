@@ -7,8 +7,10 @@ plot.py
 '''
 
 from __future__ import print_function, absolute_import
-from vplot.utils import ShowHelp, GetConf, GetOutput
+from vplot.utils import ShowHelp, GetConf, GetArrays
+import os
 import matplotlib.pyplot as pl
+pl.style.use(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vplot.mplstyle'))
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ColorConverter
@@ -55,7 +57,7 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     aaxis = conf.aaxis
   
   # Output object
-  output = GetOutput(bodies)
+  output = GetArrays(bodies)
   
   # Names of all available params
   param_names = list(set([param.name for body in output.bodies for param in body.params]))

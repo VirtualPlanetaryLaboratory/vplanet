@@ -116,8 +116,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnCountHalts[iBody] = malloc(iNumModules*sizeof(fnCountHaltsModule));
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
   module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
-
-  module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
   module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
   module->fnVerifyRotation[iBody] = malloc(iNumModules*sizeof(fnVerifyRotationModule));
 

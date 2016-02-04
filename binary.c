@@ -20,65 +20,141 @@ void  InitializeControlBinary(CONTROL *control) {
 }
 
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
-  /*
-  dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
-  dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
-  dest[iBody].dXFrac = src[iBody].dXFrac;
-  dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
-  dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
-  dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
-  */
+  // Copy body properties from src to dest
+//  dest[iBody].dR0 = src[iBody].dR0;
+//  dest[iBody].dCylPos = src[iBody].dCylPos;
+//  dest[iBody].dCylVel = src[iBody].dCylVel;
+  dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
+  dest[iBody].dFreeInc = src[iBody].dFreeInc;
+  dest[iBody].dLL13N0 = src[iBody].dLL13N0;
+//  dest[iBody].dLL13K0 = src[iBody].dLL13K0;
+//  dest[iBody].dLL13V0 = src[iBody].dLL13V0;
+
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  //
+  // Malloc space for cylindrical position, velocity arrays
+//  body[iBody].dCylPos = malloc(3*sizeof(double));
+//  body[iBody].dCylVel = malloc(3*sizeof(double));
+
+  // Init values to 0s?
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  //
+  // Malloc space for cylindrical position, velocity arrays for tmp body
+//  control->Evolve.tmpBody[iBody].dCylPos = malloc(3*sizeof(double));
+//  control->Evolve.tmpBody[iBody].dCylVel = malloc(3*sizeof(double));
+
 }
 
 /**************** BINARY options ********************/
-/*
 
-void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadFreeEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // Free eccentricity, can't be in primary file
+  // Note: Do error checking for negative values
   int lTmp=-1;
   double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dEnvelopeMass = dTmp;
+    if (dTmp < 0.0 || dTmp >= 1.0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be in range [0,1).\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    } else
+      body[iFile-1].dFreeEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].dEnvelopeMass = options->dDefault;
+      body[iFile-1].dFreeEcc = options->dDefault;
 }
-*/
+
+void ReadLL13N0(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // Lee + Leung 2013 Mean Motion N0
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    body[iFile-1].dLL13N0 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dLL13N0,files->iNumInputs);
+  }
+}
+
+void ReadFreeInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  /* Free inclination goes from 0 to 180 degrees */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) { // Input as radians
+      if (dTmp < 0 || dTmp > PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else { // Input as Degrees
+      if (dTmp < 0 || dTmp > 180) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dFreeInc = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFreeInc = options->dDefault;
+}  
+
+/* Init Options BINARY */
 
 void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
-  /*
-  sprintf(options[OPT_XFRAC].cName,"dXFrac");
-  sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/XUV");
-  sprintf(options[OPT_XFRAC].cDefault,"1");
-  options[OPT_XFRAC].dDefault = 1;
-  options[OPT_XFRAC].iType = 2;
-  options[OPT_XFRAC].iMultiFile = 1;
-  fnRead[OPT_XFRAC] = &ReadXFrac;
-  
-  sprintf(options[OPT_ATMXABSEFF].cName,"dAtmXAbsEff");
-  sprintf(options[OPT_ATMXABSEFF].cDescr,"X-ray/XUV absorption efficiency (epsilon)");
-  sprintf(options[OPT_ATMXABSEFF].cDefault,"0.15");
-  options[OPT_ATMXABSEFF].dDefault = 0.15;
-  options[OPT_ATMXABSEFF].iType = 2;
-  options[OPT_ATMXABSEFF].iMultiFile = 1;
-  fnRead[OPT_ATMXABSEFF] = &ReadAtmXAbsEff;
+  sprintf(options[OPT_FREEECC].cName,"dFreeEcc");
+  sprintf(options[OPT_FREEECC].cDescr,"Circumbinary planet free eccentricity");
+  sprintf(options[OPT_FREEECC].cDefault,"0.0");
+  options[OPT_FREEECC].dDefault = 0.0;
+  options[OPT_FREEECC].iType = 2;
+  options[OPT_FREEECC].iMultiFile = 1;
+  fnRead[OPT_FREEECC] = &ReadFreeEcc;
 
+  sprintf(options[OPT_FREEINC].cName,"dFreeInc");
+  sprintf(options[OPT_FREEINC].cDescr,"Circumbinary planet free inclination");
+  sprintf(options[OPT_FREEINC].cDefault,"0.0 degrees");
+  options[OPT_FREEINC].dDefault = 0.0;
+  options[OPT_FREEINC].iType = 2;
+  options[OPT_FREEINC].iMultiFile = 1;
+  fnRead[OPT_FREEINC] = &ReadFreeInc;
+
+  sprintf(options[OPT_LL13N0].cName,"dLL13N0");
+  sprintf(options[OPT_LL13N0].cDescr,"Lee+Leung 2013 Mean Motion");
+  sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
+  options[OPT_LL13N0].dDefault = 1./YEARSEC;
+  options[OPT_LL13N0].iType = 2;
+  options[OPT_LL13N0].dNeg = 1./YEARSEC;
+  sprintf(options[OPT_LL13N0].cNeg,"/Year");
+  fnRead[OPT_LL13N0] = &ReadLL13N0;
+
+  /*
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
   sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
@@ -88,59 +164,16 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
   sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
-  
-  sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
-  sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
-  sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
-  options[OPT_ENVELOPEMASS].dDefault = 0;
-  options[OPT_ENVELOPEMASS].iType = 2;
-  options[OPT_ENVELOPEMASS].iMultiFile = 1;
-  options[OPT_ENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
-  fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
-
-  sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
-  sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
-  sprintf(options[OPT_HALTDESICCATED].cDefault,"0");
-  options[OPT_HALTDESICCATED].iType = 0;
-  fnRead[OPT_HALTDESICCATED] = &ReadHaltMinSurfaceWaterMass;
-  
-  sprintf(options[OPT_HALTENVELOPEGONE].cName,"bHaltEnvelopeGone");
-  sprintf(options[OPT_HALTENVELOPEGONE].cDescr,"Halt When Envelope Evaporates?");
-  sprintf(options[OPT_HALTENVELOPEGONE].cDefault,"0");
-  options[OPT_HALTENVELOPEGONE].iType = 0;
-  fnRead[OPT_HALTENVELOPEGONE] = &ReadHaltMinEnvelopeMass;
-
-  sprintf(options[OPT_MINSURFACEWATERMASS].cName,"dMinSurfWaterMass");
-  sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Minimum Surface Water Mass");
-  sprintf(options[OPT_MINSURFACEWATERMASS].cDefault,"1.e-5 TO");
-  options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
-  options[OPT_MINSURFACEWATERMASS].iType = 2;
-  options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
-  sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
-  fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
-  
-  sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
-  sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
-  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth");
-  options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
-  options[OPT_MINENVELOPEMASS].iType = 2;
-  options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
-  fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
   */
-
 }
 
 void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  /*
-  for (iOpt=OPTSTARTATMESC;iOpt<OPTENDATMESC;iOpt++) {
+  for (iOpt=OPTSTARTBINARY;iOpt<OPTENDBINARY;iOpt++) {
     if (options[iOpt].iType != -1) 
       fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
   }
-  */
 }
     
 /******************* Verify BINARY ******************/
@@ -192,6 +225,16 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 }
 */
 
+void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody)
+{
+ //TODO
+}
+
+/* Force behavior */
+void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule)
+{
+ //TODO
+}
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   /*
@@ -224,6 +267,9 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
   */
 
+  control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
+  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
+  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 
 void InitializeModuleBinary(CONTROL *control,MODULE *module) {
@@ -231,6 +277,10 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 }
 
 /**************** BINARY Update ****************/
+
+void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
+  //TODO
+}
 
 /*
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
@@ -310,6 +360,10 @@ void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
 
 */
 
+void CountHaltsBinary(HALT *halt,int *iHalt) {
+// TODO
+}
+
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
 
 /*
@@ -324,13 +378,14 @@ void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 /************* BINARY Outputs ******************/
 
 void HelpOutputBinary(OUTPUT *output) {
-  /*
   int iOut;
 
-  printf("\n ------ ATMESC output ------\n");
-  for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) 
+  printf("\n ------ BINARY output ------\n");
+  for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) 
     WriteHelpOutput(&output[iOut]);
 }
+
+/*
 
 void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dSurfaceWaterMass;
@@ -342,8 +397,9 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass,cUnit);
   }
-*/
 }
+
+*/
 /*
 void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dEnvelopeMass;
@@ -361,7 +417,7 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
-  //TODO
+  //TODO with primary variables
 }
 
 /*
@@ -394,16 +450,16 @@ void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
 
 void LogOptionsBinary(CONTROL *control, FILE *fp) {
 
-  /* Anything here?*/
+fprintf(fp,"-------- BINARY Options -----\n\n");
+
 }
 
 void LogBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
-
-  /* Anything here? 
+  /* Anything here?
   int iOut;
 
-  fprintf(fp,"\n----- ATMESC PARAMETERS ------\n");
-  for (iOut=OUTSTARTATMESC;iOut<OUTBODYSTARTATMESC;iOut++) {
+  fprintf(fp,"\n----- BINARY PARAMETERS ------\n");
+  for (iOut=OUTSTARTBINARY;iOut<OUTBODYSTARTBINARY;iOut++) {
     if (output[iOut].iNum > 0)
       WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,0);
   }
@@ -411,44 +467,33 @@ void LogBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
 }
 
 void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  //TODO
-}
-
-/*
-void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;  
-  fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
+  fprintf(fp,"----- BINARY PARAMETERS (%s)------\n",body[iBody].cName);
   
-  for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
+  for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
 }
-*/
 
 void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = BINARY;
 
-  /*
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlAtmEsc;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyAtmEsc;
+  module->fnInitializeControl[iBody][iModule] = &InitializeControlBinary;
+  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyBinary;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsAtmEsc;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
-  module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
-  module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationAtmEsc;
+  module->fnCountHalts[iBody][iModule] = &CountHaltsBinary;
+  module->fnReadOptions[iBody][iModule] = &ReadOptionsBinary;
+  module->fnLogBody[iBody][iModule] = &LogBodyBinary;
+  module->fnVerify[iBody][iModule] = &VerifyBinary;
+  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltBinary;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
-  module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
-  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;
+  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
 
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
-  */
+  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionBinary;
+  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
 
 }
 
@@ -501,3 +546,12 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   return -elim;
 }
 */
+
+/* Useful math functions */
+// Note: use russell's math functions for Laplace coeffs and their derivatives
+// TODO: cross product, dot product for 3 element arrays of doubles
+
+
+/* Functions to compute barycentric orbital elements for a planet (iBodyType == 0) Body */
+// Assumes barycenter is at the origin
+// TODO: compute specific angular momentum, gravitational parameter, ecc, inc, semi, w, Omega, etc...

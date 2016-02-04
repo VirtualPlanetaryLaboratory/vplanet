@@ -1099,7 +1099,7 @@ void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     } else
       if (iFile > 0)
-        body[iFile-1].iBodyType = options->dDefault;
+        body[iFile-1].iBodyType = atoi(options->cDefault);
 }
 
 /*
@@ -2681,7 +2681,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BODYTYPE].cDescr,"BodyType");
   sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
   options[OPT_BODYTYPE].dDefault = 0;
-  options[OPT_BODYTYPE].iType = 2;
+  options[OPT_BODYTYPE].iType = 1;
   options[OPT_BODYTYPE].iMultiFile = 1;
   fnRead[OPT_BODYTYPE] = &ReadBodyType;
 

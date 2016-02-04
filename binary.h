@@ -7,19 +7,35 @@
  *
 */
 
-void InitializeModuleBinary(CONTROL *control,MODULE *module);
+/* Options Info */
+/* For options and output, binary has 2000-2100 */
+#define OPTSTARTBINARY          2000 /* Start of Binary options */
+#define OPTENDBINARY            2100 /* End of Binary options */
+
+#define OPT_FREEECC             2010 // Free eccentricity
+#define OPT_FREEINC             2020 // Free inclination
+#define OPT_LL13N0              2030 // LL13 Mean Motion
+
+/* Binary 2000 - 2099 */
+#define OUTSTARTBINARY          2000
+#define OUTENDBINARY            2100
+
+void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
 void AddModuleBinary(MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);
 
-/* Options Info */
+
 
 /* Options Functions */
 void HelpOptionsBinary(OPTIONS*);
 void InitializeOptionsBinary(OPTIONS*,fnReadOption[]);
 void ReadOptionsBinary(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void ReadFreeEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFreeInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 
@@ -29,7 +45,8 @@ void CountHaltsBinary(HALT*,int*);
 /* Verify Functions */
 void VerifyBinary(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
-void PropertiesBinary(BODY*,int);
+void fnPropertiesBinary(BODY*,UPDATE*,int);
+void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule);
 
 /* Update functions */
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
@@ -37,6 +54,7 @@ void InitializeUpdateBinary(BODY*,UPDATE*,int);
 /* Output Functinos */
 
 void HelpOutputBinary(OUTPUT*);
+void InitializeOutputFunctionBinary(OUTPUT*,int,int);
 void InitializeOutputBinary(OUTPUT*,fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT*,int,int);
 

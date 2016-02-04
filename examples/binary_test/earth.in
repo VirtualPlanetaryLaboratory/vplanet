@@ -1,0 +1,94 @@
+# Earth's parameters
+sName		earth			# Body's name
+#saModules	eqtide radheat thermint atmesc
+saModules binary
+
+# Physical Properties
+iBodyType       0                               # Type of body 0 -> Planet
+dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
+dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
+dObliquity	23.5			
+dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+
+# Binary Properties
+dFreeEcc        0.0                     # Free Eccentricity
+dFreeInc        0.0                     # Free Inclination
+
+# Orbital Properties
+#dEcc            0.8			# Eccentricity
+#dSemi           -0.1			# Semi-major axis, negative -> AU
+
+# EQTIDE Parameters 
+#dTidalTau	-630			# Tidal time lag, negative -> seconds
+#bForceEqSpin    1
+#dTidalQ		100			# Tidal phase lag
+#dK2		0.3			# Love number of degree 2
+#dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
+#saTidePerts	sun			# Body name(s) of tidal perturbers
+
+# ATMESC Properties
+#dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+#dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+#dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
+#dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
+#bHaltSurfaceDesiccated    1               # Halt when dry?
+#bHaltEnvelopeGone         0               # Halt when evaporated?
+#dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+
+# RADHEAT Parameters
+# Initialize 40K
+#d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
+#d40KMassMan    -1
+#d40KPowerMan   -1
+#d40KNumCore     -2			# Numer of potassium-40 atoms, negative -> Earth
+#d40KPowerCore   -1
+#d40KMassCore   -1
+
+# 232Th
+#d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThMassMan  -1
+#d232ThPowerMan -1
+#d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThPowerCore -1
+
+# 235U
+#d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+#d235UMassMan    -1
+#d235UPowerMan    -1
+#d235UNumCore	-1
+#d235UPowerCore  -1
+
+# 238U
+#d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+#238UPowerMan    -1
+#d238UNumCore	-1
+#d238UPowerCore  -1
+
+# # THERMINT inputs.
+#dTMan  3000.0  #2500.0
+#dTCore 6000.0
+#dViscRatioMan 5.0  #5.6
+#dEruptEff 0.2
+#dViscRef  1e8
+
+# Output
+saOutputOrder Time #Semim Ecce -SurfWaterMass -EnvelopeMass TMan Tcore
+
+#saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
+#		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $
+#		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal $
+#saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide $
+#		    -TUMan -TMan -TLMan -TDotMan -TCMB -TCore -TDotCore $
+#		    -TJumpUMan -TJumpLMan -SignTJumpUMan -SignTJumpLMan -ViscUMan -ViscLMan $
+#		    -BLUMan -BLLMan -HflowUMan -HflowLMan -HflowCMB $
+#		    -HflowLatentMan -RadPowerMan -RadPowerCore -ShmodUMan -FMeltUMan -MeltfactorUMan $
+#		    -K2Man -Imk2Man -TidalPowMan ImK2 -PowerEqTide DepthMeltMan TDepthMeltMan HflowMeltMan $
+#	             RIC
+# HflowLatentIC PowerGravIC DRICDTCMB
+# -HfluxUMan -HfluxLMan -HfluxCMB
+
+#bFixOrbit	1
+# Output can be in any order and need only be unambiguous. 
+# Units of negative arguments are listed in the onboard help (./vplanet -h).
+

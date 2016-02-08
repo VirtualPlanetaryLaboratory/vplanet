@@ -1330,7 +1330,7 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   // Total change in dObl/dTime
   dFoo = 0;
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) 
-    dFoo += body[iBody].daDoblDtEqtide[iPert];
+    dFoo += body[iBody].daDoblDtEqtide[body[iBody].iaTidePerts[iPert]];
 
   *dTmp = dFoo;
 

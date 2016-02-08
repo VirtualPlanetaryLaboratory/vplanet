@@ -15,10 +15,20 @@
 #define OPT_FREEECC             2010 // Free eccentricity
 #define OPT_FREEINC             2020 // Free inclination
 #define OPT_LL13N0              2030 // LL13 Mean Motion
+#define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
+#define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
 
-/* Binary 2000 - 2099 */
+/* Output Info */
+
 #define OUTSTARTBINARY          2000
 #define OUTENDBINARY            2100
+
+// Naming convention same as for OPT_* constants
+#define OUT_FREEECC             2010 
+#define OUT_FREEINC             2020
+#define OUT_LL13N0              2030
+#define OUT_LL13K0              2040
+#define OUT_LL13V0              2050
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -27,8 +37,6 @@ void BodyCopyBinary(BODY*,BODY*,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);
 
-
-
 /* Options Functions */
 void HelpOptionsBinary(OPTIONS*);
 void InitializeOptionsBinary(OPTIONS*,fnReadOption[]);
@@ -36,6 +44,8 @@ void ReadOptionsBinary(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 void ReadFreeEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadFreeInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLL13K0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLL13V0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 
@@ -52,11 +62,15 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
 
 /* Output Functinos */
-
 void HelpOutputBinary(OUTPUT*);
 void InitializeOutputFunctionBinary(OUTPUT*,int,int);
 void InitializeOutputBinary(OUTPUT*,fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT*,int,int);
+void WriteFreeEcc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFreeInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteLL13N0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteLL13K0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteLL13V0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL*,FILE*);

@@ -1099,7 +1099,7 @@ void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     } else
       if (iFile > 0)
-        body[iFile-1].iBodyType = atoi(options->cDefault);
+        AssignDefaultInt(options,&body[iFile-1].iBodyType,files->iNumInputs);
 }
 
 /*

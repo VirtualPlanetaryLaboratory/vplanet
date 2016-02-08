@@ -35,6 +35,7 @@
 #define OUT_ROTANGMOM		530
 #define OUT_ROTKINENERGY        535
 #define OUT_ROTVEL		540
+#define OUT_BODYTYPE            545
 #define OUT_ROTRATE             550
 #define OUT_ROTPER              560
 

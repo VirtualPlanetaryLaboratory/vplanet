@@ -40,6 +40,12 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
   }
 }
 
+/* iBodyType */
+void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].iBodyType;
+  strcpy(cUnit,"");
+}
+
 /*
  * D
  */
@@ -449,6 +455,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_AGE].dNeg = 1./(YEARSEC*1e9);
   output[OUT_AGE].iNum = 1;
   fnWrite[OUT_AGE] = &WriteAge;
+
+  /*
+   * BodyType
+   */
+
+  sprintf(output[OUT_BODYTYPE].cName,"BodyType");
+  sprintf(output[OUT_BODYTYPE].cDescr,"Type of Body (0 == planet)");
+  output[OUT_BODYTYPE].iNum = 1;
+  fnWrite[OUT_BODYTYPE] = &WriteBodyType;
 
   /*
    * D

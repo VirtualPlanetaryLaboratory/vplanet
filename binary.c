@@ -27,12 +27,15 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
   dest[iBody].dFreeInc = src[iBody].dFreeInc;
   dest[iBody].dLL13N0 = src[iBody].dLL13N0;
-//  dest[iBody].dLL13K0 = src[iBody].dLL13K0;
-//  dest[iBody].dLL13V0 = src[iBody].dLL13V0;
+  dest[iBody].dLL13K0 = src[iBody].dLL13K0;
+  dest[iBody].dLL13V0 = src[iBody].dLL13V0;
 
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+// TODO:
+// Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
+// 
   // Malloc space for cylindrical position, velocity arrays
 //  body[iBody].dCylPos = malloc(3*sizeof(double));
 //  body[iBody].dCylVel = malloc(3*sizeof(double));
@@ -89,6 +92,51 @@ void ReadLL13N0(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   } else {
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dLL13N0,files->iNumInputs);
+  }
+}
+
+void ReadLL13K0(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // Lee + Leung 2013 radial epicyclic frequency
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    body[iFile-1].dLL13K0 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dLL13K0,files->iNumInputs);
+  }
+}
+
+
+void ReadLL13V0(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // Lee + Leung 2013 vertical epicyclic frequency
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    body[iFile-1].dLL13V0 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dLL13V0,files->iNumInputs);
   }
 }
 
@@ -150,21 +198,31 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
+  options[OPT_LL13N0].iMultiFile = 1;
   options[OPT_LL13N0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13N0].cNeg,"/Year");
   fnRead[OPT_LL13N0] = &ReadLL13N0;
 
-  /*
-  sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
-  sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
-  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
-  options[OPT_SURFACEWATERMASS].dDefault = 0;
-  options[OPT_SURFACEWATERMASS].iType = 2;
-  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
-  options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
-  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
-  fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
-  */
+  sprintf(options[OPT_LL13K0].cName,"dLL13K0");
+  sprintf(options[OPT_LL13K0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
+  sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
+  options[OPT_LL13K0].dDefault = 1./YEARSEC;
+  options[OPT_LL13K0].iType = 2;
+  options[OPT_LL13K0].iMultiFile = 1;
+  options[OPT_LL13K0].dNeg = 1./YEARSEC;
+  sprintf(options[OPT_LL13K0].cNeg,"/Year");
+  fnRead[OPT_LL13K0] = &ReadLL13K0;
+
+  sprintf(options[OPT_LL13V0].cName,"dLL13V0");
+  sprintf(options[OPT_LL13V0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
+  sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
+  options[OPT_LL13V0].dDefault = 1./YEARSEC;
+  options[OPT_LL13V0].iType = 2;
+  options[OPT_LL13V0].iMultiFile = 1;
+  options[OPT_LL13V0].dNeg = 1./YEARSEC;
+  sprintf(options[OPT_LL13V0].cNeg,"/Year");
+  fnRead[OPT_LL13V0] = &ReadLL13V0;
+
 }
 
 void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -225,15 +283,11 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 }
 */
 
-void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody)
-{
- //TODO
+void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
 }
 
 /* Force behavior */
-void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule)
-{
- //TODO
+void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -385,39 +439,121 @@ void HelpOutputBinary(OUTPUT *output) {
     WriteHelpOutput(&output[iOut]);
 }
 
-/*
+void WriteFreeEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  // Note: Only makes sense for planets (iBodyType == 0)
+  if(body[iBody].iBodyType == 0)
+    *dTmp = body[iBody].dFreeEcc;
+  else
+    *dTmp = -1;
 
-void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dSurfaceWaterMass;
+  strcpy(cUnit,"");
+}
+
+void WriteFreeInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  // Note: Only makes sense for planets (iBodyType == 0)
+  if(body[iBody].iBodyType == 0)
+    *dTmp = body[iBody].dFreeInc;
+  else
+    *dTmp = -1;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsMass(units->iMass);
-    fsUnitsMass(units->iMass,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
   }
 }
 
-*/
-/*
-void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dEnvelopeMass;
+void WriteLL13N0(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ // Note: Only applies to planets (iBodyType == 0)
+ if(body[iBody].iBodyType == 0)
+   *dTmp = body[iBody].dLL13N0;
+ else
+   *dTmp = -1;
 
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsMass(units->iMass);
-    fsUnitsMass(units->iMass,cUnit);
-  }
-
+ if(output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else {
+   *dTmp *= fdUnitsTime(units->iTime);
+   fsUnitsTime(units->iTime,cUnit);
+ }
 }
-*/
+
+
+void WriteLL13K0(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ // Note: Only applies to planets (iBodyType == 0)
+ if(body[iBody].iBodyType == 0)
+   *dTmp = body[iBody].dLL13K0;
+ else
+   *dTmp = -1;
+
+ if(output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else {
+   *dTmp *= fdUnitsTime(units->iTime);
+   fsUnitsTime(units->iTime,cUnit);
+ }
+}
+
+void WriteLL13V0(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ // Note: Only applies to planets (iBodyType == 0)
+ if(body[iBody].iBodyType == 0)
+   *dTmp = body[iBody].dLL13V0;
+ else
+   *dTmp = -1;
+
+ if(output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else {
+   *dTmp *= fdUnitsTime(units->iTime);
+   fsUnitsTime(units->iTime,cUnit);
+ }
+}
 
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
-  //TODO with primary variables
+  sprintf(output[OUT_FREEECC].cName,"FreeEcc");
+  sprintf(output[OUT_FREEECC].cDescr,"Free Eccentricity");
+  output[OUT_FREEECC].bNeg = 0;
+  output[OUT_FREEECC].iNum = 1;
+  fnWrite[OUT_FREEECC] = &WriteFreeEcc;
+
+  sprintf(output[OUT_FREEINC].cName,"FreeInc");
+  sprintf(output[OUT_FREEINC].cDescr,"Free Inclination");
+  sprintf(output[OUT_FREEINC].cNeg,"Deg");
+  output[OUT_FREEINC].bNeg = 1;
+  output[OUT_FREEINC].dNeg = 1./DEGRAD;
+  output[OUT_FREEINC].iNum = 1;
+  fnWrite[OUT_FREEINC] = &WriteFreeInc;
+
+  sprintf(output[OUT_LL13N0].cName,"LL13N0");
+  sprintf(output[OUT_LL13N0].cDescr,"Leung+Lee 2013 Mean Motion");
+  sprintf(output[OUT_LL13N0].cNeg,"1/year");
+  output[OUT_LL13N0].bNeg = 1;
+  output[OUT_LL13N0].dNeg = 1./YEARSEC;
+  output[OUT_LL13N0].iNum = 1;
+  fnWrite[OUT_LL13N0] = &WriteLL13N0;
+
+  sprintf(output[OUT_LL13K0].cName,"LL13K0");
+  sprintf(output[OUT_LL13K0].cDescr,"Leung+Lee 2013 Radial epicyclic frequency");
+  sprintf(output[OUT_LL13K0].cNeg,"1/year");
+  output[OUT_LL13K0].bNeg = 1;
+  output[OUT_LL13K0].dNeg = 1./YEARSEC;
+  output[OUT_LL13K0].iNum = 1;
+  fnWrite[OUT_LL13K0] = &WriteLL13K0;
+
+  sprintf(output[OUT_LL13V0].cName,"LL13V0");
+  sprintf(output[OUT_LL13V0].cDescr,"Leung+Lee 2013 vertical epicyclic frequency");
+  sprintf(output[OUT_LL13V0].cNeg,"1/year");
+  output[OUT_LL13V0].bNeg = 1;
+  output[OUT_LL13V0].dNeg = 1./YEARSEC;
+  output[OUT_LL13V0].iNum = 1;
+  fnWrite[OUT_LL13V0] = &WriteLL13V0;
+
 }
 
 /*

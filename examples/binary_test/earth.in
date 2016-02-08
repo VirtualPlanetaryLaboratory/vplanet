@@ -12,8 +12,8 @@ dObliquity	23.5
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.0                     # Free Eccentricity
-dFreeInc        0.0                     # Free Inclination
+dFreeEcc        0.003                     # Free Eccentricity
+dFreeInc        1.0                     # Free Inclination [deg]
 
 # Orbital Properties
 #dEcc            0.8			# Eccentricity

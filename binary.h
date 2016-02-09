@@ -7,6 +7,9 @@
  *
 */
 
+
+#define K_MAX                   3   /* Max term to sum to */
+
 /* Options Info */
 /* For options and output, binary has 2000-2100 */
 #define OPTSTARTBINARY          2000 /* Start of Binary options */
@@ -103,3 +106,12 @@ double fdPot0dR(int,int,double,BODY*);
 double fdPot1(int,int,double,BODY*);
 double fdPot1dR(int,int,double,BODY*);
 double fdn(double,BODY*);
+double fdC0(BODY*);
+double fdC0k(int,BODY*);
+double fdCPk(int,BODY*);
+double fdCMk(int,BODY*);
+double fdD0(BODY*);
+double fdDk0(int,BODY*);
+double fdDPk(int,BODY*);
+double fdDMk(int,BODY*);
+double calculate_R(double,BODY*,double);

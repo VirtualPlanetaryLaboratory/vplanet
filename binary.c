@@ -952,6 +952,127 @@ double fdn(double R, BODY *body)
   return sqrt(fdPot0dR(0,0,R,body)/R);
 }
 
+/*
+ * Definitions for C, D terms from LL13
+ * They are essentially combinations of different potential components
+ * and their derivatives w.r.t R evaluated at the location of the cbp
+ */
+
+/* LL13 C0 as defined in eqn 28 */
+double fdC0(BODY *body)
+{
+  double c = -body[0].dEcc*fdPot1dR(0,0,body[2].dSemi,body)/body[2].dSemi;
+  c /= (body[2].dLL13K0*body[2].dLL13K0 - body[0].dMeanMotion*body[0].dMeanMotion);
+  return c;
+}
+
+/* LL13 C^0_k as defined by eqn 29 */
+double fdC0k(int k, BODY *body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double c = fdPot0dR(0,k,body[2].dSemi,body) + (2.*n*fdPot0(0,k,body[2].dSemi,body))/(body[2].dSemi*(n-body[0].dMeanMotion));
+  c /= body[2].dSemi;
+  c /= (body[2].dLL13K0*body[2].dLL13K0 - k*k*pow(body[2].dLL13N0 - body[0].dMeanMotion,2));
+  return c;
+}
+
+/* LL13 C^+_k as defined by eqn 30a (the + term) */
+double fdCPk(int k, BODY *body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double tmp1 = k*fdPot0dR(0,k,body[2].dSemi,body) - 0.5*fdPot1dR(0,k,body[2].dSemi,body);
+  double tmp2 = k*n*(2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body));
+  tmp2 /= body[2].dSemi*(k*n - (k+1.)*body[0].dMeanMotion);
+  tmp1 += tmp2;
+
+  double c = body[0].dEcc*tmp1/body[2].dSemi;
+  c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion);
+  return c;
+}
+
+/* LL13 C^-_k as defined by eqn 30b (the - term) */
+double fdCMk(int k, BODY *body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double tmp1 = -k*fdPot0dR(0,k,body[2].dSemi,body) - 0.5*fdPot1dR(0,k,body[2].dSemi,body);
+  double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body));
+  tmp2 /= body[2].dSemi*(k*n - (k-1.)*body[0].dMeanMotion);
+  tmp1 += tmp2;
+   
+  double c = body[0].dEcc*tmp1/body[2].dSemi;
+  c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion);
+  return c;
+}
+
+/* LL13 D0 as defined by eqn 32 */
+double fdD0(BODY * body)
+{
+  return 2.0*fdC0(body);
+}
+
+/* LL13 Dk0 as defined by eqn 33 */
+double fdDk0(int k, BODY * body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double Dk = 2.0*fdC0k(k,body)*fdPot0(0,k,body[2].dSemi,body)/(body[2].dSemi*body[2].dSemi);
+  return (Dk/(n*(n - body[0].dMeanMotion)));
+}
+
+/* LL13 D+_k as defined by eqn 34a (the + term) */
+double fdDPk(int k, BODY * body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double Dk = 2.0*fdCPk(k,body);
+
+  double tmp1 = body[0].dEcc*(k*(2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body)));
+  tmp1 /= 2.0*body[2].dSemi*body[2].dSemi*n * (k*n - (k+1.)*body[0].dMeanMotion);
+  
+  return Dk - tmp1;
+}
+
+/* LL13 D-_k as defined by eqn 34b (the - term) */
+double fdMk(int k, BODY * body)
+{
+  double n = fdn(body[2].dSemi,body);
+  double Dk = 2.0*fdCPk(k,body);
+ 
+  double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body)));
+  tmp1 /= 2.0*body[2].dSemi*body[2].dSemi*n * (k*n - (k-1.)*body[0].dMeanMotion);
+
+  return Dk - tmp1;
+}
+
+/*
+ * LL13 Functions to compute cylindrical positions, velocities
+ * R, phi, z and RDot, phiDot, zDot
+ */
+
+double calculate_R(double dTime, BODY *body, double dPsi)
+{
+  // Note: Assume all phase values (phi, psi, etc...) are 0
+  // Fine because they are arbitary offsets
+
+  double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
+  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double varpi = body[0].dLongA + body[0].dArgP;
+
+  double tmp = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
+  double tmp2 = 0.0;
+
+  for(int k = 1; k < K_MAX; k++)
+  {
+    //do stuff TODO
+  }
+
+  return 0.0;
+}
+
+
+
+
+
+
+
 
 
 

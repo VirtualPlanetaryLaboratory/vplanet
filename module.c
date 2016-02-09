@@ -389,9 +389,16 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  */
 
 void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
-    body[iBody].dImK2 = fdImk2Man(body,iBody);
-    PropsAuxCPL(body,update,iBody);
-    body[iBody].dTidePower = fdCPLTidePower(body,iBody);
+  /* RB- These first 3 lines were taken from PropsAuxThermint, but 
+   as they rely on eqtide being called, they belong here.*/
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+
+
+  body[iBody].dImK2 = fdImk2Man(body,iBody);
+  PropsAuxCPL(body,update,iBody);
+  body[iBody].dTidePower = fdCPLTidePower(body,iBody);
 }
 
 /* This does not seem to be necessary

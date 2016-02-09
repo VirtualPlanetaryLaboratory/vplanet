@@ -387,6 +387,7 @@ typedef struct {
   double dLXUV;
   double dSatXUVFrac;
   int iStellarModel;
+  int iWindModel;
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -869,7 +870,7 @@ typedef struct {
   int bEnvelopeGone;              /**< Halt if evaporated?*/
   
   /* STELLAR */
-  // Nothing
+  int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
   int dMinTMan;     /**< Halt at this TMan */

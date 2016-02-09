@@ -386,10 +386,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-    /* Manually adjust variables for each module*/
-    if (body[1].daIceMass[0] != body[1].daIceMass[0]) {
-        printf("stop");
-    }
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
         control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);

@@ -103,6 +103,8 @@ void WriteHelpOutput(OUTPUT *output) {
 void HelpOptions(OPTIONS *options) {
   int iOpt,iModule;
   
+  /* XXX Disperse to modules to organize options by module */
+
   printf("----- Input Options -----\n\n");
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) 
     WriteHelpOption(&options[iOpt]);

@@ -21,9 +21,14 @@ void  InitializeControlBinary(CONTROL *control) {
 
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   // Copy body properties from src to dest
-//  dest[iBody].dR0 = src[iBody].dR0;
-//  dest[iBody].dCylPos = src[iBody].dCylPos;
-//  dest[iBody].dCylVel = src[iBody].dCylVel;
+  
+  for(int i = 0; i < 3; i++) {
+    dest[iBody].daCylPos[i] = src[iBody].daCylPos[i];
+    dest[iBody].daCylVel[i] = src[iBody].daCylVel[i];
+    dest[iBody].dCartPos[i] = src[iBody].dCartPos[i];
+    dest[iBody].dCartVel[i] = src[iBody].dCartVel[i];
+  }
+  
   dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
   dest[iBody].dFreeInc = src[iBody].dFreeInc;
   dest[iBody].dLL13N0 = src[iBody].dLL13N0;
@@ -37,16 +42,20 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
 // 
   // Malloc space for cylindrical position, velocity arrays
-//  body[iBody].dCylPos = malloc(3*sizeof(double));
-//  body[iBody].dCylVel = malloc(3*sizeof(double));
+  body[iBody].daCylPos = malloc(3*sizeof(double));
+  body[iBody].daCylVel = malloc(3*sizeof(double));
+  body[iBody].dCartPos = malloc(3*sizeof(double));
+  body[iBody].dCartVel = malloc(3*sizeof(double));
 
   // Init values to 0s?
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
   // Malloc space for cylindrical position, velocity arrays for tmp body
-//  control->Evolve.tmpBody[iBody].dCylPos = malloc(3*sizeof(double));
-//  control->Evolve.tmpBody[iBody].dCylVel = malloc(3*sizeof(double));
+  control->Evolve.tmpBody[iBody].daCylPos = malloc(3*sizeof(double));
+  control->Evolve.tmpBody[iBody].daCylVel = malloc(3*sizeof(double));
+  control->Evolve.tmpBody[iBody].dCartPos = malloc(3*sizeof(double));
+  control->Evolve.tmpBody[iBody].dCartVel = malloc(3*sizeof(double));
 
 }
 
@@ -683,11 +692,125 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 */
 
-/* Useful math functions */
-// Note: use russell's math functions for Laplace coeffs and their derivatives
-// TODO: cross product, dot product for 3 element arrays of doubles
+/* 
+ * Useful math functions 
+ */
+
+/* 3D dot product */
+double fdDot(double *a, double *b)
+{
+  return (a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
+}
+
+/* Kronecker Delta */
+int fiDelta(int i, int j)
+{
+  if(i == j)
+    return 1;
+  else
+    return 0;
+}
+
+/* Convert from cylindrical position coords to cartesian (3 dimensional) */
+void fvCylToCartPos(double *daCylPos, double *dCartPos)
+{
+  dCartPos[0] = daCylPos[0]*cos(daCylPos[1]);
+  dCartPos[1] = daCylPos[1]*sin(daCylPos[1]);
+  dCartPos[2] = daCylPos[2];
+}
+
+/* Convert from cylindrical velocity coords to cartesian (3 dimensional) */
+void fvCylToCartVel(double *daCylPos, double *daCylVel, double *dCartVel)
+{
+  dCartVel[0] = daCylVel[0]*cos(daCylPos[1]) - daCylPos[0]*sin(daCylPos[1])*daCylVel[1];
+  dCartVel[1] = daCylVel[0]*sin(daCylPos[1]) + daCylPos[0]*cos(daCylPos[1])*daCylVel[1];
+  dCartVel[2] = daCylVel[2];
+}
+
+/*
+ * Functions for calculating orbital parameters assuming that the barycenter
+ * of the binary is at the origin
+ */
+
+/* Calculate specific angular momentum 
+ * h = r x v in cartesian coords
+ */
+void fvSpecificAngMom(double *r, double *v, double *h)
+{
+  // No return since resultant vector, h, is supplied
+  cross(r,v,h); // r x v -> h
+}
+
+/* Calculate specific orbital energy
+ * eps = v^2/2 - mu/|r|
+ */
+double fdSpecificOrbEng(BODY *body)
+{
+  // For binary, iBody 0, 1 == stars, 2 == planet
+  double mu = BIGG*(body[0].dMass + body[1].dMass); // Gravitational parameter
+  double r_norm = sqrt(fdDot(body[2].dCartPos,body[2].dCartPos));
+  
+  return fdDot(body[2].dCartVel,body[2].dCartVel)/2.0 - (mu/r_norm);
+}
+
+/* Compute a body's semimajor axis
+ * a = -mu/(2*eps)
+ */
+double fdComputeSemi(BODY *body)
+{
+  // For binary, iBody 0, 1 == stars, 2 == planet
+  return -BIGG*(body[0].dMass + body[1].dMass)/(2.0*fdSpecificOrbEng(body));
+}
+
+/* Compute a body's orbital eccentricity
+ * e = sqrt(1 + 2*eps*h*h/(mu*mu))
+ */
+double fdComputeEcc(BODY *body)
+{
+  // For binary, iBody 0, 1 == stars, 2 == planet
+  double mu = BIGG*(body[0].dMass + body[1].dMass); // Gravitational parameter
+  double h[3];
+  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  
+  return sqrt(1. + (2.*fdSpecificOrbEng(body)*fdDot(h,h))/(mu*mu));
+}
+
+//Below are functions russell already defined in distorb that i'll reuse
+//double fdLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS)
+//double fdDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double dIndexS)
+// Note: for Laplace Coeff functions, they go as b^J_s(alpha) where J is an int, S is a half int double !!
+
+/* 
+ * Analytic equations from Leung+Lee 2013 that govern circumbinary planet (cbp) evolution
+ * for 1 (!) cbp
+ */
+
+/* LL13 N0 */
+double fdMeanMotion(BODY *body)
+{
+  // Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+
+  double N0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+
+  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
+  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
+
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dSemi);
+  tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
+
+  return sqrt(N0*(tmp1 + tmp2));
+}
 
 
-/* Functions to compute barycentric orbital elements for a planet (iBodyType == 0) Body */
-// Assumes barycenter is at the origin
-// TODO: compute specific angular momentum, gravitational parameter, ecc, inc, semi, w, Omega, etc...
+
+
+
+
+
+
+
+
+

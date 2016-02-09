@@ -17,6 +17,7 @@
 #define OPT_LL13N0              2030 // LL13 Mean Motion
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
+#define OPT_CYLPOS              2060 // Cylindrical position [r,phi,z]
 
 /* Output Info */
 
@@ -29,6 +30,7 @@
 #define OUT_LL13N0              2030
 #define OUT_LL13K0              2040
 #define OUT_LL13V0              2050
+#define OUT_CYLPOS              2060
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -77,5 +79,18 @@ void LogOptionsBinary(CONTROL*,FILE*);
 void LogBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
+/* Math Functions */
+int fiDelta(int,int);
+double fdDot(double*,double*);
+void fvCylToCartPos(double*,double*);
+void fvCylToCartVel(double*,double*,double*);
+void fvSpecificAngMom(double*,double*,double*);
+double fdSpecificOrbEng(BODY*);
+
+/* Orbital Element Functions */
+double fdComputeSemi(BODY*);
+double fdComputeEcc(BODY*);
+
 /* Binary functions */
-//TODO
+
+double fdMeanMotion(BODY*);

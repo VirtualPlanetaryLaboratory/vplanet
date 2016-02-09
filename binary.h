@@ -102,3 +102,4 @@ double fdPot0(int,int,double,BODY*);
 double fdPot0dR(int,int,double,BODY*);
 double fdPot1(int,int,double,BODY*);
 double fdPot1dR(int,int,double,BODY*);
+double fdn(double,BODY*);

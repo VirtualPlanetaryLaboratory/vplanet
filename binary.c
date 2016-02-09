@@ -944,7 +944,13 @@ double fdPot1dR(int j, int k, double R, BODY * body)
   return coeff*((fp*g + gp*f + hp*i + ip*h)*l + lp*(f*g + h*i));
 }
 
-
+/* LL13 function defined in paragraph in between eqn 24 and 25 which is like
+ * the mean motion at R
+ */
+double fdn(double R, BODY *body)
+{
+  return sqrt(fdPot0dR(0,0,R,body)/R);
+}
 
 
 

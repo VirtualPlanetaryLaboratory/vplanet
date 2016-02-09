@@ -90,7 +90,15 @@ double fdSpecificOrbEng(BODY*);
 /* Orbital Element Functions */
 double fdComputeSemi(BODY*);
 double fdComputeEcc(BODY*);
+double fdMeanAnomaly(double,double,double);
 
 /* Binary functions */
 
 double fdMeanMotion(BODY*);
+double fdEpiFreqK(BODY*);
+double fdEpiFreqV(BODY*);
+double fdPhi0(double,double,double);
+double fdPot0(int,int,double,BODY*);
+double fdPot0dR(int,int,double,BODY*);
+double fdPot1(int,int,double,BODY*);
+double fdPot1dR(int,int,double,BODY*);

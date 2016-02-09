@@ -775,6 +775,12 @@ double fdComputeEcc(BODY *body)
   return sqrt(1. + (2.*fdSpecificOrbEng(body)*fdDot(h,h))/(mu*mu));
 }
 
+/* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset */
+double fdMeanAnomaly(double dMeanMotion, double dTime, double dPhi)
+{
+  return dMeanMotion * dTime + dPhi;
+}
+
 //Below are functions russell already defined in distorb that i'll reuse
 //double fdLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS)
 //double fdDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double dIndexS)
@@ -803,6 +809,163 @@ double fdMeanMotion(BODY *body)
 
   return sqrt(N0*(tmp1 + tmp2));
 }
+
+/* LL13 K0 */
+double fdEpiFreqK(BODY *body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+ 
+  double K0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+
+  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
+  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
+
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dSemi);
+  tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
+
+  double tmp3 = body[0].dMass*body[1].dMass*body[0].dSemi*body[0].dSemi/(M*M*body[2].dSemi*body[2].dSemi);
+
+  double tmp4 = body[1].dMass*fdDerivLaplaceCoeff(2,alphaa,0,0.5)/M;
+  tmp4 += body[0].dMass*fdDerivLaplaceCoeff(2,alphab,0,0.5)/M;
+  tmp3 *= tmp4;
+
+  K0 *= (tmp1 - tmp2 - tmp3);
+  return sqrt(K0);
+}
+
+/* LL13 V0 */
+double fdEpiFreqV(BODY *body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+     
+  double V0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+
+  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,1.5)/M;
+  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,1.5)/M;
+  return sqrt(V0 * tmp1);
+}
+
+/* Circular (azimuthal) motion of the guiding center for a cbp: phi0 */
+double fdPhi0(double dTime, double dMeanMotion, double dPsi)
+{
+  return dMeanMotion * dTime + dPsi;
+}
+
+/*
+ * Functions to compute binary potentials and their derivatives w.r.t. radius
+ */
+
+/* LL13 Eqn 15: Binary potential component 0 */
+double fdPot0(int j, int k, double R, BODY *body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/R;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/R;
+
+  double coeff = -(2. - fiDelta(k,0))/2.;
+  coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
+
+  double tmp1 = pow(-1.,k)*body[0].dMass*fdLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
+  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
+
+  return coeff*tmp1;
+
+}
+
+/* LL13 Eqn 15: d/dR of binary potential component 0 */
+double fdPot0dR(int j, int k, double R, BODY *body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/R;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/R;
+
+  double coeff = -(2. - fiDelta(k,0))/2.;
+
+  double f = pow(-1.,k)*body[0].dMass*fdLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
+  f += body[1].dMass*fdLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
+  double g = BIGG*(body[0].dMass + body[1].dMass)/R;
+
+  double g_prime = -g/R;
+  double f_prime = -pow(-1.,k)*body[0].dMass*alphaa*R*fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/(R*R*M);
+  f_prime += -body[1].dMass*alphab*R*fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/(R*R*M);
+
+  return coeff*(f_prime*g + g_prime*f);
+}
+
+/* LL13 eqn 16: Binary potential component 1 */
+double fdPot1(int j, int k, double R, BODY *body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/R;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/R;
+
+  double coeff = -(2. - fiDelta(k,0))/2.;
+  coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
+
+  double tmp1 = pow(-1.,k)*body[0].dMass*alphaa*fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/M;
+  tmp1 += body[1].dMass*alphab*fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/M;
+
+  return coeff*tmp1;
+}
+
+/* LL13 eqn 16: d/dR of binary potential component 1 */
+double fdPot1dR(int j, int k, double R, BODY * body)
+{
+  //Define intermediate quantities
+  double M = body[0].dMass + body[1].dMass;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/R;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/R;
+
+  double coeff = -(2. - fiDelta(k,0))/2.;
+
+  // Break up big terms into multiple terms: x
+  double f = pow(-1.,k)*body[0].dMass*alphaa/M;
+  double g = fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.);
+  double h = body[1].dMass*alphab/M;
+  double i = fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.);
+  double l = BIGG*(body[0].dMass + body[1].dMass)/R;
+
+  // Derivatives of the above terms w.r.t. R (and hence, alphas): xp
+  double fp = -pow(-1.,k)*body[0].dMass*alphaa/(R*M);
+  double gp = -alphaa*fdDerivLaplaceCoeff(2,alphaa,k,(j+1.)/2.)/R;
+  double hp = -body[1].dMass*alphab/(R*M);
+  double ip = -alphab*fdDerivLaplaceCoeff(2,alphab,k,(j+1.)/2.)/R;
+  double lp = -BIGG*(body[0].dMass + body[1].dMass)/(R*R);
+
+  return coeff*((fp*g + gp*f + hp*i + ip*h)*l + lp*(f*g + h*i));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

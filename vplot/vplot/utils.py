@@ -284,10 +284,13 @@ def GetArrays(bodies = []):
         raise Exception('Unable to open %s.' % body.climfile)
 
       # ... and the grid order
-      gridorder = re.search(r'- BODY: %s -(.*?)\nGrid Output Order:(.*?)\n' % body.name, 
-                              logfile, re.DOTALL).groups()[1]
-      body.gridparams = GetParams(gridorder, climfile)
-      
+      try:
+        gridorder = re.search(r'- BODY: %s -(.*?)\nGrid Output Order:(.*?)\n' % body.name, 
+                                logfile, re.DOTALL).groups()[1]
+        body.gridparams = GetParams(gridorder, climfile)
+      except:
+        pass
+        
   # Final check
   if len([param.name for body in output.bodies for param in body.params]) == 0:
     raise Exception("There don't seem to be any parameters to be plotted...")

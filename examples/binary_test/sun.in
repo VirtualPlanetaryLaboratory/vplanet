@@ -1,18 +1,19 @@
 # The host star, the sun -> Primary body!
 sName		primary		# Body's name
 #saModules	eqtide stellar		# Modules to apply, exact spelling required
-saModules stellar
+saModules stellar binary
 
 # Physical Parameters
 iBodyType       1               # 1 -> Star
-dMass		0.949		# Mass, negative -> Earth masses
+dMass		0.6859945166		# Mass, negative -> Earth masses
 #dRadius		0.00153		# Radius, negative -> Earth radii
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
 # Binary Parameters
-dEcc            0.1             # Binary eccentricity
-dSemi           -0.1469            # Binary semimajor axis 
-dLongP          0.0
+dEcc            0.16048             # Binary eccentricity
+dSemi           -0.22405            # Binary semimajor axis 
+dLongP          257.79
+dFreeInc        0.0011              # Binary inclination
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.

@@ -228,11 +228,11 @@ typedef struct {
 
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
-  //double dR0;           /**< Guiding Radius, equal to dSemi so not needed */
+  double dR0;           /**< Guiding Radius,initially equal to dSemi */
   double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
   double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
-  double dFreeInc;      /**< CBP's free inclination */
+  double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
   double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
   double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
   double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */

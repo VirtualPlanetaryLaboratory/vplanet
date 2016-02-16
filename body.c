@@ -231,11 +231,9 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
   /* dflemin3 added means to keep track of whether binary is being used*/
-  int cond = 0;
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
     if(src[iBody].iBodyType == 0 && src[iBody].bBinary == 1)
-      cond = 1; // binary being used, allow primary to copy orbital parameters
     dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;
@@ -247,7 +245,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dAge = src[iBody].dAge;
 
     /* Only orbiting bodies retain these parameters unless binary is used*/
-    if(iBody == 0 && cond == 1) {
+    if(iBody == 0 && src[iBody].bBinary == 1) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
       dest[iBody].dSemi = src[iBody].dSemi;

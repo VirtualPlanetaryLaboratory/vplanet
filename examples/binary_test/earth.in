@@ -5,19 +5,18 @@ saModules binary
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
-dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
+dMass		-104.6264			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.003                     # Free Eccentricity
-dFreeInc        1.0                     # Free Inclination [deg]
+dFreeEcc        0.02373                     # Free Eccentricity
+dFreeInc        0.3083                     # Free Inclination [deg]
 
 # Orbital Properties
-dEcc            0.0			# Eccentricity
-dSemi           -20.0			# Semi-major axis, negative -> AU
+dSemi           -0.7016			# Semi-major axis, negative -> AU
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds

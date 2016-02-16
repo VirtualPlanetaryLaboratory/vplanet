@@ -34,20 +34,34 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dLL13N0 = src[iBody].dLL13N0;
   dest[iBody].dLL13K0 = src[iBody].dLL13K0;
   dest[iBody].dLL13V0 = src[iBody].dLL13V0;
+  dest[iBody].dR0 = src[iBody].dR0; 
 
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-// TODO:
-// Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
-// 
+
+  // If ibody is the CBP (body 2, iBodyType 0), init
+  if(body[iBody].iBodyType == 0) // If the body is a planet
+  {
+    // Inits for CBP
+    body[2].dR0 = body[2].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
+    body[2].dLL13N0 = fdMeanMotion(body);
+    body[2].dLL13K0 = fdEpiFreqK(body);
+    body[2].dLL13V0 = fdEpiFreqV(body);
+  }
+  
+  // If it's the binary (body 0), init its orbital properties if need be
+  if(iBody == 0)
+  {
+    body[0].dMeanMotion = sqrt(BIGG*(body[0].dMass+body[1].dMass)/pow(body[0].dSemi,3));
+  }
+
+  // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
   // Malloc space for cylindrical position, velocity arrays
   body[iBody].daCylPos = malloc(3*sizeof(double));
   body[iBody].daCylVel = malloc(3*sizeof(double));
   body[iBody].dCartPos = malloc(3*sizeof(double));
   body[iBody].dCartVel = malloc(3*sizeof(double));
-
-  // Init values to 0s?
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -300,6 +314,7 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  
   /*
   int bAtmEsc=0;
 
@@ -336,7 +351,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 }
 
 void InitializeModuleBinary(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
+/* Anything here? */
 }
 
 /**************** BINARY Update ****************/
@@ -796,15 +811,15 @@ double fdMeanMotion(BODY *body)
 {
   // Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
 
   double N0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
 
   double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
   tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
 
-  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dSemi);
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dR0);
   tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
 
   return sqrt(N0*(tmp1 + tmp2));
@@ -815,18 +830,18 @@ double fdEpiFreqK(BODY *body)
 {
   //Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
  
   double K0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
 
   double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
   tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
 
-  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dSemi);
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dR0);
   tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
 
-  double tmp3 = body[0].dMass*body[1].dMass*body[0].dSemi*body[0].dSemi/(M*M*body[2].dSemi*body[2].dSemi);
+  double tmp3 = body[0].dMass*body[1].dMass*body[0].dSemi*body[0].dSemi/(M*M*body[2].dR0*body[2].dR0);
 
   double tmp4 = body[1].dMass*fdDerivLaplaceCoeff(2,alphaa,0,0.5)/M;
   tmp4 += body[0].dMass*fdDerivLaplaceCoeff(2,alphab,0,0.5)/M;
@@ -841,8 +856,8 @@ double fdEpiFreqV(BODY *body)
 {
   //Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dSemi;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dSemi;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
      
   double V0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
 
@@ -961,7 +976,7 @@ double fdn(double R, BODY *body)
 /* LL13 C0 as defined in eqn 28 */
 double fdC0(BODY *body)
 {
-  double c = -body[0].dEcc*fdPot1dR(0,0,body[2].dSemi,body)/body[2].dSemi;
+  double c = -body[0].dEcc*fdPot1dR(0,0,body[2].dR0,body)/body[2].dR0;
   c /= (body[2].dLL13K0*body[2].dLL13K0 - body[0].dMeanMotion*body[0].dMeanMotion);
   return c;
 }
@@ -969,9 +984,9 @@ double fdC0(BODY *body)
 /* LL13 C^0_k as defined by eqn 29 */
 double fdC0k(int k, BODY *body)
 {
-  double n = fdn(body[2].dSemi,body);
-  double c = fdPot0dR(0,k,body[2].dSemi,body) + (2.*n*fdPot0(0,k,body[2].dSemi,body))/(body[2].dSemi*(n-body[0].dMeanMotion));
-  c /= body[2].dSemi;
+  double n = fdn(body[2].dR0,body);
+  double c = fdPot0dR(0,k,body[2].dR0,body) + (2.*n*fdPot0(0,k,body[2].dR0,body))/(body[2].dR0*(n-body[0].dMeanMotion));
+  c /= body[2].dR0;
   c /= (body[2].dLL13K0*body[2].dLL13K0 - k*k*pow(body[2].dLL13N0 - body[0].dMeanMotion,2));
   return c;
 }
@@ -979,13 +994,13 @@ double fdC0k(int k, BODY *body)
 /* LL13 C^+_k as defined by eqn 30a (the + term) */
 double fdCPk(int k, BODY *body)
 {
-  double n = fdn(body[2].dSemi,body);
-  double tmp1 = k*fdPot0dR(0,k,body[2].dSemi,body) - 0.5*fdPot1dR(0,k,body[2].dSemi,body);
-  double tmp2 = k*n*(2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body));
-  tmp2 /= body[2].dSemi*(k*n - (k+1.)*body[0].dMeanMotion);
+  double n = fdn(body[2].dR0,body);
+  double tmp1 = k*fdPot0dR(0,k,body[2].dR0,body) - 0.5*fdPot1dR(0,k,body[2].dR0,body);
+  double tmp2 = k*n*(2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body));
+  tmp2 /= body[2].dR0*(k*n - (k+1.)*body[0].dMeanMotion);
   tmp1 += tmp2;
 
-  double c = body[0].dEcc*tmp1/body[2].dSemi;
+  double c = body[0].dEcc*tmp1/body[2].dR0;
   c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion);
   return c;
 }
@@ -993,10 +1008,10 @@ double fdCPk(int k, BODY *body)
 /* LL13 C^-_k as defined by eqn 30b (the - term) */
 double fdCMk(int k, BODY *body)
 {
-  double n = fdn(body[2].dSemi,body);
-  double tmp1 = -k*fdPot0dR(0,k,body[2].dSemi,body) - 0.5*fdPot1dR(0,k,body[2].dSemi,body);
-  double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body));
-  tmp2 /= body[2].dSemi*(k*n - (k-1.)*body[0].dMeanMotion);
+  double n = fdn(body[2].dR0,body);
+  double tmp1 = -k*fdPot0dR(0,k,body[2].dR0,body) - 0.5*fdPot1dR(0,k,body[2].dR0,body);
+  double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body));
+  tmp2 /= body[2].dR0*(k*n - (k-1.)*body[0].dMeanMotion);
   tmp1 += tmp2;
    
   double c = body[0].dEcc*tmp1/body[2].dSemi;
@@ -1013,19 +1028,19 @@ double fdD0(BODY * body)
 /* LL13 Dk0 as defined by eqn 33 */
 double fdDk0(int k, BODY * body)
 {
-  double n = fdn(body[2].dSemi,body);
-  double Dk = 2.0*fdC0k(k,body)*fdPot0(0,k,body[2].dSemi,body)/(body[2].dSemi*body[2].dSemi);
+  double n = fdn(body[2].dR0,body);
+  double Dk = 2.0*fdC0k(k,body)*fdPot0(0,k,body[2].dR0,body)/(body[2].dSemi*body[2].dR0);
   return (Dk/(n*(n - body[0].dMeanMotion)));
 }
 
 /* LL13 D+_k as defined by eqn 34a (the + term) */
 double fdDPk(int k, BODY * body)
 {
-  double n = fdn(body[2].dSemi,body);
+  double n = fdn(body[2].dR0,body);
   double Dk = 2.0*fdCPk(k,body);
 
-  double tmp1 = body[0].dEcc*(k*(2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body)));
-  tmp1 /= 2.0*body[2].dSemi*body[2].dSemi*n * (k*n - (k+1.)*body[0].dMeanMotion);
+  double tmp1 = body[0].dEcc*(k*(2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body)));
+  tmp1 /= 2.0*body[2].dR0*body[2].dR0*n * (k*n - (k+1.)*body[0].dMeanMotion);
   
   return Dk - tmp1;
 }
@@ -1033,11 +1048,11 @@ double fdDPk(int k, BODY * body)
 /* LL13 D-_k as defined by eqn 34b (the - term) */
 double fdDMk(int k, BODY * body)
 {
-  double n = fdn(body[2].dSemi,body);
+  double n = fdn(body[2].dR0,body);
   double Dk = 2.0*fdCPk(k,body);
  
-  double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[2].dSemi,body) - fdPot1(0,k,body[2].dSemi,body)));
-  tmp1 /= 2.0*body[2].dSemi*body[2].dSemi*n * (k*n - (k-1.)*body[0].dMeanMotion);
+  double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body)));
+  tmp1 /= 2.0*body[2].dR0*body[2].dR0*n * (k*n - (k-1.)*body[0].dMeanMotion);
 
   return Dk - tmp1;
 }
@@ -1055,7 +1070,7 @@ double calculate_R(double dTime, BODY *body, double dPsi)
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
-  double varpi = body[0].dLongA + body[0].dArgP;
+  double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
   double tmp2 = 0.0;
@@ -1069,7 +1084,7 @@ double calculate_R(double dTime, BODY *body, double dPsi)
     tmp2 += tmp3;
   }
 
-  return body[2].dSemi*(tmp1-tmp2);
+  return body[2].dR0*(tmp1-tmp2);
 }
 
 double calculate_Phi(double dTime, BODY *body, double dPsi)
@@ -1080,7 +1095,7 @@ double calculate_Phi(double dTime, BODY *body, double dPsi)
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
-  double varpi = body[0].dLongA + body[0].dArgP;
+  double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double phi = phi0 * 2.0*body[2].dLL13N0*body[2].dFreeEcc*sin(body[2].dLL13K0*dTime + dPsi)/body[2].dLL13K0;
   phi += body[2].dLL13N0*fdD0(body)*sin(M)/body[0].dMeanMotion;
@@ -1103,7 +1118,7 @@ double calculate_Z(double dTime, BODY *body, double dXi)
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
 
-  return body[2].dSemi*body[2].dFreeInc*cos(body[2].dLL13V0*dTime + dXi);
+  return body[2].dR0*body[2].dFreeInc*cos(body[2].dLL13V0*dTime + dXi);
 }
 
 double calculate_Rdot(double dTime, BODY *body, double dPsi, double dPhi)
@@ -1117,7 +1132,7 @@ double calculate_Rdot(double dTime, BODY *body, double dPsi, double dPhi)
   double phi0_dot = body[2].dLL13N0;
   double M_dot = body[2].dMeanMotion;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double varpi = body[0].dLongA + body[0].dArgP;
+  double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = k0*body[2].dFreeEcc*sin(k0*dTime + dPsi) + fdC0(body)*sin(M)*M_dot;
 
@@ -1131,7 +1146,7 @@ double calculate_Rdot(double dTime, BODY *body, double dPsi, double dPhi)
     tmp2 += tmp3;
   }
 
-  return body[2].dSemi*(tmp1-tmp2);
+  return body[2].dR0*(tmp1-tmp2);
 }
 
 double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
@@ -1144,7 +1159,7 @@ double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
   double n = body[0].dMeanMotion;
   double M_dot = body[2].dMeanMotion;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double varpi = body[0].dLongA + body[0].dArgP;
+  double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = n0 + 2.0*n0*body[2].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fdD0(body)*cos(M)*M_dot;
 
@@ -1163,36 +1178,8 @@ double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
 
 double calculate_Zdot(double dTime, BODY *body, double dXi)
 {
-  return -body[2].dSemi*body[2].dFreeInc*sin(body[2].dLL13V0*dTime + dXi)*body[2].dLL13V0;
+  return -body[2].dR0*body[2].dFreeInc*sin(body[2].dLL13V0*dTime + dXi)*body[2].dLL13V0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* 
  * Debug functions...evaluates and prints out all C,D's and what have you
@@ -1204,7 +1191,25 @@ void fDebugBinary(BODY *body)
 {
   fprintf(stderr,"Performing debug outputs...\n");
 
-  // TODO: stuff here
+  fprintf(stdout,"Bin props: a, e, m1, m2, dMeanMotion, varpi: %lf,%lf,%lf,%lf,%lf,%lf\n",body[0].dSemi/AUCM,body[0].dEcc,body[0].dMass/MSUN,body[1].dMass/MSUN,body[0].dMeanMotion,body[0].dLongP/DEGRAD);
+
+  fprintf(stdout,"C0 = %lf\n",fdC0(body));
+  for(int k = 1; k < K_MAX; k++)
+  {
+    fprintf(stdout,"C0%d = %lf\n",k,fdC0k(k,body));
+    fprintf(stdout,"C+%d = %lf\n",k,fdCPk(k,body));
+    fprintf(stdout,"C-%d = %lf\n",k,fdCMk(k,body));
+  }
+
+  fprintf(stdout,"nk [1/s] %e\n",body[2].dMeanMotion);
+  fprintf(stdout,"n0 [1/s] %e\n",body[2].dLL13N0);
+  fprintf(stdout,"k0 [1/s] %e\n",body[2].dLL13K0);
+  fprintf(stdout,"v0 [1/s] %e\n",body[2].dLL13V0);
+
+  fprintf(stdout,"r0 %lf\n",body[2].dR0/AUCM);
+  fprintf(stdout,"n0/nk %lf\n",body[2].dLL13N0/body[2].dMeanMotion);
+  fprintf(stdout,"k0/nk %lf\n",body[2].dLL13K0/body[2].dMeanMotion);
+  fprintf(stdout,"v0/nk %lf\n",body[2].dLL13V0/body[2].dMeanMotion);
 
   fprintf(stderr,"Debug output end.\n");
 }

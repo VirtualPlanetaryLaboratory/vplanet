@@ -111,6 +111,10 @@ int main(int argc,char *argv[]) {
       printf("Log file written.\n");
   }
 
+  /* Debugging functions */
+  if(body[0].bBinary)
+    fDebugBinary(body);
+
   /* Perform evolution */
 
   if (control.Evolve.bDoForward || control.Evolve.bDoBackward) {

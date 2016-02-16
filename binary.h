@@ -8,7 +8,7 @@
 */
 
 
-#define K_MAX                   3   /* Max term to sum to */
+#define K_MAX                   4   /* Max term to sum to */
 
 /* Options Info */
 /* For options and output, binary has 2000-2100 */

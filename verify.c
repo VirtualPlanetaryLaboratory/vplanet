@@ -105,7 +105,11 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
     if (body[iBody].bPoise) {
-      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      if(body[iBody].bBinary == 0){ // Not binary, regular single-star orbit
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      } else if(body[iBody].bBinary && iBody != 1){ // Set mean motion for binary (primary,iBody==0;planet,iBody==2)
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+        }
     }  
     return;
   }
@@ -132,15 +136,30 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   
   /* Only one option set */
   
-  if (dMeanMotion > 0)
-    body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
-  if (dPeriod > 0)
-    body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
-  if (dSemi > 0)
-    body[iBody].dSemi = dSemi;
-
-  if (dMeanMotion == 0)
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  if (dMeanMotion > 0) {
+    if(body[iBody].bBinary && iBody != 1)
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
+    else
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
+  }
+  if (dPeriod > 0) {
+    if(body[iBody].bBinary && iBody != 1)
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+  }
+  if (dSemi > 0) {
+    if(body[iBody].bBinary && iBody != 1)
+      body[iBody].dSemi = dSemi;
+    else
+      body[iBody].dSemi = dSemi;
+  }
+  if (dMeanMotion == 0) {
+    if(body[iBody].bBinary && iBody != 1)
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass+body[1].dMass);
+    else
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  }
   //XXX Initialize central body parameters.
   
   

@@ -110,9 +110,9 @@ int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].dSemi <= halt->dMinSemi) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: e = ");
+      printf("HALT: a = ");
       fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
-      printf(", < min e = ");
+      printf(", < min a = ");
       fprintd(stdout,halt->dMinSemi,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
     }
@@ -167,9 +167,11 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
       return 1;
     }
   }
-  else if(body[iBody].bBinary == 1) { // Using binary...see if binaries or primary and secondary merge
+  // Check for merge when planet is using binary
+  // This also checks if stars merged, for simplicity
+  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
     double max_radius = max(body[0].dRadius,body[1].dRadius);
-    if((body[iBody].dSemi*(1-sqrt(body[iBody].dEccSq)) <= (body[0].dSemi + max_radius) || body[0].dRadius+body[1].dRadius < body[0].dSemi) && halt->bMerge) { /* Merge! */
+    if((body[iBody].dSemi*(1-sqrt(body[iBody].dEccSq)) <= (body[0].dSemi + max_radius) || body[0].dRadius+body[1].dRadius >= body[0].dSemi) && halt->bMerge) { /* Merge! */
         if(io->iVerbose > VERBPROG)
           printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 

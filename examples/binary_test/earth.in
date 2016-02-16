@@ -16,8 +16,8 @@ dFreeEcc        0.003                     # Free Eccentricity
 dFreeInc        1.0                     # Free Inclination [deg]
 
 # Orbital Properties
-#dEcc            0.8			# Eccentricity
-#dSemi           -0.1			# Semi-major axis, negative -> AU
+dEcc            0.0			# Eccentricity
+dSemi           -20.0			# Semi-major axis, negative -> AU
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds

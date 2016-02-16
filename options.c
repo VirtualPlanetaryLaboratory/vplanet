@@ -2269,7 +2269,6 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
-
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
   int iOpt,iFile;

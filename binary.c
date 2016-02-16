@@ -1031,7 +1031,7 @@ double fdDPk(int k, BODY * body)
 }
 
 /* LL13 D-_k as defined by eqn 34b (the - term) */
-double fdMk(int k, BODY * body)
+double fdDMk(int k, BODY * body)
 {
   double n = fdn(body[2].dSemi,body);
   double Dk = 2.0*fdCPk(k,body);
@@ -1052,19 +1052,118 @@ double calculate_R(double dTime, BODY *body, double dPsi)
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitary offsets
 
+  // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
   double varpi = body[0].dLongA + body[0].dArgP;
 
-  double tmp = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
+  double tmp1 = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
   double tmp2 = 0.0;
+  double tmp3;
 
   for(int k = 1; k < K_MAX; k++)
   {
-    //do stuff TODO
+    tmp3 = fdC0k(k,body)*cos(k*(phi0 - M - varpi));
+    tmp3 += fdCPk(k,body)*cos(k*(phi0 - varpi) - (k+1.)*M);
+    tmp3 += fdCMk(k,body)*cos(k*(phi0 - varpi) - (k-1.)*M);
+    tmp2 += tmp3;
   }
 
-  return 0.0;
+  return body[2].dSemi*(tmp1-tmp2);
+}
+
+double calculate_Phi(double dTime, BODY *body, double dPsi)
+{
+  // Note: Assume all phase values (phi, psi, etc...) are 0
+  // Fine because they are arbitrary offsets
+
+  // Useful intermediate quantities
+  double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
+  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double varpi = body[0].dLongA + body[0].dArgP;
+
+  double phi = phi0 * 2.0*body[2].dLL13N0*body[2].dFreeEcc*sin(body[2].dLL13K0*dTime + dPsi)/body[2].dLL13K0;
+  phi += body[2].dLL13N0*fdD0(body)*sin(M)/body[0].dMeanMotion;
+
+  double tot = 0.0;
+  double tmp1 = 0.0;
+  for(int k = 1; k < K_MAX; k++)
+  {
+    tmp1 = body[2].dLL13N0*fdDk0(k,body)*sin(k*(phi0-M-varpi))/(k*(body[2].dLL13N0-body[0].dMeanMotion));
+    tmp1 += body[2].dLL13N0*fdDPk(k,body)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion);
+    tmp1 += body[2].dLL13N0*fdDMk(k,body)*sin(k*(phi0-varpi) - (k-1.)*M)/(k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion);
+    tot += tmp1;
+  }
+
+  return (phi + tot);
+}
+
+double calculate_Z(double dTime, BODY *body, double dXi)
+{
+  // Note: Assume all phase values (phi, psi, etc...) are 0
+  // Fine because they are arbitrary offsets
+
+  return body[2].dSemi*body[2].dFreeInc*cos(body[2].dLL13V0*dTime + dXi);
+}
+
+double calculate_Rdot(double dTime, BODY *body, double dPsi, double dPhi)
+{
+  // Note: Assume all phase values (phi, psi, etc...) are 0
+  // Fine because they are arbitrary offsets
+
+  // Useful intermediate quantities
+  double k0 = body[2].dLL13K0;
+  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0_dot = body[2].dLL13N0;
+  double M_dot = body[2].dMeanMotion;
+  double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
+  double varpi = body[0].dLongA + body[0].dArgP;
+
+  double tmp1 = k0*body[2].dFreeEcc*sin(k0*dTime + dPsi) + fdC0(body)*sin(M)*M_dot;
+
+  double tmp2 = 0.0; // Total sum
+  double tmp3 = 0.0; // Intermediate sum for each k
+  for(int k = 1; k < K_MAX; k++)
+  {
+    tmp3 = -fdC0k(k,body)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
+    tmp3 -= fdCPk(k,body)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
+    tmp3 -= fdCMk(k,body)*sin(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot -(k-1.)*M_dot);
+    tmp2 += tmp3;
+  }
+
+  return body[2].dSemi*(tmp1-tmp2);
+}
+
+double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
+{
+  // Useful intermediate quantities
+  double k0 = body[2].dLL13K0;
+  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0_dot = body[2].dLL13N0;
+  double n0 = body[2].dLL13N0;
+  double n = body[0].dMeanMotion;
+  double M_dot = body[2].dMeanMotion;
+  double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
+  double varpi = body[0].dLongA + body[0].dArgP;
+
+  double tmp1 = n0 + 2.0*n0*body[2].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fdD0(body)*cos(M)*M_dot;
+
+  double tmp2 = 0.0; // Total loop sum
+  double tmp3 = 0.0; // Intermediate loop sum
+  for(int k = 1; k < K_MAX; k++)
+  {
+    tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
+    tmp3 += (n0*fdDPk(k,body)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
+    tmp3 += (n0*fdDMk(k,body)/(k*n0 - (k-1.)*n))*cos(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot-(k-1.)*M_dot);
+    tmp2 += tmp3;
+  }
+
+  return (tmp1+tmp2);
+}
+
+double calculate_Zdot(double dTime, BODY *body, double dXi)
+{
+  return -body[2].dSemi*body[2].dFreeInc*sin(body[2].dLL13V0*dTime + dXi)*body[2].dLL13V0;
 }
 
 
@@ -1095,12 +1194,17 @@ double calculate_R(double dTime, BODY *body, double dPsi)
 
 
 
+/* 
+ * Debug functions...evaluates and prints out all C,D's and what have you
+ * to see if any bugs exits
+ */
 
+/* General debug: Run in main AFTER all stuff read in, processed */
+void fDebugBinary(BODY *body)
+{
+  fprintf(stderr,"Performing debug outputs...\n");
 
+  // TODO: stuff here
 
-
-
-
-
-
-
+  fprintf(stderr,"Debug output end.\n");
+}

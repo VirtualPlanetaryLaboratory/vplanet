@@ -9,7 +9,8 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	sun.in $	# The host star
-		earth.in	# Earth
+		sun2.in $       # Secondary
+                earth.in	# Earth
 
 
 # Array options can continue to the next line with a terminating "$". The $ can be 

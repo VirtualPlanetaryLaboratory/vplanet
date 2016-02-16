@@ -190,7 +190,8 @@ typedef struct {
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the
-   * second element in the BODY array.   */
+   * second element in the BODY array and, if using binary
+   * in the primary (0th) body*/
   double dSemi;          /**< Body's Semi-major Axis */
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */

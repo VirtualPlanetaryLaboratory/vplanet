@@ -115,3 +115,11 @@ double fdDk0(int,BODY*);
 double fdDPk(int,BODY*);
 double fdDMk(int,BODY*);
 double calculate_R(double,BODY*,double);
+double calculate_Phi(double,BODY*,double);
+double calculate_Z(double,BODY*,double);
+double calculate_Rdot(double,BODY*,double,double);
+double calculate_Phidot(double,BODY*,double,double);
+double calculate_Zdot(double,BODY*,double);
+
+/* Misc functions */
+void fDebugBinary(BODY*);

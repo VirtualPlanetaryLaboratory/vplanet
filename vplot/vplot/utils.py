@@ -155,7 +155,13 @@ def GetParamDescriptions():
   help = help.replace('\x1b[0m', '')
   
   # Get only the output params
-  stroutput = help.split('These options follow the argument saOutputOrder.')[1]
+  try:
+    stroutput = help.split('These options follow the argument saOutputOrder.')[1]
+  except:
+    # Debugging for Diego (2/16/2016), who gets an error on the line above
+    np.savez('error_report', help = help, version = sys.version_info)
+    raise Exception('Error report generated.')
+  
   stroutput = [x for x in stroutput.split('\n') if len(x)]
 
   descr = {}

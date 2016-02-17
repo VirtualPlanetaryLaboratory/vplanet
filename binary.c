@@ -53,7 +53,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   // If it's the binary (body 0), init its orbital properties if need be
   if(iBody == 0)
   {
-    body[0].dMeanMotion = sqrt(BIGG*(body[0].dMass+body[1].dMass)/pow(body[0].dSemi,3));
+//    body[0].dMeanMotion = sqrt(BIGG*(body[0].dMass+body[1].dMass)/pow(body[0].dSemi,3));
   }
 
   // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters

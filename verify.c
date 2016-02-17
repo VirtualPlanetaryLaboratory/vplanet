@@ -91,6 +91,11 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
+  // If doing binary and we're looking at the secondary, return
+  // Since the primary holds all binary orbital information
+  if(body[iBody].bBinary && iBody == 1)
+    return;
+
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
 
   if (options[OPT_ORBSEMI].iLine[iFile] > -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] == -1)
@@ -107,10 +112,12 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
     if (body[iBody].bPoise) {
       if(body[iBody].bBinary == 0){ // Not binary, regular single-star orbit
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-      } else if(body[iBody].bBinary && iBody != 1){ // Set mean motion for binary (primary,iBody==0;planet,iBody==2)
+      } else if(body[iBody].bBinary && iBody == 2){ // Set mean motion for CBP (primary,iBody==0;planet,iBody==2)
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+      } 
+  } else if(body[iBody].bBinary && iBody == 0 && body[iBody].iBodyType == 1) { // Mean motion for binary is stored in primary
           body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
-        }
-    }  
+      }  
     return;
   }
   
@@ -137,27 +144,35 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   /* Only one option set */
   
   if (dMeanMotion > 0) {
-    if(body[iBody].bBinary && iBody != 1)
+    if(body[iBody].bBinary && iBody == 2) // CBP
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
-    else
+    else if(body[iBody].bBinary && iBody == 0) // Primary
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
+    else if(body[iBody].bBinary == 0)
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
   }
   if (dPeriod > 0) {
-    if(body[iBody].bBinary && iBody != 1)
+    if(body[iBody].bBinary && iBody == 2) // CBP
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
-    else
+    else if(body[iBody].bBinary && iBody == 0) // Primary
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary == 0)
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
   }
   if (dSemi > 0) {
-    if(body[iBody].bBinary && iBody != 1)
+    if(body[iBody].bBinary && iBody == 2) // CBP
       body[iBody].dSemi = dSemi;
-    else
+    else if(body[iBody].bBinary && iBody == 0) // Primary
+      body[iBody].dSemi = dSemi;  
+    else if(body[iBody].bBinary == 0)
       body[iBody].dSemi = dSemi;
   }
   if (dMeanMotion == 0) {
-    if(body[iBody].bBinary && iBody != 1)
+    if(body[iBody].bBinary && iBody == 2) // CBP
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass+body[1].dMass);
-    else
+    else if(body[iBody].bBinary && iBody == 0) // Primary
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+    else if(body[iBody].bBinary == 0)
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   }
   //XXX Initialize central body parameters.
@@ -440,7 +455,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
 
     /* XXX Only module reference in file -- can this be changed? */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
+    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (body[iBody].bBinary)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 

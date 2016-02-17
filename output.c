@@ -177,10 +177,20 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  if(body[iBody].bBinary == 0) {
   if (iBody > 0)
-    *dTmp = body[iBody].dMeanMotion;
+    *dTmp = body[iBody].dMeanMotion; 
   else
     *dTmp = -1;
+  }
+  else { // doing binary 
+  if(iBody != 1)
+  {
+    *dTmp = body[iBody].dMeanMotion;
+  }
+  else
+    *dTmp = -1;
+  } 
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1043,6 +1053,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
+
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
@@ -1063,7 +1074,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 
   /* System Properties */
   LogSystem(body,control,module,output,system,update,fnWrite,fp);
-  
+
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 

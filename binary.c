@@ -6,7 +6,6 @@
  * circumbinary planet dynamics module.
  *
 */
-// NOTE: Still need to edit module.c, update.c
 
 #include <stdio.h>
 #include <math.h>
@@ -41,7 +40,7 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 
   // If ibody is the CBP (body 2, iBodyType 0), init
-  if(body[iBody].iBodyType == 0) // If the body is a planet
+  if(body[iBody].iBodyType == 0 && iBody == 2) // If the body is a planet
   {
     // Inits for CBP
     body[2].dR0 = body[2].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
@@ -50,12 +49,6 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[2].dLL13V0 = fdEpiFreqV(body);
   }
   
-  // If it's the binary (body 0), init its orbital properties if need be
-  if(iBody == 0)
-  {
-//    body[0].dMeanMotion = sqrt(BIGG*(body[0].dMass+body[1].dMass)/pow(body[0].dSemi,3));
-  }
-
   // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
   // Malloc space for cylindrical position, velocity arrays
   body[iBody].daCylPos = malloc(3*sizeof(double));
@@ -1014,7 +1007,7 @@ double fdCMk(int k, BODY *body)
   tmp2 /= body[2].dR0*(k*n - (k-1.)*body[0].dMeanMotion);
   tmp1 += tmp2;
    
-  double c = body[0].dEcc*tmp1/body[2].dSemi;
+  double c = body[0].dEcc*tmp1/body[2].dR0;
   c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion);
   return c;
 }
@@ -1191,7 +1184,8 @@ void fDebugBinary(BODY *body)
 {
   fprintf(stderr,"Performing debug outputs...\n");
 
-  fprintf(stdout,"Bin props: a, e, m1, m2, dMeanMotion, varpi: %lf,%lf,%lf,%lf,%lf,%lf\n",body[0].dSemi/AUCM,body[0].dEcc,body[0].dMass/MSUN,body[1].dMass/MSUN,body[0].dMeanMotion,body[0].dLongP/DEGRAD);
+  fprintf(stdout,"Bin props: a, e, m1, m2, dMeanMotion, varpi: %lf,%lf,%lf,%lf,%lf,%e\n",body[0].dSemi/AUCM,body[0].dEcc,body[0].dMass/MSUN,body[1].dMass/MSUN,body[0].dMeanMotion,body[0].dLongP/DEGRAD);
+  fprintf(stdout,"planet props: a, e, m1, dMeanMotion: %lf,%lf,%lf,%e\n",body[2].dSemi/AUCM,body[2].dEcc,body[2].dMass/MEARTH,body[2].dMeanMotion);
 
   fprintf(stdout,"C0 = %lf\n",fdC0(body));
   for(int k = 1; k < K_MAX; k++)

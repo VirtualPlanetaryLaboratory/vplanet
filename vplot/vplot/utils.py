@@ -6,8 +6,8 @@ utils.py
 
 '''
 
-from __future__ import print_function, absolute_import
-import vplot.defaults as defaults
+from __future__ import division, print_function, absolute_import, unicode_literals
+from . import defaults
 import os
 import subprocess
 import sys

@@ -6,8 +6,8 @@ plot.py
 
 '''
 
-from __future__ import print_function, absolute_import
-from vplot.utils import ShowHelp, GetConf, GetArrays
+from __future__ import division, print_function, absolute_import, unicode_literals
+from .utils import ShowHelp, GetConf, GetArrays
 import os
 import matplotlib.pyplot as pl
 pl.style.use(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vplot.mplstyle'))

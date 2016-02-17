@@ -17,6 +17,8 @@ dFreeInc        0.3083                     # Free Inclination [deg]
 
 # Orbital Properties
 dSemi           -0.7016			# Semi-major axis, negative -> AU
+dEcc            0.02373
+dLongP          0.0
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds

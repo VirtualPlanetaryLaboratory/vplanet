@@ -47,8 +47,20 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[2].dLL13N0 = fdMeanMotion(body);
     body[2].dLL13K0 = fdEpiFreqK(body);
     body[2].dLL13V0 = fdEpiFreqV(body);
+    
+    // Set up initial orbital elements
+    body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
+    body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
   }
-  
+ 
+  // Inits if the body is the primary
+  if(body[iBody].iBodyType == 1 && iBody == 0)
+  {
+    // Set Initial Poincare H, K
+    body[0].dHecc = body[0].dEcc*sin(body[0].dLongP);
+    body[0].dKecc = body[0].dEcc*cos(body[0].dLongP);
+  }
+
   // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
   // Malloc space for cylindrical position, velocity arrays
   body[iBody].daCylPos = malloc(3*sizeof(double));

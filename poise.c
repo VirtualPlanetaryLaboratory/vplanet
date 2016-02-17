@@ -6,6 +6,8 @@
 */
 
 /* lines where something like iBody == 0 occurs
+ * ~1831 : where solar flux is important (alter for body!)
+ * 1931-will want to alter astrodist for binary
  * ~1389
  *
  */

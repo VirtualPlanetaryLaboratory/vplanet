@@ -42,7 +42,12 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
 
 /* iBodyType */
 void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].iBodyType;
+  if(body[iBody].bBinary) {
+    *dTmp = body[iBody].iBodyType;
+  }
+  else
+    *dTmp = -1;
+
   strcpy(cUnit,"");
 }
 
@@ -156,10 +161,21 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-  else
-    *dTmp = -1;
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
   sprintf(cUnit,"");
 }
 
@@ -177,7 +193,7 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if(body[iBody].bBinary == 0) {
+  if(body[iBody].bBinary == 0) { // Not doing binary
   if (iBody > 0)
     *dTmp = body[iBody].dMeanMotion; 
   else
@@ -203,10 +219,21 @@ void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (iBody > 0)
-    *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
-  else
-    *dTmp=-1;
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
+    else
+      *dTmp=-1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[0].dMass));
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -218,10 +245,21 @@ void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = body[iBody].dSemi;
-  else
-    *dTmp = -1;
+  
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
+  else { // Doing binary
+    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+      *dTmp = body[iBody].dSemi;
+    else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1266,6 +1304,3 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
 
 }
-
-
-

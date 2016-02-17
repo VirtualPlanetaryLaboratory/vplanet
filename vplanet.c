@@ -112,8 +112,9 @@ int main(int argc,char *argv[]) {
   }
 
   /* Debugging functions */
-  if(body[0].bBinary)
-    fDebugBinary(body);
+  if(body[0].bBinary == 1) {
+    //fDebugBinary(body);
+  }
 
   /* Perform evolution */
 

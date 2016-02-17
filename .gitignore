@@ -11,3 +11,4 @@ vplot_config.py
 *.Climate
 *.DailyInsolInit
 *.txt
+*.Laplace

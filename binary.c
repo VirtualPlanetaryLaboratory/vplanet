@@ -315,7 +315,37 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
 }
 
 /* Force behavior */
+/* 
+ * Since binary doesn't integrate any diff eqs, evaluate all the 
+ * equations and set CBP orbital properties here
+ * Note: I assume all arbitrary phase offsets are 0
+ */
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
+  double dTime = evolve->dTime; // Current integration time in seconds
+  
+  // Compute all the cylindrical positions
+  body[2].daCylPos[0] = calculate_R(dTime,body,0.0);
+  body[2].daCylPos[1] = calculate_Phi(dTime,body,0.0);
+  body[2].daCylPos[2] = calculate_Z(dTime,body,0.0);
+
+  // Compute all the cylindrical velocities
+  body[2].daCylVel[0] = calculate_Rdot(dTime,body,0.0,0.0);
+  body[2].daCylVel[1] = calculate_Phidot(dTime,body,0.0,0.0);
+  body[2].daCylVel[2] = calculate_Zdot(dTime,body,0.0);
+
+  // Convert from cylindrical -> cartesian coordinates
+  fvCylToCartPos(body[2].daCylPos,body[2].dCartPos); // Pos conversion
+  fvCylToCartVel(body[2].daCylPos,body[2].daCylVel,body[2].dCartVel); // Vel conversion
+
+  // Compute CBP orbital elements
+
+  // LongA, ArgP -> LongP (needed for dHecc, dKecc)
+
+  // Eccentricity
+  //TODO
+
+  // Semimajor Axis
+  body[2].dSemi = fdComputeSemi(body); // Semi for semimajor axis
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -657,7 +687,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
 
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionBinary;
+  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
 
 }
@@ -735,7 +765,7 @@ int fiDelta(int i, int j)
 void fvCylToCartPos(double *daCylPos, double *dCartPos)
 {
   dCartPos[0] = daCylPos[0]*cos(daCylPos[1]);
-  dCartPos[1] = daCylPos[1]*sin(daCylPos[1]);
+  dCartPos[1] = daCylPos[0]*sin(daCylPos[1]);
   dCartPos[2] = daCylPos[2];
 }
 

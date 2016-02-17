@@ -74,7 +74,8 @@ dLongP          0.0
 #dViscRef  1e8
 
 # Output
-saOutputOrder Time #Semim Ecce -SurfWaterMass -EnvelopeMass TMan Tcore
+sOutFile      earth.forward
+saOutputOrder Time Semim #Ecce -SurfWaterMass -EnvelopeMass TMan Tcore
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

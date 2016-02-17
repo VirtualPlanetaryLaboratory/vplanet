@@ -251,33 +251,10 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
 
-  return fig, ax
-  
-if __name__ == '__main__':
-  parser = argparse.ArgumentParser(prog = 'VPLOT', add_help = False)
-  parser.add_argument("-h", "--help", nargs = '?', default = False, const = 1, help = 'Display the help')
-  parser.add_argument("-b", "--bodies", nargs = '*', default = None, help = 'Bodies to plot; should match names of .in files')
-  parser.add_argument("-x", "--xaxis", default = None, help = 'Parameter to plot on the x-axis')
-  parser.add_argument("-y", "--yaxis", nargs = '*', default = None, help = 'Parameter(s) to plot on the y-axis')
-  parser.add_argument("-a", "--aaxis", default = None, help = 'Parameter to control line alpha')
-  args = parser.parse_args()
-
-  # Help?
-  if args.help:
-    if args.help == 1:
-      ShowHelp()
-    else:
-      ShowHelp(args.help)
-    quit()
-
-  # Initialize
-  conf = GetConf()
-  
-  # Plot
-  fig, _ = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
-
   # Show or save?
   if conf.interactive:
     pl.show()
   else:
     fig.savefig(conf.figname, bbox_inches = 'tight')
+
+  return fig, ax

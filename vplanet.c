@@ -113,7 +113,7 @@ int main(int argc,char *argv[]) {
 
   /* Debugging functions */
   if(body[0].bBinary == 1) {
-    //fDebugBinary(body);
+    fDebugBinary(body);
   }
 
   /* Perform evolution */

@@ -59,9 +59,9 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     // Set Initial Poincare H, K
     body[0].dHecc = body[0].dEcc*sin(body[0].dLongP);
     body[0].dKecc = body[0].dEcc*cos(body[0].dLongP);
+    body[0].dEccSq = body[0].dEcc*body[0].dEcc;
   }
 
-  // Have something here where if the body is a planet, set it's dLL13N0,K0, and V0 paremters
   // Malloc space for cylindrical position, velocity arrays
   body[iBody].daCylPos = malloc(3*sizeof(double));
   body[iBody].daCylVel = malloc(3*sizeof(double));
@@ -337,12 +337,23 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   fvCylToCartPos(body[2].daCylPos,body[2].dCartPos); // Pos conversion
   fvCylToCartVel(body[2].daCylPos,body[2].daCylVel,body[2].dCartVel); // Vel conversion
 
+  // Compute binary orbital elements as needed
+  body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
+  body[0].dEccSq = body[0].dEcc*body[0].dEcc;
+
   // Compute CBP orbital elements
 
   // LongA, ArgP -> LongP (needed for dHecc, dKecc)
+  body[2].dLongP = 0;
+  // TODO: currently, place holder
 
   // Eccentricity
-  //TODO
+  body[2].dEcc = fdComputeEcc(body);
+  body[2].dEccSq = body[2].dEcc*body[2].dEcc;
+
+  // Set Initial Poincare H, K
+  body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
+  body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
 
   // Semimajor Axis
   body[2].dSemi = fdComputeSemi(body); // Semi for semimajor axis
@@ -615,28 +626,6 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 
 }
 
-/*
-void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
-  
-  sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
-  sprintf(output[OUT_SURFACEWATERMASS].cDescr,"Surface Water Mass");
-  sprintf(output[OUT_SURFACEWATERMASS].cNeg,"TO");
-  output[OUT_SURFACEWATERMASS].bNeg = 1;
-  output[OUT_SURFACEWATERMASS].dNeg = 1./TOMASS;
-  output[OUT_SURFACEWATERMASS].iNum = 1;
-  fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
-  
-  sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
-  sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
-  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");
-  output[OUT_ENVELOPEMASS].bNeg = 1;
-  output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
-  output[OUT_ENVELOPEMASS].iNum = 1;
-  fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
-
-}
-*/
-
 void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
   //output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
 }
@@ -694,54 +683,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
 /************* BINARY Functions ************/
 
-/*
-double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-  // TODO: Currently this is just Erkaev's model. Add other escape regimes
-  
-  // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  if (body[iaBody[0]].dEnvelopeMass > 0)
-    return 0;
-  
-  double elim, fxuv, xi, ktide;
-  
-  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
-       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
-  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-	else ktide = 0;
-
-  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
-  elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
-         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
-
-  return -elim;
-}
-
-double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-  // TODO: Currently this is just Erkaev's model. Add other escape regimes
-  
-  // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  if (body[iaBody[0]].dEnvelopeMass <= 0)
-    return 0;
-  
-  double elim, fxuv, xi, ktide;
-  
-  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
-       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
-  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-	else ktide = 0;
-
-  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
-  elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
-         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
-
-  return -elim;
-}
-*/
-
 /* 
  * Useful math functions 
  */
@@ -797,7 +738,7 @@ void fvSpecificAngMom(double *r, double *v, double *h)
 double fdSpecificOrbEng(BODY *body)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  double mu = BIGG*(body[0].dMass + body[1].dMass); // Gravitational parameter
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
   double r_norm = sqrt(fdDot(body[2].dCartPos,body[2].dCartPos));
   
   return fdDot(body[2].dCartVel,body[2].dCartVel)/2.0 - (mu/r_norm);
@@ -809,7 +750,7 @@ double fdSpecificOrbEng(BODY *body)
 double fdComputeSemi(BODY *body)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  return -BIGG*(body[0].dMass + body[1].dMass)/(2.0*fdSpecificOrbEng(body));
+  return -BIGG*(body[0].dMass + body[1].dMass+body[2].dMass)/(2.0*fdSpecificOrbEng(body));
 }
 
 /* Compute a body's orbital eccentricity
@@ -818,7 +759,7 @@ double fdComputeSemi(BODY *body)
 double fdComputeEcc(BODY *body)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  double mu = BIGG*(body[0].dMass + body[1].dMass); // Gravitational parameter
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
   double h[3];
   fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
   
@@ -1064,8 +1005,11 @@ double fdD0(BODY * body)
 double fdDk0(int k, BODY * body)
 {
   double n = fdn(body[2].dR0,body);
-  double Dk = 2.0*fdC0k(k,body)*fdPot0(0,k,body[2].dR0,body)/(body[2].dSemi*body[2].dR0);
-  return (Dk/(n*(n - body[0].dMeanMotion)));
+  double tmp1 = 2.0*fdC0k(k,body);
+  double Dk = -fdPot0(0,k,body[2].dR0,body)/(body[2].dR0*body[2].dR0);
+  Dk /= (n*(n - body[0].dMeanMotion));
+
+  return (tmp1-Dk);
 }
 
 /* LL13 D+_k as defined by eqn 34a (the + term) */
@@ -1084,7 +1028,7 @@ double fdDPk(int k, BODY * body)
 double fdDMk(int k, BODY * body)
 {
   double n = fdn(body[2].dR0,body);
-  double Dk = 2.0*fdCPk(k,body);
+  double Dk = 2.0*fdCMk(k,body);
  
   double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body)));
   tmp1 /= 2.0*body[2].dR0*body[2].dR0*n * (k*n - (k-1.)*body[0].dMeanMotion);
@@ -1104,12 +1048,12 @@ double calculate_R(double dTime, BODY *body, double dPsi)
 
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
   double tmp2 = 0.0;
-  double tmp3;
+  double tmp3 = 0.0;
 
   for(int k = 1; k < K_MAX; k++)
   {
@@ -1129,10 +1073,10 @@ double calculate_Phi(double dTime, BODY *body, double dPsi)
 
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
-  double phi = phi0 * 2.0*body[2].dLL13N0*body[2].dFreeEcc*sin(body[2].dLL13K0*dTime + dPsi)/body[2].dLL13K0;
+  double phi = phi0 + 2.0*body[2].dLL13N0*body[2].dFreeEcc*sin(body[2].dLL13K0*dTime + dPsi)/body[2].dLL13K0;
   phi += body[2].dLL13N0*fdD0(body)*sin(M)/body[0].dMeanMotion;
 
   double tot = 0.0;
@@ -1163,9 +1107,9 @@ double calculate_Rdot(double dTime, BODY *body, double dPsi, double dPhi)
 
   // Useful intermediate quantities
   double k0 = body[2].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
   double phi0_dot = body[2].dLL13N0;
-  double M_dot = body[2].dMeanMotion;
+  double M_dot = body[0].dMeanMotion;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
@@ -1188,11 +1132,11 @@ double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
 {
   // Useful intermediate quantities
   double k0 = body[2].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[2].dMeanMotion,0);
+  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
   double phi0_dot = body[2].dLL13N0;
   double n0 = body[2].dLL13N0;
   double n = body[0].dMeanMotion;
-  double M_dot = body[2].dMeanMotion;
+  double M_dot = n;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 

@@ -6,8 +6,8 @@ utils.py
 
 '''
 
-from __future__ import print_function, absolute_import
-import vplot.defaults as defaults
+from __future__ import division, print_function, absolute_import, unicode_literals
+from . import defaults
 import os
 import subprocess
 import sys
@@ -155,7 +155,13 @@ def GetParamDescriptions():
   help = help.replace('\x1b[0m', '')
   
   # Get only the output params
-  stroutput = help.split('These options follow the argument saOutputOrder.')[1]
+  try:
+    stroutput = help.split('These options follow the argument saOutputOrder.')[1]
+  except:
+    # Debugging for Diego (2/16/2016), who gets an error on the line above
+    np.savez('error_report', help = help, version = sys.version_info)
+    raise Exception('Error report generated.')
+  
   stroutput = [x for x in stroutput.split('\n') if len(x)]
 
   descr = {}
@@ -284,10 +290,13 @@ def GetArrays(bodies = []):
         raise Exception('Unable to open %s.' % body.climfile)
 
       # ... and the grid order
-      gridorder = re.search(r'- BODY: %s -(.*?)\nGrid Output Order:(.*?)\n' % body.name, 
-                              logfile, re.DOTALL).groups()[1]
-      body.gridparams = GetParams(gridorder, climfile)
-      
+      try:
+        gridorder = re.search(r'- BODY: %s -(.*?)\nGrid Output Order:(.*?)\n' % body.name, 
+                                logfile, re.DOTALL).groups()[1]
+        body.gridparams = GetParams(gridorder, climfile)
+      except:
+        pass
+        
   # Final check
   if len([param.name for body in output.bodies for param in body.params]) == 0:
     raise Exception("There don't seem to be any parameters to be plotted...")

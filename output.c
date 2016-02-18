@@ -1124,8 +1124,9 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       }
       free(dTmp);
     }
-    
-    if (control->bOutputLapl) {
+  } 
+  
+  if (control->bOutputLapl) {
       for (iBody=1;iBody<(control->Evolve.iNumBodies-1);iBody++) {
         if (body[iBody].bDistOrb && body[iBody].bEqtide) {
           if (control->Evolve.iDistOrbModel == RD4) {
@@ -1185,7 +1186,6 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
           }
         }
       }
-    }
   }
 }
 

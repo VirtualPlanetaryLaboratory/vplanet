@@ -868,9 +868,9 @@ void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbo
     }
       
   } else {
-    if (options[OPT_PCO2].iLine[iBody+1] > -1 || options[OPT_TGLOBALEST].iLine[iBody+1] > -1) {
+    if (options[OPT_PCO2].iLine[iBody+1] > -1) {
       if (iVerbose >= VERBERR)
-        fprintf(stderr,"ERROR: Cannot set %s or %s unless setting bCalcAB = 1 in File:%s\n", options[OPT_PCO2].cName, options[OPT_TGLOBALEST].cName, cFile);
+        fprintf(stderr,"ERROR: Cannot set %s unless setting bCalcAB = 1 in File:%s\n", options[OPT_PCO2].cName, cFile);
       exit(EXIT_INPUT);
     }
   }
@@ -1914,65 +1914,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   }
 }
 
-double OLRhm16(BODY *body, int iBody, int iLat) {
-  double phi, Int, t, f;
-  
-  phi = log10(body[iBody].dpCO2);
-  t = log10(body[iBody].daTemp[iLat]+273.15);
-  f = -2.48628357550066070303*pow(t,4)+7.25686337527984814955*pow(t,3)*phi+\
-    2.66003990584155758370e+01*pow(t,3)+1.28886975027996131260*pow(t,2)*pow(phi,2)-\
-    4.52752012625326543116e+01*pow(t,2)*phi-1.03681774883879782578e+02*pow(t,2)-\
-    1.87770911951353952629e-01*t*pow(phi,3)-7.09857849167248389222*t*pow(phi,2)+\
-    9.06298526889689526342e+01*t*phi+1.77672602732389293578e+02*t+\
-    1.04704125795963207124e-02*pow(phi,4)+4.97915275161904036239e-01*pow(phi,3)+\
-    9.62210886703750745141*pow(phi,2)-5.72489253176301815529e+01*phi-\
-    1.09454844237166085463e+02;
-  Int = pow(10.0,f)/1000.;
-  return Int;
-}
 
-double dOLRdThm16(BODY *body, int iBody, int iLat) {
-  double phi, dI, t, f;
-  
-  phi = log10(body[iBody].dpCO2);
-  t = log10(body[iBody].daTemp[iLat]+273.15);
-  f = 4*(-2.48628357550066070303*pow(t,3))+3*7.25686337527984814955*pow(t,2)*phi+\
-    3*2.66003990584155758370e+01*pow(t,2)+2*1.28886975027996131260*t*pow(phi,2)-\
-    2*4.52752012625326543116e+01*t*phi-2*1.03681774883879782578e+02*t-\
-    1.87770911951353952629e-01*pow(phi,3)-7.09857849167248389222*pow(phi,2)+\
-    9.06298526889689526342e+01*phi+1.77672602732389293578e+02;
-  dI = OLRhm16(body,iBody,iLat) * f / (body[iBody].daTemp[iLat]+273.15);
-  return dI;
-}
-
-double OLRwk97(BODY *body, int iBody){
-  double phi, Int, T;
-  
-  phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal+273.15;
-  Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
-      + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
-      - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
-      + 9.173169e-3*pow(phi,3)*T - 7.775195e-5*pow(phi,3)*pow(T,2) \
-      - 1.679112e-7*phi*pow(T,3) + 6.590999e-8*pow(phi,2)*pow(T,3) \
-      + 1.528125e-7*pow(phi,3)*pow(T,3) - 3.367567e-2*pow(phi,4) - 1.631909e-4*pow(phi,4)*T \
-      + 3.663871e-6*pow(phi,4)*pow(T,2) - 9.255646e-9*pow(phi,4)*pow(T,3);
-  return Int;
-}
-  
-double dOLRdTwk97(BODY *body, int iBody){
-  double phi, dI, T;
-  
-  phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal+273.15;
-  dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
-       + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
-       - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
-       + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
-       + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
-       + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
-  return dI;
-}
 
 void Albedo(BODY *body, int iBody) {
  int i;
@@ -2172,6 +2114,155 @@ void PoiseAnnual(BODY *body, int iBody) {
   } 
 }
 
+double OLRhm16(BODY *body, int iBody, int iLat) {
+  double phi, Int, t, f;
+  
+  phi = log10(body[iBody].dpCO2);
+  t = log10(body[iBody].daTemp[iLat]+273.15);
+  f = -2.48628357550066070303*pow(t,4)+7.25686337527984814955*pow(t,3)*phi+\
+    2.66003990584155758370e+01*pow(t,3)+1.28886975027996131260*pow(t,2)*pow(phi,2)-\
+    4.52752012625326543116e+01*pow(t,2)*phi-1.03681774883879782578e+02*pow(t,2)-\
+    1.87770911951353952629e-01*t*pow(phi,3)-7.09857849167248389222*t*pow(phi,2)+\
+    9.06298526889689526342e+01*t*phi+1.77672602732389293578e+02*t+\
+    1.04704125795963207124e-02*pow(phi,4)+4.97915275161904036239e-01*pow(phi,3)+\
+    9.62210886703750745141*pow(phi,2)-5.72489253176301815529e+01*phi-\
+    1.09454844237166085463e+02;
+  Int = pow(10.0,f)/1000.;
+  return Int;
+}
+
+double dOLRdThm16(BODY *body, int iBody, int iLat) {
+  double phi, dI, t, f;
+  
+  phi = log10(body[iBody].dpCO2);
+  t = log10(body[iBody].daTemp[iLat]+273.15);
+  f = 4*(-2.48628357550066070303*pow(t,3))+3*7.25686337527984814955*pow(t,2)*phi+\
+    3*2.66003990584155758370e+01*pow(t,2)+2*1.28886975027996131260*t*pow(phi,2)-\
+    2*4.52752012625326543116e+01*t*phi-2*1.03681774883879782578e+02*t-\
+    1.87770911951353952629e-01*pow(phi,3)-7.09857849167248389222*pow(phi,2)+\
+    9.06298526889689526342e+01*phi+1.77672602732389293578e+02;
+  dI = OLRhm16(body,iBody,iLat) * f / (body[iBody].daTemp[iLat]+273.15);
+  return dI;
+}
+
+double OLRwk97(BODY *body, int iBody){
+  double phi, Int, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal+273.15;
+  Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
+      + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
+      - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
+      + 9.173169e-3*pow(phi,3)*T - 7.775195e-5*pow(phi,3)*pow(T,2) \
+      - 1.679112e-7*phi*pow(T,3) + 6.590999e-8*pow(phi,2)*pow(T,3) \
+      + 1.528125e-7*pow(phi,3)*pow(T,3) - 3.367567e-2*pow(phi,4) - 1.631909e-4*pow(phi,4)*T \
+      + 3.663871e-6*pow(phi,4)*pow(T,2) - 9.255646e-9*pow(phi,4)*pow(T,3);
+  return Int;
+}
+  
+double dOLRdTwk97(BODY *body, int iBody){
+  double phi, dI, T;
+  
+  phi = log(body[iBody].dpCO2/3.3e-4);
+  T = body[iBody].dTGlobal+273.15;
+  dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
+       + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
+       - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
+       + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
+       + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
+       + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
+  return dI;
+}
+
+double AlbedoTOA250(double Temp, double phi, double zenith, double albsurf) {
+  double mu, tmpk, dTmp;
+  mu = cos(zenith);
+  tmpk = log10(Temp+273.15);
+  
+  dTmp =-3.85012232848957469677e-01*pow(mu,3)-6.96531554347999848353e-01*pow(mu,2)*albsurf+\
+    2.42857549634872105226e-01*pow(mu,2)*tmpk-2.31481801714080587251e-02*pow(mu,2)*phi+\
+    7.57465850815683405806e-01*pow(mu,2)+5.96814144736246901535e-02*mu*pow(albsurf,2)-\
+    1.75727212504243279767e-01*mu*albsurf*tmpk-2.30100329998756958361e-02*mu*albsurf*phi+\
+    1.44251804214881951260*mu*albsurf-9.02545268984961568393e-01*mu*pow(tmpk,2)+\
+    1.57941955978928016968e-02*mu*tmpk*phi+3.97293638588704522974*mu*tmpk+\
+    2.70147674038867611351e-03*mu*pow(phi,2)+8.03672155561869008822e-03*mu*phi-\
+    5.73032110666873784055*mu+3.96559806148959886896e-02*pow(albsurf,3)+\
+    2.33885096505821558910e-02*pow(albsurf,2)*tmpk+\
+    2.74510235320486427335e-02*pow(albsurf,2)*phi-3.84846342778979097488e-02*pow(albsurf,2)\
+    -3.15002995177932909598*albsurf*pow(tmpk,2)+1.14651902580197844611e-02*albsurf*tmpk*phi\
+    +1.42815649270102174029e+01*albsurf*tmpk-3.09546329509477503861e-02*albsurf*pow(phi,2)-\
+    1.76981823655272652029e-01*albsurf*phi-1.58742662566315075878e+01*albsurf-\
+    1.19596747987198490648e+01*pow(tmpk,3)+2.45714743903220678156e-01*pow(tmpk,2)*phi+\
+    8.35393842124811669692e+01*pow(tmpk,2)+1.57929454173889281809e-02*tmpk*pow(phi,2)\
+    -1.08795528509187522381*tmpk*phi-1.94361034226210506404e+02*tmpk+\
+    2.35398348220261423996e-03*pow(phi,3)-9.93551441872782097053e-03*pow(phi,2)+\
+    1.27264071660509348050*phi+1.51187949312305107696e+02;
+    
+  return dTmp;
+}
+
+double AlbedoTOA350(double Temp, double phi, double zenith, double albsurf) {
+  double mu, tmpk, dTmp;
+  mu = cos(zenith);
+  tmpk = log10(Temp+273.15);
+  
+  dTmp = -5.09975205006765963667e-01*pow(mu,3)-3.40610615781183956319e-01*pow(mu,2)*albsurf+\
+    1.14176177169990245019*pow(mu,2)*tmpk-5.24526088212194721572e-02*pow(mu,2)*phi-\
+    1.43219719437679327001*pow(mu,2)+7.37476842696725698456e-02*mu*pow(albsurf,2)-\
+    1.56389013046517910688*mu*albsurf*tmpk-3.63070233788836613242e-02*mu*albsurf*phi+\
+    4.38889957272478703487*mu*albsurf+2.53452383879804399314*mu*pow(tmpk,2)-\
+    4.42938675408524121235e-02*mu*tmpk*phi-1.33502486536347504398e+01*mu*tmpk+\
+    6.71956372965975927414e-03*mu*pow(phi,2)+2.00967989231304683395e-01*mu*phi+\
+    1.62174320728479308684e+01*mu+7.29851676064863924553e-02*pow(albsurf,3)-\
+    1.91671441145864707156e-01*pow(albsurf,2)*tmpk+\
+    2.71422375721983473451e-02*pow(albsurf,2)*phi+4.17481270021712147500e-01*pow(albsurf,2)\
+    -4.27836609721979854726*albsurf*pow(tmpk,2)+\
+    3.31308975598249677574e-01*albsurf*tmpk*phi+1.99721042601166445252e+01*albsurf*tmpk-\
+    3.18138877412854834126e-02*albsurf*pow(phi,2)-9.49259969594588803865e-01*albsurf*phi-\
+    2.29729957841319354372e+01*albsurf+3.25119540754754225986e+01*pow(tmpk,3)+\
+    8.25004048439829218431e-01*pow(tmpk,2)*phi-2.43459998007232115924e+02*pow(tmpk,2)+\
+    8.59284602328564128815e-02*tmpk*pow(phi,2)-3.89131744012519842357*tmpk*phi+\
+    6.07253060212875880097e+02*tmpk+4.24041511060452899068e-03*pow(phi,3)-\
+    1.75529664906436649874e-01*pow(phi,2)+4.65564025220353627788*phi-\
+    5.03971924136900156554e+02;
+    
+  return dTmp;
+}
+
+double AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
+  double phi = log10(body[iBody].dpCO2), albtmp;
+  
+  if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+    albtmp = body[iBody].dIceAlbedo;
+  } else {
+    albtmp = body[iBody].dAlbedoLand;
+  }
+  
+  if (body[iBody].daTempLand[iLat] <= (-23.15)) {
+    body[iBody].daAlbedoLand[iLat] = AlbedoTOA250(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempLand[iLat] <= 76.85) {
+    body[iBody].daAlbedoLand[iLat] = AlbedoTOA350(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+  } else {
+    fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)");
+    exit(EXIT_INPUT);
+  }
+
+  if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+    albtmp = body[iBody].dIceAlbedo;
+  } else {
+    albtmp = body[iBody].dAlbedoWater;
+  }
+  
+  if (body[iBody].daTempWater[iLat] <= (-23.15)) {
+    body[iBody].daAlbedoWater[iLat] = AlbedoTOA250(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempWater[iLat] <= 76.85) {
+    body[iBody].daAlbedoWater[iLat] = AlbedoTOA350(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+  } else {
+    fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)");
+    exit(EXIT_INPUT);
+  }
+}
+
 void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
   int iLat;
   double zenith;
@@ -2181,13 +2272,17 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
     //zenith angle of sun at noon at each latitude
     zenith = fabs(body[iBody].daLats[iLat] - body[iBody].daDeclination[iDay]);
     
-    body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*pow(sin(zenith),2)-1.)/2.;
-    body[iBody].daAlbedoWater[iLat] = body[iBody].dAlbedoWater+0.08*(3.*pow(sin(zenith),2)-1.)/2.;
-    if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
-      body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
-    }
-    if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
-      body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
+    if (body[iBody].bCalcAB == 1) {
+      AlbedoTOAhm16(body, zenith, iBody, iLat);
+    } else {
+      body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*pow(sin(zenith),2)-1.)/2.;
+      body[iBody].daAlbedoWater[iLat] = body[iBody].dAlbedoWater+0.08*(3.*pow(sin(zenith),2)-1.)/2.;
+      if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+        body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
+      }
+      if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+        body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
+      }
     }
     body[iBody].daAlbedo[iLat] = body[iBody].daLandFrac[iLat]*body[iBody].daAlbedoLand[iLat]+ \
                               body[iBody].daWaterFrac[iLat]*body[iBody].daAlbedoWater[iLat];

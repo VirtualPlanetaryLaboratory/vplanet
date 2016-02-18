@@ -30,11 +30,11 @@ dInitIceLat      90.
 dInitIceHeight   0.
 #bHadley          1
 dDiffusion        0.58
-#dPlanckA          250
+#dPlanckA         203.3
 #dPlanckB         1.5
-bCalcAB          1
+bCalcAB           1
 dTGlobalInit      14.85
-dpCO2            0.001
+dpCO2            0.0005
 #dSurfAlbedo       0.4
 bClimateModel     sea
 iNumYears         4
@@ -42,5 +42,5 @@ iNStepInYear      60
 bSeaIceModel      0
 dIceDepRate       3e-5
 dIceAlbedo        0.6
-dHeatCapLand      1.53
-dMixingDepth      70
+#dHeatCapLand      1.53
+#dMixingDepth      70

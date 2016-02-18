@@ -536,6 +536,12 @@ typedef struct {
   double *daPlanckA;
   double *daPlanckB;
   double dTGlobalInit;
+  double *daDeltaTempL;
+  double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
+  double *daEnergyResL;
+  double *daEnergyResW;       /**< Energy residuals */
+  double *daEnerResLAnn;
+  double *daEnerResWAnn;      /**< Annually averaged energy residuals */
 
 } BODY;
 

@@ -934,6 +934,12 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daPlanckA = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daPlanckB = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDeltaTempL = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daDeltaTempW = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daEnergyResL = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daEnergyResW = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daEnerResLAnn = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daEnerResWAnn = malloc(body[iBody].iNumLats*sizeof(double));
 
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -1498,6 +1504,30 @@ void WriteDIceMassDtFlow(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     //fsUnitsEnergyFlux(units,cUnit);
   }
 }  
+
+void WriteEnergyResL(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].daEnergyResL[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+}
+  
+void WriteEnergyResW(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].daEnergyResW[body[iBody].iWriteLat];
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+}  
   
 void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName,"TGlobal");
@@ -1650,6 +1680,24 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEFLOW].iNum = 1;
   output[OUT_ICEFLOW].bGrid = 1;
   fnWrite[OUT_ICEFLOW] = &WriteDIceMassDtFlow; 
+  
+  sprintf(output[OUT_ENERGYRESL].cName,"EnergyResL");
+  sprintf(output[OUT_ENERGYRESL].cDescr,"Energy residual on land");
+  sprintf(output[OUT_ENERGYRESL].cNeg,"W/m^2");
+  output[OUT_ENERGYRESL].bNeg = 1;
+  output[OUT_ENERGYRESL].dNeg = 1;
+  output[OUT_ENERGYRESL].iNum = 1;
+  output[OUT_ENERGYRESL].bGrid = 1;
+  fnWrite[OUT_ENERGYRESL] = &WriteEnergyResL; 
+  
+  sprintf(output[OUT_ENERGYRESW].cName,"EnergyResW");
+  sprintf(output[OUT_ENERGYRESW].cDescr,"Energy residual over water");
+  sprintf(output[OUT_ENERGYRESW].cNeg,"W/m^2");
+  output[OUT_ENERGYRESW].bNeg = 1;
+  output[OUT_ENERGYRESW].dNeg = 1;
+  output[OUT_ENERGYRESW].iNum = 1;
+  output[OUT_ENERGYRESW].bGrid = 1;
+  fnWrite[OUT_ENERGYRESW] = &WriteEnergyResW; 
   
   // sprintf(output[OUT_TIMELAT].cName,"Time");
 //   sprintf(output[OUT_TIMELAT].cDescr,"time, printed for each latitude");
@@ -2325,6 +2373,10 @@ void SeaIce(BODY *body, int iBody) {
   }
   
   for (i=0;i<body[iBody].iNumLats;i++) {
+    //temp change this time step
+    body[iBody].daDeltaTempL[i] = body[iBody].daTmpTemp[2*i]-body[iBody].daTempLand[i];
+    body[iBody].daDeltaTempW[i] = body[iBody].daTmpTemp[2*i+1]-body[iBody].daTempWater[i];
+    
     body[iBody].daTempLand[i] = body[iBody].daTmpTemp[2*i];
     body[iBody].daTempWater[i] = body[iBody].daTmpTemp[2*i+1];
     
@@ -2454,6 +2506,64 @@ void SourceFSeas(BODY *body, int iBody, int day) {
   }
 }
 
+
+void EnergyResiduals(BODY *body, int iBody, int day) {
+  int i;
+  double nu_fl, nu_fw, Cl_dt, Cw_dt, dt_Lf;
+  Cl_dt = body[iBody].dHeatCapLand/body[iBody].dSeasDeltat;
+  Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
+  dt_Lf = body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce;
+  
+  for (i=0;i<body[iBody].iNumLats;i++) {
+    nu_fl = body[iBody].dNuLandWater/body[iBody].daLandFrac[i];
+    nu_fw = body[iBody].dNuLandWater/body[iBody].daWaterFrac[i];
+
+    if (i==0) {
+      body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
+        body[iBody].daLambda[i+1]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i+1])-\
+        nu_fl*(body[iBody].daTempLand[i]-body[iBody].daTempWater[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempLand[i];
+        
+      body[iBody].daEnergyResW[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoWater[i])-Cw_dt*(body[iBody].daDeltaTempW[i])-\
+        body[iBody].daLambda[i+1]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i+1])-\
+        nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempWater[i];
+    } else if (i==body[iBody].iNumLats) {
+      body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
+        body[iBody].daLambda[i]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i-1])-\
+        nu_fl*(body[iBody].daTempLand[i]-body[iBody].daTempWater[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempLand[i];
+        
+      body[iBody].daEnergyResW[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoWater[i])-Cw_dt*(body[iBody].daDeltaTempW[i])-\
+        body[iBody].daLambda[i]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i-1])-\
+        nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempWater[i];
+    } else {
+      body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
+        body[iBody].daLambda[i]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i-1])-\
+        body[iBody].daLambda[i+1]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i+1])-\
+        nu_fl*(body[iBody].daTempLand[i]-body[iBody].daTempWater[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempLand[i];
+        
+      body[iBody].daEnergyResW[i] = body[iBody].daInsol[i][day]*\
+        (1.0-body[iBody].daAlbedoWater[i])-Cw_dt*(body[iBody].daDeltaTempW[i])-\
+        body[iBody].daLambda[i]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i-1])-\
+        body[iBody].daLambda[i+1]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i+1])-\
+        nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
+        body[iBody].daPlanckA[i]-body[iBody].daPlanckB[i]*body[iBody].daTempWater[i];
+    }
+    
+    body[iBody].daEnerResLAnn[i] += body[iBody].daEnergyResL[i]/body[iBody].iNStepInYear;
+    body[iBody].daEnerResWAnn[i] += body[iBody].daEnergyResW[i]/body[iBody].iNStepInYear;
+  }
+}
+
+
 void PoiseSeasonal(BODY *body, int iBody) {
   int i, j, nstep, nyear, day;
   double h;
@@ -2477,6 +2587,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].daDivFluxAnnual[i] = 0.0;
         body[iBody].daFluxOutAnnual[i] = 0.0;
         body[iBody].daIceBalanceAnnual[i] = 0.0;
+        body[iBody].daEnerResLAnn[i] = 0.0;
+        body[iBody].daEnerResWAnn[i] = 0.0;
         if (nyear == 0) {
           //reset ice sheet stuff only on first year       
           if (body[iBody].bIceSheets) {
@@ -2484,6 +2596,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
           }
         }
     }
+    
     AlbedoSeasonal(body,iBody,0);
     body[iBody].dAlbedoGlobal = 0.0;
     
@@ -2571,6 +2684,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
           }
         }
         for (i=0;i<body[iBody].iNumLats;i++) {
+          //temp change this time step
+          body[iBody].daDeltaTempL[i] = body[iBody].daTmpTemp[2*i]-body[iBody].daTempLand[i];
+          body[iBody].daDeltaTempW[i] = body[iBody].daTmpTemp[2*i+1]-body[iBody].daTempWater[i];          
           //calculate temperature and fluxes by latitude and global average 
           body[iBody].daTempLand[i] = body[iBody].daTmpTemp[2*i];
           body[iBody].daTempWater[i] = body[iBody].daTmpTemp[2*i+1];
@@ -2639,7 +2755,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].dFluxInGlobal += \
               body[iBody].dFluxInGlobalTmp/(body[iBody].iNStepInYear);
       }
-      
+      EnergyResiduals(body,iBody,day);
       AlbedoSeasonal(body,iBody,day);
     }
     if (body[iBody].bIceSheets) {

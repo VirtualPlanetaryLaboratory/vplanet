@@ -925,10 +925,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     
     // POISE's ice mass
     update[iBody].iIceMass = -1;
-    /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
-    control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
     if (update[iBody].iNumIceMass) { 
+      /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
+      control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
+      
       update[iBody].iIceMass = iVar;
       control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {

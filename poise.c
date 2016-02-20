@@ -991,7 +991,13 @@ void InitializeClimateParams(BODY *body, int iBody) {
       }  
     
       if (body[iBody].bMEPDiff) {   
-        body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;   
+        if (i==0) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+        } else if (i==body[iBody].iNumLats) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i-1]/4.0;
+        } else {
+          body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+        } 
       } else {
         body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
       }
@@ -1126,9 +1132,9 @@ void InitializeClimateParams(BODY *body, int iBody) {
       }
     }  
 
+    AnnualInsolation(body, iBody); 
     AlbedoSeasonal(body,iBody,0);
     body[iBody].dAlbedoGlobal = body[iBody].dAlbedoGlobal*body[iBody].iNStepInYear;
-    AnnualInsolation(body, iBody); 
     MatrixSeasonal(body, iBody);
     SourceFSeas(body,iBody,0);
     if (body[iBody].bSeaIceModel) {
@@ -1140,6 +1146,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
     while (fabs(TGlobalTmp - body[iBody].dTGlobal) > 0.01) {
       TGlobalTmp = body[iBody].dTGlobal; 
       PoiseSeasonal(body,iBody); 
+      printf("TGlobal = %f\n",TGlobalTmp);
     }
   }
 } 
@@ -1460,8 +1467,12 @@ void WriteDivFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 }       
 
 void WriteIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat];
-  
+  if (body[iBody].bIceSheets) {
+    *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat];
+  } else {
+    *dTmp = 0.0;
+  }
+    
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
   } else {
@@ -1471,7 +1482,11 @@ void WriteIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 }    
 
 void WriteIceHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat]/RHOICE;
+  if (body[iBody].bIceSheets) {
+    *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat]/RHOICE;
+  } else {
+    *dTmp = 0.0;
+  }
   
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
@@ -1483,7 +1498,11 @@ void WriteIceHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
-  *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][0]);
+  if (body[iBody].bIceSheets) {
+    *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][0]);
+  } else {
+    *dTmp = 0.0;
+  }
   
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
@@ -1495,7 +1514,11 @@ void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   
 void WriteDIceMassDtFlow(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
-  *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][1]);
+  if (body[iBody].bIceSheets) {
+    *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][1]);
+  } else {
+    *dTmp = 0.0;
+  }
   
   if (output->bDoNeg[iBody]) {
     strcpy(cUnit,output->cNeg);
@@ -2277,13 +2300,36 @@ double AlbedoTOA350(double Temp, double phi, double zenith, double albsurf) {
   return dTmp;
 }
 
+double Fresnel(double zenith) {
+  double A, r, n=1.33;
+  
+  r = asin(sin(zenith)/n);
+  if (zenith == 0) {
+    A = pow((n-1)/(n+1),2);
+  } else {  
+    A = 0.5*(pow(sin(zenith-r)/sin(zenith+r),2)+pow(tan(zenith-r)/tan(zenith+r),2));
+  }
+  
+  return A;
+}
+  
+
 double AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
   double phi = log10(body[iBody].dpCO2), albtmp;
   
-  if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
-    albtmp = body[iBody].dIceAlbedo;
+//   if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+//     albtmp = body[iBody].dIceAlbedo;
+//   } else {
+//     albtmp = body[iBody].dAlbedoLand;
+//   }
+
+/// hack hack hack
+  if ((body[iBody].daTempLand[iLat] <= 0) && (body[iBody].daTempLand[iLat] > -10)) {
+    albtmp = 0.45;
+  } else if (body[iBody].daTempLand[iLat] <= -10) {
+    albtmp = 0.7;
   } else {
-    albtmp = body[iBody].dAlbedoLand;
+    albtmp = 0.2;
   }
   
   if (body[iBody].daTempLand[iLat] <= (-23.15)) {
@@ -2295,10 +2341,19 @@ double AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
     exit(EXIT_INPUT);
   }
 
-  if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
-    albtmp = body[iBody].dIceAlbedo;
+//   if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+//     albtmp = body[iBody].dIceAlbedo;
+//   } else {
+//     albtmp = body[iBody].dAlbedoWater;
+//   }
+  
+  /// hack hack hack
+  if ((body[iBody].daTempWater[iLat] <= 0) && (body[iBody].daTempWater[iLat] > -10)) {
+    albtmp = 0.55;
+  } else if (body[iBody].daTempWater[iLat] <= -10) {
+    albtmp = 0.7;
   } else {
-    albtmp = body[iBody].dAlbedoWater;
+    albtmp = Fresnel(zenith);
   }
   
   if (body[iBody].daTempWater[iLat] <= (-23.15)) {
@@ -2623,6 +2678,25 @@ void PoiseSeasonal(BODY *body, int iBody) {
                     * (body[iBody].daTempWater[i] - body[iBody].dFrzTSeaIce);
             }
           }
+          
+          if (body[iBody].bCalcAB) {
+            /* Calculate A and B from Haqq-Misra et al 2016 result */
+            body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
+            body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
+               - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
+            
+            if (body[iBody].bMEPDiff) {   
+              if (i==0) {
+                body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+              } else if (i==(body[iBody].iNumLats-1)) {
+                body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+                body[iBody].daDiffusion[i+1] = body[iBody].daPlanckB[i]/4.0;
+              } else {
+                body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+              } 
+            } 
+          } 
+          
           //calculate fluxes by latitude and global average 
           body[iBody].daFluxOutLand[i] = body[iBody].daPlanckA[i] \
                                   + body[iBody].daPlanckB[i]*body[iBody].daTempLand[i];
@@ -2699,6 +2773,17 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
             body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
                - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
+            
+            if (body[iBody].bMEPDiff) {   
+              if (i==0) {
+                body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+              } else if (i==(body[iBody].iNumLats-1)) {
+                body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+                body[iBody].daDiffusion[i+1] = body[iBody].daPlanckB[i]/4.0;
+              } else {
+                body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+              } 
+            } 
           } 
             
           body[iBody].daFluxOutLand[i] = body[iBody].daPlanckA[i] \

@@ -2078,8 +2078,8 @@ void PoiseAnnual(BODY *body, int iBody) {
   Albedo(body, iBody);
   AnnualInsolation(body, iBody);
   if (body[iBody].bCalcAB) {
-    body[iBody].dPlanckB = dOLRdTwk97(body,iBody);
-    body[iBody].dPlanckA = OLRwk97(body,iBody) \
+    body[iBody].dPlanckB = dOLRdTwk97(body,iBody,0);
+    body[iBody].dPlanckA = OLRwk97(body,iBody,0) \
       - body[iBody].dPlanckB*(body[iBody].dTGlobal);
   }
   
@@ -2216,11 +2216,11 @@ double dOLRdThm16(BODY *body, int iBody, int iLat) {
   return dI;
 }
 
-double OLRwk97(BODY *body, int iBody){
+double OLRwk97(BODY *body, int iBody, int iLat){
   double phi, Int, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal+273.15;
+  T = body[iBody].daTemp[iLat]+273.15;
   Int = 9.468980 - 7.714727e-5*phi - 2.794778*T - 3.244753e-3*phi*T-3.547406e-4*pow(phi,2.) \
       + 2.212108e-2*pow(T,2) + 2.229142e-3*pow(phi,2)*T + 3.088497e-5*phi*pow(T,2) \
       - 2.789815e-5*pow(phi*T,2) - 3.442973e-3*pow(phi,3) - 3.361939e-5*pow(T,3) \
@@ -2231,11 +2231,11 @@ double OLRwk97(BODY *body, int iBody){
   return Int;
 }
   
-double dOLRdTwk97(BODY *body, int iBody){
+double dOLRdTwk97(BODY *body, int iBody, int iLat){
   double phi, dI, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  T = body[iBody].dTGlobal+273.15;
+  T = body[iBody].daTemp[iLat]+273.15;
   dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
        + 2*3.088497e-5*phi*T - 3*1.679112e-7*phi*pow(T,2) + 2.229142e-3*pow(phi,2) \
        - 2*2.789815e-5*pow(phi,2)*T + 3*6.590999e-8*pow(phi,2)*pow(T,2) \
@@ -2770,9 +2770,13 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           if (body[iBody].bCalcAB) {
             /* Calculate A and B from Haqq-Misra et al 2016 result */
-            body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
-            body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
-               - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
+            // body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
+//             body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
+//                - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
+//               
+            body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
+            body[iBody].daPlanckA[i] = OLRwk97(body,iBody,i) \
+                  - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]);
             
             if (body[iBody].bMEPDiff) {   
               if (i==0) {

@@ -134,8 +134,8 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     for b, body in enumerate(output.bodies):
     
       # Get indices of the parameters
-      xi = np.where(x == np.array([param.name for param in body.params]))[0]
-      yi = np.where(y == np.array([param.name for param in body.params]))[0]
+      xi = np.where(np.array([param.name for param in body.params]) == x)[0]
+      yi = np.where(np.array([param.name for param in body.params]) == y)[0]
       if aaxis is not None and aaxis != 'None':
         ai = np.where(a == np.array([param.name for param in body.params]))[0]
       else:

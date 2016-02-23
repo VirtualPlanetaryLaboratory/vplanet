@@ -30,6 +30,7 @@
 // Naming convention same as for OPT_* constants
 #define OUT_FREEECC             2010 
 #define OUT_FREEINC             2020
+#define OUT_BININC                 2025
 #define OUT_LL13N0              2030
 #define OUT_LL13K0              2040
 #define OUT_LL13V0              2050
@@ -73,6 +74,7 @@ void InitializeOutputBinary(OUTPUT*,fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT*,int,int);
 void WriteFreeEcc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFreeInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13N0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13K0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13V0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -93,6 +95,11 @@ double fdSpecificOrbEng(BODY*);
 /* Orbital Element Functions */
 double fdComputeSemi(BODY*);
 double fdComputeEcc(BODY*);
+double fdComputeInc(BODY*);
+double fdComputeLongA(BODY*);
+void fdComputeEccVector(BODY*,double*);
+double fdComputeArgPeri(BODY*);
+double fdHolmanStability(BODY*);
 double fdMeanAnomaly(double,double,double);
 
 /* Binary functions */

@@ -30,6 +30,9 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   
   dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
   dest[iBody].dFreeInc = src[iBody].dFreeInc;
+  dest[iBody].dInc = src[iBody].dInc;
+  dest[iBody].dArgP = src[iBody].dArgP;
+  dest[iBody].dLongA = src[iBody].dLongA;
   dest[iBody].dLL13N0 = src[iBody].dLL13N0;
   dest[iBody].dLL13K0 = src[iBody].dLL13K0;
   dest[iBody].dLL13V0 = src[iBody].dLL13V0;
@@ -44,6 +47,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   {
     // Inits for CBP
     body[2].dR0 = body[2].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
+    body[2].dInc = body[2].dFreeInc; // CBP initial inc == free inclination
     body[2].dLL13N0 = fdMeanMotion(body);
     body[2].dLL13K0 = fdEpiFreqK(body);
     body[2].dLL13V0 = fdEpiFreqV(body);
@@ -297,18 +301,6 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
   fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
 }
-
-void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
-  
-  if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
-    // Let's desiccate this planet.
-    body[iBody].dSurfaceWaterMass = 0;
-  
-  if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)
-    // Let's remove its envelope.
-    body[iBody].dEnvelopeMass = 0;
-  
-}
 */
 
 void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
@@ -344,8 +336,14 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   // Compute CBP orbital elements
 
   // LongA, ArgP -> LongP (needed for dHecc, dKecc)
-  body[2].dLongP = 0;
-  // TODO: currently, place holder
+  body[2].dLongA = fdComputeLongA(body);
+  body[2].dArgP = fdComputeArgPeri(body);
+  double LongP = body[2].dLongA + body[2].dArgP;
+  while(LongP > 2.0*PI)
+  {
+    LongP -= 2.0*PI;
+  }
+  body[2].dLongP = LongP;
 
   // Eccentricity
   body[2].dEcc = fdComputeEcc(body);
@@ -357,12 +355,37 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
   // Semimajor Axis
   body[2].dSemi = fdComputeSemi(body); // Semi for semimajor axis
+
+  // Inclination
+  body[2].dInc = fdComputeInc(body); // CBP inclination
+
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   
+  // If binary is being used, ALL bodies must have correct type
+  if(body[0].iBodyType != 1 || body[1].iBodyType != 1 || body[2].iBodyType != 0)
+  {
+    if(control->Io.iVerbose >= VERBERR)
+    {
+      fprintf(stderr,"ERROR: In binary, bodies 0, 1 iBodyType must be 1 (star == 1).\n");
+      fprintf(stderr,"Body 2 must be 0 (planet == 0).\n");
+    }
+    exit(EXIT_INPUT);
+  }
+
+  // If binary is being used, ALL bodies must have iBinary == 1
+  if(body[0].bBinary == 0 || body[1].bBinary == 0 || body[2].bBinary == 0)
+  {
+    if(control->Io.iVerbose >= VERBERR)
+    {
+      fprintf(stderr,"ERROR: In binary, all bodies must have bBinary == 1.\n");
+      fprintf(stderr,"body[i].bBinary for i=[1,3]: %d,%d,%d.\n",body[0].bBinary,body[1].bBinary,body[2].bBinary);
+    }
+    exit(EXIT_INPUT);
+  }
+
   /*
-  int bAtmEsc=0;
 
   
   if (body[iBody].dSurfaceWaterMass > 0) {
@@ -386,9 +409,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
-  control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
-  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
   */
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
@@ -535,6 +555,23 @@ void WriteFreeInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   }
 }
 
+void WriteInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[])
+{
+  // Note: Only makes sense for planets (iBodyType == 0)
+  if(body[iBody].iBodyType == 0)
+    *dTmp = body[iBody].dInc;
+  else
+    *dTmp = -1;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 void WriteLL13N0(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
  // Note: Only applies to planets (iBodyType == 0)
  if(body[iBody].iBodyType == 0)
@@ -599,6 +636,14 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_FREEINC].dNeg = 1./DEGRAD;
   output[OUT_FREEINC].iNum = 1;
   fnWrite[OUT_FREEINC] = &WriteFreeInc;
+
+  sprintf(output[OUT_BININC].cName,"dIncBinary");
+  sprintf(output[OUT_BININC].cDescr,"Inclination");
+  sprintf(output[OUT_BININC].cNeg,"Deg");
+  output[OUT_BININC].bNeg = 1;
+  output[OUT_BININC].dNeg = 1./DEGRAD;
+  output[OUT_BININC].iNum = 1;
+  fnWrite[OUT_BININC] = &WriteInc;
 
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
   sprintf(output[OUT_LL13N0].cDescr,"Leung+Lee 2013 Mean Motion");
@@ -764,6 +809,105 @@ double fdComputeEcc(BODY *body)
   fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
   
   return sqrt(1. + (2.*fdSpecificOrbEng(body)*fdDot(h,h))/(mu*mu));
+}
+
+/* Compute a body's inclincation
+ * i = arccos(h_z/|h|)
+ */
+double fdComputeInc(BODY *body)
+{
+  double h[3];
+  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  return acos(h[2]/sqrt(fdDot(h,h)));
+}
+
+/* Compute a body's longitude of ascending node
+ * See: https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node
+ */
+double fdComputeLongA(BODY *body)
+{
+  double Omega = 0.0;
+  double h[3];
+  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  double n[3] = {-h[1],h[0],0};
+
+  // Case: |n| = 0
+  double mag_n = sqrt(fdDot(n,n));
+  if(fabs(mag_n) < 1.0e-6)
+  {
+    return Omega;
+  }
+
+  if(n[1] >= 0)
+  {
+    Omega = acos(n[0]/mag_n);
+  }
+  else
+  {
+    Omega = 2.0*PI - acos(n[0]/mag_n);
+  }
+
+  return Omega;
+}
+
+void fdComputeEccVector(BODY *body, double *evec)
+{
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
+  double h[3];
+  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  cross(body[2].dCartVel,h,evec);
+  
+  double mag_r = sqrt(fdDot(body[2].dCartPos,body[2].dCartPos));
+
+  for(int i = 0; i < 3; i++)
+  {
+    evec[i] = evec[i]/mu - body[2].dCartPos[i]/mag_r;
+  }
+}
+
+double fdComputeArgPeri(BODY *body)
+{
+  double evec[3];
+  double h[3];
+  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  fdComputeEccVector(body,evec);
+  double n[3] = {-h[1],h[0],0};
+  double mag_n = sqrt(fdDot(n,n));
+  double mag_evec = sqrt(fdDot(evec,evec));
+
+  // if LongA ~ 0, assume planar orbit
+  if(fabs(fdComputeLongA(body)) < 1.0e-6)
+  {
+    if(h[2] > 0)
+    {
+      return atan2(evec[1],evec[0]);
+    }
+    else
+    {
+      return 2.0*PI - atan2(evec[1],evec[0]);
+    }
+  }
+  else
+  {
+    if(evec[2] >= 0)
+    {
+      return acos(fdDot(n,evec)/(mag_n*mag_evec));
+    }
+    else
+    {
+      return 2.0*PI - acos(fdDot(n,evec)/(mag_n*mag_evec));
+    }
+  }
+}
+
+/* 
+ * Compute the dynamical stability limit, a_crit, first computed by
+ * Holman and Wieget 1989 that depends on binary dSemi, dEcc
+ * If CBP.dSemi < a_crit, planet is unstable and system should halt
+ */
+double fdHolmanStability(BODY *body)
+{
+  return -1.
 }
 
 /* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset */

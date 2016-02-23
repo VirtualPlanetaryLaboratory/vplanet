@@ -1,7 +1,7 @@
 # secondary sun
 sName		secondary		# Body's name
 #saModules	eqtide stellar		# Modules to apply, exact spelling required
-saModules stellar binary
+saModules stellar binary 
 
 # Physical Parameters
 iBodyType       1               # 1 -> Star

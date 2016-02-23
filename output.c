@@ -401,9 +401,10 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX I don't think this will work with just eqtide
-  //*dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
-  *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  *dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
+
+  // XXX This does not work with just eqtide -- This is Peter's code
+  //*dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   strcpy(cUnit,"");
 }
 

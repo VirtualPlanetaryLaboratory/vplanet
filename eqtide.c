@@ -978,10 +978,9 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBSEMI].cName);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
-    } else {
-      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-      CalcHK(body,iBody);
     }
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+    CalcHK(body,iBody);
   }
 }
 

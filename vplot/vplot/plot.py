@@ -6,9 +6,11 @@ plot.py
 
 '''
 
-from __future__ import print_function, absolute_import
-from vplot.utils import ShowHelp, GetConf, GetOutput
+from __future__ import division, print_function, absolute_import, unicode_literals
+from .utils import ShowHelp, GetConf, GetArrays
+import os
 import matplotlib.pyplot as pl
+pl.style.use(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vplot.mplstyle'))
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ColorConverter
@@ -55,7 +57,7 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     aaxis = conf.aaxis
   
   # Output object
-  output = GetOutput(bodies)
+  output = GetArrays(bodies)
   
   # Names of all available params
   param_names = list(set([param.name for body in output.bodies for param in body.params]))
@@ -132,8 +134,8 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     for b, body in enumerate(output.bodies):
     
       # Get indices of the parameters
-      xi = np.where(x == np.array([param.name for param in body.params]))[0]
-      yi = np.where(y == np.array([param.name for param in body.params]))[0]
+      xi = np.where(np.array([param.name for param in body.params]) == x)[0]
+      yi = np.where(np.array([param.name for param in body.params]) == y)[0]
       if aaxis is not None and aaxis != 'None':
         ai = np.where(a == np.array([param.name for param in body.params]))[0]
       else:
@@ -249,33 +251,10 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
 
-  return fig, ax
-  
-if __name__ == '__main__':
-  parser = argparse.ArgumentParser(prog = 'VPLOT', add_help = False)
-  parser.add_argument("-h", "--help", nargs = '?', default = False, const = 1, help = 'Display the help')
-  parser.add_argument("-b", "--bodies", nargs = '*', default = None, help = 'Bodies to plot; should match names of .in files')
-  parser.add_argument("-x", "--xaxis", default = None, help = 'Parameter to plot on the x-axis')
-  parser.add_argument("-y", "--yaxis", nargs = '*', default = None, help = 'Parameter(s) to plot on the y-axis')
-  parser.add_argument("-a", "--aaxis", default = None, help = 'Parameter to control line alpha')
-  args = parser.parse_args()
-
-  # Help?
-  if args.help:
-    if args.help == 1:
-      ShowHelp()
-    else:
-      ShowHelp(args.help)
-    quit()
-
-  # Initialize
-  conf = GetConf()
-  
-  # Plot
-  fig, _ = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
-
   # Show or save?
   if conf.interactive:
     pl.show()
   else:
     fig.savefig(conf.figname, bbox_inches = 'tight')
+
+  return fig, ax

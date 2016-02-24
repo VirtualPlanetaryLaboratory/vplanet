@@ -930,10 +930,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
     if (update[iBody].iNumIceMass) { 
       update[iBody].iIceMass = iVar;
+      control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         update[iBody].iaIceMass[iLat] = iVar;
         update[iBody].iaVar[iVar] = VICEMASS;
-        update[iBody].iNumEqns[iVar] = 1;
+        update[iBody].iNumEqns[iVar] = update[iBody].iNumIceMass;
         update[iBody].pdVar[iVar] = &body[iBody].daIceMass[iLat];
         update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
         update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
@@ -941,6 +942,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         update[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
 
         if (control->Evolve.iOneStep == RUNGEKUTTA) {
+          
           control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].daIceMass[iLat];
           control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
           control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumIceMass*sizeof(double));

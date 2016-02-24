@@ -1865,7 +1865,7 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
         } else { // Negative option not set, initialize bDoNeg to false
             output[iOut].bDoNeg[iFile-1] = 0;
         }   
-        if (output[iOut].bGrid == 0) {
+        if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
           files->Outfile[iFile-1].caCol[i][0]='\0';
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
@@ -1926,7 +1926,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
           strcpy(cOption[count],output[j].cName);
           count = 1;
           iOut = j;
-          if (output[j].bGrid == 1)
+          if (output[j].bGrid == 1 || output[j].bGrid == 2)
             iNumGrid += 1;
           j = NUMOUT; /* Poor man's break! */
         } else {
@@ -1940,7 +1940,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
             strcpy(cOption[count],output[j].cName);
             count++;
             iOut = j;
-            if (output[j].bGrid == 1)
+            if (output[j].bGrid == 1 || output[j].bGrid == 2)
               iNumGrid += 1;
           }
         }

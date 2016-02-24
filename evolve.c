@@ -129,7 +129,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               if (update[iBody].iaType[iVar][iEqn] == 2) {
                 // The parameter is a "polar/sinusoidal quantity" controlled by a time derivative
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
                   dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
@@ -137,15 +138,29 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
               } else if (update[iBody].iaType[iVar][iEqn] == 4) {
                 // unique type for ice sheets to prevent small amounts of ice -> dDt -> 0
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
-                  if (*(update[iBody].pdVar[iVar])/RHOICE < 0.01) {
-                    //if ice is < 1 cm thick, treat timestep as if it is 1 cm
-                    dMinNow = fabs(0.01/update[iBody].daDerivProc[iVar][iEqn]);
-                  } else { 
-                    dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
+                  dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
+                    (2*body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]));
+                  if (dMinNow < dMin) {
+                    if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
+                        dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
+                    } else {
+                        dMin = dMinNow;
+                    }
                   }
-                  if (dMinNow < dMin) 
-                    dMin = dMinNow;
+                }
+              } else if (update[iBody].iaType[iVar][iEqn] == 9) {
+                // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+                if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+                  dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+                  if (dMinNow < dMin) {
+                    if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
+                      dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
+                    } else {
+                      dMin = dMinNow;
+                    }
+                  }
                 }
               } else {
                 // The parameter is controlled by a time derivative
@@ -367,7 +382,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-    /* Manually adjust variables for each module*/
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
         control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);
@@ -392,6 +406,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     control->Evolve.dTime += dDt;
     control->Evolve.nSteps++;
+    
+    // if (control->Evolve.dTime >= 360*YEARSEC) {
+//       printf("stop\n");
+//     }
         
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {

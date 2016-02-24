@@ -33,8 +33,10 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
 
 int fiGetLowerBound(double val, const double *arr, int dim){
 	int i;
-	if ((val < arr[0]) || (val > arr[dim-1])){
-			return STELLAR_ERR_WAY_OUTOFBOUNDS;
+	if (val < arr[0]){
+		return STELLAR_ERR_OUTOFBOUNDS_LO;
+	} else if (val > arr[dim-1]) {
+	  return STELLAR_ERR_OUTOFBOUNDS_HI;
 	} else {
 			for (i=0;i<dim-2;i++){
 				if (val < arr[i+1]) break;
@@ -53,9 +55,17 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], 
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
 	// and normalized distances to the interpolation point dx, dy.
 	double C0, C1, C;	
-	C0 = data[xi][yi]*(1-dx) + data[xi+1][yi]*dx;
-	C1 = data[xi][yi+1]*(1-dx) + data[xi+1][yi+1]*dx;
-	C = C0*(1-dy) + C1*dy;
+	if (dx == 0) {
+	  C0 = data[xi][yi];
+	  C1 = data[xi][yi+1];
+	} else {
+	  C0 = data[xi][yi]*(1-dx) + data[xi+1][yi]*dx;
+	  C1 = data[xi][yi+1]*(1-dx) + data[xi+1][yi+1]*dx;	
+	}
+	if (dy == 0)
+	  C = C0;
+	else
+	  C = C0*(1-dy) + C1*dy;
 	return C;
 }
 
@@ -145,15 +155,35 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 		result = fdBaraffeBiCubic(iMLEN,iALEN,data,xi,yi,dx,dy);
 		if isnan(result) {
 			// Maybe we can still linearly interpolate. Let's check:
-			for (dxi = 0; dxi<2; dxi++){
-				for (dyi = 0; dyi<2; dyi++){
-					if isnan(data[xi+dxi][yi+dyi]){
+			if (dx == 0){
+        for (dyi = 0; dyi<2; dyi++){
+          if isnan(data[xi][yi+dyi]){
+            // Hopeless; you're bounded by
+            // a NaN on at least one side
+            *iError = STELLAR_ERR_ISNAN;
+            return 0;
+          }
+        }
+			} else if (dy == 0){
+				for (dxi = 0; dxi<2; dxi++){
+					if isnan(data[xi+dxi][yi]){
 						// Hopeless; you're bounded by
 						// a NaN on at least one side
 						*iError = STELLAR_ERR_ISNAN;
 						return 0;
 					}
 				}
+			} else {
+        for (dxi = 0; dxi<2; dxi++){
+          for (dyi = 0; dyi<2; dyi++){
+            if isnan(data[xi+dxi][yi+dyi]){
+              // Hopeless; you're bounded by
+              // a NaN on at least one side
+              *iError = STELLAR_ERR_ISNAN;
+              return 0;
+            }
+          }
+        }
 			}
 			// We're good! A linear interpolation will save the day.
 			*iError = STELLAR_ERR_LINEAR;

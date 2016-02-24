@@ -22,7 +22,7 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iLat;
   
   if (src[iBody].bIceSheets) {

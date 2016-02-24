@@ -815,7 +815,7 @@ typedef struct {
 typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
-typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
+typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
 /* Integration parameters */
 typedef struct {

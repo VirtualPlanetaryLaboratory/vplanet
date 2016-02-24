@@ -22,7 +22,7 @@ void InitializeModuleDistOrb(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dPinc = src[iBody].dPinc;

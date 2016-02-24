@@ -112,7 +112,7 @@
 
 void InitializeControlThermint(CONTROL*);
 void AddModuleThermint(MODULE*,int,int);
-void BodyCopyThermint(BODY*,BODY*,int,int);
+void BodyCopyThermint(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 

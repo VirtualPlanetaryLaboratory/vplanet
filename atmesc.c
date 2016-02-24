@@ -19,7 +19,7 @@ void  InitializeControlAtmEsc(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;

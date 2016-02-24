@@ -17,7 +17,7 @@ void  InitializeControlThermint(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
   /* Constants */

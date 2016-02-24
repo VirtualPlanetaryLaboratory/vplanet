@@ -14,7 +14,7 @@
 
 void InitializeControlEqtide(CONTROL*);
 void AddModuleEqtide(MODULE*,int,int);
-void BodyCopyEqtide(BODY*,BODY*,int,int);
+void BodyCopyEqtide(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 int fiGetModuleIntEqtide(MODULE*,int);

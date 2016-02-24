@@ -17,7 +17,7 @@
 
 void InitializeControlDistOrb(CONTROL*);
 void AddModuleDistOrb(MODULE*,int,int);
-void BodyCopyDistOrb(BODY*,BODY*,int,int);
+void BodyCopyDistOrb(BODY*,BODY*,int,int,int);
 void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 

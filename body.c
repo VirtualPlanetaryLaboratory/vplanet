@@ -251,7 +251,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     /* Copymodule specific properties */
     for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)
       // Only module reference in file -- can this be changed? XXX
-      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,iBody);
+      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,evolve->iNumBodies,iBody);
   }
 }
 

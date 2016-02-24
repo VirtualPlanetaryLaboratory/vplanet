@@ -14,7 +14,7 @@
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
-void BodyCopyStellar(BODY*,BODY*,int,int);
+void BodyCopyStellar(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 

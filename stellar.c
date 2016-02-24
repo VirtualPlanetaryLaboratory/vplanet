@@ -18,7 +18,7 @@ void  InitializeControlStellar(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
   dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;

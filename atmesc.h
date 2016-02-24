@@ -12,7 +12,7 @@
 
 void InitializeControlAtmEsc(CONTROL*);
 void AddModuleAtmEsc(MODULE*,int,int);
-void BodyCopyAtmEsc(BODY*,BODY*,int,int);
+void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyAtmEsc(BODY*,CONTROL*,UPDATE*,int);
 

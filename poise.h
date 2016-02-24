@@ -85,6 +85,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_FLUXINGLOBAL     1823
 #define OUT_FLUXOUTGLOBAL    1824
 #define OUT_TOTICEMASS       1825
+#define OUT_TOTICEFLOW       1826
+#define OUT_TOTICEBALANCE    1827
 
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831

@@ -140,7 +140,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
                 if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
                   dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
-                    (2*body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]));
+                    (2*(body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]+\
+                        body[iBody].daBasalFlowMid[iVar-update[iBody].iIceMass+1])));
                   if (dMinNow < dMin) {
                     if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
                         dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;

@@ -1359,6 +1359,30 @@ void WriteTotIceMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsMass(units->iMass,cUnit);
   }
 }    
+
+void WriteIceFlowTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dIceFlowTot;
+
+  if (output->bDoNeg[iBody]) {
+    // Negative option is SI
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}    
+ 
+void WriteIceBalanceTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dIceBalanceTot;
+
+  if (output->bDoNeg[iBody]) {
+    // Negative option is SI
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}     
   
 void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].daAnnualInsol[body[iBody].iWriteLat];
@@ -1585,6 +1609,20 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTICEMASS].iNum = 1;
   fnWrite[OUT_TOTICEMASS] = &WriteTotIceMass;
   
+  sprintf(output[OUT_TOTICEFLOW].cName,"TotIceFlow");
+  sprintf(output[OUT_TOTICEFLOW].cDescr,"Global total ice flow in ice sheets (should = 0)");
+  sprintf(output[OUT_TOTICEFLOW].cNeg,"kg");
+  output[OUT_TOTICEFLOW].bNeg = 1;
+  output[OUT_TOTICEFLOW].iNum = 1;
+  fnWrite[OUT_TOTICEFLOW] = &WriteIceFlowTot;
+  
+  sprintf(output[OUT_TOTICEBALANCE].cName,"TotIceBalance");
+  sprintf(output[OUT_TOTICEBALANCE].cDescr,"Global total ice balance in ice sheets (this time step)");
+  sprintf(output[OUT_TOTICEBALANCE].cNeg,"kg");
+  output[OUT_TOTICEBALANCE].bNeg = 1;
+  output[OUT_TOTICEBALANCE].iNum = 1;
+  fnWrite[OUT_TOTICEBALANCE] = &WriteIceBalanceTot;
+  
   sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
   sprintf(output[OUT_FLUXINGLOBAL].cDescr,"Global mean flux in (insol*(1-albedo)) from POISE");
   /* Sadly, Russell, we must set the negative option to W/m^2.
@@ -1800,8 +1838,8 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 }
 
 /************* POISE Functions ***********/
-double BasalVel(BODY *body, int iBody, int iLat){
-  double ased, bsed, ub, m = 1.25, minv, grav;
+double BasalFlow(BODY *body, int iBody, int iLat){
+  double ased, bsed, dTmp, m = 1.25, minv, grav;
   
   if (body[iBody].daSedShear[iLat] == 0) {
     return 0.0;
@@ -1816,13 +1854,13 @@ double BasalVel(BODY *body, int iBody, int iLat){
       minv = 1 - bsed/fabs(ased)*SEDH;
     }
   
-    ub = 2*(SEDD0*ased)/((m+1)*bsed)*pow(fabs(ased)/(2*SEDD0*SEDMU),m) * \
-          (1.0-pow(minv,m+1));
+    dTmp = 2*(SEDD0*RHOICE*grav*body[iBody].daIceHeight[iLat])/((m+1)*bsed)*\
+        pow(fabs(ased)/(2*SEDD0*SEDMU),m) * (1.0-pow(minv,m+1));
 
-    if (ub != ub) {
+    if (dTmp != dTmp) {
       printf("nan");
     }
-    return ub;
+    return dTmp;
   }
 }
 
@@ -1877,30 +1915,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
           pow(body[iBody].daIceHeight[iLat],nGLEN+2);
       body[iBody].daSedShear[iLat] = RHOICE*grav*body[iBody].daIceHeight[iLat]*\
           body[iBody].daDIceHeightDy[iLat];
-      body[iBody].daBasalVel[iLat] = BasalVel(body, iBody, iLat);
-    }
-    
-    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      /* calculate derivative to 2nd order accuracy */
-      if (iLat == 0) {
-        body[iBody].daBasalFlow[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) * \
-            (body[iBody].daBasalVel[iLat+1]*body[iBody].daIceHeight[iLat+1] \
-            -body[iBody].daBasalVel[iLat]*body[iBody].daIceHeight[iLat]) / \
-            (body[iBody].dRadius*deltax);
-      } else if (iLat == (body[iBody].iNumLats-1)) {
-        body[iBody].daBasalFlow[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) * \
-            (body[iBody].daBasalVel[iLat]*body[iBody].daIceHeight[iLat]\
-            -body[iBody].daBasalVel[iLat-1]*body[iBody].daIceHeight[iLat-1]) / \
-            (body[iBody].dRadius*deltax);
-      } else {
-        body[iBody].daBasalFlow[iLat] = (sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) *\
-            (body[iBody].daBasalVel[iLat+1]*body[iBody].daIceHeight[iLat+1]\
-            -body[iBody].daBasalVel[iLat]*body[iBody].daIceHeight[iLat]) / \
-            (body[iBody].dRadius*deltax) + sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) *\
-            (body[iBody].daBasalVel[iLat]*body[iBody].daIceHeight[iLat]\
-            -body[iBody].daBasalVel[iLat-1]*body[iBody].daIceHeight[iLat-1]) / \
-            (body[iBody].dRadius*deltax) )/2.0;
-      }
+      body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
     }
     
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
@@ -2417,7 +2432,7 @@ double Fresnel(double zenith) {
 }
   
 
-double AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
+void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
   double phi = log10(body[iBody].dpCO2), albtmp;
   
 //   if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
@@ -2469,7 +2484,7 @@ double AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
   }
 }
 
-double AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
+void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
   
   if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
@@ -3108,19 +3123,18 @@ double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {
   deltayR = body[iaBody[0]].dRadius*deltax/sqrt(1.0-pow(body[iaBody[0]].daXBoundary[iaBody[1]+1],2));
 
   if (iaBody[1] == 0) {
-    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
-      -body[iaBody[0]].daIceHeight[iaBody[1]]))/pow(deltayR,2);
+    dfdy =((body[iaBody[0]].daIceFlowMid[iaBody[1]+1]+body[iaBody[0]].daBasalFlowMid[iaBody[1]+1])*\
+      (body[iaBody[0]].daIceHeight[iaBody[1]+1]-body[iaBody[0]].daIceHeight[iaBody[1]]))/pow(deltayR,2);
   } else if (iaBody[1] == (body[iaBody[0]].iNumLats-1)) {
-    dfdy = -body[iaBody[0]].daIceFlowMid[iaBody[1]]*(body[iaBody[0]].daIceHeight[iaBody[1]] -\
-      body[iaBody[0]].daIceHeight[iaBody[1]-1])/pow(deltayL,2);
+    dfdy = -(body[iaBody[0]].daIceFlowMid[iaBody[1]]+body[iaBody[0]].daBasalFlowMid[iaBody[1]])\
+      *(body[iaBody[0]].daIceHeight[iaBody[1]]-body[iaBody[0]].daIceHeight[iaBody[1]-1])/pow(deltayL,2);
   } else {
-    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]*(body[iaBody[0]].daIceHeight[iaBody[1]+1]\
-      -body[iaBody[0]].daIceHeight[iaBody[1]]))/pow(deltayR,2) - \
-       (body[iaBody[0]].daIceFlowMid[iaBody[1]] * (body[iaBody[0]].daIceHeight[iaBody[1]] - \
-      body[iaBody[0]].daIceHeight[iaBody[1]-1]))/pow(deltayL,2);
+    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]+body[iaBody[0]].daBasalFlowMid[iaBody[1]+1])*\
+    (body[iaBody[0]].daIceHeight[iaBody[1]+1]-body[iaBody[0]].daIceHeight[iaBody[1]])/pow(deltayR,2)-\
+    (body[iaBody[0]].daIceFlowMid[iaBody[1]]+body[iaBody[0]].daBasalFlowMid[iaBody[1]]) *\
+    (body[iaBody[0]].daIceHeight[iaBody[1]]-body[iaBody[0]].daIceHeight[iaBody[1]-1])/pow(deltayL,2);
   }
   
-  dfdy += body[iaBody[0]].daBasalFlowMid[iaBody[1]];
   /* convert to mass */
   dTmp = dfdy*RHOICE;
   

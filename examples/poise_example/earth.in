@@ -13,7 +13,8 @@ dLongP       13.467 #8.99    #pericenter, wrt Earth's position at spring equinox
 #note that this is the typical value +180, since that one is solar position
 dLongA       348.73936
 # bGRCorr      0
-saOutputOrder    Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal -TotIceMass DeltaTime
+saOutputOrder    Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
+  -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 #saOutputOrder     Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
   -IceFlow EnergyResW EnergyResL

@@ -599,9 +599,14 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
 
+  // If planet is a CBP, compute flux from 2 stars
+  if(body[iaBody[0]].bBinary == 1 && iaBody[0] == 2) { // CBP is body 2
+    fxuv = fluxBinary(body,body[0].dLXUV,body[1].dLXUV); 
+  }
+  else { // normal single-star planet
   fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
          pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
+  }
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 
@@ -622,9 +627,15 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
 
-  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
+  // If planet is a CBP, compute flux from 2 stars
+  if(body[iaBody[0]].bBinary == 1 && iaBody[0] == 2) { // CBP is body 2
+    fxuv = fluxBinary(body,body[0].dLXUV,body[1].dLXUV); 
+  }
+  else { // normal single-star planet
+    fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
+           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
+  }
+
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 

@@ -28,7 +28,7 @@ dFreeInc        0.0011              # Binary inclination
 
 # STELLAR parameters
 sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
-#dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
+dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!

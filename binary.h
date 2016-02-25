@@ -21,6 +21,7 @@
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
 #define OPT_CYLPOS              2060 // Cylindrical position [r,phi,z]
+#define OPT_HALTHOLMAN              2070 // Holman+Wiegert 1999 Instability limit
 
 /* Output Info */
 
@@ -52,9 +53,10 @@ void ReadFreeInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13K0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13V0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltHolmanUnstable(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
-
+int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt);
 void CountHaltsBinary(HALT*,int*);
 
@@ -129,4 +131,5 @@ double calculate_Phidot(double,BODY*,double,double);
 double calculate_Zdot(double,BODY*,double);
 
 /* Misc functions */
+double fluxBinary(BODY*,double,double);
 void fDebugBinary(BODY*);

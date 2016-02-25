@@ -1,7 +1,7 @@
 # Earth's parameters
 sName		earth			# Body's name
 #saModules	eqtide radheat thermint atmesc
-saModules       binary
+saModules       binary atmesc
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
@@ -12,8 +12,9 @@ dObliquity	23.5
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.02373                     # Free Eccentricity
+dFreeEcc        0.0 #0.05                     # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
+bHaltHolmanUnstable 1                   # End simulation if the CBP goes within the critical stability limit
 
 # Orbital Properties
 dSemi           -0.7016			# Semi-major axis, negative -> AU
@@ -29,13 +30,13 @@ dLongP          0.0
 #saTidePerts	sun			# Body name(s) of tidal perturbers
 
 # ATMESC Properties
-#dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-#dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-#dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
-#dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
-#bHaltSurfaceDesiccated    1               # Halt when dry?
-#bHaltEnvelopeGone         0               # Halt when evaporated?
-#dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
+dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    1               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 
 # RADHEAT Parameters
 # Initialize 40K
@@ -74,7 +75,7 @@ dLongP          0.0
 #dViscRef  1e8
 
 # Output
-saOutputOrder Time Semim Ecce dIncBinary LongP #-SurfWaterMass -EnvelopeMass TMan Tcore
+saOutputOrder Time Semim Ecce dIncBinary LongP -SurfWaterMass -EnvelopeMass
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

@@ -882,6 +882,9 @@ typedef struct {
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
 
+  /* BINARY */
+  int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
+
 } HALT;
 
 /* Units. These can be different for different bodies. If set

@@ -204,6 +204,21 @@ void ReadFreeInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dFreeInc = options->dDefault;
 }  
 
+void ReadHaltHolmanUnstable(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltHolmanUnstable = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bEnvelopeGone,files->iNumInputs);
+}
+
 /* Init Options BINARY */
 
 void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
@@ -254,6 +269,12 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LL13V0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13V0].cNeg,"/Year");
   fnRead[OPT_LL13V0] = &ReadLL13V0;
+
+  sprintf(options[OPT_HALTHOLMAN].cName,"bHaltHolmanUnstable");
+  sprintf(options[OPT_HALTHOLMAN].cDescr,"Halt when CBP is Holman-Wiegert Unstable?");
+  sprintf(options[OPT_HALTHOLMAN].cDefault,"0");
+  options[OPT_HALTHOLMAN].iType = 0;
+  fnRead[OPT_HALTHOLMAN] = &ReadHaltHolmanUnstable;
 
 }
 
@@ -331,7 +352,6 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
   // Compute binary orbital elements as needed
   body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
-  body[0].dEccSq = body[0].dEcc*body[0].dEcc;
 
   // Compute CBP orbital elements
 
@@ -358,7 +378,6 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
   // Inclination
   body[2].dInc = fdComputeInc(body); // CBP inclination
-
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -423,51 +442,30 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 /**************** BINARY Update ****************/
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
-  //TODO
+  // Nothing here
 }
-
-/*
-void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
-  if (body[iBody].dSurfaceWaterMass > 0) {
-    if (update[iBody].iNumSurfaceWaterMass == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumSurfaceWaterMass++;
-  }
-  
-  if (body[iBody].dEnvelopeMass > 0) {
-    if (update[iBody].iNumEnvelopeMass == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumEnvelopeMass++;
-    
-    if (update[iBody].iNumMass == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumMass++;
-  }
-  
-}
-
-void FinalizeUpdateEccBinary(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-}
-
-void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
-  update[iBody].iNumSurfaceWaterMass = (*iEqn)++;
-}
-
-void FinalizeUpdateEnvelopeMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
-  update[iBody].iNumEnvelopeMass = (*iEqn)++;
-}
-
-void FinalizeUpdateMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
-  update[iBody].iNumMass = (*iEqn)++;
-}
-
-*/      
 
 /***************** BINARY Halts *****************/
 
+
+/*
+ * If the CBP's dSemi is less than the Holman stability limit, it's unstable and
+ * integration ends
+ */
+int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  double a_crit = fdHolmanStability(body);
+  
+  // If the body is less than critical stability limit
+  if(body[2].dSemi <= a_crit)
+  {
+    if(io->iVerbose >= VERBPROG) 
+    {
+      printf("HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[2].cName,body[2].dSemi/AUCM,a_crit/AUCM);
+    }
+    return 1;
+  }
+  return 0;
+}
 /*
 int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   
@@ -505,18 +503,14 @@ void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
 */
 
 void CountHaltsBinary(HALT *halt,int *iHalt) {
-// TODO
+  if(halt->bHaltHolmanUnstable)
+    (*iHalt)++;
 }
 
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-
-/*
-  if (control->Halt[iBody].bSurfaceDesiccated)
-    control->fnHalt[iBody][(*iHalt)++] = &fbHaltSurfaceDesiccated;
+  if (control->Halt[iBody].bHaltHolmanUnstable)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltHolmanUnstable;
   
-  if (control->Halt[iBody].bEnvelopeGone)
-    control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnvelopeGone;
-*/
 }
 
 /************* BINARY Outputs ******************/
@@ -672,7 +666,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 }
 
 void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
-  //output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
+// Nothing
 }
 
 /************ BINARY Logging Functions **************/
@@ -902,12 +896,16 @@ double fdComputeArgPeri(BODY *body)
 
 /* 
  * Compute the dynamical stability limit, a_crit, first computed by
- * Holman and Wieget 1989 that depends on binary dSemi, dEcc
+ * Holman and Wieget 1999 that depends on binary dSemi, dEcc
  * If CBP.dSemi < a_crit, planet is unstable and system should halt
  */
 double fdHolmanStability(BODY *body)
 {
-  return -1.
+  double a = body[0].dSemi;
+  double e = body[0].dEcc;
+  double mu = body[1].dMass/(body[0].dMass + body[1].dMass);
+
+  return (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
 }
 
 /* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset */
@@ -1302,6 +1300,16 @@ double calculate_Phidot(double dTime, BODY *body, double dPsi, double dPhi)
 double calculate_Zdot(double dTime, BODY *body, double dXi)
 {
   return -body[2].dR0*body[2].dFreeInc*sin(body[2].dLL13V0*dTime + dXi)*body[2].dLL13V0;
+}
+
+/* Misc Functions */
+
+/* Binary orbit-averaged flux received by CBP
+ * Note: A crude estimate used right now as a place holder
+ */
+double fluxBinary(BODY *body, double L1, double L2)
+{
+  return (L1 + L2)/(4.0*PI*body[2].dSemi*body[2].dSemi * pow(1.0-body[2].dEcc*body[2].dEcc,0.5));
 }
 
 /* 

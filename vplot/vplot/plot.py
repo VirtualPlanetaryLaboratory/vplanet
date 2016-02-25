@@ -9,13 +9,15 @@ plot.py
 from __future__ import division, print_function, absolute_import, unicode_literals
 from .utils import ShowHelp, GetConf, GetArrays
 import os
+import matplotlib as mpl
 import matplotlib.pyplot as pl
 pl.style.use(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vplot.mplstyle'))
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ColorConverter
+import matplotlib.gridspec as gridspec
 import argparse
-import numpy as np; np.seterr(divide = 'ignore')
+import numpy as np; np.seterr(divide = 'ignore', invalid = 'ignore')
 
 __all__ = ['Plot']
 
@@ -107,15 +109,12 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
     columns -= 1
     
   # Set up the plot
-  fig, ax = pl.subplots(rows, columns, figsize = (conf.figwidth, conf.figheight))
-  ax = np.atleast_1d(ax).flatten()
-  if not hasattr(ax, '__len__'):
-    ax = [ax]
-  if conf.tight_layout:
-    fig.subplots_adjust(hspace = 0.1) 
-  else:
-    fig.subplots_adjust(hspace = 0.25)
-  
+  # See http://stackoverflow.com/a/19627237
+  mpl.rcParams['figure.autolayout'] = False
+  fig = pl.figure(1, figsize = (conf.figwidth, conf.figheight))
+  gs = gridspec.GridSpec(rows, columns)
+  ax = [fig.add_subplot(ss) for ss in gs]
+
   # Hide empty subplots
   empty = range(len(yarr), rows*columns)
   for i in empty:
@@ -250,7 +249,9 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
       pl.title('VPLANET: %s' % output.sysname, fontsize = 24)
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
-
+  
+  gs.tight_layout(fig, rect=[0, 0.03, 1, 0.95]) 
+  
   # Show or save?
   if conf.interactive:
     pl.show()

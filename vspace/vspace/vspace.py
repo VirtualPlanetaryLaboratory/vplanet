@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os 
 import sys
 import subprocess as sb
@@ -15,7 +16,7 @@ else:
 try:
   f = open(inputf,'r')
 except IOError:
-  print "%s is not a valid file name. Please reenter."%inputf 
+  print ("%s is not a valid file name. Please reenter." %inputf)
   
 lines = f.readlines()
 f.close()

@@ -430,7 +430,7 @@ void Unrecognized(FILES files) {
   char cLine[LINE],cWord[NAMELEN];
   int iFile,iLine,bExit=0; /* Assume don't exit */
 
-  for (iFile=1;iFile<files.iNumInputs;iFile++) {
+  for (iFile=0;iFile<files.iNumInputs;iFile++) {
     fp=fopen(files.Infile[iFile].cIn,"r");
 
     iLine=0;

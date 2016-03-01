@@ -256,6 +256,11 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       }
       *iNumIndices += iNumWords;
       (*iNumLines)++;
+    } else {
+      if (iVerbose >= VERBINPUT) {
+	fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
+	bContinue=0;
+      }
     }
   }
 }    

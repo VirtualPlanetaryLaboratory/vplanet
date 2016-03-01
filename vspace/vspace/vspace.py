@@ -113,7 +113,7 @@ if numvars == 0:
     try:
       fIn = open(src+'/'+flist[i],'r')
     except IOError:
-      print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+      print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
   
     #find the lines in 'inputf' that correspond to this file
     slines = lines[fline[i]+1:fline[i+1]]
@@ -165,7 +165,7 @@ elif numvars >= 1:
       try:
         fIn = open(src+'/'+flist[i],'r')
       except IOError:
-        print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+        print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
       
       #find the lines in 'inputf' that correspond to this file
       slines = lines[fline[i]+1:fline[i+1]]

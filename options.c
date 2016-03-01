@@ -256,6 +256,11 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       }
       *iNumIndices += iNumWords;
       (*iNumLines)++;
+    } else {
+      if (iVerbose >= VERBINPUT) {
+	fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
+	bContinue=0;
+      }
     }
   }
 }    
@@ -433,7 +438,7 @@ void Unrecognized(FILES files) {
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */
         sscanf(cLine,"%s",cWord);       
-        fprintf(stderr,"ERROR: Unrecognized parameter \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
+        fprintf(stderr,"ERROR: Unrecognized option \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
         bExit=1;
       }
       iLine++;
@@ -504,12 +509,15 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
     }
     if (*iVerbose == VERBALL) {
       fprintf(stderr,"WARNING: -v set at command line, but %s option set.\n",options->cName);
-      fprintf(stderr,"iVerbose is set to %d\n",VERBALL);
+      fprintf(stderr,"\tiVerbose is set to %d.\n",VERBALL);
+    } else if (*iVerbose == 0) {
+      fprintf(stderr,"WARNING: -q set at command line, but %s option set.\n",options->cName);
+      fprintf(stderr,"\tiVerbose is set to 0.\n");
     } else {
       *iVerbose = iTmp;
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else if (*iVerbose == -1) // Was not set at command line, so set to default
      *iVerbose = atoi(options->cDefault);
 }
 

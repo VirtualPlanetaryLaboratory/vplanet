@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os 
 import sys
 import subprocess as sb
@@ -15,7 +16,7 @@ else:
 try:
   f = open(inputf,'r')
 except IOError:
-  print "%s is not a valid file name. Please reenter."%inputf 
+  print ("%s is not a valid file name. Please reenter." %inputf)
   
 lines = f.readlines()
 f.close()
@@ -112,7 +113,7 @@ if numvars == 0:
     try:
       fIn = open(src+'/'+flist[i],'r')
     except IOError:
-      print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+      print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
   
     #find the lines in 'inputf' that correspond to this file
     slines = lines[fline[i]+1:fline[i+1]]
@@ -164,7 +165,7 @@ elif numvars >= 1:
       try:
         fIn = open(src+'/'+flist[i],'r')
       except IOError:
-        print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+        print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
       
       #find the lines in 'inputf' that correspond to this file
       slines = lines[fline[i]+1:fline[i+1]]

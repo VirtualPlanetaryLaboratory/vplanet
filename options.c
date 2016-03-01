@@ -438,7 +438,7 @@ void Unrecognized(FILES files) {
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */
         sscanf(cLine,"%s",cWord);       
-        fprintf(stderr,"ERROR: Unrecognized parameter \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
+        fprintf(stderr,"ERROR: Unrecognized option \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
         bExit=1;
       }
       iLine++;

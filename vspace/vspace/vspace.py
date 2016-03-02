@@ -30,6 +30,7 @@ fline = [] #list of line numbers associated with each file
 iter_var = []  #list that will contain all iteration variables.
 iter_file = []  #which file each variable belongs to
 iter_name = []  #the name of each variable
+prefix = []
 numtry = 1     #number of trials to be generated
 numvars = 0   #number of iter_vars
 for i in range(len(lines)):
@@ -50,6 +51,11 @@ for i in range(len(lines)):
     spl = re.split('[\[\]]',lines[i])
     name = lines[i].split()[0]
     values = spl[1].split(',')
+
+    if len(lines[i].split()) == 3:
+      prefix.append(lines[i].split()[2])
+    else:
+      raise IOError("Please provide a short prefix identifying each parameter to be iterated (to be used in directory names): <option> [<range>] <prefix>. Prefix is missing for '%s' for '%s'"%(name,flist[fnum-1]))
     if len(values) != 3:
       raise IOError("Attempt to iterate over '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>, <high>, <spacing>], [<low>, <high>, n<number of points>], or [<low>, <high>, l<number of points>] (log spacing) "%(name,flist[fnum-1]))
     
@@ -88,7 +94,6 @@ for i in range(len(lines)):
     numvars += 1
       
 fline.append(i+1)
-
 #error handling
 if src == None:
   raise IOError("Name of source folder not provided in file '%s'. Use syntax 'srcfolder <foldername>'"%inputf)
@@ -128,16 +133,17 @@ if numvars == 0:
   
     for j in range(len(dlines)):
       for k in range(len(spref)):
-        if dlines[j].split()[0] == spref[k]:
-          sflag[k] = 1   #option in file to be copied matched with option from inputf
-          dlines[j] = slines[k]
-          if dlines[j][-1] != '\n' and j < (len(dlines)-1):
-           dlines[j] = dlines[j]+'\n'  #add a newline, just in case
-        elif dlines[j].split()[0] == 'rm':
-          #remove an option by placing a comment!
-          if dlines[j].split()[1] == spref[k]:
-            dlines[j] = '#'+dlines[j]
-            sflag[k] = 1
+        if dlines[j].split() != []:
+          if dlines[j].split()[0] == spref[k]:
+            sflag[k] = 1   #option in file to be copied matched with option from inputf
+            dlines[j] = slines[k]
+            if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+             dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+          elif dlines[j].split()[0] == 'rm':
+            #remove an option by placing a comment!
+            if dlines[j].split()[1] == spref[k]:
+              dlines[j] = '#'+dlines[j]
+              sflag[k] = 1
   
       fOut.write(dlines[j])  #write to the copied file
     
@@ -156,7 +162,13 @@ elif numvars >= 1:
 
   #iterate over all possible combinations
   for tup in it.product(*iterables0):
-    destfull = dest+'/'+trial+'%d'%count  #create directory for this combination
+    destfull = dest+'/'+trial  #create directory for this combination
+    for ii in range(len(tup)):
+      index0 = np.where(iter_var[ii]==tup[ii])[0]
+      destfull += prefix[ii]+np.str(index0[0])
+      if ii != len(tup)-1:
+        destfull += '_'
+
     if not os.path.exists(destfull):
        os.system('mkdir '+destfull)
     
@@ -180,19 +192,20 @@ elif numvars >= 1:
           
       for j in range(len(dlines)):
         for k in range(len(spref)):
-          if dlines[j].split()[0] == spref[k]:
-            sflag[k] = 1   #option in file to be copied matched with option from inputf
-            dlines[j] = slines[k]
-            for m in range(len(iter_file)):
-              if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
-                dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
-            if dlines[j][-1] != '\n' and j < (len(dlines)-1):
-              dlines[j] = dlines[j]+'\n'  #add a newline, just in case
-          elif slines[k].split()[0] == 'rm':
-            #remove an option by placing a comment!
-            if dlines[j].split()[0] == slines[k].split()[1]:
-              dlines[j] = '#'+dlines[j]
-              sflag[k] = 1
+          if dlines[j].split() != []:
+            if dlines[j].split()[0] == spref[k]:
+              sflag[k] = 1   #option in file to be copied matched with option from inputf
+              dlines[j] = slines[k]
+              for m in range(len(iter_file)):
+                if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
+                  dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
+              if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+                dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+            elif slines[k].split()[0] == 'rm':
+              #remove an option by placing a comment!
+              if dlines[j].split()[0] == slines[k].split()[1]:
+                dlines[j] = '#'+dlines[j]
+                sflag[k] = 1
               
         fOut.write(dlines[j])  #write to the copied file
       

@@ -56,7 +56,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
   // For each body, determine how many independent variables need updating.
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    update[iBody].iaModule = malloc(module->iNumModules[iBody]*sizeof(int));
 
     // Assume no modules to start
     //update[iBody].iNumEcc=0;

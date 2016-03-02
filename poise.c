@@ -708,16 +708,16 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_HEATCAPLAND].cName,"dHeatCapLand");
   sprintf(options[OPT_HEATCAPLAND].cDescr,"Land heat capacity in seasonal model");
-  sprintf(options[OPT_HEATCAPLAND].cDefault,"0.45");
-  options[OPT_HEATCAPLAND].dDefault = 0.45;
+  sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7");
+  options[OPT_HEATCAPLAND].dDefault = 1.42e7;
   options[OPT_HEATCAPLAND].iType = 2;  
   options[OPT_HEATCAPLAND].iMultiFile = 1;   
   fnRead[OPT_HEATCAPLAND] = &ReadHeatCapLand;
   
   sprintf(options[OPT_HEATCAPWATER].cName,"dHeatCapWater");
   sprintf(options[OPT_HEATCAPWATER].cDescr,"Water heat capacity in seasonal model");
-  sprintf(options[OPT_HEATCAPWATER].cDefault,"9.8");
-  options[OPT_HEATCAPWATER].dDefault = 9.8;
+  sprintf(options[OPT_HEATCAPWATER].cDefault,"3.093e8");
+  options[OPT_HEATCAPWATER].dDefault = 3.093e8;
   options[OPT_HEATCAPWATER].iType = 2;  
   options[OPT_HEATCAPWATER].iMultiFile = 1;   
   fnRead[OPT_HEATCAPWATER] = &ReadHeatCapWater;
@@ -2568,7 +2568,7 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
 void SeaIce(BODY *body, int iBody) {
   int i, j;
   double nhicearea=0, shicearea=0, nhtotarea=0, shtotarea=0, nhfw, shfw, nhdW, shdW, Cw_dt;
-  Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
+  Cw_dt = (body[iBody].dHeatCapWater*body[iBody].dMeanMotion/(2*PI))/body[iBody].dSeasDeltat;
   
   for (i=0;i<2*body[iBody].iNumLats;i++) {
     for (j=0;j<2*body[iBody].iNumLats;j++) {
@@ -2667,8 +2667,8 @@ void SeaIce(BODY *body, int iBody) {
 void MatrixSeasonal(BODY *body, int iBody) {
   int i, j;
   double xboundary, nu_fl, nu_fw, Cl_dt, Cw_dt, dt_Lf;
-  Cl_dt = body[iBody].dHeatCapLand/body[iBody].dSeasDeltat;
-  Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
+  Cl_dt = body[iBody].dHeatCapLand*body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat;
+  Cw_dt = body[iBody].dHeatCapWater*body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat;
   dt_Lf = body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce;
 
   for (i=0;i<body[iBody].iNumLats+1;i++) {
@@ -2724,10 +2724,10 @@ void SourceFSeas(BODY *body, int iBody, int day) {
             - (1.0-body[iBody].daAlbedoLand[i])*body[iBody].daInsol[i][day];
     body[iBody].daSourceW[i] = body[iBody].daPlanckA[i] \
             - (1.0-body[iBody].daAlbedoWater[i])*body[iBody].daInsol[i][day];
-    body[iBody].daSourceLW[2*i] = body[iBody].daTempLand[i]\
-                  * body[iBody].dHeatCapLand/body[iBody].dSeasDeltat-body[iBody].daSourceL[i];
-    body[iBody].daSourceLW[2*i+1] = body[iBody].daTempWater[i]\
-                  * body[iBody].dHeatCapWater/body[iBody].dSeasDeltat-body[iBody].daSourceW[i];
+    body[iBody].daSourceLW[2*i] = body[iBody].daTempLand[i] * body[iBody].dHeatCapLand\
+                  * body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat-body[iBody].daSourceL[i];
+    body[iBody].daSourceLW[2*i+1] = body[iBody].daTempWater[i] * body[iBody].dHeatCapWater \
+                  * body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat-body[iBody].daSourceW[i];
   }
 }
 
@@ -2735,9 +2735,9 @@ void SourceFSeas(BODY *body, int iBody, int day) {
 void EnergyResiduals(BODY *body, int iBody, int day) {
   int i;
   double nu_fl, nu_fw, Cl_dt, Cw_dt, dt_Lf;
-  Cl_dt = body[iBody].dHeatCapLand/body[iBody].dSeasDeltat;
-  Cw_dt = body[iBody].dHeatCapWater/body[iBody].dSeasDeltat;
-  dt_Lf = body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce;
+  Cl_dt = body[iBody].dHeatCapLand*body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat;
+  Cw_dt = body[iBody].dHeatCapWater*body[iBody].dMeanMotion/(2*PI)/body[iBody].dSeasDeltat;
+  dt_Lf = body[iBody].dSeasDeltat*body[iBody].dMeanMotion/(2*PI)/body[iBody].dLatentHeatIce;
   
   for (i=0;i<body[iBody].iNumLats;i++) {
     nu_fl = body[iBody].dNuLandWater/body[iBody].daLandFrac[i];
@@ -2844,8 +2844,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
             if (body[iBody].daTempWater[i] < body[iBody].dFrzTSeaIce) {
               // create new sea ice 
               body[iBody].daSeaIceHeight[i] = \
-                    -body[iBody].dHeatCapWater/body[iBody].dLatentHeatIce \
-                    * (body[iBody].daTempWater[i] - body[iBody].dFrzTSeaIce);
+                    -body[iBody].dHeatCapWater*body[iBody].dMeanMotion/(2*PI)\
+                    /body[iBody].dLatentHeatIce*(body[iBody].daTempWater[i] - body[iBody].dFrzTSeaIce);
             }
           }
           

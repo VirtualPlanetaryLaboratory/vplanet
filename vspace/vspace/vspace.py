@@ -51,9 +51,8 @@ for i in range(len(lines)):
     spl = re.split('[\[\]]',lines[i])
     name = lines[i].split()[0]
     values = spl[1].split(',')
-
-    if len(lines[i].split()) == 3:
-      prefix.append(lines[i].split()[2])
+    if len(spl) == 3:
+      prefix.append(spl[2].strip())
     else:
       raise IOError("Please provide a short prefix identifying each parameter to be iterated (to be used in directory names): <option> [<range>] <prefix>. Prefix is missing for '%s' for '%s'"%(name,flist[fnum-1]))
     if len(values) != 3:

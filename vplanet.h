@@ -881,6 +881,9 @@ typedef struct {
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
 
+  /* POISE */
+  int bHaltMinIceDt;  /**< Halt if ice flow time-step falls below a minimum value */
+  int iMinIceDt;    /**< Halt if ice flow time-step falls below this value (number of orbital periods)*/
 } HALT;
 
 /* Units. These can be different for different bodies. If set

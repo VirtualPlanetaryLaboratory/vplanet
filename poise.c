@@ -328,9 +328,11 @@ void ReadIceSheets(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     body[iFile-1].bIceSheets = bTmp;
+    control->Halt[iFile-1].bHaltMinIceDt = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&body[iFile-1].bIceSheets,files->iNumInputs);
+    control->Halt[iFile-1].bHaltMinIceDt = options->dDefault;
 }
 
 void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -535,6 +537,18 @@ void ReadNumYears(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&body[iFile-1].iNumYears,files->iNumInputs);
+}
+
+void ReadMinIceDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,iTmp;
+  AddOptionInt(files->Infile[iFile].cIn,options->cName,&iTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->Halt[iFile-1].iMinIceDt = iTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&control->Halt[iFile-1].iMinIceDt,files->iNumInputs);
 }
 
 void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
@@ -793,6 +807,15 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ALBEDOWATER].iType = 2;  
   options[OPT_ALBEDOWATER].iMultiFile = 1;   
   fnRead[OPT_ALBEDOWATER] = &ReadAlbedoWater;
+  
+  sprintf(options[OPT_MINICEDT].cName,"iMinIceDt");
+  sprintf(options[OPT_MINICEDT].cDescr,"Minimum ice sheet timestep (unit orbital period)");
+  sprintf(options[OPT_MINICEDT].cDefault,"5");
+  options[OPT_MINICEDT].dDefault = 5;
+  options[OPT_MINICEDT].iType = 1;  
+  options[OPT_MINICEDT].iMultiFile = 1;   
+  fnRead[OPT_MINICEDT] = &ReadMinIceDt;
+  
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1263,11 +1286,41 @@ void FinalizeUpdateIceMassPoise(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 /***************** POISE Halts *****************/
 
 void CountHaltsPoise(HALT *halt,int *iNumHalts) { 
+  if (halt->bHaltMinIceDt == 1) 
+    iNumHalts++;
 }
 
 void VerifyHaltPoise(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+  if ((control->Halt[iBody].bHaltMinIceDt == 0) && (options[OPT_MINICEDT].iLine[iBody+1] > -1)) {
+    fprintf(stderr,"ERROR: Cannot set %s unless %s is also set for body %d\n", options[OPT_MINICEDT].cName, options[OPT_ICESHEETS].cName, iBody);
+    exit(EXIT_INPUT);
+  } else if (control->Halt[iBody].bHaltMinIceDt == 1) {
+    control->fnHalt[iBody][(*iHalt)++] = &HaltMinIceDt;
+  }
 }
 
+/* Minimum ice flow time-step? */
+int HaltMinIceDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
+  int iLat;
+  double dDt, dMin;
+  
+  dMin = halt->iMinIceDt*(2*PI/body[iBody].dMeanMotion);
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    dDt = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
+              (2*(body[iBody].daIceFlowMid[iLat]+body[iBody].daBasalFlowMid[iLat])));
+    if (dDt < dMin) {
+      if (io->iVerbose >= VERBPROG) {
+        printf("HALT: Ice flow dt (body %d, lat %d) = ",iBody,iLat);
+        fprintd(stdout,dDt*body[iBody].dMeanMotion/(2*PI),io->iSciNot,io->iDigits);
+        printf(", < min dt = ");
+        fprintd(stdout,halt->iMinIceDt,io->iSciNot,io->iDigits);
+        printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+      }
+      return 1;
+    }
+  }
+  return 0;
+}
 
 /************* POISE Outputs ******************/
 
@@ -1919,9 +1972,6 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
     }
     
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
-      if (body[iBody].daBasalFlow[iLat] != body[iBody].daBasalFlow[iLat]) {
-        printf("nan\n");
-      }
       if (iLat == 0) {
         body[iBody].daIceFlowMid[iLat] = 0;
         body[iBody].daBasalFlowMid[iLat] = 0;
@@ -2656,12 +2706,8 @@ void SeaIce(BODY *body, int iBody) {
       }
     }
       
-    body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
-                            body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
-    body[iBody].dTGlobalTmp += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
-  body[iBody].dTGlobal += \
-          body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
+  
 }  
 
 void MatrixSeasonal(BODY *body, int iBody) {
@@ -2849,6 +2895,22 @@ void PoiseSeasonal(BODY *body, int iBody) {
             }
           }
           
+          // ice growth/ablation
+          if (body[iBody].bIceSheets) {  
+              //calculate derivative of ice mass density and take an euler step
+              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+              if (body[iBody].daIceMassTmp[i] < 0.0) {
+                 body[iBody].daIceMassTmp[i] = 0.0;
+              } //don't let ice mass become negative
+              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                    body[iBody].dHeatCapLand; //adjust temperature
+          }
+          
+          body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
+                            body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
+          body[iBody].dTGlobalTmp += body[iBody].daTemp[i]/body[iBody].iNumLats;
+          
           if (body[iBody].bCalcAB) {
             /* Calculate A and B from williams and kasting 97 result */
             body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
@@ -2890,16 +2952,6 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daFluxInAnnual[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
           body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLand[i];
-          
-          // ice growth/ablation
-          if (body[iBody].bIceSheets) {  
-              //calculate derivative of ice mass density and take an euler step
-              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
-              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
-              if (body[iBody].daIceMassTmp[i] < 0.0) {
-                 body[iBody].daIceMassTmp[i] = 0.0;
-              } //don't let ice mass become negative
-          }
         }
         
         TempGradient(body, body[iBody].dSeasDeltax, iBody);
@@ -2915,6 +2967,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
           }
         }
         
+        body[iBody].dTGlobal += \
+          body[iBody].dTGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxOutGlobal += \
               body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxInGlobal += \
@@ -2934,6 +2988,19 @@ void PoiseSeasonal(BODY *body, int iBody) {
           //calculate temperature and fluxes by latitude and global average 
           body[iBody].daTempLand[i] = body[iBody].daTmpTemp[2*i];
           body[iBody].daTempWater[i] = body[iBody].daTmpTemp[2*i+1];
+          
+          // ice growth/ablation
+          if (body[iBody].bIceSheets) {  
+              //calculate derivative of ice mass density and take an euler step
+              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+              if (body[iBody].daIceMassTmp[i] < 0.0) {
+                 body[iBody].daIceMassTmp[i] = 0.0;
+              } //don't let ice mass become negative
+              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                    body[iBody].dHeatCapLand; //adjust temperature
+          }
+          
           body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
                                   body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
           body[iBody].dTGlobalTmp += body[iBody].daTemp[i]/body[iBody].iNumLats;
@@ -2980,16 +3047,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daTempAnnual[i] += body[iBody].daTemp[i]/body[iBody].iNStepInYear;
           body[iBody].daAlbedoAnnual[i] += body[iBody].daAlbedo[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxInAnnual[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
-          body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
-          
-          // ice growth/ablation
-          if (body[iBody].bIceSheets) {  
-              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
-              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
-              if (body[iBody].daIceMassTmp[i] < 0.0) {
-                body[iBody].daIceMassTmp[i] = 0.0;
-              } //don't let ice mass become negative 
-          }
+          body[iBody].daFluxOutAnnual[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;    
           
           body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLand[i];
         }
@@ -3049,7 +3107,7 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
     /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
     dTmp = 2.3*SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
   } else {
-    if (body[iBody].dAlbedoGlobal >= 0.6) {
+    if (body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
       /* no precip once planet is frozen */
       dTmp = 0.0;
     } else {

@@ -330,9 +330,10 @@ void ReadIceSheets(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     body[iFile-1].bIceSheets = bTmp;
     control->Halt[iFile-1].bHaltMinIceDt = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
+  } else {
     AssignDefaultInt(options,&body[iFile-1].bIceSheets,files->iNumInputs);
     control->Halt[iFile-1].bHaltMinIceDt = options->dDefault;
+  }
 }
 
 void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -1287,7 +1288,7 @@ void FinalizeUpdateIceMassPoise(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 
 void CountHaltsPoise(HALT *halt,int *iNumHalts) { 
   if (halt->bHaltMinIceDt == 1) 
-    iNumHalts++;
+    (*iNumHalts)++;
 }
 
 void VerifyHaltPoise(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -2897,14 +2898,24 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           // ice growth/ablation
           if (body[iBody].bIceSheets) {  
-              //calculate derivative of ice mass density and take an euler step
-              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
-              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
-              if (body[iBody].daIceMassTmp[i] < 0.0) {
-                 body[iBody].daIceMassTmp[i] = 0.0;
-              } //don't let ice mass become negative
-              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+            //calculate derivative of ice mass density and take an euler step
+            body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+            body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+            if (body[iBody].daIceMassTmp[i] < 0.0) {
+               body[iBody].daIceMassTmp[i] = 0.0;
+            } //don't let ice mass become negative
+            if (body[iBody].daIceBalance[i][nstep] < 0 && body[iBody].daIceMassTmp[i] != 0) {
+              if (body[iBody].daIceMassTmp[i] <= fabs(h*body[iBody].daIceBalance[i][nstep])) {
+                body[iBody].daTempLand[i] += -body[iBody].daIceMassTmp[i]*LFICE/\
                     body[iBody].dHeatCapLand; //adjust temperature
+              } else {
+                body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                  body[iBody].dHeatCapLand; //adjust temperature
+              }
+            } else if (body[iBody].daIceBalance[i][nstep] > 0) {
+              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                  body[iBody].dHeatCapLand; //adjust temperature
+            }
           }
           
           body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
@@ -2991,14 +3002,24 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           // ice growth/ablation
           if (body[iBody].bIceSheets) {  
-              //calculate derivative of ice mass density and take an euler step
-              body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
-              body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
-              if (body[iBody].daIceMassTmp[i] < 0.0) {
-                 body[iBody].daIceMassTmp[i] = 0.0;
-              } //don't let ice mass become negative
-              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+            //calculate derivative of ice mass density and take an euler step
+            body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
+            body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+            if (body[iBody].daIceMassTmp[i] < 0.0) {
+               body[iBody].daIceMassTmp[i] = 0.0;
+            } //don't let ice mass become negative
+            if (body[iBody].daIceBalance[i][nstep] < 0 && body[iBody].daIceMassTmp[i] != 0) {
+              if (body[iBody].daIceMassTmp[i] <= fabs(h*body[iBody].daIceBalance[i][nstep])) {
+                body[iBody].daTempLand[i] += -body[iBody].daIceMassTmp[i]*LFICE/\
                     body[iBody].dHeatCapLand; //adjust temperature
+              } else {
+                body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                  body[iBody].dHeatCapLand; //adjust temperature
+              }
+            } else if (body[iBody].daIceBalance[i][nstep] > 0) {
+              body[iBody].daTempLand[i] += h*body[iBody].daIceBalance[i][nstep]*LFICE/\
+                  body[iBody].dHeatCapLand; //adjust temperature
+            }
           }
           
           body[iBody].daTemp[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \

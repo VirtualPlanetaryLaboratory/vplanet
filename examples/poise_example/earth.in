@@ -50,3 +50,4 @@ dIceAlbedo        0.7
 #dHeatCapLand      1.53
 #dHeatCapWater      28.4
 #dMixingDepth      70
+iMinIceDt          100

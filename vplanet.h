@@ -554,7 +554,8 @@ typedef struct {
   double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
   double dIceFlowTot;
   double dIceBalanceTot;
-
+  int bSnowball;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

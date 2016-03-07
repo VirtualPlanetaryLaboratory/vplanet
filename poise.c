@@ -43,6 +43,7 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
     }
     dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
     dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
+    dest[iBody].daTempWater[iLat] = src[iBody].daTempWater[iLat];
   }
 }
 
@@ -52,6 +53,7 @@ void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,in
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 //   control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTempWater = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daIceBalanceAnnual = malloc(body[iBody].iNumLats*sizeof(double));
   
   control->Evolve.tmpBody[iBody].daLats = malloc(body[iBody].iNumLats*sizeof(double));
@@ -65,7 +67,7 @@ void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int
   control->Evolve.tmpBody[iBody].daBasalVel = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daBasalFlow = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daBasalFlowMid = malloc((body[iBody].iNumLats+1)*sizeof(double));
-  
+
 }
 
 /**************** POISE options ********************/
@@ -971,6 +973,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daEnergyResW = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnerResLAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnerResWAnn = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].bSnowball = 0;
 
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -1918,11 +1921,32 @@ double BasalFlow(BODY *body, int iBody, int iLat){
   }
 }
 
+void Snowball(BODY *body, int iBody) {
+  int iLat, iNum=0;
+  
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (body[iBody].bSeaIceModel) {
+      if (body[iBody].daSeaIceHeight[iLat] > 0) {
+        iNum++;
+      }
+    } else {
+      if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+        iNum++;
+      }
+    }
+  }
+  if (iNum == body[iBody].iNumLats) {
+    body[iBody].bSnowball = 1;
+  } else {
+    body[iBody].bSnowball = 0;
+  }   
+}
+
 
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
   double deltax, Tice = 270, Aice, grav;
   int iLat;
-  
+    
   if (body[iBody].bEqtide) {
     body[iBody].dMeanMotion = \
           fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
@@ -2517,7 +2541,7 @@ void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
 //   }
   
   /// hack hack hack
-  if ((body[iBody].daTempWater[iLat] <= 0) && (body[iBody].daTempWater[iLat] > -10)) {
+  if ((body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) && (body[iBody].daTempWater[iLat] > -10)) {
     albtmp = 0.55;
   } else if (body[iBody].daTempWater[iLat] <= -10) {
     albtmp = 0.7;
@@ -3147,6 +3171,9 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
 double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   double Tice = 273.15, dTmp;
   
+  /* check if snowball state entered */
+  Snowball(body, iaBody[0]);
+  
   if (body[iaBody[0]].bClimateModel == ANN) {
     /* first, calculate melting/accumulation */
     if (body[iaBody[0]].daTemp[iaBody[1]]>0.0) {
@@ -3157,7 +3184,7 @@ double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
         dTmp = 0.0;
       }
     } else {
-      if (body[iaBody[0]].dAlbedoGlobal >= body[iaBody[0]].dIceAlbedo) {
+      if (body[iaBody[0]].bSnowball == 1) {
         /* no precip once planet is frozen */
         dTmp = 0.0;
       } else {
@@ -3184,7 +3211,7 @@ double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
       dTmp = 0.0;
     }      
     
-    if (body[iaBody[0]].dAlbedoGlobal == 0.6) {
+    if (body[iaBody[0]].bSnowball == 1) {
       dTmp = 0.0;
     }
   }

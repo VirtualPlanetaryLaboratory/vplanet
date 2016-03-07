@@ -1968,6 +1968,9 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].bIceSheets) {
     deltax = 2.0/body[iBody].iNumLats;
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      if (body[iBody].daIceMass[iLat] < 1e-30) {
+        body[iBody].daIceMass[iLat] = 0.0;
+      }
       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
     }
     

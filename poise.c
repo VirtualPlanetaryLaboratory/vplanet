@@ -40,10 +40,12 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
       dest[iBody].daIceBalanceAnnual[iLat] = src[iBody].daIceBalanceAnnual[iLat];
       dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
       dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
+      dest[iBody].daLandFrac[iLat] = src[iBody].daLandFrac[iLat];
+      dest[iBody].daTempWater[iLat] = src[iBody].daTempWater[iLat];
     }
     dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
     dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
-    dest[iBody].daTempWater[iLat] = src[iBody].daTempWater[iLat];
+    dest[iBody].dFrzTSeaIce = src[iBody].dFrzTSeaIce;
   }
 }
 
@@ -67,6 +69,7 @@ void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int
   control->Evolve.tmpBody[iBody].daBasalVel = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daBasalFlow = malloc(body[iBody].iNumLats*sizeof(double));
   control->Evolve.tmpBody[iBody].daBasalFlowMid = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daLandFrac = malloc(body[iBody].iNumLats*sizeof(double));
 
 }
 
@@ -1911,7 +1914,7 @@ double BasalFlow(BODY *body, int iBody, int iLat){
       minv = 1 - bsed/fabs(ased)*SEDH;
     }
   
-    dTmp = 2*(SEDD0*RHOICE*grav*body[iBody].daIceHeight[iLat])/((m+1)*bsed)*\
+    dTmp = 2*(SEDD0*RHOICE*grav*pow(body[iBody].daIceHeight[iLat],2))/((m+1)*bsed)*\
         pow(fabs(ased)/(2*SEDD0*SEDMU),m) * (1.0-pow(minv,m+1));
 
     if (dTmp != dTmp) {
@@ -1965,6 +1968,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
   
   grav = BIGG*body[iBody].dMass/pow(body[iBody].dRadius,2);
   
+  body[iBody].dIceMassTot = 0.0;
   if (body[iBody].bIceSheets) {
     deltax = 2.0/body[iBody].iNumLats;
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
@@ -1972,6 +1976,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
         body[iBody].daIceMass[iLat] = 0.0;
       }
       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
+      body[iBody].dIceMassTot += body[iBody].daIceMass[iLat]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0])))*body[iBody].daLandFrac[iLat];
     }
     
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
@@ -3173,6 +3178,10 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
 
 double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   double Tice = 273.15, dTmp;
+  
+//   if (body[iaBody[0]].daIceMass[iaBody[1]] <= 1e-30) {
+//     body[iaBody[0]].daIceMass[iaBody[1]] = 0;
+//   }
   
   /* check if snowball state entered */
   Snowball(body, iaBody[0]);

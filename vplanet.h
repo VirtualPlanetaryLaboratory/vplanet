@@ -59,7 +59,7 @@
 #define RHOH2O        1000
 #define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
 #define SEDH          10      //depth of sediment layer (m)
-#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDD0         2.5e-14  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 
 /* Exit Status */

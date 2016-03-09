@@ -3176,6 +3176,105 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   return dTmp;
 }
 
+void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
+  /* integrate ice sheets via Crank-Nicholson method in ForceBehavior 
+     in the same way Huybers' model works */
+  int iLat;
+  double IceTime = evolve->dTime, IceDt;
+  double deltax, Tice = 270, Aice, grav;
+  
+  grav = BIGG*body[iBody].dMass/pow(body[iBody].dRadius,2);
+  /* deformability of ice, dependent on temperature */
+  if (Tice < 263) {
+    Aice = a1ICE * exp(-Q1ICE/(RGAS*Tice));
+  } else {
+    Aice = a2ICE * exp(-Q2ICE/(RGAS*Tice));
+  }
+  
+  while (IceTime < evolve->dTime+evolve->dCurrentDt) { 
+    IceDt = body[iBody].dIceTimeStep*YEARSEC;
+    if (IceTime+IceDt > evolve->dTime+evolve->dCurrentDt) {
+      //ice time step carries past start of next RK time step
+      IceDt = evolve->dTime+evolve->dCurrentDt-IceTime;
+    }
+
+    Snowball(body, iBody);
+    /* first, get ice balances */
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      if (body[iBody]].daIceMass[iLat] <= 0 && body[iBody]].daIceBalanceAnnual[iLat]] < 0.0) {
+        body[iBody].daIceBalanceTmp[iLat] = 0;
+      } else if (body[iBody].dIceMassTot >= MOCEAN && body[iBody]].daIceBalanceAnnual[iLat]] > 0.0) {
+        body[iBody].daIceBalanceTmp[iLat] = 0;
+      } else {
+        body[iBody].daIceBalanceTmp[iLat] = body[iBody].daIceBalanceAnnual[iLat];
+      }
+      if (body[iBody].bSnowball == 1) {
+        body[iBody].daIceBalanceTmp[iLat] = 0;
+      }
+    }
+  
+    if (body[iBody].bIceSheets) {
+      deltax = 2.0/body[iBody].iNumLats;
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+        if (body[iBody].daIceMass[iLat] < 1e-30) {
+          body[iBody].daIceMass[iLat] = 0.0;
+        }
+        body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
+      }
+    
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+        /* calculate derivative to 2nd order accuracy */
+        if (iLat == 0) {
+          body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) * \
+              (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
+              (body[iBody].dRadius*deltax);  
+        } else if (iLat == (body[iBody].iNumLats-1)) {
+          body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) * \
+              (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
+              (body[iBody].dRadius*deltax);
+        } else {
+          body[iBody].daDIceHeightDy[iLat] = (sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) *\
+              (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
+              (body[iBody].dRadius*deltax) + sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) *\
+              (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
+              (body[iBody].dRadius*deltax) )/2.0;
+        }
+        body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
+            pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
+            pow(body[iBody].daIceHeight[iLat],nGLEN+2);
+        body[iBody].daSedShear[iLat] = RHOICE*grav*body[iBody].daIceHeight[iLat]*\
+            body[iBody].daDIceHeightDy[iLat];
+        body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
+      }
+    
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
+        if (iLat == 0) {
+          body[iBody].daIceFlowMid[iLat] = 0;
+          body[iBody].daBasalFlowMid[iLat] = 0;
+        } else if (iLat == body[iBody].iNumLats-1) {
+          body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
+             body[iBody].daIceFlow[iLat-1])/2.0;
+          body[iBody].daIceFlowMid[iLat+1] = 0;
+          body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
+             body[iBody].daBasalFlow[iLat-1])/2.0;
+          body[iBody].daBasalFlowMid[iLat+1] = 0;
+        } else {
+          body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
+             body[iBody].daIceFlow[iLat-1])/2.0;
+          body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
+             body[iBody].daBasalFlow[iLat-1])/2.0;
+        }    
+      }
+    }
+    
+    
+    IceTime += IceDt;
+  }
+  
+  
+  //recalc dIceMassTot at end  
+}
+
 double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
   double Tice = 273.15, dTmp;
   

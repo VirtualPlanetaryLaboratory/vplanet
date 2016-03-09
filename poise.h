@@ -143,6 +143,7 @@ double OLRhm16(BODY*,int,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
+void PoiseIceSheets(BODY*,EVOLVE*,int);
 void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);

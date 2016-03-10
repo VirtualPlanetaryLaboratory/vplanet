@@ -56,7 +56,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SEAICEMODEL     1851
 #define OPT_ALBEDOLAND      1852
 #define OPT_ALBEDOWATER     1853
-#define OPT_MINICEDT        1854
+#define OPT_ICEDT        1854
 
 #define OPT_CLIMATEMODEL    1899
 

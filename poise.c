@@ -543,7 +543,7 @@ void ReadNumYears(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     AssignDefaultInt(options,&body[iFile-1].iNumYears,files->iNumInputs);
 }
 
-void ReadMinIceDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadIceDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,iTmp;
   AddOptionInt(files->Infile[iFile].cIn,options->cName,&iTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -812,13 +812,13 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ALBEDOWATER].iMultiFile = 1;   
   fnRead[OPT_ALBEDOWATER] = &ReadAlbedoWater;
   
-  sprintf(options[OPT_MINICEDT].cName,"iMinIceDt");
-  sprintf(options[OPT_MINICEDT].cDescr,"Minimum ice sheet timestep (unit orbital period)");
-  sprintf(options[OPT_MINICEDT].cDefault,"5");
-  options[OPT_MINICEDT].dDefault = 5;
-  options[OPT_MINICEDT].iType = 1;  
-  options[OPT_MINICEDT].iMultiFile = 1;   
-  fnRead[OPT_MINICEDT] = &ReadMinIceDt;
+  sprintf(options[OPT_ICEDT].cName,"iIceDt");
+  sprintf(options[OPT_ICEDT].cDescr,"Ice sheet timestep (unit orbital period)");
+  sprintf(options[OPT_ICEDT].cDefault,"5");
+  options[OPT_ICEDT].dDefault = 5;
+  options[OPT_ICEDT].iType = 1;  
+  options[OPT_ICEDT].iMultiFile = 1;   
+  fnRead[OPT_ICEDT] = &ReadIceDt;
   
 }
 

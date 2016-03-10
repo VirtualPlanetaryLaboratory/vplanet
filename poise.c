@@ -1575,7 +1575,7 @@ void WriteIceHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
-    *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][0]);
+    *dTmp = body[iBody].daIceBalanceAvg[body[iBody].iWriteLat]*RHOICE;
   } else {
     *dTmp = 0.0;
   }
@@ -1591,7 +1591,7 @@ void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 void WriteDIceMassDtFlow(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
-    *dTmp = *(update[iBody].padDIceMassDtPoise[body[iBody].iWriteLat][1]);
+    *dTmp = body[iBody].daIceFlowAvg[body[iBody].iWriteLat];
   } else {
     *dTmp = 0.0;
   }
@@ -2021,15 +2021,15 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
   if (body[iBody].bClimateModel == ANN) {
     PoiseAnnual(body,iBody);
   } else if (body[iBody].bClimateModel == SEA) {
+    body[iBody].dIceBalanceTot = 0.0;  //total change in ice mass this time step
+    body[iBody].dIceFlowTot = 0.0;  //total ice flow (should equal zero)
+    body[iBody].dIceMassTot = 0.0;
     if (body[iBody].bIceSheets) {
       PoiseIceSheets(body,evolve,iBody);
     }
     PoiseSeasonal(body,iBody);     
   } 
-  
-  body[iBody].dIceBalanceTot = 0.0;  //total change in ice mass this time step
-  body[iBody].dIceFlowTot = 0.0;  //total ice flow (should equal zero)
-  body[iBody].dIceMassTot = 0.0;
+
   if (body[iBody].bIceSheets) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
       if (body[iBody].daIceMass[iLat] < 0) {
@@ -2039,8 +2039,8 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
 //       }
       if (body[iBody].bClimateModel == SEA) {
         body[iBody].dIceMassTot += body[iBody].daIceMass[iLat]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0])))*body[iBody].daLandFrac[iLat]; 
-//         body[iBody].dIceBalanceTot += evolve->tmpUpdate[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][0]*evolve->dCurrentDt;
-//         body[iBody].dIceFlowTot += evolve->tmpUpdate[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][1]*evolve->dCurrentDt;
+        body[iBody].dIceBalanceTot += body[iBody].dIceBalanceAvg[iLat];
+        body[iBody].dIceFlowTot += body[iBody].dIceFlowAvg[iLat];
       }
     }
   }
@@ -3355,12 +3355,26 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
         body[iBody].daIceMass[iLat] = 0.0;
         body[iBody].daIceHeight[iLat] = 0.0;
       }
-      body[iBody].daIceBalanceAvg[iLat] += body[iBody].daIceBalanceTmp[iLat]*IceDt;
+      body[iBody].daIceBalanceAvg[iLat] += body[iBody].daIceBalanceTmp[iLat]*IceDt/evolve->dCurrentDt;
+      if (iLat == 0) {
+        body[iBody].daIceFlowAvg[iLat] += body[iBody].daIceSheetDiff[iLat+1]*\
+          (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat])/\
+          pow(body[iBody].daYBoundary[iLat+1],2)/evolve->dCurrentDt;
+      } else if (iLat == body[iBody].iNumLats-1) {
+        body[iBody].daIceFlowAvg[iLat] += -body[iBody].daIceSheetDiff[iLat]*\
+          (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1])\
+          /pow(body[iBody].daYBoundary[iLat],2)/evolve->dCurrentDt;      
+      } else {
+        body[iBody].daIceFlowAvg[iLat] += body[iBody].daIceSheetDiff[iLat+1]*\
+          (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat])/\
+          pow(body[iBody].daYBoundary[iLat+1],2)-body[iBody].daIceSheetDiff[iLat]*\
+          (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1])\
+          /pow(body[iBody].daYBoundary[iLat],2)/evolve->dCurrentDt;
+      }    
     }
     
     IceTime += IceDt;
   }
-  
   
   //recalc dIceMassTot at end  
 }

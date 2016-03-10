@@ -555,6 +555,15 @@ typedef struct {
   double dIceFlowTot;
   double dIceBalanceTot;
   int bSnowball;
+  double *daIceSheetDiff;
+  double *daIcePropsTmp;
+  double **daIceSheetMat;
+  double *daIceGamTmp;
+  double *daYBoundary;
+  int iIceTimeStep;
+  double *daIceBalanceTmp;
+  double *daIceBalanceAvg;
+  double *daIceFlowAvg;
   
 } BODY;
 

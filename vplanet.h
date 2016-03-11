@@ -61,6 +61,8 @@
 #define SEDH          10      //depth of sediment layer (m)
 #define SEDD0         2.5e-14  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
+#define RHOBROCK      3370
+#define BROCKTIME     5000  //relaxation timescale for bedrock 
 
 /* Exit Status */
 
@@ -564,6 +566,9 @@ typedef struct {
   double *daIceBalanceTmp;
   double *daIceBalanceAvg;
   double *daIceFlowAvg;
+  int iReRunSeas;
+  double *daBedrockH;         /**< Height of bedrock (can be negative) */
+  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
   
 } BODY;
 

@@ -56,7 +56,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SEAICEMODEL     1851
 #define OPT_ALBEDOLAND      1852
 #define OPT_ALBEDOWATER     1853
-#define OPT_ICEDT        1854
+#define OPT_ICEDT           1854
+#define OPT_RERUNSEAS       1855
+
 
 #define OPT_CLIMATEMODEL    1899
 
@@ -104,11 +106,12 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEFLOW          1842
 #define OUT_ENERGYRESL       1843
 #define OUT_ENERGYRESW       1844
+#define OUT_BEDROCKH         1845
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
 
-int HaltMinIceDt(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+// int HaltMinIceDt(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
 void HelpOutputPoise(OUTPUT*);
 void WriteTGlobal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

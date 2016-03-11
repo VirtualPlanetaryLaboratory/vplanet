@@ -29,8 +29,8 @@ dPrecA       0.0
 iLatCellNum      150
 bMEPDiff         1
 bIceSheets       1
-dInitIceLat      40.
-dInitIceHeight   100.
+dInitIceLat      90.
+dInitIceHeight   0.
 #bHadley          1
 #dDiffusion        0.58
 #dPlanckA         203.3
@@ -50,4 +50,4 @@ dIceAlbedo        0.65
 #dHeatCapLand      1.53
 #dHeatCapWater      28.4
 #dMixingDepth      70
-iMinIceDt          5
+iIceDt             5

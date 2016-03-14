@@ -2575,7 +2575,8 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA370(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else {
     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (190K<T<370K)\n");
-    exit(EXIT_INPUT);
+    body[iBody].daAlbedoLand[iLat] = AlbedoTOA370(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+//     exit(EXIT_INPUT);
   }
 
   if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
@@ -2599,7 +2600,8 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA370(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else {
     fprintf(stderr,"Ocean temperature at surface exceeds range for TOA albedo calculation (190<T<370K)\n");
-    exit(EXIT_INPUT);
+    body[iBody].daAlbedoWater[iLat] = AlbedoTOA370(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+//     exit(EXIT_INPUT);
   }
 }
 

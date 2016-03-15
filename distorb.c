@@ -586,7 +586,7 @@ void InitializeQincDistOrbRD4(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
       body[iBody].iaGravPerts[iPert] = j;
@@ -642,7 +642,7 @@ void InitializeQincDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;

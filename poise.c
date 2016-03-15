@@ -2231,7 +2231,7 @@ void PoiseAnnual(BODY *body, int iBody) {
   double *lambda, **M, **Mcopy, **Mdiff, **invM,  *SourceF, *TempTerms, *tmpTemp, *tmpTempTerms, *Dmidpt; 
   int Nmax, i, j, n, k;
   
-  /* Get cuurent climate parameters */
+  /* Get curent climate parameters */
   Albedo(body, iBody);
   AnnualInsolation(body, iBody);
   if (body[iBody].bCalcAB) {
@@ -2385,6 +2385,9 @@ double OLRwk97(BODY *body, int iBody, int iLat){
       - 1.679112e-7*phi*pow(T,3) + 6.590999e-8*pow(phi,2)*pow(T,3) \
       + 1.528125e-7*pow(phi,3)*pow(T,3) - 3.367567e-2*pow(phi,4) - 1.631909e-4*pow(phi,4)*T \
       + 3.663871e-6*pow(phi,4)*pow(T,2) - 9.255646e-9*pow(phi,4)*pow(T,3);
+  if (Int >= 300) {
+    Int = 300.0;
+  }
   return Int;
 }
   
@@ -2399,6 +2402,9 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat){
        + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
        + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
        + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
+  if (OLRwk97(body,iBody,iLat)>=300.0) {
+    dI = 0;
+  }
   return dI;
 }
 
@@ -2574,8 +2580,8 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   } else if (body[iBody].daTempLand[iLat] <= 96.85) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA370(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else {
-    fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (190K<T<370K)\n");
-    body[iBody].daAlbedoLand[iLat] = AlbedoTOA370(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+//     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (190K<T<370K)\n");
+    body[iBody].daAlbedoLand[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
 //     exit(EXIT_INPUT);
   }
 
@@ -2599,8 +2605,8 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   } else if (body[iBody].daTempWater[iLat] <= 96.85) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA370(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else {
-    fprintf(stderr,"Ocean temperature at surface exceeds range for TOA albedo calculation (190<T<370K)\n");
-    body[iBody].daAlbedoWater[iLat] = AlbedoTOA370(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+//     fprintf(stderr,"Ocean temperature at surface exceeds range for TOA albedo calculation (190<T<370K)\n");
+    body[iBody].daAlbedoWater[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
 //     exit(EXIT_INPUT);
   }
 }

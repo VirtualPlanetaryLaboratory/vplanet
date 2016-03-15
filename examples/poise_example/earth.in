@@ -4,7 +4,7 @@ saModules    distorb distrot poise
 dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
-dObliquity   23.5 #23.682    #no Moons yet in vplanet....
+dObliquity   90.0 #23.682    #no Moons yet in vplanet....
 dSemi        1.00000011
 #dSemi        1.7
 dEcc         0.0167 #0.036851

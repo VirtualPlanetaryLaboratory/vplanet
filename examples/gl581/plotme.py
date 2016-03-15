@@ -19,7 +19,7 @@ import vplot
 
 # Get the figure object and array of axis instances
 # with a call to the ``Plot()`` method
-fig, ax = vplot.Plot()
+fig, ax = vplot.Plot(interactive = False)
 
 # Change the title of the plot
 fig.suptitle('Whoa! VPLOT is AWESOME', fontsize = 24)

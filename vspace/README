@@ -65,21 +65,23 @@ To generate trials that explore a parameter space, simply provide a range of val
 the desired option instead of a single value. These should have 3 entries, surrounded by
 square brackets ``[]``, in the following manner:
   
-    <option name> [start, end, spacing]
+    <option name> [start, end, spacing] <prefix>
+    
+(Here, ``prefix`` is a string that will be used in the naming of the output directories. 
+More on this below.) For example, to generate trials changing ``dSemi`` from 1 to 2 with 
+spacings of 0.1:
   
-For example, to generate trials changing ``dSemi`` from 1 to 2 with spacings of 0.1:
-  
-    dSemi  [1, 2, 0.1]
+    dSemi  [1, 2, 0.1]  a
     
 Alternatively, you can provide the number of trials instead of the spacing by putting an
 ``n`` before the 3rd numerical entry. For example,
 
-    dSemi  [1, 2, n10]
+    dSemi  [1, 2, n10]  a
     
 would generate ten trials, equally spaced, from 1 to 2. You can also changed to 
 logarithmic spacing by using ``l`` instead of ``n``:
   
-    dSemi  [1, 2, l10]
+    dSemi  [1, 2, l10]  a
     
 would generate ten trials, logarithmically spaced, from 1 to 2. 
 
@@ -87,24 +89,41 @@ Minus options are allowed, but if you are providing the spacing, rather than usi
 ``n`` or ``l`` option, either provide a negative spacing or swap the start and end values.
 Use:
 
-    dRadius  [-1, -2, -0.1]
+    dRadius  [-1, -2, -0.1]  R
 
 or,
 
-    dRadius  [-2, -1, 0.1]
+    dRadius  [-2, -1, 0.1]  R
     
-rather than ``dRadius [-1, -2, 0.1]``. VSPACE will not check whether a minus option is 
+rather than ``dRadius [-1, -2, 0.1]  R``. VSPACE will not check whether a minus option is 
 allowed by VPLANET, so make sure you check ``vplanet -h``. 
 
 You can vary more than one parameter at a time! For example, in your input file you might 
 have,
 
-    dSemi  [1, 2, n10]
-    dEcc   [0.1, 0.2, n10]
+    dSemi  [1, 2, n10]  a
+    dEcc   [0.1, 0.2, n10]  e
     
 would generate initial conditions for every possible combination of ``dSemi`` and 
 ``dEcc``, resulting in a total of 100 trials. You can do this for as many parameters as 
 you like, so you have the power to generate a large number of files very quickly. Use this
 wisely: test with small numbers first to ensure that files end up in the correct locations
 and that initial conditions are indeed output with the desired values.  
+
+Finally, let's look at what ``prefix`` does. This value should be a short, yet descriptive
+string that will be used in naming output directories. For example, if ``destfolder`` is 
+set to ``TheMoonRules_``, the line
+
+    dSemi  [1, 2, n10]  a
+    
+will generate ten trials (if this is the only option being varied), with names like 
+``TheMoonRules_a0``, ``TheMoonRules_a1``, and so on. With two parameters:
+    
+    dSemi  [1, 2, n10]  a
+    dEcc   [0.1, 0.2, n10]  e
+    
+output folders will look like this: ``TheMoonRules_a0_e0``, ``TheMoonRules_a0_e1``, etc.
+Vary as many parameters as you like, but be sure to give them prefix tags that are 
+meaningful to you. 
+  
       

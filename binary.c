@@ -37,6 +37,10 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dLL13K0 = src[iBody].dLL13K0;
   dest[iBody].dLL13V0 = src[iBody].dLL13V0;
   dest[iBody].dR0 = src[iBody].dR0; 
+  dest[iBody].dSemi = src[iBody].dSemi;
+  dest[iBody].dHecc = src[iBody].dHecc;
+  dest[iBody].dKecc = src[iBody].dKecc;
+  dest[iBody].dEcc = src[iBody].dEcc;
 
 }
 
@@ -289,40 +293,18 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     
 /******************* Verify BINARY ******************/
 
-/*
-void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iSurfaceWaterMass][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass][0] = 1;
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0][0] = iBody;
+  update[iBody].iaType[update[iBody].iCBPR][0] = 3;
+  update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
+  update[iBody].iaBody[update[iBody].iCBPR][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPR][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
 
-  update[iBody].pdDSurfaceWaterMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
-  fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
+  update[iBody].pdCBPRBinary = &update[iBody].daDerivProc[update[iBody].iCBPR][0];
+  fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
 }
 
-void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iEnvelopeMass][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0] = 1;
-  update[iBody].iaBody[update[iBody].iEnvelopeMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
-
-  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
-  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-}
-
-void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) { 
-
-  update[iBody].iaType[update[iBody].iMass][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iMass][0] = 1;
-  update[iBody].iaBody[update[iBody].iMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iMass][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iMass][0][0] = iBody;
-
-  update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
-  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
-}
-*/
 
 void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
 }
@@ -335,9 +317,15 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
  */
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
   double dTime = evolve->dTime; // Current integration time in seconds
-  
+
+  // Compute all binary properties as needed
+  body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
+
   // Compute all the cylindrical positions
-  body[2].daCylPos[0] = calculate_R(dTime,body,0.0);
+  int iVar = 0;
+  int iEqn = 0;
+  int *iaBody = update[iBody].iaBody[iVar][iEqn];
+  body[2].daCylPos[0] = fdCBPRBinary(body,system,iaBody); //calculate_R(dTime,body,0.0);
   body[2].daCylPos[1] = calculate_Phi(dTime,body,0.0);
   body[2].daCylPos[2] = calculate_Z(dTime,body,0.0);
 
@@ -349,9 +337,6 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   // Convert from cylindrical -> cartesian coordinates
   fvCylToCartPos(body[2].daCylPos,body[2].dCartPos); // Pos conversion
   fvCylToCartVel(body[2].daCylPos,body[2].daCylVel,body[2].dCartVel); // Vel conversion
-
-  // Compute binary orbital elements as needed
-  body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
 
   // Compute CBP orbital elements
 
@@ -369,7 +354,7 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   body[2].dEcc = fdComputeEcc(body);
   body[2].dEccSq = body[2].dEcc*body[2].dEcc;
 
-  // Set Initial Poincare H, K
+  // Set Poincare H, K
   body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
   body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
 
@@ -404,31 +389,8 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     exit(EXIT_INPUT);
   }
 
-  /*
-
-  
-  if (body[iBody].dSurfaceWaterMass > 0) {
-    VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    bAtmEsc = 1;
-  }
-  
-  if (body[iBody].dEnvelopeMass > 0) {
-    VerifyEnvelopeMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyMassAtmEsc(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    bAtmEsc = 1;
-  }
-  
-  // Ensure envelope mass is physical
-  if (body[iBody].dEnvelopeMass > body[iBody].dMass) {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: %s cannot be grater than %s in file %s.\n",options[OPT_ENVELOPEMASS].cName,options[OPT_MASS].cName,files->Infile[iBody+1].cIn);
-    exit(EXIT_INPUT);
-  }
-  
-  if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
-    fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
-
-  */
+  // Call sub-verify functions to ensure matrix is properly configured for planet
+  // TODO
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
@@ -442,7 +404,14 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 /**************** BINARY Update ****************/
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
-  // Nothing here
+  // Ensure update is "integrating" all CBP positions, velocities
+  update[iBody].iNumCBPR++;
+  update[iBody].iNumVars++;
+}
+
+void FinalizeUpdateCBPR(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = BINARY;
+  update[iBody].iNumCBPR = (*iEqn)++;
 }
 
 /***************** BINARY Halts *****************/
@@ -466,41 +435,6 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
   }
   return 0;
 }
-/*
-int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  
-  if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
-    if (io->iVerbose >= VERBPROG) {
-      printf("HALT: %s's surface water mass =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].dSurfaceWaterMass/TOMASS,io->iSciNot,io->iDigits);
-      printf("TO.\n");
-    }
-    return 1;
-  }
-  return 0;
-} 
-
-int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  
-  if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
-    if (io->iVerbose >= VERBPROG) {
-      printf("HALT: %s's envelope mass =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].dEnvelopeMass/MEARTH,io->iSciNot,io->iDigits);
-      printf("Earth Masses.\n");
-    }
-    return 1;
-  }
-  return 0;
-} 
-
-void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
-  if (halt->bSurfaceDesiccated)
-    (*iHalt)++;
-  if (halt->bEnvelopeGone)
-    (*iHalt)++;
-}
-
-*/
 
 void CountHaltsBinary(HALT *halt,int *iHalt) {
   if(halt->bHaltHolmanUnstable)
@@ -714,6 +648,9 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
+
+  // Update functions
+  //module->fnFinalizeUpdateCBPRModule[iBody][iModule] = &FinalizeUpdateCBPR;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
@@ -1183,10 +1120,13 @@ double fdDMk(int k, BODY * body)
  * R, phi, z and RDot, phiDot, zDot
  */
 
-double calculate_R(double dTime, BODY *body, double dPsi)
-{
+/* Computes the CBP orbital radius */
+double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) 
+{ 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitary offsets
+  double dPsi = 0.0;
+  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
@@ -1231,7 +1171,19 @@ double calculate_Phi(double dTime, BODY *body, double dPsi)
     tot += tmp1;
   }
 
-  return (phi + tot);
+  phi = phi + tot;
+ 
+  // Ensure phi ranges from [0,2PI]
+  while(phi > 2.0*PI)
+  {
+    phi -= 2.0*PI;
+  }
+  while(phi < 0.0)
+  {
+    phi += 2.0*PI;
+  }
+
+  return phi;
 }
 
 double calculate_Z(double dTime, BODY *body, double dXi)

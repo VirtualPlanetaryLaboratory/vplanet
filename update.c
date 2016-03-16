@@ -86,6 +86,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumRadius=0;
     update[iBody].iNumMass=0;
     update[iBody].iNumIceMass=0;
+    update[iBody].iNumCBPR=0;
 
     update[iBody].iNumVars=0;
     
@@ -921,7 +922,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+   
+    // Add binary stuff here
+    // TODO
     
     // POISE's ice mass
     update[iBody].iIceMass = -1;

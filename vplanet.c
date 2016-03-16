@@ -114,7 +114,7 @@ int main(int argc,char *argv[]) {
   /* Debugging functions */
   if(body[0].bBinary == 1) {
     //fDebugBinary(body);
-  }
+   }
 
   /* Perform evolution */
 
@@ -127,6 +127,11 @@ int main(int argc,char *argv[]) {
       if (control.Io.iVerbose >= VERBPROG)
 	printf("Log file updated.\n");
     }
+  }
+
+  /* Debugging functions */
+  if(body[0].bBinary == 1) {
+    //fDebugBinary(body);
   }
 
   end = time(NULL);

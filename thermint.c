@@ -6,13 +6,6 @@
  *
 */
 
-/* where something like iBody == 0 occurs
- * ~90
- * ~110
- * ~140
- * ~160
- */
-
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>

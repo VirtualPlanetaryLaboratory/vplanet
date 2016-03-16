@@ -1,23 +1,22 @@
 # Earth's parameters
 sName		earth			# Body's name
-#saModules	eqtide radheat thermint atmesc
-saModules       binary atmesc
+saModules       binary radheat thermint atmesc
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
-dMass		-104.6264			# Mass, negative -> Earth masses
+dMass		-2 #-104.6264			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.0 #0.05                     # Free Eccentricity
+dFreeEcc        0.2 #0.05                     # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable 1                   # End simulation if the CBP goes within the critical stability limit
 
 # Orbital Properties
-dSemi           -0.7016			# Semi-major axis, negative -> AU
+dSemi           -0.4 #-0.7016			# Semi-major axis, negative -> AU
 dEcc            0.02373
 dLongP          0.0
 
@@ -35,47 +34,47 @@ dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficienc
 dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
 dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    1               # Halt when dry?
-bHaltEnvelopeGone         0               # Halt when evaporated?
+bHaltEnvelopeGone         1               # Halt when evaporated?
 dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 
 # RADHEAT Parameters
 # Initialize 40K
-#d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
+d40KNumMan      -1			# Numer of potassium-40 atoms, negative -> Earth
 #d40KMassMan    -1
 #d40KPowerMan   -1
-#d40KNumCore     -2			# Numer of potassium-40 atoms, negative -> Earth
+d40KNumCore     -1			# Numer of potassium-40 atoms, negative -> Earth
 #d40KPowerCore   -1
 #d40KMassCore   -1
 
 # 232Th
-#d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
+d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
 #d232ThMassMan  -1
 #d232ThPowerMan -1
-#d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
+d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
 #d232ThPowerCore -1
 
 # 235U
-#d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 #d235UMassMan    -1
 #d235UPowerMan    -1
-#d235UNumCore	-1
+d235UNumCore	-1
 #d235UPowerCore  -1
 
 # 238U
-#d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+d238UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 #238UPowerMan    -1
-#d238UNumCore	-1
+d238UNumCore	-1
 #d238UPowerCore  -1
 
 # # THERMINT inputs.
-#dTMan  3000.0  #2500.0
-#dTCore 6000.0
-#dViscRatioMan 5.0  #5.6
-#dEruptEff 0.2
-#dViscRef  1e8
+dTMan  3000.0  #2500.0
+dTCore 6000.0
+dViscRatioMan 5.0  #5.6
+dEruptEff 0.2
+dViscRef  1e8
 
 # Output
-saOutputOrder Time Semim Ecce dIncBinary LongP -SurfWaterMass -EnvelopeMass
+saOutputOrder Time Mass Semim Ecce dIncBinary LongP TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

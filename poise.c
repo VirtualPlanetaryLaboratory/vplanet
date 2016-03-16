@@ -1829,9 +1829,16 @@ double true2eccA(double TrueA, double Ecc) {
 void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
-  
-  Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
-    
+ 
+  if(body[iBody].bBinary == 1 && iBody == 2)
+  {
+    Sconst = fluxBinary(body,body[0].dLuminosity,body[1].dLuminosity); 
+    Sconst *= pow(1.0-body[iBody].dEcc*body[iBody].dEcc,0.5); // astrodist corrects for this later
+  }
+  else {
+    Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
+  }  
+
   sin_delta = sin(body[iBody].dObliquity)*sin(body[iBody].dTrueL);
   cos_delta = sqrt(1.0-pow(sin_delta,2));
   tan_delta = sin_delta/cos_delta;

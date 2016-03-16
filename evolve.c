@@ -16,10 +16,11 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if(body[iBody].bBinary){ // Considering binary systems
-      if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+      if(body[iBody].iBodyType == 0) // CBP
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
       else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
+      else {}
     }
     else { // Not considering binary systems
     if (iBody != 0) {

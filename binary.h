@@ -64,10 +64,11 @@ void CountHaltsBinary(HALT*,int*);
 void VerifyBinary(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
 void fnPropertiesBinary(BODY*,UPDATE*,int);
-void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule);
 
 /* Update functions */
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
+void FinalizeUpdateCBPR(BODY*,UPDATE*,int*,int,int,int);
+
 
 /* Output Functinos */
 void HelpOutputBinary(OUTPUT*);
@@ -123,7 +124,7 @@ double fdD0(BODY*);
 double fdDk0(int,BODY*);
 double fdDPk(int,BODY*);
 double fdDMk(int,BODY*);
-double calculate_R(double,BODY*,double);
+double fdCBPRBinary(BODY*,SYSTEM*,int*);
 double calculate_Phi(double,BODY*,double);
 double calculate_Z(double,BODY*,double);
 double calculate_Rdot(double,BODY*,double,double);

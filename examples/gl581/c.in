@@ -5,6 +5,8 @@ sName		c			# Body's name
 #		atmesc poise
 saModules eqtide distorb distrot
 
+sTideModel	p2
+
 # Physical Properties
 dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
 dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii

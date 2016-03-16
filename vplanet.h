@@ -295,8 +295,8 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  /* Interior Thermal Parameters */
-  int bThermint;    /**< Apply Module THERMINT? */
+  /* Thermint Parameters */
+  int bThermint;           /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */
@@ -351,16 +351,22 @@ typedef struct {
   double dRIC;             /**< IC radius */
   double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
   double dDOC;             /**< OC shell thickness */
-  double dChiOC;           /**< OC light element concentration chi. */
-  double dChiIC;           /**< IC light element concentration chi. */
   double dThermConductOC;  /**< Thermal conductivity OC */
   double dThermConductIC;  /**< Thermal conductivity IC */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dMassOC;          /**< OC Mass. */
+  double dMassIC;          /**< IC Mass. */
+  double dMassChiOC;       /**< OC Chi Mass. */
+  double dMassChiIC;       /**< IC Chi Mass. */
+  double dDTChi;           /**< Core Liquidus Depression */
   /* Constants */
   double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
   double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
-
+  double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
+  
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;

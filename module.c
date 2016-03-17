@@ -65,6 +65,9 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
   // Finalize Binary Primary Variable Functions
   module->fnFinalizeUpdateCBPR = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRDotModule));
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -159,6 +162,9 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   // Add Binary stuff here too?
   // Finalize Binary Primary Variable Functions
   module->fnFinalizeUpdateCBPR[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRDotModule));
 
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -190,6 +196,9 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
  
   

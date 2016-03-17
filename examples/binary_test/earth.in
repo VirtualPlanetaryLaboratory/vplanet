@@ -74,7 +74,7 @@ dLongP          0.0
 ##dViscRef  1e8
 
 # Output
-saOutputOrder Time CBPR Semim Ecce dIncBinary LongP #TMan TCore SurfWater Envelop
+saOutputOrder Time CBPR CBPZ CBPPhi CBPRDot Semim Ecce #dIncBinary #TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

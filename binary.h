@@ -20,7 +20,7 @@
 #define OPT_LL13N0              2030 // LL13 Mean Motion
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
-#define OPT_HALTHOLMAN              2070 // Holman+Wiegert 1999 Instability limit
+#define OPT_HALTHOLMAN          2070 // Holman+Wiegert 1999 Instability limit
 
 /* Output Info */
 
@@ -36,6 +36,9 @@
 #define OUT_LL13V0              2050
 #define OUT_CYLPOS              2060
 #define OUT_CBPR                2061
+#define OUT_CBPZ                2062
+#define OUT_CBPPHI              2063
+#define OUT_CBPRDOT             2064
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -62,13 +65,19 @@ void CountHaltsBinary(HALT*,int*);
 
 /* Verify Functions */
 void VerifyBinary(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyCBPR(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyCBPZ(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyCBPPhi(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyCBPRDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
 void fnPropertiesBinary(BODY*,UPDATE*,int);
 
 /* Update functions */
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
 void FinalizeUpdateCBPRBinary(BODY*,UPDATE*,int*,int,int,int);
-
+void FinalizeUpdateCBPZBinary(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateCBPPhiBinary(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateCBPRDotBinary(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 void HelpOutputBinary(OUTPUT*);
@@ -82,6 +91,9 @@ void WriteLL13N0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[
 void WriteLL13K0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13V0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPR(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPPhi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPRDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL*,FILE*);
@@ -126,9 +138,9 @@ double fdDk0(int,BODY*);
 double fdDPk(int,BODY*);
 double fdDMk(int,BODY*);
 double fdCBPRBinary(BODY*,SYSTEM*,int*);
-double calculate_Phi(double,BODY*,double);
-double calculate_Z(double,BODY*,double);
-double calculate_Rdot(double,BODY*,double,double);
+double fdCBPPhiBinary(BODY*,SYSTEM*,int*);
+double fdCBPZBinary(BODY*,SYSTEM*,int*);
+double fdCBPRDotBinary(BODY*,SYSTEM*,int*);
 double calculate_Phidot(double,BODY*,double,double);
 double calculate_Zdot(double,BODY*,double);
 

@@ -153,7 +153,7 @@
 // Primary variables that control CBP's cylindrical positions, velocities
 #define VCBPR              2000
 #define VCBPPHI            2010
-#define VCBPOZ              2020
+#define VCBPZ              2020
 #define VCBPRDOT           2030
 #define VCBPPHIDOT         2040
 #define VCBPZDOT           2050
@@ -236,6 +236,9 @@ typedef struct {
   int bBinary;          /** Apply BINARY module? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
   double dCBPR;         /** < CBP radius */
+  double dCBPZ;         /** < CBP height above/below the orbital plane */
+  double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
+  double dCBPRDot;      /** < CBP radial orbital velocity */
   double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
   double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
@@ -829,12 +832,21 @@ typedef struct {
   double *pdDMassDtAtmesc;
 
   /* BINARY */
-  int iCBPR; /**< Variable # Corresponding to the CBP's radius */
+  int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
   int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */  
+  int iCBPZ; /**< Variable # corresponding to the CBP's cylindrical Z positions */
+  int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
+  int iCBPPhi; /**< Variable # Corresponding to the CBP's orbital azimuthal angle */
+  int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
+  int iCBPRDot; /**< Variable # Corresponding to the CBP's radial velocity */
+  int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
 
   /* Points to the element in UPDATE's daDerivProc matrix that contains the 
    * derivative of these variables due to BINARY. */
-  double *pdCBPRBinary; // Equation that governs CBP radius
+  double *pdCBPRBinary; // Equation that governs CBP orbital radius
+  double *pdCBPZBinary; // Equation that governs CBP cylindrical position Z
+  double *pdCBPPhiBinary; // Equation that governs CBP orbital azimuthal angle
+  double *pdCBPRDotBinary; // Equation that governs CBP radial velocity
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
@@ -1160,6 +1172,9 @@ typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
@@ -1252,7 +1267,11 @@ typedef struct {
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
  
   /* Function points to finalize binary update functions */
+  /* CBP R, Z, Phi, and their time derivaties */
   fnFinalizeUpdateCBPRModule **fnFinalizeUpdateCBPR;
+  fnFinalizeUpdateCBPZModule **fnFinalizeUpdateCBPZ;
+  fnFinalizeUpdateCBPPhiModule **fnFinalizeUpdateCBPPhi;
+  fnFinalizeUpdateCBPRDotModule **fnFinalizeUpdateCBPRDot;
 
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */

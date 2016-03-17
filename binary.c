@@ -21,13 +21,6 @@ void  InitializeControlBinary(CONTROL *control) {
 
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
   // Copy body properties from src to dest
-  
-  for(int i = 0; i < 3; i++) {
-    dest[iBody].daCylPos[i] = src[iBody].daCylPos[i];
-    dest[iBody].daCylVel[i] = src[iBody].daCylVel[i];
-    dest[iBody].dCartPos[i] = src[iBody].dCartPos[i];
-    dest[iBody].dCartVel[i] = src[iBody].dCartVel[i];
-  }
  
   dest[iBody].dCBPR = src[iBody].dCBPR;
   dest[iBody].dCBPZ = src[iBody].dCBPZ;
@@ -73,7 +66,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[2].dLL13N0 = fdMeanMotion(body);
     body[2].dLL13K0 = fdEpiFreqK(body);
     body[2].dLL13V0 = fdEpiFreqV(body);
-    
+   
     // Set up initial orbital elements
     body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
     body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
@@ -87,21 +80,9 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[0].dKecc = body[0].dEcc*cos(body[0].dLongP);
     body[0].dEccSq = body[0].dEcc*body[0].dEcc;
   }
-
-  // Malloc space for cylindrical position, velocity arrays
-  body[iBody].daCylPos = malloc(3*sizeof(double));
-  body[iBody].daCylVel = malloc(3*sizeof(double));
-  body[iBody].dCartPos = malloc(3*sizeof(double));
-  body[iBody].dCartVel = malloc(3*sizeof(double));
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  // Malloc space for cylindrical position, velocity arrays for tmp body
-  control->Evolve.tmpBody[iBody].daCylPos = malloc(3*sizeof(double));
-  control->Evolve.tmpBody[iBody].daCylVel = malloc(3*sizeof(double));
-  control->Evolve.tmpBody[iBody].dCartPos = malloc(3*sizeof(double));
-  control->Evolve.tmpBody[iBody].dCartVel = malloc(3*sizeof(double));
-
 }
 
 /**************** BINARY options ********************/
@@ -387,53 +368,6 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
  * Note: I assume all arbitrary phase offsets are 0
  */
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
-  /*
-  // Compute all binary properties as needed
-  body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
-
-  // Compute all the cylindrical positions
-  int iVar = 0;
-  int iEqn = 0;
-  int *iaBody = update[iBody].iaBody[iVar][iEqn];
-  body[2].daCylPos[0] = fdCBPRBinary(body,system,iaBody); //calculate_R(dTime,body,0.0);
-  body[2].daCylPos[1] = calculate_Phi(dTime,body,0.0);
-  body[2].daCylPos[2] = calculate_Z(dTime,body,0.0);
-
-  // Compute all the cylindrical velocities
-  body[2].daCylVel[0] = calculate_Rdot(dTime,body,0.0,0.0);
-  body[2].daCylVel[1] = calculate_Phidot(dTime,body,0.0,0.0);
-  body[2].daCylVel[2] = calculate_Zdot(dTime,body,0.0);
-
-  // Convert from cylindrical -> cartesian coordinates
-  fvCylToCartPos(body[2].daCylPos,body[2].dCartPos); // Pos conversion
-  fvCylToCartVel(body[2].daCylPos,body[2].daCylVel,body[2].dCartVel); // Vel conversion
-
-  // Compute CBP orbital elements
-
-  // LongA, ArgP -> LongP (needed for dHecc, dKecc)
-  body[2].dLongA = fdComputeLongA(body);
-  body[2].dArgP = fdComputeArgPeri(body);
-  double LongP = body[2].dLongA + body[2].dArgP;
-  while(LongP > 2.0*PI)
-  {
-    LongP -= 2.0*PI;
-  }
-  body[2].dLongP = LongP;
-
-  // Eccentricity
-  body[2].dEcc = fdComputeEcc(body);
-  body[2].dEccSq = body[2].dEcc*body[2].dEcc;
-
-  // Set Poincare H, K
-  body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
-  body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
-
-  // Semimajor Axis
-  body[2].dSemi = fdComputeSemi(body); // Semi for semimajor axis
-
-  // Inclination
-  body[2].dInc = fdComputeInc(body); // CBP inclination
-  */
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -467,6 +401,16 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+
+  // Set Planet initial positions, velocities according to LL13 theory
+  int iaBody[1] = {2}; //  Pick out CBP
+  body[2].dCBPR = fdCBPRBinary(body,system,iaBody);
+  body[2].dCBPZ = fdCBPZBinary(body,system,iaBody);
+  body[2].dCBPPhi = fdCBPPhiBinary(body,system,iaBody);
+  body[2].dCBPRDot = fdCBPRDotBinary(body,system,iaBody);
+  body[2].dCBPPhiDot = fdCBPPhiDotBinary(body,system,iaBody);
+  body[2].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
+
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
@@ -962,9 +906,46 @@ double fdSpecificOrbEng(BODY *body)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
   double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
-  double r_norm = sqrt(fdDot(body[2].dCartPos,body[2].dCartPos));
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+     
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
   
-  return fdDot(body[2].dCartVel,body[2].dCartVel)/2.0 - (mu/r_norm);
+  double r_norm = sqrt(fdDot(rCart,rCart));
+  
+  return fdDot(vCart,vCart)/2.0 - (mu/r_norm);
+}
+
+/* Compute and assign CBP's orbital elements */
+
+void fdAssignOrbitalElements(BODY *body)
+{
+  body[2].dSemi = fdComputeSemi(body);
+  body[2].dEcc = fdComputeEcc(body);
+  body[2].dInc = fdComputeInc(body);
+
+  // LongA, ArgP -> LongP (needed for dHecc, dKecc)
+  body[2].dLongA = fdComputeLongA(body);
+  body[2].dArgP = fdComputeArgPeri(body);
+  double LongP = body[2].dLongA + body[2].dArgP;
+  while(LongP > 2.0*PI)
+  {
+    LongP -= 2.0*PI;
+  }
+  while(LongP < 0.0)
+  {
+    LongP += 2.0*PI;
+  }
+  body[2].dLongP = LongP;
+
+  body[2].dEccSq = body[2].dEcc*body[2].dEcc; 
+  // Set Poincare H, K
+  body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
+  body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
 }
 
 /* Compute a body's semimajor axis
@@ -973,7 +954,7 @@ double fdSpecificOrbEng(BODY *body)
 double fdComputeSemi(BODY *body)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  return -BIGG*(body[0].dMass + body[1].dMass+body[2].dMass)/(2.0*fdSpecificOrbEng(body));
+  return -BIGG*(body[0].dMass + body[1].dMass + body[2].dMass)/(2.0*fdSpecificOrbEng(body));
 }
 
 /* Compute a body's orbital eccentricity
@@ -984,7 +965,15 @@ double fdComputeEcc(BODY *body)
   // For binary, iBody 0, 1 == stars, 2 == planet
   double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
   double h[3];
-  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+  
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
+  fvSpecificAngMom(rCart,vCart,h);
   
   return sqrt(1. + (2.*fdSpecificOrbEng(body)*fdDot(h,h))/(mu*mu));
 }
@@ -995,7 +984,16 @@ double fdComputeEcc(BODY *body)
 double fdComputeInc(BODY *body)
 {
   double h[3];
-  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+     
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
+  
+  fvSpecificAngMom(rCart,vCart,h);
   return acos(h[2]/sqrt(fdDot(h,h)));
 }
 
@@ -1006,7 +1004,16 @@ double fdComputeLongA(BODY *body)
 {
   double Omega = 0.0;
   double h[3];
-  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
+
+  fvSpecificAngMom(rCart,vCart,h);
   double n[3] = {-h[1],h[0],0};
 
   // Case: |n| = 0
@@ -1032,14 +1039,24 @@ void fdComputeEccVector(BODY *body, double *evec)
 {
   double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
   double h[3];
-  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
-  cross(body[2].dCartVel,h,evec);
+
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+     
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
+
+  fvSpecificAngMom(rCart,vCart,h);
+  cross(vCart,h,evec);
   
-  double mag_r = sqrt(fdDot(body[2].dCartPos,body[2].dCartPos));
+  double mag_r = sqrt(fdDot(rCart,rCart));
 
   for(int i = 0; i < 3; i++)
   {
-    evec[i] = evec[i]/mu - body[2].dCartPos[i]/mag_r;
+    evec[i] = evec[i]/mu - rCart[i]/mag_r;
   }
 }
 
@@ -1047,7 +1064,17 @@ double fdComputeArgPeri(BODY *body)
 {
   double evec[3];
   double h[3];
-  fvSpecificAngMom(body[2].dCartPos,body[2].dCartVel,h);
+
+  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
+  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double rCart[3];
+  double vCart[3];
+       
+  // Convert from cyl->cart coords
+  fvCylToCartPos(r,rCart);
+  fvCylToCartVel(r,v,vCart);
+
+  fvSpecificAngMom(rCart,vCart,h);
   fdComputeEccVector(body,evec);
   double n[3] = {-h[1],h[0],0};
   double mag_n = sqrt(fdDot(n,n));

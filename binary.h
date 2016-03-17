@@ -117,6 +117,7 @@ void fvSpecificAngMom(double*,double*,double*);
 double fdSpecificOrbEng(BODY*);
 
 /* Orbital Element Functions */
+void fdAssignOrbitalElements(BODY*);
 double fdComputeSemi(BODY*);
 double fdComputeEcc(BODY*);
 double fdComputeInc(BODY*);

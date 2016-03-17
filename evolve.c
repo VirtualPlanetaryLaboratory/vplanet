@@ -17,7 +17,12 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if(body[iBody].bBinary){ // Considering binary systems
       if(body[iBody].iBodyType == 0) // CBP
+      {
+        // Set CBP orbital elements, mean motion
+        fdAssignOrbitalElements(body);
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+      
+      }
       else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
       {
         // Correctly set binary's mean motion

@@ -241,8 +241,8 @@ typedef struct {
   double dCBPRDot;      /** < CBP radial orbital velocity */
   double dCBPZDot;      /** < CBP z orbital velocity */
   double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
-  double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
-  double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
+  //double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
+  //double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
   double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
   double dInc;          /**< CBP's actual inclication */

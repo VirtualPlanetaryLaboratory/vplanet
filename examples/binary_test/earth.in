@@ -11,7 +11,7 @@ dObliquity	23.5
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.05                     # Free Eccentricity
+dFreeEcc        0.03                     # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable 1                   # End simulation if the CBP goes within the critical stability limit
 
@@ -74,7 +74,7 @@ dLongP          0.0
 ##dViscRef  1e8
 
 # Output
-saOutputOrder Time CBPR CBPZ CBPPhi CBPRDot CBPZDot CBPPhiDot Semim Ecce #dIncBinary #TMan TCore SurfWater Envelop
+saOutputOrder Time LongP Semim Ecce dIncBinary #TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

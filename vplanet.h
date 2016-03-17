@@ -239,6 +239,8 @@ typedef struct {
   double dCBPZ;         /** < CBP height above/below the orbital plane */
   double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
   double dCBPRDot;      /** < CBP radial orbital velocity */
+  double dCBPZDot;      /** < CBP z orbital velocity */
+  double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
   double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
   double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
@@ -840,13 +842,19 @@ typedef struct {
   int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
   int iCBPRDot; /**< Variable # Corresponding to the CBP's radial velocity */
   int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
+  int iCBPZDot; /** < Variable # Corresponding to the CBP's Z orbital velocity */
+  int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1] */
+  int iCBPPhiDot; /** < Variable # Corresponding to the CBP's Phi orbital angular velocity */
+  int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
 
   /* Points to the element in UPDATE's daDerivProc matrix that contains the 
    * derivative of these variables due to BINARY. */
   double *pdCBPRBinary; // Equation that governs CBP orbital radius
   double *pdCBPZBinary; // Equation that governs CBP cylindrical position Z
   double *pdCBPPhiBinary; // Equation that governs CBP orbital azimuthal angle
-  double *pdCBPRDotBinary; // Equation that governs CBP radial velocity
+  double *pdCBPRDotBinary; // Equation that governs CBP radial orbital velocity
+  double *pdCBPZDotBinary; // Equation that governs CBP z orbital velocity
+  double *pdCBPPhiDotBinary; // Equation that governs CBP phi orbital velocity
 
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
@@ -1175,6 +1183,8 @@ typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
@@ -1272,6 +1282,8 @@ typedef struct {
   fnFinalizeUpdateCBPZModule **fnFinalizeUpdateCBPZ;
   fnFinalizeUpdateCBPPhiModule **fnFinalizeUpdateCBPPhi;
   fnFinalizeUpdateCBPRDotModule **fnFinalizeUpdateCBPRDot;
+  fnFinalizeUpdateCBPZDotModule **fnFinalizeUpdateCBPZDot;
+  fnFinalizeUpdateCBPPhiDotModule **fnFinalizeUpdateCBPPhiDot;
 
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */

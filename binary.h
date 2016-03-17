@@ -39,6 +39,8 @@
 #define OUT_CBPZ                2062
 #define OUT_CBPPHI              2063
 #define OUT_CBPRDOT             2064
+#define OUT_CBPZDOT             2065
+#define OUT_CBPPHIDOT           2066
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -69,6 +71,8 @@ void VerifyCBPR(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void VerifyCBPZ(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void VerifyCBPPhi(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void VerifyCBPRDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyCBPZDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyCBPPhiDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
 void fnPropertiesBinary(BODY*,UPDATE*,int);
 
@@ -78,6 +82,8 @@ void FinalizeUpdateCBPRBinary(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateCBPZBinary(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateCBPPhiBinary(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateCBPRDotBinary(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateCBPZDotBinary(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateCBPPhiDotBinary(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 void HelpOutputBinary(OUTPUT*);
@@ -92,8 +98,10 @@ void WriteLL13K0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[
 void WriteLL13V0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPR(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPZDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPPhi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPRDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPPhiDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL*,FILE*);
@@ -141,8 +149,8 @@ double fdCBPRBinary(BODY*,SYSTEM*,int*);
 double fdCBPPhiBinary(BODY*,SYSTEM*,int*);
 double fdCBPZBinary(BODY*,SYSTEM*,int*);
 double fdCBPRDotBinary(BODY*,SYSTEM*,int*);
-double calculate_Phidot(double,BODY*,double,double);
-double calculate_Zdot(double,BODY*,double);
+double fdCBPZDotBinary(BODY*,SYSTEM*,int*);
+double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
 double fluxBinary(BODY*,double,double);

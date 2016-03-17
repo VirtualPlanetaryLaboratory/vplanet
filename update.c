@@ -924,8 +924,37 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
    
     // Add binary stuff here
-    // TODO
     
+    // Binary's CBP's Orbital Radiys (dCBPR)
+    update[iBody].iCBPR = -1;
+    if (update[iBody].iNumCBPR) {
+      update[iBody].iCBPR = iVar;
+      update[iBody].iaVar[iVar] = VCBPR;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumCBPR;
+      update[iBody].pdVar[iVar] = &body[iBody].dCBPR;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dCBPR;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumCBPR*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumCBPR*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateCBPR[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
     // POISE's ice mass
     update[iBody].iIceMass = -1;
     /* XXX hack to get ice sheets working, since since these don't get malloced until verify */

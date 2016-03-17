@@ -20,7 +20,6 @@
 #define OPT_LL13N0              2030 // LL13 Mean Motion
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
-#define OPT_CYLPOS              2060 // Cylindrical position [r,phi,z]
 #define OPT_HALTHOLMAN              2070 // Holman+Wiegert 1999 Instability limit
 
 /* Output Info */
@@ -36,6 +35,7 @@
 #define OUT_LL13K0              2040
 #define OUT_LL13V0              2050
 #define OUT_CYLPOS              2060
+#define OUT_CBPR                2061
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -67,7 +67,7 @@ void fnPropertiesBinary(BODY*,UPDATE*,int);
 
 /* Update functions */
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
-void FinalizeUpdateCBPR(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateCBPRBinary(BODY*,UPDATE*,int*,int,int,int);
 
 
 /* Output Functinos */
@@ -81,6 +81,7 @@ void WriteInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13N0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13K0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13V0(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPR(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL*,FILE*);

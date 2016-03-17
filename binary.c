@@ -4,7 +4,8 @@
  *
  * Subroutines that control the integration of the 
  * circumbinary planet dynamics module.
- *
+ * Note: body 0 = primary star, body 1 = secondary star, body 2 = CBP (circumbinary planet)
+ * Leung and Lee 2013 Theory ONLY applies to this 3 body approximation.
 */
 
 #include <stdio.h>
@@ -27,7 +28,8 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
     dest[iBody].dCartPos[i] = src[iBody].dCartPos[i];
     dest[iBody].dCartVel[i] = src[iBody].dCartVel[i];
   }
-  
+ 
+  dest[iBody].dCBPR = src[iBody].dCBPR;
   dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
   dest[iBody].dFreeInc = src[iBody].dFreeInc;
   dest[iBody].dInc = src[iBody].dInc;
@@ -50,6 +52,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   if(body[iBody].iBodyType == 0 && iBody == 2) // If the body is a planet
   {
     // Inits for CBP
+    body[2].dCBPR = body[2].dSemi;
     body[2].dR0 = body[2].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
     body[2].dInc = body[2].dFreeInc; // CBP initial inc == free inclination
     body[2].dLL13N0 = fdMeanMotion(body);
@@ -295,7 +298,7 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPR][0] = 3;
+  update[iBody].iaType[update[iBody].iCBPR][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPR][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPR][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
@@ -316,8 +319,7 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
  * Note: I assume all arbitrary phase offsets are 0
  */
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
-  double dTime = evolve->dTime; // Current integration time in seconds
-
+  /*
   // Compute all binary properties as needed
   body[0].dEcc = sqrt(pow(body[0].dKecc,2) + pow(body[0].dHecc,2));
 
@@ -363,6 +365,7 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
   // Inclination
   body[2].dInc = fdComputeInc(body); // CBP inclination
+  */
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -390,6 +393,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
 
   // Call sub-verify functions to ensure matrix is properly configured for planet
+  VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   // TODO
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
@@ -409,7 +413,7 @@ void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
   update[iBody].iNumVars++;
 }
 
-void FinalizeUpdateCBPR(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void FinalizeUpdateCBPRBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = BINARY;
   update[iBody].iNumCBPR = (*iEqn)++;
 }
@@ -549,6 +553,19 @@ void WriteLL13V0(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
  }
 }
 
+// Write the circumbinary planet orbital radius (CBPR)
+void WriteCBPR(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dCBPR;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
   sprintf(output[OUT_FREEECC].cName,"FreeEcc");
@@ -596,6 +613,14 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13V0].dNeg = 1./YEARSEC;
   output[OUT_LL13V0].iNum = 1;
   fnWrite[OUT_LL13V0] = &WriteLL13V0;
+
+  sprintf(output[OUT_CBPR].cName,"CBPR");
+  sprintf(output[OUT_CBPR].cDescr,"Circumbinary Planet Orbital Radius");
+  output[OUT_CBPR].bNeg = 1;
+  sprintf(output[OUT_CBPR].cNeg,"AU");
+  output[OUT_CBPR].dNeg = 1.0/AUCM;
+  output[OUT_CBPR].iNum = 1;
+  fnWrite[OUT_CBPR] = &WriteCBPR;
 
 }
 
@@ -650,7 +675,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
 
   // Update functions
-  //module->fnFinalizeUpdateCBPRModule[iBody][iModule] = &FinalizeUpdateCBPR;
+  module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateCBPRBinary;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;

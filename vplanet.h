@@ -235,6 +235,7 @@ typedef struct {
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
+  double dCBPR;         /** < CBP radius */
   double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
   double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
@@ -832,7 +833,7 @@ typedef struct {
   int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */  
 
   /* Points to the element in UPDATE's daDerivProc matrix that contains the 
-   * derivative of these variables due to ATMESC. */
+   * derivative of these variables due to BINARY. */
   double *pdCBPRBinary; // Equation that governs CBP radius
 
   /* STELLAR */ 
@@ -1158,7 +1159,7 @@ typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int); // Binary CBP orbital radius
+typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);

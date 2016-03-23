@@ -1,6 +1,6 @@
 # Earth's parameters
 sName		earth			# Body's name
-saModules       binary
+saModules       binary #atmesc
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
@@ -29,13 +29,13 @@ dLongP          0.0
 #saTidePerts	sun			# Body name(s) of tidal perturbers
 
 # ATMESC Properties
-##dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-##dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-##dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
-##dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
-##bHaltSurfaceDesiccated    1               # Halt when dry?
-##bHaltEnvelopeGone         1               # Halt when evaporated?
-##dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+#dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+#dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+#dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
+#dEnvelopeMass             -1.0          # Initial envelope mass (Earth masses)
+#bHaltSurfaceDesiccated    1               # Halt when dry?
+#bHaltEnvelopeGone         1               # Halt when evaporated?
+#dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 
 # RADHEAT Parameters
 # Initialize 40K

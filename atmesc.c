@@ -601,7 +601,7 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // If planet is a CBP, compute flux from 2 stars
   if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { // CBP
-    fxuv = fluxBinary(body,body[0].dLXUV,body[1].dLXUV); 
+    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV);
   }
   else { // normal single-star planet
   fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
@@ -629,7 +629,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // If planet is a CBP, compute flux from 2 stars
   if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { // CBP
-    fxuv = fluxBinary(body,body[0].dLXUV,body[1].dLXUV); 
+    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV); 
   }
   else { // normal single-star planet
     fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 

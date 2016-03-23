@@ -9,6 +9,8 @@
 
 
 #define K_MAX                   4   /* Max term to sum to */
+#define FLUX_INT_MAX            100 /* How many CBP positions per orbit to integrate over */
+#define KEQNTOL                 1.0e-4 /* Tolerance for Kepler eqn computation */
 
 /* Options Info */
 /* For options and output, binary has 2000-2100 */
@@ -126,6 +128,8 @@ void fdComputeEccVector(BODY*,double*);
 double fdComputeArgPeri(BODY*);
 double fdHolmanStability(BODY*);
 double fdMeanAnomaly(double,double,double);
+double fdMeanToEccentric(double,double);
+double fdEccToTrue(double,double);
 
 /* Binary functions */
 
@@ -155,4 +159,5 @@ double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
 double fluxBinary(BODY*,double,double);
+double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);
 void fDebugBinary(BODY*);

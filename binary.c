@@ -20,8 +20,8 @@ void  InitializeControlBinary(CONTROL *control) {
 }
 
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
-  // Copy body properties from src to dest
- 
+  // Copy body properties from src to dest for cbp
+
   dest[iBody].dCBPR = src[iBody].dCBPR;
   dest[iBody].dCBPZ = src[iBody].dCBPZ;
   dest[iBody].dCBPPhi = src[iBody].dCBPPhi;
@@ -31,17 +31,18 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
 
   dest[iBody].dFreeEcc = src[iBody].dFreeEcc;
   dest[iBody].dFreeInc = src[iBody].dFreeInc;
-  dest[iBody].dInc = src[iBody].dInc;
-  dest[iBody].dArgP = src[iBody].dArgP;
-  dest[iBody].dLongA = src[iBody].dLongA;
   dest[iBody].dLL13N0 = src[iBody].dLL13N0;
   dest[iBody].dLL13K0 = src[iBody].dLL13K0;
   dest[iBody].dLL13V0 = src[iBody].dLL13V0;
   dest[iBody].dR0 = src[iBody].dR0; 
+
   dest[iBody].dSemi = src[iBody].dSemi;
   dest[iBody].dHecc = src[iBody].dHecc;
-  dest[iBody].dKecc = src[iBody].dKecc;
-  dest[iBody].dEcc = src[iBody].dEcc;
+  dest[iBody].dHecc = src[iBody].dKecc;
+  dest[iBody].dHecc = src[iBody].dEcc;
+  dest[iBody].dArgP = src[iBody].dArgP;
+  dest[iBody].dInc = src[iBody].dInc;
+  dest[iBody].dLongA = src[iBody].dLongA;
 
 }
 
@@ -50,8 +51,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   // If ibody is the CBP (body 2, iBodyType 0), init
   if(body[iBody].iBodyType == 0 && iBody == 2) // If the body is a planet
   {
-    // Inits for CBP
-    
+
     // Init inital cylindrical positions, velocities
     // In future, use more intelligent starting points!
     body[2].dCBPR = body[2].dSemi;
@@ -294,7 +294,7 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPR][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPR][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPR][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPR][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
@@ -305,7 +305,7 @@ void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
 
 void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPZ][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPZ][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPZ][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPZ][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPZ][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPZ][0][0] = iBody;
@@ -316,7 +316,7 @@ void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
 
 void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPPhi][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPPhi][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhi][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhi][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPPhi][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhi][0][0] = iBody;
@@ -327,7 +327,7 @@ void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdat
 
 void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPRDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPRDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPRDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPRDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPRDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPRDot][0][0] = iBody;
@@ -338,7 +338,7 @@ void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
 
 void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPZDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPZDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPZDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPZDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPZDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPZDot][0][0] = iBody;
@@ -349,7 +349,7 @@ void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
 
 void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   
-  update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0][0] = iBody;
@@ -361,28 +361,39 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUp
 void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
 }
 
-/* Force behavior */
-/* 
- * Since binary doesn't integrate any diff eqs, evaluate all the 
- * equations and set CBP orbital properties here
- * Note: I assume all arbitrary phase offsets are 0
- */
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   
   // If binary is being used, ALL bodies must have correct type
-  if(body[0].iBodyType != 1 || body[1].iBodyType != 1 || body[2].iBodyType != 0)
+  if(iBody < 2) // Primary or secondary
   {
-    if(control->Io.iVerbose >= VERBERR)
+    if(body[iBody].iBodyType != 1)
     {
-      fprintf(stderr,"ERROR: In binary, bodies 0, 1 iBodyType must be 1 (star == 1).\n");
-      fprintf(stderr,"Body 2 must be 0 (planet == 0).\n");
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"ERROR: In binary, bodies 0, 1 iBodyType must be 1 (star == 1).\n");
+        fprintf(stderr,"Body 2 must be 0 (planet == 0).\n");
+        fprintf(stderr,"iBody: %d iBodyType: %d\n",iBody,body[iBody].iBodyType);
+      }
+      exit(EXIT_INPUT);
     }
-    exit(EXIT_INPUT);
   }
-
+  else // cbp
+  {
+    if(body[iBody].iBodyType != 0)
+    {
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"ERROR: In binary, bodies 0, 1 iBodyType must be 1 (star == 1).\n");
+        fprintf(stderr,"Body 2 must be 0 (planet == 0).\n");
+        fprintf(stderr,"iBody: %d iBodyType: %d\n",iBody,body[iBody].iBodyType);
+      }
+      exit(EXIT_INPUT);
+    }
+  }
+  
   // If binary is being used, ALL bodies must have iBinary == 1
   if(body[0].bBinary == 0 || body[1].bBinary == 0 || body[2].bBinary == 0)
   {
@@ -394,23 +405,32 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     exit(EXIT_INPUT);
   }
 
+  // Binary only allows 3 bodies: 2 stars, 1 CBP
+  if(control->Evolve.iNumBodies > 3)
+  {
+    fprintf(stderr,"ERROR: In binary, only 3 bodies are allowed: 2 stars, 1 planet.\n");
+    exit(EXIT_INPUT);
+  }
+
   // Call sub-verify functions to ensure matrix is properly configured for planet
-  VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+  if(body[iBody].iBodyType == 0)
+  {
+    VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   // Set Planet initial positions, velocities according to LL13 theory
-  int iaBody[1] = {2}; //  Pick out CBP
-  body[2].dCBPR = fdCBPRBinary(body,system,iaBody);
-  body[2].dCBPZ = fdCBPZBinary(body,system,iaBody);
-  body[2].dCBPPhi = fdCBPPhiBinary(body,system,iaBody);
-  body[2].dCBPRDot = fdCBPRDotBinary(body,system,iaBody);
-  body[2].dCBPPhiDot = fdCBPPhiDotBinary(body,system,iaBody);
-  body[2].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
-
+    int iaBody[1] = {iBody}; //  Pick out CBP
+    body[iBody].dCBPR = fdCBPRBinary(body,system,iaBody);
+    body[iBody].dCBPZ = fdCBPZBinary(body,system,iaBody);
+    body[iBody].dCBPPhi = fdCBPPhiBinary(body,system,iaBody);
+    body[iBody].dCBPRDot = fdCBPRDotBinary(body,system,iaBody);
+    body[iBody].dCBPPhiDot = fdCBPPhiDotBinary(body,system,iaBody);
+    body[iBody].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
+  }
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
@@ -424,24 +444,34 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 /**************** BINARY Update ****************/
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
-  // Ensure update is "integrating" all CBP positions, velocities
-  update[iBody].iNumCBPR++;
-  update[iBody].iNumVars++;
+  // Only cbp should be in matrix
+  if(body[iBody].iBodyType == 0)
+  {
+    if(update[iBody].iNumCBPR == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPR++;
 
-  update[iBody].iNumCBPZ++;
-  update[iBody].iNumVars++;
+    if(update[iBody].iNumCBPZ == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPZ++;
 
-  update[iBody].iNumCBPPhi++;
-  update[iBody].iNumVars++;
+    if(update[iBody].iNumCBPPhi == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPPhi++;
 
-  update[iBody].iNumCBPRDot++;
-  update[iBody].iNumVars++;
+    if(update[iBody].iNumCBPRDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPRDot++;
 
-  update[iBody].iNumCBPZDot++;
-  update[iBody].iNumVars++;
+    if(update[iBody].iNumCBPZDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPZDot++;
 
-  update[iBody].iNumCBPPhiDot++;
-  update[iBody].iNumVars++;
+    if(update[iBody].iNumCBPPhiDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPPhiDot++;
+
+  }
 }
 
 void FinalizeUpdateCBPRBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -840,6 +870,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateCBPRBinary;
   module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateCBPZBinary;
   module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateCBPPhiBinary;
+  module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateCBPPhiDotBinary;
   module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateCBPRDotBinary;
   module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateCBPZDotBinary;
 
@@ -1103,6 +1134,53 @@ double fdComputeArgPeri(BODY *body)
       return 2.0*PI - acos(fdDot(n,evec)/(mag_n*mag_evec));
     }
   }
+}
+
+/* Convert mean anomaly M to eccentric anomaly E
+ * by solving kepler equation using Newton's Method 
+ */
+double fdMeanToEccentric(double M, double e)
+{
+  // If e is 0, or close enough, return 
+  if(e < 1.0e-10)
+  {
+    return M;
+  }
+  else if(e >= 1) // Should never happen, but better safe than sorry
+  {
+    fprintf(stderr,"ERROR: in fdMeanToEccentric (binary), eccentricity >= 1: %e\n",e);
+    exit(1);
+  }
+  
+  double E0 = M/(1.0-e) - e*pow(M,3.)/(6.*pow(1.-e,4.)); // First guess via series expansion
+  double E = E0;
+  double dE = KEQNTOL + 1.0;
+  int count = 0;
+
+  while(dE > KEQNTOL)
+  {
+    // Compute E_n+1 (E) from E_n (E0)
+    E = E0 - (E0 - e*sin(E0) - M)/(1. - e*cos(E0));
+    dE = fabs(E-E0);
+    E0 = E;
+  
+    count += 1;
+
+    if(count <= 20) // Stop if too many iterations
+    {
+      fprintf(stderr,"ERROR: in fdMeanToEccentric, too many iterations to solve Kepler Equation\n");
+      exit(1);
+    }
+
+  }
+  
+  return E;
+}
+
+/* Convert eccentric anomaly to true anomaly */
+double fdEccToTrue(double E, double e)
+{
+  return 2.0*atan2(sqrt(1.-e)*cos(E/2.),sqrt(1.+e)*sin(E/2.));
 }
 
 /* 
@@ -1552,6 +1630,75 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 double fluxBinary(BODY *body, double L1, double L2)
 {
   return (L1 + L2)/(4.0*PI*body[2].dSemi*body[2].dSemi * pow(1.0-body[2].dEcc*body[2].dEcc,0.5));
+}
+
+/* Compute the exact flux (as close to exact as you want)
+ * received by the CBP from the 2 stars averaged over 1 CBP orbit
+ * Assumes binary orb elements don't vary much over 1 CBP orbit
+ */
+double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
+{
+  // Define/init all variables 
+  double period = 2.0*PI/body[2].dMeanMotion; // Period of CBP orbit
+  double flux = 0.0;
+  double step = period/FLUX_INT_MAX;
+  double trueAnomaly = 0.0;
+  double meanAnomaly = 0.0;
+  double eccAnomaly = 0.0;
+  double radius = 0.0;
+  double r1 = 0.0, r2 = 0.0;
+  double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0; // Cartesian position of binary in plane
+  double x = 0.0, y = 0.0; // Cartesian positon of cbp
+  double r = 0.0, phi = 0.0, z = 0.0; // Cyl position of cbp
+  double dAge = body[iaBody[0]].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
+
+  // Loop over steps in CBP orbit, add flux due to each star at each step
+  for(int i = 0; i < FLUX_INT_MAX; i++)
+  {
+    // Get binary position by solving kepler's eqn
+    // mean -> ecc -> true anomaly
+    meanAnomaly = body[0].dMeanMotion*body[iaBody[0]].dAge; // ignore arbitrary phase offset since P_bin << P_cbp for LL13 theory
+    eccAnomaly = fdMeanToEccentric(meanAnomaly,body[0].dEcc);
+    trueAnomaly = fdEccToTrue(eccAnomaly,body[0].dEcc);
+
+    radius = body[0].dSemi * (1.0 - body[0].dEcc*body[0].dEcc);
+    radius /= (1.0 + body[0].dEcc*cos(trueAnomaly));
+    
+    // Radial position of each star
+    r1 = body[1].dMass*radius/(body[0].dMass+body[1].dMass);
+    r2 = -body[0].dMass*radius/(body[0].dMass+body[1].dMass);
+
+    // Cartesian position of stars (in plane, no z)
+    x1 = r1*cos(trueAnomaly);
+    x2 = r2*cos(trueAnomaly);
+    y1 = r1*sin(trueAnomaly);
+    y2 = r2*sin(trueAnomaly);
+
+    // Compute CBP positon in cylindrical coords
+    r = fdCBPRBinary(body,system,iaBody);
+    phi = fdCBPPhiBinary(body,system,iaBody);
+    z = fdCBPZBinary(body,system,iaBody);
+
+    // Convert to cartesian
+    x = r*cos(phi);
+    y = r*sin(phi);
+    // z = z
+
+    // Compute squared distances from each star to CBP
+    r1 = pow(x-x1,2.) + pow(y-y1,2.) + z*z;
+    r2 = pow(x-x2,2.) + pow(y-y2,2.) + z*z;
+
+    // Compute fluxes due to each star
+    flux += (L0/(4.0*PI*r1) + L1/(4.0*PI*r2));
+  
+    // Increment body's age aka time
+    body[iaBody[0]].dAge += step;
+  }
+
+  // Reset the body's dAge to what it was at the start of this function!
+  body[iaBody[0]].dAge = dAge;
+
+  return flux/FLUX_INT_MAX;
 }
 
 /* 

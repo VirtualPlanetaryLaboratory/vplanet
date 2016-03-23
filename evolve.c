@@ -95,7 +95,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   int iBody,iVar,iEqn;
   EVOLVE integr;
   double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
- 
+  double amp = 0.0;
+
   integr = control->Evolve;
 
   // XXXX Change Eqn to Proc?
@@ -125,6 +126,30 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   dMin = dMinNow;
               }
             }
+          } else if (update[iBody].iaType[iVar][0] == 10) { // 10 because binary
+              // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+              // and the parameter can oscillate through 0 (like CBP position, velocities)
+              dVarNow = *update[iBody].pdVar[iVar];
+              // Something like amp = body.CBPAmp[iVar];
+              for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+              }
+              if (control->Evolve.bFirstStep) {
+                dMin = integr.dTimeStep;
+                control->Evolve.bFirstStep = 0;
+              } else {
+                /* Sum over all equations giving new value of the variable */
+                dVarTotal = 0.;
+                for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                  dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
+                }
+                // Prevent division by zero
+                if (dVarNow != dVarTotal) {
+                  dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
+                  if (dMinNow < dMin)
+                    dMin = dMinNow;
+                }
+              }
           } else if (update[iBody].iaType[iVar][0] == 3) {
           /* The parameter does not require a derivative, but is calculated explicitly as a function of age.
              Also, is a sinusoidal quantity (e.g. h,k,p,q in DistOrb) */
@@ -262,7 +287,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -287,7 +312,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -311,7 +336,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){  
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){  
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -330,7 +355,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // NOTHING!
       } else {
         control->Evolve.daDeriv[3][iBody][iVar] = 0;
@@ -346,7 +371,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] + 
       2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         *(update[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];
       } else {

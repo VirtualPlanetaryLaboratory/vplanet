@@ -241,15 +241,12 @@ typedef struct {
   double dCBPRDot;      /** < CBP radial orbital velocity */
   double dCBPZDot;      /** < CBP z orbital velocity */
   double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
-  //double *daCylPos;      /**< Cylindrical position of body for circumbinary orbit, barycentric */
-  //double *daCylVel;      /**< Cylindrical velocity of body for circumbinary orbit, barycentric */
   double dFreeEcc;      /**< CBP's free eccentricity */
   double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
   double dInc;          /**< CBP's actual inclication */
   double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
   double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
   double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
-  // Note: no cartesian since dCartPos/Vel exist via Distorb
 
   /* DISTROT parameters */
   int bDistRot;

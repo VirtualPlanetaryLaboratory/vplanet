@@ -6,7 +6,7 @@
 */
 
 /* lines where something like iBody == 0 occurs
- * ~1831 : where solar flux is important (alter for body!)
+ * ~1833 : where solar flux is important (alter for body!)
  * 1931-will want to alter astrodist for binary
  * ~1389
  *
@@ -1830,14 +1830,7 @@ void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
  
-  if(body[iBody].bBinary == 1 && iBody == 2)
-  {
-    Sconst = fluxBinary(body,body[0].dLuminosity,body[1].dLuminosity); 
-    Sconst *= pow(1.0-body[iBody].dEcc*body[iBody].dEcc,0.5); // astrodist corrects for this later
-  }
-  else {
-    Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
-  }  
+  Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
 
   sin_delta = sin(body[iBody].dObliquity)*sin(body[iBody].dTrueL);
   cos_delta = sqrt(1.0-pow(sin_delta,2));

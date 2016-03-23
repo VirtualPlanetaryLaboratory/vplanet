@@ -77,7 +77,7 @@ saTidePerts	star			# Body name(s) of tidal perturbers
 # Output
 # saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
 # 	      TMan Tcore -Tglobal -FluxOutGlobal -RadPowerT DeltaT
-saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo $
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

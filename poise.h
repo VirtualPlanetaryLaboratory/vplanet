@@ -85,6 +85,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_FLUXINGLOBAL     1823
 #define OUT_FLUXOUTGLOBAL    1824
 #define OUT_TOTICEMASS       1825
+#define OUT_TOTICEFLOW       1826
+#define OUT_TOTICEBALANCE    1827
 
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831
@@ -99,7 +101,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEHEIGHT        1840
 #define OUT_DICEMASSDT       1841
 #define OUT_ICEFLOW          1842
-//#define OUT_TIMELAT          1843
+#define OUT_ENERGYRESL       1843
+#define OUT_ENERGYRESW       1844
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -131,8 +134,8 @@ void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void Albedo(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
-double dOLRdTwk97(BODY*,int);
-double OLRwk97(BODY*,int);
+double dOLRdTwk97(BODY*,int,int);
+double OLRwk97(BODY*,int,int);
 double dOLRdThm16(BODY*,int,int);
 double OLRhm16(BODY*,int,int);
 

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os 
 import sys
 import subprocess as sb
@@ -15,7 +16,7 @@ else:
 try:
   f = open(inputf,'r')
 except IOError:
-  print "%s is not a valid file name. Please reenter."%inputf 
+  print ("%s is not a valid file name. Please reenter." %inputf)
   
 lines = f.readlines()
 f.close()
@@ -29,6 +30,7 @@ fline = [] #list of line numbers associated with each file
 iter_var = []  #list that will contain all iteration variables.
 iter_file = []  #which file each variable belongs to
 iter_name = []  #the name of each variable
+prefix = []
 numtry = 1     #number of trials to be generated
 numvars = 0   #number of iter_vars
 for i in range(len(lines)):
@@ -49,6 +51,10 @@ for i in range(len(lines)):
     spl = re.split('[\[\]]',lines[i])
     name = lines[i].split()[0]
     values = spl[1].split(',')
+    if len(spl) == 3:
+      prefix.append(spl[2].strip())
+    else:
+      raise IOError("Please provide a short prefix identifying each parameter to be iterated (to be used in directory names): <option> [<range>] <prefix>. Prefix is missing for '%s' for '%s'"%(name,flist[fnum-1]))
     if len(values) != 3:
       raise IOError("Attempt to iterate over '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>, <high>, <spacing>], [<low>, <high>, n<number of points>], or [<low>, <high>, l<number of points>] (log spacing) "%(name,flist[fnum-1]))
     
@@ -87,7 +93,6 @@ for i in range(len(lines)):
     numvars += 1
       
 fline.append(i+1)
-
 #error handling
 if src == None:
   raise IOError("Name of source folder not provided in file '%s'. Use syntax 'srcfolder <foldername>'"%inputf)
@@ -103,7 +108,7 @@ if re.search('\/',dest) != None:
   dest_parent = '/'.join(dest.split("/")[0:-1])
   if not os.path.exists(dest_parent):
     raise IOError("Destination's parent folder '%s' does not exist"%dest_parent)
-elif not os.path.exists(dest):
+if not os.path.exists(dest):
   os.system('mkdir '+dest)
 
 if numvars == 0:  
@@ -112,7 +117,7 @@ if numvars == 0:
     try:
       fIn = open(src+'/'+flist[i],'r')
     except IOError:
-      print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+      print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
   
     #find the lines in 'inputf' that correspond to this file
     slines = lines[fline[i]+1:fline[i+1]]
@@ -127,16 +132,17 @@ if numvars == 0:
   
     for j in range(len(dlines)):
       for k in range(len(spref)):
-        if dlines[j].split()[0] == spref[k]:
-          sflag[k] = 1   #option in file to be copied matched with option from inputf
-          dlines[j] = slines[k]
-          if dlines[j][-1] != '\n' and j < (len(dlines)-1):
-           dlines[j] = dlines[j]+'\n'  #add a newline, just in case
-        elif dlines[j].split()[0] == 'rm':
-          #remove an option by placing a comment!
-          if dlines[j].split()[1] == spref[k]:
-            dlines[j] = '#'+dlines[j]
-            sflag[k] = 1
+        if dlines[j].split() != []:
+          if dlines[j].split()[0] == spref[k]:
+            sflag[k] = 1   #option in file to be copied matched with option from inputf
+            dlines[j] = slines[k]
+            if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+             dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+          elif dlines[j].split()[0] == 'rm':
+            #remove an option by placing a comment!
+            if dlines[j].split()[1] == spref[k]:
+              dlines[j] = '#'+dlines[j]
+              sflag[k] = 1
   
       fOut.write(dlines[j])  #write to the copied file
     
@@ -155,7 +161,13 @@ elif numvars >= 1:
 
   #iterate over all possible combinations
   for tup in it.product(*iterables0):
-    destfull = dest+'/'+trial+'%d'%count  #create directory for this combination
+    destfull = dest+'/'+trial  #create directory for this combination
+    for ii in range(len(tup)):
+      index0 = np.where(iter_var[ii]==tup[ii])[0]
+      destfull += prefix[ii]+np.str(index0[0])
+      if ii != len(tup)-1:
+        destfull += '_'
+
     if not os.path.exists(destfull):
        os.system('mkdir '+destfull)
     
@@ -164,7 +176,7 @@ elif numvars >= 1:
       try:
         fIn = open(src+'/'+flist[i],'r')
       except IOError:
-        print "%s is not a valid file name. Please reenter."%(src+'/'+flist[i])
+        print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
       
       #find the lines in 'inputf' that correspond to this file
       slines = lines[fline[i]+1:fline[i+1]]
@@ -179,19 +191,20 @@ elif numvars >= 1:
           
       for j in range(len(dlines)):
         for k in range(len(spref)):
-          if dlines[j].split()[0] == spref[k]:
-            sflag[k] = 1   #option in file to be copied matched with option from inputf
-            dlines[j] = slines[k]
-            for m in range(len(iter_file)):
-              if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
-                dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
-            if dlines[j][-1] != '\n' and j < (len(dlines)-1):
-              dlines[j] = dlines[j]+'\n'  #add a newline, just in case
-          elif slines[k].split()[0] == 'rm':
-            #remove an option by placing a comment!
-            if dlines[j].split()[0] == slines[k].split()[1]:
-              dlines[j] = '#'+dlines[j]
-              sflag[k] = 1
+          if dlines[j].split() != []:
+            if dlines[j].split()[0] == spref[k]:
+              sflag[k] = 1   #option in file to be copied matched with option from inputf
+              dlines[j] = slines[k]
+              for m in range(len(iter_file)):
+                if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
+                  dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
+              if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+                dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+            elif slines[k].split()[0] == 'rm':
+              #remove an option by placing a comment!
+              if dlines[j].split()[0] == slines[k].split()[1]:
+                dlines[j] = '#'+dlines[j]
+                sflag[k] = 1
               
         fOut.write(dlines[j])  #write to the copied file
       

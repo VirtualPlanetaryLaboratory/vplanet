@@ -57,6 +57,12 @@
 #define Q2ICE         13.9e4     //energy in ice deformation at T>=263 (J/mol)
 #define RGAS          8.3144598  //gas constant in J K^-1 mol^-1
 #define nGLEN         3.0  //Glen's law coefficient
+#define RHOSED        2390  //sediment density from Huybers&Tziperman08
+#define RHOH2O        1000
+#define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
+#define SEDH          10      //depth of sediment layer (m)
+#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 
 /* Exit Status */
 
@@ -79,7 +85,7 @@
 
 #define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
-#define OPTLEN        24    /* Maximum length of an option */
+#define OPTLEN        64    /* Maximum length of an option */
 #define OPTDESCR      64    /* Number of characters in option
 			     * description */
 #define LINE          128   /* Maximum number of characters 
@@ -317,8 +323,8 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  /* Interior Thermal Parameters */
-  int bThermint;    /**< Apply Module THERMINT? */
+  /* Thermint Parameters */
+  int bThermint;           /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */
@@ -373,16 +379,22 @@ typedef struct {
   double dRIC;             /**< IC radius */
   double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
   double dDOC;             /**< OC shell thickness */
-  double dChiOC;           /**< OC light element concentration chi. */
-  double dChiIC;           /**< IC light element concentration chi. */
   double dThermConductOC;  /**< Thermal conductivity OC */
   double dThermConductIC;  /**< Thermal conductivity IC */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dMassOC;          /**< OC Mass. */
+  double dMassIC;          /**< IC Mass. */
+  double dMassChiOC;       /**< OC Chi Mass. */
+  double dMassChiIC;       /**< IC Chi Mass. */
+  double dDTChi;           /**< Core Liquidus Depression */
   /* Constants */
   double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
   double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
-
+  double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
+  
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
@@ -564,6 +576,18 @@ typedef struct {
   double *daPlanckA;
   double *daPlanckB;
   double dTGlobalInit;
+  double *daDeltaTempL;
+  double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
+  double *daEnergyResL;
+  double *daEnergyResW;       /**< Energy residuals */
+  double *daEnerResLAnn;
+  double *daEnerResWAnn;      /**< Annually averaged energy residuals */
+  double *daSedShear;         /**< sediment shear stress (for ice sheets) */
+  double *daBasalVel;         /**< Basal velocity of ice */
+  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
+  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
+  double dIceFlowTot;
+  double dIceBalanceTot;
 
 } BODY;
 
@@ -956,6 +980,7 @@ typedef struct {
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
   int iOneStep;          /**< Integration Method # */
+  double dCurrentDt;
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */

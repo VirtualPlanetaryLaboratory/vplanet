@@ -389,10 +389,12 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       strcpy(body[iFile-1].saTidePerts[iBody],saTmp[iBody]);
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
-  } else 
-    if (iFile > 0) {
-      body[iFile-1].iTidePerts=0;
+  } else {
+    if (iFile > 0 && control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,"ERROR: Eqtide called for body %s, but %s not set.\n",body[iFile-1].cName,options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
+  }
   free(lTmp);
 }
 
@@ -995,10 +997,9 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         fprintf(stderr,"ERROR: %s cannot be set for the central body.\n",options[OPT_ORBSEMI].cName);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
-    } else {
-      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-      CalcHK(body,iBody);
     }
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+    CalcHK(body,iBody);
   }
 }
 
@@ -1347,7 +1348,7 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   // Total change in dObl/dTime
   dFoo = 0;
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) 
-    dFoo += body[iBody].daDoblDtEqtide[iPert];
+    dFoo += body[iBody].daDoblDtEqtide[body[iBody].iaTidePerts[iPert]];
 
   *dTmp = dFoo;
 

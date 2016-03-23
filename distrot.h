@@ -21,7 +21,7 @@ void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_DYNELLIP              1402
 #define OPT_FORCEPRECRATE         1403
 #define OPT_PRECRATE              1404
-
+#define OPT_CALCDYNELLIP          1405
 
 /* Options Functions */
 void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -83,6 +83,7 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 void PropertiesDistRot(BODY*,UPDATE*,int);
 void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 void RotateVector(double*,double*,double,int);
+void CalcDynEllip(BODY*,int);
 
 /* DistRot's equations */
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);

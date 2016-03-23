@@ -1,18 +1,14 @@
 # Example primary input file for VPLANET
-sSystemName	gl581			# System Name
+sSystemName	sun			# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
-
-sTideModel 	CPL
 
 # All space after a # is ignored, as is white space
 # The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	gl581.in $	# The host star
-		c.in  $		# Gl 581 c, Earth-like w/strong tides
-		d.in		# Gl 581 d, weaker tides, 30x potassium-40
+saBodyFiles	earth.in
 
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
@@ -41,8 +37,8 @@ bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
 #dTimeStep	100
-dStopTime	2e5		# Stop time for evolution
-dOutputTime	1e3		# Output timesteps (assuming in body files)
+dStopTime	4.5e9  #1e10		# Stop time for evolution
+dOutputTime	1e6		# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)
 

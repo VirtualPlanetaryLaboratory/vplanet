@@ -401,9 +401,10 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX I don't think this will work with just eqtide
-  //*dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
-  *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  // XXX This doesn't work with just eqtide!
+
+  *dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
+  //*dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   strcpy(cUnit,"");
 }
 
@@ -882,21 +883,21 @@ void LogBodyRelations(CONTROL *control,FILE *fp,int iBody) {
 }
 
 void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  int iFile,iOut,iSubOut,iExtra=0;
+  int iCol,iOut,iSubOut,iExtra=0;
   char cCol[NUMOUT][OPTLEN];
   double *dTmp;
   char cUnit[48],cTmp[48];
   
-  for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
+  for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-      if (memcmp(files->Outfile[iBody].caCol[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
         /* Match! */
         dTmp=malloc(output[iOut].iNum*sizeof(double));
         fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
         for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
-          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caCol[iFile]);
+          strcpy(cCol[iCol+iSubOut+iExtra],files->Outfile[iBody].caCol[iCol]);
           sprintf(cTmp,"[%s]",cUnit);
-          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+          strcat(cCol[iCol+iSubOut+iExtra],cTmp);
         }
         iExtra += (output[iOut].iNum-1);
 	free(dTmp);
@@ -906,38 +907,39 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
   }
 
   fprintf(fp,"Output Order:");
-  for (iFile=0;iFile<(files->Outfile[iBody].iNumCols + iExtra);iFile++)
-    fprintf(fp," %s",cCol[iFile]);
+  for (iCol=0;iCol<(files->Outfile[iBody].iNumCols + iExtra);iCol++)
+    fprintf(fp," %s",cCol[iCol]);
   fprintf(fp, "\n");
 }
 
 void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  int iFile,iOut,iSubOut,iExtra=0;
+  int iCol,iOut,iSubOut,iExtra=0;
   char cCol[NUMOUT][OPTLEN];
   double *dTmp;
   char cUnit[48],cTmp[48];
   
-  for (iFile=0;iFile<files->Outfile[iBody].iNumCols;iFile++) {
+
+  for (iCol=0;iCol<files->Outfile[iBody].iNumGrid;iCol++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
-      if (memcmp(files->Outfile[iBody].caGrid[iFile],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
+      if (memcmp(files->Outfile[iBody].caGrid[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
         /* Match! */
         dTmp=malloc(output[iOut].iNum*sizeof(double));
         fnWrite[iOut](body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
         for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++) {
-          strcpy(cCol[iFile+iSubOut+iExtra],files->Outfile[iBody].caGrid[iFile]);
+          strcpy(cCol[iCol+iSubOut+iExtra],files->Outfile[iBody].caGrid[iCol]);
           sprintf(cTmp,"[%s]",cUnit);
-          strcat(cCol[iFile+iSubOut+iExtra],cTmp);
+          strcat(cCol[iCol+iSubOut+iExtra],cTmp);
         }
         iExtra += (output[iOut].iNum-1);
-	free(dTmp);
+  free(dTmp);
       }
-      
     }
   }
-
+  
+  
   fprintf(fp,"Grid Output Order:");
-  for (iFile=0;iFile<(files->Outfile[iBody].iNumGrid + iExtra);iFile++)
-    fprintf(fp," %s",cCol[iFile]);
+  for (iCol=0;iCol<(files->Outfile[iBody].iNumGrid + iExtra);iCol++)
+    fprintf(fp," %s",cCol[iCol]);
   fprintf(fp, "\n");
 }
 
@@ -1124,8 +1126,9 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       }
       free(dTmp);
     }
-    
-    if (control->bOutputLapl) {
+  } 
+  
+  if (control->bOutputLapl) {
       for (iBody=1;iBody<(control->Evolve.iNumBodies-1);iBody++) {
         if (body[iBody].bDistOrb && body[iBody].bEqtide) {
           if (control->Evolve.iDistOrbModel == RD4) {
@@ -1185,7 +1188,6 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
           }
         }
       }
-    }
   }
 }
 

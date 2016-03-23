@@ -49,36 +49,36 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 
   // If ibody is the CBP (body 2, iBodyType 0), init
-  if(body[iBody].iBodyType == 0 && iBody == 2) // If the body is a planet
+  if(body[iBody].iBodyType == 0) // If the body is a planet
   {
 
     // Init inital cylindrical positions, velocities
     // In future, use more intelligent starting points!
-    body[2].dCBPR = body[2].dSemi;
-    body[2].dCBPZ = 0.0;
-    body[2].dCBPPhi = 0.0;
-    body[2].dCBPRDot = 0.0;
-    body[2].dCBPZDot = 0.0;
-    body[2].dCBPPhiDot = 0.0;
+    body[iBody].dCBPR = body[iBody].dSemi;
+    body[iBody].dCBPZ = 0.0;
+    body[iBody].dCBPPhi = 0.0;
+    body[iBody].dCBPRDot = 0.0;
+    body[iBody].dCBPZDot = 0.0;
+    body[iBody].dCBPPhiDot = 0.0;
 
-    body[2].dR0 = body[2].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
-    body[2].dInc = body[2].dFreeInc; // CBP initial inc == free inclination
-    body[2].dLL13N0 = fdMeanMotion(body);
-    body[2].dLL13K0 = fdEpiFreqK(body);
-    body[2].dLL13V0 = fdEpiFreqV(body);
+    body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
+    body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
+    body[iBody].dLL13N0 = fdMeanMotion(body);
+    body[iBody].dLL13K0 = fdEpiFreqK(body);
+    body[iBody].dLL13V0 = fdEpiFreqV(body);
    
     // Set up initial orbital elements
-    body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
-    body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
+    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
   }
- 
+
   // Inits if the body is the primary
   if(body[iBody].iBodyType == 1 && iBody == 0)
   {
-    // Set Initial Poincare H, K
-    body[0].dHecc = body[0].dEcc*sin(body[0].dLongP);
-    body[0].dKecc = body[0].dEcc*cos(body[0].dLongP);
-    body[0].dEccSq = body[0].dEcc*body[0].dEcc;
+    // Set Initial Poincare H, K using imputted dEcc
+    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
   }
 }
 
@@ -393,7 +393,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       exit(EXIT_INPUT);
     }
   }
-  
+ 
   // If binary is being used, ALL bodies must have iBinary == 1
   if(body[0].bBinary == 0 || body[1].bBinary == 0 || body[2].bBinary == 0)
   {
@@ -404,7 +404,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     }
     exit(EXIT_INPUT);
   }
-
+  
   // Binary only allows 3 bodies: 2 stars, 1 CBP
   if(control->Evolve.iNumBodies > 3)
   {
@@ -412,9 +412,9 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     exit(EXIT_INPUT);
   }
 
-  // Call sub-verify functions to ensure matrix is properly configured for planet
   if(body[iBody].iBodyType == 0)
   {
+    // Call verifies to properly set up eqns in matrix
     VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -422,7 +422,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
-  // Set Planet initial positions, velocities according to LL13 theory
+    // Set Planet initial positions, velocities according to LL13 theory
     int iaBody[1] = {iBody}; //  Pick out CBP
     body[iBody].dCBPR = fdCBPRBinary(body,system,iaBody);
     body[iBody].dCBPZ = fdCBPZBinary(body,system,iaBody);
@@ -470,7 +470,6 @@ void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
     if(update[iBody].iNumCBPPhiDot == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumCBPPhiDot++;
-
   }
 }
 
@@ -519,7 +518,7 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
   {
     if(io->iVerbose >= VERBPROG) 
     {
-      printf("HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[2].cName,body[2].dSemi/AUCM,a_crit/AUCM);
+      fprintf(stderr,"HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[2].cName,body[2].dSemi/AUCM,a_crit/AUCM);
     }
     return 1;
   }

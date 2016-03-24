@@ -19,7 +19,7 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
       if(body[iBody].iBodyType == 0) // CBP
       {
         // Set CBP orbital elements, mean motion
-        fdAssignOrbitalElements(body);
+        fdAssignOrbitalElements(body,iBody);
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
       
       }
@@ -457,7 +457,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     control->Evolve.dTime += dDt;
     control->Evolve.nSteps++;
-    
+
     // if (control->Evolve.dTime >= 360*YEARSEC) {
 //       printf("stop\n");
 //     }

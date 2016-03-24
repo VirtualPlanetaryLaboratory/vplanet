@@ -116,16 +116,16 @@ double fdDot(double*,double*);
 void fvCylToCartPos(double*,double*);
 void fvCylToCartVel(double*,double*,double*);
 void fvSpecificAngMom(double*,double*,double*);
-double fdSpecificOrbEng(BODY*);
+double fdSpecificOrbEng(BODY*,int);
 
 /* Orbital Element Functions */
-void fdAssignOrbitalElements(BODY*);
-double fdComputeSemi(BODY*);
-double fdComputeEcc(BODY*);
-double fdComputeInc(BODY*);
-double fdComputeLongA(BODY*);
-void fdComputeEccVector(BODY*,double*);
-double fdComputeArgPeri(BODY*);
+void fdAssignOrbitalElements(BODY*,int);
+double fdComputeSemi(BODY*,int);
+double fdComputeEcc(BODY*,int);
+double fdComputeInc(BODY*,int);
+double fdComputeLongA(BODY*,int);
+void fdComputeEccVector(BODY*,double*,int);
+double fdComputeArgPeri(BODY*,int);
 double fdHolmanStability(BODY*);
 double fdMeanAnomaly(double,double,double);
 double fdMeanToEccentric(double,double);
@@ -133,23 +133,23 @@ double fdEccToTrue(double,double);
 
 /* Binary functions */
 
-double fdMeanMotion(BODY*);
-double fdEpiFreqK(BODY*);
-double fdEpiFreqV(BODY*);
+double fdMeanMotion(BODY*,int);
+double fdEpiFreqK(BODY*,int);
+double fdEpiFreqV(BODY*,int);
 double fdPhi0(double,double,double);
 double fdPot0(int,int,double,BODY*);
 double fdPot0dR(int,int,double,BODY*);
 double fdPot1(int,int,double,BODY*);
 double fdPot1dR(int,int,double,BODY*);
 double fdn(double,BODY*);
-double fdC0(BODY*);
-double fdC0k(int,BODY*);
-double fdCPk(int,BODY*);
-double fdCMk(int,BODY*);
-double fdD0(BODY*);
-double fdDk0(int,BODY*);
-double fdDPk(int,BODY*);
-double fdDMk(int,BODY*);
+double fdC0(BODY*,int);
+double fdC0k(int,BODY*,int);
+double fdCPk(int,BODY*,int);
+double fdCMk(int,BODY*,int);
+double fdD0(BODY*,int);
+double fdDk0(int,BODY*,int);
+double fdDPk(int,BODY*,int);
+double fdDMk(int,BODY*,int);
 double fdCBPRBinary(BODY*,SYSTEM*,int*);
 double fdCBPPhiBinary(BODY*,SYSTEM*,int*);
 double fdCBPZBinary(BODY*,SYSTEM*,int*);
@@ -160,4 +160,3 @@ double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 /* Misc functions */
 double fluxBinary(BODY*,double,double);
 double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);
-void fDebugBinary(BODY*);

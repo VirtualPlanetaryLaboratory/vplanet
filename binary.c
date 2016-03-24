@@ -63,9 +63,9 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
     body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
-    body[iBody].dLL13N0 = fdMeanMotion(body);
-    body[iBody].dLL13K0 = fdEpiFreqK(body);
-    body[iBody].dLL13V0 = fdEpiFreqV(body);
+    body[iBody].dLL13N0 = fdMeanMotion(body,iBody);
+    body[iBody].dLL13K0 = fdEpiFreqK(body,iBody);
+    body[iBody].dLL13V0 = fdEpiFreqV(body,iBody);
    
     // Set up initial orbital elements
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
@@ -394,25 +394,28 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     }
   }
  
-  // If binary is being used, ALL bodies must have iBinary == 1
-  if(body[0].bBinary == 0 || body[1].bBinary == 0 || body[2].bBinary == 0)
+  // If binary is being used, ALL bodies must have bBinary == 1
+  for(int i = 0; i < control->Evolve.iNumBodies; i++)
   {
-    if(control->Io.iVerbose >= VERBERR)
+    if(body[i].bBinary == 0)
     {
-      fprintf(stderr,"ERROR: In binary, all bodies must have bBinary == 1.\n");
-      fprintf(stderr,"body[i].bBinary for i=[1,3]: %d,%d,%d.\n",body[0].bBinary,body[1].bBinary,body[2].bBinary);
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"ERROR: In binary, all bodies must have bBinary == 1.\n");
+        fprintf(stderr,"body[i].bBinary == 0: %d\n",i);
+      }
+      exit(EXIT_INPUT);
     }
-    exit(EXIT_INPUT);
   }
   
   // Binary only allows 3 bodies: 2 stars, 1 CBP
   if(control->Evolve.iNumBodies > 3)
   {
-    fprintf(stderr,"ERROR: In binary, only 3 bodies are allowed: 2 stars, 1 planet.\n");
-    exit(EXIT_INPUT);
+    fprintf(stderr,"ERROR: In binary, only 3 bodies are allowed: 2 stars, 1 planet. Run at your own peril!\n");
+    //exit(EXIT_INPUT); // For right now, I'll allow it
   }
 
-  if(body[iBody].iBodyType == 0)
+  if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Call verifies to properly set up eqns in matrix
     VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -444,7 +447,7 @@ void InitializeModuleBinary(CONTROL *control,MODULE *module) {
 /**************** BINARY Update ****************/
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
-  // Only cbp should be in matrix
+  // Only planets should be in matrix
   if(body[iBody].iBodyType == 0)
   {
     if(update[iBody].iNumCBPR == 0)
@@ -514,15 +517,21 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
   double a_crit = fdHolmanStability(body);
   
   // If the body is less than critical stability limit
-  if(body[2].dSemi <= a_crit)
+  // Check stability for planets
+  if(body[iBody].iBodyType == 0)
   {
-    if(io->iVerbose >= VERBPROG) 
+    if(body[iBody].dSemi <= a_crit)
     {
-      fprintf(stderr,"HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[2].cName,body[2].dSemi/AUCM,a_crit/AUCM);
+      if(io->iVerbose >= VERBPROG) 
+      {
+        fprintf(stderr,"HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[2].cName,body[2].dSemi/AUCM,a_crit/AUCM);
+      }
+      return 1;
     }
-    return 1;
+    return 0;
   }
-  return 0;
+  else // Doesn't apply to stars
+    return 0;
 }
 
 void CountHaltsBinary(HALT *halt,int *iHalt) {
@@ -828,15 +837,7 @@ fprintf(fp,"-------- BINARY Options -----\n\n");
 }
 
 void LogBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
-  /* Anything here?
-  int iOut;
-
-  fprintf(fp,"\n----- BINARY PARAMETERS ------\n");
-  for (iOut=OUTSTARTBINARY;iOut<OUTBODYSTARTBINARY;iOut++) {
-    if (output[iOut].iNum > 0)
-      WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,0);
-  }
-  */
+  /* Anything here?*/
 }
 
 void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
@@ -932,12 +933,12 @@ void fvSpecificAngMom(double *r, double *v, double *h)
 /* Calculate specific orbital energy
  * eps = v^2/2 - mu/|r|
  */
-double fdSpecificOrbEng(BODY *body)
+double fdSpecificOrbEng(BODY *body, int iBody)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass); // Gravitational parameter
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
      
@@ -952,16 +953,16 @@ double fdSpecificOrbEng(BODY *body)
 
 /* Compute and assign CBP's orbital elements */
 
-void fdAssignOrbitalElements(BODY *body)
+void fdAssignOrbitalElements(BODY *body, int iBody)
 {
-  body[2].dSemi = fdComputeSemi(body);
-  body[2].dEcc = fdComputeEcc(body);
-  body[2].dInc = fdComputeInc(body);
+  body[iBody].dSemi = fdComputeSemi(body,iBody);
+  body[iBody].dEcc = fdComputeEcc(body,iBody);
+  body[iBody].dInc = fdComputeInc(body,iBody);
 
   // LongA, ArgP -> LongP (needed for dHecc, dKecc)
-  body[2].dLongA = fdComputeLongA(body);
-  body[2].dArgP = fdComputeArgPeri(body);
-  double LongP = body[2].dLongA + body[2].dArgP;
+  body[iBody].dLongA = fdComputeLongA(body,iBody);
+  body[iBody].dArgP = fdComputeArgPeri(body,iBody);
+  double LongP = body[iBody].dLongA + body[iBody].dArgP;
   while(LongP > 2.0*PI)
   {
     LongP -= 2.0*PI;
@@ -970,33 +971,33 @@ void fdAssignOrbitalElements(BODY *body)
   {
     LongP += 2.0*PI;
   }
-  body[2].dLongP = LongP;
+  body[iBody].dLongP = LongP;
 
-  body[2].dEccSq = body[2].dEcc*body[2].dEcc; 
+  body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc; 
   // Set Poincare H, K
-  body[2].dHecc = body[2].dEcc*sin(body[2].dLongP);
-  body[2].dKecc = body[2].dEcc*cos(body[2].dLongP);
+  body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+  body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
 }
 
 /* Compute a body's semimajor axis
  * a = -mu/(2*eps)
  */
-double fdComputeSemi(BODY *body)
+double fdComputeSemi(BODY *body, int iBody)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  return -BIGG*(body[0].dMass + body[1].dMass + body[2].dMass)/(2.0*fdSpecificOrbEng(body));
+  return -BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass)/(2.0*fdSpecificOrbEng(body,iBody));
 }
 
 /* Compute a body's orbital eccentricity
  * e = sqrt(1 + 2*eps*h*h/(mu*mu))
  */
-double fdComputeEcc(BODY *body)
+double fdComputeEcc(BODY *body, int iBody)
 {
   // For binary, iBody 0, 1 == stars, 2 == planet
-  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass); // Gravitational parameter
   double h[3];
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
   
@@ -1005,17 +1006,17 @@ double fdComputeEcc(BODY *body)
   fvCylToCartVel(r,v,vCart);
   fvSpecificAngMom(rCart,vCart,h);
   
-  return sqrt(1. + (2.*fdSpecificOrbEng(body)*fdDot(h,h))/(mu*mu));
+  return sqrt(1. + (2.*fdSpecificOrbEng(body,iBody)*fdDot(h,h))/(mu*mu));
 }
 
 /* Compute a body's inclincation
  * i = arccos(h_z/|h|)
  */
-double fdComputeInc(BODY *body)
+double fdComputeInc(BODY *body, int iBody)
 {
   double h[3];
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
      
@@ -1030,12 +1031,12 @@ double fdComputeInc(BODY *body)
 /* Compute a body's longitude of ascending node
  * See: https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node
  */
-double fdComputeLongA(BODY *body)
+double fdComputeLongA(BODY *body, int iBody)
 {
   double Omega = 0.0;
   double h[3];
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
 
@@ -1065,13 +1066,13 @@ double fdComputeLongA(BODY *body)
   return Omega;
 }
 
-void fdComputeEccVector(BODY *body, double *evec)
+void fdComputeEccVector(BODY *body, double *evec, int iBody)
 {
-  double mu = BIGG*(body[0].dMass + body[1].dMass + body[2].dMass); // Gravitational parameter
+  double mu = BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass); // Gravitational parameter
   double h[3];
 
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
      
@@ -1090,13 +1091,13 @@ void fdComputeEccVector(BODY *body, double *evec)
   }
 }
 
-double fdComputeArgPeri(BODY *body)
+double fdComputeArgPeri(BODY *body, int iBody)
 {
   double evec[3];
   double h[3];
 
-  double r[3] = {body[2].dCBPR,body[2].dCBPPhi,body[2].dCBPZ};
-  double v[3] = {body[2].dCBPRDot,body[2].dCBPPhiDot,body[2].dCBPZDot};
+  double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
+  double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
        
@@ -1105,13 +1106,13 @@ double fdComputeArgPeri(BODY *body)
   fvCylToCartVel(r,v,vCart);
 
   fvSpecificAngMom(rCart,vCart,h);
-  fdComputeEccVector(body,evec);
+  fdComputeEccVector(body,evec,iBody);
   double n[3] = {-h[1],h[0],0};
   double mag_n = sqrt(fdDot(n,n));
   double mag_evec = sqrt(fdDot(evec,evec));
 
   // if LongA ~ 0, assume planar orbit
-  if(fabs(fdComputeLongA(body)) < 1.0e-6)
+  if(fabs(fdComputeLongA(body,iBody)) < 1.0e-6)
   {
     if(h[2] > 0)
     {
@@ -1213,41 +1214,41 @@ double fdMeanAnomaly(double dMeanMotion, double dTime, double dPhi)
  */
 
 /* LL13 N0 */
-double fdMeanMotion(BODY *body)
+double fdMeanMotion(BODY *body, int iBody)
 {
   // Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[iBody].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[iBody].dR0;
 
-  double N0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+  double N0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
   double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
   tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
 
-  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dR0);
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[iBody].dR0);
   tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
 
   return sqrt(N0*(tmp1 + tmp2));
 }
 
 /* LL13 K0 */
-double fdEpiFreqK(BODY *body)
+double fdEpiFreqK(BODY *body, int iBody)
 {
   //Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[iBody].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[iBody].dR0;
  
-  double K0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+  double K0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
   double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
   tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
 
-  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[2].dR0);
+  double tmp2 = body[0].dMass*body[1].dMass*body[0].dSemi/(M*M*body[iBody].dR0);
   tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
 
-  double tmp3 = body[0].dMass*body[1].dMass*body[0].dSemi*body[0].dSemi/(M*M*body[2].dR0*body[2].dR0);
+  double tmp3 = body[0].dMass*body[1].dMass*body[0].dSemi*body[0].dSemi/(M*M*body[iBody].dR0*body[iBody].dR0);
 
   double tmp4 = body[1].dMass*fdDerivLaplaceCoeff(2,alphaa,0,0.5)/M;
   tmp4 += body[0].dMass*fdDerivLaplaceCoeff(2,alphab,0,0.5)/M;
@@ -1258,14 +1259,14 @@ double fdEpiFreqK(BODY *body)
 }
 
 /* LL13 V0 */
-double fdEpiFreqV(BODY *body)
+double fdEpiFreqV(BODY *body, int iBody)
 {
   //Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
-  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[2].dR0;
-  double alphab = (body[0].dSemi*body[0].dMass/M)/body[2].dR0;
+  double alphaa = (body[0].dSemi*body[1].dMass/M)/body[iBody].dR0;
+  double alphab = (body[0].dSemi*body[0].dMass/M)/body[iBody].dR0;
      
-  double V0 = body[2].dMeanMotion*body[2].dMeanMotion/2.;
+  double V0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
   double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,1.5)/M;
   tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,1.5)/M;
@@ -1380,88 +1381,88 @@ double fdn(double R, BODY *body)
  */
 
 /* LL13 C0 as defined in eqn 28 */
-double fdC0(BODY *body)
+double fdC0(BODY *body, int iBody)
 {
-  double c = -body[0].dEcc*fdPot1dR(0,0,body[2].dR0,body)/body[2].dR0;
-  c /= (body[2].dLL13K0*body[2].dLL13K0 - body[0].dMeanMotion*body[0].dMeanMotion);
+  double c = -body[0].dEcc*fdPot1dR(0,0,body[iBody].dR0,body)/body[iBody].dR0;
+  c /= (body[iBody].dLL13K0*body[iBody].dLL13K0 - body[0].dMeanMotion*body[0].dMeanMotion);
   return c;
 }
 
 /* LL13 C^0_k as defined by eqn 29 */
-double fdC0k(int k, BODY *body)
+double fdC0k(int k, BODY *body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double c = fdPot0dR(0,k,body[2].dR0,body) + (2.*n*fdPot0(0,k,body[2].dR0,body))/(body[2].dR0*(n-body[0].dMeanMotion));
-  c /= body[2].dR0;
-  c /= (body[2].dLL13K0*body[2].dLL13K0 - k*k*pow(body[2].dLL13N0 - body[0].dMeanMotion,2));
+  double n = fdn(body[iBody].dR0,body);
+  double c = fdPot0dR(0,k,body[iBody].dR0,body) + (2.*n*fdPot0(0,k,body[iBody].dR0,body))/(body[iBody].dR0*(n-body[0].dMeanMotion));
+  c /= body[iBody].dR0;
+  c /= (body[iBody].dLL13K0*body[iBody].dLL13K0 - k*k*pow(body[iBody].dLL13N0 - body[0].dMeanMotion,2));
   return c;
 }
 
 /* LL13 C^+_k as defined by eqn 30a (the + term) */
-double fdCPk(int k, BODY *body)
+double fdCPk(int k, BODY *body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double tmp1 = k*fdPot0dR(0,k,body[2].dR0,body) - 0.5*fdPot1dR(0,k,body[2].dR0,body);
-  double tmp2 = k*n*(2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body));
-  tmp2 /= body[2].dR0*(k*n - (k+1.)*body[0].dMeanMotion);
+  double n = fdn(body[iBody].dR0,body);
+  double tmp1 = k*fdPot0dR(0,k,body[iBody].dR0,body) - 0.5*fdPot1dR(0,k,body[iBody].dR0,body);
+  double tmp2 = k*n*(2.*k*fdPot0(0,k,body[iBody].dR0,body) - fdPot1(0,k,body[iBody].dR0,body));
+  tmp2 /= body[iBody].dR0*(k*n - (k+1.)*body[0].dMeanMotion);
   tmp1 += tmp2;
 
-  double c = body[0].dEcc*tmp1/body[2].dR0;
-  c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion);
+  double c = body[0].dEcc*tmp1/body[iBody].dR0;
+  c /= body[iBody].dLL13K0*body[iBody].dLL13K0 - (k*body[iBody].dLL13N0 - (k+1.)*body[0].dMeanMotion)*(k*body[iBody].dLL13N0 - (k+1.)*body[0].dMeanMotion);
   return c;
 }
 
 /* LL13 C^-_k as defined by eqn 30b (the - term) */
-double fdCMk(int k, BODY *body)
+double fdCMk(int k, BODY *body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double tmp1 = -k*fdPot0dR(0,k,body[2].dR0,body) - 0.5*fdPot1dR(0,k,body[2].dR0,body);
-  double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body));
-  tmp2 /= body[2].dR0*(k*n - (k-1.)*body[0].dMeanMotion);
+  double n = fdn(body[iBody].dR0,body);
+  double tmp1 = -k*fdPot0dR(0,k,body[iBody].dR0,body) - 0.5*fdPot1dR(0,k,body[iBody].dR0,body);
+  double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[iBody].dR0,body) - fdPot1(0,k,body[iBody].dR0,body));
+  tmp2 /= body[iBody].dR0*(k*n - (k-1.)*body[0].dMeanMotion);
   tmp1 += tmp2;
    
-  double c = body[0].dEcc*tmp1/body[2].dR0;
-  c /= body[2].dLL13K0*body[2].dLL13K0 - (k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion)*(k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion);
+  double c = body[0].dEcc*tmp1/body[iBody].dR0;
+  c /= body[iBody].dLL13K0*body[iBody].dLL13K0 - (k*body[iBody].dLL13N0 - (k-1.)*body[0].dMeanMotion)*(k*body[iBody].dLL13N0 - (k-1.)*body[0].dMeanMotion);
   return c;
 }
 
 /* LL13 D0 as defined by eqn 32 */
-double fdD0(BODY * body)
+double fdD0(BODY * body, int iBody)
 {
-  return 2.0*fdC0(body);
+  return 2.0*fdC0(body, iBody);
 }
 
 /* LL13 Dk0 as defined by eqn 33 */
-double fdDk0(int k, BODY * body)
+double fdDk0(int k, BODY * body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double tmp1 = 2.0*fdC0k(k,body);
-  double Dk = -fdPot0(0,k,body[2].dR0,body)/(body[2].dR0*body[2].dR0);
+  double n = fdn(body[iBody].dR0,body);
+  double tmp1 = 2.0*fdC0k(k,body,iBody);
+  double Dk = -fdPot0(0,k,body[iBody].dR0,body)/(body[iBody].dR0*body[iBody].dR0);
   Dk /= (n*(n - body[0].dMeanMotion));
 
   return (tmp1-Dk);
 }
 
 /* LL13 D+_k as defined by eqn 34a (the + term) */
-double fdDPk(int k, BODY * body)
+double fdDPk(int k, BODY * body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double Dk = 2.0*fdCPk(k,body);
+  double n = fdn(body[iBody].dR0,body);
+  double Dk = 2.0*fdCPk(k,body,iBody);
 
-  double tmp1 = body[0].dEcc*(k*(2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body)));
-  tmp1 /= 2.0*body[2].dR0*body[2].dR0*n * (k*n - (k+1.)*body[0].dMeanMotion);
+  double tmp1 = body[0].dEcc*(k*(2.*k*fdPot0(0,k,body[iBody].dR0,body) - fdPot1(0,k,body[iBody].dR0,body)));
+  tmp1 /= 2.0*body[iBody].dR0*body[iBody].dR0*n * (k*n - (k+1.)*body[0].dMeanMotion);
   
   return Dk - tmp1;
 }
 
 /* LL13 D-_k as defined by eqn 34b (the - term) */
-double fdDMk(int k, BODY * body)
+double fdDMk(int k, BODY * body, int iBody)
 {
-  double n = fdn(body[2].dR0,body);
-  double Dk = 2.0*fdCMk(k,body);
+  double n = fdn(body[iBody].dR0,body);
+  double Dk = 2.0*fdCMk(k,body,iBody);
  
-  double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[2].dR0,body) - fdPot1(0,k,body[2].dR0,body)));
-  tmp1 /= 2.0*body[2].dR0*body[2].dR0*n * (k*n - (k-1.)*body[0].dMeanMotion);
+  double tmp1 = body[0].dEcc*(k*(-2.*k*fdPot0(0,k,body[iBody].dR0,body) - fdPot1(0,k,body[iBody].dR0,body)));
+  tmp1 /= 2.0*body[iBody].dR0*body[iBody].dR0*n * (k*n - (k-1.)*body[0].dMeanMotion);
 
   return Dk - tmp1;
 }
@@ -1474,53 +1475,57 @@ double fdDMk(int k, BODY * body)
 /* Computes the CBP orbital radius */
 double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) 
 { 
+  int iBody = iaBody[0];
+
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitary offsets
   double dPsi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
-  double tmp1 = 1. - body[2].dFreeEcc*cos(body[2].dLL13K0*dTime + dPsi) - fdC0(body)*cos(M);
+  double tmp1 = 1. - body[iBody].dFreeEcc*cos(body[iBody].dLL13K0*dTime + dPsi) - fdC0(body,iBody)*cos(M);
   double tmp2 = 0.0;
   double tmp3 = 0.0;
 
   for(int k = 1; k < K_MAX; k++)
   {
-    tmp3 = fdC0k(k,body)*cos(k*(phi0 - M - varpi));
-    tmp3 += fdCPk(k,body)*cos(k*(phi0 - varpi) - (k+1.)*M);
-    tmp3 += fdCMk(k,body)*cos(k*(phi0 - varpi) - (k-1.)*M);
+    tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
+    tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
+    tmp3 += fdCMk(k,body,iBody)*cos(k*(phi0 - varpi) - (k-1.)*M);
     tmp2 += tmp3;
   }
 
-  return body[2].dR0*(tmp1-tmp2);
+  return body[iBody].dR0*(tmp1-tmp2);
 }
 
 double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
+  int iBody = iaBody[0];
+
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
   double dPsi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
-  double phi = phi0 + 2.0*body[2].dLL13N0*body[2].dFreeEcc*sin(body[2].dLL13K0*dTime + dPsi)/body[2].dLL13K0;
-  phi += body[2].dLL13N0*fdD0(body)*sin(M)/body[0].dMeanMotion;
+  double phi = phi0 + 2.0*body[iBody].dLL13N0*body[iBody].dFreeEcc*sin(body[iBody].dLL13K0*dTime + dPsi)/body[iBody].dLL13K0;
+  phi += body[iBody].dLL13N0*fdD0(body,iBody)*sin(M)/body[0].dMeanMotion;
 
   double tot = 0.0;
   double tmp1 = 0.0;
   for(int k = 1; k < K_MAX; k++)
   {
-    tmp1 = body[2].dLL13N0*fdDk0(k,body)*sin(k*(phi0-M-varpi))/(k*(body[2].dLL13N0-body[0].dMeanMotion));
-    tmp1 += body[2].dLL13N0*fdDPk(k,body)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[2].dLL13N0 - (k+1.)*body[0].dMeanMotion);
-    tmp1 += body[2].dLL13N0*fdDMk(k,body)*sin(k*(phi0-varpi) - (k-1.)*M)/(k*body[2].dLL13N0 - (k-1.)*body[0].dMeanMotion);
+    tmp1 = body[iBody].dLL13N0*fdDk0(k,body,iBody)*sin(k*(phi0-M-varpi))/(k*(body[iBody].dLL13N0-body[0].dMeanMotion));
+    tmp1 += body[iBody].dLL13N0*fdDPk(k,body,iBody)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[iBody].dLL13N0 - (k+1.)*body[0].dMeanMotion);
+    tmp1 += body[iBody].dLL13N0*fdDMk(k,body,iBody)*sin(k*(phi0-varpi) - (k-1.)*M)/(k*body[iBody].dLL13N0 - (k-1.)*body[0].dMeanMotion);
     tot += tmp1;
   }
 
@@ -1541,71 +1546,77 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPZBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
+  int iBody = iaBody[0];
+
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
   double dXi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
-  return body[2].dR0*body[2].dFreeInc*cos(body[2].dLL13V0*dTime + dXi);
+  return body[iBody].dR0*body[iBody].dFreeInc*cos(body[iBody].dLL13V0*dTime + dXi);
 }
 
 double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
+  int iBody = iaBody[0];
+
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
   double dPsi = 0.0;
   double dPhi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
-  double k0 = body[2].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
-  double phi0_dot = body[2].dLL13N0;
+  double k0 = body[iBody].dLL13K0;
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double phi0_dot = body[iBody].dLL13N0;
   double M_dot = body[0].dMeanMotion;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
-  double tmp1 = k0*body[2].dFreeEcc*sin(k0*dTime + dPsi) + fdC0(body)*sin(M)*M_dot;
+  double tmp1 = k0*body[iBody].dFreeEcc*sin(k0*dTime + dPsi) + fdC0(body,iBody)*sin(M)*M_dot;
 
   double tmp2 = 0.0; // Total sum
   double tmp3 = 0.0; // Intermediate sum for each k
   for(int k = 1; k < K_MAX; k++)
   {
-    tmp3 = -fdC0k(k,body)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
-    tmp3 -= fdCPk(k,body)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
-    tmp3 -= fdCMk(k,body)*sin(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot -(k-1.)*M_dot);
+    tmp3 = -fdC0k(k,body,iBody)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
+    tmp3 -= fdCPk(k,body,iBody)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
+    tmp3 -= fdCMk(k,body,iBody)*sin(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot -(k-1.)*M_dot);
     tmp2 += tmp3;
   }
 
-  return body[2].dR0*(tmp1-tmp2);
+  return body[iBody].dR0*(tmp1-tmp2);
 }
 
 double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
+  int iBody = iaBody[0];
+
   // Set arbitrary phase constants to 0
   double dPsi = 0.0;
   double dPhi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
-  double k0 = body[2].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[2].dLL13N0,0);
-  double phi0_dot = body[2].dLL13N0;
-  double n0 = body[2].dLL13N0;
+  double k0 = body[iBody].dLL13K0;
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double phi0_dot = body[iBody].dLL13N0;
+  double n0 = body[iBody].dLL13N0;
   double n = body[0].dMeanMotion;
   double M_dot = n;
   double M = fdMeanAnomaly(body[0].dMeanMotion,dTime,0);
   double varpi = body[0].dLongP;//body[0].dLongA + body[0].dArgP;
 
-  double tmp1 = n0 + 2.0*n0*body[2].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fdD0(body)*cos(M)*M_dot;
+  double tmp1 = n0 + 2.0*n0*body[iBody].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fdD0(body,iBody)*cos(M)*M_dot;
 
   double tmp2 = 0.0; // Total loop sum
   double tmp3 = 0.0; // Intermediate loop sum
   for(int k = 1; k < K_MAX; k++)
   {
-    tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
-    tmp3 += (n0*fdDPk(k,body)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
-    tmp3 += (n0*fdDMk(k,body)/(k*n0 - (k-1.)*n))*cos(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot-(k-1.)*M_dot);
+    tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body,iBody)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
+    tmp3 += (n0*fdDPk(k,body,iBody)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
+    tmp3 += (n0*fdDMk(k,body,iBody)/(k*n0 - (k-1.)*n))*cos(k*(phi0-varpi)-(k-1.)*M)*(k*phi0_dot-(k-1.)*M_dot);
     tmp2 += tmp3;
   }
 
@@ -1614,17 +1625,20 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
+  int iBody = iaBody[0];
+
   // Set arbitrary phase constants to 0 for simplicity
   double dXi = 0.0;
-  double dTime = body[iaBody[0]].dAge; // Time == Age of the body
+  double dTime = body[iBody].dAge; // Time == Age of the body
 
-  return -body[2].dR0*body[2].dFreeInc*sin(body[2].dLL13V0*dTime + dXi)*body[2].dLL13V0;
+  return -body[iBody].dR0*body[iBody].dFreeInc*sin(body[iBody].dLL13V0*dTime + dXi)*body[iBody].dLL13V0;
 }
 
 /* Misc Functions */
 
 /* Binary orbit-averaged flux received by CBP
  * Note: A crude estimate used right now as a place holder
+ * Don't use this function!
  */
 double fluxBinary(BODY *body, double L1, double L2)
 {
@@ -1638,7 +1652,8 @@ double fluxBinary(BODY *body, double L1, double L2)
 double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
 {
   // Define/init all variables 
-  double period = 2.0*PI/body[2].dMeanMotion; // Period of CBP orbit
+  int iBody = iaBody[0];
+  double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;
   double trueAnomaly = 0.0;
@@ -1649,14 +1664,14 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0; // Cartesian position of binary in plane
   double x = 0.0, y = 0.0; // Cartesian positon of cbp
   double r = 0.0, phi = 0.0, z = 0.0; // Cyl position of cbp
-  double dAge = body[iaBody[0]].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
+  double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
   for(int i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly
-    meanAnomaly = body[0].dMeanMotion*body[iaBody[0]].dAge; // ignore arbitrary phase offset since P_bin << P_cbp for LL13 theory
+    meanAnomaly = body[0].dMeanMotion*body[iBody].dAge; // ignore arbitrary phase offset since P_bin << P_cbp for LL13 theory
     eccAnomaly = fdMeanToEccentric(meanAnomaly,body[0].dEcc);
     trueAnomaly = fdEccToTrue(eccAnomaly,body[0].dEcc);
 
@@ -1691,45 +1706,11 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
     flux += (L0/(4.0*PI*r1) + L1/(4.0*PI*r2));
   
     // Increment body's age aka time
-    body[iaBody[0]].dAge += step;
+    body[iBody].dAge += step;
   }
 
   // Reset the body's dAge to what it was at the start of this function!
-  body[iaBody[0]].dAge = dAge;
+  body[iBody].dAge = dAge;
 
   return flux/FLUX_INT_MAX;
-}
-
-/* 
- * Debug functions...evaluates and prints out all C,D's and what have you
- * to see if any bugs exits
- */
-
-/* General debug: Run in main AFTER all stuff read in, processed */
-void fDebugBinary(BODY *body)
-{
-  fprintf(stderr,"Performing debug outputs...\n");
-
-  fprintf(stdout,"Bin props: a, e, m1, m2, dMeanMotion, varpi: %lf,%lf,%lf,%lf,%lf,%e\n",body[0].dSemi/AUCM,body[0].dEcc,body[0].dMass/MSUN,body[1].dMass/MSUN,body[0].dMeanMotion,body[0].dLongP/DEGRAD);
-  fprintf(stdout,"planet props: a, e, m1, dMeanMotion: %lf,%lf,%lf,%e\n",body[2].dSemi/AUCM,body[2].dEcc,body[2].dMass/MEARTH,body[2].dMeanMotion);
-
-  fprintf(stdout,"C0 = %lf\n",fdC0(body));
-  for(int k = 1; k < K_MAX; k++)
-  {
-    fprintf(stdout,"C0%d = %lf\n",k,fdC0k(k,body));
-    fprintf(stdout,"C+%d = %lf\n",k,fdCPk(k,body));
-    fprintf(stdout,"C-%d = %lf\n",k,fdCMk(k,body));
-  }
-
-  fprintf(stdout,"nk [1/s] %e\n",body[2].dMeanMotion);
-  fprintf(stdout,"n0 [1/s] %e\n",body[2].dLL13N0);
-  fprintf(stdout,"k0 [1/s] %e\n",body[2].dLL13K0);
-  fprintf(stdout,"v0 [1/s] %e\n",body[2].dLL13V0);
-
-  fprintf(stdout,"r0 %lf\n",body[2].dR0/AUCM);
-  fprintf(stdout,"n0/nk %lf\n",body[2].dLL13N0/body[2].dMeanMotion);
-  fprintf(stdout,"k0/nk %lf\n",body[2].dLL13K0/body[2].dMeanMotion);
-  fprintf(stdout,"v0/nk %lf\n",body[2].dLL13V0/body[2].dMeanMotion);
-
-  fprintf(stderr,"Debug output end.\n");
 }

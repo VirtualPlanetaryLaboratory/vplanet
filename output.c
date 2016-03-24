@@ -160,7 +160,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
   else // Doing binary
   {
-    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+    if(body[iBody].iBodyType == 0) // CBP
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
     else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
@@ -218,7 +218,7 @@ void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
   else // Doing binary
   {
-    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+    if(body[iBody].iBodyType == 0) // CBP
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
     else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[0].dMass));
@@ -244,7 +244,7 @@ void WriteOrbSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
       *dTmp = -1;
   }
   else { // Doing binary
-    if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+    if(body[iBody].iBodyType == 0) // CBP
       *dTmp = body[iBody].dSemi;
     else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
       *dTmp = body[iBody].dSemi;

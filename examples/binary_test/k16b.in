@@ -1,5 +1,5 @@
 # Earth's parameters
-sName		earth			# Body's name
+sName		k16b			# Body's name
 saModules       binary #atmesc
 
 # Physical Properties

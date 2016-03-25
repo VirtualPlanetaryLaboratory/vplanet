@@ -2796,6 +2796,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
+  InitializeOptionsFlare(options,fnRead);
 
 }
  

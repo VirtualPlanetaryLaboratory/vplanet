@@ -699,6 +699,7 @@ void WriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
@@ -706,6 +707,7 @@ void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
@@ -1349,12 +1351,19 @@ double fdImk2Man(BODY *body,int iBody) {
 /* Inner Core Size */
 double fdRIC(BODY *body,int iBody) {
   //    double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
-    double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
-    if (numerator>0) {    //IC Found.
-        return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
-    } else {
-        return 0;        //no IC.
-    }
+  double dRIC;
+  
+  double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
+  if (numerator>0) {    //IC Found.
+    dRIC = (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
+  } else {
+    dRIC = 0;        //no IC.
+  }
+  
+  if (dRIC > ERCORE)
+    dRIC = ERCORE;
+
+  return dRIC;
 }
 
 double fdTidalPowMan(BODY *body,int iBody) {

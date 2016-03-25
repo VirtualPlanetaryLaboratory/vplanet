@@ -1,7 +1,7 @@
 # Gl581 d
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
-saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA CassiniOne CassiniTwo
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA CassiniOne CassiniTwo 
 
 # The order of options in a file is unimportant
 # The user selects the ordering of the output

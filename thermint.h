@@ -25,7 +25,7 @@
 #define EMASSMAN         EMASSFRACMAN*EMASS    //[kg] mass of E mantle
 #define EMASSFRACCORE    0.32                  //mass frac E core
 #define EMASSCORE        EMASSFRACCORE*EMASS   //[kg] mass of E core
-#define EMASSIC          9.7e22                //[kg] mass of present IC.
+#define EMASSIC          9.9124e22             //[kg] mass of present IC.
 #define EMASSOC          EMASSCORE-EMASSIC     //[kg] mass of present OC.
 #define EMASSOCEAN       1.4e21                //[kg] mass of E oceans
 #define EMASSFRACOCEAN   EMASSOCEAN/EMASS      //ocean mass frac
@@ -76,8 +76,8 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
-#define VISCREF          6e7           //[m2/s] reference kinematic mantle viscosity, def ViscRef.
-#define VISCJUMPULM      2.1           //[nd] viscosity jump from upper to lower mantle, def ViscRatioMan.
+#define VISCREF          5e7           //[m2/s] reference kinematic mantle viscosity, def ViscRef.
+#define VISCJUMPULM      2.7           //[nd] viscosity jump from upper to lower mantle, def ViscRatioMan.
 #define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
@@ -94,9 +94,17 @@
 #define DTLIQMAN         +500.0        //[K] mantle liquidus offset, T_liq=T_sol+DTLIQMAN
 #define DVLIQDTM         +8e17         //[m3/K] change in mantle liquid volume with T_m approximated (Driscoll&B 2015)
 #define DLIND            7000.0*KM     //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
-#define TREFLIND         5430.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
+#define TREFLIND         5705.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
 #define DVLIQDTEMP       8e17          //[m^3/K] approximation of mantle DV_liq/DT.
 #define ERUPTEFF         0.1           //[nd] Default eruption efficiency.
+/* CORE CHEMISTRY */
+#define DTCHIREF         300.          //[K] DT_chi>0. liquidus depression present E.
+#define CHI_OC_E         0.18          //[nd] OCore light element concentration present E.
+#define PARTITION_CHI_CORE (ERICB)/(ERCORE) //[nd] Core Le Partition coefficent=R_ic_e/r_e
+#define CHI_IC_E         PARTITION_CHI_CORE*CHI_OC_E //[nd] IC Le concentration in E  (CHI_IC_E=partition*CHI_OC_E)
+#define EMASSOC_CHI      CHI_OC_E*EMASSOC //[kg] Mass of Chi in OC in E
+#define EMASSIC_CHI      CHI_IC_E*EMASSIC //[kg] Mass of Chi in IC in E
+#define EMASSCORE_CHI    EMASSOC_CHI+EMASSIC_CHI  //[kg] total Chi mass OC+IC in E (conserved)
 /* ADIABATIC PROPERTIES */
 #define ADGRADMAN        (0.5)/(KM)    //[K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18)
 #define DADCORE          6340.0*KM     //[m] liq iron core adiabatic length scale (DB15 eq A22)
@@ -172,11 +180,17 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_CHIIC           1781   //IC light element concentration chi.
 #define OPT_THERMCONDUCTOC  1782   //Thermal conductivity OC
 #define OPT_THERMCONDUCTIC  1783   //Thermal conductivity IC
+#define OPT_MASSOC          1784   //OC Mass
+#define OPT_MASSIC          1785   //IC Mass
+#define OPT_MASSCHIOC       1786   //OC chi Mass
+#define OPT_MASSCHIIC       1787   //IC chi Mass
+#define OPT_DTCHI           1788   //Core Liquidus Depression
 /* Constants */
 #define OPT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
 #define OPT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OPT_VISCREF         1792   //Reference Viscosity
 #define OPT_TREFLIND        1793   //Reference Temperature Lindemann Core Liquidus
+#define OPT_DTCHIREF        1794   //Reference Core Liquidus Depression
 
 #define OPT_HALTMINTMAN     1798
 #define OPT_HALTMINTCORE    1799
@@ -188,6 +202,7 @@ void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRatioMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -279,11 +294,17 @@ void PropsAuxThermint(BODY*,UPDATE*,int);
 #define OUT_CHIIC           1781   //IC light element concentration chi.
 #define OUT_THERMCONDUCTOC  1782   //Thermal conductivity OC
 #define OUT_THERMCONDUCTIC  1783   //Thermal conductivity IC
+#define OUT_MASSOC          1784   //OC Mass
+#define OUT_MASSIC          1785   //IC Mass
+#define OUT_MASSCHIOC       1786   //OC chi Mass
+#define OUT_MASSCHIIC       1787   //IC chi Mass
+#define OUT_DTCHI           1788   //Core Liquidus Depression
 /* Constants */
 #define OUT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
 #define OUT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OUT_VISCREF         1792   //Reference Viscosity
 #define OUT_TREFLIND        1793   //Reference Lindeman Temperature
+#define OUT_DTCHIREF        1794   //Reference Liquidus Depression
 
 
 void HelpOutputThermint(OUTPUT*);
@@ -331,6 +352,12 @@ void WriteTidalPowMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void WriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDRICDTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMassOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMassIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMassChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMassChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDTChi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsThermint(CONTROL*,FILE*);
@@ -386,6 +413,13 @@ double fdTidalPowMan(BODY*,int);
 double fdHflowSurfMan(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
+double fdChiOC(BODY*,int);
+double fdChiIC(BODY*,int);
+double fdMassIC(BODY*,int);
+double fdMassOC(BODY*,int);
+double fdMassChiIC(BODY*,int);
+double fdMassChiOC(BODY*,int);
+double fdDTChi(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 

@@ -372,10 +372,12 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       strcpy(body[iFile-1].saTidePerts[iBody],saTmp[iBody]);
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
-  } else 
-    if (iFile > 0) {
-      body[iFile-1].iTidePerts=0;
+  } else {
+    if (iFile > 0 && control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,"ERROR: Eqtide called for body %s, but %s not set.\n",body[iFile-1].cName,options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
+  }
   free(lTmp);
 }
 

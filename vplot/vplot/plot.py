@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin python
+####!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
 plot.py
@@ -39,7 +40,7 @@ def AlphaMap(r = 0, g = 0, b = 0):
     
   return LinearSegmentedColormap('AlphaMap', cdict)
 
-def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
+def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None, interactive = True):
   '''
 
   '''
@@ -252,7 +253,7 @@ def Plot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None):
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
 
   # Show or save?
-  if conf.interactive:
+  if interactive and conf.interactive:
     pl.show()
   else:
     fig.savefig(conf.figname, bbox_inches = 'tight')

@@ -17,7 +17,7 @@ void  InitializeControlThermint(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
   /* Constants */
@@ -791,6 +791,7 @@ void WriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
@@ -798,6 +799,7 @@ void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
@@ -1527,21 +1529,29 @@ double fdDTChi(BODY *body, int iBody) {
 
 /* Inner Core Size */
 double fdRIC(BODY *body,int iBody) {
+  double dRIC;
+
   /*  OLD VERSION without light element depression.
     double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
     if (numerator>0) {    //IC Found.
         return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
   */
   /* NEW VERSION with light element liquidus depression  */
+
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
   double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
   double numerator=1.+pow((DADCORE)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
   double denom=1.+pow((DADCORE)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
-    return (ERCORE)*sqrt(numerator/denom);
+    dRIC = (ERCORE)*sqrt(numerator/denom);
   } else {
-    return 0;        //no IC.
+    dRIC = 0;        //no IC.
   }
+
+  if (dRIC > ERCORE)
+    dRIC = ERCORE;
+
+  return dRIC;
 }
 
 /*  Heat Flows  */

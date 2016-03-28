@@ -22,7 +22,7 @@ void InitializeModuleDistRot(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dXobl = src[iBody].dXobl;

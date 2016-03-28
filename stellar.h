@@ -18,7 +18,7 @@
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
-void BodyCopyStellar(BODY*,BODY*,int,int);
+void BodyCopyStellar(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 
@@ -100,6 +100,8 @@ double fdRadiusFunctionBaraffe(double, double);
 double fdDRotRateDt(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
+double fdLXUVStellar(BODY*,SYSTEM*,UPDATE*,int,int);
+
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

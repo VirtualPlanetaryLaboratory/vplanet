@@ -85,8 +85,8 @@
 
 void InitializeControlRadheat(CONTROL*);
 void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+void InitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */

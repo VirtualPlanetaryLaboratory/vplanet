@@ -18,13 +18,12 @@ void  InitializeControlStellar(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
   dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].iWindModel = src[iBody].iWindModel;
-  dest[iBody].dLXUV = src[iBody].dLXUV;
 }
 
 void InitializeBodyStellar(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -300,27 +299,6 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
 }
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
-
-  // TODO TODO TODO: Fix kink! Check saturation criteria.
-  
-  // Update LXUV
-  double dPer, dLXRay, dLEUV;
-  dPer = 2 * PI / body[iBody].dRotRate;
-  
-  // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
-  dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
-
-  if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
-    // Saturated regime (Reiners, Schussler & Passegger 2014)
-    dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
-  }
-  
-  // Sanz-Forcada et al. (2011), eqn (3)
-  dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
-  
-  // Based on Miles Timpe's thesis:
-  body[iBody].dLXUV = dLXRay + dLEUV;
-
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -482,7 +460,7 @@ void WriteTemperature(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dLXUV;
+  *dTmp = fdLXUVStellar(body,system,update,iBody,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -495,7 +473,7 @@ void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 }
 
 void WriteLXUVFrac(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
+  *dTmp = fdLXUVStellar(body,system,update,iBody,iBody) / body[iBody].dLuminosity;
   strcpy(cUnit,"");
 }
 
@@ -515,8 +493,8 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TEMPERATURE].iNum = 1;
   fnWrite[OUT_TEMPERATURE] = &WriteTemperature;
   
-  sprintf(output[OUT_LXUV].cName,"LXUV");
-  sprintf(output[OUT_LXUV].cDescr,"X-ray/XUV Luminosity");
+  sprintf(output[OUT_LXUV].cName,"LXUVStellar");
+  sprintf(output[OUT_LXUV].cDescr,"Base X-ray/XUV Luminosity");
   sprintf(output[OUT_LXUV].cNeg,"LSUN");
   output[OUT_LXUV].bNeg = 1;
   output[OUT_LXUV].dNeg = 1./LSUN;
@@ -531,7 +509,7 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
 }
 
 void FinalizeOutputFunctionStellar(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxStellar;
+  output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVStellar;
 }
 
 /************ STELLAR Logging Functions **************/
@@ -564,19 +542,6 @@ void LogBodyStellar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
   for (iOut=OUTSTARTSTELLAR;iOut<OUTENDSTELLAR;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-    /*
-    fprintf(fp,"40K Constant: ");
-    fprintd(fp,body[iBody].d40KConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"232Th Constant: ");
-    fprintd(fp,body[iBody].d232ThConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"238U Constant: ");
-    fprintd(fp,body[iBody].d238UConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-    */
   }
 }
 
@@ -748,8 +713,34 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
   }
 }
 
+/* RORY: Rodrigo put this in PropertiesStellar, but I don't think this is necessary for STELLAR. It is important with ATMESC, and so should also be called from PropertiesAtmescStellar in module.c. */
+
+double fdLXUVStellar(BODY *body,SYSTEM *system,UPDATE*update,int iBody,int iFoo) {
+  // TODO TODO TODO: Fix kink! Check saturation criteria.
+  
+  // Update LXUV
+  double dPer, dLXRay, dLEUV;
+  dPer = 2 * PI / body[iBody].dRotRate;
+  
+  // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
+  dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
+
+  if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
+    // Saturated regime (Reiners, Schussler & Passegger 2014)
+    dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
+  }
+  
+  // Sanz-Forcada et al. (2011), eqn (3)
+  dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+  
+  // Based on Miles Timpe's thesis:
+  return dLXRay + dLEUV;
+}
+
+
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
+// RORY: I don't think so! -- This function should be set to ReturnOutputZero
   return 0;
 }

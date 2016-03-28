@@ -55,6 +55,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   module->fnFinalizeUpdateIceMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
+  module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
   
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
   module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
@@ -101,6 +102,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bStellar)
     iNumModules++;
   if (body[iBody].bPoise)
+    iNumModules++;
+  if (body[iBody].bFlare)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -150,6 +153,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
   module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   
   /* Initialize all FinalizeUpdate functions to null. The modules that
      need them will replace them in AddModule. */
@@ -180,6 +184,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
+
     module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
   }
 
@@ -220,6 +226,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModulePoise(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = POISE;
   }
+  if (body[iBody].bFlare) {
+    AddModuleFlare(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = FLARE;
+  }
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iFile){
@@ -253,13 +263,15 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
         body[iFile-1].bDistRot = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-	      body[iFile-1].bThermint = 1;
+	body[iFile-1].bThermint = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
-	      body[iFile-1].bAtmEsc = 1;
-	    } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
-	      body[iFile-1].bStellar = 1;
-	    } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
-	      body[iFile-1].bPoise = 1;
+	body[iFile-1].bAtmEsc = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
+	body[iFile-1].bStellar = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
+	body[iFile-1].bPoise = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
+	body[iFile-1].bFlare = 1;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -279,14 +291,16 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
   int iBody;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-      (*body)[iBody].bEqtide = 0;
-      (*body)[iBody].bDistOrb = 0;
-      (*body)[iBody].bDistRot = 0;
-      (*body)[iBody].bRadheat = 0;
-      (*body)[iBody].bThermint = 0;
-      (*body)[iBody].bPoise = 0;
-      (*body)[iBody].bStellar = 0;
-      (*body)[iBody].bAtmEsc = 0;  }
+    (*body)[iBody].bEqtide = 0;
+    (*body)[iBody].bDistOrb = 0;
+    (*body)[iBody].bDistRot = 0;
+    (*body)[iBody].bRadheat = 0;
+    (*body)[iBody].bThermint = 0;
+    (*body)[iBody].bPoise = 0;
+    (*body)[iBody].bStellar = 0;
+    (*body)[iBody].bAtmEsc = 0;
+    (*body)[iBody].bFlare = 0;
+  }
 }
 
 /*
@@ -347,6 +361,17 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
   }
 }
 
+void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bFlare) {
+    if (!body[iBody].bStellar) {
+      fprintf(stderr,"ERROR: Must include module STELLAR ro run module FLARE.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  } else
+    control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
+}
+
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
@@ -367,6 +392,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  
+  VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
   
   control->Evolve.iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -400,6 +427,11 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
   body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
+}
+
+void PropsAuxFlareStellar(BODY *body,UPDATE *update,int iBody) {
+  SYSTEM system; // dummy for LXUVStellar
+  body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }
 
 /*

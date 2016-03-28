@@ -85,6 +85,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumRadius=0;
     update[iBody].iNumMass=0;
     update[iBody].iNumIceMass=0;
+    update[iBody].iNumLXUV=00;
 
     update[iBody].iNumVars=0;
     
@@ -498,7 +499,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }  
-    
+
     /* Obsolete!
     // Obliquity
     update[iBody].iObl = -1;
@@ -960,6 +961,38 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         iVar++;
       }
       
+    }
+
+    // XUV Luminosity
+    /* This one is tricky because it is an auxiliary property
+       of STELLAR, but a primary variable of FLARE. */
+    update[iBody].iLXUV = -1;
+    if (update[iBody].iNumLXUV) {
+      update[iBody].iLXUV = iVar;
+      update[iBody].iaVar[iVar] = VLXUV;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumLXUV;
+      update[iBody].pdVar[iVar] = &body[iBody].dLXUVFlare; // Note this does NOT point dLXUV
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dLXUV;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumLXUV*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumLXUV*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateLXUV[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
     }
   }
 }

@@ -22,6 +22,15 @@ double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
   return 0;
 }
 
+double fdUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
+  return TINY;
+}
+
+// Reset function pointer to return TINY
+void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
+  fnUpdate[iBody][iVar][iEqn] = &fdUpdateFunctionTiny;
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
@@ -438,7 +447,7 @@ void PropsAuxFlareStellar(BODY *body,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {

@@ -85,10 +85,8 @@
 #define NUMOUT        2000  /* Number of output parameters */
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
-#define OPTDESCR      128    /* Number of characters in option
-			     * description */
-#define LINE          128   /* Maximum number of characters 
-			     * in a line */
+#define OPTDESCR      128    /* Number of characters in option description */
+#define LINE          128   /* Maximum number of characters in a line */
 #define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -993,7 +991,8 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -1118,8 +1117,6 @@ typedef struct {
 
 } OUTPUT;
 
-
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 

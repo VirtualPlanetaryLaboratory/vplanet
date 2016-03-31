@@ -5,9 +5,11 @@ sName		c			# Body's name
 #		atmesc poise
 saModules eqtide distorb distrot
 
+sTideModel	p2
+
 # Physical Properties
-dMass		-1.0  #-5.5			# Mass, negative -> Earth masses
-dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
+dMass		-5.5			# Mass, negative -> Earth masses
+dRadius		-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
@@ -30,7 +32,7 @@ dPrecA		255
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds
 #bForceEqSpin    1
-dTidalQ		100			# Tidal phase lag
+dTidalQ		100			# Tidal quality factor
 dK2		0.3			# Love number of degree 2
 dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
 saTidePerts	star			# Body name(s) of tidal perturbers
@@ -78,7 +80,7 @@ saTidePerts	star			# Body name(s) of tidal perturbers
 # saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
 # 	      TMan Tcore -Tglobal -FluxOutGlobal -RadPowerT DeltaT
 saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo $
-
+	-RotTimeEqtide
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $
 #		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal $

@@ -85,8 +85,8 @@
 
 void InitializeControlRadheat(CONTROL*);
 void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+void InitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
@@ -326,7 +326,7 @@ double fdRadPowerCore(BODY*,UPDATE*,int);
 double fdRadPowerTotal(BODY*,UPDATE*,int);
 double fdRadPower(double,double,double); // XXX
 
-void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);

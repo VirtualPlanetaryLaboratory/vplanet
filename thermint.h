@@ -120,7 +120,7 @@
 
 void InitializeControlThermint(CONTROL*);
 void AddModuleThermint(MODULE*,int,int);
-void BodyCopyThermint(BODY*,BODY*,int,int);
+void BodyCopyThermint(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
@@ -421,7 +421,7 @@ double fdMassChiIC(BODY*,int);
 double fdMassChiOC(BODY*,int);
 double fdDTChi(BODY*,int);
 
-void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

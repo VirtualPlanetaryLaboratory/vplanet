@@ -31,7 +31,7 @@ void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
 /* All the auxiliary properties for EQTIDE calculations need to be included
    in this subroutine! */
 
-void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
@@ -48,7 +48,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
     dest[iBody].dDeccDtEqtide = src[iBody].dDeccDtEqtide;
   }
 
-  for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
+  for (iPert=0;iPert<iNumBodies;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
     dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
     dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
@@ -74,7 +74,7 @@ void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 }
 
 void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  int iBodyPert;
+  int iPert;
 
   control->Evolve.tmpBody[iBody].dTidalChi = malloc(control->Evolve.iNumBodies*sizeof(double));
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
@@ -84,15 +84,15 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
-    for (iBodyPert=0;iBodyPert<control->Evolve.iNumBodies;iBodyPert++)
-      control->Evolve.tmpBody[iBody].iTidalEpsilon[iBodyPert] = malloc(10*sizeof(int));
+    for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
+      control->Evolve.tmpBody[iBody].iTidalEpsilon[iPert] = malloc(10*sizeof(int));
   }
 
   if (control->Evolve.iEqtideModel == CTL) {
     control->Evolve.tmpBody[iBody].dTidalF = malloc(control->Evolve.iNumBodies*sizeof(double*));
     control->Evolve.tmpBody[iBody].dTidalBeta = malloc(control->Evolve.iNumBodies*sizeof(double));
-    for (iBodyPert=0;iBodyPert<control->Evolve.iNumBodies;iBodyPert++)
-      control->Evolve.tmpBody[iBody].dTidalF[iBodyPert] = malloc(5*sizeof(double));
+    for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
+      control->Evolve.tmpBody[iBody].dTidalF[iPert] = malloc(5*sizeof(double));
   }
 
 }
@@ -2178,7 +2178,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
 
-  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
+  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -2250,7 +2250,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
@@ -2265,8 +2265,15 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     /* Tidally Locked? */
-    else
+    else {
+      // Is the body now tidally locked?
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter);
+      // If so, reset the function pointer to return TINY for dDRotRateDt
+      /* The index of iaRotEqtide must be zero, as locking is only possible 
+	 if there is one tidal perturber */
+      if (evolve->bForceEqSpin[iBody])
+	SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
+    }
   }
 
   /* If small enough, set some quantities to zero */
@@ -2354,7 +2361,7 @@ double fdCPLTidePowerEq(double dTidalZ,double dEccSq,double dMeanMotion,double d
   double dGammaOrb,dGammaRot,dRotRateEq;
   int *iEpsilon;
 
-  iEpsilon = malloc(9*sizeof(int));
+  iEpsilon = malloc(10*sizeof(int));
 
   /* Must reset spin rate in order to get the phase lags correctly */
 

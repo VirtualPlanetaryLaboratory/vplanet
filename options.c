@@ -2130,7 +2130,7 @@ void ReadRadiusGyration(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
+    if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than zero.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
@@ -2804,6 +2804,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
+  InitializeOptionsFlare(options,fnRead);
 
 }
  

@@ -5,13 +5,6 @@
  * Validate the options. This will become a mess!
  */
 
-/* Lines where something like iBody == 0 occurs
- * ~84
- * ~345
- * ~415
- * ~423
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -92,8 +85,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
   // If doing binary and we're looking at the secondary, return
-  // Since the primary holds all binary orbital information
-  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1)
+  // Since the secondary holds all binary orbital information
+  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
     return;
 
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
@@ -113,13 +106,16 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       if(body[iBody].bBinary == 0){ // Not binary, regular single-star orbit
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
       } 
-      else if(body[iBody].bBinary && body[iBody].iBodyType == 0 && iBody == 2){ // Set mean motion for CBP (primary,iBody==0;planet,iBody==2)
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 0){ // Set mean motion for CBP (primary,iBody==0;planet,iBody > 1)
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+      }
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) { // Set mean motion for binary, info in secondary
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
       } 
     } 
     else if(body[iBody].bPoise == 0)
     {
-      if(body[iBody].bBinary == 0)
+      if(body[iBody].bBinary != 1)
       {
         if(iBody > 0) // No binary, regular planet
         {
@@ -128,11 +124,11 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       }
       else // Doing binary
       {
-        if(body[iBody].iBodyType == 0 && iBody == 2) // CBP
+        if(body[iBody].iBodyType == 0) // CBP
         {
           body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
         }
-        else if(body[iBody].iBodyType == 1 && iBody == 0) // primary
+        else if(body[iBody].iBodyType == 1 && iBody == 1) // binary orbit info in secondary
         {
           body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
         }
@@ -165,35 +161,35 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   /* Only one option set */
   
   if (dMeanMotion > 0) {
-    if(body[iBody].bBinary && body[iBody].iBodyType == 0 &&iBody == 2) // CBP
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
-    else if(body[iBody].bBinary && iBody == 0) // Primary
+    else if(body[iBody].bBinary && iBody == 1) // binary
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
-    else if(body[iBody].bBinary == 0)
+    else
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
   }
   if (dPeriod > 0) {
-    if(body[iBody].bBinary && body[iBody].iBodyType == 0 && iBody == 2) // CBP
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
-    else if(body[iBody].bBinary && iBody == 0) // Primary
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
-    else if(body[iBody].bBinary == 0)
+    else
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
   }
   if (dSemi > 0) {
-    if(body[iBody].bBinary && body[iBody].iBodyType == 0 && iBody == 2) // CBP
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
       body[iBody].dSemi = dSemi;
-    else if(body[iBody].bBinary && iBody == 0) // Primary
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
       body[iBody].dSemi = dSemi;  
-    else if(body[iBody].bBinary == 0)
+    else
       body[iBody].dSemi = dSemi;
   }
   if (dMeanMotion == 0) {
-    if(body[iBody].bBinary && iBody == 2) // CBP
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Primary
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
-    else if(body[iBody].bBinary && iBody == 0) // Primary
-      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
-    else if(body[iBody].bBinary == 0)
+    else
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   }
   //XXX Initialize central body parameters.

@@ -152,7 +152,7 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if(body[iBody].bBinary == 0) { // Not doing binary
+  if(body[iBody].bBinary != 1) { // Not doing binary
     if (iBody > 0)
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
     else
@@ -162,7 +162,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   {
     if(body[iBody].iBodyType == 0) // CBP
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-    else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // binary
       *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
     else
       *dTmp = -1;
@@ -191,7 +191,7 @@ void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp = -1;
   }
   else { // doing binary 
-  if(iBody != 1)
+  if(iBody > 0)
   {
     *dTmp = body[iBody].dMeanMotion;
   }
@@ -220,8 +220,8 @@ void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   {
     if(body[iBody].iBodyType == 0) // CBP
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
-    else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
-      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[0].dMass));
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
     else
       *dTmp = -1;
   }
@@ -246,7 +246,7 @@ void WriteOrbSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   else { // Doing binary
     if(body[iBody].iBodyType == 0) // CBP
       *dTmp = body[iBody].dSemi;
-    else if(body[iBody].iBodyType == 1 && iBody == 0) // Binary
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
       *dTmp = body[iBody].dSemi;
     else
       *dTmp = -1;

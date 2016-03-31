@@ -23,7 +23,7 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
       
       }
-      else if(body[iBody].iBodyType == 1 && iBody == 0) // Primary
+      else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
       {
         // Correctly set binary's mean motion
         body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
@@ -69,8 +69,9 @@ double AssignDt(double dMin,double dNextOutput,double dEta) {
 
   dMin = dEta * dMin;
   if (dNextOutput < dMin)
+  {
     dMin = dNextOutput;
-
+  }
   return dMin;
 }
 
@@ -80,7 +81,7 @@ double fdNextOutput(double dTime,double dOutputInterval) {
   /* Number of output so far */
   nSteps = (int)(dTime/dOutputInterval);
   /* Next output is one more */
-  return (nSteps+1)*dOutputInterval;
+  return (nSteps+1.0)*dOutputInterval;
 }
 
 /* fdGetUpdateInfo fills the Update arrays with the derivatives 
@@ -95,7 +96,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   int iBody,iVar,iEqn;
   EVOLVE integr;
   double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
-  double amp = 0.0;
 
   integr = control->Evolve;
 
@@ -144,10 +144,12 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
                 }
                 // Prevent division by zero
-                if (dVarNow != dVarTotal) {
+                if (fabs(dVarNow - dVarTotal) > 1.0e-5) {
                   dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
-                  if (dMinNow < dMin)
-                    dMin = dMinNow;
+                  if (dMinNow < dMin && dMinNow > DAYSEC) // Don't resolve things on < 1 day scales (dflemin3 ad-hoc assumption)
+                  {
+                     dMin = dMinNow;
+                  }
                 }
               }
           } else if (update[iBody].iaType[iVar][0] == 3) {
@@ -276,6 +278,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     *dDt = control->Evolve.dTimeStep;
     
   control->Evolve.dCurrentDt = *dDt;  
+
   /* XXX Should each eqn be updated separately? Each parameter at a 
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
@@ -433,6 +436,12 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
+    // dflemin3 hack
+    if(control->Evolve.dTime < DAYSEC)
+    {
+      //dDt = DAYSEC;
+    }
+    
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
         control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);
@@ -458,10 +467,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     control->Evolve.dTime += dDt;
     control->Evolve.nSteps++;
 
-    // if (control->Evolve.dTime >= 360*YEARSEC) {
-//       printf("stop\n");
-//     }
-        
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {
       dFoo = fdGetUpdateInfo(body,control,system,update,fnUpdate); 

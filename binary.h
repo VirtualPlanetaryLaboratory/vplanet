@@ -158,5 +158,4 @@ double fdCBPZDotBinary(BODY*,SYSTEM*,int*);
 double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
-double fluxBinary(BODY*,double,double);
 double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);

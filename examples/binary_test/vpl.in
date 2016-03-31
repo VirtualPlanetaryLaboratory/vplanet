@@ -10,8 +10,7 @@ bOverwrite	1			# Allow file overwrites?
 # List of "body files" that contain body-specific parameters
 saBodyFiles	primary.in $	# The primary star
 		secondary.in  $	# The secondary star
-		k16b.in		# Kepler 16b
-
+		k16b.in 	# Kepler 16b
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -39,8 +38,8 @@ bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
 #dTimeStep	100
-dStopTime	1e2		# Stop time for evolution
-dOutputTime	1.0e-1		# Output timesteps (assuming in body files)
+dStopTime	1.0e6		# Stop time for evolution
+dOutputTime	1.0e4		# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)
 

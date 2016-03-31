@@ -180,7 +180,7 @@ typedef struct {
 /* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
-  int iBodyType;        /**< Body's type: 0 for planet, 1 for star, defaults to planet  */
+  int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
 
   /* Body Properties */
   double dAge;           /**< Body's Age */

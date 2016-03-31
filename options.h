@@ -67,7 +67,7 @@
 #define OPT_OBL	                640
 #define OPT_OUTDIGITS           570
 #define OPT_OUTPUTORDER		580
-#define OPT_GRIDOUTPUT    585
+#define OPT_GRIDOUTPUT          585
 #define OPT_OUTSCINOT	        590
 #define OPT_OVERWRITE           595
 

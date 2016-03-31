@@ -104,6 +104,31 @@ void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   }
 }  
 
+void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Multiple modules can contribute to this output */
+  int iModule;
+
+  *dTmp=0;
+  /*
+  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
+    // Only module reference in file, can this be changed? XXX
+    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
+
+  */
+
+  *dTmp = body[iBody].dLXUVFlare;
+  *dTmp += fdLXUVStellar(body,system,update,iBody,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+
+}
+
 /*
  * M
  */
@@ -549,6 +574,14 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGP].iNum = 1;
   fnWrite[OUT_LONGP] = &WriteLongP; 
   
+  sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");
+  sprintf(output[OUT_LXUVTOT].cDescr,"Total XUV Luminosity");
+  sprintf(output[OUT_LXUVTOT].cNeg,"LSUN");
+  output[OUT_LXUVTOT].bNeg = 1;
+  output[OUT_LXUVTOT].dNeg = 1./LSUN;
+  output[OUT_LXUVTOT].iNum = 1;
+  fnWrite[OUT_LXUVTOT] = &WriteLXUVTot;
+
   /*
    * M
    */
@@ -761,8 +794,8 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
   int iBody,iModule;
 
   // Add new mult-module outputs here
-  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
 
+  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
   for (iBody=0;iBody<iNumBodies;iBody++) {
     // Malloc number of modules for each multi-module output
     output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
@@ -772,6 +805,18 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
       output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
     }
   }
+
+  output[OUT_LXUVTOT].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    // Malloc number of modules for each multi-module output
+    output[OUT_LXUVTOT].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      /* Initialize them all to return nothing, then they get changed 
+      from AddModule subroutines */
+      output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdReturnOutputZero;
+    }
+  }
+
 }
 
 /*
@@ -1295,5 +1340,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
   InitializeOutputBinary(output,fnWrite);
+  InitializeOutputFlare(output,fnWrite);
 
 }

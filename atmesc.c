@@ -19,7 +19,7 @@ void  InitializeControlAtmEsc(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;
@@ -308,7 +308,7 @@ void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
   /* Nothing */
 }
 
-void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
     // Let's desiccate this planet.

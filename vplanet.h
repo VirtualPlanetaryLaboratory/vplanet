@@ -17,8 +17,8 @@
 #define DYNAMO        6
 #define THERMINT      7
 #define POISE         8
-// Benjamin's module 9
 #define BINARY        10
+#define FLARE         9
 
 /* Fundamental constants */
 
@@ -85,11 +85,9 @@
 
 #define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
-#define OPTLEN        64    /* Maximum length of an option */
-#define OPTDESCR      64    /* Number of characters in option
-			     * description */
-#define LINE          128   /* Maximum number of characters 
-			     * in a line */
+#define OPTLEN        24    /* Maximum length of an option */
+#define OPTDESCR      128    /* Number of characters in option description */
+#define LINE          128   /* Maximum number of characters in a line */
 #define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -163,6 +161,9 @@
 #define VCBPRDOT           2030
 #define VCBPPHIDOT         2040
 #define VCBPZDOT           2050
+
+// FLARE
+#define VLXUV           1901
 
 /* Now define the structs */
 
@@ -408,10 +409,10 @@ typedef struct {
   int bStellar;
   double dLuminosity;
   double dTemperature;
-  double dLXUV;
   double dSatXUVFrac;
   int iStellarModel;
   int iWindModel;
+  double dLXUV; // Not really a STELLAR parameter
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -588,6 +589,12 @@ typedef struct {
   double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
   double dIceFlowTot;
   double dIceBalanceTot;
+
+  // FLARE
+  int bFlare;
+  double dFlareConst;
+  double dFlareExp;
+  double dLXUVFlare;
 
 } BODY;
 
@@ -900,8 +907,13 @@ typedef struct {
   int *iaIceMassDepMelt;
   int *iaIceMassFlow;
   int iIceMass;
-} UPDATE;
 
+  /* FLARE */
+  int iLXUV;
+  int iNumLXUV;
+  double *pdDLXUVFlareDt;
+
+} UPDATE;
 
 typedef struct {
   int iNumHalts;       /**< Total Number of Halts */
@@ -964,7 +976,7 @@ typedef struct {
 typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
-typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
+typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
 /* Integration parameters */
 typedef struct {
@@ -1032,7 +1044,8 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -1108,7 +1121,7 @@ typedef struct {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
-  char cDefault[OPTLEN];       /**< Description of Default Value */
+  char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
@@ -1157,8 +1170,6 @@ typedef struct {
 
 } OUTPUT;
 
-
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 
@@ -1208,6 +1219,7 @@ typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1316,6 +1328,7 @@ typedef struct {
   /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
+  fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
@@ -1373,6 +1386,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "distrot.h"
 #include "poise.h"
 #include "binary.h"
+#include "flare.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 

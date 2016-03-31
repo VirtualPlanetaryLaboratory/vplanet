@@ -29,7 +29,7 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iLat;
   
   if (src[iBody].bIceSheets) {
@@ -1949,7 +1949,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
 
   body[iBody].dIceBalanceTot = 0.0;  //total change in ice mass this time step

@@ -27,7 +27,7 @@ void InitializeModuleDistRot(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dXobl = src[iBody].dXobl;
@@ -757,7 +757,7 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 //   }
 }
 
-void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
 void RotateVector(double *v1, double *v2, double theta, int axis) {

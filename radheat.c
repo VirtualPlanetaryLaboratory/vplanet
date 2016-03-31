@@ -18,7 +18,7 @@ void  InitializeControlRadheat(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].d40KNumMan = src[iBody].d40KNumMan;
   dest[iBody].d40KConstMan = src[iBody].d40KConstMan;
 
@@ -1021,7 +1021,7 @@ void PropsAuxRadheat(BODY *body,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
-void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   if (body[iBody].d40KNumMan < 0.5)
     body[iBody].d40KNumMan = 0;
   if (body[iBody].d40KNumCore < 0.5)

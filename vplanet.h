@@ -991,7 +991,8 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -1116,8 +1117,6 @@ typedef struct {
 
 } OUTPUT;
 
-
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 

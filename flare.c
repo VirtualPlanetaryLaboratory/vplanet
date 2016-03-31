@@ -103,7 +103,7 @@ void PropertiesFlare(BODY *body,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
-void fnForceBehaviorFlare(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void fnForceBehaviorFlare(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   if (body[iBody].dLXUVFlare < 0)
     body[iBody].dLXUVFlare = 0;

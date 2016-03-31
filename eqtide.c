@@ -2250,7 +2250,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
@@ -2269,7 +2269,10 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       // Is the body now tidally locked?
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter);
       // If so, reset the function pointer to return TINY for dDRotRateDt
-      SetDerivTiny(update,fnUpdate,iBody,update[iBody].iRotRate,update[iBody].iRotRateEqtide);
+      /* The index of iaRotEqtide must be zero, as locking is only possible 
+	 if there is one tidal perturber */
+      if (evolve->bForceEqSpin[iBody])
+	SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
     }
   }
 

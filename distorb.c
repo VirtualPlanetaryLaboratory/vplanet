@@ -1515,7 +1515,7 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
 }
 
-void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
 /* Factorial function. Nuff sed. */

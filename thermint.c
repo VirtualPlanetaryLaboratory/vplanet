@@ -393,7 +393,8 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
 }
 
-void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  // XXX Reset fnUpdate functions to SetDerivTiny?
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
   if (body[iBody].dTCore < 0.5)

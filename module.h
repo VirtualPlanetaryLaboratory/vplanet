@@ -14,4 +14,4 @@ void PropsAuxDistOrbDistRot(BODY*,UPDATE*,int);
 void PropsAuxRadheatThermint(BODY*,UPDATE*,int);
 void PropsAuxFlareStellar(BODY*,UPDATE*,int);
 
-void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

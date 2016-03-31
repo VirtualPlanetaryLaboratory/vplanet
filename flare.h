@@ -30,7 +30,7 @@ void InitializeOptionsFlare(OPTIONS*,fnReadOption[]);
 void ReadOptionsFlare(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 void PropertiesFlare(BODY*,UPDATE*,int);
-void fnForceBehaviorFlare(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void fnForceBehaviorFlare(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */
 void HelpOptionsFlare(OPTIONS*);
@@ -67,9 +67,7 @@ void LogOptionsFlare(CONTROL*,FILE*);
 void LogFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
-/* RadHeat functions */
+/* FLARE functions */
 double fdLXUVFlare(BODY*,SYSTEM*,UPDATE*,int,int);
-
-void fnForceBehaviorFlare(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
 
 double fdDLXUVFlareDt(BODY*,SYSTEM*,int*); 

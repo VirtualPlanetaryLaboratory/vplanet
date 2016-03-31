@@ -421,7 +421,7 @@ double fdMassChiIC(BODY*,int);
 double fdMassChiOC(BODY*,int);
 double fdDTChi(BODY*,int);
 
-void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

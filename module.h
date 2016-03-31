@@ -1,3 +1,6 @@
+double fdUpdateFunctionTiny(BODY*,SYSTEM*,int*);
+void SetDerivTiny(fnUpdateVariable***,int,int,int);
+
 void InitializeModule(MODULE*,int);
 void FinalizeModule(BODY*,MODULE*,int);
 double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);

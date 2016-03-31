@@ -22,6 +22,15 @@ double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
   return 0;
 }
 
+double fdUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
+  return TINY;
+}
+
+// Reset function pointer to return TINY
+void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
+  fnUpdate[iBody][iVar][iEqn] = &fdUpdateFunctionTiny;
+}
+
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 

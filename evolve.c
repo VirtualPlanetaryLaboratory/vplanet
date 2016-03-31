@@ -389,7 +389,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
         control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,update,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
     }
 
     /* Halt? */

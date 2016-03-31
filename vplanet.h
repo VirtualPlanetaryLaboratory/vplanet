@@ -85,10 +85,8 @@
 #define NUMOUT        2000  /* Number of output parameters */
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
-#define OPTDESCR      128    /* Number of characters in option
-			     * description */
-#define LINE          128   /* Maximum number of characters 
-			     * in a line */
+#define OPTDESCR      128    /* Number of characters in option description */
+#define LINE          128   /* Maximum number of characters in a line */
 #define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */

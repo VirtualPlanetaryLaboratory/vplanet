@@ -2265,8 +2265,12 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     /* Tidally Locked? */
-    else
+    else {
+      // Is the body now tidally locked?
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter);
+      // If so, reset the function pointer to return TINY for dDRotRateDt
+      SetDerivTiny(update,fnUpdate,iBody,update[iBody].iRotRate,update[iBody].iRotRateEqtide);
+    }
   }
 
   /* If small enough, set some quantities to zero */

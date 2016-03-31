@@ -16,7 +16,7 @@ dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable 1                   # End simulation if the CBP goes within the critical stability limit
 
 # Orbital Properties
-dSemi           -0.7016			# Semi-major axis, negative -> AU
+dSemi           -0.3			# Semi-major axis, negative -> AU
 dEcc            0.02373
 dLongP          0.0
 

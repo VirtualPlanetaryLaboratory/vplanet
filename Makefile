@@ -7,3 +7,5 @@ debug:
 opt:
 	-gcc -O3 -o vplanet *.c -lm
 
+profile:
+	-gcc -pg -o vplanet *.c -lm

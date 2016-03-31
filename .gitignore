@@ -5,6 +5,7 @@
 Integr.iNumBodies
 bitbucket_xyz
 bitbucket_xyz.pub
+*.Laplace
 cName
 control.c~
 control.h~

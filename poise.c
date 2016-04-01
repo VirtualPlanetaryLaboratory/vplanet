@@ -843,7 +843,7 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
       exit(EXIT_INPUT);
     }
     
-    if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] == -1) {
+    if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] > -1) {
       if (iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: Cannot set %s or %s for annual model in file %s\nPlease use option %s\n", options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName, cFile, options[OPT_SURFALBEDO].cName);
       exit(EXIT_INPUT);
@@ -1423,6 +1423,8 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNumYears*body[iBody].iNStepInYear;iDay++) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      printf("%d %d\n",iLat,iDay);
+      printf("%d %d %lf\n",iLat,iDay,body[iBody].daTempDaily[iLat][iDay]);
       fprintd(fp,body[iBody].daTempDaily[iLat][iDay],control->Io.iSciNot,control->Io.iDigits);
       fprintf(fp," ");
     }

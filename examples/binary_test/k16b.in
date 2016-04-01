@@ -1,6 +1,6 @@
 # Earth's parameters
 sName		k16b			# Body's name
-saModules       binary #atmesc
+saModules       binary
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
@@ -13,7 +13,7 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 # Binary Properties
 dFreeEcc        0.03                     # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
-bHaltHolmanUnstable 1                   # End simulation if the CBP goes within the critical stability limit
+bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 
 # Orbital Properties
 dSemi           -0.3			# Semi-major axis, negative -> AU

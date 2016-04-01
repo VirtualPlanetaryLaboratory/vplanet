@@ -17,8 +17,8 @@
 #define DYNAMO        6
 #define THERMINT      7
 #define POISE         8
-#define BINARY        10
 #define FLARE         9
+#define BINARY        10
 
 /* Fundamental constants */
 

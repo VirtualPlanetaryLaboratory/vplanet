@@ -121,6 +121,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bPoise)
     iNumModules++;
   if (body[iBody].bBinary)
+    iNumModules++;
   if (body[iBody].bFlare)
     iNumModules++;
 
@@ -264,6 +265,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bBinary) {
     AddModuleBinary(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = BINARY;
+  }
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = FLARE;
@@ -310,7 +312,6 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 	body[iFile-1].bPoise = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
         body[iFile-1].bBinary = 1;
-      }
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
       } else {
@@ -320,11 +321,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       }
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
-  } else {
+  
+    } else {
     if (control->Io.iVerbose >= VERBERR && iFile > 0) 
       fprintf(stderr,"WARNING: %s not present in file %s. No evolution will occur for this body.\n",options->cName,files->Infile[iFile].cIn);
   }
-
   free(lTmp);
 }
 
@@ -340,7 +341,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bPoise = 0;
       (*body)[iBody].bStellar = 0;
       (*body)[iBody].bAtmEsc = 0;
-      (*body)[iBody].bBinary = 0; }
+      (*body)[iBody].bBinary = 0;
       (*body)[iBody].bFlare = 0;
   }
 }

@@ -18,8 +18,7 @@
 void  InitializeControlBinary(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
-
-void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   // Copy body properties from src to dest for cbp
 
   dest[iBody].dCBPR = src[iBody].dCBPR;
@@ -362,7 +361,7 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
 // TODO
 }
 
-void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule){
+void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule){
 // Nada
 }
 

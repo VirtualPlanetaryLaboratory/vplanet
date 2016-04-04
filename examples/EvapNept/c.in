@@ -74,6 +74,7 @@ dSurfWaterMass	-1
 # POISE
 iLatCellNum	151
 saGridOutput	-Latitude TempLat AlbedoLat AnnInsol FluxOut
+bClimateModel   sea
 
 # Output
 saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $

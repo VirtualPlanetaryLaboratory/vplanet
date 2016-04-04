@@ -842,23 +842,22 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
   if (!bPrimary(body,iBody)) {
+    // Initialize Orbital variable for the matrix
+    InitializeSemiEqtide(body,update,iBody);
+    InitializeHeccEqtide(body,update,iBody);
+    InitializeKeccEqtide(body,update,iBody);
+    
+    // If the orbit is allowed to evolve, assign derivative functions
     if (!control->Evolve.bFixOrbit[iBody]) {
-      /* Semi-major axis */
-      InitializeSemiEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
-      
-      /* Eccentricity */
-      //InitializeEccEqtide(body,update,iBody);
-      //fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCPLDeccDt;
-      InitializeHeccEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
-      InitializeKeccEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
+      
     } else {
-      // XXX This won't work if more than one module is affecting the orbit
-      update[iBody].iNumEqns[update[iBody].iHecc]--;
-      update[iBody].iNumEqns[update[iBody].iKecc]--;
-      update[iBody].iNumEqns[update[iBody].iSemi]--;
+      // If the orbit is fixed, function return TINY
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
     }
   }
 

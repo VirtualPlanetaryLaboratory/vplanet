@@ -326,6 +326,69 @@ void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     AssignDefaultInt(options,&body[iFile-1].bClimateModel,files->iNumInputs);
 }
 
+void ReadAlbedoType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  /* Albedo type, use #defined variables */
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* This parameter can not appear in the primary input,
+       as it is module specific (it's easier to code this
+       way. It should also only appear in one body file
+       so as different tidal models cannot be called. */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"fix",3)) {
+      body[iFile-1].iAlbedoType = ALBFIXED;
+    } else if (!memcmp(sLower(cTmp),"tay",3)) {
+      body[iFile-1].iAlbedoType = ALBTAYLOR;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are fix or tay.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+//     AssignDefaultInt(options,&body[iFile-1].iAlbedoType,files->iNumInputs);
+    body[iFile-1].iAlbedoType = options->dDefault;
+  }
+}
+
+void ReadGeography(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  /* Albedo type, use #defined variables */
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* This parameter can not appear in the primary input,
+       as it is module specific (it's easier to code this
+       way. It should also only appear in one body file
+       so as different tidal models cannot be called. */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"uni3",4)) {
+      body[iFile-1].iGeography = UNIFORM3;
+    } else if (!memcmp(sLower(cTmp),"modn",4)) {
+      body[iFile-1].iGeography = MODERN;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are uni3 or modn.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+//     AssignDefaultInt(options,&body[iFile-1].iAlbedoType,files->iNumInputs);
+    body[iFile-1].iGeography = options->dDefault;
+  }
+}
+
+
 void ReadInitIceLat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -797,6 +860,22 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RERUNSEAS].iType = 1;  
   options[OPT_RERUNSEAS].iMultiFile = 1;   
   fnRead[OPT_RERUNSEAS] = &ReadReRunSeas;
+  
+  sprintf(options[OPT_ALBEDOTYPE].cName,"iAlbedoType");
+  sprintf(options[OPT_ALBEDOTYPE].cDescr,"Water albedo type");
+  sprintf(options[OPT_ALBEDOTYPE].cDefault,"fix");
+  options[OPT_ALBEDOTYPE].dDefault = ALBFIXED;
+  options[OPT_ALBEDOTYPE].iType = 1;  
+  options[OPT_ALBEDOTYPE].iMultiFile = 1;   
+  fnRead[OPT_ALBEDOTYPE] = &ReadAlbedoType;
+  
+  sprintf(options[OPT_GEOGRAPHY].cName,"iGeography");
+  sprintf(options[OPT_GEOGRAPHY].cDescr,"Type of land distribution");
+  sprintf(options[OPT_GEOGRAPHY].cDefault,"uni3");
+  options[OPT_GEOGRAPHY].dDefault = UNIFORM3;
+  options[OPT_GEOGRAPHY].iType = 1;  
+  options[OPT_GEOGRAPHY].iMultiFile = 1;   
+  fnRead[OPT_GEOGRAPHY] = &ReadGeography;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -847,7 +926,7 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVe
       exit(EXIT_INPUT);
     }
     
-    if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] == -1) {
+    if (options[OPT_ALBEDOLAND].iLine[iBody+1] > -1 || options[OPT_ALBEDOWATER].iLine[iBody+1] > -1) {
       if (iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: Cannot set %s or %s for annual model in file %s\nPlease use option %s\n", options[OPT_ALBEDOLAND].cName, options[OPT_ALBEDOWATER].cName, cFile, options[OPT_SURFALBEDO].cName);
       exit(EXIT_INPUT);
@@ -912,10 +991,27 @@ void InitializeLandWater(BODY *body, int iBody) {
   body[iBody].daLandFrac = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daWaterFrac = malloc(body[iBody].iNumLats*sizeof(double));
   
-  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daLandFrac[iLat] = 0.34;
-    body[iBody].daWaterFrac[iLat] = 1.0-body[iBody].daLandFrac[iLat];
-  }  
+  if (body[iBody].iGeography == UNIFORM3) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      body[iBody].daLandFrac[iLat] = 0.34;
+      body[iBody].daWaterFrac[iLat] = 1.0-body[iBody].daLandFrac[iLat];
+    }  
+  } else if (body[iBody].iGeography == MODERN) {
+    for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      if (body[iBody].daLats[iLat]*180./PI <= -60) {
+        body[iBody].daLandFrac[iLat] = 0.95/1.0094;
+      } else if (body[iBody].daLats[iLat]*180./PI > -60 && body[iBody].daLats[iLat]*180./PI <= -40) {
+        body[iBody].daLandFrac[iLat] = 0.05/1.0094;
+      } else if (body[iBody].daLats[iLat]*180./PI > -40 && body[iBody].daLats[iLat]*180./PI <= 20) {
+        body[iBody].daLandFrac[iLat] = 0.25/1.0094;
+      } else if (body[iBody].daLats[iLat]*180./PI > 20 && body[iBody].daLats[iLat]*180./PI <= 70) {
+        body[iBody].daLandFrac[iLat] = 0.5/1.0094;
+      } else {
+        body[iBody].daLandFrac[iLat] = 0.38/1.0094;
+      }
+      body[iBody].daWaterFrac[iLat] = 1.0-body[iBody].daLandFrac[iLat];
+    } 
+  }
 }
 
 void InitializeClimateParams(BODY *body, int iBody) {
@@ -2403,7 +2499,7 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat){
        + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
        + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
   if (OLRwk97(body,iBody,iLat)>=300.0) {
-    dI = 0;
+    dI = 0.001;
   }
   return dI;
 }
@@ -2557,6 +2653,16 @@ void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
   }
 }
 
+double AlbedoTaylor(double zenith) {
+  double mu = cos(zenith);
+  
+  if (mu > 0) {
+    return 0.037/(1.1*pow(mu,1.4)+0.15);
+  } else {
+    return 0.037/0.15;
+  }
+}
+
 void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
   
@@ -2588,7 +2694,11 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
     albtmp = body[iBody].dIceAlbedo;
   } else {
-    albtmp = body[iBody].dAlbedoWater;
+    if (body[iBody].iAlbedoType == ALBFIXED) {
+      albtmp = body[iBody].dAlbedoWater;
+    } else if (body[iBody].iAlbedoType == ALBTAYLOR) {
+      albtmp = AlbedoTaylor(zenith);
+    }
   }
   
   /// hack hack hack
@@ -2620,7 +2730,7 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
     //zenith angle of sun at noon at each latitude
     zenith = fabs(body[iBody].daLats[iLat] - body[iBody].daDeclination[iDay]);
     
-    if (body[iBody].bCalcAB == 1) {
+    if (body[iBody].bCalcAB == 1 || body[iBody].bCalcAB == 0) {
       AlbedoTOAwk97(body, zenith, iBody, iLat);
     } else {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*pow(sin(zenith),2)-1.)/2.;
@@ -3114,7 +3224,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
               body[iBody].dFluxOutGlobalTmp/(body[iBody].iNStepInYear);
         body[iBody].dFluxInGlobal += \
               body[iBody].dFluxInGlobalTmp/(body[iBody].iNStepInYear);
+        
       }
+      
       EnergyResiduals(body,iBody,day);
       AlbedoSeasonal(body,iBody,day);
     }

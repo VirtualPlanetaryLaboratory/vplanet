@@ -569,6 +569,9 @@ typedef struct {
   int iReRunSeas;
   double *daBedrockH;         /**< Height of bedrock (can be negative) */
   double *daBedrockHEq;       /**< Equilibrium height of bedrock */
+  int iAlbedoType;            /**< type of water albedo used (if fix, dAlbedoWater is used,
+                                   if tay, Taylor relation is used) */
+  int iGeography;
   
 } BODY;
 

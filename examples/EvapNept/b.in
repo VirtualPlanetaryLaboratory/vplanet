@@ -1,0 +1,41 @@
+# Evaporating mini-Neptune
+sName		b		# Body's name
+saModules	eqtide atmesc $ 
+		distorb distrot
+
+# Physical Properties
+dMass		-30		# Mass, negative -> Earth masses
+dRadius		-6		# Radius, negative -> Earth radii
+dRotPeriod	-1.0  		# Rotation period, negative -> days
+dObliquity	23.5			
+dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+dEcc            0.4			# Eccentricity
+dSemi           0.03			# Semi-major axis, negative -> AU
+
+# DISTORB Parameters
+dInc		3
+dLongA		33
+dLongP		100
+sOrbitModel rd4
+
+# DISTROT Parameters
+dPrecA		255
+
+# EQTIDE Parameters 
+#dTidalTau	-630			# Tidal time lag, negative -> seconds
+#bForceEqSpin    1
+dTidalQ		1e5			# Tidal phase lag
+dK2		0.3			# Love number of degree 2
+dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
+saTidePerts	star			# Body name(s) of tidal perturbers
+
+# ATMESC inputs
+dXFrac		1
+dAtmXAbsEff	0.3
+dEnvelopeMass	-20
+
+# Output
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli -SurfWaterMass -Mass
+	      

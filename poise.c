@@ -22,7 +22,28 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
   /* Anything here? */
 }
 
-void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
+  int iLat;
+  
+  if (src[iBody].bIceSheets) {
+    dest[iBody].iNumLats = src[iBody].iNumLats;
+    dest[iBody].dIceMassTot = src[iBody].dIceMassTot;
+    dest[iBody].dIceDepRate = src[iBody].dIceDepRate;
+    dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
+    dest[iBody].dIceAlbedo = src[iBody].dIceAlbedo;
+    dest[iBody].bClimateModel = src[iBody].bClimateModel;
+    dest[iBody].bIceSheets = src[iBody].bIceSheets;
+    for (iLat=0;iLat<src[iBody].iNumLats;iLat++) {
+      dest[iBody].daIceMass[iLat] = src[iBody].daIceMass[iLat];
+      dest[iBody].daTemp[iLat] = src[iBody].daTemp[iLat];
+      dest[iBody].daLats[iLat] = src[iBody].daLats[iLat];
+      dest[iBody].daIceBalanceAnnual[iLat] = src[iBody].daIceBalanceAnnual[iLat];
+      dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
+      dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
+    }
+    dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
+    dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
+  }
 }
 
 void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -1525,6 +1546,8 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNumYears*body[iBody].iNStepInYear;iDay++) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+      printf("%d %d\n",iLat,iDay);
+      printf("%d %d %lf\n",iLat,iDay,body[iBody].daTempDaily[iLat][iDay]);
       fprintd(fp,body[iBody].daTempDaily[iLat][iDay],control->Io.iSciNot,control->Io.iDigits);
       fprintf(fp," ");
     }
@@ -2091,7 +2114,7 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
 //   }
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
   
   if (body[iBody].bEqtide) {

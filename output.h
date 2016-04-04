@@ -28,6 +28,7 @@
 #define OUT_DT			200
 
 #define OUT_LONGP               300
+#define OUT_LXUVTOT             310
 
 #define OUT_MASS                500
 #define OUT_OBL                 510

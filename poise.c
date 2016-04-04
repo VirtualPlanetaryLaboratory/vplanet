@@ -1546,8 +1546,8 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNumYears*body[iBody].iNStepInYear;iDay++) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      printf("%d %d\n",iLat,iDay);
-      printf("%d %d %lf\n",iLat,iDay,body[iBody].daTempDaily[iLat][iDay]);
+      //printf("%d %d\n",iLat,iDay);
+      //printf("%d %d %lf\n",iLat,iDay,body[iBody].daTempDaily[iLat][iDay]);
       fprintd(fp,body[iBody].daTempDaily[iLat][iDay],control->Io.iSciNot,control->Io.iDigits);
       fprintf(fp," ");
     }

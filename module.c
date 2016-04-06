@@ -376,9 +376,9 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
     if (!body[iBody].bStellar) {
       fprintf(stderr,"ERROR: Must include module STELLAR ro run module FLARE.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-    }
-  } else
-    control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
+    } else
+      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
+  }
 }
 
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {

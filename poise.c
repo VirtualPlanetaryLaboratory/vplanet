@@ -25,10 +25,75 @@ void InitializeModulePoise(CONTROL *control,MODULE *module) {
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
 }
 
+void AnnualCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
+  int i;
+ 
+  dest[iBody].iNumLats = src[iBody].iNumLats;
+  dest[iBody].dFixIceLat = src[iBody].dFixIceLat;
+  dest[iBody].bJormungand = src[iBody].bJormungand;
+  dest[iBody].dIceAlbedo = src[iBody].dIceAlbedo;
+  dest[iBody].dSurfAlbedo = src[iBody].dSurfAlbedo;
+  dest[iBody].bClimateModel = ANN;
+  dest[iBody].dLongP = src[iBody].dLongP;
+  dest[iBody].bCalcAB = src[iBody].bCalcAB;
+  dest[iBody].bMEPDiff = src[iBody].bMEPDiff;
+  
+  
+  for (i=0;i<=src[iBody].iNumLats;i++) {
+    if (i!=src[iBody].iNumLats) {
+      dest[iBody].daLats[i] = src[iBody].daLats[i];
+      dest[iBody].daAlbedo[i] = src[iBody].daAlbedo[i];
+      dest[iBody].daTemp[i] = src[iBody].daTemp[i];
+      dest[iBody].daPlanckA[i] = src[iBody].daPlanckA[i];
+      dest[iBody].daPlanckB[i] = src[iBody].daPlanckB[i];
+      
+    }
+    dest[iBody].daDiffusion[i] = src[iBody].daDiffusion[i];
+  }
+  
+}
+
 void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 }
 
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  int i;
+  
+  control->Evolve.tmpBody[iBody].daDiffusion = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daInsol = malloc((body[iBody].iNumLats)*sizeof(double*));
+  control->Evolve.tmpBody[iBody].daAnnualInsol = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daLambda = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daAlbedo = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTemp = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daFlux = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daFluxIn = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daFluxOut = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daDivFlux = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTGrad = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daPlanckA = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daPlanckB = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daSourceF = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].rowswap = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].scale = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].dUnitV = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTempTerms = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTmpTemp = malloc((body[iBody].iNumLats)*sizeof(double));
+  control->Evolve.tmpBody[iBody].daTmpTempTerms = malloc((body[iBody].iNumLats)*sizeof(double));
+
+  control->Evolve.tmpBody[iBody].dMDiff = malloc((body[iBody].iNumLats)*sizeof(double*));
+  control->Evolve.tmpBody[iBody].dMClim = malloc((body[iBody].iNumLats)*sizeof(double*));
+  control->Evolve.tmpBody[iBody].dMEuler = malloc((body[iBody].iNumLats)*sizeof(double*));
+  control->Evolve.tmpBody[iBody].dMEulerCopy = malloc((body[iBody].iNumLats)*sizeof(double*));
+  control->Evolve.tmpBody[iBody].dInvM = malloc((body[iBody].iNumLats)*sizeof(double*));
+
+  for (i=0;i<body[iBody].iNumLats;i++) {
+    control->Evolve.tmpBody[iBody].daInsol[i] = malloc((body[iBody].iNDays)*sizeof(double));
+    control->Evolve.tmpBody[iBody].dMDiff[i] = malloc((body[iBody].iNumLats)*sizeof(double));
+    control->Evolve.tmpBody[iBody].dMClim[i] = malloc((body[iBody].iNumLats)*sizeof(double));
+    control->Evolve.tmpBody[iBody].dMEuler[i] = malloc((body[iBody].iNumLats)*sizeof(double));
+    control->Evolve.tmpBody[iBody].dMEulerCopy[i] = malloc((body[iBody].iNumLats)*sizeof(double));
+    control->Evolve.tmpBody[iBody].dInvM[i] = malloc((body[iBody].iNumLats)*sizeof(double));  
+  }
 }
 
 /**************** POISE options ********************/
@@ -1073,7 +1138,6 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
   
-    
     body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
     for (i=0;i<=body[iBody].iNumLats;i++) {
       if (i!=body[iBody].iNumLats) {
@@ -1085,18 +1149,17 @@ void InitializeClimateParams(BODY *body, int iBody) {
         body[iBody].dMEuler[i] = malloc(body[iBody].iNumLats*sizeof(double));
         body[iBody].dMEulerCopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
         body[iBody].dInvM[i] = malloc(body[iBody].iNumLats*sizeof(double));
-      
-        if (body[iBody].bIceSheets) {
-          if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
-            body[iBody].daIceMass[i] = body[iBody].dInitIceHeight*RHOICE;
-            body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
-  //           body[iBody].daIceHeight[i] = body[iBody].dInitIceHeight;
-          } else {
-            body[iBody].daIceMass[i] = 0.0;
-  //           body[iBody].daIceHeight[i] = 0.0;
-          }
-        }
       }  
+      
+      if (body[iBody].bCalcAB) {
+        /* Calculate A and B from williams and kasting 97 result */
+        body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
+        body[iBody].daPlanckA[i] = OLRwk97(body,iBody,i) \
+          - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
+      } else {
+        body[iBody].daPlanckB[i] = body[iBody].dPlanckB;
+        body[iBody].daPlanckA[i] = body[iBody].dPlanckA;
+      }
     
       if (body[iBody].bMEPDiff) {   
         if (i==0) {
@@ -1122,6 +1185,7 @@ void InitializeClimateParams(BODY *body, int iBody) {
       body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i];
     }
     body[iBody].dAlbedoGlobal /= body[iBody].iNumLats;    
+    PoiseAnnual(body,iBody);
     
   } else if (body[iBody].bClimateModel == SEA) {
     /* oh yeah, seasonal model, oh yeah! 
@@ -1246,7 +1310,13 @@ void InitializeClimateParams(BODY *body, int iBody) {
       }
       
       if (body[iBody].bMEPDiff) {   
-        body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;   
+        if (i==0) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+        } else if (i==body[iBody].iNumLats) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i-1]/4.0;
+        } else {
+          body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+        } 
       } else {
         body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
       }
@@ -1336,7 +1406,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   
   /* The climate simulation is done entirely in ForceBehavior. */
   if (body[iBody].bIceSheets) {
-    // VerifyIceSheets(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+    VerifyIceSheets(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 //     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
 //       InitializeIceMassDepMelt(body,update,iBody,iLat);
 //       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fdPoiseDIceMassDtDepMelt;
@@ -2266,12 +2336,6 @@ void Albedo(BODY *body, int iBody) {
     } else if (body[iBody].bAlbedoZA) {
        /* Use albedo based on zenith angle */
        body[iBody].daAlbedo[i] = 0.31+0.04*(3*pow(sin(body[iBody].daLats[i]),2)-1);
-    } else if (body[iBody].bIceSheets) {
-       if (body[iBody].daIceMass[i] > 0) {
-          body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
-       } else {
-          body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
-       }
     } else {
        if (body[iBody].daTemp[i] <= -10.0) {
          body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
@@ -2326,16 +2390,29 @@ void TempGradient(BODY *body, double delta_x, int iBody) {
     
 void PoiseAnnual(BODY *body, int iBody) {
   double delta_t, delta_x, xboundary, Tchange, tmpTglobal;
-  double *lambda, **M, **Mcopy, **Mdiff, **invM,  *SourceF, *TempTerms, *tmpTemp, *tmpTempTerms, *Dmidpt; 
   int Nmax, i, j, n, k;
   
   /* Get curent climate parameters */
   Albedo(body, iBody);
   AnnualInsolation(body, iBody);
   if (body[iBody].bCalcAB) {
-    body[iBody].dPlanckB = dOLRdTwk97(body,iBody,0);
-    body[iBody].dPlanckA = OLRwk97(body,iBody,0) \
-      - body[iBody].dPlanckB*(body[iBody].dTGlobal);
+    for (i=0;i<=body[iBody].iNumLats;i++) {
+      if (i!=body[iBody].iNumLats) {
+        body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
+        body[iBody].daPlanckA[i] = OLRwk97(body,iBody,i) \
+          - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]);
+      }
+  
+      if (body[iBody].bMEPDiff) {   
+        if (i==0) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+        } else if (i==body[iBody].iNumLats) {
+          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i-1]/4.0;
+        } else {
+          body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+        } 
+      }
+    }
   }
   
   delta_t = 1.5/body[iBody].iNumLats;
@@ -2354,7 +2431,7 @@ void PoiseAnnual(BODY *body, int iBody) {
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       if (j==i) {
-        body[iBody].dMClim[i][j] = (-body[iBody].dPlanckB-body[iBody].daLambda[i+1]-body[iBody].daLambda[i])/body[iBody].dHeatCapAnn;
+        body[iBody].dMClim[i][j] = (-body[iBody].daPlanckB[i]-body[iBody].daLambda[i+1]-body[iBody].daLambda[i])/body[iBody].dHeatCapAnn;
         body[iBody].dMDiff[i][j] = (-body[iBody].daLambda[i+1]-body[iBody].daLambda[i]);
         body[iBody].dMEuler[i][j] = -1.0/delta_t;
       } else if (j==(i+1)) {
@@ -2374,7 +2451,7 @@ void PoiseAnnual(BODY *body, int iBody) {
       body[iBody].daTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
-                         body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
+                         body[iBody].daPlanckA[i])/body[iBody].dHeatCapAnn;
     body[iBody].daTempTerms[i] += body[iBody].daSourceF[i];
     body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
   }
@@ -2402,13 +2479,13 @@ void PoiseAnnual(BODY *body, int iBody) {
     Albedo(body,iBody);
     for (i=0;i<body[iBody].iNumLats;i++) {
       body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
-                         body[iBody].dPlanckA)/body[iBody].dHeatCapAnn;
+                         body[iBody].daPlanckA[i])/body[iBody].dHeatCapAnn;
       body[iBody].daTemp[i] = body[iBody].daTmpTemp[i];
       body[iBody].daTempTerms[i] = body[iBody].daTmpTempTerms[i];
       body[iBody].dTGlobal = tmpTglobal;
     }
     if (n >= Nmax) {
-      fprintf(stderr,"POISE solution not converged before max iterations reached.");
+      fprintf(stderr,"POISE solution not converged before max iterations reached.\n");
       exit(EXIT_INPUT);
     }
     n++;
@@ -2435,7 +2512,7 @@ void PoiseAnnual(BODY *body, int iBody) {
       body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
-    body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
+    //body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
 
   } 
 }

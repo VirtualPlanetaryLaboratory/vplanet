@@ -1513,6 +1513,10 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+  if (body[iBody].bPoise) {
+    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+    body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+  }
 }
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {

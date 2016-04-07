@@ -14,17 +14,17 @@ dSemi           -1		# Semi-major axis, negative -> AU
 
 # RADHEAT Parameters
 #40K
-d40KNumMan    -1.0
-d40KNumCore   -3.0
+#d40KNumMan    -1.0
+#d40KNumCore   -3.0
 #232Th
-d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
-d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
+#d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
 #235U
-d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
-d235UNumCore	-1
+#d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
+#d235UNumCore	-1
 #238U
-d238UNumMan	-1.0  #-1.16			# Number of uranium-238 atims, negative -> Earth
-d238UNumCore	-1
+#d238UNumMan	-1.0  #-1.16			# Number of uranium-238 atims, negative -> Earth
+#d238UNumCore	-1
 
 ### THERMINT inputs.
 dTMan     3000.0
@@ -36,10 +36,12 @@ dTCore    6000.0	#6000
 #dDTChiRef 300.     ## def is 100.
 
 #Output
-saOutputOrder	Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -TidalPowMan -HflowCMB $
-		-HflowLatentIC -PowerGravIC $
-		-RadPowerMan -RadPowerCore -BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan $
-		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC ChiOC ChiIC DTChi
+saOutputOrder Time -RadPowerMan
+
+#saOutputOrder	Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -TidalPowMan -HflowCMB $
+#		-HflowLatentIC -PowerGravIC $
+#		-RadPowerMan -RadPowerCore -BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan $
+#		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC ChiOC ChiIC DTChi
 
 #-40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan $
 #-40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore $

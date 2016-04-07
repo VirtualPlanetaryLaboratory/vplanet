@@ -641,6 +641,7 @@ typedef struct {
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
+  double dZero;         /**< Sometimes you need a pointer to zero */
 
   /*! The body #s to calculate the derivative. First dimension is 
       the Primary Variable #, second is the process #, third is the 

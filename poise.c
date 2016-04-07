@@ -1084,15 +1084,15 @@ void InitializeClimateParams(BODY *body, int iBody) {
   double Toffset, xboundary, TGlobalTmp;
   
   body[iBody].dIceMassTot = 0.0;
-  body[iBody].daDiffusion = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  body[iBody].daDiffusionAnn = malloc((body[iBody].iNumLats+1)*sizeof(double));
   body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double*));
   body[iBody].daAnnualInsol = malloc(body[iBody].iNumLats*sizeof(double));
-  body[iBody].daLambda = malloc((body[iBody].iNumLats+1)*sizeof(double));
-  body[iBody].daAlbedo = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].daLambdaAnn = malloc((body[iBody].iNumLats+1)*sizeof(double));
+  body[iBody].daAlbedoAnn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   //body[iBody].iNDays = 360;
-  body[iBody].dMDiff = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
-  body[iBody].daTemp = malloc(body[iBody].iNumLats*sizeof(double)); 
+  body[iBody].dMDiffAnn = malloc(body[iBody].iNumLats*sizeof(double*)); // matrix of heat diffusion terms only
+  body[iBody].daTempAnn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFlux = malloc(body[iBody].iNumLats*sizeof(double));  
   body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daFluxOut = malloc(body[iBody].iNumLats*sizeof(double)); 
@@ -1104,8 +1104,8 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].daDeclination = malloc(body[iBody].iNDays*sizeof(double));
   body[iBody].daTGrad = malloc(body[iBody].iNumLats*sizeof(double)); 
   body[iBody].daDMidPt = malloc(body[iBody].iNumLats*sizeof(double));
-  body[iBody].daPlanckA = malloc(body[iBody].iNumLats*sizeof(double));
-  body[iBody].daPlanckB = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daPlanckAAnn = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daPlanckBAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daDeltaTempL = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daDeltaTempW = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnergyResL = malloc(body[iBody].iNumLats*sizeof(double));
@@ -1123,71 +1123,69 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].dTGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
   
-  if (body[iBody].bClimateModel == ANN) {      
  
-    body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMClim = malloc(body[iBody].iNumLats*sizeof(double*)); 
+  body[iBody].dMEulerAnn = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dMEulerCopyAnn = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].dInvMAnn = malloc(body[iBody].iNumLats*sizeof(double*));
+  body[iBody].daSourceF = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].rowswapAnn =  malloc(body[iBody].iNumLats*sizeof(int));
+  body[iBody].scaleAnn = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].dUnitVAnn = malloc(body[iBody].iNumLats*sizeof(double));
+
+  body[iBody].daDiffusionAnn[0] = body[iBody].dDiffCoeff;
+  for (i=0;i<=body[iBody].iNumLats;i++) {
+    if (i!=body[iBody].iNumLats) {
+      body[iBody].daTempAnn[i] = 20.*(1.0-1.5*pow(sin(body[iBody].daLats[i]),2))+Toffset;
+      body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
+      body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
+      body[iBody].dMClim[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMDiffAnn[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEulerAnn[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dMEulerCopyAnn[i] = malloc(body[iBody].iNumLats*sizeof(double));
+      body[iBody].dInvMAnn[i] = malloc(body[iBody].iNumLats*sizeof(double));
+    }  
     
-    body[iBody].dMEuler = malloc(body[iBody].iNumLats*sizeof(double*));
-    body[iBody].dMEulerCopy = malloc(body[iBody].iNumLats*sizeof(double*));
-    body[iBody].dInvM = malloc(body[iBody].iNumLats*sizeof(double*));
-    body[iBody].daSourceF = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daTmpTemp = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daTmpTempTerms = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].rowswap =  malloc(body[iBody].iNumLats*sizeof(int));
-    body[iBody].scale = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].dUnitV = malloc(body[iBody].iNumLats*sizeof(double));
-  
-    body[iBody].daDiffusion[0] = body[iBody].dDiffCoeff;
-    for (i=0;i<=body[iBody].iNumLats;i++) {
-      if (i!=body[iBody].iNumLats) {
-        body[iBody].daTemp[i] = 20.*(1.0-1.5*pow(sin(body[iBody].daLats[i]),2))+Toffset;
-        body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
-        body[iBody].daInsol[i] = malloc(body[iBody].iNDays*sizeof(double));
-        body[iBody].dMClim[i] = malloc(body[iBody].iNumLats*sizeof(double));
-        body[iBody].dMDiff[i] = malloc(body[iBody].iNumLats*sizeof(double));
-        body[iBody].dMEuler[i] = malloc(body[iBody].iNumLats*sizeof(double));
-        body[iBody].dMEulerCopy[i] = malloc(body[iBody].iNumLats*sizeof(double));
-        body[iBody].dInvM[i] = malloc(body[iBody].iNumLats*sizeof(double));
-      }  
-      
-      if (body[iBody].bCalcAB) {
-        /* Calculate A and B from williams and kasting 97 result */
-        body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
-        body[iBody].daPlanckA[i] = OLRwk97(body,iBody,i) \
-          - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
-      } else {
-        body[iBody].daPlanckB[i] = body[iBody].dPlanckB;
-        body[iBody].daPlanckA[i] = body[iBody].dPlanckA;
-      }
-    
-      if (body[iBody].bMEPDiff) {   
-        if (i==0) {
-          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
-        } else if (i==body[iBody].iNumLats) {
-          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i-1]/4.0;
-        } else {
-          body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
-        } 
-      } else {
-        body[iBody].daDiffusion[i] = body[iBody].dDiffCoeff;   
-      }
-    
-      if (body[iBody].bHadley) {
-        // XXX not self-consistent with rotation rate!
-        xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
-        body[iBody].daDiffusion[i] += body[iBody].dDiffCoeff*9.*exp(-pow((xboundary/sin(25.*DEGRAD)),6));
-      }
+    if (body[iBody].bCalcAB) {
+      /* Calculate A and B from williams and kasting 97 result */
+      body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i);
+      body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i) \
+        - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]); 
+    } else {
+      body[iBody].daPlanckBAnn[i] = body[iBody].dPlanckB;
+      body[iBody].daPlanckAAnn[i] = body[iBody].dPlanckA;
     }
   
-    Albedo(body,iBody);
-    for (i=0;i<body[iBody].iNumLats;i++) {
-      body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i];
+    if (body[iBody].bMEPDiff) {   
+      if (i==0) {
+        body[iBody].daDiffusionAnn[i] = body[iBody].daPlanckBAnn[i]/4.0;
+      } else if (i==body[iBody].iNumLats) {
+        body[iBody].daDiffusionAnn[i] = body[iBody].daPlanckBAnn[i-1]/4.0;
+      } else {
+        body[iBody].daDiffusionAnn[i] = (body[iBody].daPlanckBAnn[i]+body[iBody].daPlanckBAnn[i-1])/8.0;  
+      } 
+    } else {
+      body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff;   
     }
-    body[iBody].dAlbedoGlobal /= body[iBody].iNumLats;    
-    PoiseAnnual(body,iBody);
+  
+    if (body[iBody].bHadley) {
+      // XXX not self-consistent with rotation rate!
+      xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
+      body[iBody].daDiffusionAnn[i] += body[iBody].dDiffCoeff*9.*exp(-pow((xboundary/sin(25.*DEGRAD)),6));
+    }
+  }
+
+  AlbedoAnnual(body,iBody);
+  for (i=0;i<body[iBody].iNumLats;i++) {
+    body[iBody].dAlbedoGlobal += body[iBody].daAlbedoAnn[i];
+  }
+  body[iBody].dAlbedoGlobal /= body[iBody].iNumLats;    
+  PoiseAnnual(body,iBody);
     
-  } else if (body[iBody].bClimateModel == SEA) {
+  if (body[iBody].bClimateModel == SEA) {
     /* oh yeah, seasonal model, oh yeah! 
     'tis the season to model ice sheets, fa la la la la, la la la la */
     VerifyNStepSeasonal(body,iBody);
@@ -2312,7 +2310,7 @@ void AnnualInsolation(BODY *body, int iBody) {
 
 
 
-void Albedo(BODY *body, int iBody) {
+void AlbedoAnnual(BODY *body, int iBody) {
  int i;
  
  for (i=0;i<body[iBody].iNumLats;i++) { 
@@ -2321,32 +2319,32 @@ void Albedo(BODY *body, int iBody) {
        if (body[iBody].bJormungand) {
           /* Cold equator */
           if (fabs(body[iBody].daLats[i]) < body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
+            body[iBody].daAlbedoAnn[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
+            body[iBody].daAlbedoAnn[i] = body[iBody].dSurfAlbedo;
           }
        } else {
           /* Cold poles */
           if (fabs(body[iBody].daLats[i]) > body[iBody].dFixIceLat) {
-            body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
+            body[iBody].daAlbedoAnn[i] = body[iBody].dIceAlbedo;
           } else {
-            body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
+            body[iBody].daAlbedoAnn[i] = body[iBody].dSurfAlbedo;
           }
        }
     } else if (body[iBody].bAlbedoZA) {
        /* Use albedo based on zenith angle */
-       body[iBody].daAlbedo[i] = 0.31+0.04*(3*pow(sin(body[iBody].daLats[i]),2)-1);
+       body[iBody].daAlbedoAnn[i] = 0.31+0.04*(3*pow(sin(body[iBody].daLats[i]),2)-1);
     } else {
-       if (body[iBody].daTemp[i] <= -10.0) {
-         body[iBody].daAlbedo[i] = body[iBody].dIceAlbedo;
+       if (body[iBody].daTempAnn[i] <= -10.0) {
+         body[iBody].daAlbedoAnn[i] = body[iBody].dIceAlbedo;
        } else {
-         body[iBody].daAlbedo[i] = body[iBody].dSurfAlbedo;
+         body[iBody].daAlbedoAnn[i] = body[iBody].dSurfAlbedo;
        }
     }
   }
 }
 
-void MatrixInvert(BODY *body, int iBody) {
+void MatrixInvertAnnual(BODY *body, int iBody) {
   double n = body[iBody].iNumLats;
   int i, j;
   float parity;
@@ -2354,23 +2352,52 @@ void MatrixInvert(BODY *body, int iBody) {
   // unitv = malloc(n*sizeof(double));
 //   rowswap = malloc(n*sizeof(int));
 // 
-  if (body[iBody].bClimateModel == SEA) n *= 2;
   
  //ludcmp(body[iBody].dMEuler,n,body[iBody].rowswap,&parity);  
-  LUDecomp(body[iBody].dMEuler,body[iBody].dMEulerCopy,body[iBody].scale,body[iBody].rowswap,n);
+  LUDecomp(body[iBody].dMEulerAnn,body[iBody].dMEulerCopyAnn,body[iBody].scaleAnn,body[iBody].rowswapAnn,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
       if (j==i) {
-        body[iBody].dUnitV[j] = 1.0;
+        body[iBody].dUnitVAnn[j] = 1.0;
       } else {
-        body[iBody].dUnitV[j] = 0.0;
+        body[iBody].dUnitVAnn[j] = 0.0;
       }
     }
 
    // lubksb(body[iBody].dMEuler,n,body[iBody].rowswap,body[iBody].dUnitV);
-    LUSolve(body[iBody].dMEulerCopy,body[iBody].dUnitV,body[iBody].rowswap, n);
+    LUSolve(body[iBody].dMEulerCopyAnn,body[iBody].dUnitVAnn,body[iBody].rowswapAnn, n);
     for (j=0;j<n;j++) {
-      body[iBody].dInvM[j][i] = body[iBody].dUnitV[j];
+      body[iBody].dInvMAnn[j][i] = body[iBody].dUnitVAnn[j];
+    }
+  }
+//   free(unitv);
+//   free(rowswap);
+}
+
+void MatrixInvertSeasonal(BODY *body, int iBody) {
+  double n = 2*body[iBody].iNumLats;
+  int i, j;
+  float parity;
+  
+  // unitv = malloc(n*sizeof(double));
+//   rowswap = malloc(n*sizeof(int));
+// 
+  
+ //ludcmp(body[iBody].dMEuler,n,body[iBody].rowswap,&parity);  
+  LUDecomp(body[iBody].dMEulerSea,body[iBody].dMEulerCopySea,body[iBody].scaleSea,body[iBody].rowswapSea,n);
+  for (i=0;i<n;i++) {
+    for (j=0;j<n;j++) {
+      if (j==i) {
+        body[iBody].dUnitVSea[j] = 1.0;
+      } else {
+        body[iBody].dUnitVSea[j] = 0.0;
+      }
+    }
+
+   // lubksb(body[iBody].dMEuler,n,body[iBody].rowswap,body[iBody].dUnitV);
+    LUSolve(body[iBody].dMEulerCopySea,body[iBody].dUnitVSea,body[iBody].rowswapSea, n);
+    for (j=0;j<n;j++) {
+      body[iBody].dInvMASea[j][i] = body[iBody].dUnitVSea[j];
     }
   }
 //   free(unitv);
@@ -2380,12 +2407,12 @@ void MatrixInvert(BODY *body, int iBody) {
 void TempGradient(BODY *body, double delta_x, int iBody) {
   int i;
   
-  body[iBody].daTGrad[0] = (body[iBody].daTemp[1]-body[iBody].daTemp[0])/(delta_x);
+  body[iBody].daTGrad[0] = (body[iBody].daTempAnn[1]-body[iBody].daTempAnn[0])/(delta_x);
   for (i=1;i<body[iBody].iNumLats-1;i++) {
-    body[iBody].daTGrad[i] = (body[iBody].daTemp[i+1]-body[iBody].daTemp[i-1])/(2*delta_x); 
+    body[iBody].daTGrad[i] = (body[iBody].daTempAnn[i+1]-body[iBody].daTempAnn[i-1])/(2*delta_x); 
   }
-  body[iBody].daTGrad[body[iBody].iNumLats-1] = (body[iBody].daTemp[body[iBody].iNumLats-1]-\
-                          body[iBody].daTemp[body[iBody].iNumLats-2])/(delta_x);
+  body[iBody].daTGrad[body[iBody].iNumLats-1] = (body[iBody].daTempAnn[body[iBody].iNumLats-1]-\
+                          body[iBody].daTempAnn[body[iBody].iNumLats-2])/(delta_x);
 }  
     
 void PoiseAnnual(BODY *body, int iBody) {
@@ -2393,23 +2420,23 @@ void PoiseAnnual(BODY *body, int iBody) {
   int Nmax, i, j, n, k;
   
   /* Get curent climate parameters */
-  Albedo(body, iBody);
+  AlbedoAnnual(body, iBody);
   AnnualInsolation(body, iBody);
   if (body[iBody].bCalcAB) {
     for (i=0;i<=body[iBody].iNumLats;i++) {
       if (i!=body[iBody].iNumLats) {
-        body[iBody].daPlanckB[i] = dOLRdTwk97(body,iBody,i);
-        body[iBody].daPlanckA[i] = OLRwk97(body,iBody,i) \
-          - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]);
+        body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i);
+        body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i) \
+          - body[iBody].daPlanckBAnn[i]*(body[iBody].daTemp[i]);
       }
   
       if (body[iBody].bMEPDiff) {   
         if (i==0) {
-          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i]/4.0;
+          body[iBody].daDiffusionAnn[i] = body[iBody].daPlanckBAnn[i]/4.0;
         } else if (i==body[iBody].iNumLats) {
-          body[iBody].daDiffusion[i] = body[iBody].daPlanckB[i-1]/4.0;
+          body[iBody].daDiffusionAnn[i] = body[iBody].daPlanckBAnn[i-1]/4.0;
         } else {
-          body[iBody].daDiffusion[i] = (body[iBody].daPlanckB[i]+body[iBody].daPlanckB[i-1])/8.0;  
+          body[iBody].daDiffusionAnn[i] = (body[iBody].daPlanckBAnn[i]+body[iBody].daPlanckBAnn[i-1])/8.0;  
         } 
       }
     }
@@ -2422,7 +2449,7 @@ void PoiseAnnual(BODY *body, int iBody) {
   /* Setup matrices, source function, temperature terms, global mean */
   for (i=0;i<body[iBody].iNumLats+1;i++) {
     xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
-    body[iBody].daLambda[i] = body[iBody].daDiffusion[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
+    body[iBody].daLambdaAnn[i] = body[iBody].daDiffusionAnn[i]*(1.0-pow(xboundary,2))/(pow(delta_x,2));
   }
   
   body[iBody].dTGlobal = 0.0;
@@ -2431,29 +2458,29 @@ void PoiseAnnual(BODY *body, int iBody) {
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       if (j==i) {
-        body[iBody].dMClim[i][j] = (-body[iBody].daPlanckB[i]-body[iBody].daLambda[i+1]-body[iBody].daLambda[i])/body[iBody].dHeatCapAnn;
-        body[iBody].dMDiff[i][j] = (-body[iBody].daLambda[i+1]-body[iBody].daLambda[i]);
-        body[iBody].dMEuler[i][j] = -1.0/delta_t;
+        body[iBody].dMClim[i][j] = (-body[iBody].daPlanckB[i]-body[iBody].daLambdaAnn[i+1]-body[iBody].daLambdaAnn[i])/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiffAnn[i][j] = (-body[iBody].daLambdaAnn[i+1]-body[iBody].daLambdaAnn[i]);
+        body[iBody].dMEulerAnn[i][j] = -1.0/delta_t;
       } else if (j==(i+1)) {
-        body[iBody].dMClim[i][j] = body[iBody].daLambda[j]/body[iBody].dHeatCapAnn;
-        body[iBody].dMDiff[i][j] = body[iBody].daLambda[j];
-        body[iBody].dMEuler[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambdaAnn[j]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiffAnn[i][j] = body[iBody].daLambdaAnn[j];
+        body[iBody].dMEulerAnn[i][j] = 0.0;
       } else if (j==(i-1)) {
-        body[iBody].dMClim[i][j] = body[iBody].daLambda[i]/body[iBody].dHeatCapAnn;
-        body[iBody].dMDiff[i][j] = body[iBody].daLambda[i];
-        body[iBody].dMEuler[i][j] = 0.0;
+        body[iBody].dMClim[i][j] = body[iBody].daLambdaAnn[i]/body[iBody].dHeatCapAnn;
+        body[iBody].dMDiffAnn[i][j] = body[iBody].daLambdaAnn[i];
+        body[iBody].dMEulerAnn[i][j] = 0.0;
       } else {
         body[iBody].dMClim[i][j] = 0.0;
-        body[iBody].dMDiff[i][j] = 0.0;
-        body[iBody].dMEuler[i][j] = 0.0;
+        body[iBody].dMDiffAnn[i][j] = 0.0;
+        body[iBody].dMEulerAnn[i][j] = 0.0;
       }
-      body[iBody].dMEuler[i][j] += 0.5*body[iBody].dMClim[i][j];
-      body[iBody].daTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
+      body[iBody].dMEulerAnn[i][j] += 0.5*body[iBody].dMClim[i][j];
+      body[iBody].daTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTempAnn[j];
     }
-    body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
-                         body[iBody].daPlanckA[i])/body[iBody].dHeatCapAnn;
+    body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedoAnn[i])*body[iBody].daAnnualInsol[i] - \
+                         body[iBody].daPlanckAAnn[i])/body[iBody].dHeatCapAnn;
     body[iBody].daTempTerms[i] += body[iBody].daSourceF[i];
-    body[iBody].dTGlobal += body[iBody].daTemp[i]/body[iBody].iNumLats;
+    body[iBody].dTGlobal += body[iBody].daTempAnn[i]/body[iBody].iNumLats;
   }
   
   MatrixInvert(body,iBody);
@@ -2468,19 +2495,19 @@ void PoiseAnnual(BODY *body, int iBody) {
       body[iBody].daTmpTempTerms[i] = body[iBody].daSourceF[i];
       
       for (j=0;j<body[iBody].iNumLats;j++) {
-        body[iBody].daTmpTemp[i] += -body[iBody].dInvM[i][j]*(0.5*(body[iBody].daTempTerms[j]+body[iBody].daSourceF[j])+body[iBody].daTemp[j]/delta_t);
-        body[iBody].daTmpTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTemp[j];
+        body[iBody].daTmpTemp[i] += -body[iBody].dInvM[i][j]*(0.5*(body[iBody].daTempTerms[j]+body[iBody].daSourceF[j])+body[iBody].daTempAnn[j]/delta_t);
+        body[iBody].daTmpTempTerms[i] += body[iBody].dMClim[i][j]*body[iBody].daTempAnn[j];
       }
       tmpTglobal += body[iBody].daTmpTemp[i]/body[iBody].iNumLats;
     }
     Tchange = tmpTglobal - body[iBody].dTGlobal;
     
     /* Update albedo, source function, temperature, temperature terms, and global mean */
-    Albedo(body,iBody);
+    AlbedoAnnual(body,iBody);
     for (i=0;i<body[iBody].iNumLats;i++) {
-      body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i] - \
-                         body[iBody].daPlanckA[i])/body[iBody].dHeatCapAnn;
-      body[iBody].daTemp[i] = body[iBody].daTmpTemp[i];
+      body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedoAnn[i])*body[iBody].daAnnualInsol[i] - \
+                         body[iBody].daPlanckAAnn[i])/body[iBody].dHeatCapAnn;
+      body[iBody].daTempAnn[i] = body[iBody].daTmpTemp[i];
       body[iBody].daTempTerms[i] = body[iBody].daTmpTempTerms[i];
       body[iBody].dTGlobal = tmpTglobal;
     }
@@ -2498,20 +2525,20 @@ void PoiseAnnual(BODY *body, int iBody) {
   body[iBody].dIceMassTot = 0.0;
   TempGradient(body, delta_x, iBody);
   for (i=0;i<body[iBody].iNumLats;i++) {
-    body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusion[i+1]+body[iBody].daDiffusion[i]);
+    body[iBody].daDMidPt[i] = 0.5*(body[iBody].daDiffusionAnn[i+1]+body[iBody].daDiffusionAnn[i]);
     body[iBody].daFlux[i] = -2.*PI*pow(body[iBody].dRadius,2)*sqrt(1.0-pow(sin(body[iBody].daLats[i]),2)) * \
                             body[iBody].daDMidPt[i]*body[iBody].daTGrad[i];
-    body[iBody].daFluxIn[i] = (1.0 - body[iBody].daAlbedo[i])*body[iBody].daAnnualInsol[i];
-    body[iBody].daFluxOut[i] = body[iBody].dPlanckA + body[iBody].dPlanckB*body[iBody].daTemp[i];                       
+    body[iBody].daFluxIn[i] = (1.0 - body[iBody].daAlbedoAnn[i])*body[iBody].daAnnualInsol[i];
+    body[iBody].daFluxOut[i] = body[iBody].dPlanckAAnn + body[iBody].dPlanckBAnn*body[iBody].daTempAnn[i];                       
     
     body[iBody].dFluxInGlobal += body[iBody].daFluxIn[i]/body[iBody].iNumLats;
     body[iBody].dFluxOutGlobal += body[iBody].daFluxOut[i]/body[iBody].iNumLats;
     
     body[iBody].daDivFlux[i] = 0.0;
     for (j=0;j<body[iBody].iNumLats;j++) {
-      body[iBody].daDivFlux[i] += -body[iBody].dMDiff[i][j]*body[iBody].daTemp[j];
+      body[iBody].daDivFlux[i] += -body[iBody].dMDiffAnn[i][j]*body[iBody].daTempAnn[j];
     }
-    body[iBody].dAlbedoGlobal += body[iBody].daAlbedo[i]/body[iBody].iNumLats;
+    body[iBody].dAlbedoGlobal += body[iBody].daAlbedoAnn[i]/body[iBody].iNumLats;
     //body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
 
   } 

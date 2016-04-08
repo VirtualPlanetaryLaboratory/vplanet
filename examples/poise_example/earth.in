@@ -4,12 +4,12 @@ saModules    distorb distrot poise
 dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
-dObliquity   23.5 #23.682    #no Moons yet in vplanet....
+dObliquity   23.44 #23.682    #no Moons yet in vplanet....
 dSemi        1.00000011
 #dSemi        1.7
-dEcc         0.0167 #0.036851
+dEcc         0.01672 #0.036851
 dInc         5e-5
-dLongP       13.467 #8.99    #pericenter, wrt Earth's position at spring equinox     
+dLongP       282.07 #8.99    #pericenter, wrt Earth's position at spring equinox     
 #note that this is the typical value +180, since that one is solar position
 dLongA       348.73936
 # bGRCorr      0
@@ -17,7 +17,7 @@ saOutputOrder    Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -Fl
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 #saOutputOrder     Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
-  -IceFlow -BedrockH EnergyResW EnergyResL
+  -IceFlow -BedrockH EnergyResW EnergyResL -FluxMerid -DivFlux
 #saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut EnergyResW EnergyResL
 #saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
 #bInvPlane    1
@@ -26,7 +26,7 @@ dDynEllip    3.28e-3
 dPrecA       0.0
 #bOverrideMaxEcc  1
 #dHaltMaxEcc     0.4
-iLatCellNum      150
+iLatCellNum      151
 #bMEPDiff         1
 #bIceSheets       1
 dInitIceLat      90.
@@ -38,7 +38,7 @@ dPlanckB         2.09
 #bCalcAB           1
 #dTGlobalInit      14.85
 #dpCO2            0.00028
-dSurfAlbedo       0.36
+dSurfAlbedo       0.3
 bClimateModel     ann
 iNumYears         4
 iNStepInYear      60

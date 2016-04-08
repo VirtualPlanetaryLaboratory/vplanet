@@ -437,161 +437,166 @@ typedef struct {
   
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
-  int bClimateModel;
-  int iNumLats;              /**< Number of latitude cells */
-  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
-  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
-  int bAlbedoZA;             /**< Use albedo based on zenith angle */
-  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
-  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
-  int iNDays;                /**< Number of days in planet's year */
-  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
-  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
-  double dAstroDist;         /**< Distance between primary and planet */
-  double dTGlobal;           /**< Global mean temperature at surface */
+
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
-  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
-  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
-  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
-  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
+  double dAlbedoGlobalTmp;
+  double dAlbedoLand;
+  int iAlbedoType;            /**< type of water albedo used (fix or tay) */
+  double dAlbedoWater;  
+  int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  double dAstroDist;         /**< Distance between primary and planet */
+  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
+  int bClimateModel;
+  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
+  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
+  double dFluxInGlobalTmp;
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
-  int iWriteLat;             /**< Stores index of latitude to be written in write function */
-  int bIceSheets;
-  double dIceMassTot;
-  double dInitIceLat;
-  double dInitIceHeight;
-  double dIceAlbedo;
-  double dSurfAlbedo;
-  double dIceDepRate;
-  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
-  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
-  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dFluxOutGlobalTmp;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
+  int iGeography;
+  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
   double dHeatCapLand;        /**< Heat capacity of land */
   double dHeatCapWater;       /**< Heat capacity of water */
-  double dNuLandWater;        /**< Land-ocean interaction term */
+  double dIceAlbedo;
+  double dIceBalanceTot;
+  double dIceDepRate;
+  double dIceFlowTot;
+  double dIceMassTot;
+  int bIceSheets;
+  int iIceTimeStep;
+  double dInitIceHeight;
+  double dInitIceLat;
+  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
+  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  int iNDays;                /**< Number of days in planet's year */
   int iNStepInYear;        /**< Number of time steps in a year */  
+  double dNuLandWater;        /**< Land-ocean interaction term */
+  int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
-  double dTGlobalTmp;
-  double dAlbedoGlobalTmp;
-  double dFluxOutGlobalTmp;
-  double dFluxInGlobalTmp;
+  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
+  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
+  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  int iReRunSeas;
   double dSeaIceConduct;
-  double dCw_dt;
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
-  double dAlbedoLand;
-  double dAlbedoWater;
-  double dTGlobalInit;
-  double dIceFlowTot;
-  double dIceBalanceTot;
   int bSnowball;
-  int iIceTimeStep;
-  int iReRunSeas;
-  int iAlbedoType;            /**< type of water albedo used (if fix, dAlbedoWater is used,
-                                   if tay, Taylor relation is used) */
-  int iGeography;
+  double dSurfAlbedo;
+  double dTGlobal;           /**< Global mean temperature at surface */
+  double dTGlobalInit;
+  double dTGlobalTmp;
+  int iWriteLat;             /**< Stores index of latitude to be written in write function */
 
   /* Arrays used by seasonal and annual */
-  double *daLats;            /**< Latitude of each cell (centered) */
-  double **daInsol;           /**< Daily insolation at each latitude */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
-  double *daTGrad;           /**< Gradient of temperature (meridional) */
+  double *daDivFlux;         /**< Divergence of surface flux */
+  double *daDMidPt;
+  double **daInsol;           /**< Daily insolation at each latitude */
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
-  double *daDivFlux;         /**< Divergence of surface flux */
-  double *daDMidPt;
+  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daTGrad;           /**< Gradient of temperature (meridional) */
 
   /* Arrays for annual model */
-  double *daTempAnn;            /**< Surface temperature in each cell */
   double *daAlbedoAnn;          /**< Albedo of each cell */
   double *daDiffusionAnn;       /**< Diffusion coefficient of each latitude boundary */
-  double **dMClim;
   double **dMEulerAnn;
   double **dMEulerCopyAnn;
   double **dInvMAnn;
-  double *dUnitVAnn;
-  double **dMDiffAnn;
   double *daLambdaAnn;
-  double *daSourceFAnn;
-  double *daTempTerms;
-  double *daTmpTemp;
-  double *daTmpTempTerms;
-  double *scaleAnn;
-  int *rowswapAnn;
+  double **dMClim;
+  double **dMDiffAnn;
   double *daPlanckAAnn;
   double *daPlanckBAnn;
-  
+  int *rowswapAnn;
+  double *scaleAnn;
+  double *daSourceF;
+  double *daTempAnn;            /**< Surface temperature in each cell */
+  double *daTempTerms;
+  double *daTmpTempAnn;
+  double *daTmpTempTerms;
+  double *dUnitVAnn;
+
   /* Arrays for seasonal model */
-  double *daDiffusionSea;
-  double *daAlbedoLW;
-  double *daLambdaSea;
-  double *daIceMass;
-  double *daIceHeight;  
-  double *daTempLand;         /**< Temperature over land (by latitude) */
-  double *daTempWater;        /**< Temperature over ocean (by lat) */
-  double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
-  double *daAlbedoLand;
-  double *daAlbedoWater;
-  double *daFluxOutLand;
-  double *daFluxOutWater;
-  double *daLandFrac;         /**< Fraction of cell which is land */
-  double *daWaterFrac;        /**< Fraction of cell which is water */
-  double *daSeaIceHeight;     /**< Sea ice height by latitude */
-  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceLW;     /**< Combined source function what matrix operates on */
-  double **dMLand;
-  double **dMWater;
-  double **dMEulerSea;
-  double **dMEulerCopySea;
-  double **dMDiffSea;
-  double *daFluxInLand;
-  double *daFluxInWater;
-  double *daSeaIceK;
-  double *daFluxSeaIce;
-  double **dMInit;
-  double *daTempAvg;
   double *daAlbedoAvg;
-  double *daFluxAvg;
-  double *daFluxOutAvg;
-  double *daFluxInAvg;
-  double *daDivFluxAvg;
-  double **daIceBalance;
-  double *daIceBalanceAnnual;
-  double *daIceMassTmp;
-  double **daTempDaily;
+  double *daAlbedoLand;
+  double *daAlbedoLW;
+  double *daAlbedoWater;
+  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
+  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
+  double *daBasalVel;         /**< Basal velocity of ice */
+  double *daBedrockH;         /**< Height of bedrock (can be negative) */
+  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
   double *daDeclination;           /**< Daily solar declination */
-  double *daDIceHeightDy;
-  double *daIceFlow;
-  double *daIceFlowMid;
-  double *daXBoundary;
-  double *daPlanckASea;
-  double *daPlanckBSea;
   double *daDeltaTempL;
   double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
+  double *daDIceHeightDy;
+  double *daDiffusionSea;
+  double *daDivFluxAvg;
   double *daEnergyResL;
   double *daEnergyResW;       /**< Energy residuals */
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
-  double *daSedShear;         /**< sediment shear stress (for ice sheets) */
-  double *daBasalVel;         /**< Basal velocity of ice */
-  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
-  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
-  double *daIceSheetDiff;
-  double *daIcePropsTmp;
-  double **daIceSheetMat;
-  double *daIceGamTmp;
-  double *daYBoundary;
-  double *daIceBalanceTmp;
+  double *daFluxAvg;
+  double *daFluxInAvg;
+  double *daFluxInLand;
+  double *daFluxInWater;
+  double *daFluxOutAvg;
+  double *daFluxOutLand;
+  double *daFluxOutWater;
+  double *daFluxSeaIce;
+  double **daIceBalance;
+  double *daIceBalanceAnnual;
   double *daIceBalanceAvg;
+  double *daIceBalanceTmp;
+  double *daIceFlow;
   double *daIceFlowAvg;
-  double *daBedrockH;         /**< Height of bedrock (can be negative) */
-  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
+  double *daIceFlowMid;
+  double *daIceGamTmp;
+  double *daIceHeight; 
+  double *daIceMass;
+  double *daIceMassTmp;
+  double *daIcePropsTmp;
+  double *daIceSheetDiff;
+  double **daIceSheetMat;
+  double **dInvMSea;
+  double *daLambdaSea;
+  double *daLandFrac;         /**< Fraction of cell which is land */
+  double **dMDiffSea;
+  double **dMEulerCopySea;
+  double **dMEulerSea;
+  double **dMInit;
+  double **dMLand;
+  double **dMWater;
+  double *daPlanckASea;
+  double *daPlanckBSea;
+  int *rowswapSea;
+  double *scaleSea;
+  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  double *daSeaIceK;
+  double *daSedShear;         /**< sediment shear stress (for ice sheets) */
+  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceLW;     /**< Combined source function what matrix operates on */
+  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
+  double *daTempAvg;
+  double **daTempDaily;
+  double *daTempLand;         /**< Temperature over land (by latitude) */
+  double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
+  double *daTempWater;        /**< Temperature over ocean (by lat) */
+  double *daTmpTempSea;
+  double *dUnitVSea;
+  double *daWaterFrac;        /**< Fraction of cell which is water */
+  double *daXBoundary;
+  double *daYBoundary;
 
   // FLARE
   int bFlare;

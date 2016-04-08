@@ -913,6 +913,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
 
 void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign40KNum(body,options,dAge,iBody);
+
   /* Mantle */
   if (update[iBody].i40KMan >= 0) {
     update[iBody].iaType[update[iBody].i40KMan][0] = 1;
@@ -921,7 +922,9 @@ void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVa
     update[iBody].iaBody[update[iBody].i40KMan][0][0]=iBody;
     update[iBody].pdD40KNumManDt = &update[iBody].daDerivProc[update[iBody].i40KMan][0];
     fnUpdate[iBody][update[iBody].i40KMan][0] = &fdD40KNumManDt;
-  }
+  } else
+    // Set to zero, so RadPower calculations can still be used
+    update[iBody].pdD40KNumManDt = &update[iBody].dZero;
 
   /* Core */
   if (update[iBody].i40KCore >= 0) {
@@ -931,7 +934,9 @@ void Verify40K(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVa
     update[iBody].iaBody[update[iBody].i40KCore][0][0]=iBody;
     update[iBody].pdD40KNumCoreDt = &update[iBody].daDerivProc[update[iBody].i40KCore][0];
     fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
-  }
+  } else
+    update[iBody].pdD40KNumCoreDt = &update[iBody].dZero;
+
 }
 
 void Verify232Th(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -945,7 +950,8 @@ void Verify232Th(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
     update[iBody].iaBody[update[iBody].i232ThMan][0][0]=iBody;
     update[iBody].pdD232ThNumManDt = &update[iBody].daDerivProc[update[iBody].i232ThMan][0];
     fnUpdate[iBody][update[iBody].i232ThMan][0] = &fdD232ThNumManDt;
-  }
+  } else
+    update[iBody].pdD232ThNumManDt = &update[iBody].dZero;
 
   /* Core */
   if (update[iBody].i232ThMan >= 0) {
@@ -955,7 +961,8 @@ void Verify232Th(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
     update[iBody].iaBody[update[iBody].i232ThCore][0][0]=iBody;
     update[iBody].pdD232ThNumCoreDt = &update[iBody].daDerivProc[update[iBody].i232ThCore][0];
     fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
-  }
+  } else
+    update[iBody].pdD232ThNumCoreDt = &update[iBody].dZero;
 }
 
 void Verify238U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -969,7 +976,8 @@ void Verify238U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
     update[iBody].iaBody[update[iBody].i238UMan][0][0]=iBody;
     update[iBody].pdD238UNumManDt = &update[iBody].daDerivProc[update[iBody].i238UMan][0];
     fnUpdate[iBody][update[iBody].i238UMan][0] = &fdD238UNumManDt;
-  }
+  } else
+    update[iBody].pdD238UNumManDt = &update[iBody].dZero;
 
   /* Core */
   if (update[iBody].i238UCore >= 0) {
@@ -979,7 +987,8 @@ void Verify238U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
     update[iBody].iaBody[update[iBody].i238UCore][0][0]=iBody;
     update[iBody].pdD238UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i238UCore][0];
     fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
-  }
+  } else
+    update[iBody].pdD238UNumCoreDt = &update[iBody].dZero;
 }
 
 void Verify235U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) { //PED
@@ -993,7 +1002,8 @@ void Verify235U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
     update[iBody].iaBody[update[iBody].i235UMan][0][0]=iBody;
     update[iBody].pdD235UNumManDt = &update[iBody].daDerivProc[update[iBody].i235UMan][0];
     fnUpdate[iBody][update[iBody].i235UMan][0] = &fdD235UNumManDt;
-  }
+  } else
+    update[iBody].pdD235UNumManDt = &update[iBody].dZero;
 
   /* Core */
   if (update[iBody].i235UCore >= 0) {
@@ -1003,7 +1013,8 @@ void Verify235U(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
     update[iBody].iaBody[update[iBody].i235UCore][0][0]=iBody;
     update[iBody].pdD235UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i235UCore][0];
     fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
-  }
+  } else
+    update[iBody].pdD235UNumCoreDt = &update[iBody].dZero;
 }
 
 /*
@@ -1056,12 +1067,6 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* XXX Need a VerifyOneOfThree subroutine */
   /* Radheat is active for this body if this subroutine is called. */
 
-  if (options[OPT_40KNUMMAN].iLine[iFile] == -1 && options[OPT_40KMASSMAN].iLine[iFile] == -1 && options[OPT_40KPOWERMAN].iLine[iFile] == -1)
-    RadheatExit(files,"40KMan",iFile);
-
-  if (options[OPT_40KNUMCORE].iLine[iFile] == -1 && options[OPT_40KMASSCORE].iLine[iFile] == -1 && options[OPT_40KPOWERCORE].iLine[iFile] == -1)
-    RadheatExit(files,"40KCore",iFile);
-
   // XXX This looks like it's insufficient to capture all the permutations
   NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody);
 
@@ -1069,12 +1074,6 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify40K(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
 
   // 232Th
-  if (options[OPT_232THNUMMAN].iLine[iFile] == -1 && options[OPT_232THMASSMAN].iLine[iFile] == -1 && options[OPT_232THPOWERMAN].iLine[iFile] == -1)
-    RadheatExit(files,"232ThMan",iFile);
-
-  if (options[OPT_232THNUMCORE].iLine[iFile] == -1 && options[OPT_232THMASSCORE].iLine[iFile] == -1 && options[OPT_232THPOWERCORE].iLine[iFile] == -1)
-    RadheatExit(files,"232ThCore",iFile);
-
   // XXX Also insufficient?
   NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iFile);
 
@@ -1082,26 +1081,12 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify232Th(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   // 238U
-  if (options[OPT_238UNUMMAN].iLine[iFile] == -1 && options[OPT_238UMASSMAN].iLine[iFile] == -1 && options[OPT_238UPOWERMAN].iLine[iFile] == -1)
-    RadheatExit(files,"238UMan",iFile);
-
-  if (options[OPT_238UNUMCORE].iLine[iFile] == -1 && options[OPT_238UMASSCORE].iLine[iFile] == -1 && options[OPT_238UPOWERCORE].iLine[iFile] == -1)
-    RadheatExit(files,"238UCore",iFile);
-
-  // XXX Still insufficient?
   NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iFile);
 
   // 238U set correctly
   Verify238U(body,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   // 235U
-  if (options[OPT_235UNUMMAN].iLine[iFile] == -1 && options[OPT_235UMASSMAN].iLine[iFile] == -1 && options[OPT_235UPOWERMAN].iLine[iFile] == -1)
-    RadheatExit(files,"235UMan",iFile);
-
-  if (options[OPT_235UNUMCORE].iLine[iFile] == -1 && options[OPT_235UMASSCORE].iLine[iFile] == -1 && options[OPT_235UPOWERCORE].iLine[iFile] == -1)
-    RadheatExit(files,"235UCore",iFile);
-
-  // Insufficient?
   NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iFile);
 
   // 235U set correctly

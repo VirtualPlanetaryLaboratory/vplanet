@@ -152,33 +152,20 @@ void IntegrationWarning(char cName1[],char cName2[],char cName3[],char cFile[],i
 }
 
 void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnIntegrate *fnOneStep) {
-  int iFile,iBack,iForw;
+  int iFile,iFile1,iFile2;
   char cTmp[OPTLEN];
 
   /* Were both Forward and Backward Set? */
   if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
     fprintf(stderr,"ERROR: Both %s and %s set. Only one is allowed.\n",options[OPT_BACK].cName,options[OPT_FORW].cName);
-    if (options[OPT_BACK].cFile[0] > 0)
-      iBack = 0;
-    else if (options[OPT_BACK].cFile[1] > 0)
-      iBack = 1;
-    else if (options[OPT_BACK].cFile[2] > 0)
-      iBack = 2;
-    else {
-      fprintf(stderr,"ERROR: Cannot determine location of %s.\n",options[OPT_BACK].cName);
-      exit(EXIT_INPUT);
+    /* Now identify which files contained the two offending options */
+    for (iFile=0;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_BACK].iLine[iFile] > 0)
+	iFile1=iFile; // Error of multiple occurences checked in Read
+      if (options[OPT_FORW].iLine[iFile] > 0)
+	iFile2=iFile; // Error of multiple occurences checked in Read
     }
-    if (options[OPT_FORW].cFile[0] > 0)
-      iForw = 0;
-    else if (options[OPT_FORW].cFile[1] > 0)
-      iForw = 1;
-    else if (options[OPT_FORW].cFile[2] > 0)
-      iForw = 2;
-    else {
-      fprintf(stderr,"ERROR: Cannot determine location of %s.\n",options[OPT_FORW].cName);
-      exit(EXIT_INPUT);
-    }
-    DoubleLineExit(options[OPT_BACK].cFile[iBack],options[OPT_FORW].cFile[iForw],options[OPT_BACK].iLine[iBack],options[OPT_FORW].iLine[iForw]);
+    DoubleLineExit(options[OPT_BACK].cFile[iFile1],options[OPT_FORW].cFile[iFile2],options[OPT_BACK].iLine[iFile1],options[OPT_FORW].iLine[iFile2]);
   }
 
   /* Fix backward output file */
@@ -255,6 +242,19 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       control->Evolve.iOneStep = RUNGEKUTTA;
       *fnOneStep = &RungeKutta4Step;
     }
+  }
+
+  /* Make sure output interval is less than stop time */
+  if (control->Evolve.dStopTime < control->Io.dOutputTime) {
+    fprintf(stderr,"ERROR: %s < %s is not allowed.\n",options[OPT_STOPTIME].cName,options[OPT_OUTPUTTIME].cName);
+    /* Now identify which files contained the two offending options */
+    for (iFile=0;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_STOPTIME].iLine[iFile] > 0)
+	iFile1=iFile; // Error of multiple occurences checked in Read
+      if (options[OPT_OUTPUTTIME].iLine[iFile] > 0)
+	iFile2=iFile; // Error of multiple occurences checked in Read
+    }
+    DoubleLineExit(options[OPT_STOPTIME].cFile[iFile1],options[OPT_STOPTIME].cFile[iFile2],options[OPT_STOPTIME].iLine[iFile1],options[OPT_OUTPUTTIME].iLine[iFile2]);
   }
 }
 

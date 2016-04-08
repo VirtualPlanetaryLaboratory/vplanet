@@ -88,6 +88,7 @@
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
+#define OUTLEN        48     /* Maximum number of characters in an output column header */
 #define LINE          128   /* Maximum number of characters in a line */
 #define NAMELEN       50
 
@@ -675,6 +676,7 @@ typedef struct {
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
+  double dZero;         /**< Sometimes you need a pointer to zero */
 
   /*! The body #s to calculate the derivative. First dimension is 
       the Primary Variable #, second is the process #, third is the 

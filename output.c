@@ -959,9 +959,9 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
 
 void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OPTLEN];
+  char cCol[NUMOUT][OUTLEN];
   double *dTmp;
-  char cUnit[48],cTmp[48];
+  char cUnit[OUTLEN],cTmp[OUTLEN];
   
 
   for (iCol=0;iCol<files->Outfile[iBody].iNumGrid;iCol++) {

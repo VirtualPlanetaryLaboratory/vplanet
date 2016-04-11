@@ -1,0 +1,45 @@
+sName        Earth   
+saModules    distorb distrot poise
+dMass        3.00316726e-06
+dRadius      -1.00
+dRotPeriod   -1.00000
+dObliquity   23.44    #no Moons yet in vplanet....
+dSemi        1.00000011
+dEcc         0.0167
+dInc         5e-5
+dLongP       102.94719
+dLongA       348.73936
+bGRCorr      1
+saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal -TotIceMass DeltaTime
+saGridOutput     -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight $
+  DIceMassDt -IceFlow -BedrockH
+dDynEllip    3.28e-3
+dPrecA       0.0
+bForcePrecRate    1
+#bOverrideMaxEcc  1
+#dHaltMaxEcc     0.4
+iLatCellNum      150
+#bMEPDiff         1
+bIceSheets       1
+dInitIceLat      90.
+dInitIceHeight   0.
+#bHadley          1
+dDiffusion        0.65
+#dPlanckA          192
+#dPlanckB         1.5
+bCalcAB          1
+dTGlobalInit      14.85
+dpCO2            0.00036
+#dSurfAlbedo       0.4
+bClimateModel     sea
+iNumYears         4
+iNStepInYear      60
+bSeaIceModel      0
+dIceDepRate       3e-5
+dIceAlbedo        0.7
+dAlbedoLand       0.4
+dAlbedoWater      0.3
+iIceDt             5
+iReRunSeas         500
+iAlbedoType        fix
+iGeography         modn

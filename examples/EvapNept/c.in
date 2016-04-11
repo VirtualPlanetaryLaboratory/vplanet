@@ -78,6 +78,6 @@ bClimateModel   sea
 
 # Output
 saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
-	      TMan Tcore -Tglobal AlbedoG -FluxOutGlobal -RadPowerT
+	      TMan Tcore -Tglobal AlbedoG -FluxOutGlobal SkipSeas -RadPowerT
 
 

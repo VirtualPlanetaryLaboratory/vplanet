@@ -100,6 +100,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TOTICEMASS       1825
 #define OUT_TOTICEFLOW       1826
 #define OUT_TOTICEBALANCE    1827
+#define OUT_SKIPSEAS         1828
+
 
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831
@@ -146,7 +148,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 /* Poise Functions */
 void PropertiesPoise(BODY*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void Albedo(BODY*,int);
+void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int,int);

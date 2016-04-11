@@ -9,5 +9,5 @@
 
 int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
 void InitializeHalts(CONTROL*,MODULE*);
-void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*,int);
+void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*);
 int HaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  

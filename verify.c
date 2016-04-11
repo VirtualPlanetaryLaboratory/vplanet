@@ -165,6 +165,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
     else if(body[iBody].bBinary && iBody == 1) // binary
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
     else
       body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
   }
@@ -173,6 +175,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
     else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
     else
       body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
   }
@@ -181,6 +185,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       body[iBody].dSemi = dSemi;
     else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
       body[iBody].dSemi = dSemi;  
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
     else
       body[iBody].dSemi = dSemi;
   }
@@ -189,6 +195,8 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
     else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Primary
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
     else
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
   }

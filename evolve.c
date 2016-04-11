@@ -19,17 +19,17 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
       if(body[iBody].iBodyType == 0) // CBP
       {
         // Set CBP orbital elements, mean motion
-        fdAssignOrbitalElements(body,iBody);
-        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+        //fdAssignOrbitalElements(body,iBody);
+        //body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
       
       }
       else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
       {
         // Correctly set binary's mean motion
-        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
+        //body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
       
         // Compute binary's eccentricity from Kecc and Hecc (since they are primary variables)
-        body[iBody].dEcc = sqrt(pow(body[iBody].dKecc,2) + pow(body[iBody].dHecc,2));
+        //body[iBody].dEcc = sqrt(pow(body[iBody].dKecc,2) + pow(body[iBody].dHecc,2));
       }
       else {}
     }

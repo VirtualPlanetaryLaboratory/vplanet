@@ -4,21 +4,20 @@ saModules       binary
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
-dMass		-104.6264			# Mass, negative -> Earth masses
-dRadius		-1.0  #-1.5			# Radius, negative -> Earth radii
+dMass		-104.6264 			# Mass, negative -> Earth masses
+dRadius		-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.03                     # Free Eccentricity
+dFreeEcc        0.03 #0.02373                   # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 
 # Orbital Properties
-dSemi           -0.3			# Semi-major axis, negative -> AU
-dEcc            0.02373
-dLongP          0.0
+dSemi           -0.7016		# Semi-major axis, negative -> AU
+dLongP          304.05
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds
@@ -26,7 +25,7 @@ dLongP          0.0
 #dTidalQ		100			# Tidal phase lag
 #dK2		0.3			# Love number of degree 2
 #dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
-#saTidePerts	sun			# Body name(s) of tidal perturbers
+#saTidePerts	primary			# Body name(s) of tidal perturbers
 
 # ATMESC Properties
 #dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)

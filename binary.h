@@ -50,6 +50,7 @@ void AddModuleBinary(MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);
+void fnPropertiesBinary(BODY*,UPDATE*,int);
 void fnForceBehaviorBinary(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */
@@ -58,6 +59,7 @@ void InitializeOptionsBinary(OPTIONS*,fnReadOption[]);
 void ReadOptionsBinary(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 void ReadFreeEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadFreeInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13K0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13V0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -77,7 +79,6 @@ void VerifyCBPRDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void VerifyCBPZDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void VerifyCBPPhiDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
-void fnPropertiesBinary(BODY*,UPDATE*,int);
 
 /* Update functions */
 void InitializeUpdateBinary(BODY*,UPDATE*,int);
@@ -133,8 +134,7 @@ double fdMeanToEccentric(double,double);
 double fdEccToTrue(double,double);
 
 /* Binary functions */
-
-double fdMeanMotion(BODY*,int);
+double fdMeanMotionBinary(BODY*,int);
 double fdEpiFreqK(BODY*,int);
 double fdEpiFreqV(BODY*,int);
 double fdPhi0(double,double,double);
@@ -160,3 +160,4 @@ double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
 double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);
+void binaryDebug(BODY*);

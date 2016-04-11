@@ -21,6 +21,7 @@ void  InitializeControlBinary(CONTROL *control) {
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   // Copy body properties from src to dest for cbp
 
+  dest[iBody].iBodyType = src[iBody].iBodyType;
   dest[iBody].dCBPR = src[iBody].dCBPR;
   dest[iBody].dCBPZ = src[iBody].dCBPZ;
   dest[iBody].dCBPPhi = src[iBody].dCBPPhi;
@@ -35,13 +36,10 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLL13V0 = src[iBody].dLL13V0;
   dest[iBody].dR0 = src[iBody].dR0; 
 
-  dest[iBody].dSemi = src[iBody].dSemi;
-  dest[iBody].dHecc = src[iBody].dHecc;
-  dest[iBody].dHecc = src[iBody].dKecc;
-  dest[iBody].dHecc = src[iBody].dEcc;
   dest[iBody].dArgP = src[iBody].dArgP;
   dest[iBody].dInc = src[iBody].dInc;
   dest[iBody].dLongA = src[iBody].dLongA;
+  dest[iBody].dLongP = src[iBody].dLongP;
 
 }
 
@@ -52,7 +50,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   {
 
     // Init inital cylindrical positions, velocities
-    // In future, use more intelligent starting points!
+    // In verify, uses more intelligent starting points!
     body[iBody].dCBPR = body[iBody].dSemi;
     body[iBody].dCBPZ = 0.0;
     body[iBody].dCBPPhi = 0.0;
@@ -62,7 +60,8 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
     body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
-    body[iBody].dLL13N0 = fdMeanMotion(body,iBody);
+    body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
+    body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
     body[iBody].dLL13K0 = fdEpiFreqK(body,iBody);
     body[iBody].dLL13V0 = fdEpiFreqV(body,iBody);
    
@@ -74,6 +73,9 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   // Inits if the body is the secondary
   if(body[iBody].iBodyType == 1 && iBody == 1)
   {
+    // Binary's inclination
+    body[iBody].dInc = 2.0*asin(body[iBody].dSinc);
+    
     // Set Initial Poincare H, K using imputted dEcc
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
     body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
@@ -358,11 +360,29 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUp
 }
 
 void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
-// TODO
+  
+  if(body[iBody].iBodyType == 0) // CBP
+  {
+    // Set CBP orbital elements, mean motion
+    fdAssignOrbitalElements(body,iBody);
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass+body[iBody].dMass));         
+  }
+  else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+  {
+    // Correctly set binary's mean motion
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
+  
+    // Compute binary's eccentricity from Kecc and Hecc (since they are primary variables)
+    body[iBody].dEcc = sqrt(pow(body[iBody].dKecc,2) + pow(body[iBody].dHecc,2));
+  }
+  else {
+    return;
+  }
+
 }
 
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule){
-// Nada
+// Anything here?
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -416,6 +436,36 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     fprintf(stderr,"WARNING: In binary, Leung and Lee 2013 is a 3 body problem: 2 stars, 1 planet. Include additional planets at your own peril!\n");
   }
 
+  // For CBP, setting dEcc, dInc doesn't matter since they are determined in part by dFreeEcc, dFreeInc
+  if(body[iBody].iBodyType == 0)
+  {
+    if(body[iBody].dEcc != -1 || body[iBody].dInc != -1)
+    {
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"WARNING: In binary setting dEcc, dInc for a circumbinary planet does not do anything.\n");
+        fprintf(stderr,"Orbital evolution is dicated by the binary and the free inclination and eccentricity.\n");
+      }
+    }
+  }
+
+  // For binary, only the secondary should have the orbital elements set!
+  if(body[iBody].iBodyType == 1)
+  {
+    if(iBody == 0) // Primary!
+    {
+      // These values default to -1
+      if(fabs(body[iBody].dInc) + 1 < TINY || fabs(body[iBody].dEcc) + 1 < TINY || fabs(body[iBody].dSemi + 1) < TINY || fabs(body[iBody].dMeanMotion) + 1 < TINY)
+      {
+        if(control->Io.iVerbose >= VERBERR)
+        {
+          fprintf(stderr,"ERROR: In binary, binary orbital element information can ONLY be in the secondary star (iBody == 1).\n");
+        }
+        exit(EXIT_INPUT);
+      }
+    }
+  }
+
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Call verifies to properly set up eqns in matrix
@@ -437,7 +487,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
-  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary; // XXX add orbital element stuff here XXX
+  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 
@@ -1050,7 +1100,7 @@ double fdComputeLongA(BODY *body, int iBody)
 
   // Case: |n| = 0
   double mag_n = sqrt(fdDot(n,n));
-  if(fabs(mag_n) < 1.0e-6)
+  if(fabs(mag_n) < TINY)
   {
     return Omega;
   }
@@ -1113,7 +1163,7 @@ double fdComputeArgPeri(BODY *body, int iBody)
   double mag_evec = sqrt(fdDot(evec,evec));
 
   // if LongA ~ 0, assume planar orbit
-  if(fabs(fdComputeLongA(body,iBody)) < 1.0e-6)
+  if(fabs(fdComputeLongA(body,iBody)) < TINY)
   {
     if(h[2] > 0)
     {
@@ -1143,13 +1193,13 @@ double fdComputeArgPeri(BODY *body, int iBody)
 double fdMeanToEccentric(double M, double e)
 {
   // If e is 0, or close enough, return 
-  if(e < 1.0e-10)
+  if(e < TINY)
   {
     return M;
   }
-  else if(e >= 1) // Should never happen, but better safe than sorry
+  else if(e >= 1 || e < 0) // Should never happen, but better safe than sorry
   {
-    fprintf(stderr,"ERROR: in fdMeanToEccentric (binary), eccentricity >= 1: %e\n",e);
+    fprintf(stderr,"ERROR: in fdMeanToEccentric (binary), eccentricity must be within [0,1). e: %e\n",e);
     exit(1);
   }
   
@@ -1215,7 +1265,7 @@ double fdMeanAnomaly(double dMeanMotion, double dTime, double dPhi)
  */
 
 /* LL13 N0 */
-double fdMeanMotion(BODY *body, int iBody)
+double fdMeanMotionBinary(BODY *body, int iBody)
 {
   // Define intermediate quantities
   double M = body[0].dMass + body[1].dMass;
@@ -1419,7 +1469,7 @@ double fdCMk(int k, BODY *body, int iBody)
   double n = fdn(body[iBody].dR0,body);
   double tmp1 = -k*fdPot0dR(0,k,body[iBody].dR0,body) - 0.5*fdPot1dR(0,k,body[iBody].dR0,body);
   double tmp2 = k*n*(-2.*k*fdPot0(0,k,body[iBody].dR0,body) - fdPot1(0,k,body[iBody].dR0,body));
-  tmp2 /= body[iBody].dR0*(k*n - (k-1.)*body[0].dMeanMotion);
+  tmp2 /= body[iBody].dR0*(k*n - (k-1.)*body[1].dMeanMotion);
   tmp1 += tmp2;
    
   double c = body[1].dEcc*tmp1/body[iBody].dR0;
@@ -1695,4 +1745,32 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   body[iBody].dAge = dAge;
 
   return flux/FLUX_INT_MAX;
+}
+
+void binaryDebug(BODY * body)
+{
+  fprintf(stderr,"binary debug information:\n");
+  fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUCM);
+  fprintf(stderr,"nk: %lf.\n",body[2].dMeanMotion*YEARSEC);
+  fprintf(stderr,"n0: %lf.\n",body[2].dLL13N0*YEARSEC);
+  fprintf(stderr,"k0: %lf.\n",body[2].dLL13K0*YEARSEC);
+  fprintf(stderr,"v0: %lf.\n",body[2].dLL13V0*YEARSEC);
+  
+  fprintf(stderr,"n0/nk: %lf.\n",body[2].dLL13N0/body[2].dMeanMotion);
+  fprintf(stderr,"k0/nk: %lf.\n",body[2].dLL13K0/body[2].dMeanMotion);
+  fprintf(stderr,"v0/nk: %lf.\n",body[2].dLL13V0/body[2].dMeanMotion);
+
+  fprintf(stderr,"C0: %lf.\n",fdC0(body,2));
+  fprintf(stderr,"C01: %lf.\n",fdC0k(1,body,2));
+  fprintf(stderr,"C02: %lf.\n",fdC0k(2,body,2));
+  fprintf(stderr,"C03: %lf.\n",fdC0k(3,body,2));
+
+  fprintf(stderr,"C1+: %lf.\n",fdCPk(1,body,2));
+  fprintf(stderr,"C2+: %lf.\n",fdCPk(2,body,2));
+  fprintf(stderr,"C3+: %lf.\n",fdCPk(3,body,2));
+
+  fprintf(stderr,"C1-: %lf.\n",fdCMk(1,body,2));
+  fprintf(stderr,"C2-: %lf.\n",fdCMk(2,body,2));
+  fprintf(stderr,"C3-: %lf.\n",fdCMk(3,body,2));
+
 }

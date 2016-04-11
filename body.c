@@ -230,11 +230,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   /* This subroutine only includes parameters needed for more than 1 module,
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
-  /* dflemin3 added means to keep track of whether binary is being used*/
-
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    if(src[iBody].iBodyType == 0 && src[iBody].bBinary == 1)
-    dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;
     dest[iBody].dRadGyra = src[iBody].dRadGyra;
@@ -246,14 +242,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dLXUV = src[iBody].dLXUV;
 
     /* Only orbiting bodies retain these parameters unless binary is used*/
-    if(iBody == 0 && src[iBody].bBinary == 1) {
-      dest[iBody].dHecc = src[iBody].dHecc;
-      dest[iBody].dKecc = src[iBody].dKecc;
-      dest[iBody].dSemi = src[iBody].dSemi;
-      dest[iBody].dRadius = src[iBody].dRadius;
-      dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
-    }
-
+    
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;

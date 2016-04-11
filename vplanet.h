@@ -22,7 +22,7 @@
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-11
+#define BIGG          6.67408e-11
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895

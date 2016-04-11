@@ -151,8 +151,8 @@ void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,in
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
-double dOLRdTwk97(BODY*,int,int);
-double OLRwk97(BODY*,int,int);
+double dOLRdTwk97(BODY*,int,int,int);
+double OLRwk97(BODY*,int,int,int);
 double dOLRdThm16(BODY*,int,int);
 double OLRhm16(BODY*,int,int);
 

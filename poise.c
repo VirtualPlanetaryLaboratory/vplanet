@@ -1084,8 +1084,8 @@ void InitializeClimateParams(BODY *body, int iBody) {
     
     if (body[iBody].bCalcAB) {
       /* Calculate A and B from williams and kasting 97 result */
-      body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i);
-      body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i) \
+      body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
+      body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
         - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]); 
     } else {
       body[iBody].daPlanckBAnn[i] = body[iBody].dPlanckB;
@@ -1246,8 +1246,8 @@ void InitializeClimateParams(BODY *body, int iBody) {
         }
         if (body[iBody].bCalcAB) {
           /* Calculate A and B from williams and kasting 97 result */
-          body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i);
-          body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i) \
+          body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+          body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
             - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
         } else {
           body[iBody].daPlanckBSea[i] = body[iBody].dPlanckB;
@@ -2163,9 +2163,9 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
     }
     
     if (body[iBody].dFluxOutGlobal >= 300 || body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
-      body[iBody].bSkipSeas == 1;
+      body[iBody].bSkipSeas = 1;
     } else {
-      body[iBody].bSkipSeas == 0;
+      body[iBody].bSkipSeas = 0;
     }
     
     if (body[iBody].bSkipSeas == 0) {
@@ -2464,8 +2464,8 @@ void PoiseAnnual(BODY *body, int iBody) {
   if (body[iBody].bCalcAB) {
     for (i=0;i<=body[iBody].iNumLats;i++) {
       if (i!=body[iBody].iNumLats) {
-        body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i);
-        body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i) \
+        body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
+        body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
           - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
       }
   
@@ -2638,11 +2638,11 @@ void PoiseAnnual(BODY *body, int iBody) {
 //   return dI;
 // }
 
-double OLRwk97(BODY *body, int iBody, int iLat){
+double OLRwk97(BODY *body, int iBody, int iLat, int bModel){
   double phi, Int, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  if (body[iBody].bClimateModel == ANN) {
+  if (bModel == ANN) {
     T = body[iBody].daTempAnn[iLat]+273.15;
   } else {
     T = body[iBody].daTempLW[iLat]+273.15;
@@ -2660,11 +2660,11 @@ double OLRwk97(BODY *body, int iBody, int iLat){
   return Int;
 }
   
-double dOLRdTwk97(BODY *body, int iBody, int iLat){
+double dOLRdTwk97(BODY *body, int iBody, int iLat, int bModel){
   double phi, dI, T;
   
   phi = log(body[iBody].dpCO2/3.3e-4);
-  if (body[iBody].bClimateModel == ANN) {
+  if (bModel == ANN) {
     T = body[iBody].daTempAnn[iLat]+273.15;
   } else {
     T = body[iBody].daTempLW[iLat]+273.15;
@@ -2675,7 +2675,7 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat){
        + 9.173169e-3*pow(phi,3) - 2*7.775195e-5*pow(phi,3)*T \
        + 3*1.528125e-7*pow(phi,3)*pow(T,2) - 1.631909e-4*pow(phi,4) \
        + 2*3.663871e-6*pow(phi,4)*T - 3*9.255646e-9*pow(phi,4)*pow(T,2);
-  if (OLRwk97(body,iBody,iLat)>=300.0) {
+  if (OLRwk97(body,iBody,iLat,bModel)>=300.0) {
     dI = 0.001;
   }
   return dI;
@@ -3233,8 +3233,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           if (body[iBody].bCalcAB) {
             /* Calculate A and B from williams and kasting 97 result */
-            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i);
-            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i) \
+            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
             
             if (body[iBody].bMEPDiff) {   
@@ -3343,8 +3343,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
 //             body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
 //                - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
 //               
-            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i);
-            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i) \
+            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                   - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
             
             if (body[iBody].bMEPDiff) {   

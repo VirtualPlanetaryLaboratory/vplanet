@@ -345,10 +345,14 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
   int iEqtide;
 
   if (body[iBody].bEqtide) {
-    if (!body[iBody].bThermint) 
+    if (!body[iBody].bThermint) {
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
-    else { // Thermint and Eqtide called
+      // Now set the "Man" functions as the WriteTidalQ uses them
+      // This ensures that the write function works
+      body[iBody].dImk2Man = body[iBody].dImK2;
+      body[iBody].dK2Man = body[iBody].dK2;
+    } else { // Thermint and Eqtide called
       /* When Thermint and Eqtide are called together, care must be taken as 
          Im(k_2) must be known in order to calculate TidalZ. As the individual 
          module PropsAux are called prior to PropsAuxMulti, we must call the 

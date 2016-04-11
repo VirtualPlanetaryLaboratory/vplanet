@@ -413,7 +413,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
 
-    /* XXX Only module reference in file -- can this be changed? */
+    /* XXX Only module reference in file -- guess we need VerifyOrbitModule */
     if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
@@ -424,9 +424,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   InitializeHalts(control,module);
   InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    VerifyHalts(body,control,module,options,iBody);
+  VerifyHalts(body,control,module,options);
 
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       // Must initialize entire body struct before verifying modules
       module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);

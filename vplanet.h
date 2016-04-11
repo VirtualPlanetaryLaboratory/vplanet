@@ -172,7 +172,8 @@ typedef struct {
 /* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
-  char cType[OPTLEN];    /**< Type of object N/I */
+  /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
+  char iType; 
 
   /* Body Properties */
   double dAge;           /**< Body's Age */

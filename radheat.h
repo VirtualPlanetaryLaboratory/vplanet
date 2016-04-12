@@ -320,33 +320,42 @@ void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* RadHeat functions */
-double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
-double fdRadPowerMan(BODY*,UPDATE*,int);
-double fdRadPowerCore(BODY*,UPDATE*,int);
-double fdRadPowerTotal(BODY*,UPDATE*,int);
-double fdRadPower(double,double,double); // XXX
-
 void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
 double fd235UConstant(double,double);  
-double fd40KPowerMan(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerMan(BODY*,SYSTEM*,int);
-double fd238UPowerMan(BODY*,SYSTEM*,int);
-double fd235UPowerMan(BODY*,SYSTEM*,int); 
-double fdTotalRadPowerMan(BODY*,int);
+
+double fd40KPowerMan(UPDATE*,int);
+double fd232ThPowerMan(UPDATE*,int);
+double fd238UPowerMan(UPDATE*,int);
+double fd235UPowerMan(UPDATE*,int); 
+double fdRadPowerMan(UPDATE*,int);
+
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*);
 double fdD235UNumManDt(BODY*,SYSTEM*,int*); 
 
-double fd40KPowerCore(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerCore(BODY*,SYSTEM*,int);
-double fd238UPowerCore(BODY*,SYSTEM*,int);
-double fd235UPowerCore(BODY*,SYSTEM*,int);
-double fdTotalRadPowerCore(BODY*,int);
+double fd40KPowerCore(UPDATE*,int);
+double fd232ThPowerCore(UPDATE*,int);
+double fd238UPowerCore(UPDATE*,int);
+double fd235UPowerCore(UPDATE*,int);
+double fdRadPowerCore(UPDATE*,int);
+
+double fd40KPower(UPDATE*,int);
+double fd232ThPower(UPDATE*,int);
+double fd235UPower(UPDATE*,int);
+double fd238UPower(UPDATE*,int);
+double fdRadPowerTot(UPDATE*,int);
+
+double fd40KEnFlux(BODY*,UPDATE*,int);
+double fd232ThEnFlux(BODY*,UPDATE*,int);
+double fd235UEnFlux(BODY*,UPDATE*,int);
+double fd238UEnFlux(BODY*,UPDATE*,int);
+double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
+
 double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);

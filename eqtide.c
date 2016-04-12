@@ -837,7 +837,10 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
+    if (control->Evolve.bForceEqSpin[iBody])
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+    else
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
   }  
   
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */

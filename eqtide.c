@@ -1124,6 +1124,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   int iPert;
 
   /* Change iTidePerts to iNumBodies XXX */
+  // XXX - I don't think so 4/11/16
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));

@@ -888,6 +888,7 @@ typedef struct {
   int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   int dMin238UPower;    /**< Halt at this Uranium-238 Power */
   int dMin235UPower;
+  int dMinRadPower;
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 

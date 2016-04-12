@@ -438,8 +438,8 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 */
 
 void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dPowRadiogCore = fdRadPowerCore(body,update,iBody);
-  body[iBody].dPowRadiogMan = fdRadPowerMan(body,update,iBody);
+  body[iBody].dPowRadiogCore = fdRadPowerCore(update,iBody);
+  body[iBody].dPowRadiogMan = fdRadPowerMan(update,iBody);
 }
 
 void PropsAuxFlareStellar(BODY *body,UPDATE *update,int iBody) {

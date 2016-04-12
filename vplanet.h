@@ -491,6 +491,7 @@ typedef struct {
   double dSeasDeltat;
   double dSeasDeltax;
   int bSkipSeas;
+  int bSkipSeasEnabled;
   int bSnowball;
   double dSurfAlbedo;
   double dTGlobal;           /**< Global mean temperature at surface */

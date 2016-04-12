@@ -50,6 +50,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICEALBEDO       1818
 #define OPT_SURFALBEDO      1819
 #define OPT_ICEDEPRATE      1820
+#define OPT_SKIPSEASENABLED 1821
 
 //#define OPT_LANDGEOM      1840
 #define OPT_HEATCAPLAND     1842

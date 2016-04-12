@@ -63,6 +63,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
       sscanf(cTmp,"%s",cWord);
+      // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {

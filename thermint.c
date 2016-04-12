@@ -1339,7 +1339,7 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnInitializeControl[iBody][iModule] = &InitializeControlThermint;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyThermint;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
+  module->fnCountHalts[iBody][iModule] = &CountHaltsThermint;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsThermint;
   module->fnLogBody[iBody][iModule] = &LogBodyThermint;
   module->fnVerify[iBody][iModule] = &VerifyThermint;

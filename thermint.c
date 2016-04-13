@@ -289,10 +289,6 @@ void ReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
     
 /******************* Verify THERMINT ******************/
 
-void VerifyRotationThermint(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 /* Is this necessary? */
 void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
@@ -1344,7 +1340,6 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyThermint;
   module->fnVerify[iBody][iModule] = &VerifyThermint;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltThermint;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationThermint;
   
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;

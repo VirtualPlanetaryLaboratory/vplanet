@@ -1169,7 +1169,6 @@ typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
-typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
@@ -1277,9 +1276,6 @@ typedef struct {
 
   /*! These functions verify module-specific halts. */ 
   fnVerifyHaltModule **fnVerifyHalt;
-
-  /*! These functions verify module-specific constraints on rotation rate. */ 
-  fnVerifyRotationModule **fnVerifyRotation;
 
   /*! These functions adds subroutines to the output functions that require
       module-specific values. */ 

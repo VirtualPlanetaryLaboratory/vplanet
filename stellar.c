@@ -218,12 +218,6 @@ void ReadOptionsStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 /******************* Verify STELLAR ******************/
 
-void VerifyRotationStellar(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  
-  // DEPRECATED! Let's get rid of this...
-  
-}
-
 void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   update[iBody].iaType[update[iBody].iRot][update[iBody].iRotStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar] = 1;
@@ -557,7 +551,6 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyStellar;
   module->fnVerify[iBody][iModule] = &VerifyStellar;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltStellar;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationStellar;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyStellar;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;

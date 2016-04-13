@@ -341,6 +341,8 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
   int iFileNum = iBody+1;
   /* Was more than one version set? */
 
+  /* !!!!!! ------ RotRate IS ALWAYS UPDATED AND CORRECT -------- !!!!!! */
+
   if (options[OPT_ROTPER].iLine[iFileNum] >= 0) {
     /* Rotation Period set -- if Rate or Vel set, exit */
     if (options[OPT_ROTRATE].iLine[iFileNum] >= 0) 
@@ -373,18 +375,6 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
-void VerifyRotation(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,char cFile[],int iBody) {
-  int iModule;
-
-  /* !!!!!! ------ RotRate IS ALWAYS UPDATED AND CORRECT -------- !!!!!! */
-
-  VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,cFile);
-
-  /* Verify modules */
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-    module->fnVerifyRotation[iBody][iModule](body,control,options,cFile,iBody);
-}
-
 /*
  *
  * Master Verify subroutine
@@ -409,9 +399,12 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody+1,files->Infile[iBody+1].cIn,control->Io.iVerbose);
 
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+      // Must initialize entire body struct before verifying modules
+      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
     /* Verify Modules */
 
-    VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
+    VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
     /* XXX Only module reference in file -- guess we need VerifyOrbitModule */
     if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
@@ -428,8 +421,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      // Must initialize entire body struct before verifying modules
-      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
       module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
     }
   }

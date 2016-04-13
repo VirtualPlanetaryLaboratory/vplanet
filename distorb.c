@@ -1498,7 +1498,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsDistOrb;
   module->fnVerify[iBody][iModule] = &VerifyDistOrb;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistOrb;
-//   module->fnVerifyRotation[iBody][iModule] = &VerifyRotationDistOrb;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistOrb;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistOrb;

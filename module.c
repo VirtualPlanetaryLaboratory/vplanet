@@ -14,10 +14,6 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
-void VerifyRotationNULL(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iBody1) {
   return 0;
 }
@@ -82,7 +78,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnReadOptions = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
   module->fnVerify = malloc(iNumBodies*sizeof(fnVerifyModule*));
   module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
-  module->fnVerifyRotation = malloc(iNumBodies*sizeof(fnVerifyRotationModule*));
 
   /* Assume no modules per body to start */
   for (iBody=0;iBody<iNumBodies;iBody++) 
@@ -129,7 +124,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
   module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
   module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
-  module->fnVerifyRotation[iBody] = malloc(iNumModules*sizeof(fnVerifyRotationModule));
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
@@ -195,7 +189,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
 
-    module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
   }
 
   /************************

@@ -852,7 +852,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT40KPOWER].cDefault,"0");
   options[OPT_HALT40KPOWER].iType = 2;
   options[OPT_HALT40KPOWER].iMultiFile = 1;
-  options[OPT_HALT40KPOWER].dNeg = 1e-12; // TW
+  options[OPT_HALT40KPOWER].dNeg = 1e12; // TW
   options[OPT_HALT40KPOWER].dDefault = 0;
   sprintf(options[OPT_HALT40KPOWER].cNeg,"TW");
   fnRead[OPT_HALT40KPOWER] = &ReadHalt40KPower;
@@ -862,7 +862,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT232THPOWER].cDefault,"0");
   options[OPT_HALT232THPOWER].iType = 2;
   options[OPT_HALT232THPOWER].iMultiFile = 1;
-  options[OPT_HALT232THPOWER].dNeg = 1e-12; // TW
+  options[OPT_HALT232THPOWER].dNeg = 1e12; // TW
   options[OPT_HALT232THPOWER].dDefault = 0;
   sprintf(options[OPT_HALT232THPOWER].cNeg,"TW");
   fnRead[OPT_HALT232THPOWER] = &ReadHalt232ThPower;
@@ -872,7 +872,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT235UPOWER].cDefault,"0");
   options[OPT_HALT235UPOWER].iType = 2;
   options[OPT_HALT235UPOWER].iMultiFile = 1;
-  options[OPT_HALT235UPOWER].dNeg = 1e-12; // TW
+  options[OPT_HALT235UPOWER].dNeg = 1e12; // TW
   options[OPT_HALT235UPOWER].dDefault = 0;
   sprintf(options[OPT_HALT235UPOWER].cNeg,"TW");
   fnRead[OPT_HALT235UPOWER] = &ReadHalt235UPower;
@@ -882,7 +882,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT238UPOWER].cDefault,"0");
   options[OPT_HALT238UPOWER].iType = 2;
   options[OPT_HALT238UPOWER].iMultiFile = 1;
-  options[OPT_HALT238UPOWER].dNeg = 1e-12; // TW
+  options[OPT_HALT238UPOWER].dNeg = 1e12; // TW
   options[OPT_HALT238UPOWER].dDefault = 0;
   sprintf(options[OPT_HALT238UPOWER].cNeg,"TW");
   fnRead[OPT_HALT238UPOWER] = &ReadHalt238UPower;
@@ -892,7 +892,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTRADPOWER].cDefault,"0");
   options[OPT_HALTRADPOWER].iType = 2;
   options[OPT_HALTRADPOWER].iMultiFile = 1;
-  options[OPT_HALTRADPOWER].dNeg = 1e-12; // TW
+  options[OPT_HALTRADPOWER].dNeg = 1e12; // TW
   options[OPT_HALTRADPOWER].dDefault = 0;
   sprintf(options[OPT_HALTRADPOWER].cNeg,"TW");
   fnRead[OPT_HALTRADPOWER] = &ReadHaltRadPower;
@@ -1350,7 +1350,7 @@ int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
   if (fd40KPower(update,iBody) < halt->dMin40KPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 40K Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d40KPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd40KPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin40KPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1367,7 +1367,7 @@ int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upda
   if (fd232ThPower(update,iBody) < halt->dMin232ThPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 232Th Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d232ThPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd232ThPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin232ThPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1384,7 +1384,7 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   if (fd238UPower(update,iBody) < halt->dMin238UPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 238U Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d238UPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd238UPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin238UPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1394,14 +1394,12 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
-/* Minimum 235U Powering? PED */
-
 int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd235UPower(update,iBody) < halt->dMin235UPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 235U Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d235UPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd235UPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin235UPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1411,6 +1409,26 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
+/* Minimum Radiogenic Power */
+
+int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  int iFoo;
+  iFoo = fdRadPowerTot(update,iBody);
+
+  if (fdRadPowerTot(update,iBody) < halt->dMinRadPower) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's Total Radiogenic Power =  ",body[iBody].cName);
+      fprintd(stdout,fdRadPowerTot(update,iBody),io->iSciNot,io->iDigits);
+      printf(" < ");
+      fprintd(stdout,halt->dMinRadPower,io->iSciNot,io->iDigits);
+      printf(".\n");
+    }
+    return 1;
+  }
+  return 0;
+}        
+
+
 void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin40KPower > 0)
     (*iNumHalts)++;
@@ -1419,6 +1437,8 @@ void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin238UPower > 0)
     (*iNumHalts)++;
   if (halt->dMin235UPower > 0)  //PED
+    (*iNumHalts)++;
+  if (halt->dMinRadPower > 0)
     (*iNumHalts)++;
 }
 
@@ -1432,6 +1452,8 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin238UPower;
   if (control->Halt[iBody].dMin235UPower > 0)  //PED
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin235UPower;
+  if (control->Halt[iBody].dMinRadPower > 0) 
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinRadPower;
 }
 
 /************* RADHEAT Outputs ******************/

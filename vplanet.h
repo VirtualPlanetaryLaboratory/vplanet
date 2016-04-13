@@ -884,11 +884,11 @@ typedef struct {
   int bSync;            /**< Halt if Rotation Becomes Synchronous? */
 
   /* RADHEAT */
-  int dMin40KPower;     /**< Halt at this Potassium-40 Power */
-  int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
-  int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower;
-  int dMinRadPower;
+  double dMin40KPower;     /**< Halt at this Potassium-40 Power */
+  double dMin232ThPower;   /**< Halt at this Thorium-232 Power */
+  double dMin238UPower;    /**< Halt at this Uranium-238 Power */
+  double dMin235UPower;
+  double dMinRadPower;
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 

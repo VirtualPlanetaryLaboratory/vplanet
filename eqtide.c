@@ -1573,7 +1573,15 @@ void WriteEccTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 }
 
 void WriteEqRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdEqRotRate(body[iBody],body[iBody].dMeanMotion,body[iBody].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1585,7 +1593,15 @@ void WriteEqRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iBody].dMeanMotion,body[iBody].dEccSq));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1597,7 +1613,15 @@ void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iBody].dMeanMotion,body[iBody].dEccSq));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1609,7 +1633,15 @@ void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 }
 
 void WriteEqRotRate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdEqRotRate(body[iBody],body[1].dMeanMotion,body[1].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1621,8 +1653,16 @@ void WriteEqRotRate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdCPLEqRotRateCont(body[1].dMeanMotion,body[1].dEccSq);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+
+  *dTmp = fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1634,8 +1674,15 @@ void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdCPLEqRotRateDiscrete(body[1].dMeanMotion,body[1].dEccSq);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+  
+  *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

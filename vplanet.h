@@ -898,8 +898,8 @@ typedef struct {
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
-  int dMinTMan;     /**< Halt at this TMan */
-  int dMinTCore;     /**< Halt at this TCore */
+  double dMinTMan;     /**< Halt at this TMan */
+  double dMinTCore;     /**< Halt at this TCore */
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */

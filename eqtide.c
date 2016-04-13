@@ -2205,9 +2205,10 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
       PropsAuxOrbiter(body,update,iBody);
   }
 
-  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) 
-    body[iBody].daDoblDtEqtide[iPert] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
-
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+    iIndex = body[iBody].iaTidePerts[iPert];
+    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
+  }
 }
 
 void PropsAuxCTL(BODY *body,UPDATE *update,int iBody) {

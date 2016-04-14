@@ -1,3 +1,5 @@
+void BodyCopyNULL(BODY*,BODY*,int,int,int);
+
 void InitializeControl(CONTROL*,MODULE*);
 void InitializeControlEvolve(CONTROL*,MODULE*,UPDATE*);
 

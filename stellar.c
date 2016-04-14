@@ -14,24 +14,12 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlStellar(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
-
 void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
   dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].iWindModel = src[iBody].iWindModel;
-}
-
-void InitializeBodyStellar(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  //
-}
-
-void InitializeUpdateTmpBodyStellar(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  //
 }
 
 /**************** STELLAR options ********************/
@@ -330,8 +318,6 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
-  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyStellar;
-
 }
 
 void InitializeModuleStellar(CONTROL *control,MODULE *module) {
@@ -543,16 +529,12 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = STELLAR;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlStellar;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyStellar;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsStellar;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsStellar;
   module->fnLogBody[iBody][iModule] = &LogBodyStellar;
   module->fnVerify[iBody][iModule] = &VerifyStellar;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltStellar;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyStellar;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
   module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;

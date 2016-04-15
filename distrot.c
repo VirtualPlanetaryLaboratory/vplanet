@@ -109,8 +109,8 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
-  sprintf(options[OPT_DYNELLIP].cDefault,"0");
-  options[OPT_DYNELLIP].dDefault = 0.0;
+  sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
+  options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;  
   options[OPT_DYNELLIP].iMultiFile = 1;   
   fnRead[OPT_DYNELLIP] = &ReadDynEllip;
@@ -793,21 +793,32 @@ double fdCentralTorqueSfac(BODY *body, int iBody) {
 }
   
 double fdCentralTorqueR(BODY *body, int iBody) {
-  double obliq;
-  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+  double obliq, tmp;
+ //  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
+//   ztmp = cos(obliq);
+  tmp = 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
   
-  return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*cos(obliq)/DAYSEC;
+  return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
 double fdObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  double tmp;
+  tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
+
   return body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
 }
 
 double fdObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
+  double tmp;
+  tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
+
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
 }
 
 double fdObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  double tmp;
+  tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
 }
 

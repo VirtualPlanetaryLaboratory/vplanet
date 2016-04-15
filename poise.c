@@ -1151,10 +1151,12 @@ void InitializeClimateParams(BODY *body, int iBody) {
     'tis the season to model ice sheets, fa la la la la, la la la la */
     
     /* First, if annual predict RGH or snowball, skip seasonal */
-    if (body[iBody].dFluxOutGlobal >= 300 || body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
-      body[iBody].bSkipSeas = 1;
-    } else {
-      body[iBody].bSkipSeas = 0;
+    if (body[iBody].bSkipSeasEnabled) {
+      if (body[iBody].dFluxOutGlobal >= 300 || body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
+        body[iBody].bSkipSeas = 1;
+      } else {
+        body[iBody].bSkipSeas = 0;
+      }
     }
     VerifyNStepSeasonal(body,iBody);
     body[iBody].dTGlobal = 0.0;
@@ -2189,10 +2191,12 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
       }
     }
     
-    if (body[iBody].dFluxOutGlobal >= 300 || body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
-      body[iBody].bSkipSeas = 1;
-    } else {
-      body[iBody].bSkipSeas = 0;
+    if (body[iBody].bSkipSeasEnabled) {
+      if (body[iBody].dFluxOutGlobal >= 300 || body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
+        body[iBody].bSkipSeas = 1;
+      } else {
+        body[iBody].bSkipSeas = 0;
+      }
     }
     
     if (body[iBody].bSkipSeas == 0) {
@@ -2944,7 +2948,7 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
     //zenith angle of sun at noon at each latitude
     zenith = fabs(body[iBody].daLats[iLat] - body[iBody].daDeclination[iDay]);
     
-    if (body[iBody].bCalcAB == 1 || body[iBody].bCalcAB == 0) {
+    if (body[iBody].bCalcAB == 1) {
       AlbedoTOAwk97(body, zenith, iBody, iLat);
     } else {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*pow(sin(zenith),2)-1.)/2.;

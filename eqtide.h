@@ -14,7 +14,7 @@
 
 void InitializeControlEqtide(CONTROL*);
 void AddModuleEqtide(MODULE*,int,int);
-void BodyCopyEqtide(BODY*,BODY*,int,int);
+void BodyCopyEqtide(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 int fiGetModuleIntEqtide(MODULE*,int);
@@ -179,7 +179,7 @@ void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /******************** CPL Functions ********************/
 

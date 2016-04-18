@@ -63,6 +63,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
       sscanf(cTmp,"%s",cWord);
+      // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
@@ -1368,8 +1369,6 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 void ReadHaltMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
-  /* Russell sez: the above statement is untrue. As coded, this MUST exist in every file when 
-     used at all, else all bodies without this parameter set will have dMaxEcc = 0. XXX */
      
   int lTmp=-1;
   double dTmp;
@@ -2146,7 +2145,7 @@ void ReadRadiusGyration(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
+    if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than zero.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
@@ -2831,6 +2830,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
+  InitializeOptionsFlare(options,fnRead);
 
 }
  

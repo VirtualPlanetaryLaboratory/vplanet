@@ -9,7 +9,7 @@
 
 void InitializeControlPoise(CONTROL*);
 void AddModulePoise(MODULE*,int,int);
-void BodyCopyPoise(BODY*,BODY*,int,int);
+void BodyCopyPoise(BODY*,BODY*,int,int,int);
 void InitializeBodyPoise(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 
@@ -130,7 +130,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 
 /* Poise Functions */
 void PropertiesPoise(BODY*,UPDATE*,int);
-void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void Albedo(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);

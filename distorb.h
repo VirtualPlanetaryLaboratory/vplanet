@@ -8,16 +8,17 @@
 */
 
 /* Orbital model */
-#define LL2         1
-#define RD4         0
-#define TEENY				1e-20
+#define LL2           1
+#define RD4           0
+#define TEENY				1e-20 // Already a TINY in vplanet.h! XXX
+#define MAXECCDISTORB 0.6627434
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
 
 void InitializeControlDistOrb(CONTROL*);
 void AddModuleDistOrb(MODULE*,int,int);
-void BodyCopyDistOrb(BODY*,BODY*,int,int);
+void BodyCopyDistOrb(BODY*,BODY*,int,int,int);
 void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 
@@ -145,7 +146,7 @@ void inv_plane(BODY*,SYSTEM*,int);
 void cross(double*,double*,double*);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

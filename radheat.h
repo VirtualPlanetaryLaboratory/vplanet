@@ -19,77 +19,74 @@
 // PD NOTE: NUM is the fundamental parameter, pow and mass should reflect num.
 // Changing the concentration requires changing all of these: pow, num, and mass.
 
-// 40K
-#define RAD40KMAN        10
-#define HALFLIFE40K      3.78e16  //5.43607e16  //=1.2G/ln(2)
-//5.6860542e+16  //[seconds]  really =tau_half/ln(2)=1/lambda
-#define ENERGY40K        2.13371243669e-13 // [W] -- weighting both Ar and Ca decay chains
-#define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
-
-#define EMASSMAN40K      8.2845415e+17  //kg  mass in Earths mantle of 40K at 4.5 Ga (t=0)
-#define ENUMMAN40K       1.2483906e+43  //[num] number of 40K atoms in E mantle at 4.5Ga
-#define EPOWERMAN40K     4.6846309e+13  //
 // Relations: P=p*M, [P]=W, [p]=W/kg, [M]=kg
 // M=N*m ,[N]=number, [m]=kg/1 atom
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
+// 40K
+#define RAD40KMAN        10
+#define ENERGY40K        2.13371243669e-13 // [J?] -- weighting both Ar and Ca decay chains
+#define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
+#define HALFLIFE40K      5.736527e+16  //3.9762576e+16  //[s] 
+/* Mantle */
+#define EMASSMAN40K      1.11075e+18  //[kg]  mass in Earths mantle of 40K at 4.5 Ga (t=0)
+#define ENUMMAN40K       8.8692227e+42  //[num] number of 40K atoms in E mantle at 4.5Ga
+#define EPOWERMAN40K     3.29892e+13  //[W]  Power from 40K in Earths Mantle at 4.5 Ga 
+/* Core */
 #define RAD40KCORE       11
-//** Default for 1 TW after 4.5 Gyr. */
-//#define EMASSCORE40K     4.977105e17
-//#define ENUMCORE40K      7.5e42
-//#define EPOWERCORE40K    4.267e13  //gives 1 TW after 4.5G using tau_k40=1.2 G.
-//** Default for 1.5 TW after 4.5 Gyr. */
-#define EMASSCORE40K     7.4656e17
-#define ENUMCORE40K      1.125e43
-#define EPOWERCORE40K    6.4005e13  
+#define EMASSCORE40K     3.90916e+17  //[kg]
+#define ENUMCORE40K      3.1214255e+42  //[num] 
+#define EPOWERCORE40K    1.16102e+13  //[W] 
 
 //232TH
 #define RAD232THMAN      12
 #define HALFLIFE232TH    6.3752726e+17 //4.4338428e17   // seconds
 #define MASS232TH        232.0377*ATOMMASS
 #define ENERGY232TH      6.833606619959e-12 // W
-#define EMASSMAN232TH    2.1017728e+17  // 2.5982745e+20  //3.1e20
-#define ENUMMAN232TH     5.4547913e+41  //6.5205779e+41  //1.45e42
-#define EPOWERMAN232TH   5.8469497e+12  // W
-
+/* Mantle */
+#define EMASSMAN232TH    2.31439e+17  //[kg]
+#define ENUMMAN232TH     5.5262845e+41  //[num] 
+#define EPOWERMAN232TH   5.92484e+12  //[W] 
+/* Core */
 #define RAD232THCORE     13
-#define EMASSCORE232TH   1.0230379e+15  // kg
-#define ENUMCORE232TH    2.6551196e+39  // num 232Th
-#define EPOWERCORE232TH  2.8460027e+10  // [W]
-
+#define EMASSCORE232TH   1.92682e+15  //[kg]
+#define ENUMCORE232TH    4.6008515e+39  //[num]
+#define EPOWERCORE232TH  4.93267e+10  //[W] 
 
 //238U
 #define RAD238UMAN       14
 #define HALFLIFE238U     2.0359742e+17  //1.409993568e17 // seconds
 #define MASS238U         238.050788268*ATOMMASS
-#define ENERGY238U       8.28293620554e-12 // ergs
-#define EMASSMAN238U     8.3866516e+16  //1.0367830e+20  //8e19
-#define ENUMMAN238U      2.1216313e+41  //2.3878961e+41  //7.5e41
-#define EPOWERMAN238U    8.6314141e+12  // W
-
+#define ENERGY238U       8.28293620554e-12 // [J]
+/* Mantle */
+#define EMASSMAN238U     1.16*1.00111e+17  //[kg]
+#define ENUMMAN238U      1.16*2.2505054e+41  //[num] 
+#define EPOWERMAN238U    1.16*9.18017e+12  //[W] 
+/* Core */
 #define RAD238UCORE      15
-#define EMASSCORE238U    4.0822026e+14  // kg
-#define ENUMCORE238U     1.0327040e+39  // num 238U
-#define EPOWERCORE238U   4.2013407e+10  // [W]
+#define EMASSCORE238U    7.83780e+14  //[kg]
+#define ENUMCORE238U     1.7619456e+39  //[num]
+#define EPOWERCORE238U   7.18726e+10  //[W]
 
 //235U
 #define RAD235UMAN       16
 #define HALFLIFE235U     3.2038174e+16  // seconds
 #define MASS235U         235.0439299*ATOMMASS
-#define ENERGY235U       6.55516e-12    // W
-#define EMASSMAN235U     2.5403288e+16  // 3.1404304e+19
-#define ENUMMAN235U      6.5086633e+40  // 8.7334519e+40
-#define EPOWERMAN235U    1.3317029e+13  // W
-
+#define ENERGY235U       6.55516e-12    // J
+/* Mantle */
+#define EMASSMAN235U     3.20325e+16  //[kg]
+#define ENUMMAN235U      9.0058843e+40  //[num] 
+#define EPOWERMAN235U    1.84187e+13  //[W]
+/* Core */
 #define RAD235UCORE      17
-#define EMASSCORE235U    1.2365050e+14  // kg
-#define ENUMCORE235U     3.1680918e+38  // num 235U
-#define EPOWERCORE235U   6.4820636e+10  // [W]
+#define EMASSCORE235U    2.50786e+14  //[kg]
+#define ENUMCORE235U     7.0508058e+38  //[num]
+#define EPOWERCORE235U   1.44202e+11  //[W] 
 
 void InitializeControlRadheat(CONTROL*);
 void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+void InitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
@@ -128,15 +125,12 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_235UNUMCORE           1153
 #define OPT_235UPOWERMAN          1154
 #define OPT_235UPOWERCORE         1155
-#define OPT_HALTMIN40KPOWERMAN    1170
-#define OPT_HALTMIN40KPOWERCORE   1171
+#define OPT_HALT40KPOWER          1170
 #define OPT_HALTMIN87RBPOWER      1172
-#define OPT_HALTMIN232THPOWERMAN  1174
-#define OPT_HALTMIN232THPOWERCORE 1175
-#define OPT_HALTMIN238UPOWERMAN	  1176
-#define OPT_HALTMIN238UPOWERCORE  1177
-#define OPT_HALTMIN235UPOWERMAN   1178  
-#define OPT_HALTMIN235UPOWERCORE  1179  
+#define OPT_HALT232THPOWER        1174
+#define OPT_HALT238UPOWER	  1176
+#define OPT_HALT235UPOWER         1178  
+#define OPT_HALTRADPOWER          1180  
 
 
 /* Options Functions */
@@ -170,7 +164,8 @@ void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
+void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
@@ -323,33 +318,42 @@ void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* RadHeat functions */
-double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
-double fdRadPowerMan(BODY*,UPDATE*,int);
-double fdRadPowerCore(BODY*,UPDATE*,int);
-double fdRadPowerTotal(BODY*,UPDATE*,int);
-double fdRadPower(double,double,double); // XXX
-
-void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
 double fd235UConstant(double,double);  
-double fd40KPowerMan(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerMan(BODY*,SYSTEM*,int);
-double fd238UPowerMan(BODY*,SYSTEM*,int);
-double fd235UPowerMan(BODY*,SYSTEM*,int); 
-double fdTotalRadPowerMan(BODY*,int);
+
+double fd40KPowerMan(UPDATE*,int);
+double fd232ThPowerMan(UPDATE*,int);
+double fd238UPowerMan(UPDATE*,int);
+double fd235UPowerMan(UPDATE*,int); 
+double fdRadPowerMan(UPDATE*,int);
+
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*);
 double fdD235UNumManDt(BODY*,SYSTEM*,int*); 
 
-double fd40KPowerCore(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerCore(BODY*,SYSTEM*,int);
-double fd238UPowerCore(BODY*,SYSTEM*,int);
-double fd235UPowerCore(BODY*,SYSTEM*,int);
-double fdTotalRadPowerCore(BODY*,int);
+double fd40KPowerCore(UPDATE*,int);
+double fd232ThPowerCore(UPDATE*,int);
+double fd238UPowerCore(UPDATE*,int);
+double fd235UPowerCore(UPDATE*,int);
+double fdRadPowerCore(UPDATE*,int);
+
+double fd40KPower(UPDATE*,int);
+double fd232ThPower(UPDATE*,int);
+double fd235UPower(UPDATE*,int);
+double fd238UPower(UPDATE*,int);
+double fdRadPowerTot(UPDATE*,int);
+
+double fd40KEnFlux(BODY*,UPDATE*,int);
+double fd232ThEnFlux(BODY*,UPDATE*,int);
+double fd235UEnFlux(BODY*,UPDATE*,int);
+double fd238UEnFlux(BODY*,UPDATE*,int);
+double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
+
 double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);

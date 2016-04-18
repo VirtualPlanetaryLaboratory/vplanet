@@ -1,0 +1,333 @@
+-------- Log file solarsys.log -------
+
+Executable: vplanet
+System Name: solarsys
+Primary Input File: vpl.in
+Body File #1: sun.in
+Body File #2: earth.in
+Body File #3: jupiter.in
+Allow files to be overwitten: Yes
+Mass Units: Kilograms
+Length Units: Meters
+Time Units: Seconds
+Angle Units: Radians
+
+------- FORMATTING -----
+Verbosity Level: 3
+Crossover Decade for Scientific Notation: 4
+Number of Digits After Decimal: 6
+Integration Method: Runge-Kutta4
+Direction: Forward
+Time Step: 3.155760e+07
+Stop Time: 3.155760e+12
+Output Interval: 3.155760e+10
+Use Variable Timestep: Yes
+dEta: 0.100000
+Minimum Value of ecc and obl: 0.000000
+
+
+---- INITIAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 0.000000 
+(Time) Simulation Time [sec]: 0.000000 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 2.613362e+41 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.841183e+41 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.841197e+41 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 1.361022e+36 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: 0.000000 
+(LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.000000 
+
+----- BODY: sun ----
+Color: 000000
+(Mass) Mass [kg]: 1.988920e+30 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [m]: 2.019573e+08 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 2.347268e+41 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.358373e+36 
+(RotVel) Rotational Velocity [m/sec]: 2337.468750 
+(RotRate) Rotational Frequency [/sec]: 1.157407e-05 
+(RotPer) Rotational Period [sec]: 5.428672e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.000000 
+(Eccentricity) Orbital Eccentricity []: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
+(OrbPeriod) Orbital Period [sec]: -1.000000 
+(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.660941e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- STELLAR PARAMETERS (sun)------
+(Luminosity) Luminosity [kg*m^2/sec^3]: 3.846000e+26 
+(LXUV) X-ray/XUV Luminosity [kg*m^2/sec^3]: 6.191016e+24 
+(Temperature) Effective Temperature [K]: 5778.000000 
+(LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.016097 
+Output Order:
+Grid Output Order:
+
+----- BODY: Earth ----
+Color: 0000ff
+(Mass) Mass [kg]: 5.973059e+24 
+(Obliquity) Obliquity [rad]: 0.410152 
+(Radius) Radius [m]: 6.378100e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.417592e+33 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.606282e+29 
+(RotVel) Rotational Velocity [m/sec]: 463.828521 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.003889 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.016241 
+(Eccentricity) Orbital Eccentricity []: 0.016700 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.990896e-07 
+(OrbPeriod) Orbital Period [sec]: 3.155959e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.495980e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.660941e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.649198e+33 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.298395e+33 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- DISTORB PARAMETERS (Earth)------
+(Inc) Body's Inclination in DistOrb [rad]: 8.726646e-07 
+(Sinc) Body's sin(1/2*Inclination) in DistOrb []: 4.363323e-07 
+(LongA) Body's Longitude of ascending node in DistOrb [rad]: 6.086650 
+(ArgP) Body's argument of pericenter in DistOrb [rad]: 0.431579 
+(Pinc) Body's p = s*sin(Omega) in DistOrb []: -8.520368e-08 
+(Qinc) Body's q = s* cos(Omega) in DistOrb []: 4.279325e-07 
+(DEccDtDistOrb) Body's decc/dt in DistOrb [/sec]: 2.820056e-16 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -2.304134e-14 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -1.152067e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -1.057127e-08 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 3.324656e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 5.465189e-15 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.018768e-15 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.274121e-15 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -1.219959e-14 
+-----DISTROT PARAMETERS (Earth)------
+(PrecA) Body's precession parameter in DistRot [rad]: 0.000000 
+(Xobl) Body's sin(obl)*cos(pA) []: 0.398749 
+(Yobl) Body's sin(obl)*sin(pA) []: 0.000000 
+(Zobl) Body's cos(obl) []: 0.917060 
+(CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.983069 
+(CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.183234 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -2.439919e-14 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 2.470906e-12 
+(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -2.237552e-14 
+(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 9.852713e-13 
+(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: 9.729154e-15 
+-----POISE PARAMETERS (Earth)------
+(TGlobal) Global mean temperature from POISE [C]: -51.445564 
+(AlbedoGlobal) Global mean bond albedo from POISE []: 0.600000 
+(FluxInGlobal) Global mean flux in (insol*(1-albedo)) from POISE [kg*m^2/sec^2/(m^2*sec)]: 1.237794e+07 
+(FluxOutGlobal) Global mean flux out from POISE []: 119.730430 
+(TotIceMass) Global total ice mass in ice sheets [kg]: 0.000000 
+(Latitude) Latitude. [Degrees]: -83.380372 
+(TempLat) Surface temperature by latitude. [C]: -57.946231 
+(AlbedoLat) Surface albedo by latitude. []: 0.600000 
+(AnnInsol) Annual insolation by latitude. [W/m^2]: 176.104892 
+(FluxMerid) Meridional flux by latitude [kg*m^2/sec^2/(m^2*sec)]: -3.055628e+14 
+(FluxIn) Incoming flux by latitude [W/m^2]: 70.443447 
+(FluxOut) Outgoing flux by latitude [W/m^2]: 107.546885 
+(DivFlux) Divergence of flux by latitude [kg*m^2/sec^2/(m^2*sec)]: 20.602436 
+(IceMass) Mass of ice sheets/area by latitude []: 0.000000 
+(IceHeight) Height of ice sheets [m]: 0.000000 
+(DIceMassDt) derivative of mass of ice sheets/area by latitude []: 7.437500e-06 
+(IceFlow) flow of ice sheets/area by latitude [kg/m^2/s]: 0.000000 
+Output Order: Time[year] Eccentricity[] Inc[deg] LongP[deg] LongA[deg] Obliquity[deg] PrecA[deg] TGlobal[C] AlbedoGlobal[C] FluxOutGlobal[W/m^2] TotIceMass[kg] DeltaTime[year]
+Grid Output Order: Time[year] Latitude[Degrees] TempLat[C] AlbedoLat[C] AnnInsol[W/m^2] FluxIn[W/m^2] FluxOut[W/m^2] IceMass[W/m^2] IceHeight[m] DIceMassDt[m] IceFlow[kg/m^2/s]
+
+----- BODY: Jupiter ----
+Color: ff0000
+(Mass) Mass [kg]: 1.898428e+27 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [m]: 9.567150e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 3.159115e+36 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.148687e+32 
+(RotVel) Rotational Velocity [m/sec]: 695.742781 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.012324 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.046797 
+(Eccentricity) Orbital Eccentricity []: 0.048393 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.678143e-08 
+(OrbPeriod) Orbital Period [sec]: 3.744130e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 7.784127e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.660941e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.618183e+35 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.236366e+35 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- DISTORB PARAMETERS (Jupiter)------
+(Inc) Body's Inclination in DistOrb [rad]: 0.022782 
+(Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.011391 
+(LongA) Body's Longitude of ascending node in DistOrb [rad]: 1.755036 
+(ArgP) Body's argument of pericenter in DistOrb [rad]: 4.785653 
+(Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.011198 
+(Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.002087 
+(DEccDtDistOrb) Body's decc/dt in DistOrb [/sec]: -1.343039e-19 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 1.728362e-21 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 8.641250e-22 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -1.503645e-15 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 1.378144e-15 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 6.445891e-17 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.711413e-17 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 3.138588e-18 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 1.683746e-17 
+Output Order: Time[year] Eccentricity[] Inc[deg] ArgP[deg] LongA[deg]
+Grid Output Order:
+
+
+
+---- FINAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 3.155760e+12 
+(Time) Simulation Time [sec]: 3.155760e+12 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 2.613393e+41 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.841183e+41 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.841197e+41 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 1.361022e+36 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.000000 
+
+----- BODY: sun ----
+Color: 000000
+(Mass) Mass [kg]: 1.988920e+30 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [m]: 2.019573e+08 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 2.347268e+41 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.358373e+36 
+(RotVel) Rotational Velocity [m/sec]: 2337.468750 
+(RotRate) Rotational Frequency [/sec]: 1.157407e-05 
+(RotPer) Rotational Period [sec]: 5.428672e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.000000 
+(Eccentricity) Orbital Eccentricity []: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
+(OrbPeriod) Orbital Period [sec]: -1.000000 
+(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.661252e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- STELLAR PARAMETERS (sun)------
+(Luminosity) Luminosity [kg*m^2/sec^3]: 3.846000e+26 
+(LXUV) X-ray/XUV Luminosity [kg*m^2/sec^3]: 6.191016e+24 
+(Temperature) Effective Temperature [K]: 5778.000000 
+(LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.016097 
+Output Order:
+Grid Output Order:
+
+----- BODY: Earth ----
+Color: 0000ff
+(Mass) Mass [kg]: 5.973059e+24 
+(Obliquity) Obliquity [rad]: 0.431926 
+(Radius) Radius [m]: 6.378100e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.417592e+33 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.606282e+29 
+(RotVel) Rotational Velocity [m/sec]: 463.828521 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.000664 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.006684 
+(Eccentricity) Orbital Eccentricity []: 0.006716 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.990896e-07 
+(OrbPeriod) Orbital Period [sec]: 3.155959e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.495980e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.661252e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.649198e+33 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.298395e+33 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- DISTORB PARAMETERS (Earth)------
+(Inc) Body's Inclination in DistOrb [rad]: 0.044988 
+(Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.022492 
+(LongA) Body's Longitude of ascending node in DistOrb [rad]: 1.604565 
+(ArgP) Body's argument of pericenter in DistOrb [rad]: 4.777629 
+(Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.022479 
+(Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.000759 
+(DEccDtDistOrb) Body's decc/dt in DistOrb [/sec]: 2.048223e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -3.720075e-15 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -1.859567e-15 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -5.456217e-13 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: -7.658085e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -4.915891e-15 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 2.546612e-15 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -1.444177e-15 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 1.232789e-14 
+-----DISTROT PARAMETERS (Earth)------
+(PrecA) Body's precession parameter in DistRot [rad]: 1.529409 
+(Xobl) Body's sin(obl)*cos(pA) []: 0.017321 
+(Yobl) Body's sin(obl)*sin(pA) []: 0.418262 
+(Zobl) Body's cos(obl) []: 0.908161 
+(CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.157427 
+(CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: -0.987531 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: 3.906927e-15 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 2.383097e-12 
+(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -9.966133e-13 
+(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 4.482221e-14 
+(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -1.635522e-15 
+-----POISE PARAMETERS (Earth)------
+(TGlobal) Global mean temperature from POISE [C]: -51.479200 
+(AlbedoGlobal) Global mean bond albedo from POISE []: 0.600000 
+(FluxInGlobal) Global mean flux in (insol*(1-albedo)) from POISE [kg*m^2/sec^2/(m^2*sec)]: 1.198852e+09 
+(FluxOutGlobal) Global mean flux out from POISE []: 119.661751 
+(TotIceMass) Global total ice mass in ice sheets [kg]: 1.427810e+21 
+(Latitude) Latitude. [Degrees]: 83.380372 
+(TempLat) Surface temperature by latitude. [C]: -57.548628 
+(AlbedoLat) Surface albedo by latitude. []: 0.600000 
+(AnnInsol) Annual insolation by latitude. [W/m^2]: 184.501938 
+(FluxMerid) Meridional flux by latitude [kg*m^2/sec^2/(m^2*sec)]: 3.256899e+14 
+(FluxIn) Incoming flux by latitude [W/m^2]: 73.808569 
+(FluxOut) Outgoing flux by latitude [W/m^2]: 108.279132 
+(DivFlux) Divergence of flux by latitude [kg*m^2/sec^2/(m^2*sec)]: 21.959499 
+(IceMass) Mass of ice sheets/area by latitude []: 8.214838e+06 
+(IceHeight) Height of ice sheets [m]: 8961.315316 
+(DIceMassDt) derivative of mass of ice sheets/area by latitude []: 0.000000 
+(IceFlow) flow of ice sheets/area by latitude [kg/m^2/s]: -0.000000 
+Output Order: Time[year] Eccentricity[] Inc[deg] LongP[deg] LongA[deg] Obliquity[deg] PrecA[deg] TGlobal[C] AlbedoGlobal[C] FluxOutGlobal[W/m^2] TotIceMass[kg] DeltaTime[year]
+Grid Output Order: Time[year] Latitude[Degrees] TempLat[C] AlbedoLat[C] AnnInsol[W/m^2] FluxIn[W/m^2] FluxOut[W/m^2] IceMass[W/m^2] IceHeight[m] DIceMassDt[m] IceFlow[kg/m^2/s]
+
+----- BODY: Jupiter ----
+Color: ff0000
+(Mass) Mass [kg]: 1.898428e+27 
+(Obliquity) Obliquity [rad]: 0.000000 
+(Radius) Radius [m]: 9.567150e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 3.159115e+36 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.148687e+32 
+(RotVel) Rotational Velocity [m/sec]: 695.742781 
+(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
+(RotPer) Rotational Period [sec]: 8.640000e+04 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.012534 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.046745 
+(Eccentricity) Orbital Eccentricity []: 0.048396 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.678143e-08 
+(OrbPeriod) Orbital Period [sec]: 3.744130e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 7.784127e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.661252e+40 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.618183e+35 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.236366e+35 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -2.649198e+33 
+----- DISTORB PARAMETERS (Jupiter)------
+(Inc) Body's Inclination in DistOrb [rad]: 0.022720 
+(Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.011360 
+(LongA) Body's Longitude of ascending node in DistOrb [rad]: 1.755445 
+(ArgP) Body's argument of pericenter in DistOrb [rad]: 4.789718 
+(Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.011167 
+(Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.002086 
+(DEccDtDistOrb) Body's decc/dt in DistOrb [/sec]: -3.914443e-19 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 1.016486e-17 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 5.082101e-18 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: 1.439903e-15 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 1.453882e-15 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 6.785987e-17 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.860126e-17 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 1.992494e-18 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -1.701226e-17 
+Output Order: Time[year] Eccentricity[] Inc[deg] ArgP[deg] LongA[deg]
+Grid Output Order:

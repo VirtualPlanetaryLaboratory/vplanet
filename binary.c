@@ -59,6 +59,10 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[iBody].dCBPPhiDot = 0.0;
 
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));
+    
+    /* MEAN MOTION MUST BE SET BEFORE FREQUENCIES ARE CALCUALTED */
+    
     body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
     body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
     body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
@@ -74,7 +78,7 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   if(body[iBody].iBodyType == 1 && iBody == 1)
   {
     // Binary's inclination
-    body[iBody].dInc = 2.0*asin(body[iBody].dSinc);
+    body[iBody].dInc = 0.0; //2.0*asin(body[iBody].dSinc);
     
     // Set Initial Poincare H, K using imputted dEcc
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
@@ -365,7 +369,7 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
   {
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass+body[iBody].dMass));         
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));         
   }
   else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
   {
@@ -491,10 +495,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 
-void InitializeModuleBinary(CONTROL *control,MODULE *module) {
-/* Anything here? */
-}
-
 /**************** BINARY Update ****************/
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
@@ -575,7 +575,7 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
     {
       if(io->iVerbose >= VERBPROG) 
       {
-        fprintf(stderr,"HALF: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,a_crit/AUCM);
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,a_crit/AUCM);
       }
       return 1;
     }
@@ -990,8 +990,8 @@ double fdSpecificOrbEng(BODY *body, int iBody)
   double mu = BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass); // Gravitational parameter
   double r[3] = {body[iBody].dCBPR,body[iBody].dCBPPhi,body[iBody].dCBPZ};
   double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
-  double rCart[3];
-  double vCart[3];
+  double rCart[3] = {0.0,0.0,0.0};
+  double vCart[3] = {0.0,0.0,0.0};
      
   // Convert from cyl->cart coords
   fvCylToCartPos(r,rCart);
@@ -999,7 +999,8 @@ double fdSpecificOrbEng(BODY *body, int iBody)
   
   double r_norm = sqrt(fdDot(rCart,rCart));
   
-  return fdDot(vCart,vCart)/2.0 - (mu/r_norm);
+  double eng = fdDot(vCart,vCart)/2.0 - (mu/r_norm);
+  return eng;
 }
 
 /* Compute and assign CBP's orbital elements */

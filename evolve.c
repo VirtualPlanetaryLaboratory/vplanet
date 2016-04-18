@@ -15,29 +15,9 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   int iBody;
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    if(body[iBody].bBinary){ // Considering binary systems
-      if(body[iBody].iBodyType == 0) // CBP
-      {
-        // Set CBP orbital elements, mean motion
-        //fdAssignOrbitalElements(body,iBody);
-        //body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
-      
-      }
-      else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
-      {
-        // Correctly set binary's mean motion
-        //body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[1].dMass));
-      
-        // Compute binary's eccentricity from Kecc and Hecc (since they are primary variables)
-        //body[iBody].dEcc = sqrt(pow(body[iBody].dKecc,2) + pow(body[iBody].dHecc,2));
-      }
-      else {}
-    }
-    else { // Not considering binary systems
-    if (iBody != 0) {
+    if (iBody != 0 && body[iBody].bBinary == 0) {
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
     }
-  }
   }
 }
 

@@ -204,7 +204,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnInitializeControl[iBody][iModule] = &InitializeControlNULL;
     module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyNULL;
     module->fnInitializeBody[iBody][iModule] = &InitializeBodyNULL;
-    module->fnInitializeModule[iBody][iModule] = &InitializeModuleNULL;
 
     module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;
@@ -240,8 +239,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
 
-    module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
- 
   }
 
   /************************

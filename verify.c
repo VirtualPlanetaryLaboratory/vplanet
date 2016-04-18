@@ -472,7 +472,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
     /* XXX Only module reference in file -- can this be changed? */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (body[iBody].bBinary)) {
+    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (iBody > 0 && body[iBody].bBinary)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 

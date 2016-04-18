@@ -414,6 +414,61 @@ void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   }
 }
 
+void WriteOblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv, dObldx, dObldy, dObldz;
+  int iPert;
+
+  dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)) * \
+    (pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)+pow(body[iBody].dZobl,2)));
+  dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)) * \
+    (pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)+pow(body[iBody].dZobl,2)));
+  dObldz = - sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)) / \
+    (pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)+pow(body[iBody].dZobl,2));
+    
+  /* Ensure that we don't overwrite derivative */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+     dDeriv += dObldx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dObldy*(*(update[iBody].padDYoblDtDistRot[iPert]))\
+        + dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
+ 
+  *dTmp = fabs(PI/dDeriv);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv, dpAdx, dpAdy;
+  int iPert;
+
+  dpAdx = - body[iBody].dYobl/(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2));
+  dpAdy = body[iBody].dXobl/(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2));
+  
+  /* Ensure that we don't overwrite derivative */
+  dDeriv=0;
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+    dDeriv += dpAdx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dpAdy*(*(update[iBody].padDYoblDtDistRot[iPert]));
+
+  *dTmp = fabs(2*PI/dDeriv);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}  
+  
 void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
@@ -437,7 +492,7 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle,cUnit);
   }
-}  
+}    
   
 void WriteBodyDXoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -498,6 +553,66 @@ void WriteBodyDZoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     fsUnitsRate(units->iTime,cUnit);
   }
 } 
+
+void WriteXoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite derivative */
+  dDeriv=0;
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
+  
+  *dTmp = fabs(1./dDeriv);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  }
+}  
+
+void WriteYoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite derivative */
+  dDeriv=0;
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
+  
+  *dTmp = fabs(1./dDeriv);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  }
+} 
+
+void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv;
+  int iPert;
+
+  /* Ensure that we don't overwrite derivative */
+  dDeriv=0;
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+    dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
+  
+  *dTmp = fabs(1./dDeriv);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  }
+}
 
 void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
@@ -620,6 +735,14 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   for (i=0;i<3;i++) *dTmp += body[iBody].dLRotTmp[i]*body[iBody].dLOrbTmp[i];  
 }  
   
+void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (iBody > 0)
+    *dTmp = body[iBody].dDynEllip;
+  else
+    *dTmp = -1;
+  sprintf(cUnit,"");
+}  
+  
 void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DOBLDTDISTROT].cName,"DOblDtDistRot");
@@ -662,6 +785,46 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DZOBLDTDISTROT].iNum = 1;
   fnWrite[OUT_DZOBLDTDISTROT] = &WriteBodyDZoblDtDistRot;
   
+  sprintf(output[OUT_XOBLTIMEDISTROT].cName,"XoblTimeDistRot");
+  sprintf(output[OUT_XOBLTIMEDISTROT].cDescr,"Xobl timescale in DistRot");
+  sprintf(output[OUT_XOBLTIMEDISTROT].cNeg,"year");
+  output[OUT_XOBLTIMEDISTROT].bNeg = 1;
+  output[OUT_XOBLTIMEDISTROT].dNeg = 1./YEARSEC;
+  output[OUT_XOBLTIMEDISTROT].iNum = 1;
+  fnWrite[OUT_XOBLTIMEDISTROT] = &WriteXoblTimeDistRot;
+
+  sprintf(output[OUT_YOBLTIMEDISTROT].cName,"YoblTimeDistRot");
+  sprintf(output[OUT_YOBLTIMEDISTROT].cDescr,"Yobl timescale in DistRot");
+  sprintf(output[OUT_YOBLTIMEDISTROT].cNeg,"year");
+  output[OUT_YOBLTIMEDISTROT].bNeg = 1;
+  output[OUT_YOBLTIMEDISTROT].dNeg = 1./YEARSEC;
+  output[OUT_YOBLTIMEDISTROT].iNum = 1;
+  fnWrite[OUT_YOBLTIMEDISTROT] = &WriteYoblTimeDistRot;
+  
+  sprintf(output[OUT_ZOBLTIMEDISTROT].cName,"ZoblTimeDistRot");
+  sprintf(output[OUT_ZOBLTIMEDISTROT].cDescr,"Zobl timescale in DistRot");
+  sprintf(output[OUT_ZOBLTIMEDISTROT].cNeg,"year");
+  output[OUT_ZOBLTIMEDISTROT].bNeg = 1;
+  output[OUT_ZOBLTIMEDISTROT].dNeg = 1./YEARSEC;
+  output[OUT_ZOBLTIMEDISTROT].iNum = 1;
+  fnWrite[OUT_ZOBLTIMEDISTROT] = &WriteZoblTimeDistRot;
+  
+  sprintf(output[OUT_OBLTIMEDISTROT].cName,"OblTimeDistRot");
+  sprintf(output[OUT_OBLTIMEDISTROT].cDescr,"Obliquity timescale in DistRot");
+  sprintf(output[OUT_OBLTIMEDISTROT].cNeg,"year");
+  output[OUT_OBLTIMEDISTROT].bNeg = 1;
+  output[OUT_OBLTIMEDISTROT].dNeg = 1./YEARSEC;
+  output[OUT_OBLTIMEDISTROT].iNum = 1;
+  fnWrite[OUT_OBLTIMEDISTROT] = &WriteOblTimeDistRot;
+  
+  sprintf(output[OUT_PRECATIMEDISTROT].cName,"PrecATimeDistRot");
+  sprintf(output[OUT_PRECATIMEDISTROT].cDescr,"Axial precession timescale in DistRot");
+  sprintf(output[OUT_PRECATIMEDISTROT].cNeg,"year");
+  output[OUT_PRECATIMEDISTROT].bNeg = 1;
+  output[OUT_PRECATIMEDISTROT].dNeg = 1./YEARSEC;
+  output[OUT_PRECATIMEDISTROT].iNum = 1;
+  fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
+  
   sprintf(output[OUT_PRECA].cName,"PrecA");
   sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
   sprintf(output[OUT_PRECA].cNeg,"Deg");
@@ -681,6 +844,13 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CASS2].bNeg = 0;
   output[OUT_CASS2].iNum = 1;
   fnWrite[OUT_CASS2] = &WriteBodyCassTwo;
+  
+  sprintf(output[OUT_DYNELLIP].cName,"DynEllip");
+  sprintf(output[OUT_DYNELLIP].cDescr,"dynamical ellipticity of planet");
+  output[OUT_DYNELLIP].bNeg = 0;
+  output[OUT_DYNELLIP].iNum = 1;
+  fnWrite[OUT_DYNELLIP] = &WriteDynEllip;
+  
 }
 
 void FinalizeOutputFunctionDistRot(OUTPUT *output,int iBody,int iModule) {
@@ -750,6 +920,9 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 //     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
+  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
+    CalcDynEllip(body, iBody);
+  }
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {

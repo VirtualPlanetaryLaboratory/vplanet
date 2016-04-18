@@ -56,11 +56,17 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_CASS1               1430
 #define OUT_CASS2               1431
 
-#define OUT_DOBLDTDISTROT        1440
+#define OUT_DOBLDTDISTROT       1440
 #define OUT_DPRECADTDISTROT     1441
-#define OUT_DXOBLDTDISTROT       1442
+#define OUT_DXOBLDTDISTROT      1442
 #define OUT_DYOBLDTDISTROT      1443
 #define OUT_DZOBLDTDISTROT      1444
+#define OUT_OBLTIMEDISTROT      1445
+#define OUT_PRECATIMEDISTROT    1446
+#define OUT_XOBLTIMEDISTROT     1447
+#define OUT_YOBLTIMEDISTROT     1448
+#define OUT_ZOBLTIMEDISTROT     1449
+#define OUT_DYNELLIP            1450
 
 void HelpOutputDistRot(OUTPUT*);
 void WriteBodyDOblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -72,6 +78,12 @@ void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteBodyXobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyYobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyZobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOblTimeDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePrecATimeDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteXoblTimeDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteYoblTimeDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteZoblTimeDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+
 void InitializeOutputDistRot(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */

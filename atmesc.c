@@ -267,10 +267,6 @@ void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     
 /******************* Verify ATMESC ******************/
 
-void VerifyRotationAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
-
 void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   update[iBody].iaType[update[iBody].iSurfaceWaterMass][0] = 1;
@@ -571,7 +567,6 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
   module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationAtmEsc;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;

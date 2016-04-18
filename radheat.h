@@ -125,15 +125,12 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_235UNUMCORE           1153
 #define OPT_235UPOWERMAN          1154
 #define OPT_235UPOWERCORE         1155
-#define OPT_HALTMIN40KPOWERMAN    1170
-#define OPT_HALTMIN40KPOWERCORE   1171
+#define OPT_HALT40KPOWER          1170
 #define OPT_HALTMIN87RBPOWER      1172
-#define OPT_HALTMIN232THPOWERMAN  1174
-#define OPT_HALTMIN232THPOWERCORE 1175
-#define OPT_HALTMIN238UPOWERMAN	  1176
-#define OPT_HALTMIN238UPOWERCORE  1177
-#define OPT_HALTMIN235UPOWERMAN   1178  
-#define OPT_HALTMIN235UPOWERCORE  1179  
+#define OPT_HALT232THPOWER        1174
+#define OPT_HALT238UPOWER	  1176
+#define OPT_HALT235UPOWER         1178  
+#define OPT_HALTRADPOWER          1180  
 
 
 /* Options Functions */
@@ -167,7 +164,8 @@ void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
+void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
@@ -320,33 +318,42 @@ void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* RadHeat functions */
-double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
-double fdRadPowerMan(BODY*,UPDATE*,int);
-double fdRadPowerCore(BODY*,UPDATE*,int);
-double fdRadPowerTotal(BODY*,UPDATE*,int);
-double fdRadPower(double,double,double); // XXX
-
 void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
 double fd235UConstant(double,double);  
-double fd40KPowerMan(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerMan(BODY*,SYSTEM*,int);
-double fd238UPowerMan(BODY*,SYSTEM*,int);
-double fd235UPowerMan(BODY*,SYSTEM*,int); 
-double fdTotalRadPowerMan(BODY*,int);
+
+double fd40KPowerMan(UPDATE*,int);
+double fd232ThPowerMan(UPDATE*,int);
+double fd238UPowerMan(UPDATE*,int);
+double fd235UPowerMan(UPDATE*,int); 
+double fdRadPowerMan(UPDATE*,int);
+
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*);
 double fdD235UNumManDt(BODY*,SYSTEM*,int*); 
 
-double fd40KPowerCore(BODY*,SYSTEM*,int*,int);
-double fd232ThPowerCore(BODY*,SYSTEM*,int);
-double fd238UPowerCore(BODY*,SYSTEM*,int);
-double fd235UPowerCore(BODY*,SYSTEM*,int);
-double fdTotalRadPowerCore(BODY*,int);
+double fd40KPowerCore(UPDATE*,int);
+double fd232ThPowerCore(UPDATE*,int);
+double fd238UPowerCore(UPDATE*,int);
+double fd235UPowerCore(UPDATE*,int);
+double fdRadPowerCore(UPDATE*,int);
+
+double fd40KPower(UPDATE*,int);
+double fd232ThPower(UPDATE*,int);
+double fd235UPower(UPDATE*,int);
+double fd238UPower(UPDATE*,int);
+double fdRadPowerTot(UPDATE*,int);
+
+double fd40KEnFlux(BODY*,UPDATE*,int);
+double fd232ThEnFlux(BODY*,UPDATE*,int);
+double fd235UEnFlux(BODY*,UPDATE*,int);
+double fd238UEnFlux(BODY*,UPDATE*,int);
+double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
+
 double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);

@@ -44,14 +44,9 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
 }
 
 void InitializeHalts(CONTROL *control,MODULE *module) {
-  int iBody;
   
   control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    control->Halt[iBody].iNumHalts = fiNumHalts(&control->Halt[iBody],module,iBody);
-    control->fnHalt[iBody] = malloc(control->Halt[iBody].iNumHalts*sizeof(fnHaltModule));
-  }
 }
 
 /****************** HALTS *********************/
@@ -184,29 +179,82 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 
 /******************* Verify *************************/
 
-void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,int iBody) {
-  int iModule,iHalt,iHalt0,iHaltNow=0;
+void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
+  int iBody,iModule,iHalt,iHalt0,iHaltNow,iHaltMaxEcc=0,iNumMaxEcc=0;
 
-  if (control->Halt[iBody].bMerge)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
-  if (control->Halt[iBody].dMinObl >= 0)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
-  if (control->Halt[iBody].dMaxEcc < 1)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
-  if (control->Halt[iBody].dMinSemi > 0)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
-  if (control->Halt[iBody].dMinEcc > 0)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
-  if (control->Halt[iBody].bPosDeDt)
-    control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
-  /* XXX Should be changed with thermint completed
-  if (control->Halt[iBody].dMinIntEn > 0)
-    control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
-  */
-  iHalt0=iHaltNow;
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-    module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    // First calculate how many halts for this body
+
+    // First get all the simple cases
+    control->Halt[iBody].iNumHalts = fiNumHalts(&control->Halt[iBody],module,iBody);
+
+    /* This needs to become module->VerifyCountHaltMaxEccModule?
+     Only necessary if DISTORB called */
+
+    /* Some bodies may have additional halts because of a halt for a
+       different body. E.g., distorb requires MaxEcc set for all 
+       bodies */
+    if (control->Halt[iBody].dMaxEcc < 1) {
+      iHaltMaxEcc=iBody; // Body # that has HaltMaxEcc
+      iNumMaxEcc++;      // How many files contain HaltMaxEcc?
+    }
+  }
+
+  if (iHaltMaxEcc) {
+    // HaltMaxEcc was set in at least 1 file, but can only be in 1
+    if (iNumMaxEcc > 1 && control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,"ERROR: %s set in %d files; should only be set in one. The maximum value for the eccentricity of all non-primary body will be MAXECCDISTORB\n.",options[OPT_HALTMAXECC].cName,iNumMaxEcc);
+      exit(EXIT_INPUT);
+    }
+
+    // Now add 1 to each iNumHalts
+    for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
+      if (iBody != iHaltMaxEcc)
+	control->Halt[iBody].iNumHalts++;
+    }
+  }
+
+  // Now malloc and assign fnHalt function vector
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->fnHalt[iBody] = malloc(control->Halt[iBody].iNumHalts*sizeof(fnHaltModule));
+
+    // Now assign the function vector
+    iHaltNow=0;
   
+    if (control->Halt[iBody].bMerge)
+      control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
+    if (control->Halt[iBody].dMinObl >= 0)
+      control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
+    if (control->Halt[iBody].dMaxEcc < 1)
+      control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+    if (control->Halt[iBody].dMinSemi > 0)
+      control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
+    if (control->Halt[iBody].dMinEcc > 0)
+      control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
+    if (control->Halt[iBody].bPosDeDt)
+      control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
+    /* XXX Should be changed with thermint completed
+       if (control->Halt[iBody].dMinIntEn > 0)
+       control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
+    */
+
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+      module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);
+
+    /* This needs to become VerifyMultiBodyHalts, as should only
+     be applied if DISTORB called. This problem is hard! */
+
+    if (iHaltMaxEcc) {
+      if (iBody != iHaltMaxEcc) {
+	control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
+	control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+      }
+    }
+  }
+
+
+
+
   /*    Now make sure all set halts apply to the selected modules 
      XXX This sounds nice, but for now, it is left out
   if (control->Halt.bMerge) {

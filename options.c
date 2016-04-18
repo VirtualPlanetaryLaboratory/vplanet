@@ -63,6 +63,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
       sscanf(cTmp,"%s",cWord);
+      // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
@@ -1374,8 +1375,6 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 void ReadHaltMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
-  /* Russell sez: the above statement is untrue. As coded, this MUST exist in every file when 
-     used at all, else all bodies without this parameter set will have dMaxEcc = 0. XXX */
      
   int lTmp=-1;
   double dTmp;

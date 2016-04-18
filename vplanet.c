@@ -113,8 +113,6 @@ int main(int argc,char *argv[]) {
 
   /* Perform evolution */
 
-  binaryDebug(body);
-
   if (control.Evolve.bDoForward || control.Evolve.bDoBackward) {
     Evolve(body,&control,&files,output,&system,update,fnUpdate,fnWrite,fnOneStep);
 
@@ -125,8 +123,6 @@ int main(int argc,char *argv[]) {
 	printf("Log file updated.\n");
     }
   }
-
-  binaryDebug(body);
 
   end = time(NULL);
   if (control.Io.iVerbose >= VERBPROG)

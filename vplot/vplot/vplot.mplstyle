@@ -52,14 +52,14 @@ axes.linewidth                : 1.0
 axes.grid                     : True
 axes.grid.which               : major
 axes.grid.axis                : both
-axes.titlesize                : 20
+axes.titlesize                : 24
 axes.titleweight              : normal
 axes.labelsize                : large
 axes.labelpad                 : 3.0
 axes.labelweight              : normal
 axes.labelcolor               : k
 axes.axisbelow                : False
-axes.formatter.limits         : -7, 7             # use scientific notation if log10 of the axis range is smaller than the first or larger than the second
+axes.formatter.limits         : -6, 6             # use scientific notation if log10 of the axis range is smaller than the first or larger than the second
 axes.formatter.use_locale     : False
 axes.formatter.use_mathtext   : True
 axes.formatter.useoffset      : False
@@ -81,7 +81,7 @@ xtick.minor.width             : 0.5
 xtick.major.pad               : 4
 xtick.minor.pad               : 4
 xtick.color                   : k
-xtick.labelsize               : medium
+xtick.labelsize               : large
 xtick.direction               : in                # in, out, or inout
 
 ytick.major.size              : 4    
@@ -92,7 +92,7 @@ ytick.minor.width             : 0.5
 ytick.major.pad               : 4 
 ytick.minor.pad               : 4  
 ytick.color                   : k   
-ytick.labelsize               : medium
+ytick.labelsize               : large
 ytick.direction               : in
 
 # GRIDS
@@ -103,7 +103,7 @@ grid.alpha                    : 0.1
 
 # LEGEND
 legend.fancybox               : False
-legend.loc                    : upper left
+legend.loc                    : upper right
 legend.numpoints              : 2
 legend.fontsize               : large
 legend.borderpad              : 0.4
@@ -135,7 +135,7 @@ figure.subplot.right          : 0.9
 figure.subplot.bottom         : 0.1
 figure.subplot.top            : 0.9
 figure.subplot.wspace         : 0.2
-figure.subplot.hspace         : 0.2
+figure.subplot.hspace         : 0.3
 
 # IMAGES
 image.aspect                  : equal             # equal | auto | a number

@@ -4,7 +4,7 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1       # 1 -> Star
-dMass		0.249 #0.2020390186		# Mass, negative -> Earth masses
+dMass		0.2020390186		# Mass, negative -> Earth masses
 #dRadius		0.00153		# Radius, negative -> Earth radii
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
@@ -18,8 +18,8 @@ dLongP          257.79
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
-dTidalQ		1e4		# Tidal phase lag
-dK2		0.5		# Love number of degree 2
+dTidalQ		1.0		# Tidal phase lag
+dK2		1.5		# Love number of degree 2
 #sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 #sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
 saTidePerts	primary		# Body name(s) of tidal perturbers

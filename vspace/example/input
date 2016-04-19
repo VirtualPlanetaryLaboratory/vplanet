@@ -1,15 +1,14 @@
-srcfolder  ../../examples/poise_example
-destfolder  newtrials
-trialname  examples
+srcfolder  ../../examples/binary_test
+destfolder  test
+trialname  binary
 
-file    earth.in
-dRadius   [-1,-2,-0.5] R
-dEcc   [0.1, 0.2, n3] e 
+file    k16b.in
+dFreeEcc   [0.0,0.2,0.05] fe
+dFreeInc   [0.0, 10.0, 1.0] fi 
             
-file   jupiter.in
-dMass   [1e-6,1e-3,l3]  M
+file   primary.in
 
-file   sun.in
+file   secondary.in
 
 file   vpl.in
 dStopTime  10000

@@ -4,8 +4,8 @@
  *
  * Subroutines that control the integration of the 
  * circumbinary planet dynamics module.
- * Note: body 0 = primary star, body 1 = secondary star, body 2 = CBP (circumbinary planet)
- * Leung and Lee 2013 Theory ONLY applies to this 3 body approximation.
+ * Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet)
+ * Leung and Lee 2013 Theory ONLY applies to the restricted 3 body approximation.
 */
 
 #include <stdio.h>
@@ -44,7 +44,12 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+// Only use this function for malloc'ing stuff
+// Since nothing has to be malloc'ed for binary, do nothing
+// Just keep for posterity
+// RIP 2016 ~ 2016 #NeverForget
 
+  /*
   // If ibody is the CBP (body 2, iBodyType 0), init
   if(body[iBody].iBodyType == 0) // If the body is a planet
   {
@@ -60,8 +65,6 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));
-    
-    /* MEAN MOTION MUST BE SET BEFORE FREQUENCIES ARE CALCUALTED */
     
     body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
     body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
@@ -85,6 +88,8 @@ void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
     body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
   }
+
+  */
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -470,8 +475,11 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     }
   }
 
+  // Initialize the circumbinary planets
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
+    // Add equations to the matrix
+
     // Call verifies to properly set up eqns in matrix
     VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -479,6 +487,21 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+
+    // Init parameters needed for subsequent cbp motion
+    
+    // dR0, dMeanMotion MUST be set before any of the frequencies
+    body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));
+    body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
+    body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
+    body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
+    body[iBody].dLL13K0 = fdEpiFreqK(body,iBody);
+    body[iBody].dLL13V0 = fdEpiFreqV(body,iBody);
+
+    // Set up initial orbital elements that are primary variables
+    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
 
     // Set Planet initial positions, velocities according to LL13 theory
     int iaBody[1] = {iBody}; //  Pick out CBP
@@ -490,6 +513,19 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
   }
 
+  // Inits if the body is the secondary (sets required binary parameters)
+  if(body[iBody].iBodyType == 1 && iBody == 1)
+  {
+    // Binary's inclination... in the plane or else
+    body[iBody].dInc = 0.0; //2.0*asin(body[iBody].dSinc);
+ 
+    // Set Initial Poincare H, K using imputted dEcc
+    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+  }
+
+  // Other things that must be set
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;

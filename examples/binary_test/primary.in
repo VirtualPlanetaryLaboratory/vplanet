@@ -1,6 +1,6 @@
 # The host star, the sun -> Primary body!
 sName		primary		# Body's name
-saModules stellar binary #eqtide
+saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1               # 1 -> Star
@@ -13,11 +13,11 @@ dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
-#dTidalQ		1e6		# Tidal phase lag
-#dK2		0.5		# Love number of degree 2
-#sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
+dTidalQ		1e6		# Tidal phase lag
+dK2		0.5		# Love number of degree 2
+sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 #sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
-#saTidePerts	secondary		# Body name(s) of tidal perturbers
+saTidePerts	secondary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`

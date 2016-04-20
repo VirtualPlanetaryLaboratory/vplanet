@@ -538,6 +538,8 @@ int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,in
   return 0;
 }        
 
+// XXX Should change these to bHaltTMan as there is no real need to check
+
 void CountHaltsThermint(HALT *halt,int *iNumHalts) {
   if (halt->dMinTMan >= 0)
     (*iNumHalts)++;
@@ -546,9 +548,9 @@ void CountHaltsThermint(HALT *halt,int *iNumHalts) {
 }
 
 void VerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-  if (control->Halt[iBody].dMinTMan > 0)
+  if (control->Halt[iBody].dMinTMan >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
-  if (control->Halt[iBody].dMinTCore > 0)
+  if (control->Halt[iBody].dMinTCore >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
 }
 

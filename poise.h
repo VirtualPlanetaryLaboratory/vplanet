@@ -7,10 +7,8 @@
  *
 */
 
-void InitializeControlPoise(CONTROL*);
 void AddModulePoise(MODULE*,int,int);
 void BodyCopyPoise(BODY*,BODY*,int,int,int);
-void InitializeBodyPoise(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 
 /* Climate model */

@@ -83,11 +83,8 @@
 #define ENUMCORE235U     7.0508058e+38  //[num]
 #define EPOWERCORE235U   1.44202e+11  //[W] 
 
-void InitializeControlRadheat(CONTROL*);
 void AddModuleRadheat(MODULE*,int,int);
 void BodyCopyRadheat(BODY*,BODY*,int,int,int);
-void InitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
@@ -125,15 +122,12 @@ void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_235UNUMCORE           1153
 #define OPT_235UPOWERMAN          1154
 #define OPT_235UPOWERCORE         1155
-#define OPT_HALTMIN40KPOWERMAN    1170
-#define OPT_HALTMIN40KPOWERCORE   1171
+#define OPT_HALT40KPOWER          1170
 #define OPT_HALTMIN87RBPOWER      1172
-#define OPT_HALTMIN232THPOWERMAN  1174
-#define OPT_HALTMIN232THPOWERCORE 1175
-#define OPT_HALTMIN238UPOWERMAN	  1176
-#define OPT_HALTMIN238UPOWERCORE  1177
-#define OPT_HALTMIN235UPOWERMAN   1178  
-#define OPT_HALTMIN235UPOWERCORE  1179  
+#define OPT_HALT232THPOWER        1174
+#define OPT_HALT238UPOWER	  1176
+#define OPT_HALT235UPOWER         1178  
+#define OPT_HALTRADPOWER          1180  
 
 
 /* Options Functions */
@@ -167,7 +161,8 @@ void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
+void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 

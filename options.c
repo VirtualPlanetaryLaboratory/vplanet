@@ -63,6 +63,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
       sscanf(cTmp,"%s",cWord);
+      // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
@@ -1250,6 +1251,22 @@ void ReadBodyName(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       sprintf(body[iFile-1].cName,"%d",iFile);
 }
 
+/* Body color (for plotting) */
+void ReadColor(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);    
+    strcpy(body[iFile-1].cColor,cTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      strcpy(body[iFile-1].cColor,options->cDefault);
+}  
+
 /*
  *
  * D
@@ -2418,7 +2435,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BODYNAME].cDefault,"Integer of Input Order, i.e. 1");
   options[OPT_BODYNAME].iType = 3;
   fnRead[OPT_BODYNAME] = &ReadBodyName;
+
+  /*
+   *
+   *   C
+   *
+   */  
   
+  sprintf(options[OPT_COLOR].cName,"cColor");
+  sprintf(options[OPT_COLOR].cDescr,"Body Color");
+  sprintf(options[OPT_COLOR].cDefault,"000000");
+  options[OPT_COLOR].iType = 2;
+  fnRead[OPT_COLOR] = &ReadColor;
   
   /*
    *

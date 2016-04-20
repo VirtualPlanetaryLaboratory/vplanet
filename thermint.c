@@ -200,6 +200,45 @@ void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dEruptEff = options->dDefault;
 }
+
+void ReadHaltMinTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMinTMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMinTMan = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMinTMan = options->dDefault;
+}
+
+void ReadHaltMinTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMinTCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMinTCore = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMinTCore = options->dDefault;
+}
+
 /* Initiatlize Input Options */
 
 void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
@@ -215,6 +254,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TMAN].dDefault = 3000.0; 
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
   fnRead[OPT_TMAN] = &ReadTMan;
+
    /* TCore */
   sprintf(options[OPT_TCORE].cName,"dTCore");
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
@@ -225,6 +265,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TCORE].dDefault = 6000.0; 
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
   fnRead[OPT_TCORE] = &ReadTCore;
+
    /* ViscRatioMan */
   sprintf(options[OPT_VISCRATIOMAN].cName,"dViscRatioMan");
   sprintf(options[OPT_VISCRATIOMAN].cDescr,"ViscRatioMan");
@@ -235,6 +276,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCRATIOMAN].dDefault = VISCJUMPULM; 
   sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default");
   fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
+
    /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
@@ -245,6 +287,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCREF].dDefault = VISCREF; 
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
+
    /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
@@ -255,6 +298,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TREFLIND].dDefault = TREFLIND; 
   sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
   fnRead[OPT_TREFLIND] = &ReadTrefLind;
+
   /* DTChiRef */
   sprintf(options[OPT_DTCHIREF].cName,"dDTChiRef");
   sprintf(options[OPT_DTCHIREF].cDescr,"DTChiRef");
@@ -265,6 +309,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DTCHIREF].dDefault = DTCHIREF; 
   sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
   fnRead[OPT_DTCHIREF] = &ReadDTChiRef;
+
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
@@ -275,6 +320,28 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ERUPTEFF].dDefault = ERUPTEFF; 
   sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
   fnRead[OPT_ERUPTEFF] = &ReadEruptEff;
+
+  /* Halt at Minimum Mantle Temperature */
+  sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
+  sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
+  sprintf(options[OPT_HALTMINTMAN].cDefault,"0 K");
+  options[OPT_HALTMINTMAN].iType = 2;
+  options[OPT_HALTMINTMAN].iMultiFile = 1;
+  options[OPT_HALTMINTMAN].dNeg = 1;
+  options[OPT_HALTMINTMAN].dDefault = 0; 
+  sprintf(options[OPT_HALTMINTMAN].cNeg,"0");
+  fnRead[OPT_HALTMINTMAN] = &ReadHaltMinTMan;
+
+  /* Halt at Minimum Core Temperature */
+  sprintf(options[OPT_HALTMINTCORE].cName,"dHaltMinTCore");
+  sprintf(options[OPT_HALTMINTCORE].cDescr,"Halt at Minimum Core Temperature");
+  sprintf(options[OPT_HALTMINTCORE].cDefault,"0 K");
+  options[OPT_HALTMINTCORE].iType = 2;
+  options[OPT_HALTMINTCORE].iMultiFile = 1;
+  options[OPT_HALTMINTCORE].dNeg = 1;
+  options[OPT_HALTMINTCORE].dDefault = 0; 
+  sprintf(options[OPT_HALTMINTCORE].cNeg,"0");
+  fnRead[OPT_HALTMINTCORE] = &ReadHaltMinTCore;
 
 }
 
@@ -288,10 +355,6 @@ void ReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 }
     
 /******************* Verify THERMINT ******************/
-
-void VerifyRotationThermint(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
 
 /* Is this necessary? */
 void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -475,17 +538,19 @@ int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,in
   return 0;
 }        
 
-void CountHaltsThermint(HALT *halt,int *iHalt) {
+// XXX Should change these to bHaltTMan as there is no real need to check
+
+void CountHaltsThermint(HALT *halt,int *iNumHalts) {
   if (halt->dMinTMan >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
   if (halt->dMinTCore >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
 }
 
 void VerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-  if (control->Halt[iBody].dMinTMan > 0)
+  if (control->Halt[iBody].dMinTMan >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
-  if (control->Halt[iBody].dMinTCore > 0)
+  if (control->Halt[iBody].dMinTCore >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
 }
 
@@ -1344,7 +1409,6 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodyThermint;
   module->fnVerify[iBody][iModule] = &VerifyThermint;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltThermint;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationThermint;
   
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;

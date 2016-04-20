@@ -192,8 +192,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TREFLIND        1793   //Reference Temperature Lindemann Core Liquidus
 #define OPT_DTCHIREF        1794   //Reference Core Liquidus Depression
 
-#define OPT_HALTMINTMAN     1798
-#define OPT_HALTMINTCORE    1799
+#define OPT_HALTMINTMAN     1798   //Minimum mantle temperature
+#define OPT_HALTMINTCORE    1799   //Minimum core temperature
 
 /* Options Functions */
 void HelpOptionsThermint(OPTIONS*);
@@ -204,9 +204,8 @@ void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-
-void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);

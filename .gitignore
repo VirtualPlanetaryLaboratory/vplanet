@@ -50,3 +50,4 @@ vplot/vplot/plot.pyc
 vplot/vplot/utils.pyc
 examples/gl581/gl581.star.forward
 .gitignore
+__pycache__

@@ -5,7 +5,7 @@ sName		c			# Body's name
 #		atmesc poise
 saModules eqtide distorb distrot
 
-sTideModel	p2
+sTideModel#	p2
 
 # Physical Properties
 dMass		-5.5			# Mass, negative -> Earth masses
@@ -13,6 +13,7 @@ dRadius		-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+cColor ff0000
 
 # Orbital Properties
 dEcc            0.06			# Eccentricity

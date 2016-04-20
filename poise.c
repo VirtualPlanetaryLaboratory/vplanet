@@ -14,18 +14,7 @@
 #include "options.h"
 #include "output.h"
 
-void InitializeControlPoise(CONTROL *control) {
-  /* Not sure if I need anything here yet */
-}
-
-void InitializeModulePoise(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
-}
-
-void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 }
 
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -2015,7 +2004,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = POISE;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlPoise;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyPoise;
   module->fnCountHalts[iBody][iModule] = &CountHaltsPoise;
   module->fnLogBody[iBody][iModule] = &LogBodyPoise;
@@ -2024,7 +2012,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnVerify[iBody][iModule] = &VerifyPoise;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltPoise;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyPoise;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
   module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;

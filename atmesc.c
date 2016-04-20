@@ -15,10 +15,6 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlAtmEsc(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
-
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
@@ -26,14 +22,6 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
   dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
-}
-
-void InitializeBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  //
-}
-
-void InitializeUpdateTmpBodyAtmEsc(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  //
 }
 
 /**************** ATMESC options ********************/
@@ -266,10 +254,6 @@ void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 }
     
 /******************* Verify ATMESC ******************/
-
-void VerifyRotationAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
 
 void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
@@ -563,17 +547,12 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = ATMESC;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlAtmEsc;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyAtmEsc;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsAtmEsc;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
   module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
   module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationAtmEsc;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;

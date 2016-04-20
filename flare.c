@@ -12,6 +12,8 @@
 #include <string.h>
 #include "vplanet.h"
 
+
+// Leave these in for now
 void  InitializeControlFlare(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }

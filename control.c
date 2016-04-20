@@ -14,6 +14,11 @@
 #include <unistd.h>
 #include <string.h>
 #include "vplanet.h"
+
+void BodyCopyNULL(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
+  // Nothing
+}
+
 /*
  * Struct Initialization
  */
@@ -38,7 +43,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 /* This is called from Verify, after the update matrix has been
    initialized. */
 void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
-  int iBody,iSubStep;
+  int iBody,iModule,iSubStep;
 
   control->Evolve.fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->Evolve.fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
@@ -52,6 +57,10 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       control->Evolve.fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
+      
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+	control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
+      }
   }
 
   /* Currently this only matters for RK4 integration. This should

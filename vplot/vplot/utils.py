@@ -16,6 +16,9 @@ import numpy as np; np.seterr(divide='ignore')
 import re
 import imp
 
+# Default color sequence
+def_color_seq = ['k', 'b', 'r', 'y', 'g', 'gray']
+
 # Default string to include in ``vplot_config.py file`` when creating one
 confstr = \
 """#!/usr/bin/env python
@@ -53,6 +56,30 @@ helpstr = \
 \x1b[1mType `vplot -h OPTION_NAME` for info on any option\x1b[0m
 """ % ', '.join(sorted([k for k in defaults.__dict__.keys() if not k.startswith('_')]))
 
+def RowCol(N):
+  '''
+  Given an integer ``N``, returns the ideal number of columns and rows 
+  to arrange ``N`` subplots on a grid.
+  
+  :param int N: The number of subplots
+  
+  :returns: **``(cols, rows)``**, the most aesthetically pleasing number of columns \
+  and rows needed to display ``N`` subplots on a grid.
+  
+  '''
+  rows = np.floor(np.sqrt(N)).astype(int)
+  while(N % rows != 0):
+    rows = rows - 1
+  cols = N/rows
+  while cols/rows > 2:
+    cols = np.ceil(cols/2.).astype(int)
+    rows *= 2
+  if cols > rows:
+    tmp = cols
+    cols = rows
+    rows = tmp
+  return int(cols), int(rows)
+
 class array(np.ndarray):
   '''
   A custom subclass of numpy ndarray with some extra
@@ -60,13 +87,16 @@ class array(np.ndarray):
   
   '''
   
-  def __new__(cls, input_array, unit = None, description = None):
+  def __new__(cls, input_array, unit = None, description = None, name = None, parent = None, color = None):
     # Input array is an already formed ndarray instance
     # We first cast to be our class type
     obj = np.asarray(input_array).view(cls)
     # add the new attribute to the created instance
     obj.unit = unit
     obj.description = description
+    obj.name = name
+    obj.parent = parent
+    obj.color = color
     # Finally, we must return the newly created object:
     return obj
 
@@ -75,7 +105,10 @@ class array(np.ndarray):
     if obj is None: return
     self.unit = getattr(obj, 'unit', None)
     self.description = getattr(obj, 'description', None)
-
+    self.name = getattr(obj, 'name', None)
+    self.parent = getattr(obj, 'parent', None)
+    self.color = getattr(obj, 'color', None)
+    
   def __array_wrap__(self, out_arr, context = None):
     # Call the parent
     return np.ndarray.__array_wrap__(self, out_arr, context)
@@ -102,17 +135,36 @@ class Output(object):
     self.pif = pif
     self.bodies = bodies
 
+  def __getitem__(self, i):
+    return self.bodies[i]
+    
+  def __len__(self):
+    return len(self.bodies)
+
+  def __repr__(self):
+    return "<VPLOT Output: %s>" % self.sysname
+
 class Body(object):
   '''
   
   '''
-  def __init__(self, name = "", infile = "", fwfile = "", climfile = "", params = [], gridparams = []):
+  def __init__(self, name = "", infile = "", fwfile = "", climfile = "", params = [], gridparams = [], color = None):
     self.name = name
     self.infile = infile
     self.fwfile = fwfile
     self.climfile = climfile
     self.params = params
     self.gridparams = gridparams
+    self.color = color
+
+  def __getitem__(self, i):
+    return self.params[i]
+    
+  def __len__(self):
+    return len(self.params)
+
+  def __repr__(self):
+    return "<VPLOT Body: %s>" % self.name
 
 class Param(object):
   '''
@@ -136,6 +188,9 @@ class Param(object):
       return "%s (%s)" % (lbl, self.unit)
     else:
       return lbl
+
+  def __repr__(self):
+    return "<VPLOT Array: %s>" % self.name
 
 def GetParamDescriptions():
   '''
@@ -214,25 +269,34 @@ def GetConf():
 
   return conf
 
-def GetArrays(bodies = []):
+def GetArrays(path = '.', bodies = [], colors = None):
   '''
   
   '''
   
+  # Initialize
   output = Output()
+  
+  # Make list very large to cycle through if there are lots of planets
+  if colors is None:
+    colors = def_color_seq
+    override_colors = False
+  else:
+    override_colors = True  
+  colors = colors * 10
   
   # Ensure bodies is a list
   if type(bodies) is str:
     bodies = [bodies]
   
   # Get the log file
-  lf = [f for f in os.listdir('.') if f.endswith('.log')]
+  lf = [f for f in os.listdir(path) if f.endswith('.log')]
   if len(lf) > 1:
     raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:
     raise Exception("There doesn't seem to be a log file in this directory.")
   else:
-    lf = lf[0]
+    lf = os.path.join(path, lf[0])
   with open(lf, 'r') as f:
     logfile = f.readlines()
   
@@ -256,10 +320,10 @@ def GetArrays(bodies = []):
   logfile = ''.join(logfile)
   
   # Grab body properties    
-  for body in output.bodies:
+  for b, body in enumerate(output.bodies):
 
     # Grab the name
-    with open(body.infile, 'r') as f:
+    with open(os.path.join(path, body.infile), 'r') as f:
       infile = f.readlines()
     j = np.argmax(np.array([l.startswith('sName') for l in infile]))
     if not infile[j].startswith('sName'):
@@ -267,12 +331,22 @@ def GetArrays(bodies = []):
     body.name = infile[j].split()[1]
     body.fwfile = '%s.%s.forward' % (output.sysname, body.name)
     body.climfile = '%s.%s.Climate' % (output.sysname, body.name)
-    if not os.path.exists(body.climfile):
+    if not os.path.exists(os.path.join(path, body.climfile)):
       body.climfile = ""
-    
+
+    # Grab the body color
+    if override_colors:
+      body.color = colors[b]
+    else:
+      try:
+        body.color = '#' + re.search(r'- BODY: %s -.*?\nColor: (.*?)\n' % body.name,
+                                     logfile, re.DOTALL).groups()[0]
+      except IndexError:
+        body.color = colors[b]
+      
     # Grab the forward arrays
     try:
-      with open(body.fwfile, 'r') as f:
+      with open(os.path.join(path, body.fwfile), 'r') as f:
         fwfile = f.readlines()
     except IOError:
       raise Exception('Unable to open %s.' % body.fwfile)
@@ -285,7 +359,7 @@ def GetArrays(bodies = []):
     if body.climfile != "":
       # Grab the climate arrays...
       try:
-        with open(body.climfile, 'r') as f:
+        with open(os.path.join(path, body.climfile), 'r') as f:
           climfile = f.readlines()
       except IOError:
         raise Exception('Unable to open %s.' % body.climfile)
@@ -336,12 +410,14 @@ def GetParams(outputorder, file):
     
     return params
     
-def GetOutput():
+def GetOutput(path = '.', **kwargs):
   '''
   
   '''
   
-  output = GetArrays()
+  path = path.replace('~', os.path.expanduser('~'))
+  
+  output = GetArrays(path = path, **kwargs)
   
   for body in output.bodies:
     setattr(output, body.name, body)
@@ -350,8 +426,10 @@ def GetOutput():
     for param in getattr(output, body.name).params:
       description = param.descr
       unit = param.unit
+      name = param.name
+      parent = body.name
       setattr(getattr(output, body.name), param.name, 
-              array(param.array, unit = unit, description = description))
+              array(param.array, unit = unit, description = description, name = name, parent = parent, color = body.color))
     
     # Grid params
     if len(getattr(output, body.name).gridparams):
@@ -364,13 +442,15 @@ def GetOutput():
       assert r == 0, "Irregular time grid; VPLOT is confused!"
     
       for param in getattr(output, body.name).gridparams:
+        name = param.name
+        if name == 'Time':
+          # We don't want to overwrite the time array!
+          continue
         description = param.descr
         unit = param.unit
-        name = param.name
-        arr = array(param.array.reshape(I, J), unit = unit, description = description)
+        parent = body.name
+        arr = array(param.array.reshape(I, J), unit = unit, description = description, name = name, parent = parent, color = body.color)
         setattr(getattr(output, body.name), name, arr)
-    
-  del output.bodies
     
   return output
   

@@ -14,10 +14,6 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlRadheat(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
-
 void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].d40KNumMan = src[iBody].d40KNumMan;
   dest[iBody].d40KConstMan = src[iBody].d40KConstMan;
@@ -42,12 +38,6 @@ void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 
   dest[iBody].d235UNumCore = src[iBody].d235UNumCore;
   dest[iBody].d235UConstCore = src[iBody].d235UConstCore;
-}
-
-void InitializeBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-}
-
-void InitializeUpdateTmpBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 }
 
 /**************** RADHEAT options ********************/
@@ -501,6 +491,102 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
         body[iFile-1].d235UNumCore = options->dDefault;
 }
 
+void ReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMin40KPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMin40KPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMin40KPower = options->dDefault;
+}
+
+void ReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMin235UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMin235UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMin235UPower = options->dDefault;
+}
+
+
+void ReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMin238UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMin238UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMin238UPower = options->dDefault;
+}
+
+void ReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMin232ThPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMin232ThPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMin232ThPower = options->dDefault;
+}
+
+void ReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMinRadPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMinRadPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMinRadPower = options->dDefault;
+}
+
 /* Initiatlize Input Options */
 
 void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
@@ -750,6 +836,57 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UPOWERCORE].dDefault = 0;
   sprintf(options[OPT_235UPOWERCORE].cNeg,"TW");
   fnRead[OPT_235UPOWERCORE] = &Read235UPowerCore;
+
+  sprintf(options[OPT_HALT40KPOWER].cName,"dHalt40KPower");
+  sprintf(options[OPT_HALT40KPOWER].cDescr,"Minimum 40K Power");
+  sprintf(options[OPT_HALT40KPOWER].cDefault,"0");
+  options[OPT_HALT40KPOWER].iType = 2;
+  options[OPT_HALT40KPOWER].iMultiFile = 1;
+  options[OPT_HALT40KPOWER].dNeg = 1e12; // TW
+  options[OPT_HALT40KPOWER].dDefault = 0;
+  sprintf(options[OPT_HALT40KPOWER].cNeg,"TW");
+  fnRead[OPT_HALT40KPOWER] = &ReadHalt40KPower;
+
+  sprintf(options[OPT_HALT232THPOWER].cName,"dHalt232ThPower");
+  sprintf(options[OPT_HALT232THPOWER].cDescr,"Minimum 232Th Power");
+  sprintf(options[OPT_HALT232THPOWER].cDefault,"0");
+  options[OPT_HALT232THPOWER].iType = 2;
+  options[OPT_HALT232THPOWER].iMultiFile = 1;
+  options[OPT_HALT232THPOWER].dNeg = 1e12; // TW
+  options[OPT_HALT232THPOWER].dDefault = 0;
+  sprintf(options[OPT_HALT232THPOWER].cNeg,"TW");
+  fnRead[OPT_HALT232THPOWER] = &ReadHalt232ThPower;
+
+  sprintf(options[OPT_HALT235UPOWER].cName,"dHalt235UPower");
+  sprintf(options[OPT_HALT235UPOWER].cDescr,"Minimum 235U Power");
+  sprintf(options[OPT_HALT235UPOWER].cDefault,"0");
+  options[OPT_HALT235UPOWER].iType = 2;
+  options[OPT_HALT235UPOWER].iMultiFile = 1;
+  options[OPT_HALT235UPOWER].dNeg = 1e12; // TW
+  options[OPT_HALT235UPOWER].dDefault = 0;
+  sprintf(options[OPT_HALT235UPOWER].cNeg,"TW");
+  fnRead[OPT_HALT235UPOWER] = &ReadHalt235UPower;
+
+  sprintf(options[OPT_HALT238UPOWER].cName,"dHalt238UPower");
+  sprintf(options[OPT_HALT238UPOWER].cDescr,"Minimum 238U Power");
+  sprintf(options[OPT_HALT238UPOWER].cDefault,"0");
+  options[OPT_HALT238UPOWER].iType = 2;
+  options[OPT_HALT238UPOWER].iMultiFile = 1;
+  options[OPT_HALT238UPOWER].dNeg = 1e12; // TW
+  options[OPT_HALT238UPOWER].dDefault = 0;
+  sprintf(options[OPT_HALT238UPOWER].cNeg,"TW");
+  fnRead[OPT_HALT238UPOWER] = &ReadHalt238UPower;
+
+  sprintf(options[OPT_HALTRADPOWER].cName,"dHaltRadPower");
+  sprintf(options[OPT_HALTRADPOWER].cDescr,"Minimum Total Radgiogenic Power");
+  sprintf(options[OPT_HALTRADPOWER].cDefault,"0");
+  options[OPT_HALTRADPOWER].iType = 2;
+  options[OPT_HALTRADPOWER].iMultiFile = 1;
+  options[OPT_HALTRADPOWER].dNeg = 1e12; // TW
+  options[OPT_HALTRADPOWER].dDefault = 0;
+  sprintf(options[OPT_HALTRADPOWER].cNeg,"TW");
+  fnRead[OPT_HALTRADPOWER] = &ReadHaltRadPower;
+
 }
 
 void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1115,10 +1252,6 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 }
 
 
-void InitializeModuleRadheat(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
-}
-
 /**************** RADHEAT update ****************/
 
 void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
@@ -1203,7 +1336,7 @@ int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
   if (fd40KPower(update,iBody) < halt->dMin40KPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 40K Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d40KPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd40KPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin40KPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1220,7 +1353,7 @@ int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upda
   if (fd232ThPower(update,iBody) < halt->dMin232ThPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 232Th Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d232ThPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd232ThPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin232ThPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1237,7 +1370,7 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   if (fd238UPower(update,iBody) < halt->dMin238UPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 238U Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d238UPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd238UPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin238UPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1247,14 +1380,12 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
-/* Minimum 235U Powering? PED */
-
 int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd235UPower(update,iBody) < halt->dMin235UPower) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's 235U Power =  ",body[iBody].cName);
-      fprintd(stdout,body[iBody].d235UPowerMan,io->iSciNot,io->iDigits);
+      fprintd(stdout,fd235UPower(update,iBody),io->iSciNot,io->iDigits);
       printf(" < ");
       fprintd(stdout,halt->dMin235UPower,io->iSciNot,io->iDigits);
       printf(".\n");
@@ -1264,6 +1395,26 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }        
 
+/* Minimum Radiogenic Power */
+
+int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  int iFoo;
+  iFoo = fdRadPowerTot(update,iBody);
+
+  if (fdRadPowerTot(update,iBody) < halt->dMinRadPower) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's Total Radiogenic Power =  ",body[iBody].cName);
+      fprintd(stdout,fdRadPowerTot(update,iBody),io->iSciNot,io->iDigits);
+      printf(" < ");
+      fprintd(stdout,halt->dMinRadPower,io->iSciNot,io->iDigits);
+      printf(".\n");
+    }
+    return 1;
+  }
+  return 0;
+}        
+
+
 void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin40KPower > 0)
     (*iNumHalts)++;
@@ -1272,6 +1423,8 @@ void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin238UPower > 0)
     (*iNumHalts)++;
   if (halt->dMin235UPower > 0)  //PED
+    (*iNumHalts)++;
+  if (halt->dMinRadPower > 0)
     (*iNumHalts)++;
 }
 
@@ -1285,6 +1438,8 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin238UPower;
   if (control->Halt[iBody].dMin235UPower > 0)  //PED
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin235UPower;
+  if (control->Halt[iBody].dMinRadPower > 0) 
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinRadPower;
 }
 
 /************* RADHEAT Outputs ******************/
@@ -2134,16 +2289,12 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = RADHEAT;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlRadheat;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyRadheat;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsRadheat;
   module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
   module->fnVerify[iBody][iModule] = &VerifyRadheat;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
 
   module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;

@@ -1,3 +1,9 @@
+void  InitializeControlNULL(CONTROL*);
+void InitializeBodyNULL(BODY*,CONTROL*,UPDATE*,int,int);
+void FinalizeUpdateNULL(BODY*,UPDATE*,int*,int,int,int);
+void InitializeUpdateTmpBodyNULL(BODY*,CONTROL*,UPDATE*,int);
+void InitializeModuleNULL(CONTROL*,MODULE*);
+
 double fdUpdateFunctionTiny(BODY*,SYSTEM*,int*);
 void SetDerivTiny(fnUpdateVariable***,int,int,int);
 

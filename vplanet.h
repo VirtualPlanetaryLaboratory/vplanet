@@ -193,7 +193,7 @@ typedef struct {
   double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
   double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
   double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
-
+  char cColor[OPTLEN];   /**< Body color (for plotting) */
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the
@@ -921,10 +921,11 @@ typedef struct {
   int bSync;            /**< Halt if Rotation Becomes Synchronous? */
 
   /* RADHEAT */
-  int dMin40KPower;     /**< Halt at this Potassium-40 Power */
-  int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
-  int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower;
+  double dMin40KPower;     /**< Halt at this Potassium-40 Power */
+  double dMin232ThPower;   /**< Halt at this Thorium-232 Power */
+  double dMin238UPower;    /**< Halt at this Uranium-238 Power */
+  double dMin235UPower;
+  double dMinRadPower;
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
@@ -934,8 +935,8 @@ typedef struct {
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
-  int dMinTMan;     /**< Halt at this TMan */
-  int dMinTCore;     /**< Halt at this TCore */
+  double dMinTMan;     /**< Halt at this TMan */
+  double dMinTCore;     /**< Halt at this TCore */
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
@@ -1208,7 +1209,6 @@ typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
-typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
@@ -1316,9 +1316,6 @@ typedef struct {
 
   /*! These functions verify module-specific halts. */ 
   fnVerifyHaltModule **fnVerifyHalt;
-
-  /*! These functions verify module-specific constraints on rotation rate. */ 
-  fnVerifyRotationModule **fnVerifyRotation;
 
   /*! These functions adds subroutines to the output functions that require
       module-specific values. */ 

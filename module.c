@@ -10,13 +10,28 @@
 #include <string.h>
 #include "vplanet.h"
 
+/* NULL functions for all module function pointer matrices. All pointers are 
+   initialized to point to these functions. Modules that require them reset
+   the pointers in AddModuleX. */
+
+void  InitializeControlNULL(CONTROL *control) {
+  // Nothing
+}
+
+void InitializeBodyNULL(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+}
+
+void InitializeModuleNULL(CONTROL *control,MODULE *module) {
+}
+
+void InitializeUpdateTmpBodyNULL(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+}
+
 void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
-void VerifyRotationNULL(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
+// Functions that are helpful for integrations
 
 double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iBody1) {
   return 0;
@@ -82,7 +97,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnReadOptions = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
   module->fnVerify = malloc(iNumBodies*sizeof(fnVerifyModule*));
   module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
-  module->fnVerifyRotation = malloc(iNumBodies*sizeof(fnVerifyRotationModule*));
 
   /* Assume no modules per body to start */
   for (iBody=0;iBody<iNumBodies;iBody++) 
@@ -129,7 +143,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
   module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
   module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
-  module->fnVerifyRotation[iBody] = malloc(iNumModules*sizeof(fnVerifyRotationModule));
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
@@ -164,9 +177,15 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   
-  /* Initialize all FinalizeUpdate functions to null. The modules that
-     need them will replace them in AddModule. */
   for(iModule = 0; iModule < iNumModules; iModule++) {
+    /* Initialize all module functions pointers to point to their respective
+       NULL function. The modules that need actual function will replace them 
+       in AddModule. */
+
+    module->fnInitializeControl[iBody][iModule] = &InitializeControlNULL;
+    module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyNULL;
+    module->fnInitializeBody[iBody][iModule] = &InitializeBodyNULL;
+
     module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
@@ -195,7 +214,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
 
-    module->fnVerifyRotation[iBody][iModule] = &VerifyRotationNULL;
   }
 
   /************************

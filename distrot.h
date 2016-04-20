@@ -7,11 +7,8 @@
  *
 */
 
-void InitializeControlDistRot(CONTROL*);
 void AddModuleDistRot(MODULE*,int,int);
 void BodyCopyDistRot(BODY*,BODY*,int,int,int);
-void InitializeBodyDistRot(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 

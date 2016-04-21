@@ -341,7 +341,7 @@ def GetArrays(path = '.', bodies = [], colors = None):
       try:
         body.color = '#' + re.search(r'- BODY: %s -.*?\nColor: (.*?)\n' % body.name,
                                      logfile, re.DOTALL).groups()[0]
-      except IndexError:
+      except AttributeError:
         body.color = colors[b]
       
     # Grab the forward arrays

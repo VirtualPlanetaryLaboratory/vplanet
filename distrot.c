@@ -14,14 +14,6 @@
 #include "options.h"
 #include "output.h"
 
-void InitializeControlDistRot(CONTROL *control) {
-  /* Not sure if I need anything here yet */
-}
-
-void InitializeModuleDistRot(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
@@ -32,12 +24,6 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
   dest[iBody].bForcePrecRate = src[iBody].bForcePrecRate;
   dest[iBody].dPrecRate = src[iBody].dPrecRate;
 
-}
-
-void InitializeBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-}
-
-void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 }
 
 /**************** DISTROT options ********************/
@@ -722,8 +708,6 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = DISTROT;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlDistRot;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistRot;
   module->fnCountHalts[iBody][iModule] = &CountHaltsDistRot;
   module->fnLogBody[iBody][iModule] = &LogBodyDistRot;
 
@@ -731,7 +715,6 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
   module->fnVerify[iBody][iModule] = &VerifyDistRot;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistRot;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistRot;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistRot;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistRot;
   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblDistRot;

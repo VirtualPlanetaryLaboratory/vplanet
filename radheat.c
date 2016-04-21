@@ -14,10 +14,6 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlRadheat(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
-
 void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].d40KNumMan = src[iBody].d40KNumMan;
   dest[iBody].d40KConstMan = src[iBody].d40KConstMan;
@@ -42,12 +38,6 @@ void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 
   dest[iBody].d235UNumCore = src[iBody].d235UNumCore;
   dest[iBody].d235UConstCore = src[iBody].d235UConstCore;
-}
-
-void InitializeBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-}
-
-void InitializeUpdateTmpBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 }
 
 /**************** RADHEAT options ********************/
@@ -1262,10 +1252,6 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 }
 
 
-void InitializeModuleRadheat(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
-}
-
 /**************** RADHEAT update ****************/
 
 void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
@@ -2303,16 +2289,12 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = RADHEAT;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlRadheat;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyRadheat;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsRadheat;
   module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
   module->fnVerify[iBody][iModule] = &VerifyRadheat;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyRadheat;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
 
   module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;

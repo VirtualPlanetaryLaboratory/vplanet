@@ -14,14 +14,6 @@
 #include "options.h"
 #include "output.h"
 
-void InitializeControlDistOrb(CONTROL *control) {
-  /* Not sure if I need anything here yet */
-}
-
-void InitializeModuleDistOrb(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
@@ -1490,7 +1482,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = DISTORB;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlDistOrb;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistOrb;
   module->fnCountHalts[iBody][iModule] = &CountHaltsDistOrb;
   module->fnLogBody[iBody][iModule] = &LogBodyDistOrb;

@@ -83,11 +83,8 @@
 #define ENUMCORE235U     7.0508058e+38  //[num]
 #define EPOWERCORE235U   1.44202e+11  //[W] 
 
-void InitializeControlRadheat(CONTROL*);
 void AddModuleRadheat(MODULE*,int,int);
 void BodyCopyRadheat(BODY*,BODY*,int,int,int);
-void InitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyRadheat(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 

@@ -38,8 +38,6 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_TIDALTAU            1045
 #define OPT_TIDALQ              1050
 
-
-
 #define OUT_ECCA                1055
 
 /* Options Functions */

@@ -425,7 +425,8 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
  
   // If binary is being used, ALL bodies must have bBinary == 1
-  for(int i = 0; i < control->Evolve.iNumBodies; i++)
+  int i;
+  for(i = 0; i < control->Evolve.iNumBodies; i++)
   {
     if(body[i].bBinary == 0)
     {

@@ -250,8 +250,8 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
     else:
       pl.suptitle('VPLANET: %s' % output.sysname, fontsize = 24)
   
-  gs.tight_layout(fig, rect=[0, 0.03, 1, 0.95]) 
-  
+  #gs.tight_layout(fig, rect=[0, 0.03, 1, 0.95]) 
+     
   # Show or save?
   if interactive and conf.interactive:
     pl.show()

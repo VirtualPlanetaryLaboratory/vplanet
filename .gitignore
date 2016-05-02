@@ -42,7 +42,6 @@ examples/gl581/gl581.c.forward
 examples/gl581/gl581.d.forward
 examples/gl581/gl581.log
 vplanet
-vplanet.dSYM/
 vplot/scripts/
 vplot/vplot/__init__.pyc
 vplot/vplot/defaults.pyc

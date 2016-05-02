@@ -18,10 +18,11 @@
 #define THERMINT      7
 #define POISE         8
 #define FLARE         9
+#define BINARY        10
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-11
+#define BIGG          6.67408e-11
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
@@ -82,7 +83,7 @@
 
 /* File Limits */
 
-#define NUMOUT        2000  /* Number of output parameters */
+#define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
@@ -97,8 +98,8 @@
 			     * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an 
 			     * input file */
-#define OPTEND        1100  /* Last output number of module options
-			     * EQTIDE is highest for this compilation */
+#define OPTEND        2100  /* Last output number of module options
+			     * Binary is highest for this compiltion */
 
 #define TINY          (1./HUGE)
 
@@ -153,6 +154,15 @@
 // POISE
 #define VICEMASS        1851
 
+// BINARY: 2000-2999, inclusive
+// Primary variables that control CBP's cylindrical positions, velocities
+#define VCBPR              2000
+#define VCBPPHI            2010
+#define VCBPZ              2020
+#define VCBPRDOT           2030
+#define VCBPPHIDOT         2040
+#define VCBPZDOT           2050
+
 // FLARE
 #define VLXUV           1901
 
@@ -172,6 +182,7 @@ typedef struct {
 /* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
+  int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
   /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
   char iType; 
 
@@ -195,7 +206,8 @@ typedef struct {
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the
-   * second element in the BODY array.   */
+   * second element in the BODY array and, if using binary
+   * in the primary (0th) body*/
   double dSemi;          /**< Body's Semi-major Axis */
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
@@ -229,7 +241,23 @@ typedef struct {
   int bEigenSet;
   double *dLOrb;
   double *dLOrbTmp;
-    
+
+  /* BINARY parameters */
+  int bBinary;          /** Apply BINARY module? */
+  double dR0;           /**< Guiding Radius,initially equal to dSemi */
+  double dCBPR;         /** < CBP radius */
+  double dCBPZ;         /** < CBP height above/below the orbital plane */
+  double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
+  double dCBPRDot;      /** < CBP radial orbital velocity */
+  double dCBPZDot;      /** < CBP z orbital velocity */
+  double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
+  double dFreeEcc;      /**< CBP's free eccentricity */
+  double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
+  double dInc;          /**< CBP's actual inclication */
+  double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
+  double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
+  double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
@@ -837,6 +865,29 @@ typedef struct {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
 
+  /* BINARY */
+  int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
+  int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */  
+  int iCBPZ; /**< Variable # corresponding to the CBP's cylindrical Z positions */
+  int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
+  int iCBPPhi; /**< Variable # Corresponding to the CBP's orbital azimuthal angle */
+  int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
+  int iCBPRDot; /**< Variable # Corresponding to the CBP's radial velocity */
+  int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
+  int iCBPZDot; /** < Variable # Corresponding to the CBP's Z orbital velocity */
+  int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1] */
+  int iCBPPhiDot; /** < Variable # Corresponding to the CBP's Phi orbital angular velocity */
+  int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
+
+  /* Points to the element in UPDATE's daDerivProc matrix that contains the 
+   * derivative of these variables due to BINARY. */
+  double *pdCBPRBinary; // Equation that governs CBP orbital radius
+  double *pdCBPZBinary; // Equation that governs CBP cylindrical position Z
+  double *pdCBPPhiBinary; // Equation that governs CBP orbital azimuthal angle
+  double *pdCBPRDotBinary; // Equation that governs CBP radial orbital velocity
+  double *pdCBPZDotBinary; // Equation that governs CBP z orbital velocity
+  double *pdCBPPhiDotBinary; // Equation that governs CBP phi orbital velocity
+
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
@@ -852,7 +903,7 @@ typedef struct {
   double *pdRadiusStellar;
   
   double *pdRotRateStellar;
-  
+
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
@@ -903,6 +954,9 @@ typedef struct {
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
+
+  /* BINARY */
+  int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
 
 } HALT;
 
@@ -1163,6 +1217,12 @@ typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
 
@@ -1253,7 +1313,16 @@ typedef struct {
   fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
-  
+ 
+  /* Function points to finalize binary update functions */
+  /* CBP R, Z, Phi, and their time derivaties */
+  fnFinalizeUpdateCBPRModule **fnFinalizeUpdateCBPR;
+  fnFinalizeUpdateCBPZModule **fnFinalizeUpdateCBPZ;
+  fnFinalizeUpdateCBPPhiModule **fnFinalizeUpdateCBPPhi;
+  fnFinalizeUpdateCBPRDotModule **fnFinalizeUpdateCBPRDot;
+  fnFinalizeUpdateCBPZDotModule **fnFinalizeUpdateCBPZDot;
+  fnFinalizeUpdateCBPPhiDotModule **fnFinalizeUpdateCBPPhiDot;
+
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */
   /*! Function pointers to finalize distrot's X */ 
@@ -1317,6 +1386,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "thermint.h"
 #include "distrot.h"
 #include "poise.h"
+#include "binary.h"
 #include "flare.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
@@ -1334,7 +1404,10 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  ********************/
 
 // XXX Obsolete?
-#define MODULEOPTEND        2000
-#define MODULEOUTEND        2000
+// Note: not obsolete! needed for new module
+// Otherwise,segfaults
+// Increased from 1900->2100 for binary
+#define MODULEOPTEND        2100
+#define MODULEOUTEND        2100
 
 

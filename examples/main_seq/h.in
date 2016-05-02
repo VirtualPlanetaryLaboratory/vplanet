@@ -1,10 +1,10 @@
 #
-sName	        0.3MSUN		                  # Body's name
+sName	        1.0MSUN		                  # Body's name
 saModules	    stellar                     # Modules to apply, exact spelling required
 
 # Output
 saOutputOrder Time -Luminosity -Radius Temperature
 
 # Physical Parameters
-dMass         0.3                         # Mass, solar masses
+dMass         1.0                         # Mass, solar masses
 sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`

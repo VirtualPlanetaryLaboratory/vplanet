@@ -5,6 +5,13 @@
  * Subroutines that control the energy balance model for climate 
 */
 
+/* lines where something like iBody == 0 occurs
+ * ~1833 : where solar flux is important (alter for body!)
+ * 1931-will want to alter astrodist for binary
+ * ~1389
+ *
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -1972,9 +1979,9 @@ double true2eccA(double TrueA, double Ecc) {
 void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
-  
+ 
   Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
-    
+
   sin_delta = sin(body[iBody].dObliquity)*sin(body[iBody].dTrueL);
   cos_delta = sqrt(1.0-pow(sin_delta,2));
   tan_delta = sin_delta/cos_delta;

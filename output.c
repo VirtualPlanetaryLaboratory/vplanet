@@ -5,7 +5,6 @@
  * Subroutines for output and logging.
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,6 +29,17 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime,cUnit);
   }
+}
+
+/* iBodyType */
+void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if(body[iBody].bBinary) {
+    *dTmp = body[iBody].iBodyType;
+  }
+  else
+    *dTmp = -1;
+
+  strcpy(cUnit,"");
 }
 
 /*
@@ -167,10 +177,21 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-  else
-    *dTmp = -1;
+  if(body[iBody].bBinary != 1) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // binary
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
   sprintf(cUnit,"");
 }
 
@@ -188,10 +209,20 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  if(body[iBody].bBinary == 0) { // Not doing binary
   if (iBody > 0)
-    *dTmp = body[iBody].dMeanMotion;
+    *dTmp = body[iBody].dMeanMotion; 
   else
     *dTmp = -1;
+  }
+  else { // doing binary 
+  if(iBody > 0)
+  {
+    *dTmp = body[iBody].dMeanMotion;
+  }
+  else
+    *dTmp = -1;
+  } 
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -204,10 +235,21 @@ void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (iBody > 0)
-    *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
-  else
-    *dTmp=-1;
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
+    else
+      *dTmp=-1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -219,10 +261,21 @@ void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = body[iBody].dSemi;
-  else
-    *dTmp = -1;
+  
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
+  else { // Doing binary
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = body[iBody].dSemi;
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -467,6 +520,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_AGE].dNeg = 1./(YEARSEC*1e9);
   output[OUT_AGE].iNum = 1;
   fnWrite[OUT_AGE] = &WriteAge;
+
+  /*
+   * BodyType
+   */
+
+  sprintf(output[OUT_BODYTYPE].cName,"BodyType");
+  sprintf(output[OUT_BODYTYPE].cDescr,"Type of Body (0 == planet)");
+  output[OUT_BODYTYPE].iNum = 1;
+  fnWrite[OUT_BODYTYPE] = &WriteBodyType;
 
   /*
    * D
@@ -1068,6 +1130,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
+
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
@@ -1088,7 +1151,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 
   /* System Properties */
   LogSystem(body,control,module,output,system,update,fnWrite,fp);
-  
+
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 
@@ -1277,9 +1340,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
+  InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
 
 }
-
-
-

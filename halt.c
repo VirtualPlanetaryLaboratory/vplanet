@@ -11,6 +11,11 @@
 #include <math.h>
 #include "vplanet.h"
 
+#define max(a,b) \
+     ({ __typeof__ (a) _a = (a); \
+             __typeof__ (b) _b = (b); \
+           _a > _b ? _a : _b; })
+
 int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
   int iModule,iNumHalts=0;
 
@@ -100,9 +105,9 @@ int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].dSemi <= halt->dMinSemi) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: e = ");
+      printf("HALT: a = ");
       fprintd(stdout,sqrt(body[iBody].dEccSq),io->iSciNot,io->iDigits);
-      printf(", < min e = ");
+      printf(", < min a = ");
       fprintd(stdout,halt->dMinSemi,io->iSciNot,io->iDigits);
       printf(" at %.2e years\n",evolve->dTime/YEARSEC);
     }
@@ -148,13 +153,27 @@ int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
 
 /* Merge? */
 int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].dSemi*(1-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
-    if (io->iVerbose > VERBPROG) 
-      printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
+  // Is iBody not using binary?
+  if(body[iBody].bBinary == 0) {
+    if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
+      if (io->iVerbose > VERBPROG) 
+        printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 
-    return 1;
+      return 1;
+    }
   }
+  // Check for merge when planet is using binary
+  // This also checks if stars merged, for simplicity
+  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
+    double max_radius = max(body[0].dRadius,body[1].dRadius);
+    if((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius) || body[0].dRadius+body[1].dRadius >= body[1].dSemi) && halt->bMerge) { /* Merge! */
+        if(io->iVerbose > VERBPROG)
+          printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
+          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUCM,body[0].dSemi/AUCM,max_radius/AUCM);
 
+        return 1;
+      }
+  }
   return 0;
 }
 

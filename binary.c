@@ -1580,7 +1580,8 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
   double tmp2 = 0.0;
   double tmp3 = 0.0;
 
-  for(int k = 1; k < K_MAX; k++)
+  int k;
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
     tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
@@ -1610,7 +1611,8 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tot = 0.0;
   double tmp1 = 0.0;
-  for(int k = 1; k < K_MAX; k++)
+  int k;
+  for(k = 1; k < K_MAX; k++)
   {
     tmp1 = body[iBody].dLL13N0*fdDk0(k,body,iBody)*sin(k*(phi0-M-varpi))/(k*(body[iBody].dLL13N0-body[1].dMeanMotion));
     tmp1 += body[iBody].dLL13N0*fdDPk(k,body,iBody)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[iBody].dLL13N0 - (k+1.)*body[1].dMeanMotion);
@@ -1657,7 +1659,8 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total sum
   double tmp3 = 0.0; // Intermediate sum for each k
-  for(int k = 1; k < K_MAX; k++)
+  int k;
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = -fdC0k(k,body,iBody)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 -= fdCPk(k,body,iBody)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
@@ -1691,7 +1694,8 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total loop sum
   double tmp3 = 0.0; // Intermediate loop sum
-  for(int k = 1; k < K_MAX; k++)
+  int k;
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body,iBody)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 += (n0*fdDPk(k,body,iBody)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
@@ -1737,7 +1741,8 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-  for(int i = 0; i < FLUX_INT_MAX; i++)
+  int i;
+  for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly

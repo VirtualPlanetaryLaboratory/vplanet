@@ -254,7 +254,8 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
     gs.tight_layout(fig, rect=[0, 0.03, 1, 0.95]) 
   except:
     # No biggie
-    continue
+    pass
+    #continue
     
   # Show or save?
   if interactive and conf.interactive:

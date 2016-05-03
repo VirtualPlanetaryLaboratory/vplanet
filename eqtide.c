@@ -24,10 +24,6 @@ void InitializeControlEqtide(CONTROL *control) {
   control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
-void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 /* All the auxiliary properties for EQTIDE calculations need to be included
    in this subroutine! */
 
@@ -2237,6 +2233,9 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 
+  if (body[1].dPrecA != 0) 
+    printf("precA: %.16e\n",body[1].dPrecA);
+
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
     if (bPrimary(body,iIndex))
@@ -2388,6 +2387,8 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 }
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
+
+  // Force some to 0 if bForceEqSpin XXX
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);
@@ -2550,13 +2551,20 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
+  double foo;
 
   if (bPrimary(body,iB0))
     iOrbiter = iB1;
   else
     iOrbiter = iB0;
 
-  return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+  //return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+  foo = body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  if (foo > 0) 
+    printf("obl: %f, dobl/dt: %f\n",body[iB0].dObliquity,foo);
+
+  return foo;
 }
 
 double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -2565,8 +2573,16 @@ double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdCPLDYoblDt(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
 
-  return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  //return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  foo = body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  if (foo != 0)
+    printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+
+  return foo;
+
 }
 
 double fdCPLDZoblDt(BODY *body,SYSTEM *system,int *iaBody) {

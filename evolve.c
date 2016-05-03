@@ -214,6 +214,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Create a copy of BODY array */
   BodyCopy(control->Evolve.tmpBody,body,&control->Evolve);
+  if (control->Evolve.tmpBody[1].dPrecA != 0) 
+    printf("PrecA != 0.\n");
 
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);

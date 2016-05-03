@@ -3,7 +3,7 @@ lines.linewidth               : 1.0               # line width in points
 lines.linestyle               : -                 # solid line
 lines.marker                  : .                 # the default marker
 lines.markeredgewidth         : 0.5               # the line width around the marker symbol
-lines.markersize              : 6                 # markersize, in points
+lines.markersize              : 5                 # markersize, in points
 lines.dash_joinstyle          : round             # miter|round|bevel
 lines.dash_capstyle           : butt              # butt|round|projecting
 lines.solid_joinstyle         : round             # miter|round|bevel
@@ -14,13 +14,13 @@ lines.antialiased             : True              # render lines in antialiased 
 markers.fillstyle             : full
 
 # FONT
-font.family                   : sans-serif
+font.family                   : serif
 font.style                    : normal
 font.variant                  : normal
 font.weight                   : normal
 font.stretch                  : normal
 font.size                     : 12.0
-font.serif                    : DejaVu Serif, New Century Schoolbook, Century Schoolbook L, Utopia, ITC Bookman, Bookman, Nimbus Roman No9 L, Times New Roman, Times, Palatino, Charter, serif
+font.serif                    : Palatino Linotype
 font.sans-serif               : DejaVu Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
 font.cursive                  : Apple Chancery, Textile, Zapf Chancery, Sand, Script MT, Felipa, cursive
 font.fantasy                  : Comic Sans MS, Chicago, Charcoal, ImpactWestern, Humor Sans, fantasy
@@ -52,14 +52,14 @@ axes.linewidth                : 1.0
 axes.grid                     : True
 axes.grid.which               : major
 axes.grid.axis                : both
-axes.titlesize                : large
+axes.titlesize                : 24
 axes.titleweight              : normal
-axes.labelsize                : medium
-axes.labelpad                 : 5.0
+axes.labelsize                : large
+axes.labelpad                 : 3.0
 axes.labelweight              : normal
 axes.labelcolor               : k
 axes.axisbelow                : False
-axes.formatter.limits         : -7, 7             # use scientific notation if log10 of the axis range is smaller than the first or larger than the second
+axes.formatter.limits         : -6, 6             # use scientific notation if log10 of the axis range is smaller than the first or larger than the second
 axes.formatter.use_locale     : False
 axes.formatter.use_mathtext   : True
 axes.formatter.useoffset      : False
@@ -81,7 +81,7 @@ xtick.minor.width             : 0.5
 xtick.major.pad               : 4
 xtick.minor.pad               : 4
 xtick.color                   : k
-xtick.labelsize               : medium
+xtick.labelsize               : large
 xtick.direction               : in                # in, out, or inout
 
 ytick.major.size              : 4    
@@ -92,7 +92,7 @@ ytick.minor.width             : 0.5
 ytick.major.pad               : 4 
 ytick.minor.pad               : 4  
 ytick.color                   : k   
-ytick.labelsize               : medium
+ytick.labelsize               : large
 ytick.direction               : in
 
 # GRIDS
@@ -103,7 +103,7 @@ grid.alpha                    : 0.1
 
 # LEGEND
 legend.fancybox               : False
-legend.loc                    : best
+legend.loc                    : upper right
 legend.numpoints              : 2
 legend.fontsize               : large
 legend.borderpad              : 0.4
@@ -122,9 +122,9 @@ legend.facecolor              : inherit
 legend.edgecolor              : inherit
 
 # FIGURE
-figure.titlesize              : medium
+figure.titlesize              : 28
 figure.titleweight            : normal
-figure.figsize                : 8, 6
+figure.figsize                : 12, 8
 figure.dpi                    : 80
 figure.facecolor              : 1.0
 figure.edgecolor              : w
@@ -135,7 +135,7 @@ figure.subplot.right          : 0.9
 figure.subplot.bottom         : 0.1
 figure.subplot.top            : 0.9
 figure.subplot.wspace         : 0.2
-figure.subplot.hspace         : 0.2
+figure.subplot.hspace         : 0.3
 
 # IMAGES
 image.aspect                  : equal             # equal | auto | a number

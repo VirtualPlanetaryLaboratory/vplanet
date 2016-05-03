@@ -202,7 +202,7 @@ typedef struct {
   double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
   double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
   double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
-
+  char cColor[OPTLEN];   /**< Body color (for plotting) */
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the

@@ -1106,6 +1106,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
+    fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 

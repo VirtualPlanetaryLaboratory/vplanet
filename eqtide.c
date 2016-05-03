@@ -41,10 +41,6 @@ void InitializeControlEqtide(CONTROL *control) {
   control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
-void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 /* All the auxiliary properties for EQTIDE calculations need to be included
    in this subroutine! */
 
@@ -111,9 +107,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
     for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
       control->Evolve.tmpBody[iBody].dTidalF[iPert] = malloc(5*sizeof(double));
   }
-
 }
-
 
 /**************** EQTIDE options ********************/
 

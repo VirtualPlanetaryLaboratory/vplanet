@@ -241,7 +241,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dAge = src[iBody].dAge;
     dest[iBody].dLXUV = src[iBody].dLXUV;
 
-    /* Only orbiting bodies retain these parameters */
+    /* Only orbiting bodies retain these parameters unless binary is used*/
+    
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;

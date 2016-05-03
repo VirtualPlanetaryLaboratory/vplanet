@@ -62,6 +62,7 @@
 
 #define OPT_ORBECC		535
 #define OPT_ORBMEANMOTION	540
+#define OPT_BODYTYPE            545
 #define OPT_ORBPER		550
 #define OPT_ORBSEMI		560
 

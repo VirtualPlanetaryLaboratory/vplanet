@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
+/* lines where something like iBody == 0 occurs
+ * ~18
+ */
+
 void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
 }
 
@@ -11,7 +15,7 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   int iBody;
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    if (iBody != 0) {
+    if (iBody != 0 && body[iBody].bBinary == 0) {
       body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
     }
   }
@@ -45,8 +49,9 @@ double AssignDt(double dMin,double dNextOutput,double dEta) {
 
   dMin = dEta * dMin;
   if (dNextOutput < dMin)
+  {
     dMin = dNextOutput;
-
+  }
   return dMin;
 }
 
@@ -56,7 +61,7 @@ double fdNextOutput(double dTime,double dOutputInterval) {
   /* Number of output so far */
   nSteps = (int)(dTime/dOutputInterval);
   /* Next output is one more */
-  return (nSteps+1)*dOutputInterval;
+  return (nSteps+1.0)*dOutputInterval;
 }
 
 /* fdGetUpdateInfo fills the Update arrays with the derivatives 
@@ -71,7 +76,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
   int iBody,iVar,iEqn;
   EVOLVE integr;
   double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
- 
+
   integr = control->Evolve;
 
   // XXXX Change Eqn to Proc?
@@ -101,6 +106,32 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   dMin = dMinNow;
               }
             }
+          } else if (update[iBody].iaType[iVar][0] == 10) { // 10 because binary
+              // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+              // and the parameter can oscillate through 0 (like CBP position, velocities)
+              dVarNow = *update[iBody].pdVar[iVar];
+              // Something like amp = body.CBPAmp[iVar];
+              for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+              }
+              if (control->Evolve.bFirstStep) {
+                dMin = integr.dTimeStep;
+                control->Evolve.bFirstStep = 0;
+              } else {
+                /* Sum over all equations giving new value of the variable */
+                dVarTotal = 0.;
+                for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+                  dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
+                }
+                // Prevent division by zero
+                if (fabs(dVarNow - dVarTotal) > 1.0e-5) {
+                  dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
+                  if (dMinNow < dMin && dMinNow > DAYSEC) // Don't resolve things on < 1 day scales (dflemin3 ad-hoc assumption)
+                  {
+                     dMin = dMinNow;
+                  }
+                }
+              }
           } else if (update[iBody].iaType[iVar][0] == 3) {
           /* The parameter does not require a derivative, but is calculated explicitly as a function of age.
              Also, is a sinusoidal quantity (e.g. h,k,p,q in DistOrb) */
@@ -226,6 +257,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     *dDt = control->Evolve.dTimeStep;
     
   control->Evolve.dCurrentDt = *dDt;  
+
   /* XXX Should each eqn be updated separately? Each parameter at a 
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
@@ -239,7 +271,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -264,7 +296,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -288,7 +320,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){  
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){  
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be 
         // evaluated with higher accuracy
@@ -307,7 +339,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // NOTHING!
       } else {
         control->Evolve.daDeriv[3][iBody][iVar] = 0;
@@ -323,7 +355,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] + 
       2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
       
-      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3){
+      if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         *(update[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];
       } else {
@@ -384,6 +416,12 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
+    // dflemin3 hack
+    if(control->Evolve.dTime < DAYSEC)
+    {
+      //dDt = DAYSEC;
+    }
+    
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
         control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,fnUpdate,iBody,iModule);
@@ -408,11 +446,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     control->Evolve.dTime += dDt;
     control->Evolve.nSteps++;
-    
-    // if (control->Evolve.dTime >= 360*YEARSEC) {
-//       printf("stop\n");
-//     }
-        
+
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {
       dFoo = fdGetUpdateInfo(body,control,system,update,fnUpdate); 

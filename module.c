@@ -88,6 +88,14 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
   module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
 
+  // Finalize Binary Primary Variable Functions
+  module->fnFinalizeUpdateCBPR = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRDotModule));
+  module->fnFinalizeUpdateCBPZDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZDotModule));
+  module->fnFinalizeUpdateCBPPhiDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiDotModule));
+
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -125,6 +133,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bStellar)
     iNumModules++;
   if (body[iBody].bPoise)
+    iNumModules++;
+  if (body[iBody].bBinary)
     iNumModules++;
   if (body[iBody].bFlare)
     iNumModules++;
@@ -175,6 +185,15 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
   module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
   module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+ 
+  // Finalize Binary Primary Variable Functions
+  module->fnFinalizeUpdateCBPR[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRDotModule));
+  module->fnFinalizeUpdateCBPZDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZDotModule));
+  module->fnFinalizeUpdateCBPPhiDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiDotModule));
+
   module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   
   for(iModule = 0; iModule < iNumModules; iModule++) {
@@ -212,6 +231,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
 
   }
@@ -253,6 +278,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModulePoise(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = POISE;
   }
+  if (body[iBody].bBinary) {
+    AddModuleBinary(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = BINARY;
+  }
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = FLARE;
@@ -292,11 +321,13 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
-	body[iFile-1].bAtmEsc = 1;
+        body[iFile-1].bAtmEsc = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
 	body[iFile-1].bStellar = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
 	body[iFile-1].bPoise = 1;
+      } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
+        body[iFile-1].bBinary = 1;
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
       } else {
@@ -306,11 +337,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       }
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
-  } else {
+  
+    } else {
     if (control->Io.iVerbose >= VERBERR && iFile > 0) 
       fprintf(stderr,"WARNING: %s not present in file %s. No evolution will occur for this body.\n",options->cName,files->Infile[iFile].cIn);
   }
-
   free(lTmp);
 }
 
@@ -318,15 +349,16 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
   int iBody;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    (*body)[iBody].bEqtide = 0;
-    (*body)[iBody].bDistOrb = 0;
-    (*body)[iBody].bDistRot = 0;
-    (*body)[iBody].bRadheat = 0;
-    (*body)[iBody].bThermint = 0;
-    (*body)[iBody].bPoise = 0;
-    (*body)[iBody].bStellar = 0;
-    (*body)[iBody].bAtmEsc = 0;
-    (*body)[iBody].bFlare = 0;
+      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bDistOrb = 0;
+      (*body)[iBody].bDistRot = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bPoise = 0;
+      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bAtmEsc = 0;
+      (*body)[iBody].bBinary = 0;
+      (*body)[iBody].bFlare = 0;
   }
 }
 
@@ -403,6 +435,21 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
   }
 }
 
+ void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
+{
+  // If binary AND eqtide are called for a body, the body MUST be a star
+  if(body[iBody].bBinary) {
+    if(body[iBody].bEqtide) {
+      if(body[iBody].iBodyType != 1) { // Body isn't a star!
+        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a body, the body MUST be a star.\n");
+        fprintf(stderr,"Errant body iBody, bBinary, bEqtide: %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+  }
+
+}
+
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
@@ -425,7 +472,9 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
   
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
+  VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
   control->Evolve.iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
   if (control->Io.iVerbose >= VERBALL)

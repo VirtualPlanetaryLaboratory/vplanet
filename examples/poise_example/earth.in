@@ -50,7 +50,10 @@ dAlbedoWater      0.3
 #dHeatCapLand      1.53
 #dHeatCapWater      28.4
 #dMixingDepth      70
+<<<<<<< HEAD
 iIceDt             5
 iReRunSeas         500
 iAlbedoType        fix
 bSkipSeasEnabled   0
+=======
+>>>>>>> 992b81ca70c77ce2fd657ec88ee4a8eeb47ca3d3

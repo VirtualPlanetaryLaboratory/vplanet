@@ -5,6 +5,11 @@
  * Subroutines that control the integration of the obliquity model. 
 */
 
+/* lines where something like iBody == 0 occurs
+ * ~149
+ * ~227
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>

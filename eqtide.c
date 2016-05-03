@@ -6,8 +6,25 @@
  * model. Also includes subroutines that switch between
  * the two models.
 */ 
-//testing a change
 
+
+/* lines where something like if iBody == 0 count occurs
+ * ~790
+ * ~975
+ * ~1098
+ * ~1186
+ * ~1280
+ * ~1304
+ * ~1370
+ * ~2200
+ * ~2210
+ * ~2260
+ * ~2306
+ * ~2480
+ * ~2493
+ * ~2681
+ * ~2696
+ */
 
 #include <stdio.h>
 #include <math.h>
@@ -988,8 +1005,11 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
     }
-    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-    CalcHK(body,iBody);
+    if(iBody > 0)
+    {
+      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+      CalcHK(body,iBody);
+    }
   }
 }
 
@@ -2229,7 +2249,13 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   int iOrbiter;
 
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
-  body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+  body[iBody].dPrecA = 0.;// atan2(body[iBody].dYobl,body[iBody].dXobl);  
+//   CalcXYZobl(body, iBody);
+
+  if (body[iBody].dPrecA != 0) {
+    printf("pA = %f\n Xobl = %f\n Yobl = %f\n Zobl = %f\n",body[iBody].dPrecA,body[iBody].dXobl,body[iBody].dYobl,body[iBody].dZobl);
+    printf("something\n");
+  }
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];

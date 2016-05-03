@@ -1,0 +1,34 @@
+# Gl581 d
+#saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
+#		-40kpowerm -232thpowerm -238upowerm -radpowerm -SurfEnFluxT
+saOutputOrder Time -EnvelopeMass Semim Ecce Inc -RotPer Obli 
+
+# The order of options in a file is unimportant
+# The user selects the ordering of the output
+
+# ATMESC Properties
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+dEnvelopeMass             -0.0015          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+#d238UNumMan	-1
+dMass		-1.0
+dObliquity	23.5
+dK2		0.3
+dRadGyra	0.5
+dRotPeriod	-2.42
+dSemi           0.15
+#dTidalTau	-630
+sName		1c
+dTidalQ		100
+dEcc            0.0
+dRadius		-1.05
+saTidePerts	trappist1
+saModules	atmesc eqtide distorb distrot
+dMaxLockDiff	0.1
+dPrecA		100
+dLongP		77
+dInc		0.5
+dLongA		213

@@ -255,7 +255,6 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
   except:
     # No biggie
     pass
-    #continue
     
   # Show or save?
   if interactive and conf.interactive:

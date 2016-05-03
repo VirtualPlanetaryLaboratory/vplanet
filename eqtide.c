@@ -1005,11 +1005,8 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
     }
-    if(iBody > 0)
-    {
-      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-      CalcHK(body,iBody);
-    }
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+    CalcHK(body,iBody);
   }
 }
 

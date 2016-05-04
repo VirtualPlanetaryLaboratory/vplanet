@@ -255,11 +255,7 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
   except:
     # No biggie
     pass
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2b9e739e8fefbd4c6ee1900831a194df5a7ca376
   # Show or save?
   if interactive and conf.interactive:
     pl.show()

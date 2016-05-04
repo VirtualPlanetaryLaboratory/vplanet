@@ -2643,10 +2643,10 @@ void PoiseAnnual(BODY *body, int iBody) {
 }
 
 double OLRhm16(BODY *body, int iBody, int iLat) {
-  double phi, Int, t, f;
+  double phi, Int, tmpk, f;
   
   phi = log10(body[iBody].dpCO2);
-  t = log10(body[iBody].daTemp[iLat]+273.15);
+  tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
   f = 9.12805643869791438760*pow(tmpk,4)+4.58408794768168803557*pow(tmpk,3)*phi- \
       8.47261075643147449910e+01*pow(tmpk,3)+4.35517381112690282752e-01*pow(tmpk*phi,2)-\
       2.86355036260417961103e+01*pow(tmpk,2)*phi+2.96626642498045896446e+02*pow(tmpk,2)-\
@@ -2660,16 +2660,16 @@ double OLRhm16(BODY *body, int iBody, int iLat) {
 }
 
 double dOLRdThm16(BODY *body, int iBody, int iLat) {
-  double phi, dI, t, f;
+  double phi, dI, tmpk, f;
   
   phi = log10(body[iBody].dpCO2);
-  t = log10(body[iBody].daTemp[iLat]+273.15);
+  tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
   f = 4*9.12805643869791438760*pow(tmpk,3)+3*4.58408794768168803557*pow(tmpk,2)*phi- \
       3*8.47261075643147449910e+01*pow(tmpk,2)+2*4.35517381112690282752e-01*tmpk*pow(phi,2)-\
       2*2.86355036260417961103e+01*tmpk*phi+2*2.96626642498045896446e+02*tmpk-\
       6.01082900358299240806e-02*pow(phi,3)-2.60414691486954641420*pow(phi,2)+\
       5.69812976563675661623e+01*phi-4.62596100127381816947e+02;
-  dI = OLRhm16(body,iBody,iLat) * f / (body[iBody].daTemp[iLat]+273.15);
+  dI = OLRhm16(body,iBody,iLat) * f / (body[iBody].daTempLW[iLat]+273.15);
   return dI;
 }
 

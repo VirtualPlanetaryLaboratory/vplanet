@@ -1482,7 +1482,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = DISTORB;
 
-  //module->fnInitializeControl[iBody][iModule] = &InitializeControlDistOrb;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistOrb;
   module->fnCountHalts[iBody][iModule] = &CountHaltsDistOrb;
   module->fnLogBody[iBody][iModule] = &LogBodyDistOrb;

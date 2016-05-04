@@ -5,6 +5,13 @@
  * Subroutines that control the energy balance model for climate 
 */
 
+/* lines where something like iBody == 0 occurs
+ * ~1833 : where solar flux is important (alter for body!)
+ * 1931-will want to alter astrodist for binary
+ * ~1389
+ *
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -13,14 +20,6 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
-
-void InitializeControlPoise(CONTROL *control) {
-  /* Not sure if I need anything here yet */
-}
-
-void InitializeModulePoise(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iLat;
@@ -44,9 +43,6 @@ void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody)
     dest[iBody].daXBoundary[iLat] = src[iBody].daXBoundary[iLat];
     dest[iBody].daBasalFlowMid[iLat] = src[iBody].daBasalFlowMid[iLat];
   }
-}
-
-void InitializeBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 }
 
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -1821,7 +1817,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = POISE;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlPoise;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyPoise;
   module->fnCountHalts[iBody][iModule] = &CountHaltsPoise;
   module->fnLogBody[iBody][iModule] = &LogBodyPoise;
@@ -1830,7 +1825,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnVerify[iBody][iModule] = &VerifyPoise;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltPoise;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyPoise;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
   module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
@@ -1985,9 +1979,9 @@ double true2eccA(double TrueA, double Ecc) {
 void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
-  
+ 
   Sconst = body[0].dLuminosity / (4.*PI*pow(body[iBody].dSemi,2));
-    
+
   sin_delta = sin(body[iBody].dObliquity)*sin(body[iBody].dTrueL);
   cos_delta = sqrt(1.0-pow(sin_delta,2));
   tan_delta = sin_delta/cos_delta;

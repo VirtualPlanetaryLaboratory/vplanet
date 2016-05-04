@@ -10,11 +10,8 @@
 #define TOMASS                  1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define TOHMASS                 TOMASS/9.   // Hydrogen mass in one TO
 
-void InitializeControlAtmEsc(CONTROL*);
 void AddModuleAtmEsc(MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyAtmEsc(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 #define OPTSTARTATMESC          1200 /* Start of AtmEsc options */

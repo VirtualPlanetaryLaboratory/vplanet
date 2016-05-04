@@ -543,16 +543,12 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = ATMESC;
 
-  //module->fnInitializeControl[iBody][iModule] = &InitializeControlAtmEsc;
-  //module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyAtmEsc;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsAtmEsc;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
   module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
   module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
 
-  //module->fnInitializeBody[iBody][iModule] = &InitializeBodyAtmEsc;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
@@ -578,9 +574,14 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
 
+  // If planet is a CBP, compute flux from 2 stars
+  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { // CBP
+    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV);
+  }
+  else { // normal single-star planet
   fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
          pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
+  }
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 
@@ -601,9 +602,15 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
 	else ktide = 0;
 
-  fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-         pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  
+  // If planet is a CBP, compute flux from 2 stars
+  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { // CBP
+    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV); 
+  }
+  else { // normal single-star planet
+    fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
+           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
+  }
+
   elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
          body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
 

@@ -46,15 +46,7 @@ saOutputOrder	Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -
 
 #saOutputOrder	Time -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan -SurfEnFluxT $
 #		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal
-#saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide $
-#		    -TUMan -TMan -TLMan -TDotMan -TCMB -TCore -TDotCore $
-#		    -TJumpUMan -TJumpLMan -SignTJumpUMan -SignTJumpLMan -ViscUMan -ViscLMan $
-#		    -BLUMan -BLLMan -HflowUMan -HflowLMan -HflowCMB $
-#		    -HflowLatentMan -RadPowerMan -RadPowerCore -ShmodUMan -FMeltUMan -MeltfactorUMan $
-#		    -K2Man -Imk2Man -TidalPowMan ImK2 -PowerEqTide DepthMeltMan TDepthMeltMan HflowMeltMan $
-#	             RIC
-# HflowLatentIC PowerGravIC DRICDTCMB
-# -HfluxUMan -HfluxLMan -HfluxCMB
+
 #bFixOrbit	1
 # Output can be in any order and need only be unambiguous. 
 # Units of negative arguments are listed in the onboard help (./vplanet -h).

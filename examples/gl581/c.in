@@ -13,9 +13,10 @@ dRadius		-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+cColor ff0000
 
 # Orbital Properties
-dEcc            0.06			# Eccentricity
+dEcc            0.2			# Eccentricity
 dSemi           0.0721			# Semi-major axis, negative -> AU
 
 # DISTORB Parameters
@@ -24,7 +25,7 @@ dLongA		33
 dLongP		100
 sOrbitModel rd4
 #dDfcrit     0.1
-bOutputLapl   1
+bOutputLapl   0
 
 # DISTROT Parameters
 dPrecA		255

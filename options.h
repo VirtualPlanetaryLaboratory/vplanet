@@ -37,6 +37,8 @@
 #define OPT_VARDT	        170
 #define OPT_BODYNAME            180
 
+#define OPT_COLOR               185
+
 #define OPT_DENSITY             190
 
 #define OPT_FORW		200
@@ -60,6 +62,7 @@
 
 #define OPT_ORBECC		535
 #define OPT_ORBMEANMOTION	540
+#define OPT_BODYTYPE            545
 #define OPT_ORBPER		550
 #define OPT_ORBSEMI		560
 

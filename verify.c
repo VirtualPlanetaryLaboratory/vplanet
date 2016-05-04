@@ -84,6 +84,11 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
+  // If doing binary and we're looking at the secondary, return
+  // Since the secondary holds all binary orbital information
+  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    return;
+
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
 
   if (options[OPT_ORBSEMI].iLine[iFile] > -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] == -1)
@@ -98,8 +103,38 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
     if (body[iBody].bPoise) {
-      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-    }  
+      if(body[iBody].bBinary == 0){ // Not binary, regular single-star orbit
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      } 
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 0){ // Set mean motion for CBP (primary,iBody==0;planet,iBody > 1)
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+      }
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) { // Set mean motion for binary, info in secondary
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      } 
+    } 
+    else if(body[iBody].bPoise == 0)
+    {
+      if(body[iBody].bBinary != 1)
+      {
+        if(iBody > 0) // No binary, regular planet
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+        }
+      }
+      else // Doing binary
+      {
+        if(body[iBody].iBodyType == 0) // CBP
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+        }
+        else if(body[iBody].iBodyType == 1 && iBody == 1) // binary orbit info in secondary
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+        }
+      }
+    }
+
     return;
   }
   
@@ -125,18 +160,48 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   
   /* Only one option set */
   
-  if (dMeanMotion > 0)
-    body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
-  if (dPeriod > 0)
-    body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
-  if (dSemi > 0)
-    body[iBody].dSemi = dSemi;
-
-  if (dMeanMotion == 0)
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  if (dMeanMotion > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
+    else if(body[iBody].bBinary && iBody == 1) // binary
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
+  }
+  if (dPeriod > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+  }
+  if (dSemi > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = dSemi;
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
+      body[iBody].dSemi = dSemi;  
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = dSemi;
+  }
+  if (dMeanMotion == 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Primary
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  }
   //XXX Initialize central body parameters.
-  
-  
+
 }
 
 /*
@@ -406,8 +471,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
-    /* XXX Only module reference in file -- guess we need VerifyOrbitModule */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
+    /* XXX Only module reference in file -- can this be changed? */
+    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (iBody > 0 && body[iBody].bBinary)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 
@@ -427,9 +492,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
-    
+    }
     VerifyModuleMulti(body,control,files,module,options,iBody);
 
     /* Must allocate memory in control struct for all perturbing bodies */

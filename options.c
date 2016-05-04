@@ -1089,6 +1089,28 @@ void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       AssignDefaultDouble(options,&body[iFile-1].dAge,files->iNumInputs);
 }
 
+/* Body Type */
+
+void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+    /* This parameter cannot exist in primary file */
+    int lTmp=-1;
+    int iTmp;
+
+    AddOptionInt(files->Infile[iFile].cIn,options->cName,&iTmp,&lTmp,control->Io.iVerbose);
+    if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (iTmp < 0) {
+        if (control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);  
+    } else
+        body[iFile-1].iBodyType = iTmp;
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+    } else
+      if (iFile > 0)
+        AssignDefaultInt(options,&body[iFile-1].iBodyType,files->iNumInputs);
+}
+
 /*
  *
  * B
@@ -1250,6 +1272,22 @@ void ReadBodyName(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     if (iFile > 0)
       sprintf(body[iFile-1].cName,"%d",iFile);
 }
+
+/* Body color (for plotting) */
+void ReadColor(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);    
+    strcpy(body[iFile-1].cColor,cTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      strcpy(body[iFile-1].cColor,options->cDefault);
+}  
 
 /*
  *
@@ -2254,7 +2292,6 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
-
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
   int iOpt,iFile;
@@ -2419,7 +2456,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BODYNAME].cDefault,"Integer of Input Order, i.e. 1");
   options[OPT_BODYNAME].iType = 3;
   fnRead[OPT_BODYNAME] = &ReadBodyName;
+
+  /*
+   *
+   *   C
+   *
+   */  
   
+  sprintf(options[OPT_COLOR].cName,"cColor");
+  sprintf(options[OPT_COLOR].cDescr,"Body Color");
+  sprintf(options[OPT_COLOR].cDefault,"000000");
+  options[OPT_COLOR].iType = 2;
+  fnRead[OPT_COLOR] = &ReadColor;
   
   /*
    *
@@ -2661,7 +2709,15 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MASS].dNeg = MEARTH;
   sprintf(options[OPT_MASS].cNeg,"Earth masses");
   fnRead[OPT_MASS] = &ReadMass;
-  
+ 
+  sprintf(options[OPT_BODYTYPE].cName,"iBodyType");
+  sprintf(options[OPT_BODYTYPE].cDescr,"BodyType");
+  sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
+  options[OPT_BODYTYPE].dDefault = 0;
+  options[OPT_BODYTYPE].iType = 1;
+  options[OPT_BODYTYPE].iMultiFile = 1;
+  fnRead[OPT_BODYTYPE] = &ReadBodyType;
+
   sprintf(options[OPT_MASSRAD].cName,"sMassRad");
   sprintf(options[OPT_MASSRAD].cDescr,"Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
   sprintf(options[OPT_MASSRAD].cDefault,"None");
@@ -2803,6 +2859,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
+  InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
 
 }

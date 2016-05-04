@@ -1,3 +1,4 @@
+*.txt
 #evolve.c#
 #radheat.h#
 #thermint.h#
@@ -5,6 +6,7 @@
 Integr.iNumBodies
 bitbucket_xyz
 bitbucket_xyz.pub
+*.Laplace
 cName
 control.c~
 control.h~
@@ -42,7 +44,6 @@ examples/gl581/gl581.c.forward
 examples/gl581/gl581.d.forward
 examples/gl581/gl581.log
 vplanet
-vplanet.dSYM/
 vplot/scripts/
 vplot/vplot/__init__.pyc
 vplot/vplot/defaults.pyc
@@ -50,3 +51,15 @@ vplot/vplot/plot.pyc
 vplot/vplot/utils.pyc
 examples/gl581/gl581.star.forward
 .gitignore
+__pycache__
+vplanet.dSYM
+*.forward
+*.log
+.stellar/
+*.pyc
+todo.rst
+vplot_config.py
+*.Climate
+*.DailyInsolInit
+*.txt
+*.Laplace

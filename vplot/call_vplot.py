@@ -7,7 +7,7 @@ call_vplot.py
 '''
 
 from __future__ import division, print_function, absolute_import, unicode_literals
-from vplot.plot import Plot
+from vplot.quickplot import QuickPlot
 from vplot.utils import ShowHelp
 import argparse
 
@@ -29,4 +29,4 @@ if __name__ == '__main__':
     quit()
 
   # Plot
-  fig, _ = Plot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)
+  fig, _ = QuickPlot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)

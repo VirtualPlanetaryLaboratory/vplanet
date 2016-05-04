@@ -162,7 +162,11 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                 update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
                 //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
                 if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
-                  dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+                  if (iVar == update[iBody].iXobl || iVar == update[iBody].iYobl || iVar == update[iBody].iZobl) {
+                    dMinNow = fabs(sin(body[iBody].dObliquity)/update[iBody].daDerivProc[iVar][iEqn]);
+                  } else {    
+                    dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+                  }
                   if (dMinNow < dMin) 
                     dMin = dMinNow;
                 }
@@ -174,8 +178,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                     (2*(body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]+\
                         body[iBody].daBasalFlowMid[iVar-update[iBody].iIceMass+1])));
                   if (dMinNow < dMin) {
-                    if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
-                        dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
+                    if (dMinNow < control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
+                        dMin = control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
                     } else {
                         dMin = dMinNow;
                     }
@@ -187,8 +191,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                 if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
                   dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
                   if (dMinNow < dMin) {
-                    if (dMinNow < 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
-                      dMin = 5*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
+                    if (dMinNow < control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
+                      dMin = control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
                     } else {
                       dMin = dMinNow;
                     }
@@ -208,7 +212,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
       }
     }
   }
-
   return dMin;
 }
  
@@ -258,7 +261,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     *dDt = control->Evolve.dTimeStep;
     
   control->Evolve.dCurrentDt = *dDt;  
-
+  
   /* XXX Should each eqn be updated separately? Each parameter at a 
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
@@ -413,7 +416,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
    * Main loop begins here 
    *
    */
-
+   
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
@@ -459,7 +462,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     /* Get auxiliary properties for next step -- first call 
        was prior to loop. */
     PropertiesAuxiliary(body,control,update);
-
   }
 
   if (control->Io.iVerbose >= VERBPROG)

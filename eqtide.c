@@ -1514,7 +1514,7 @@ void WriteDXoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1532,7 +1532,7 @@ void WriteDYoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1550,7 +1550,7 @@ void WriteDZoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1901,7 +1901,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DHECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's h in EQTIDE");
   sprintf(output[OUT_DHECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DHECCDTEQTIDE].bNeg = 1;
-  output[OUT_DHECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DHECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DHECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DHECCDTEQTIDE] = &WriteDHeccDtEqtide;
 
@@ -1909,7 +1909,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DKECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's k in EQTIDE");
   sprintf(output[OUT_DKECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DKECCDTEQTIDE].bNeg = 1;
-  output[OUT_DKECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DKECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DKECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DKECCDTEQTIDE] = &WriteDKeccDtEqtide;
 
@@ -1917,7 +1917,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DXOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's X in EQTIDE");
   sprintf(output[OUT_DXOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DXOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DXOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DXOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DXOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DXOBLDTEQTIDE] = &WriteDXoblDtEqtide;
 
@@ -1925,7 +1925,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DYOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Y in EQTIDE");
   sprintf(output[OUT_DYOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DYOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DYOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DYOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DYOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DYOBLDTEQTIDE] = &WriteDYoblDtEqtide;
 
@@ -1933,7 +1933,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DZOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Z in EQTIDE");
   sprintf(output[OUT_DZOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DZOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DZOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DZOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DZOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DZOBLDTEQTIDE] = &WriteDZoblDtEqtide;
 
@@ -2247,6 +2247,12 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
 
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+//   CalcXYZobl(body, iBody);
+
+  // if (body[iBody].dPrecA != 0) {
+//     printf("pA = %f\n Xobl = %f\n Yobl = %f\n Zobl = %f\n",body[iBody].dPrecA,body[iBody].dXobl,body[iBody].dYobl,body[iBody].dZobl);
+//     printf("something\n");
+//   }
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];

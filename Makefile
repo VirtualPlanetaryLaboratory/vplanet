@@ -9,3 +9,4 @@ opt:
 
 profile:
 	-gcc -pg -o vplanet *.c -lm
+

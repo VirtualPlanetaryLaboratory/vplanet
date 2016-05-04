@@ -1164,6 +1164,7 @@ void fdComputeEccVector(BODY *body, double *evec, int iBody)
   double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
+  int i;
      
   // Convert from cyl->cart coords
   fvCylToCartPos(r,rCart);
@@ -1174,7 +1175,7 @@ void fdComputeEccVector(BODY *body, double *evec, int iBody)
   
   double mag_r = sqrt(fdDot(rCart,rCart));
 
-  for(int i = 0; i < 3; i++)
+  for(i = 0; i < 3; i++)
   {
     evec[i] = evec[i]/mu - rCart[i]/mag_r;
   }
@@ -1564,7 +1565,7 @@ double fdDMk(int k, BODY * body, int iBody)
 /* Computes the CBP orbital radius */
 double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) 
 { 
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitary offsets
@@ -1580,7 +1581,7 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
   double tmp2 = 0.0;
   double tmp3 = 0.0;
 
-  for(int k = 1; k < K_MAX; k++)
+  for (k = 1; k < K_MAX; k++)
   {
     tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
     tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
@@ -1593,7 +1594,7 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
@@ -1610,7 +1611,7 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tot = 0.0;
   double tmp1 = 0.0;
-  for(int k = 1; k < K_MAX; k++)
+  for(k = 1; k < K_MAX; k++)
   {
     tmp1 = body[iBody].dLL13N0*fdDk0(k,body,iBody)*sin(k*(phi0-M-varpi))/(k*(body[iBody].dLL13N0-body[1].dMeanMotion));
     tmp1 += body[iBody].dLL13N0*fdDPk(k,body,iBody)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[iBody].dLL13N0 - (k+1.)*body[1].dMeanMotion);
@@ -1637,7 +1638,7 @@ double fdCBPZBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
@@ -1657,7 +1658,7 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total sum
   double tmp3 = 0.0; // Intermediate sum for each k
-  for(int k = 1; k < K_MAX; k++)
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = -fdC0k(k,body,iBody)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 -= fdCPk(k,body,iBody)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
@@ -1670,7 +1671,7 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Set arbitrary phase constants to 0
   double dPsi = 0.0;
@@ -1691,7 +1692,7 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total loop sum
   double tmp3 = 0.0; // Intermediate loop sum
-  for(int k = 1; k < K_MAX; k++)
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body,iBody)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 += (n0*fdDPk(k,body,iBody)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
@@ -1722,7 +1723,7 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
 {
   // Define/init all variables 
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], i;
   double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;
@@ -1737,7 +1738,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-  for(int i = 0; i < FLUX_INT_MAX; i++)
+  for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly

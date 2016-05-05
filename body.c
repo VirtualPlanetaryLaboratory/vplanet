@@ -27,10 +27,11 @@
 int fiSign(double dValue) {
   int iSign;
 
-  if (dValue != 0) 
+  if (fabs(dValue) > EPS) 
     iSign = (int)(dValue/fabs(dValue));
   else 
     iSign = 0;
+
   return iSign;
 }
 

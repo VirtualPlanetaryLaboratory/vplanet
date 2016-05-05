@@ -45,7 +45,6 @@ destdir is where the user wants the output (.pbs file, args file)
 
 # Imports
 import os
-import sys
 import stat
 
 def parseInput(infile="input"):
@@ -112,7 +111,7 @@ def makeCommandList(simdir=".", outfile="vplArgs.txt",infile="input"):
     count = 0 # Keeps track of how many run sim commands have been written
     d = simdir
     
-    destdir, trialname, infiles = parseInput(infile,src=d)
+    destdir, trialname, infiles, src = parseInput(infile)
     
     # Get list of all directories in simdir via stack overflow black magic
     # This also ignores all non-directories and ., .. which is convienent
@@ -273,11 +272,3 @@ def makeHyakVPlanetPBS(script="run_vplanet.pbs",taskargs="vplArgs.txt",
         
     return None
 # end function
-  
-##############################
-#
-# Run the script!
-#
-##############################  
-
-# Put this in vspace

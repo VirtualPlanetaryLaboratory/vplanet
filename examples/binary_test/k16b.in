@@ -14,6 +14,7 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 dFreeEcc        0.03 #0.02373                   # Free Eccentricity
 dFreeInc        3.0 #0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
+bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
 dSemi           0.4 #-0.7016		# Semi-major axis, negative -> AU

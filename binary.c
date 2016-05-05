@@ -229,7 +229,22 @@ void ReadHaltHolmanUnstable(BODY *body,CONTROL *control,FILES *files,OPTIONS *op
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bEnvelopeGone,files->iNumInputs);
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltHolmanUnstable,files->iNumInputs);
+}
+
+void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bBinaryUseMatrix = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].bBinaryUseMatrix = 1; // Default to using the matrix
 }
 
 /* Init Options BINARY */
@@ -288,6 +303,12 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTHOLMAN].cDefault,"0");
   options[OPT_HALTHOLMAN].iType = 0;
   fnRead[OPT_HALTHOLMAN] = &ReadHaltHolmanUnstable;
+
+  sprintf(options[OPT_BINUSEMATRIX].cName,"bBinaryUseMatrix");
+  sprintf(options[OPT_BINUSEMATRIX].cDescr,"Use matrix or compute main variables on the fly?");
+  sprintf(options[OPT_BINUSEMATRIX].cDefault,"1");
+  options[OPT_BINUSEMATRIX].iType = 0;
+  fnRead[OPT_BINUSEMATRIX] = &ReadBinaryUseMatrix;
 
 }
 
@@ -372,6 +393,19 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
   
   if(body[iBody].iBodyType == 0) // CBP
   {
+    if(body[iBody].bBinaryUseMatrix == 0) // Not using the matrix
+    {
+      // If not including eqns in the matrix, compute main variables on the fly!
+      SYSTEM * system; // dummy variable
+      int iaBody[1] = {iBody}; //  Pick out CBP
+      body[iBody].dCBPR = fdCBPRBinary(body,system,iaBody);
+      body[iBody].dCBPZ = fdCBPZBinary(body,system,iaBody);
+      body[iBody].dCBPPhi = fdCBPPhiBinary(body,system,iaBody);
+      body[iBody].dCBPRDot = fdCBPRDotBinary(body,system,iaBody);
+      body[iBody].dCBPPhiDot = fdCBPPhiDotBinary(body,system,iaBody);
+      body[iBody].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
+    }
+    
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));         
@@ -480,14 +514,16 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Add equations to the matrix
-
-    // Call verifies to properly set up eqns in matrix
-    VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-    VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    if(body[iBody].bBinaryUseMatrix)
+    {
+      // Call verifies to properly set up eqns in matrix
+      VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    }
 
     // Init parameters needed for subsequent cbp motion
     
@@ -540,31 +576,34 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
   // Only planets should be in matrix
-  if(body[iBody].iBodyType == 0)
+  if(body[iBody].bBinaryUseMatrix) // include eqns in matrix
   {
-    if(update[iBody].iNumCBPR == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPR++;
+    if(body[iBody].iBodyType == 0)
+    {
+      if(update[iBody].iNumCBPR == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPR++;
 
-    if(update[iBody].iNumCBPZ == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPZ++;
+      if(update[iBody].iNumCBPZ == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPZ++;
 
-    if(update[iBody].iNumCBPPhi == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPPhi++;
+      if(update[iBody].iNumCBPPhi == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPPhi++;
 
-    if(update[iBody].iNumCBPRDot == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPRDot++;
+      if(update[iBody].iNumCBPRDot == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPRDot++;
 
-    if(update[iBody].iNumCBPZDot == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPZDot++;
+      if(update[iBody].iNumCBPZDot == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPZDot++;
 
-    if(update[iBody].iNumCBPPhiDot == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumCBPPhiDot++;
+      if(update[iBody].iNumCBPPhiDot == 0)
+        update[iBody].iNumVars++;
+      update[iBody].iNumCBPPhiDot++;
+    }
   }
 }
 

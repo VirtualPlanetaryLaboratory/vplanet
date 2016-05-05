@@ -23,6 +23,7 @@
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
 #define OPT_HALTHOLMAN          2070 // Holman+Wiegert 1999 Instability limit
+#define OPT_BINUSEMATRIX           2080 // Whether or not to include eqns in matrix
 
 /* Output Info */
 
@@ -64,6 +65,7 @@ void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13K0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13V0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltHolmanUnstable(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadBinaryUseMatrix(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);

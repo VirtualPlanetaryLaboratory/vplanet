@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
-/* lines where something like iBody == 0 occurs
- * ~18
- */
-
 void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
 }
 
@@ -124,7 +120,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
                   dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
                 }
                 // Prevent division by zero
-                if (fabs(dVarNow - dVarTotal) > 1.0e-5) {
+                if (fabs(dVarNow - dVarTotal) > TINY) {
                   dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
                   if (dMinNow < dMin && dMinNow > DAYSEC) // Don't resolve things on < 1 day scales (dflemin3 ad-hoc assumption)
                   {
@@ -397,7 +393,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     /* Now choose the correct timestep */
     dDt = AssignDt(dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
   } else
-    dDt = control->Evolve.dTimeStep;
+      dDt = control->Evolve.dTimeStep;
 
   /* Write out initial conditions */
 
@@ -420,7 +416,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     // dflemin3 hack
     if(control->Evolve.dTime < DAYSEC)
     {
-      //dDt = DAYSEC;
+      dDt = DAYSEC; // 1st step is a month
     }
     
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

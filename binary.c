@@ -374,7 +374,7 @@ void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
   {
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));         
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));         
   }
   else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
   {
@@ -493,7 +493,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     
     // dR0, dMeanMotion MUST be set before any of the frequencies
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));
     body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
     body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
     body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
@@ -512,6 +512,10 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dCBPRDot = fdCBPRDotBinary(body,system,iaBody);
     body[iBody].dCBPPhiDot = fdCBPPhiDotBinary(body,system,iaBody);
     body[iBody].dCBPZDot = fdCBPZDotBinary(body,system,iaBody);
+ 
+    // Init orbital elements
+    fdAssignOrbitalElements(body,iBody);
+  
   }
 
   // Inits if the body is the secondary (sets required binary parameters)
@@ -964,7 +968,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
-
 }
 
 /************* BINARY Functions ************/

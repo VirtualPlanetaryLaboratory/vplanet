@@ -11,15 +11,15 @@ dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 # The first body in the saBodyFiles list must be the central mass.
 
 # Binary Parameters
-dEcc            0.16048             # Binary eccentricity
-dSemi           -0.22405            # Binary semimajor axis 
+dEcc            0.2 #0.16048             # Binary eccentricity
+dSemi           0.05 #0.22405            # Binary semimajor axis 
 dLongP          257.79
 #dInc        0.0011              # Binary inclination
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
-dTidalQ		1.0		# Tidal phase lag
-dK2		1.5		# Love number of degree 2
+dTidalQ		5e3		# Tidal phase lag
+dK2		0.5		# Love number of degree 2
 #sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 #sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
 saTidePerts	primary		# Body name(s) of tidal perturbers

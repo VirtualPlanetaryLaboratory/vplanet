@@ -27,8 +27,10 @@
 
 #define KGAUSS        0.01720209895
 #define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
-/* Units: Calculations are done in SI */
 
+#define EPS           1e-10       // Precision for difference of doubles to be effectively 0
+
+/* Units: Calculations are done in SI */
 #define cLIGHT        299792458.0 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30

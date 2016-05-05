@@ -474,11 +474,6 @@ void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }
 
-
-void InitializeModuleThermint(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
-}
-
 /**************** RADHEAT update ****************/
 
 void InitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {

@@ -1581,12 +1581,8 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
   double tmp2 = 0.0;
   double tmp3 = 0.0;
 
-<<<<<<< HEAD
   for (k = 1; k < K_MAX; k++)
-=======
-  int k;
-  for(k = 1; k < K_MAX; k++)
->>>>>>> f5eeac72d0cd1040ee9d754e5518a68463ccfa78
+
   {
     tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
     tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
@@ -1616,10 +1612,7 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tot = 0.0;
   double tmp1 = 0.0;
-<<<<<<< HEAD
-=======
-  int k;
->>>>>>> f5eeac72d0cd1040ee9d754e5518a68463ccfa78
+
   for(k = 1; k < K_MAX; k++)
   {
     tmp1 = body[iBody].dLL13N0*fdDk0(k,body,iBody)*sin(k*(phi0-M-varpi))/(k*(body[iBody].dLL13N0-body[1].dMeanMotion));
@@ -1667,10 +1660,7 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total sum
   double tmp3 = 0.0; // Intermediate sum for each k
-<<<<<<< HEAD
-=======
-  int k;
->>>>>>> f5eeac72d0cd1040ee9d754e5518a68463ccfa78
+
   for(k = 1; k < K_MAX; k++)
   {
     tmp3 = -fdC0k(k,body,iBody)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
@@ -1705,10 +1695,7 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total loop sum
   double tmp3 = 0.0; // Intermediate loop sum
-<<<<<<< HEAD
-=======
-  int k;
->>>>>>> f5eeac72d0cd1040ee9d754e5518a68463ccfa78
+
   for(k = 1; k < K_MAX; k++)
   {
     tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body,iBody)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
@@ -1755,10 +1742,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-<<<<<<< HEAD
-=======
-  int i;
->>>>>>> f5eeac72d0cd1040ee9d754e5518a68463ccfa78
+
   for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn

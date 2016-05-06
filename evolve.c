@@ -173,10 +173,11 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 		/* ?Obl require special treatment because they can 
 		   overconstrain obliquity and PrecA */
 		if (iVar == update[iBody].iXobl || iVar == update[iBody].iYobl || iVar == update[iBody].iZobl) {
-		  if (fabs(body[iBody].dPrecA) < EPS) 
+		  if (body[iBody].dObliquity != 0) 
 		    dMinNow = fabs(sin(body[iBody].dObliquity)/update[iBody].daDerivProc[iVar][iEqn]);
-		  else
-		    dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
+		} else if (iVar == update[iBody].iHecc || iVar == update[iBody].iKecc) {
+		  if (body[iBody].dEcc != 0) 
+		    dMinNow = fabs(body[iBody].dEcc/update[iBody].daDerivProc[iVar][iEqn]);
 		} else {    
 		  dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
 		}

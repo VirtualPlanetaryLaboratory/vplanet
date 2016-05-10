@@ -67,6 +67,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_RERUNSEAS       1855
 #define OPT_ALBEDOTYPE      1856
 #define OPT_GEOGRAPHY       1857
+#define OPT_SEASOUTPUTTIME  1858
 
 
 #define OPT_CLIMATEMODEL    1899

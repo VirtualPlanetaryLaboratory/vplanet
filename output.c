@@ -1221,12 +1221,24 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            if (body[iBody].dSeasOutputTime != 0) {
+              body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;
+            }            
           }
           fp = fopen(cPoiseGrid,"w");     
         } else {
           fp = fopen(cPoiseGrid,"a");
         }
-     
+        
+        if (body[iBody].dSeasOutputTime != 0) {
+          if (control->Evolve.dTime >= body[iBody].dSeasNextOutput && iLat == 0) {
+            WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+              WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+              WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
+          }
+        }
+          
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid+iExtra;iGrid++) {
           fprintd(fp,dGrid[iGrid],control->Io.iSciNot,control->Io.iDigits);
           fprintf(fp," ");

@@ -20,6 +20,9 @@
 #include "vplanet.h"
 #include "options.h"
 #include "output.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
 }
@@ -489,6 +492,20 @@ void ReadAlbedoLand(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dAlbedoLand = options->dDefault;
 }
 
+void ReadSeasOutputTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dSeasOutputTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSeasOutputTime = options->dDefault;
+}
 
 void ReadAlbedoWater(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -894,6 +911,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_GEOGRAPHY].iType = 1;  
   options[OPT_GEOGRAPHY].iMultiFile = 1;   
   fnRead[OPT_GEOGRAPHY] = &ReadGeography;
+  
+  sprintf(options[OPT_SEASOUTPUTTIME].cName,"dSeasOutputTime");
+  sprintf(options[OPT_SEASOUTPUTTIME].cDescr,"Output interval for seasonal parameters");
+  sprintf(options[OPT_SEASOUTPUTTIME].cDefault,"0");
+  options[OPT_SEASOUTPUTTIME].dDefault = 0;
+  options[OPT_SEASOUTPUTTIME].iType = 2;  
+  options[OPT_SEASOUTPUTTIME].iMultiFile = 1;   
+  fnRead[OPT_SEASOUTPUTTIME] = &ReadSeasOutputTime;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1348,6 +1373,16 @@ void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int 
   }
 }
     
+void VerifySeasOutputTime(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
+  if (body[iBody].dSeasOutputTime != 0) {
+    if (body[iBody].dSeasOutputTime < control->Io.dOutputTime) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s in file %s must be greater than or equal to %s \n", options[OPT_SEASOUTPUTTIME].cName, cFile,options[OPT_OUTPUTTIME].cName);
+      exit(EXIT_INPUT);
+    }
+  }
+}  
+    
 void InitializeIceMassDepMelt(BODY *body,UPDATE *update,int iBody,int iLat) {
   update[iBody].iaType[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = 9;
   update[iBody].padDIceMassDtPoise[iLat][0] = &update[iBody].daDerivProc[update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]];
@@ -1373,6 +1408,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   VerifyAstro(body,iBody);
   VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  VerifySeasOutputTime(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
@@ -1550,8 +1586,22 @@ void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   char cOut[NAMELEN];
   FILE *fp;
   int iLat,iDay;
+  double dTime;
+  
+  struct stat st = {0};
+  if (stat("SeasonalClimateFiles",&st) == -1) {
+    mkdir("SeasonalClimateFiles",0777);
+  } 
    
-  sprintf(cOut,"%s.%s.DailyInsolInit",system->cName,body[iBody].cName);
+  dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
+  
+  if (dTime == 0) {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.DailyInsol.0",system->cName,body[iBody].cName);
+  } else if (dTime < 10000) { 
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.DailyInsol.%.0f",system->cName,body[iBody].cName,dTime);
+  } else {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.DailyInsol.%.2e",system->cName,body[iBody].cName,dTime);
+  }
 
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNDays;iDay++) {
@@ -1569,7 +1619,22 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   FILE *fp;
   int iLat,iDay;
    
-  sprintf(cOut,"%s.%s.SeasonalTempInit",system->cName,body[iBody].cName);
+  double dTime;
+  
+  struct stat st = {0};
+  if (stat("SeasonalClimateFiles",&st) == -1) {
+    mkdir("SeasonalClimateFiles",0777);
+  } 
+   
+  dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
+  
+  if (dTime == 0) {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalTemp.0",system->cName,body[iBody].cName);
+  } else if (dTime < 10000) { 
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalTemp.%.0f",system->cName,body[iBody].cName,dTime);
+  } else {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalTemp.%.2e",system->cName,body[iBody].cName,dTime);
+  }
 
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNumYears*body[iBody].iNStepInYear;iDay++) {
@@ -1589,7 +1654,22 @@ void WriteSeasonalIceBalance(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   FILE *fp;
   int iLat,iDay;
    
-  sprintf(cOut,"%s.%s.SeasonalIceBalance",system->cName,body[iBody].cName);
+  double dTime;
+   
+  struct stat st = {0};
+  if (stat("SeasonalClimateFiles",&st) == -1) {
+    mkdir("SeasonalClimateFiles",0777);
+  }
+    
+  dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
+  
+  if (dTime == 0) {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalIceBalance.0",system->cName,body[iBody].cName);
+  } else if (dTime < 10000) { 
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.0f",system->cName,body[iBody].cName,dTime);
+  } else {
+    sprintf(cOut,"SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.2e",system->cName,body[iBody].cName,dTime);
+  } 
 
   fp = fopen(cOut,"w");
   for (iDay=0;iDay<body[iBody].iNStepInYear;iDay++) {

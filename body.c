@@ -27,10 +27,11 @@
 int fiSign(double dValue) {
   int iSign;
 
-  if (dValue != 0) 
+  if (fabs(dValue) > EPS) 
     iSign = (int)(dValue/fabs(dValue));
   else 
     iSign = 0;
+
   return iSign;
 }
 
@@ -261,4 +262,8 @@ void CalcXYZobl(BODY *body, int iBody) {
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
+
+  if (body[iBody].dZobl > 1)
+    printf("Zobl: %.16e\n",body[iBody].dZobl);
+
 }

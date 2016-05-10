@@ -336,10 +336,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
 }
 
-void InitializeModuleAtmEsc(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
-}
-
 /**************** ATMESC update ****************/
 
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  

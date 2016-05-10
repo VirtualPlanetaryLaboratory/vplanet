@@ -578,7 +578,7 @@ void InitializeQincDistOrbRD4(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
       body[iBody].iaGravPerts[iPert] = j;
@@ -634,7 +634,7 @@ void InitializeQincDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
@@ -1505,6 +1505,10 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+  if (body[iBody].bPoise) {
+    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+    body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+  }
 }
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {

@@ -1514,7 +1514,7 @@ void WriteDXoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1532,7 +1532,7 @@ void WriteDYoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1550,7 +1550,7 @@ void WriteDZoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1901,7 +1901,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DHECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's h in EQTIDE");
   sprintf(output[OUT_DHECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DHECCDTEQTIDE].bNeg = 1;
-  output[OUT_DHECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DHECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DHECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DHECCDTEQTIDE] = &WriteDHeccDtEqtide;
 
@@ -1909,7 +1909,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DKECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's k in EQTIDE");
   sprintf(output[OUT_DKECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DKECCDTEQTIDE].bNeg = 1;
-  output[OUT_DKECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DKECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DKECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DKECCDTEQTIDE] = &WriteDKeccDtEqtide;
 
@@ -1917,7 +1917,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DXOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's X in EQTIDE");
   sprintf(output[OUT_DXOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DXOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DXOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DXOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DXOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DXOBLDTEQTIDE] = &WriteDXoblDtEqtide;
 
@@ -1925,7 +1925,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DYOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Y in EQTIDE");
   sprintf(output[OUT_DYOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DYOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DYOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DYOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DYOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DYOBLDTEQTIDE] = &WriteDYoblDtEqtide;
 
@@ -1933,7 +1933,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DZOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Z in EQTIDE");
   sprintf(output[OUT_DZOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DZOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DZOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DZOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DZOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DZOBLDTEQTIDE] = &WriteDZoblDtEqtide;
 
@@ -2248,6 +2248,17 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 
+  /* These lines for checking the obliquity evolution in an eqtide-only run
+
+  CalcXYZobl(body, iBody);
+
+  if (body[iBody].dPrecA != 0) {
+  printf("pA = %f\n Xobl = %f\n Yobl = %f\n Zobl = %f\n",body[iBody].dPrecA,body[iBody].dXobl,body[iBody].dYobl,body[iBody].dZobl);
+  printf("something\n");
+   }
+  */
+
+
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
     if (bPrimary(body,iIndex))
@@ -2400,13 +2411,14 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 
+  // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
+  
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);
   iEpsilon[2]=fiSign(2*dRotRate-dMeanMotion);
   iEpsilon[5]=fiSign(dMeanMotion);
   iEpsilon[8]=fiSign(dRotRate-2*dMeanMotion);
   iEpsilon[9]=fiSign(dRotRate);
-  
 }
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
@@ -2561,6 +2573,7 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
+  double foo;
 
   if (bPrimary(body,iB0))
     iOrbiter = iB1;
@@ -2568,6 +2581,15 @@ double fdCPLDoblDt(BODY *body,int *iaBody) {
     iOrbiter = iB0;
 
   return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  /*
+  foo = body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  if (foo > 0) 
+    printf("obl: %e, dobl/dt: %e\n",body[iB0].dObliquity,foo);
+
+  return foo;
+  */
 }
 
 double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -2576,8 +2598,18 @@ double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdCPLDYoblDt(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
 
-  return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  //return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  foo = body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+
+  /*
+  printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  if (foo != 0)
+    printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  */
+  return foo;
+
 }
 
 double fdCPLDZoblDt(BODY *body,SYSTEM *system,int *iaBody) {

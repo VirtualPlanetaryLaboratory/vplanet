@@ -12,7 +12,7 @@ dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
 # Binary Parameters
 dEcc            0.2 #0.16048             # Binary eccentricity
-dSemi           0.08 #0.05 #0.22405            # Binary semimajor axis 
+dSemi           0.065 #0.05 #0.22405            # Binary semimajor axis 
 dLongP          257.79
 #dInc        0.0011              # Binary inclination
 

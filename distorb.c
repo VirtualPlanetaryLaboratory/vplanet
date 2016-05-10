@@ -1068,6 +1068,8 @@ void CountHaltsDistOrb(HALT *halt,int *iNumHalts) {
       (*iNumHalts)++;
     }
   }
+  /* halt for close encounters */
+  (*iNumHalts)++;
 }
 
 void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -1082,9 +1084,39 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
         control->fnHalt[iBody][(*iHalt)++] = &HaltMaxEcc;
       }
     }
+    control->Halt[iBody].dCloseEnc = CLOSEENCDISTORB;
+    control->fnHalt[iBody][(*iHalt)++] = &HaltCloseEnc;
   }
 }
 
+int HaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  int iPert, jBody;
+  
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    jBody = body[iBody].iaGravPerts[iPert];
+    if (body[jBody].dSemi < body[iBody].dSemi) {
+      //comparing apocentre of inner planet with pericentre of outer
+      if ((body[iBody].dRPeri-body[jBody].dRApo) < 4*MutualHillRad(body,iBody,jBody)) {
+        if (io->iVerbose >= VERBPROG) {
+          printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
+          printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+        }
+        return 1;
+      }
+    } else if (body[jBody].dSemi > body[iBody].dSemi) {
+      //comparing apocentre of inner planet with pericentre of outer
+      if ((body[iBody].dRApo-body[jBody].dRPeri) < 4*MutualHillRad(body,iBody,jBody)) {
+        if (io->iVerbose >= VERBPROG) {
+          printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
+          printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+        }
+        return 1;
+      }
+    }
+  }
+  
+  return 0;
+}
 
 /************* DISTORB Outputs ******************/
 
@@ -1522,6 +1554,10 @@ void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) {
     body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
     body[iBody].dSinc = sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2));
   }
+  body[iBody].dRPeri = (1.0-sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)))* \
+                          body[iBody].dSemi;
+  body[iBody].dRApo = (1.0+sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)))* \
+                          body[iBody].dSemi;
 }
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1579,6 +1615,12 @@ double ABmatrix(BODY *body, int j, int jBody, int kBody) {
   AB = n/4.0*body[kBody].dMass/(body[0].dMass+body[jBody].dMass)*alpha*abar*b;
   return AB*365.25;  //returns in units of rad/year
 }
+
+double MutualHillRad(BODY *body, int iBody, int jBody) {
+  return 0.5*pow((body[iBody].dMass+body[jBody].dMass)/body[0].dMass,1./3)*\
+          (body[iBody].dSemi+body[jBody].dSemi);
+}
+
 
 double GRCorrMatrix(BODY *body, int jBody, int kBody) {
   double n, GRC;

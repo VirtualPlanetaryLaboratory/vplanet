@@ -87,6 +87,8 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DPINCDTDISTORB      1353
 #define OUT_DQINCDTDISTORB      1354
 
+int HaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+
 void HelpOutputDistOrb(OUTPUT*);
 void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDSincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -114,6 +116,7 @@ void LogDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistOrb Functions */
+double MutualHillRad(BODY*,int,int);
 double signf(double);
 double fdLaplaceCoeff(double,int,double);
 double fdDerivLaplaceCoeff(int,double,int,double);

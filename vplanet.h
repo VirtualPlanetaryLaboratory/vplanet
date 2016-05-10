@@ -93,7 +93,7 @@
 #define OPTDESCR      128    /* Number of characters in option description */
 #define OUTLEN        48     /* Maximum number of characters in an output column header */
 #define LINE          128   /* Maximum number of characters in a line */
-#define NAMELEN       100
+#define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -245,6 +245,8 @@ typedef struct {
   int bEigenSet;
   double *dLOrb;
   double *dLOrbTmp;
+  double dRPeri;
+  double dRApo;
 
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
@@ -520,8 +522,6 @@ typedef struct {
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
-  double dSeasOutputTime;
-  double dSeasNextOutput;
   int bSkipSeas;
   int bSkipSeasEnabled;
   int bSnowball;

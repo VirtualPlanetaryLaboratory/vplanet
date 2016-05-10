@@ -17,16 +17,20 @@
 #define DYNAMO        6
 #define THERMINT      7
 #define POISE         8
+#define FLARE         9
+#define BINARY        10
 
 /* Fundamental constants */
 
-#define BIGG          6.672e-11
+#define BIGG          6.67408e-11
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
 #define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
-/* Units: Calculations are done in SI */
 
+#define EPS           1e-10       // Precision for difference of doubles to be effectively 0
+
+/* Units: Calculations are done in SI */
 #define cLIGHT        299792458.0 
 #define MEARTH        5.9742e24
 #define MSUN          1.98892e30
@@ -59,8 +63,10 @@
 #define RHOH2O        1000
 #define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
 #define SEDH          10      //depth of sediment layer (m)
-#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDD0         2.5e-14  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
+#define RHOBROCK      3370
+#define BROCKTIME     5000  //relaxation timescale for bedrock 
 
 /* Exit Status */
 
@@ -81,13 +87,12 @@
 
 /* File Limits */
 
-#define NUMOUT        2000  /* Number of output parameters */
+#define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
-#define OPTLEN        64    /* Maximum length of an option */
-#define OPTDESCR      64    /* Number of characters in option
-			     * description */
-#define LINE          128   /* Maximum number of characters 
-			     * in a line */
+#define OPTLEN        24    /* Maximum length of an option */
+#define OPTDESCR      128    /* Number of characters in option description */
+#define OUTLEN        48     /* Maximum number of characters in an output column header */
+#define LINE          128   /* Maximum number of characters in a line */
 #define NAMELEN       50
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -97,8 +102,8 @@
 			     * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an 
 			     * input file */
-#define OPTEND        1100  /* Last output number of module options
-			     * EQTIDE is highest for this compiltion */
+#define OPTEND        2100  /* Last output number of module options
+			     * Binary is highest for this compiltion */
 
 #define TINY          (1./HUGE)
 
@@ -153,6 +158,18 @@
 // POISE
 #define VICEMASS        1851
 
+// BINARY: 2000-2999, inclusive
+// Primary variables that control CBP's cylindrical positions, velocities
+#define VCBPR              2000
+#define VCBPPHI            2010
+#define VCBPZ              2020
+#define VCBPRDOT           2030
+#define VCBPPHIDOT         2040
+#define VCBPZDOT           2050
+
+// FLARE
+#define VLXUV           1901
+
 /* Now define the structs */
 
 /*!
@@ -169,7 +186,9 @@ typedef struct {
 /* Body Structure */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
-  char cType[OPTLEN];    /**< Type of object N/I */
+  int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
+  /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
+  char iType; 
 
   /* Body Properties */
   double dAge;           /**< Body's Age */
@@ -187,11 +206,12 @@ typedef struct {
   double dPowRadiogMan;  /**< Body's Mantle's  Radiogenic Power */
   double dPowCoreRadiog; /**< Body's Core's  Radiogenic Power */
   double dPowManRadiog;  /**< Body's Mantle's  Radiogenic Power */
-
+  char cColor[OPTLEN];   /**< Body color (for plotting) */
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
   /* Orbital Properties. By convention, these are stored in the
-   * second element in the BODY array.   */
+   * second element in the BODY array and, if using binary
+   * in the primary (0th) body*/
   double dSemi;          /**< Body's Semi-major Axis */
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
@@ -225,7 +245,23 @@ typedef struct {
   int bEigenSet;
   double *dLOrb;
   double *dLOrbTmp;
-    
+
+  /* BINARY parameters */
+  int bBinary;          /** Apply BINARY module? */
+  double dR0;           /**< Guiding Radius,initially equal to dSemi */
+  double dCBPR;         /** < CBP radius */
+  double dCBPZ;         /** < CBP height above/below the orbital plane */
+  double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
+  double dCBPRDot;      /** < CBP radial orbital velocity */
+  double dCBPZDot;      /** < CBP z orbital velocity */
+  double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
+  double dFreeEcc;      /**< CBP's free eccentricity */
+  double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
+  double dInc;          /**< CBP's actual inclication */
+  double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
+  double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
+  double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
@@ -295,8 +331,8 @@ typedef struct {
   double d235UPowerCore;
   double d235UMassCore;
 
-  /* Interior Thermal Parameters */
-  int bThermint;    /**< Apply Module THERMINT? */
+  /* Thermint Parameters */
+  int bThermint;           /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */
@@ -351,16 +387,22 @@ typedef struct {
   double dRIC;             /**< IC radius */
   double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
   double dDOC;             /**< OC shell thickness */
-  double dChiOC;           /**< OC light element concentration chi. */
-  double dChiIC;           /**< IC light element concentration chi. */
   double dThermConductOC;  /**< Thermal conductivity OC */
   double dThermConductIC;  /**< Thermal conductivity IC */
+  double dChiOC;           /**< OC light element concentration chi. */
+  double dChiIC;           /**< IC light element concentration chi. */
+  double dMassOC;          /**< OC Mass. */
+  double dMassIC;          /**< IC Mass. */
+  double dMassChiOC;       /**< OC Chi Mass. */
+  double dMassChiIC;       /**< IC Chi Mass. */
+  double dDTChi;           /**< Core Liquidus Depression */
   /* Constants */
   double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dEruptEff;        /**< Mantle melt eruption efficiency */
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
   double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
-
+  double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
+  
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
@@ -374,10 +416,10 @@ typedef struct {
   int bStellar;
   double dLuminosity;
   double dTemperature;
-  double dLXUV;
   double dSatXUVFrac;
   int iStellarModel;
   int iWindModel;
+  double dLXUV; // Not really a STELLAR parameter
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -427,134 +469,175 @@ typedef struct {
   
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
-  int bClimateModel;
-  int iNumLats;              /**< Number of latitude cells */
-  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
-  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
-  int bAlbedoZA;             /**< Use albedo based on zenith angle */
-  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
-  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
-  int iNDays;                /**< Number of days in planet's year */
-  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
-  double *daLats;            /**< Latitude of each cell (centered) */
-  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
-  double dAstroDist;         /**< Distance between primary and planet */
-  double **daInsol;           /**< Daily insolation at each latitude */
-  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
-  double *daTemp;            /**< Surface temperature in each cell */
-  double dTGlobal;           /**< Global mean temperature at surface */
-  double *daTGrad;           /**< Gradient of temperature (meridional) */
-  double *daAlbedo;          /**< Albedo of each cell */
+
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
-  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
-  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
-  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
-  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
+  double dAlbedoGlobalTmp;
+  double dAlbedoLand;
+  int iAlbedoType;            /**< type of water albedo used (fix or tay) */
+  double dAlbedoWater;  
+  int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  double dAstroDist;         /**< Distance between primary and planet */
+  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
+  int bClimateModel;
+  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
-  double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */
-  double *daFlux;            /**< Meridional surface heat flux */
-  double *daFluxIn;          /**< Incoming surface flux (insolation) */
-  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
-  double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
-  double *daDivFlux;         /**< Divergence of surface flux */
-  int iWriteLat;             /**< Stores index of latitude to be written in write function */
-  double **dMClim;
-  double **dMEuler;
-  double **dMEulerCopy;
-  double **dInvM;
-  double *dUnitV;
-  double **dMDiff;
-  double *daLambda;
-  double *daSourceF;
-  double *daTempTerms;
-  double *daTmpTemp;
-  double *daTmpTempTerms;
-  double *daDMidPt;
-  double *scale;
-  int *rowswap;
-  int bIceSheets;
-  double *daIceMass;
-  double *daIceHeight;
-  double dIceMassTot;
-//   double *daIceHeight;
-  double dInitIceLat;
-  double dInitIceHeight;
-  double dIceAlbedo;
-  double dSurfAlbedo;
-  double dIceDepRate;
-  
-  /* additional stuff for seasonal model */
-  double *daTempLand;         /**< Temperature over land (by latitude) */
-  double *daTempWater;        /**< Temperature over ocean (by lat) */
-  double *daAlbedoLand;
-  double *daAlbedoWater;
-  double *daFluxOutLand;
-  double *daFluxOutWater;
-  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
-  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
-  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dFluxInGlobalTmp;
+  double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
+  double dFluxOutGlobalTmp;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
+  int iGeography;
+  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
   double dHeatCapLand;        /**< Heat capacity of land */
   double dHeatCapWater;       /**< Heat capacity of water */
-  double *daLandFrac;         /**< Fraction of cell which is land */
-  double *daWaterFrac;        /**< Fraction of cell which is water */
-  double dNuLandWater;        /**< Land-ocean interaction term */
-  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  double dIceAlbedo;
+  double dIceBalanceTot;
+  double dIceDepRate;
+  double dIceFlowTot;
+  double dIceMassTot;
+  int bIceSheets;
+  int iIceTimeStep;
+  double dInitIceHeight;
+  double dInitIceLat;
+  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
+  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  int iNDays;                /**< Number of days in planet's year */
   int iNStepInYear;        /**< Number of time steps in a year */  
+  double dNuLandWater;        /**< Land-ocean interaction term */
+  int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
-  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceLW;     /**< Combined source function what matrix operates on */
-  double **dMLand;
-  double **dMWater;
-  double dTGlobalTmp;
-  double dAlbedoGlobalTmp;
-  double dFluxOutGlobalTmp;
-  double dFluxInGlobalTmp;
-  double *daFluxInLand;
-  double *daFluxInWater;
+  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
+  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
+  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  int iReRunSeas;
   double dSeaIceConduct;
-  double *daSeaIceK;
-  double *daFluxSeaIce;
-  double **dMInit;
-  double dCw_dt;
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
-  double *daTempAnnual;
-  double *daAlbedoAnnual;
-  double *daFluxAnnual;
-  double *daFluxOutAnnual;
-  double *daFluxInAnnual;
-  double *daDivFluxAnnual;
-  double **daIceBalance;
-  double *daIceBalanceAnnual;
-  double *daIceMassTmp;
-  double **daTempDaily;
-  double *daDeclination;           /**< Daily solar declination */
-  double *daDIceHeightDy;
-  double *daIceFlow;
-  double dAlbedoLand;
-  double dAlbedoWater;
-  double *daIceFlowMid;
-  double *daXBoundary;
-  double *daPlanckA;
-  double *daPlanckB;
+  int bSkipSeas;
+  int bSkipSeasEnabled;
+  int bSnowball;
+  double dSurfAlbedo;
+  double dTGlobal;           /**< Global mean temperature at surface */
   double dTGlobalInit;
+  double dTGlobalTmp;
+  int iWriteLat;             /**< Stores index of latitude to be written in write function */
+
+  /* Arrays used by seasonal and annual */
+  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
+  double *daDivFlux;         /**< Divergence of surface flux */
+  double *daDMidPt;
+  double **daInsol;           /**< Daily insolation at each latitude */
+  double *daFlux;            /**< Meridional surface heat flux */
+  double *daFluxIn;          /**< Incoming surface flux (insolation) */
+  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daTGrad;           /**< Gradient of temperature (meridional) */
+
+  /* Arrays for annual model */
+  double *daAlbedoAnn;          /**< Albedo of each cell */
+  double *daDiffusionAnn;       /**< Diffusion coefficient of each latitude boundary */
+  double **dMEulerAnn;
+  double **dMEulerCopyAnn;
+  double **dInvMAnn;
+  double *daLambdaAnn;
+  double **dMClim;
+  double **dMDiffAnn;
+  double *daPlanckAAnn;
+  double *daPlanckBAnn;
+  int *rowswapAnn;
+  double *scaleAnn;
+  double *daSourceF;
+  double *daTempAnn;            /**< Surface temperature in each cell */
+  double *daTempTerms;
+  double *daTmpTempAnn;
+  double *daTmpTempTerms;
+  double *dUnitVAnn;
+
+  /* Arrays for seasonal model */
+  double *daAlbedoAvg;
+  double *daAlbedoLand;
+  double *daAlbedoLW;
+  double *daAlbedoWater;
+  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
+  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
+  double *daBasalVel;         /**< Basal velocity of ice */
+  double *daBedrockH;         /**< Height of bedrock (can be negative) */
+  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
+  double *daDeclination;           /**< Daily solar declination */
   double *daDeltaTempL;
   double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
+  double *daDIceHeightDy;
+  double *daDiffusionSea;
+  double *daDivFluxAvg;
   double *daEnergyResL;
   double *daEnergyResW;       /**< Energy residuals */
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
+  double *daFluxAvg;
+  double *daFluxInAvg;
+  double *daFluxInLand;
+  double *daFluxInWater;
+  double *daFluxOutAvg;
+  double *daFluxOutLand;
+  double *daFluxOutWater;
+  double *daFluxSeaIce;
+  double **daIceBalance;
+  double *daIceBalanceAnnual;
+  double *daIceBalanceAvg;
+  double *daIceBalanceTmp;
+  double *daIceFlow;
+  double *daIceFlowAvg;
+  double *daIceFlowMid;
+  double *daIceGamTmp;
+  double *daIceHeight; 
+  double *daIceMass;
+  double *daIceMassTmp;
+  double *daIcePropsTmp;
+  double *daIceSheetDiff;
+  double **daIceSheetMat;
+  double **dInvMSea;
+  double *daLambdaSea;
+  double *daLandFrac;         /**< Fraction of cell which is land */
+  double **dMDiffSea;
+  double **dMEulerCopySea;
+  double **dMEulerSea;
+  double **dMInit;
+  double **dMLand;
+  double **dMWater;
+  double *daPlanckASea;
+  double *daPlanckBSea;
+  int *rowswapSea;
+  double *scaleSea;
+  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  double *daSeaIceK;
   double *daSedShear;         /**< sediment shear stress (for ice sheets) */
-  double *daBasalVel;         /**< Basal velocity of ice */
-  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
-  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
-  double dIceFlowTot;
-  double dIceBalanceTot;
+  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceLW;     /**< Combined source function what matrix operates on */
+  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
+  double *daTempAvg;
+  double **daTempDaily;
+  double *daTempLand;         /**< Temperature over land (by latitude) */
+  double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
+  double *daTempWater;        /**< Temperature over ocean (by lat) */
+  double *daTmpTempSea;
+  double *dUnitVSea;
+  double *daWaterFrac;        /**< Fraction of cell which is water */
+  double *daXBoundary;
+  double *daYBoundary;
 
+  // FLARE
+  int bFlare;
+  double dFlareConst;
+  double dFlareExp;
+  double dLXUVFlare;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -626,6 +709,7 @@ typedef struct {
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;         
+  double dZero;         /**< Sometimes you need a pointer to zero */
 
   /*! The body #s to calculate the derivative. First dimension is 
       the Primary Variable #, second is the process #, third is the 
@@ -820,6 +904,29 @@ typedef struct {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
 
+  /* BINARY */
+  int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
+  int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */  
+  int iCBPZ; /**< Variable # corresponding to the CBP's cylindrical Z positions */
+  int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
+  int iCBPPhi; /**< Variable # Corresponding to the CBP's orbital azimuthal angle */
+  int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
+  int iCBPRDot; /**< Variable # Corresponding to the CBP's radial velocity */
+  int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
+  int iCBPZDot; /** < Variable # Corresponding to the CBP's Z orbital velocity */
+  int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1] */
+  int iCBPPhiDot; /** < Variable # Corresponding to the CBP's Phi orbital angular velocity */
+  int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
+
+  /* Points to the element in UPDATE's daDerivProc matrix that contains the 
+   * derivative of these variables due to BINARY. */
+  double *pdCBPRBinary; // Equation that governs CBP orbital radius
+  double *pdCBPZBinary; // Equation that governs CBP cylindrical position Z
+  double *pdCBPPhiBinary; // Equation that governs CBP orbital azimuthal angle
+  double *pdCBPRDotBinary; // Equation that governs CBP radial orbital velocity
+  double *pdCBPZDotBinary; // Equation that governs CBP z orbital velocity
+  double *pdCBPPhiDotBinary; // Equation that governs CBP phi orbital velocity
+
   /* STELLAR */ 
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
@@ -835,7 +942,7 @@ typedef struct {
   double *pdRadiusStellar;
   
   double *pdRotRateStellar;
-  
+
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
   int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
@@ -843,8 +950,13 @@ typedef struct {
   int *iaIceMassDepMelt;
   int *iaIceMassFlow;
   int iIceMass;
-} UPDATE;
 
+  /* FLARE */
+  int iLXUV;
+  int iNumLXUV;
+  double *pdDLXUVFlareDt;
+
+} UPDATE;
 
 typedef struct {
   int iNumHalts;       /**< Total Number of Halts */
@@ -862,10 +974,11 @@ typedef struct {
   int bSync;            /**< Halt if Rotation Becomes Synchronous? */
 
   /* RADHEAT */
-  int dMin40KPower;     /**< Halt at this Potassium-40 Power */
-  int dMin232ThPower;   /**< Halt at this Thorium-232 Power */
-  int dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  int dMin235UPower;
+  double dMin40KPower;     /**< Halt at this Potassium-40 Power */
+  double dMin232ThPower;   /**< Halt at this Thorium-232 Power */
+  double dMin238UPower;    /**< Halt at this Uranium-238 Power */
+  double dMin235UPower;
+  double dMinRadPower;
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/ 
@@ -875,12 +988,18 @@ typedef struct {
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
-  int dMinTMan;     /**< Halt at this TMan */
-  int dMinTCore;     /**< Halt at this TCore */
+  double dMinTMan;     /**< Halt at this TMan */
+  double dMinTCore;     /**< Halt at this TCore */
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
 
+  /* POISE */
+  int bHaltMinIceDt;  /**< Halt if ice flow time-step falls below a minimum value */
+  int iMinIceDt;    /**< Halt if ice flow time-step falls below this value (number of orbital periods)*/
+
+  /* BINARY */
+  int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -904,7 +1023,7 @@ typedef struct {
 typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
-typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int);
+typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
 /* Integration parameters */
 typedef struct {
@@ -972,7 +1091,8 @@ typedef struct {
    halts, units, and the integration, including manipulating the UPDATE
    matrix through fnForceBehavior. */
 
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,int,int);
+typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
@@ -1048,7 +1168,7 @@ typedef struct {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
-  char cDefault[OPTLEN];       /**< Description of Default Value */
+  char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
@@ -1097,8 +1217,6 @@ typedef struct {
 
 } OUTPUT;
 
-
-typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
 
@@ -1141,12 +1259,18 @@ typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
-typedef void (*fnVerifyRotationModule)(BODY*,CONTROL*,OPTIONS*,char[],int);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
@@ -1231,7 +1355,16 @@ typedef struct {
   fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
   /*! Function pointers to finalize Mantle Temperature */ 
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
-  
+ 
+  /* Function points to finalize binary update functions */
+  /* CBP R, Z, Phi, and their time derivaties */
+  fnFinalizeUpdateCBPRModule **fnFinalizeUpdateCBPR;
+  fnFinalizeUpdateCBPZModule **fnFinalizeUpdateCBPZ;
+  fnFinalizeUpdateCBPPhiModule **fnFinalizeUpdateCBPPhi;
+  fnFinalizeUpdateCBPRDotModule **fnFinalizeUpdateCBPRDot;
+  fnFinalizeUpdateCBPZDotModule **fnFinalizeUpdateCBPZDot;
+  fnFinalizeUpdateCBPPhiDotModule **fnFinalizeUpdateCBPPhiDot;
+
   /*! These functions assign Equation and Module information regarding 
       DistRot x,y,z variables in the UPDATE struct. */
   /*! Function pointers to finalize distrot's X */ 
@@ -1241,6 +1374,7 @@ typedef struct {
   /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
+  fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
  
   /*! These functions log module-specific data. */ 
   fnLogBodyModule **fnLogBody;
@@ -1253,9 +1387,6 @@ typedef struct {
 
   /*! These functions verify module-specific halts. */ 
   fnVerifyHaltModule **fnVerifyHalt;
-
-  /*! These functions verify module-specific constraints on rotation rate. */ 
-  fnVerifyRotationModule **fnVerifyRotation;
 
   /*! These functions adds subroutines to the output functions that require
       module-specific values. */ 
@@ -1297,6 +1428,8 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "thermint.h"
 #include "distrot.h"
 #include "poise.h"
+#include "binary.h"
+#include "flare.h"
 
 /* Do this stuff with a few functions and some global variables? XXX */
 
@@ -1313,7 +1446,10 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  ********************/
 
 // XXX Obsolete?
-#define MODULEOPTEND        1900
-#define MODULEOUTEND        1900
+// Note: not obsolete! needed for new module
+// Otherwise,segfaults
+// Increased from 1900->2100 for binary
+#define MODULEOPTEND        2100
+#define MODULEOUTEND        2100
 
 

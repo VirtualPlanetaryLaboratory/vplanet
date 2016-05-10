@@ -6,8 +6,25 @@
  * model. Also includes subroutines that switch between
  * the two models.
 */ 
-//testing a change
 
+
+/* lines where something like if iBody == 0 count occurs
+ * ~790
+ * ~975
+ * ~1098
+ * ~1186
+ * ~1280
+ * ~1304
+ * ~1370
+ * ~2200
+ * ~2210
+ * ~2260
+ * ~2306
+ * ~2480
+ * ~2493
+ * ~2681
+ * ~2696
+ */
 
 #include <stdio.h>
 #include <math.h>
@@ -24,14 +41,10 @@ void InitializeControlEqtide(CONTROL *control) {
   control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
 }
 
-void InitializeModuleEqtide(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
 /* All the auxiliary properties for EQTIDE calculations need to be included
    in this subroutine! */
 
-void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
@@ -48,7 +61,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iBody) {
     dest[iBody].dDeccDtEqtide = src[iBody].dDeccDtEqtide;
   }
 
-  for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) {
+  for (iPert=0;iPert<iNumBodies;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
     dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
     dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
@@ -74,7 +87,7 @@ void InitializeBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 }
 
 void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  int iBodyPert;
+  int iPert;
 
   control->Evolve.tmpBody[iBody].dTidalChi = malloc(control->Evolve.iNumBodies*sizeof(double));
   control->Evolve.tmpBody[iBody].dTidalZ = malloc(control->Evolve.iNumBodies*sizeof(double));
@@ -84,19 +97,17 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
 
   if (control->Evolve.iEqtideModel == CPL) {
     control->Evolve.tmpBody[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
-    for (iBodyPert=0;iBodyPert<control->Evolve.iNumBodies;iBodyPert++)
-      control->Evolve.tmpBody[iBody].iTidalEpsilon[iBodyPert] = malloc(10*sizeof(int));
+    for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
+      control->Evolve.tmpBody[iBody].iTidalEpsilon[iPert] = malloc(10*sizeof(int));
   }
 
   if (control->Evolve.iEqtideModel == CTL) {
     control->Evolve.tmpBody[iBody].dTidalF = malloc(control->Evolve.iNumBodies*sizeof(double*));
     control->Evolve.tmpBody[iBody].dTidalBeta = malloc(control->Evolve.iNumBodies*sizeof(double));
-    for (iBodyPert=0;iBodyPert<control->Evolve.iNumBodies;iBodyPert++)
-      control->Evolve.tmpBody[iBody].dTidalF[iBodyPert] = malloc(5*sizeof(double));
+    for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
+      control->Evolve.tmpBody[iBody].dTidalF[iPert] = malloc(5*sizeof(double));
   }
-
 }
-
 
 /**************** EQTIDE options ********************/
 
@@ -500,9 +511,14 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
 
 void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
   double dMeanMotion;
-  
+  int iOrbiter;
+
   if (options[OPT_FORCEEQSPIN].iLine[iBody+1] >= 0) {
-    dMeanMotion=fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+
+    if (body[iBody].iTidePerts > 1) {
+      fprintf(stderr,"ERROR: %s cannot be true is %s has more than 1 argument.\n",options[OPT_FORCEEQSPIN].cName,options[OPT_TIDEPERTS].cName);
+      DoubleLineExit(options[OPT_FORCEEQSPIN].cFile[iBody+1],options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_TIDEPERTS].iLine[iBody+1]);
+    }
 
     if (options[OPT_ROTPER].iLine[iBody+1] >= 0) 
       VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTPER].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_ROTPER].iLine[iBody+1],control->Io.iVerbose);
@@ -514,8 +530,14 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFil
       VerifyRotationEqtideWarning(options[OPT_FORCEEQSPIN].cName,options[OPT_ROTVEL].cName,cFile,options[OPT_FORCEEQSPIN].iLine[iBody+1],options[OPT_ROTVEL].iLine[iBody+1],control->Io.iVerbose);
 
     /* Done with warnings, do the assignment */
-
-    body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iBody].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+    if (bPrimary(body,iBody))
+      iOrbiter = body[iBody].iaTidePerts[0];
+    else
+      iOrbiter = iBody;
+    
+    dMeanMotion=fdSemiToMeanMotion(body[iOrbiter].dSemi,body[iBody].dMass+body[body[iBody].iaTidePerts[0]].dMass);
+    //XXX Is dEccSq set here??
+    body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
   }
   CalcXYZobl(body,iBody);
 }
@@ -837,28 +859,30 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
+    if (control->Evolve.bForceEqSpin[iBody])
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+    else
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
   }  
   
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
   if (!bPrimary(body,iBody)) {
+    // Initialize Orbital variable for the matrix
+    InitializeSemiEqtide(body,update,iBody);
+    InitializeHeccEqtide(body,update,iBody);
+    InitializeKeccEqtide(body,update,iBody);
+    
+    // If the orbit is allowed to evolve, assign derivative functions
     if (!control->Evolve.bFixOrbit[iBody]) {
-      /* Semi-major axis */
-      InitializeSemiEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
-      
-      /* Eccentricity */
-      //InitializeEccEqtide(body,update,iBody);
-      //fnUpdate[iBody][update[iBody].iEcc][update[iBody].iEccEqtide] = &fdCPLDeccDt;
-      InitializeHeccEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
-      InitializeKeccEqtide(body,update,iBody);
       fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
+      
     } else {
-      // XXX This won't work if more than one module is affecting the orbit
-      update[iBody].iNumEqns[update[iBody].iHecc]--;
-      update[iBody].iNumEqns[update[iBody].iKecc]--;
-      update[iBody].iNumEqns[update[iBody].iSemi]--;
+      // If the orbit is fixed, function return TINY
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
     }
   }
 
@@ -1036,18 +1060,14 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
 
 
 void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  //int iModule;
-
-  /* This function only called if Eqtide is active for this body */
-
-  /* Get module number */
-  //iModule = fdGetModuleIntEqtide(update,iBody);
 
   VerifyTideModel(control,files,options);
 
   VerifyOrbitEqtide(body,control,files,options);
 
   VerifyPerturbersEqtide(body,files,options,update,control->Evolve.iNumBodies,iBody);
+
+  VerifyRotationEqtide(body,control,options,files->Infile[iBody+1].cIn,iBody);
 
   /* Verify input set correctly and assign update functions */
   if (control->Evolve.iEqtideModel == CTL)
@@ -1122,6 +1142,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   int iPert;
 
   /* Change iTidePerts to iNumBodies XXX */
+  // XXX - I don't think so 4/11/16
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
@@ -1493,7 +1514,7 @@ void WriteDXoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1511,7 +1532,7 @@ void WriteDYoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1529,7 +1550,7 @@ void WriteDZoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1563,7 +1584,15 @@ void WriteEccTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 }
 
 void WriteEqRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdEqRotRate(body[iBody],body[iBody].dMeanMotion,body[iBody].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1575,7 +1604,15 @@ void WriteEqRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iBody].dMeanMotion,body[iBody].dEccSq));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1587,7 +1624,15 @@ void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iBody].dMeanMotion,body[iBody].dEccSq));
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1599,7 +1644,15 @@ void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 }
 
 void WriteEqRotRate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdEqRotRate(body[iBody],body[1].dMeanMotion,body[1].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1611,8 +1664,16 @@ void WriteEqRotRate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdCPLEqRotRateCont(body[1].dMeanMotion,body[1].dEccSq);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+
+  *dTmp = fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1624,8 +1685,15 @@ void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdCPLEqRotRateDiscrete(body[1].dMeanMotion,body[1].dEccSq);
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+  
+  *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1833,7 +1901,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DHECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's h in EQTIDE");
   sprintf(output[OUT_DHECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DHECCDTEQTIDE].bNeg = 1;
-  output[OUT_DHECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DHECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DHECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DHECCDTEQTIDE] = &WriteDHeccDtEqtide;
 
@@ -1841,7 +1909,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DKECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's k in EQTIDE");
   sprintf(output[OUT_DKECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DKECCDTEQTIDE].bNeg = 1;
-  output[OUT_DKECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DKECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DKECCDTEQTIDE].iNum = 1;
   fnWrite[OUT_DKECCDTEQTIDE] = &WriteDKeccDtEqtide;
 
@@ -1849,7 +1917,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DXOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's X in EQTIDE");
   sprintf(output[OUT_DXOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DXOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DXOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DXOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DXOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DXOBLDTEQTIDE] = &WriteDXoblDtEqtide;
 
@@ -1857,7 +1925,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DYOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Y in EQTIDE");
   sprintf(output[OUT_DYOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DYOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DYOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DYOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DYOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DYOBLDTEQTIDE] = &WriteDYoblDtEqtide;
 
@@ -1865,7 +1933,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DZOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Z in EQTIDE");
   sprintf(output[OUT_DZOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DZOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DZOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DZOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DZOBLDTEQTIDE].iNum = 1;
   fnWrite[OUT_DZOBLDTEQTIDE] = &WriteDZoblDtEqtide;
 
@@ -2105,7 +2173,6 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsEqtide;
   module->fnVerify[iBody][iModule] = &VerifyEqtide;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltEqtide;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationEqtide;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyEqtide;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateEqtide;
@@ -2178,8 +2245,19 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
 
-  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl); //acos(body[iBody].dZobl);
+  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+
+  /* These lines for checking the obliquity evolution in an eqtide-only run
+
+  CalcXYZobl(body, iBody);
+
+  if (body[iBody].dPrecA != 0) {
+  printf("pA = %f\n Xobl = %f\n Yobl = %f\n Zobl = %f\n",body[iBody].dPrecA,body[iBody].dXobl,body[iBody].dYobl,body[iBody].dZobl);
+  printf("something\n");
+   }
+  */
+
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
@@ -2198,7 +2276,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
-    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iIndex]]);
+    body[iBody].daDoblDtEqtide[iIndex] = fdCPLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
   }
 }
 
@@ -2250,7 +2328,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct. 
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe 
@@ -2265,8 +2343,15 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     /* Tidally Locked? */
-    else
+    else {
+      // Is the body now tidally locked?
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter);
+      // If so, reset the function pointer to return TINY for dDRotRateDt
+      /* The index of iaRotEqtide must be zero, as locking is only possible 
+	 if there is one tidal perturber */
+      if (evolve->bForceEqSpin[iBody])
+	SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
+    }
   }
 
   /* If small enough, set some quantities to zero */
@@ -2326,13 +2411,14 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 
+  // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
+  
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);
   iEpsilon[2]=fiSign(2*dRotRate-dMeanMotion);
   iEpsilon[5]=fiSign(dMeanMotion);
   iEpsilon[8]=fiSign(dRotRate-2*dMeanMotion);
   iEpsilon[9]=fiSign(dRotRate);
-  
 }
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
@@ -2354,7 +2440,7 @@ double fdCPLTidePowerEq(double dTidalZ,double dEccSq,double dMeanMotion,double d
   double dGammaOrb,dGammaRot,dRotRateEq;
   int *iEpsilon;
 
-  iEpsilon = malloc(9*sizeof(int));
+  iEpsilon = malloc(10*sizeof(int));
 
   /* Must reset spin rate in order to get the phase lags correctly */
 
@@ -2487,6 +2573,7 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
+  double foo;
 
   if (bPrimary(body,iB0))
     iOrbiter = iB1;
@@ -2494,6 +2581,15 @@ double fdCPLDoblDt(BODY *body,int *iaBody) {
     iOrbiter = iB0;
 
   return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  /*
+  foo = body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  if (foo > 0) 
+    printf("obl: %e, dobl/dt: %e\n",body[iB0].dObliquity,foo);
+
+  return foo;
+  */
 }
 
 double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -2502,8 +2598,18 @@ double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdCPLDYoblDt(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
 
-  return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  //return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  foo = body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+
+  /*
+  printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  if (foo != 0)
+    printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  */
+  return foo;
+
 }
 
 double fdCPLDZoblDt(BODY *body,SYSTEM *system,int *iaBody) {

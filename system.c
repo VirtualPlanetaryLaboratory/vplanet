@@ -9,6 +9,12 @@
  * properties.
 */
 
+/* where something like iBody == 0 occurs
+ * ~50
+ * ~74
+ * ~110
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

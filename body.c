@@ -27,10 +27,11 @@
 int fiSign(double dValue) {
   int iSign;
 
-  if (dValue != 0) 
+  if (fabs(dValue) > EPS) 
     iSign = (int)(dValue/fabs(dValue));
   else 
     iSign = 0;
+
   return iSign;
 }
 
@@ -239,8 +240,10 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dZobl = src[iBody].dZobl;
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
+    dest[iBody].dLXUV = src[iBody].dLXUV;
 
-    /* Only orbiting bodies retain these parameters */
+    /* Only orbiting bodies retain these parameters unless binary is used*/
+    
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
@@ -251,7 +254,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     /* Copymodule specific properties */
     for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)
       // Only module reference in file -- can this be changed? XXX
-      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,iBody);
+      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,evolve->iNumBodies,iBody);
   }
 }
 
@@ -259,4 +262,8 @@ void CalcXYZobl(BODY *body, int iBody) {
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
+
+  if (body[iBody].dZobl > 1)
+    printf("Zobl: %.16e\n",body[iBody].dZobl);
+
 }

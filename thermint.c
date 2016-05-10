@@ -17,13 +17,14 @@ void  InitializeControlThermint(CONTROL *control) {
   /* Nothing for now, but this subroutine is necessary for module loops. */
 }
 
-void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
+void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
   /* Constants */
   dest[iBody].dViscRatioMan = src[iBody].dViscRatioMan;
   dest[iBody].dViscRef = src[iBody].dViscRef;
   dest[iBody].dTrefLind = src[iBody].dTrefLind;
+  dest[iBody].dDTChiRef = src[iBody].dDTChiRef;
   dest[iBody].dEruptEff = src[iBody].dEruptEff;
   /* Aux Props Variables */
   dest[iBody].dTUMan=src[iBody].dTUMan;
@@ -70,6 +71,13 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iBody) {
   dest[iBody].dMassICDot=src[iBody].dMassICDot;
   dest[iBody].dHflowLatentIC=src[iBody].dHflowLatentIC;
   dest[iBody].dPowerGravIC=src[iBody].dPowerGravIC;
+  dest[iBody].dChiOC=src[iBody].dChiOC;
+  dest[iBody].dChiIC=src[iBody].dChiIC;
+  dest[iBody].dMassOC=src[iBody].dMassOC;
+  dest[iBody].dMassIC=src[iBody].dMassIC;
+  dest[iBody].dMassChiOC=src[iBody].dMassChiOC;
+  dest[iBody].dMassChiIC=src[iBody].dMassChiIC;
+  dest[iBody].dDTChi=src[iBody].dDTChi;
 }
 
 void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -161,6 +169,21 @@ void ReadTrefLind(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dTrefLind = options->dDefault;
 }
+void ReadDTChiRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dDTChiRef = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dDTChiRef = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dDTChiRef = options->dDefault;
+}
 
 void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -177,6 +200,45 @@ void ReadEruptEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dEruptEff = options->dDefault;
 }
+
+void ReadHaltMinTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMinTMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMinTMan = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMinTMan = options->dDefault;
+}
+
+void ReadHaltMinTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+	control->Halt[iFile-1].dMinTCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+	control->Halt[iFile-1].dMinTCore = fdUnitsTemp(dTmp,control->Units[iFile].iTemp,0);
+
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+       control->Halt[iFile-1].dMinTCore = options->dDefault;
+}
+
 /* Initiatlize Input Options */
 
 void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
@@ -192,6 +254,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TMAN].dDefault = 3000.0; 
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
   fnRead[OPT_TMAN] = &ReadTMan;
+
    /* TCore */
   sprintf(options[OPT_TCORE].cName,"dTCore");
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
@@ -202,6 +265,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TCORE].dDefault = 6000.0; 
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
   fnRead[OPT_TCORE] = &ReadTCore;
+
    /* ViscRatioMan */
   sprintf(options[OPT_VISCRATIOMAN].cName,"dViscRatioMan");
   sprintf(options[OPT_VISCRATIOMAN].cDescr,"ViscRatioMan");
@@ -212,6 +276,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCRATIOMAN].dDefault = VISCJUMPULM; 
   sprintf(options[OPT_VISCRATIOMAN].cNeg,"Default");
   fnRead[OPT_VISCRATIOMAN] = &ReadViscRatioMan;
+
    /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
@@ -222,6 +287,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCREF].dDefault = VISCREF; 
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
+
    /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
@@ -232,6 +298,18 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TREFLIND].dDefault = TREFLIND; 
   sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
   fnRead[OPT_TREFLIND] = &ReadTrefLind;
+
+  /* DTChiRef */
+  sprintf(options[OPT_DTCHIREF].cName,"dDTChiRef");
+  sprintf(options[OPT_DTCHIREF].cDescr,"DTChiRef");
+  sprintf(options[OPT_DTCHIREF].cDefault,"Default in thermint.h");
+  options[OPT_DTCHIREF].iType = 2;
+  options[OPT_DTCHIREF].iMultiFile = 1;
+  options[OPT_DTCHIREF].dNeg = 1;
+  options[OPT_DTCHIREF].dDefault = DTCHIREF; 
+  sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
+  fnRead[OPT_DTCHIREF] = &ReadDTChiRef;
+
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
@@ -242,6 +320,28 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ERUPTEFF].dDefault = ERUPTEFF; 
   sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
   fnRead[OPT_ERUPTEFF] = &ReadEruptEff;
+
+  /* Halt at Minimum Mantle Temperature */
+  sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
+  sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
+  sprintf(options[OPT_HALTMINTMAN].cDefault,"0 K");
+  options[OPT_HALTMINTMAN].iType = 2;
+  options[OPT_HALTMINTMAN].iMultiFile = 1;
+  options[OPT_HALTMINTMAN].dNeg = 1;
+  options[OPT_HALTMINTMAN].dDefault = 0; 
+  sprintf(options[OPT_HALTMINTMAN].cNeg,"0");
+  fnRead[OPT_HALTMINTMAN] = &ReadHaltMinTMan;
+
+  /* Halt at Minimum Core Temperature */
+  sprintf(options[OPT_HALTMINTCORE].cName,"dHaltMinTCore");
+  sprintf(options[OPT_HALTMINTCORE].cDescr,"Halt at Minimum Core Temperature");
+  sprintf(options[OPT_HALTMINTCORE].cDefault,"0 K");
+  options[OPT_HALTMINTCORE].iType = 2;
+  options[OPT_HALTMINTCORE].iMultiFile = 1;
+  options[OPT_HALTMINTCORE].dNeg = 1;
+  options[OPT_HALTMINTCORE].dDefault = 0; 
+  sprintf(options[OPT_HALTMINTCORE].cNeg,"0");
+  fnRead[OPT_HALTMINTCORE] = &ReadHaltMinTCore;
 
 }
 
@@ -255,10 +355,6 @@ void ReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 }
     
 /******************* Verify THERMINT ******************/
-
-void VerifyRotationThermint(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
-  /* Nothing */
-}
 
 /* Is this necessary? */
 void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
@@ -345,6 +441,14 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   /* Core */
+  /* Iterate on Core chemistry before R_ICB */
+  body[iBody].dMassIC=fdMassIC(body,iBody);
+  body[iBody].dMassOC=fdMassOC(body,iBody);
+  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
+  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
+  body[iBody].dChiOC=fdChiOC(body,iBody);       
+  body[iBody].dChiIC=fdChiIC(body,iBody);
+  body[iBody].dDTChi=fdDTChi(body,iBody);
   body[iBody].dRIC=fdRIC(body,iBody);
   body[iBody].dDRICDTCMB=fdDRICDTCMB(body,iBody);
   body[iBody].dMassICDot=fdMassICDot(body,update,iBody);
@@ -352,7 +456,8 @@ void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
 }
 
-void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  // XXX Reset fnUpdate functions to SetDerivTiny?
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
   if (body[iBody].dTCore < 0.5)
@@ -367,11 +472,6 @@ void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxThermint;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyThermint;
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
-}
-
-
-void InitializeModuleThermint(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
 }
 
 /**************** RADHEAT update ****************/
@@ -433,17 +533,19 @@ int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,in
   return 0;
 }        
 
-void CountHaltsThermint(HALT *halt,int *iHalt) {
+// XXX Should change these to bHaltTMan as there is no real need to check
+
+void CountHaltsThermint(HALT *halt,int *iNumHalts) {
   if (halt->dMinTMan >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
   if (halt->dMinTCore >= 0)
-    (iHalt)++;
+    (*iNumHalts)++;
 }
 
 void VerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-  if (control->Halt[iBody].dMinTMan > 0)
+  if (control->Halt[iBody].dMinTMan >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
-  if (control->Halt[iBody].dMinTCore > 0)
+  if (control->Halt[iBody].dMinTCore >= 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
 }
 
@@ -676,6 +778,57 @@ void WriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dChiOC;
+  //  *dTmp = body[iBody].dRIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dChiIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMassOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMassOC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMassIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMassIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMassChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMassChiOC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMassChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMassChiIC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dDTChi;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
 
 /* Heat Flows/Fluxes */
 void WriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -699,6 +852,7 @@ void WriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
@@ -706,6 +860,7 @@ void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
@@ -755,7 +910,6 @@ void WritePowerGravIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-
 
 void WriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TDotMan */
@@ -904,7 +1058,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
   sprintf(output[OUT_BLUMAN].cNeg,"km");
   output[OUT_BLUMAN].bNeg = 1;
-  output[OUT_BLUMAN].dNeg = 1;  //KM; 
+  output[OUT_BLUMAN].dNeg = 1e-3;  //KM; 
   output[OUT_BLUMAN].iNum = 1;
   fnWrite[OUT_BLUMAN] = &WriteBLUMan;
   /* BLLMan */
@@ -912,7 +1066,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BLLMAN].cDescr,"Boundary Layer Thickness Lower Mantle");
   sprintf(output[OUT_BLLMAN].cNeg,"km");
   output[OUT_BLLMAN].bNeg = 1;
-  output[OUT_BLLMAN].dNeg = 1; 
+  output[OUT_BLLMAN].dNeg = 1e-3; 
   output[OUT_BLLMAN].iNum = 1;
   fnWrite[OUT_BLLMAN] = &WriteBLLMan;
   /* ShmodUMan */
@@ -1003,12 +1157,14 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].dNeg = 1; 
   output[OUT_IMK2MAN].iNum = 1;
   fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+
+  /*  CORE WRITES */
   /* RIC */
   sprintf(output[OUT_RIC].cName,"RIC");
   sprintf(output[OUT_RIC].cDescr,"Inner Core Radius");
-  sprintf(output[OUT_RIC].cNeg,"m");
+  sprintf(output[OUT_RIC].cNeg,"km");
   output[OUT_RIC].bNeg = 1;
-  output[OUT_RIC].dNeg = 1; 
+  output[OUT_RIC].dNeg = 1e-3; 
   output[OUT_RIC].iNum = 1;
   fnWrite[OUT_RIC] = &WriteRIC;
   /* DRICDTCMB */
@@ -1019,6 +1175,63 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DRICDTCMB].dNeg = 1; 
   output[OUT_DRICDTCMB].iNum = 1;
   fnWrite[OUT_DRICDTCMB] = &WriteDRICDTCMB;
+  /* ChiOC */
+  sprintf(output[OUT_CHIOC].cName,"ChiOC");
+  sprintf(output[OUT_CHIOC].cDescr,"Light Element Concentration in Outer Core");
+  sprintf(output[OUT_CHIOC].cNeg,"nd");
+  output[OUT_CHIOC].bNeg = 1;
+  output[OUT_CHIOC].dNeg = 1; 
+  output[OUT_CHIOC].iNum = 1;
+  fnWrite[OUT_CHIOC] = &WriteChiOC;
+  /* ChiIC */
+  sprintf(output[OUT_CHIIC].cName,"ChiIC");
+  sprintf(output[OUT_CHIIC].cDescr,"Light Element Concentration in Inner Core");
+  sprintf(output[OUT_CHIIC].cNeg,"nd");
+  output[OUT_CHIIC].bNeg = 1;
+  output[OUT_CHIIC].dNeg = 1; 
+  output[OUT_CHIIC].iNum = 1;
+  fnWrite[OUT_CHIIC] = &WriteChiIC;
+  /* MassOC */
+  sprintf(output[OUT_MASSOC].cName,"MassOC");
+  sprintf(output[OUT_MASSOC].cDescr,"Mass of Outer Core");
+  sprintf(output[OUT_MASSOC].cNeg,"EMASSOC");
+  output[OUT_MASSOC].bNeg = 1;
+  output[OUT_MASSOC].dNeg = 1/(EMASSOC); 
+  output[OUT_MASSOC].iNum = 1;
+  fnWrite[OUT_MASSOC] = &WriteMassOC;
+  /* MassIC */
+  sprintf(output[OUT_MASSIC].cName,"MassIC");
+  sprintf(output[OUT_MASSIC].cDescr,"Mass of Inner Core");
+  sprintf(output[OUT_MASSIC].cNeg,"EMASSIC");
+  output[OUT_MASSIC].bNeg = 1;
+  output[OUT_MASSIC].dNeg = 1/(EMASSIC); 
+  output[OUT_MASSIC].iNum = 1;
+  fnWrite[OUT_MASSIC] = &WriteMassIC;
+  /* MassChiOC */
+  sprintf(output[OUT_MASSCHIOC].cName,"MassChiOC");
+  sprintf(output[OUT_MASSCHIOC].cDescr,"Mass of Chi in Outer Core");
+  sprintf(output[OUT_MASSCHIOC].cNeg,"EMASSOC_CHI");
+  output[OUT_MASSCHIOC].bNeg = 1;
+  output[OUT_MASSCHIOC].dNeg = 1/(EMASSOC_CHI); 
+  output[OUT_MASSCHIOC].iNum = 1;
+  fnWrite[OUT_MASSCHIOC] = &WriteMassChiOC;
+  /* MassChiIC */
+  sprintf(output[OUT_MASSCHIIC].cName,"MassChiIC");
+  sprintf(output[OUT_MASSCHIIC].cDescr,"Mass of Chi in Inner Core");
+  sprintf(output[OUT_MASSCHIIC].cNeg,"EMASSIC_CHI");
+  output[OUT_MASSCHIIC].bNeg = 1;
+  output[OUT_MASSCHIIC].dNeg = 1/(EMASSIC_CHI); 
+  output[OUT_MASSCHIIC].iNum = 1;
+  fnWrite[OUT_MASSCHIIC] = &WriteMassChiIC;
+  /* DTChi */
+  sprintf(output[OUT_DTCHI].cName,"DTChi");
+  sprintf(output[OUT_DTCHI].cDescr,"Core Liquidus Depression");
+  sprintf(output[OUT_DTCHI].cNeg,"K");
+  output[OUT_DTCHI].bNeg = 1;
+  output[OUT_DTCHI].dNeg = 1; 
+  output[OUT_DTCHI].iNum = 1;
+  fnWrite[OUT_DTCHI] = &WriteDTChi;
+  
 
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
@@ -1026,7 +1239,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_HFLUXUMAN].cDescr,"Heat Flux Upper Mantle");
   sprintf(output[OUT_HFLUXUMAN].cNeg,"W/m^2");
   output[OUT_HFLUXUMAN].bNeg = 1;
-  output[OUT_HFLUXUMAN].dNeg = 1;  //KM; 
+  output[OUT_HFLUXUMAN].dNeg = 1;  
   output[OUT_HFLUXUMAN].iNum = 1;
   fnWrite[OUT_HFLUXUMAN] = &WriteHfluxUMan;
   /* HFluxLMan */
@@ -1048,65 +1261,65 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /* HFlowUMan */
   sprintf(output[OUT_HFLOWUMAN].cName,"HflowUMan");
   sprintf(output[OUT_HFLOWUMAN].cDescr,"Heat Flow Upper Mantle");
-  sprintf(output[OUT_HFLOWUMAN].cNeg,"W");
+  sprintf(output[OUT_HFLOWUMAN].cNeg,"TW");
   output[OUT_HFLOWUMAN].bNeg = 1;
-  output[OUT_HFLOWUMAN].dNeg = 1;
+  output[OUT_HFLOWUMAN].dNeg = 1e-12;
   output[OUT_HFLOWUMAN].iNum = 1;
   fnWrite[OUT_HFLOWUMAN] = &WriteHflowUMan;
   /* HFlowLMan */
   sprintf(output[OUT_HFLOWLMAN].cName,"HflowLMan");
   sprintf(output[OUT_HFLOWLMAN].cDescr,"Heat Flow Lower Mantle");
-  sprintf(output[OUT_HFLOWLMAN].cNeg,"W");
+  sprintf(output[OUT_HFLOWLMAN].cNeg,"TW");
   output[OUT_HFLOWLMAN].bNeg = 1;
-  output[OUT_HFLOWLMAN].dNeg = 1;
+  output[OUT_HFLOWLMAN].dNeg = 1e-12;
   output[OUT_HFLOWLMAN].iNum = 1;
   fnWrite[OUT_HFLOWLMAN] = &WriteHflowLMan;
   /* HFlowCMB */
   sprintf(output[OUT_HFLOWCMB].cName,"HflowCMB");
   sprintf(output[OUT_HFLOWCMB].cDescr,"Heat Flow Core-Mantle Boundary");
-  sprintf(output[OUT_HFLOWCMB].cNeg,"W");
+  sprintf(output[OUT_HFLOWCMB].cNeg,"TW");
   output[OUT_HFLOWCMB].bNeg = 1;
-  output[OUT_HFLOWCMB].dNeg = 1;
+  output[OUT_HFLOWCMB].dNeg = 1e-12;
   output[OUT_HFLOWCMB].iNum = 1;
   fnWrite[OUT_HFLOWCMB] = &WriteHflowCMB;
   /* HFlowLatentMan */
   sprintf(output[OUT_HFLOWLATENTMAN].cName,"HflowLatentMan");
   sprintf(output[OUT_HFLOWLATENTMAN].cDescr,"Latent Heat Flow Mantle");
-  sprintf(output[OUT_HFLOWLATENTMAN].cNeg,"W");
+  sprintf(output[OUT_HFLOWLATENTMAN].cNeg,"TW");
   output[OUT_HFLOWLATENTMAN].bNeg = 1;
-  output[OUT_HFLOWLATENTMAN].dNeg = 1;
+  output[OUT_HFLOWLATENTMAN].dNeg = 1e-12;
   output[OUT_HFLOWLATENTMAN].iNum = 1;
   fnWrite[OUT_HFLOWLATENTMAN] = &WriteHflowLatentMan;
   /* HFlowMeltMan */
   sprintf(output[OUT_HFLOWMELTMAN].cName,"HflowMeltMan");
   sprintf(output[OUT_HFLOWMELTMAN].cDescr,"Melt Heat Flow Mantle");
-  sprintf(output[OUT_HFLOWMELTMAN].cNeg,"W");
+  sprintf(output[OUT_HFLOWMELTMAN].cNeg,"TW");
   output[OUT_HFLOWMELTMAN].bNeg = 1;
-  output[OUT_HFLOWMELTMAN].dNeg = 1;
+  output[OUT_HFLOWMELTMAN].dNeg = 1e-12;
   output[OUT_HFLOWMELTMAN].iNum = 1;
   fnWrite[OUT_HFLOWMELTMAN] = &WriteHflowMeltMan;
   /* TidalPowMan */
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
-  sprintf(output[OUT_TIDALPOWMAN].cNeg,"W");
+  sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
   output[OUT_TIDALPOWMAN].bNeg = 1;
-  output[OUT_TIDALPOWMAN].dNeg = 1;
+  output[OUT_TIDALPOWMAN].dNeg = 1e-12;
   output[OUT_TIDALPOWMAN].iNum = 1;
   fnWrite[OUT_TIDALPOWMAN] = &WriteTidalPowMan;
   /* HFlowLatentIC */
   sprintf(output[OUT_HFLOWLATENTIC].cName,"HflowLatentIC");
   sprintf(output[OUT_HFLOWLATENTIC].cDescr,"Latent Heat Release at ICB");
-  sprintf(output[OUT_HFLOWLATENTIC].cNeg,"W");
+  sprintf(output[OUT_HFLOWLATENTIC].cNeg,"TW");
   output[OUT_HFLOWLATENTIC].bNeg = 1;
-  output[OUT_HFLOWLATENTIC].dNeg = 1;
+  output[OUT_HFLOWLATENTIC].dNeg = 1e-12;
   output[OUT_HFLOWLATENTIC].iNum = 1;
   fnWrite[OUT_HFLOWLATENTIC] = &WriteHflowLatentIC;
   /* PowerGravIC */
   sprintf(output[OUT_POWERGRAVIC].cName,"PowerGravIC");
   sprintf(output[OUT_POWERGRAVIC].cDescr,"Gravitational Power Release at ICB");
-  sprintf(output[OUT_POWERGRAVIC].cNeg,"W");
+  sprintf(output[OUT_POWERGRAVIC].cNeg,"TW");
   output[OUT_POWERGRAVIC].bNeg = 1;
-  output[OUT_POWERGRAVIC].dNeg = 1;
+  output[OUT_POWERGRAVIC].dNeg = 1e-12;
   output[OUT_POWERGRAVIC].iNum = 1;
   fnWrite[OUT_POWERGRAVIC] = &WritePowerGravIC;
 
@@ -1175,8 +1388,8 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e EVOLCORE=%e EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);
   fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e STIFFNESS=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC,STIFFNESS);
   fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e THERMDIFFUMAN=%e cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
-  fprintf(fp,"TrefLind=%e ViscRef=%e \n",body[iBody].dTrefLind,body[iBody].dViscRef);
-  //  fprintf(fp,"TrefLind=%e \n",(TREFLIND));
+  fprintf(fp,"TrefLind=%e ViscRef=%e VISCJUMPULM=%e \n",body[iBody].dTrefLind,body[iBody].dViscRef,VISCJUMPULM);
+  fprintf(fp,"DTCHIREF=%e CHI_OC_E=%e PARTITION=%e CHI_IC_E=%e EMASSOC_CHI=%e EMASSIC_CHI=%e EMASSCORE_CHI=%e\n",body[iBody].dDTChiRef,CHI_OC_E,PARTITION_CHI_CORE,CHI_IC_E,EMASSOC_CHI,EMASSIC_CHI,EMASSCORE_CHI);
 }
 
 void AddModuleThermint(MODULE *module,int iBody,int iModule) {
@@ -1186,12 +1399,11 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnInitializeControl[iBody][iModule] = &InitializeControlThermint;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyThermint;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
+  module->fnCountHalts[iBody][iModule] = &CountHaltsThermint;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsThermint;
   module->fnLogBody[iBody][iModule] = &LogBodyThermint;
   module->fnVerify[iBody][iModule] = &VerifyThermint;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltThermint;
-  module->fnVerifyRotation[iBody][iModule] = &VerifyRotationThermint;
   
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;
@@ -1346,17 +1558,63 @@ double fdImk2Man(BODY *body,int iBody) {
   double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (STIFFNESS)*(1.0+ denom2) );
   return imk2;
 }
+
+/* Core Chemistry */
+double fdMassIC(BODY *body, int iBody) {
+  return 4./3*PI*pow(body[iBody].dRIC,3.)*(EDENSIC);
+}
+double fdMassOC(BODY *body, int iBody) {
+  return EMASSCORE-body[iBody].dMassIC;
+}
+double fdMassChiOC(BODY *body, int iBody) {
+  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
+}
+double fdMassChiIC(BODY *body, int iBody) {
+  return EMASSCORE_CHI-body[iBody].dMassChiOC;
+}
+double fdChiOC(BODY *body, int iBody) {
+  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+}
+double fdChiIC(BODY *body, int iBody) {
+  if (body[iBody].dRIC>0.) {
+    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+  } else {
+    return 0.;
+  }
+}
+double fdDTChi(BODY *body, int iBody) {
+  return body[iBody].dDTChiRef*body[iBody].dChiOC/(CHI_OC_E);
+}
+
+
 /* Inner Core Size */
 double fdRIC(BODY *body,int iBody) {
-  //    double numerator=pow((DADCORE)/(ERCORE),2.0)*log((TREFLIND)/body[iBody].dTCMB)-1.0;
+  double dRIC;
+
+  /*  OLD VERSION without light element depression.
     double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
     if (numerator>0) {    //IC Found.
         return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
-    } else {
-        return 0;        //no IC.
-    }
+  */
+  /* NEW VERSION with light element liquidus depression  */
+
+  double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
+  double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+  double numerator=1.+pow((DADCORE)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
+  double denom=1.+pow((DADCORE)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
+  if ((numerator/denom)>0.) {    //IC exists
+    dRIC = (ERCORE)*sqrt(numerator/denom);
+  } else {
+    dRIC = 0;        //no IC.
+  }
+
+  if (dRIC > ERCORE)
+    dRIC = ERCORE;
+
+  return dRIC;
 }
 
+/*  Heat Flows  */
 double fdTidalPowMan(BODY *body,int iBody) {
   /* Peter's version. I think dRotRate should be dMeanMotion.
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
@@ -1393,13 +1651,19 @@ double fdHflowMeltMan(BODY *body,int iBody) {
     return body[iBody].dEruptEff*MeltMassDot*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
 }
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
-    if (body[iBody].dRIC>0) {   //If IC exists.
-      double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
-      //      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log((TREFLIND)/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
-      return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
-    } else {                    //If no IC.
-      return 0;
-    }
+  if (body[iBody].dRIC>0) {   //If IC exists.
+    /* OLD VERSION no Le depression.
+       double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
+       return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
+    */
+    /* NEW VERSION with Le depression */
+    double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
+    double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+    double denom=pow((DADCORE)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
+    return (1./2)*pow((DADCORE),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
+  } else {                    //If no IC.
+    return 0;
+  }
 }
 double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.

@@ -1,0 +1,84 @@
+# Phabitable planet
+sName		c		# Body's name
+saModules	eqtide 		$# Tidal Effects
+		radheat 	$# Radioagenic heating
+		thermint 	$# Geophysics
+		distorb 	$# Planet-planet pertubations
+		distrot 	$# Axial tilt evolution
+		atmesc 		$# Hydrogen escape
+		poise		# Climate
+
+# Physical Properties
+dMass		-1.0  		# Mass, negative -> Earth masses
+dRadius		-1.0  		# Radius, negative -> Earth radii
+dRotPeriod	-1.0  		# Rotation period, negative -> days
+dObliquity	23.5			
+dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+dEcc            0.3		# Eccentricity
+dSemi           0.3		# Semi-major axis, negative -> AU
+
+# DISTORB Parameters
+dInc		5
+dLongA		298
+dLongP		100
+
+# DISTROT Parameters
+dPrecA		255
+
+# EQTIDE Parameters 
+#dTidalTau	-630		# Tidal time lag, negative -> seconds
+#bForceEqSpin    1
+dTidalQ		100		# Tidal phase lag
+dK2		0.3		# Love number of degree 2
+dMaxLockDiff	0.1		# Difference from tidal rotation period before locking
+saTidePerts	star		# Body name(s) of tidal perturbers
+
+# RADHEAT Parameters
+# Initialize 40K
+d40KNumMan      -1		# Numer of potassium-40 atoms, negative -> Earth
+#d40KMassMan    -1
+#d40KPowerMan   -1
+#d40KNumCore     -2		# Numer of potassium-40 atoms, negative -> Earth
+#d40KPowerCore   -1
+d40KMassCore   -1
+# 232Th
+d232ThNumMan	-1		# Number of thorium-232 atoms, negative -> Earth
+#d232ThMassMan  -1
+#d232ThPowerMan -1
+d232ThNumCore	-1		# Number of thorium-232 atoms, negative -> Earth
+# 235U
+d235UNumMan	-1		# Number of uranium-238 atims, negative -> Earth
+#d235UMassMan    -1
+#d235UPowerMan    -1
+d235UNumCore	-1
+# 238U
+d238UNumMan	-1		# Number of uranium-238 atims, negative -> Earth
+#d238UMassMan    -1
+#d238UPowerMan    -1
+d238UNumCore	-1
+
+# THERMINT inputs.
+dTMan  3000.0  #2500.0
+dTCore 6000.0
+dViscRatioMan 5.0  #5.6
+dEruptEff 0.2
+dViscRef  1e8
+
+# ATMESC inputs
+dXFrac		1
+dAtmXAbsEff	0.3
+dSurfWaterMass	-1
+
+# POISE
+dSurfAlbedo     0.3
+iLatCellNum	151
+saGridOutput	-Latitude TempLat AlbedoLat AnnInsol FluxOut
+bClimateModel   sea
+
+# Output
+saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
+	      TMan Tcore -Tglobal AlbedoG -FluxOutGlobal SkipSeas -RadPowerT
+
+

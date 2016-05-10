@@ -84,6 +84,11 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
+  // If doing binary and we're looking at the secondary, return
+  // Since the secondary holds all binary orbital information
+  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    return;
+
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
 
   if (options[OPT_ORBSEMI].iLine[iFile] > -1 && options[OPT_ORBMEANMOTION].iLine[iFile] == -1 && options[OPT_ORBPER].iLine[iFile] == -1)
@@ -98,8 +103,38 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
     if (body[iBody].bPoise) {
-      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-    }  
+      if(body[iBody].bBinary == 0){ // Not binary, regular single-star orbit
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      } 
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 0){ // Set mean motion for CBP (primary,iBody==0;planet,iBody > 1)
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+      }
+      else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) { // Set mean motion for binary, info in secondary
+        body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+      } 
+    } 
+    else if(body[iBody].bPoise == 0)
+    {
+      if(body[iBody].bBinary != 1)
+      {
+        if(iBody > 0) // No binary, regular planet
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+        }
+      }
+      else // Doing binary
+      {
+        if(body[iBody].iBodyType == 0) // CBP
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+        }
+        else if(body[iBody].iBodyType == 1 && iBody == 1) // binary orbit info in secondary
+        {
+          body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+        }
+      }
+    }
+
     return;
   }
   
@@ -125,18 +160,48 @@ void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose)
   
   /* Only one option set */
   
-  if (dMeanMotion > 0)
-    body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
-  if (dPeriod > 0)
-    body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
-  if (dSemi > 0)
-    body[iBody].dSemi = dSemi;
-
-  if (dMeanMotion == 0)
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  if (dMeanMotion > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass+body[1].dMass,body[iBody].dMass,dMeanMotion);
+    else if(body[iBody].bBinary && iBody == 1) // binary
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[1].dMass,dMeanMotion);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = fdMeanMotionToSemi(body[0].dMass,body[iBody].dMass,dMeanMotion);
+  }
+  if (dPeriod > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = fdPeriodToSemi(dPeriod,(body[0].dMass+body[iBody].dMass));
+  }
+  if (dSemi > 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dSemi = dSemi;
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // binary
+      body[iBody].dSemi = dSemi;  
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dSemi = dSemi;
+  }
+  if (dMeanMotion == 0) {
+    if(body[iBody].bBinary && body[iBody].iBodyType == 0) // CBP
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass+body[iBody].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Primary
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[1].dMass);
+    else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+    {}
+    else
+      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
+  }
   //XXX Initialize central body parameters.
-  
-  
+
 }
 
 /*
@@ -152,33 +217,20 @@ void IntegrationWarning(char cName1[],char cName2[],char cName3[],char cFile[],i
 }
 
 void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnIntegrate *fnOneStep) {
-  int iFile,iBack,iForw;
+  int iFile,iFile1,iFile2;
   char cTmp[OPTLEN];
 
   /* Were both Forward and Backward Set? */
   if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
     fprintf(stderr,"ERROR: Both %s and %s set. Only one is allowed.\n",options[OPT_BACK].cName,options[OPT_FORW].cName);
-    if (options[OPT_BACK].cFile[0] > 0)
-      iBack = 0;
-    else if (options[OPT_BACK].cFile[1] > 0)
-      iBack = 1;
-    else if (options[OPT_BACK].cFile[2] > 0)
-      iBack = 2;
-    else {
-      fprintf(stderr,"ERROR: Cannot determine location of %s.\n",options[OPT_BACK].cName);
-      exit(EXIT_INPUT);
+    /* Now identify which files contained the two offending options */
+    for (iFile=0;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_BACK].iLine[iFile] > 0)
+	iFile1=iFile; // Error of multiple occurences checked in Read
+      if (options[OPT_FORW].iLine[iFile] > 0)
+	iFile2=iFile; // Error of multiple occurences checked in Read
     }
-    if (options[OPT_FORW].cFile[0] > 0)
-      iForw = 0;
-    else if (options[OPT_FORW].cFile[1] > 0)
-      iForw = 1;
-    else if (options[OPT_FORW].cFile[2] > 0)
-      iForw = 2;
-    else {
-      fprintf(stderr,"ERROR: Cannot determine location of %s.\n",options[OPT_FORW].cName);
-      exit(EXIT_INPUT);
-    }
-    DoubleLineExit(options[OPT_BACK].cFile[iBack],options[OPT_FORW].cFile[iForw],options[OPT_BACK].iLine[iBack],options[OPT_FORW].iLine[iForw]);
+    DoubleLineExit(options[OPT_BACK].cFile[iFile1],options[OPT_FORW].cFile[iFile2],options[OPT_BACK].iLine[iFile1],options[OPT_FORW].iLine[iFile2]);
   }
 
   /* Fix backward output file */
@@ -255,6 +307,19 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       control->Evolve.iOneStep = RUNGEKUTTA;
       *fnOneStep = &RungeKutta4Step;
     }
+  }
+
+  /* Make sure output interval is less than stop time */
+  if (control->Evolve.dStopTime < control->Io.dOutputTime) {
+    fprintf(stderr,"ERROR: %s < %s is not allowed.\n",options[OPT_STOPTIME].cName,options[OPT_OUTPUTTIME].cName);
+    /* Now identify which files contained the two offending options */
+    for (iFile=0;iFile<files->iNumInputs;iFile++) {
+      if (options[OPT_STOPTIME].iLine[iFile] > 0)
+	iFile1=iFile; // Error of multiple occurences checked in Read
+      if (options[OPT_OUTPUTTIME].iLine[iFile] > 0)
+	iFile2=iFile; // Error of multiple occurences checked in Read
+    }
+    DoubleLineExit(options[OPT_STOPTIME].cFile[iFile1],options[OPT_STOPTIME].cFile[iFile2],options[OPT_STOPTIME].iLine[iFile1],options[OPT_OUTPUTTIME].iLine[iFile2]);
   }
 }
 
@@ -341,6 +406,8 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
   int iFileNum = iBody+1;
   /* Was more than one version set? */
 
+  /* !!!!!! ------ RotRate IS ALWAYS UPDATED AND CORRECT -------- !!!!!! */
+
   if (options[OPT_ROTPER].iLine[iFileNum] >= 0) {
     /* Rotation Period set -- if Rate or Vel set, exit */
     if (options[OPT_ROTRATE].iLine[iFileNum] >= 0) 
@@ -373,18 +440,6 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
-void VerifyRotation(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options,char cFile[],int iBody) {
-  int iModule;
-
-  /* !!!!!! ------ RotRate IS ALWAYS UPDATED AND CORRECT -------- !!!!!! */
-
-  VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,cFile);
-
-  /* Verify modules */
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-    module->fnVerifyRotation[iBody][iModule](body,control,options,cFile,iBody);
-}
-
 /*
  *
  * Master Verify subroutine
@@ -409,12 +464,15 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody+1,files->Infile[iBody+1].cIn,control->Io.iVerbose);
 
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+      // Must initialize entire body struct before verifying modules
+      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
     /* Verify Modules */
 
-    VerifyRotation(body,control,module,options,files->Infile[iBody+1].cIn,iBody);
+    VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
     /* XXX Only module reference in file -- can this be changed? */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise)) {
+    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (iBody > 0 && body[iBody].bBinary)) {
       VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
     }
 
@@ -424,21 +482,19 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   InitializeHalts(control,module);
   InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    VerifyHalts(body,control,module,options,iBody);
+  VerifyHalts(body,control,module,options);
 
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      // Must initialize entire body struct before verifying modules
-      module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
       module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
     }
   }
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
-    
+    }
     VerifyModuleMulti(body,control,files,module,options,iBody);
 
     /* Must allocate memory in control struct for all perturbing bodies */

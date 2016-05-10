@@ -5,7 +5,6 @@
  * Subroutines for output and logging.
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,6 +29,17 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime,cUnit);
   }
+}
+
+/* iBodyType */
+void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if(body[iBody].bBinary) {
+    *dTmp = body[iBody].iBodyType;
+  }
+  else
+    *dTmp = -1;
+
+  strcpy(cUnit,"");
 }
 
 /*
@@ -94,6 +104,31 @@ void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   }
 }  
 
+void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Multiple modules can contribute to this output */
+  int iModule;
+
+  *dTmp=0;
+  /*
+  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
+    // Only module reference in file, can this be changed? XXX
+    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
+
+  */
+
+  *dTmp = body[iBody].dLXUVFlare;
+  *dTmp += fdLXUVStellar(body,system,update,iBody,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+
+}
+
 /*
  * M
  */
@@ -142,10 +177,21 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-  else
-    *dTmp = -1;
+  if(body[iBody].bBinary != 1) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // binary
+      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+    else
+      *dTmp = -1;
+  }
   sprintf(cUnit,"");
 }
 
@@ -163,10 +209,20 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  if(body[iBody].bBinary == 0) { // Not doing binary
   if (iBody > 0)
-    *dTmp = body[iBody].dMeanMotion;
+    *dTmp = body[iBody].dMeanMotion; 
   else
     *dTmp = -1;
+  }
+  else { // doing binary 
+  if(iBody > 0)
+  {
+    *dTmp = body[iBody].dMeanMotion;
+  }
+  else
+    *dTmp = -1;
+  } 
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -179,10 +235,21 @@ void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (iBody > 0)
-    *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
-  else
-    *dTmp=-1;
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
+    else
+      *dTmp=-1;
+  }
+  else // Doing binary
+  {
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[1].dMass+body[iBody].dMass));
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+      *dTmp = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass+body[iBody].dMass));
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -194,10 +261,21 @@ void WriteOrbPeriod(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteOrbSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (iBody > 0)
-    *dTmp = body[iBody].dSemi;
-  else
-    *dTmp = -1;
+  
+  if(body[iBody].bBinary == 0) { // Not doing binary
+    if (iBody > 0)
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
+  else { // Doing binary
+    if(body[iBody].iBodyType == 0) // CBP
+      *dTmp = body[iBody].dSemi;
+    else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
+      *dTmp = body[iBody].dSemi;
+    else
+      *dTmp = -1;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -444,6 +522,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_AGE] = &WriteAge;
 
   /*
+   * BodyType
+   */
+
+  sprintf(output[OUT_BODYTYPE].cName,"BodyType");
+  sprintf(output[OUT_BODYTYPE].cDescr,"Type of Body (0 == planet)");
+  output[OUT_BODYTYPE].iNum = 1;
+  fnWrite[OUT_BODYTYPE] = &WriteBodyType;
+
+  /*
    * D
    */
   
@@ -487,6 +574,14 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGP].iNum = 1;
   fnWrite[OUT_LONGP] = &WriteLongP; 
   
+  sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");
+  sprintf(output[OUT_LXUVTOT].cDescr,"Total XUV Luminosity");
+  sprintf(output[OUT_LXUVTOT].cNeg,"LSUN");
+  output[OUT_LXUVTOT].bNeg = 1;
+  output[OUT_LXUVTOT].dNeg = 1./LSUN;
+  output[OUT_LXUVTOT].iNum = 1;
+  fnWrite[OUT_LXUVTOT] = &WriteLXUVTot;
+
   /*
    * M
    */
@@ -699,8 +794,8 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
   int iBody,iModule;
 
   // Add new mult-module outputs here
-  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
 
+  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
   for (iBody=0;iBody<iNumBodies;iBody++) {
     // Malloc number of modules for each multi-module output
     output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
@@ -710,6 +805,18 @@ void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
       output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
     }
   }
+
+  output[OUT_LXUVTOT].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    // Malloc number of modules for each multi-module output
+    output[OUT_LXUVTOT].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      /* Initialize them all to return nothing, then they get changed 
+      from AddModule subroutines */
+      output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdReturnOutputZero;
+    }
+  }
+
 }
 
 /*
@@ -884,9 +991,9 @@ void LogBodyRelations(CONTROL *control,FILE *fp,int iBody) {
 
 void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OPTLEN];
+  char cCol[NUMOUT][OUTLEN];
   double *dTmp;
-  char cUnit[48],cTmp[48];
+  char cUnit[OUTLEN],cTmp[OUTLEN];
   
   for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
@@ -914,9 +1021,9 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
 
 void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OPTLEN];
+  char cCol[NUMOUT][OUTLEN];
   double *dTmp;
-  char cUnit[48],cTmp[48];
+  char cUnit[OUTLEN],cTmp[OUTLEN];
   
 
   for (iCol=0;iCol<files->Outfile[iBody].iNumGrid;iCol++) {
@@ -999,6 +1106,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     fprintf(fp,"\n----- BODY: %s ----\n",body[iBody].cName);
+    fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
@@ -1022,6 +1130,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
+
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
@@ -1042,7 +1151,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 
   /* System Properties */
   LogSystem(body,control,module,output,system,update,fnWrite,fp);
-  
+
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 
@@ -1108,10 +1217,11 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         sprintf(cPoiseGrid,"%s.%s.Climate",system->cName,body[iBody].cName);
    
         if (control->Evolve.dTime == 0 && iLat == 0) {
-          WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-          WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-                    WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-
+          if (body[iBody].bClimateModel == SEA) {
+            WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+          }
           fp = fopen(cPoiseGrid,"w");     
         } else {
           fp = fopen(cPoiseGrid,"a");
@@ -1231,8 +1341,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputDistRot(output,fnWrite);
   InitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
+  InitializeOutputBinary(output,fnWrite);
+  InitializeOutputFlare(output,fnWrite);
 
 }
-
-
-

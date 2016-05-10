@@ -109,21 +109,3 @@ would generate initial conditions for every possible combination of ``dSemi`` an
 you like, so you have the power to generate a large number of files very quickly. Use this
 wisely: test with small numbers first to ensure that files end up in the correct locations
 and that initial conditions are indeed output with the desired values.  
-
-Finally, let's look at what ``prefix`` does. This value should be a short, yet descriptive
-string that will be used in naming output directories. For example, if ``destfolder`` is 
-set to ``TheMoonRules_``, the line
-
-    dSemi  [1, 2, n10]  a
-    
-will generate ten trials (if this is the only option being varied), with names like 
-``TheMoonRules_a0``, ``TheMoonRules_a1``, and so on. With two parameters:
-    
-    dSemi  [1, 2, n10]  a
-    dEcc   [0.1, 0.2, n10]  e
-    
-output folders will look like this: ``TheMoonRules_a0_e0``, ``TheMoonRules_a0_e1``, etc.
-Vary as many parameters as you like, but be sure to give them prefix tags that are 
-meaningful to you. 
-  
-      

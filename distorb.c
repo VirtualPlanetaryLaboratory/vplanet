@@ -14,15 +14,7 @@
 #include "options.h"
 #include "output.h"
 
-void InitializeControlDistOrb(CONTROL *control) {
-  /* Not sure if I need anything here yet */
-}
-
-void InitializeModuleDistOrb(CONTROL *control,MODULE *module) {
-  /* Anything here? */
-}
-
-void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iBody) {
+void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
   dest[iBody].dPinc = src[iBody].dPinc;
@@ -353,7 +345,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
   
   sprintf(options[OPT_ORMAXECC].cName,"bOverrideMaxEcc");
-  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity in DistOrb (MaxEcc = 0.6627434)");
+  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity in DistOrb (MaxEcc = MAXORBDISTORB)");
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
   options[OPT_ORMAXECC].iType = 0;  
@@ -586,7 +578,7 @@ void InitializeQincDistOrbRD4(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
       body[iBody].iaGravPerts[iPert] = j;
@@ -642,7 +634,7 @@ void InitializeQincDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
@@ -955,7 +947,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 //       LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
 //     }
   }
-  
+
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistOrb;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyDistOrb;
 }
@@ -1067,12 +1059,14 @@ void CountHaltsDistOrb(HALT *halt,int *iNumHalts) {
 }
 
 void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+  int iHaltMaxEcc=0,iNumMaxEcc=0; // If set for one body, set for all
+
   /* Mandatory halt for DistOrb */
   if (body[iBody].bDistOrb) {
     if (control->Halt[iBody].bOverrideMaxEcc==0) {
-      /* If you don't override max ecc, and you HAVEN'T set it manually for this body, default to 0.6627434 */
+      /* If you don't override max ecc, and you HAVEN'T set it manually for this body, default to MAXECCDISTORB (== 0.6627434) */
       if (control->Halt[iBody].dMaxEcc==1) {
-        control->Halt[iBody].dMaxEcc = 0.6627434;
+        control->Halt[iBody].dMaxEcc = MAXECCDISTORB;
         control->fnHalt[iBody][(*iHalt)++] = &HaltMaxEcc;
       }
     }
@@ -1488,7 +1482,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = DISTORB;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlDistOrb;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistOrb;
   module->fnCountHalts[iBody][iModule] = &CountHaltsDistOrb;
   module->fnLogBody[iBody][iModule] = &LogBodyDistOrb;
@@ -1496,7 +1489,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsDistOrb;
   module->fnVerify[iBody][iModule] = &VerifyDistOrb;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistOrb;
-//   module->fnVerifyRotation[iBody][iModule] = &VerifyRotationDistOrb;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistOrb;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistOrb;
@@ -1513,9 +1505,13 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+  if (body[iBody].bPoise) {
+    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+    body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+  }
 }
 
-void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
 /* Factorial function. Nuff sed. */

@@ -5,6 +5,7 @@ import subprocess as sb
 import numpy as np
 import re
 from IPython.core.debugger import Tracer
+import vspace_hyak
 import itertools as it
 
 
@@ -216,4 +217,22 @@ elif numvars >= 1:
     fOut.close()        
     count += 1    #move to next combination
 
-  
+# Just do this block if you want to 
+if(False):
+    # Now that all the simulation directories have been populated,
+    # Make the submission scripts for hyak
+    # Parse input file
+
+    # TODO: allow the input file to include flags to set default things for
+    # the .pbs script and for whether or not to run this section    
+    
+    
+    destfolder, trialname, infiles, src = vspace_hyak.parseInput(infile=inputf)
+        
+    # Make command list and .sh files to run the scripts
+    vspace_hyak.makeCommandList(simdir=destfolder,infile=inputf)
+    
+    # Make the submission script
+    vspace_hyak.makeHyakVPlanetPBS(script="run_vplanet.pbs",taskargs="vplArgs.txt",
+                           walltime="00:30:00",
+                           simdir=destfolder,logdir=destfolder)

@@ -422,6 +422,9 @@ double fdDTChi(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
+double fdSurfEnFluxThermint(BODY*,SYSTEM*,UPDATE*,int,int);
+
+
 /* MATH  FUNCTIONS */
 double cube(double);
 double root(int,BODY*,int,double,double,double,int);

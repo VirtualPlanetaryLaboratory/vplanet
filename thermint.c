@@ -13,9 +13,14 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlThermint(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
+void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+
+  /* A non-eqtide run requires this to be 0 to start. If eqtide is called,
+     then the value will be updated in PropsAuxMultiEqtideThermint. */
+
+  body[iBody].dTidalPowMan = 0;
 }
+
 
 void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
@@ -51,7 +56,8 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dDepthMeltMan=src[iBody].dDepthMeltMan;
   dest[iBody].dTDepthMeltMan=src[iBody].dTDepthMeltMan;
   dest[iBody].dTJumpMeltMan=src[iBody].dTJumpMeltMan;
-  /* Tides */
+  /* Tides XXX Should these live in eqtide? They're really only for when
+   Q is allowed to change, which requires thermint. */
   dest[iBody].dK2Man=src[iBody].dK2Man;
   dest[iBody].dImk2Man=src[iBody].dImk2Man;
   /* Heat Flows */
@@ -78,12 +84,6 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMassChiOC=src[iBody].dMassChiOC;
   dest[iBody].dMassChiIC=src[iBody].dMassChiIC;
   dest[iBody].dDTChi=src[iBody].dDTChi;
-}
-
-void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-}
-
-void InitializeUpdateTmpBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
 }
 
 /**************** RADHEAT options ********************/
@@ -474,7 +474,7 @@ void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }
 
-/**************** RADHEAT update ****************/
+/**************** THERMINT update ****************/
 
 void InitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
   /* Initially allow all radiogenic heat sources to be present. If any are 0, 
@@ -889,6 +889,8 @@ void WriteHflowMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
+/* All tidal phenomena should live in eqtide.c
 void WriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTidalPowMan;
   if (output->bDoNeg[iBody]) {
@@ -896,6 +898,8 @@ void WriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+*/
+
 void WriteHflowLatentIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLatentIC;
   if (output->bDoNeg[iBody]) {
@@ -1298,14 +1302,15 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWMELTMAN].dNeg = 1e-12;
   output[OUT_HFLOWMELTMAN].iNum = 1;
   fnWrite[OUT_HFLOWMELTMAN] = &WriteHflowMeltMan;
-  /* TidalPowMan */
+  /* TidalPowMan
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
   output[OUT_TIDALPOWMAN].bNeg = 1;
   output[OUT_TIDALPOWMAN].dNeg = 1e-12;
   output[OUT_TIDALPOWMAN].iNum = 1;
-  fnWrite[OUT_TIDALPOWMAN] = &WriteTidalPowMan;
+  fnWrite[OUT_TIDALPOWMAN] = &WriteTidalPowMan; */
+
   /* HFlowLatentIC */
   sprintf(output[OUT_HFLOWLATENTIC].cName,"HflowLatentIC");
   sprintf(output[OUT_HFLOWLATENTIC].cDescr,"Latent Heat Release at ICB");
@@ -1353,7 +1358,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
-    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxRadheat; //This is need to print the global var to log.  Needs to be fixed.
+    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxThermint; //This is need to print the global var to log.  Needs to be fixed.
 }
 
 /************ THERMINT Logging Functions **************/
@@ -1396,9 +1401,6 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = THERMINT;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlThermint;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyThermint;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsThermint;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsThermint;
   module->fnLogBody[iBody][iModule] = &LogBodyThermint;
@@ -1413,7 +1415,7 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreThermint;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionThermint;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionThermint;
+  module->fnFinalizeOutputFunction[iBody][iModule] = FinalizeOutputFunctionThermint;
 
 }
 
@@ -1614,13 +1616,17 @@ double fdRIC(BODY *body,int iBody) {
   return dRIC;
 }
 
-/*  Heat Flows  */
+/* All tidal phenomena should exist exclusively in eqtide.c
+
+ Heat Flows 
 double fdTidalPowMan(BODY *body,int iBody) {
-  /* Peter's version. I think dRotRate should be dMeanMotion.
+   Peter's version. I think dRotRate should be dMeanMotion.
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-  */
+  
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
 }
+
+*/
 
 /* Heat Fluxes/flows */
 double fdHfluxUMan(BODY *body,int iBody) {
@@ -1773,4 +1779,15 @@ double fdSolTempDiffMan(double depth,BODY *body,int iBody) { //Given a depth and
     double solidus=fdSolidusMan(depth);
     double geotherm=TSURF+body[iBody].dSignTJumpUMan*body[iBody].dTJumpUMan*erf(2.0*depth/body[iBody].dBLUMan); //DB14 (16)
     return solidus-geotherm;
+}
+
+double fdSurfEnFluxThermint(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+
+  /* dHFlowUMan is the energy flux at the top of the mantle, but includes 
+     radiogenic heating. Therefore we must subtract off the radiogenic
+     heating from the core and mantle, but not the crust, which is not
+     part of thermint. */
+
+  //return (body[iBody].dHflowUMan - (fdRadPowerMan(update,iBody)+fdRadPowerCore(update,iBody)))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+  return (body[iBody].dHflowUMan - fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }

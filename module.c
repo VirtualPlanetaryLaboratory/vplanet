@@ -490,12 +490,15 @@ void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
-  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+
+  // Maybe don't call? XXX
+  //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
 
-  body[iBody].dImK2 = fdImk2Man(body,iBody);
+  //body[iBody].dImK2 = fdImk2Man(body,iBody);
   PropsAuxCPL(body,update,iBody);
-  body[iBody].dTidePower = fdCPLTidePower(body,iBody);
+  // Call dTidePowerMan
+  body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
 }
 
 /* This does not seem to be necessary

@@ -225,7 +225,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	    }
 	  }
 	}
->>>>>>> origin/master
       }
     }
   }

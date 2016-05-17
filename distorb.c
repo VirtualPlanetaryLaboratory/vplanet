@@ -217,6 +217,30 @@ void ReadOverrideMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 //     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
 }
 
+void ReadHaltHillStab(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->Halt[iFile-1].bHillStab = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    control->Halt[iFile-1].bHillStab = options->dDefault;
+}
+
+void ReadHaltCloseEnc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->Halt[iFile-1].bCloseEnc = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    control->Halt[iFile-1].bCloseEnc = options->dDefault;
+}
+
 void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -364,6 +388,22 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORMAXECC].iMultiFile = 0; 
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
   
+  sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
+  sprintf(options[OPT_HALTHILLSTAB].cDescr,"Enforce Hill stability criterion (halt if failed)");
+  sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
+  options[OPT_HALTHILLSTAB].dDefault = 0;
+  options[OPT_HALTHILLSTAB].iType = 0;  
+  options[OPT_HALTHILLSTAB].iMultiFile = 0; 
+  fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
+  
+  sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
+  sprintf(options[OPT_HALTCLOSEENC].cDescr,"Halt if orbits get too close");
+  sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
+  options[OPT_HALTCLOSEENC].dDefault = 0;
+  options[OPT_HALTCLOSEENC].iType = 0;  
+  options[OPT_HALTCLOSEENC].iMultiFile = 0; 
+  fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
+  
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
   sprintf(options[OPT_EIGENSET].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
@@ -395,6 +435,8 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTLAPL].iType = 0;  
   options[OPT_OUTPUTLAPL].iMultiFile = 0; 
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
+  
+  
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -474,6 +516,13 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
     options[OPT_ORBITMODEL].iLine[0] = 1;
   }  
 }
+
+
+// void VerifyStabilityHalts(CONTROL *control,FILES *files,OPTIONS *options) {
+//   int iFile, iHillSet, iCloseSet;
+//   /* make sure user doesn't set both bHaltHillStab and bHaltCloseEnc */
+//   
+// }
 
 void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
@@ -668,6 +717,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   int i, j=0, iPert=0, jBody=0;
   
   VerifyOrbitModel(control,files,options);
+//   VerifyStabilityHalts(control,files,options);
   body[iBody].dLOrb = malloc(3*sizeof(double));
   body[iBody].dLOrbTmp = malloc(3*sizeof(double));
   if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
@@ -1069,7 +1119,8 @@ void CountHaltsDistOrb(HALT *halt,int *iNumHalts) {
     }
   }
   /* halt for close encounters */
-  (*iNumHalts)++;
+  if (halt->bHillStab || halt->bCloseEnc)
+    (*iNumHalts)++;
 }
 
 void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -1084,33 +1135,89 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
         control->fnHalt[iBody][(*iHalt)++] = &HaltMaxEcc;
       }
     }
-    control->Halt[iBody].dCloseEnc = CLOSEENCDISTORB;
-    control->fnHalt[iBody][(*iHalt)++] = &HaltCloseEnc;
+//     control->Halt[iBody].bHillStab = HILLSTABDISTORB;
+    if (control->Halt[iBody].bHillStab) {
+      control->fnHalt[iBody][(*iHalt)++] = &HaltHillStab;
+    } else if (control->Halt[iBody].bCloseEnc) {
+      control->fnHalt[iBody][(*iHalt)++] = &HaltCloseEnc;
+    }
   }
+}
+
+int HaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  int iPert, jBody;
+  double mu1, mu2, alpha, gamma1, gamma2, delta, crit, hill;
+  
+  if (halt->bHillStab == 1) {
+    for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+      /* I have to loop over iBody here, ultimately because I want to have to set bHaltHillStab
+         only once, not in every file. There is no easy way to set bHillStab for one body and
+         distribute that to all others before the number of halts are counted. So, I just set it
+         once and check Hill stability for all planets during the one call of HaltHillStab(). */
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        jBody = body[iBody].iaGravPerts[iPert];
+        if (body[jBody].dSemi < body[iBody].dSemi) {
+          //jBody is the inner planet
+          mu1 = body[jBody].dMass/body[0].dMass;
+          mu2 = body[iBody].dMass/body[0].dMass;
+          gamma1 = sqrt(1-(pow(body[jBody].dHecc,2)+pow(body[jBody].dKecc,2)));
+          gamma2 = sqrt(1-(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)));
+          delta = sqrt(body[iBody].dSemi/body[jBody].dSemi);
+        } else if (body[jBody].dSemi > body[iBody].dSemi) {
+          //jBody is the outer planet
+          mu2 = body[jBody].dMass/body[0].dMass;
+          mu1 = body[iBody].dMass/body[0].dMass;
+          gamma2 = sqrt(1-(pow(body[jBody].dHecc,2)+pow(body[jBody].dKecc,2)));
+          gamma1 = sqrt(1-(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)));
+          delta = sqrt(body[jBody].dSemi/body[iBody].dSemi);
+        }
+        alpha = mu1 + mu2;
+        crit = 1.0 + pow((3./alpha),(4./3))*mu1*mu2;
+        hill = pow(alpha,-3)*(mu1+mu2/pow(delta,2))*pow((mu1*gamma1+mu2*gamma2*delta),2);
+        if (hill < crit) {
+          if (io->iVerbose >= VERBPROG) {
+            printf("HALT: hill stability criterion failed for planets %d and %d",iBody,jBody);
+            printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+          }
+          return 1;
+        }
+      }
+    }
+  }
+  return 0;
 }
 
 int HaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   int iPert, jBody;
+  double dDR;
   
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-    jBody = body[iBody].iaGravPerts[iPert];
-    if (body[jBody].dSemi < body[iBody].dSemi) {
-      //comparing apocentre of inner planet with pericentre of outer
-      if ((body[iBody].dRPeri-body[jBody].dRApo) < 4*MutualHillRad(body,iBody,jBody)) {
-        if (io->iVerbose >= VERBPROG) {
-          printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
-          printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+  if (halt->bCloseEnc == 1) {
+    for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        jBody = body[iBody].iaGravPerts[iPert];
+        if (body[jBody].dSemi < body[iBody].dSemi) {
+          //comparing apocentre of inner planet with pericentre of outer
+          dDR = fabs(body[iBody].dRPeri-body[jBody].dRApo);
+          //dDR = MinOrbitSep3D(body,iBody,jBody);
+          if (dDR < 4*MutualHillRad(body,iBody,jBody)) {
+            if (io->iVerbose >= VERBPROG) {
+              printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
+              printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+            }
+            return 1;
+          }
+        } else if (body[jBody].dSemi > body[iBody].dSemi) {
+          //comparing apocentre of inner planet with pericentre of outer
+          dDR = fabs(body[jBody].dRPeri-body[iBody].dRApo);
+          // dDR = MinOrbitSep3D(body,iBody,jBody);
+          if (dDR < 4*MutualHillRad(body,iBody,jBody)) {
+            if (io->iVerbose >= VERBPROG) {
+              printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
+              printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+            }
+            return 1;
+          }
         }
-        return 1;
-      }
-    } else if (body[jBody].dSemi > body[iBody].dSemi) {
-      //comparing apocentre of inner planet with pericentre of outer
-      if ((body[iBody].dRApo-body[jBody].dRPeri) < 4*MutualHillRad(body,iBody,jBody)) {
-        if (io->iVerbose >= VERBPROG) {
-          printf("HALT: close encounter between planets %d and %d = ",iBody,jBody);
-          printf(" at %.2e years\n",evolve->dTime/YEARSEC);
-        }
-        return 1;
       }
     }
   }
@@ -1549,11 +1656,10 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
-  if (body[iBody].bPoise) {
-    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
-    body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-    body[iBody].dSinc = sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2));
-  }
+  body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+  body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+  body[iBody].dSinc = sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2));
+    
   body[iBody].dRPeri = (1.0-sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)))* \
                           body[iBody].dSemi;
   body[iBody].dRApo = (1.0+sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)))* \
@@ -1562,6 +1668,76 @@ void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) {
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
+
+double MinOrbitSep2D(BODY *body, int iBody, int jBody) {
+  double dTheta=0, dMin, dR1, dR2, dDR;
+  int i;
+  
+  dMin = fabs(body[iBody].dSemi-body[jBody].dSemi);
+  for (i=0;i<360;i++) {
+    dR1 = body[iBody].dSemi*(1-pow(body[iBody].dHecc,2)-pow(body[iBody].dKecc,2))/ \
+         (1+sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2))*cos(dTheta-body[iBody].dLongP));
+    dR2 = body[jBody].dSemi*(1-pow(body[jBody].dHecc,2)-pow(body[jBody].dKecc,2))/ \
+         (1+sqrt(pow(body[jBody].dHecc,2)+pow(body[jBody].dKecc,2))*cos(dTheta-body[jBody].dLongP));
+    dDR = fabs(dR1-dR2);
+    if (dDR < dMin) {
+      dMin = dDR;
+    }
+    dTheta += PI/180.;
+  }
+  
+  return dMin;
+}
+
+double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
+  //XXX currently only works if bInvPlane = 1, since dCartPos is not malloc'd otherwise
+    
+  double dTheta=0, dMin, dR1, dR2, dDR, cosE, f, xtmp, ytmp;
+  int i;
+  
+  dMin = HUGE;
+  for (i=0;i<360;i++) {
+    f = (dTheta - body[iBody].dLongP);
+    while (f<0) f+=2*PI;
+    cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
+    if (f <= PI) body[iBody].dEccA = acos(cosE);
+    if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
+  
+    xtmp = xinit(body, iBody);
+    ytmp = yinit(body, iBody);
+    
+    body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
+    body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
+    body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+    
+    f = (dTheta - body[jBody].dLongP);
+    while (f<0) f+=2*PI;
+    cosE = (cos(f)+body[jBody].dEcc) / (1.0+body[jBody].dEcc*cos(f));
+    if (f <= PI) body[jBody].dEccA = acos(cosE);
+    if (f > PI) body[jBody].dEccA = 2.*PI - acos(cosE);
+    
+    xtmp = xinit(body, jBody);
+    ytmp = yinit(body, jBody);
+    
+    body[jBody].dCartPos[0] = xtmp*(xangle1(body,jBody))+ytmp*(xangle2(body,jBody));
+    body[jBody].dCartPos[1] = xtmp*(yangle1(body,jBody))+ytmp*(yangle2(body,jBody));
+    body[jBody].dCartPos[2] = xtmp*(zangle1(body,jBody))+ytmp*(zangle2(body,jBody));
+    
+    dDR = sqrt(pow(body[iBody].dCartPos[0]-body[jBody].dCartPos[0],2) + \
+               pow(body[iBody].dCartPos[1]-body[jBody].dCartPos[1],2) + \
+               pow(body[iBody].dCartPos[2]-body[jBody].dCartPos[2],2));
+  
+    dDR *= AUCM;
+    
+    if (dDR < dMin) {
+      dMin = dDR;
+    }
+    dTheta += PI/180.;
+  }
+  
+  return dMin;
+}
+
 
 /* Factorial function. Nuff sed. */
 unsigned long int factorial(unsigned int n)
@@ -1620,7 +1796,6 @@ double MutualHillRad(BODY *body, int iBody, int jBody) {
   return 0.5*pow((body[iBody].dMass+body[jBody].dMass)/body[0].dMass,1./3)*\
           (body[iBody].dSemi+body[jBody].dSemi);
 }
-
 
 double GRCorrMatrix(BODY *body, int jBody, int kBody) {
   double n, GRC;

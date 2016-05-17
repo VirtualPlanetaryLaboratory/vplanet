@@ -93,7 +93,7 @@
 #define OPTDESCR      128    /* Number of characters in option description */
 #define OUTLEN        48     /* Maximum number of characters in an output column header */
 #define LINE          128   /* Maximum number of characters in a line */
-#define NAMELEN       50
+#define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -522,6 +522,8 @@ typedef struct {
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
+  double dSeasOutputTime;
+  double dSeasNextOutput;
   int bSkipSeas;
   int bSkipSeasEnabled;
   int bSnowball;
@@ -995,6 +997,8 @@ typedef struct {
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
+  int bHillStab;       /**< halt if 2 planets fail Hill stability crit (technically valid for only 2 planets)*/
+  int bCloseEnc;       /**< halt if any planet pair has orbits too close (crudely comparing inner's apocenter and outer's pericenter)*/
 
   /* POISE */
   int bHaltMinIceDt;  /**< Halt if ice flow time-step falls below a minimum value */

@@ -102,7 +102,6 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TOTICEBALANCE    1827
 #define OUT_SKIPSEAS         1828
 
-
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831
 #define OUT_ALBEDOLAT        1832
@@ -119,6 +118,10 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ENERGYRESL       1843
 #define OUT_ENERGYRESW       1844
 #define OUT_BEDROCKH         1845
+#define OUT_TEMPLANDLAT      1846
+#define OUT_TEMPWATERLAT     1847
+#define OUT_ALBEDOLANDLAT    1848
+#define OUT_ALBEDOWATERLAT   1849
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

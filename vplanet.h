@@ -566,6 +566,8 @@ typedef struct {
 
   /* Arrays for seasonal model */
   double *daAlbedoAvg;
+  double *daAlbedoAvgL;
+  double *daAlbedoAvgW;
   double *daAlbedoLand;
   double *daAlbedoLW;
   double *daAlbedoWater;
@@ -626,6 +628,8 @@ typedef struct {
   double *daSourceLW;     /**< Combined source function what matrix operates on */
   double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
   double *daTempAvg;
+  double *daTempAvgL;
+  double *daTempAvgW;
   double **daTempDaily;
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */

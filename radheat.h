@@ -256,7 +256,8 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 #define OUT_RADPOWERMAN         1190  
 #define OUT_RADPOWERCORE        1191
-#define OUT_RADPOWERTOTAL       1192  
+#define OUT_RADPOWERCRUST       1192
+#define OUT_RADPOWERTOTAL       1193  
 #define OUT_SURFENFLUXRADHEAT   1195
 
 void HelpOutputRadheat(OUTPUT*);
@@ -355,3 +356,5 @@ double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD235UNumCoreDt(BODY*,SYSTEM*,int*); 
+
+double fdRadPowerCrust(UPDATE*,int);

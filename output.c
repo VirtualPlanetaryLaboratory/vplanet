@@ -701,7 +701,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SURFENFLUX].cDescr,"Total Surface Energy Flux");
   sprintf(output[OUT_SURFENFLUX].cNeg,"W/m^2");
   output[OUT_SURFENFLUX].bNeg = 1;
-  output[OUT_SURFENFLUX].dNeg = 1e-3;
+  output[OUT_SURFENFLUX].dNeg = 1;
   output[OUT_SURFENFLUX].iNum = 1;
   fnWrite[OUT_SURFENFLUX] = &WriteSurfaceEnergyFlux;
   

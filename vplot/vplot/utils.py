@@ -418,7 +418,7 @@ def GetOutput(path = '.', **kwargs):
   path = path.replace('~', os.path.expanduser('~'))
   
   output = GetArrays(path = path, **kwargs)
-  
+
   for body in output.bodies:
     setattr(output, body.name, body)
     

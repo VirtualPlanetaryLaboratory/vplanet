@@ -164,8 +164,9 @@ elif numvars >= 1:
   for tup in it.product(*iterables0):
     destfull = dest+'/'+trial  #create directory for this combination
     for ii in range(len(tup)):
+      n = len(str(len(iter_var[ii])))
       index0 = np.where(iter_var[ii]==tup[ii])[0]
-      destfull += prefix[ii]+np.str(index0[0])
+      destfull += prefix[ii]+np.str(index0[0]).zfill(n)
       if ii != len(tup)-1:
         destfull += '_'
 

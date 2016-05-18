@@ -1218,6 +1218,10 @@ void InitializeClimateParams(BODY *body, int iBody) {
     body[iBody].daFluxSeaIce = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTempAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daAlbedoAvg = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daTempAvgL = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daAlbedoAvgL = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daTempAvgW = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daAlbedoAvgW = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daFluxAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daFluxInAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daDivFluxAvg = malloc(body[iBody].iNumLats*sizeof(double));
@@ -1491,6 +1495,38 @@ void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   }
 }
 
+void WriteTempLandLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daTempAvgL[body[iBody].iWriteLat];
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    /* Units already in Celsius (POISE uses Celsius) */
+    strcpy(cUnit,output->cNeg);
+  } else { 
+    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    fsUnitsTime(0,cUnit);
+  }
+}
+
+void WriteTempWaterLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daTempAvgW[body[iBody].iWriteLat];
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    /* Units already in Celsius (POISE uses Celsius) */
+    strcpy(cUnit,output->cNeg);
+  } else { 
+    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    fsUnitsTime(0,cUnit);
+  }
+}
+
 void WriteLatitude(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].daLats[body[iBody].iWriteLat];
   
@@ -1510,6 +1546,22 @@ void WriteAlbedoLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     *dTmp = body[iBody].daAlbedoAvg[body[iBody].iWriteLat];
   }
 }
+
+void WriteAlbedoLandLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daAlbedoAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daAlbedoAvgL[body[iBody].iWriteLat];
+  }
+}
+ 
+void WriteAlbedoWaterLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daAlbedoAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daAlbedoAvgW[body[iBody].iWriteLat];
+  }
+} 
   
 void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dFluxInGlobal;
@@ -1913,6 +1965,24 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLAT].bGrid = 1;
   fnWrite[OUT_TEMPLAT] = &WriteTempLat; 
   
+  sprintf(output[OUT_TEMPLANDLAT].cName,"TempLandLat");
+  sprintf(output[OUT_TEMPLANDLAT].cDescr,"Land surface temperature by latitude.");
+  sprintf(output[OUT_TEMPLANDLAT].cNeg,"C");
+  output[OUT_TEMPLANDLAT].bNeg = 1;
+  output[OUT_TEMPLANDLAT].dNeg = 1; //conversion is hardcoded in write function
+  output[OUT_TEMPLANDLAT].iNum = 1;
+  output[OUT_TEMPLANDLAT].bGrid = 1;
+  fnWrite[OUT_TEMPLANDLAT] = &WriteTempLandLat; 
+  
+  sprintf(output[OUT_TEMPWATERLAT].cName,"TempWaterLat");
+  sprintf(output[OUT_TEMPWATERLAT].cDescr,"Water surface temperature by latitude.");
+  sprintf(output[OUT_TEMPWATERLAT].cNeg,"C");
+  output[OUT_TEMPWATERLAT].bNeg = 1;
+  output[OUT_TEMPWATERLAT].dNeg = 1; //conversion is hardcoded in write function
+  output[OUT_TEMPWATERLAT].iNum = 1;
+  output[OUT_TEMPWATERLAT].bGrid = 1;
+  fnWrite[OUT_TEMPWATERLAT] = &WriteTempWaterLat; 
+  
   sprintf(output[OUT_LATITUDE].cName,"Latitude");
   sprintf(output[OUT_LATITUDE].cDescr,"Latitude.");
   sprintf(output[OUT_LATITUDE].cNeg,"Degrees");
@@ -1928,6 +1998,20 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOLAT].iNum = 1;
   output[OUT_ALBEDOLAT].bGrid = 1;
   fnWrite[OUT_ALBEDOLAT] = &WriteAlbedoLat; 
+  
+  sprintf(output[OUT_ALBEDOLANDLAT].cName,"AlbedoLandLat");
+  sprintf(output[OUT_ALBEDOLANDLAT].cDescr,"Land surface albedo by latitude.");
+  output[OUT_ALBEDOLANDLAT].bNeg = 0;
+  output[OUT_ALBEDOLANDLAT].iNum = 1;
+  output[OUT_ALBEDOLANDLAT].bGrid = 1;
+  fnWrite[OUT_ALBEDOLANDLAT] = &WriteAlbedoLandLat; 
+  
+  sprintf(output[OUT_ALBEDOWATERLAT].cName,"AlbedoWaterLat");
+  sprintf(output[OUT_ALBEDOWATERLAT].cDescr,"Water surface albedo by latitude.");
+  output[OUT_ALBEDOWATERLAT].bNeg = 0;
+  output[OUT_ALBEDOWATERLAT].iNum = 1;
+  output[OUT_ALBEDOWATERLAT].bGrid = 1;
+  fnWrite[OUT_ALBEDOWATERLAT] = &WriteAlbedoWaterLat; 
   
   sprintf(output[OUT_ANNUALINSOL].cName,"AnnInsol");
   sprintf(output[OUT_ANNUALINSOL].cDescr,"Annual insolation by latitude.");
@@ -3279,6 +3363,10 @@ void PoiseSeasonal(BODY *body, int iBody) {
         //start of year, reset annual averages to zero 
         body[iBody].daTempAvg[i] = 0.0;
         body[iBody].daAlbedoAvg[i] = 0.0;
+        body[iBody].daTempAvgL[i] = 0.0;
+        body[iBody].daTempAvgW[i] = 0.0;
+        body[iBody].daAlbedoAvgL[i] = 0.0;
+        body[iBody].daAlbedoAvgW[i] = 0.0;
         body[iBody].daFluxAvg[i] = 0.0;
         body[iBody].daFluxInAvg[i] = 0.0;
         body[iBody].daDivFluxAvg[i] = 0.0;
@@ -3384,6 +3472,10 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           // annual averages by latitude
           body[iBody].daTempAvg[i] += body[iBody].daTempLW[i]/body[iBody].iNStepInYear;
+          body[iBody].daTempAvgL[i] += body[iBody].daTempLand[i]/body[iBody].iNStepInYear;
+          body[iBody].daTempAvgW[i] += body[iBody].daTempWater[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAvgL[i] += body[iBody].daAlbedoLand[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAvgW[i] += body[iBody].daAlbedoWater[i]/body[iBody].iNStepInYear; 
           body[iBody].daAlbedoAvg[i] += body[iBody].daAlbedoLW[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxInAvg[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxOutAvg[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;
@@ -3493,6 +3585,10 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           // annual averages by latitude
           body[iBody].daTempAvg[i] += body[iBody].daTempLW[i]/body[iBody].iNStepInYear;
+          body[iBody].daTempAvgL[i] += body[iBody].daTempLand[i]/body[iBody].iNStepInYear;
+          body[iBody].daTempAvgW[i] += body[iBody].daTempWater[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAvgL[i] += body[iBody].daAlbedoLand[i]/body[iBody].iNStepInYear;
+          body[iBody].daAlbedoAvgW[i] += body[iBody].daAlbedoWater[i]/body[iBody].iNStepInYear;          
           body[iBody].daAlbedoAvg[i] += body[iBody].daAlbedoLW[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxInAvg[i] += body[iBody].daFluxIn[i]/body[iBody].iNStepInYear;
           body[iBody].daFluxOutAvg[i] += body[iBody].daFluxOut[i]/body[iBody].iNStepInYear;    

@@ -495,7 +495,7 @@ void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
   //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
 
-  //body[iBody].dImK2 = fdImk2Man(body,iBody);
+  body[iBody].dImK2 = fdImk2Man(body,iBody);
   PropsAuxCPL(body,update,iBody);
   // Call dTidePowerMan
   body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);

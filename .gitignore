@@ -63,3 +63,6 @@ vplot_config.py
 *.DailyInsolInit
 *.txt
 *.Laplace
+tex/exoearth.tex~
+tex/outline
+tex/outline~

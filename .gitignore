@@ -31,7 +31,6 @@ output.c~
 radheat.c~
 radheat.h~
 test/
-tex/
 thermint.c~
 thermint.h~
 util.c~

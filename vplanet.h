@@ -517,6 +517,7 @@ typedef struct {
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dPrecA0;            /**< Initial pA value used when distrot is not called */
   int iReRunSeas;
   double dSeaIceConduct;
   int bSeaIceModel;

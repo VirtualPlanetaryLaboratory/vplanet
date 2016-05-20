@@ -267,3 +267,20 @@ void CalcXYZobl(BODY *body, int iBody) {
     printf("Zobl: %.16e\n",body[iBody].dZobl);
 
 }
+
+
+void CalcDynEllip(BODY *body, int iBody) {
+  double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
+  double nuEarth, EdEarth, EdVenus, dTmp;
+  
+  EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
+  EdVenus = J2Venus/0.336;
+  nuEarth = 2*PI/(DAYSEC);
+  
+  dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+  
+  body[iBody].dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/\
+                            body[iBody].dMass;
+  
+  if (body[iBody].dDynEllip < EdVenus) body[iBody].dDynEllip = EdVenus;
+}

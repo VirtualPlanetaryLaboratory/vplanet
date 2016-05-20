@@ -162,6 +162,28 @@ void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
+void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bDistRot == 0 && body[iBody].bPoise == 1) {
+    *dTmp = body[iBody].dPrecA;
+  } else {
+    *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+  }
+  
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
+  }
+  while (*dTmp > 2*PI) {
+    *dTmp -= 2*PI;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}  
 
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
@@ -606,6 +628,14 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBL].dNeg = DEGRAD;
   output[OUT_OBL].iNum = 1;
   fnWrite[OUT_OBL] = &WriteObliquity;
+  
+  sprintf(output[OUT_PRECA].cName,"PrecA");
+  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
+  sprintf(output[OUT_PRECA].cNeg,"Deg");
+  output[OUT_PRECA].bNeg = 1;
+  output[OUT_PRECA].dNeg = 1./DEGRAD;
+  output[OUT_PRECA].iNum = 1;
+  fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");

@@ -1091,6 +1091,10 @@ void InitializeClimateParams(BODY *body, int iBody) {
   body[iBody].dTGlobal = 0.0;
   body[iBody].dAlbedoGlobal = 0.0;
   
+  if (body[iBody].bDistRot == 0) {
+    body[iBody].dPrecA0 = body[iBody].dPrecA;
+  }
+  
   if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeasEnabled) {
     body[iBody].daDiffusionAnn = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daLambdaAnn = malloc((body[iBody].iNumLats+1)*sizeof(double));
@@ -1413,6 +1417,9 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifySeasOutputTime(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  if (body[iBody].bDistRot == 0) {
+    VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
+  }
   
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);
@@ -2241,6 +2248,12 @@ void Snowball(BODY *body, int iBody) {
 
 
 void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
+  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
+    if (body[iBody].bDistRot == 0) {
+      CalcDynEllip(body, iBody);
+    }
+  }
+  
   // double deltax, Tice = 270, Aice, grav;
 //   int iLat;
     
@@ -2319,6 +2332,18 @@ void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {
 //   }
 }
 
+void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
+  /* calculates precession angle as an explicit function of time 
+     for use only when distrot is not called! */
+  double ecc2;
+  ecc2 = pow(body[iBody].dHecc,2) + pow(body[iBody].dKecc,2);
+  body[iBody].dPrecA = 3.*BIGG*body[0].dMass/(2.*pow(body[iBody].dSemi,3)*body[iBody].dRotRate) *\
+                       body[iBody].dDynEllip*pow((1.0-ecc2),-3./2)*cos(body[iBody].dObliquity) * \
+                       evolve->dTime + body[iBody].dPrecA0;
+  while (body[iBody].dPrecA >= 2*PI) body[iBody].dPrecA -= 2*PI;
+  while (body[iBody].dPrecA < 0) body[iBody].dPrecA += 2*PI;
+}
+
 void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
   
@@ -2329,6 +2354,10 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
     if (body[iBody].bClimateModel == SEA) {
       VerifyNStepSeasonal(body,iBody);
     }
+  }
+  
+  if (body[iBody].bDistRot == 0) {
+    PrecessionExplicit(body,evolve,iBody);
   }
   
   if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeasEnabled) {

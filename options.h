@@ -74,6 +74,8 @@
 #define OPT_OVERWRITE           595
 
 #define OPT_PRECA               610
+#define OPT_DYNELLIP            611
+#define OPT_CALCDYNELLIP        612     
 #define OPT_PRILUM	        615
 
 #define OPT_RADIUS              650

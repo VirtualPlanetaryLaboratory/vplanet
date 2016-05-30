@@ -1001,7 +1001,7 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadSystemName(control,files,&options[OPT_SYSTEMNAME],system,iFile);
     /* Get Modules first as it helps with verification
        ReadModules is in module.c */
-    ReadModules(*body,control,files,&options[OPT_MODULES],iFile);
+    ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
   }
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) 
@@ -1805,8 +1805,8 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
  */
 
 
-void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
-  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=0,iNumGrid=0;
+void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
+  int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=1,iNumGrid=0;
   int k,iOut,*lTmp;
   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
   int iLen1,iLen2;
@@ -1917,9 +1917,21 @@ void ReadOutputOrder(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int 
           files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
+	// Is option part of selected modules?
+	if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
+	  // Parameter is part of selected modules
+	} else {
+	  fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
+	  PrintModuleList(stderr,output[iOut].iModuleBit);
+	  fprintf(stderr,"\n");
+	  ok=0;
+	}
       }
     }
- 
+
+    if (!ok) 
+      DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
+
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
@@ -2347,7 +2359,7 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
 
   /* Read in output order -- merge into ReadGeneralOptions? */
   for (iFile=1;iFile<files->iNumInputs;iFile++) {
-    ReadOutputOrder(files,options,output,iFile,control->Io.iVerbose);
+    ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
     if ((*body)[iFile-1].bPoise) {
       ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
     }

@@ -51,6 +51,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
   module->iNumModules = malloc(iNumBodies*sizeof(int));
   module->iaModule = malloc(iNumBodies*sizeof(int*));  
+  module->iBitSum = malloc(iNumBodies*sizeof(int*));
 
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
@@ -288,7 +289,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   }
 }
 
-void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iFile){
+void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iFile){
   int iNumIndices=0,iNumLines=0,iModule;
   int *lTmp;
   char saTmp[MAXARRAY][OPTLEN];
@@ -304,6 +305,16 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
 
+    /* The iBitSum field is to check that every output parameter is part
+       of the input modules. The variables EQTIDE, RADHEAT, etc. are set
+       in vpanet.h. Each module-specific parameter is given the appropriate
+       bit in InitializeOutput. In ReadOutputOrder the field 
+       output->iModuleBit is compared bitwise to module->iBitSum. 
+       Parameters that can be specified for multiple modules are set to 1. 
+    */
+
+    module->iBitSum[iFile-1] = 1;
+
     for (iModule=0;iModule<iNumIndices;iModule++) {
 
       /************************
@@ -312,37 +323,70 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
         body[iFile-1].bEqtide = 1;
+	module->iBitSum[iFile-1] += EQTIDE;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
         body[iFile-1].bRadheat = 1;
+	module->iBitSum[iFile-1] += RADHEAT;
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
         body[iFile-1].bDistOrb = 1;
+	module->iBitSum[iFile-1] += DISTORB;
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
         body[iFile-1].bDistRot = 1;
+	module->iBitSum[iFile-1] += DISTROT;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
+	module->iBitSum[iFile-1] += THERMINT;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
         body[iFile-1].bAtmEsc = 1;
+	module->iBitSum[iFile-1] += ATMESC;
       } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
 	body[iFile-1].bStellar = 1;
+	module->iBitSum[iFile-1] += STELLAR;
       } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
 	body[iFile-1].bPoise = 1;
+	module->iBitSum[iFile-1] += POISE;
       } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
         body[iFile-1].bBinary = 1;
+	module->iBitSum[iFile-1] += BINARY;
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
+	module->iBitSum[iFile-1] += FLARE;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
     }
-    UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
+    UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
   
     } else {
     if (control->Io.iVerbose >= VERBERR && iFile > 0) 
       fprintf(stderr,"WARNING: %s not present in file %s. No evolution will occur for this body.\n",options->cName,files->Infile[iFile].cIn);
   }
   free(lTmp);
+}
+
+void PrintModuleList(FILE *file,int iBitSum) {
+  if (iBitSum & EQTIDE) 
+    fprintf(file,"EQTIDE ");
+  if (iBitSum & RADHEAT)
+    fprintf(file,"RADHEAT ");
+  if (iBitSum & ATMESC)
+    fprintf(file,"ATMESC ");
+  if (iBitSum & THERMINT)
+    fprintf(file,"THERMINT ");
+  if (iBitSum & STELLAR)
+    fprintf(file,"STELLAR ");
+  if (iBitSum & BINARY)
+    fprintf(file,"BINARY ");
+  if (iBitSum & DISTORB)
+    fprintf(file,"DISTORB ");
+  if (iBitSum & DISTROT)
+    fprintf(file,"DISTROT ");
+  if (iBitSum & FLARE)
+    fprintf(file,"FLARE ");
+  if (iBitSum & POISE)
+    fprintf(file,"POISE ");
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {

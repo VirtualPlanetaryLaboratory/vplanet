@@ -465,12 +465,15 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LUMINOSITY].bNeg = 1;
   output[OUT_LUMINOSITY].dNeg = 1./LSUN;
   output[OUT_LUMINOSITY].iNum = 1;
+  output[OUT_LUMINOSITY].iModuleBit = STELLAR;
   fnWrite[OUT_LUMINOSITY] = &WriteLuminosity;
 
+  // Maybe change to TEFF? XXX
   sprintf(output[OUT_TEMPERATURE].cName,"Temperature");
   sprintf(output[OUT_TEMPERATURE].cDescr,"Effective Temperature");
   output[OUT_TEMPERATURE].bNeg = 0;
   output[OUT_TEMPERATURE].iNum = 1;
+  output[OUT_TEMPERATURE].iModuleBit = STELLAR;
   fnWrite[OUT_TEMPERATURE] = &WriteTemperature;
   
   sprintf(output[OUT_LXUV].cName,"LXUVStellar");
@@ -479,12 +482,14 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUV].bNeg = 1;
   output[OUT_LXUV].dNeg = 1./LSUN;
   output[OUT_LXUV].iNum = 1;
+  output[OUT_LXUV].iModuleBit = STELLAR;
   fnWrite[OUT_LXUV] = &WriteLXUV;
 
   sprintf(output[OUT_LXUVFRAC].cName,"LXUVFrac");
   sprintf(output[OUT_LXUVFRAC].cDescr,"X-ray/XUV Luminosity Fraction");
   output[OUT_LXUVFRAC].bNeg = 0;
   output[OUT_LXUVFRAC].iNum = 1;
+  output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
 }
 

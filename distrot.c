@@ -664,6 +664,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DOBLDTDISTROT].bNeg = 1;
   output[OUT_DOBLDTDISTROT].dNeg = YEARSEC/DEGRAD;
   output[OUT_DOBLDTDISTROT].iNum = 1;
+  output[OUT_DOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DOBLDTDISTROT] = &WriteBodyDOblDtDistRot;
   
   sprintf(output[OUT_DPRECADTDISTROT].cName,"DPrecADtDistRot");
@@ -672,6 +673,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DPRECADTDISTROT].bNeg = 1;
   output[OUT_DPRECADTDISTROT].dNeg = YEARSEC/DEGRAD;
   output[OUT_DPRECADTDISTROT].iNum = 1;
+  output[OUT_DPRECADTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DPRECADTDISTROT] = &WriteBodyDPrecADtDistRot;
  
   sprintf(output[OUT_DXOBLDTDISTROT].cName,"DXoblDtDistRot");
@@ -680,6 +682,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DXOBLDTDISTROT].bNeg = 1;
   output[OUT_DXOBLDTDISTROT].dNeg = YEARSEC;
   output[OUT_DXOBLDTDISTROT].iNum = 1;
+  output[OUT_DXOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DXOBLDTDISTROT] = &WriteBodyDXoblDtDistRot;
   
   sprintf(output[OUT_DYOBLDTDISTROT].cName,"DYoblDtDistRot");
@@ -688,6 +691,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DYOBLDTDISTROT].bNeg = 1;
   output[OUT_DYOBLDTDISTROT].dNeg = YEARSEC;
   output[OUT_DYOBLDTDISTROT].iNum = 1;
+  output[OUT_DYOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DYOBLDTDISTROT] = &WriteBodyDYoblDtDistRot;
   
   sprintf(output[OUT_DZOBLDTDISTROT].cName,"DZoblDtDistRot");
@@ -696,6 +700,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DZOBLDTDISTROT].bNeg = 1;
   output[OUT_DZOBLDTDISTROT].dNeg = YEARSEC;
   output[OUT_DZOBLDTDISTROT].iNum = 1;
+  output[OUT_DZOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DZOBLDTDISTROT] = &WriteBodyDZoblDtDistRot;
   
   sprintf(output[OUT_XOBLTIMEDISTROT].cName,"XoblTimeDistRot");
@@ -704,6 +709,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_XOBLTIMEDISTROT].bNeg = 1;
   output[OUT_XOBLTIMEDISTROT].dNeg = 1./YEARSEC;
   output[OUT_XOBLTIMEDISTROT].iNum = 1;
+  output[OUT_XOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_XOBLTIMEDISTROT] = &WriteXoblTimeDistRot;
 
   sprintf(output[OUT_YOBLTIMEDISTROT].cName,"YoblTimeDistRot");
@@ -712,6 +718,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_YOBLTIMEDISTROT].bNeg = 1;
   output[OUT_YOBLTIMEDISTROT].dNeg = 1./YEARSEC;
   output[OUT_YOBLTIMEDISTROT].iNum = 1;
+  output[OUT_YOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_YOBLTIMEDISTROT] = &WriteYoblTimeDistRot;
   
   sprintf(output[OUT_ZOBLTIMEDISTROT].cName,"ZoblTimeDistRot");
@@ -720,6 +727,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ZOBLTIMEDISTROT].bNeg = 1;
   output[OUT_ZOBLTIMEDISTROT].dNeg = 1./YEARSEC;
   output[OUT_ZOBLTIMEDISTROT].iNum = 1;
+  output[OUT_ZOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_ZOBLTIMEDISTROT] = &WriteZoblTimeDistRot;
   
   sprintf(output[OUT_OBLTIMEDISTROT].cName,"OblTimeDistRot");
@@ -728,6 +736,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBLTIMEDISTROT].bNeg = 1;
   output[OUT_OBLTIMEDISTROT].dNeg = 1./YEARSEC;
   output[OUT_OBLTIMEDISTROT].iNum = 1;
+  output[OUT_OBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_OBLTIMEDISTROT] = &WriteOblTimeDistRot;
   
   sprintf(output[OUT_PRECATIMEDISTROT].cName,"PrecATimeDistRot");
@@ -736,26 +745,28 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].bNeg = 1;
   output[OUT_PRECATIMEDISTROT].dNeg = 1./YEARSEC;
   output[OUT_PRECATIMEDISTROT].iNum = 1;
+  output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
-  
-
   
   sprintf(output[OUT_CASS1].cName,"CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg = 0;
   output[OUT_CASS1].iNum = 1;
+  output[OUT_CASS1].iModuleBit = DISTROT;
   fnWrite[OUT_CASS1] = &WriteBodyCassOne;
   
   sprintf(output[OUT_CASS2].cName,"CassiniTwo");
   sprintf(output[OUT_CASS2].cDescr,"Second Cassini parameter (alignment of Cassini state vectors");
   output[OUT_CASS2].bNeg = 0;
   output[OUT_CASS2].iNum = 1;
+  output[OUT_CASS2].iModuleBit = DISTROT;
   fnWrite[OUT_CASS2] = &WriteBodyCassTwo;
   
   sprintf(output[OUT_DYNELLIP].cName,"DynEllip");
   sprintf(output[OUT_DYNELLIP].cDescr,"dynamical ellipticity of planet");
   output[OUT_DYNELLIP].bNeg = 0;
   output[OUT_DYNELLIP].iNum = 1;
+  output[OUT_DYNELLIP].iModuleBit = DISTROT;
   fnWrite[OUT_DYNELLIP] = &WriteDynEllip;
   
 }

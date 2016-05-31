@@ -466,7 +466,6 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass,cUnit);
   }
-
 }
 
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
@@ -562,7 +561,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Currently this is just Erkaev's model. Add other escape regimes
-  
+
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
   if (body[iaBody[0]].dEnvelopeMass > 0)
     return 0;
@@ -592,9 +591,9 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: Currently this is just Erkaev's model. Add other escape regimes
   
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  if (body[iaBody[0]].dEnvelopeMass <= 0)
+  if (body[iaBody[0]].dEnvelopeMass <= 0){
     return 0;
-  
+  }
   double elim, fxuv, xi, ktide;
   
   xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 

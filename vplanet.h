@@ -149,7 +149,7 @@
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
-#define VENVELOPEMASS  1202
+#define VENVELOPEMASS      1203
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -419,6 +419,7 @@ typedef struct {
   double dSatXUVFrac;
   int iStellarModel;
   int iWindModel;
+  int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
 
   /* PHOTOCHEM Parameters */

@@ -20,6 +20,8 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].iWindModel = src[iBody].iWindModel;
+  dest[iBody].iXUVModel = src[iBody].iXUVModel;
+  dest[iBody].dLXUV = src[iBody].dLXUV;
 }
 
 /**************** STELLAR options ********************/
@@ -88,6 +90,33 @@ void ReadWindModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else 
     if (iFile > 0)
       body[iFile-1].iWindModel = STELLAR_MODEL_REINERS;
+}
+
+void ReadXUVModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"ri",2)) {
+      body[iFile-1].iXUVModel = STELLAR_MODEL_RIBAS;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iXUVModel = STELLAR_MODEL_NONE;
+    } else if (!memcmp(sLower(cTmp),"re",2)) {
+      if (control->Io.iVerbose >= VERBINPUT)
+	      fprintf(stderr,"WARNING: The REINERS XUV model has serious issues. The recommended model is RIBAS.\n");
+      body[iFile-1].iXUVModel = STELLAR_MODEL_REINERS;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iXUVModel = STELLAR_MODEL_RIBAS;
 }
 
 void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -168,6 +197,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_WINDMODEL].iType = 3;
   options[OPT_WINDMODEL].iMultiFile = 1;
   fnRead[OPT_WINDMODEL] = &ReadWindModel;
+
+  sprintf(options[OPT_XUVMODEL].cName,"sXUVModel");
+  sprintf(options[OPT_XUVMODEL].cDescr,"XUV Evolution Model");
+  sprintf(options[OPT_XUVMODEL].cDefault,"RIBAS");
+  options[OPT_XUVMODEL].iType = 3;
+  options[OPT_XUVMODEL].iMultiFile = 1;
+  fnRead[OPT_XUVMODEL] = &ReadXUVModel;
 
   sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
   sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
@@ -281,6 +317,36 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
 }
 
 void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
+
+  // Update LXUV
+  if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
+    double dPer, dLXRay, dLEUV;
+    dPer = 2 * PI / body[iBody].dRotRate;
+  
+    // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
+    dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
+
+    if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
+      // Saturated regime (Reiners, Schussler & Passegger 2014)
+      dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
+    }
+  
+    // Sanz-Forcada et al. (2011), eqn (3)
+    dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+  
+    // Based on Miles Timpe's thesis:
+    body[iBody].dLXUV = dLXRay + dLEUV;
+  } else if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS) {
+    
+    // DEBUG! TODO!
+    
+    body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+
+  } else {
+    
+    body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+    
+  }
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -318,6 +384,8 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
+  control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyStellar;
+  
 }
 
 void InitializeModuleStellar(CONTROL *control,MODULE *module) {
@@ -440,7 +508,7 @@ void WriteTemperature(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdLXUVStellar(body,system,update,iBody,iBody);
+  *dTmp = body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -453,7 +521,7 @@ void WriteLXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 }
 
 void WriteLXUVFrac(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdLXUVStellar(body,system,update,iBody,iBody) / body[iBody].dLuminosity;
+  *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
   strcpy(cUnit,"");
 }
 
@@ -489,7 +557,7 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
 }
 
 void FinalizeOutputFunctionStellar(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVStellar;
+  //output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVStellar;
 }
 
 /************ STELLAR Logging Functions **************/
@@ -687,32 +755,6 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
     exit(EXIT_INT);
   }
 }
-
-/* RORY: Rodrigo put this in PropertiesStellar, but I don't think this is necessary for STELLAR. It is important with ATMESC, and so should also be called from PropertiesAtmescStellar in module.c. */
-
-double fdLXUVStellar(BODY *body,SYSTEM *system,UPDATE*update,int iBody,int iFoo) {
-  // TODO TODO TODO: Fix kink! Check saturation criteria.
-  
-  // Update LXUV
-  double dPer, dLXRay, dLEUV;
-  dPer = 2 * PI / body[iBody].dRotRate;
-  
-  // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
-  dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
-
-  if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
-    // Saturated regime (Reiners, Schussler & Passegger 2014)
-    dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
-  }
-  
-  // Sanz-Forcada et al. (2011), eqn (3)
-  dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
-  
-  // Based on Miles Timpe's thesis:
-  return dLXRay + dLEUV;
-}
-
-
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!

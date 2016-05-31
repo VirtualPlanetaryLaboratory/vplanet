@@ -15,12 +15,12 @@ sUnitAngle     d                            # Options: deg, rad
 
 # Input/Output
 bDoLog         1                            # Write a log file?
-iDigits        16                            # Maximum number of digits to right of decimal
+iDigits        10                            # Maximum number of digits to right of decimal
 dMinValue      1e-10                        # Minimum value of eccentricity/obliquity
 
 # Evolution Parameters
 bDoForward    1                             # Perform a forward evolution?
 bVarDt        1                             # Use variable timestepping?
 dEta          0.1                           # Coefficient for variable timestepping
-dStopTime     1e6                           # Stop time for evolution
+dStopTime     1e8                           # Stop time for evolution
 dOutputTime   1e5                           # Output timesteps (assuming in body files)

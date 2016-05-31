@@ -80,7 +80,7 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
     if (options[OPT_DYNELLIP].iLine[iBody+1] > -1) {
       fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
     } 
-    CalcDynEllip(body,iBody);
+    body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
   }
 }
 

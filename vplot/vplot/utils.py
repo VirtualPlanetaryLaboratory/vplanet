@@ -17,7 +17,7 @@ import re
 import imp
 
 # Default color sequence
-def_color_seq = ['k', 'b', 'r', 'y', 'g', 'gray']
+def_color_seq = ['#c91111', '#e09401', '#13aed5', '#1321d8', '#642197']
 
 # Default string to include in ``vplot_config.py file`` when creating one
 confstr = \

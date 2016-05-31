@@ -8,17 +8,16 @@
 /*! Top-level declarations */
 
 /* How many modules are available? */
-#define EQTIDE        0
-#define RADHEAT       1
-#define ATMESC        2
-#define DISTORB       3
-#define DISTROT       4
-#define STELLAR       5
-#define DYNAMO        6
-#define THERMINT      7
-#define POISE         8
-#define FLARE         9
-#define BINARY        10
+#define EQTIDE        2
+#define RADHEAT       4
+#define ATMESC        8
+#define DISTORB       16
+#define DISTROT       32
+#define STELLAR       64
+#define THERMINT      128
+#define POISE         256
+#define FLARE         512
+#define BINARY        1024
 
 /* Fundamental constants */
 
@@ -285,7 +284,7 @@ typedef struct {
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
-  double dTidePower;     /**< Body's Internal Tidal Power Dissipation */
+  //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
@@ -1206,6 +1205,7 @@ typedef struct {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
   int bNeg;              /**< Is There a Negative Option? */
+  int iModuleBit;              /**< Bit flag for module to check output parameters */
   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
   char cNeg[NAMELEN];    /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
@@ -1282,6 +1282,7 @@ typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 typedef struct {
   int *iNumModules; /**< Number of Modules per Body */
   int **iaModule; /**< Module #s that Apply to the Body */
+  int *iBitSum;
 
   /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;

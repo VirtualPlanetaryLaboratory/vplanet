@@ -820,6 +820,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_FREEECC].cDescr,"Free Eccentricity");
   output[OUT_FREEECC].bNeg = 0;
   output[OUT_FREEECC].iNum = 1;
+  output[OUT_FREEECC].iModuleBit = BINARY;
   fnWrite[OUT_FREEECC] = &WriteFreeEcc;
 
   sprintf(output[OUT_FREEINC].cName,"FreeInc");
@@ -828,6 +829,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_FREEINC].bNeg = 1;
   output[OUT_FREEINC].dNeg = 1./DEGRAD;
   output[OUT_FREEINC].iNum = 1;
+  output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeInc;
 
   sprintf(output[OUT_BININC].cName,"dIncBinary");
@@ -836,6 +838,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BININC].bNeg = 1;
   output[OUT_BININC].dNeg = 1./DEGRAD;
   output[OUT_BININC].iNum = 1;
+  output[OUT_BININC].iModuleBit = BINARY;
   fnWrite[OUT_BININC] = &WriteInc;
 
   sprintf(output[OUT_CBPPHI].cName,"CBPPhi");
@@ -844,6 +847,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHI].bNeg = 1;
   output[OUT_CBPPHI].dNeg = 1.0/DEGRAD;
   output[OUT_CBPPHI].iNum = 1;
+  output[OUT_CBPPHI].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHI] = &WriteCBPPhi;
 
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
@@ -852,6 +856,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13N0].bNeg = 1;
   output[OUT_LL13N0].dNeg = 1./YEARSEC;
   output[OUT_LL13N0].iNum = 1;
+  output[OUT_LL13N0].iModuleBit = BINARY;
   fnWrite[OUT_LL13N0] = &WriteLL13N0;
 
   sprintf(output[OUT_LL13K0].cName,"LL13K0");
@@ -860,6 +865,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13K0].bNeg = 1;
   output[OUT_LL13K0].dNeg = 1./YEARSEC;
   output[OUT_LL13K0].iNum = 1;
+  output[OUT_LL13K0].iModuleBit = BINARY;
   fnWrite[OUT_LL13K0] = &WriteLL13K0;
 
   sprintf(output[OUT_LL13V0].cName,"LL13V0");
@@ -868,6 +874,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13V0].bNeg = 1;
   output[OUT_LL13V0].dNeg = 1./YEARSEC;
   output[OUT_LL13V0].iNum = 1;
+  output[OUT_LL13V0].iModuleBit = BINARY;
   fnWrite[OUT_LL13V0] = &WriteLL13V0;
 
   sprintf(output[OUT_CBPR].cName,"CBPR");
@@ -876,6 +883,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPR].cNeg,"AU");
   output[OUT_CBPR].dNeg = 1.0/AUCM;
   output[OUT_CBPR].iNum = 1;
+  output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPR;
 
   sprintf(output[OUT_CBPZ].cName,"CBPZ");
@@ -884,6 +892,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPZ].cNeg,"AU");
   output[OUT_CBPZ].dNeg = 1.0/AUCM;
   output[OUT_CBPZ].iNum = 1;
+  output[OUT_CBPZ].iModuleBit = BINARY;
   fnWrite[OUT_CBPZ] = &WriteCBPZ;
   
   sprintf(output[OUT_CBPRDOT].cName,"CBPRDot");
@@ -892,6 +901,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPRDOT].bNeg = 0;
   output[OUT_CBPRDOT].dNeg = DAYSEC;
   output[OUT_CBPRDOT].iNum = 1;
+  output[OUT_CBPRDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPRDOT] = &WriteCBPRDot;
 
   sprintf(output[OUT_CBPZDOT].cName,"CBPZDot");
@@ -900,6 +910,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPZDOT].bNeg = 0;
   output[OUT_CBPZDOT].dNeg = DAYSEC;
   output[OUT_CBPZDOT].iNum = 1;
+  output[OUT_CBPZDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPZDOT] = &WriteCBPZDot;
 
   sprintf(output[OUT_CBPPHIDOT].cName,"CBPPhiDot");
@@ -908,6 +919,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHIDOT].bNeg = 0;
   output[OUT_CBPPHIDOT].dNeg = DAYSEC;
   output[OUT_CBPPHIDOT].iNum = 1;
+  output[OUT_CBPPHIDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHIDOT] = &WriteCBPPhiDot;
 
 }

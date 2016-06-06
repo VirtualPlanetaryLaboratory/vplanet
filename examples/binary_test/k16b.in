@@ -4,20 +4,20 @@ saModules       binary
 
 # Physical Properties
 iBodyType       0                               # Type of body 0 -> Planet
-dMass		-104.6264 			# Mass, negative -> Earth masses
-dRadius		-1.5			# Radius, negative -> Earth radii
+dMass		1.0 #-104.6264 			# Mass, negative -> Earth masses
+dRadius		1.0 #-1.5			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity	23.5			
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 
 # Binary Properties
-dFreeEcc        0.3 #0.03 #0.02373                   # Free Eccentricity
-dFreeInc        3.0 #0.3083                     # Free Inclination [deg]
+dFreeEcc        0.0 #0.03 #0.02373                   # Free Eccentricity
+dFreeInc        0.0 #0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
-dSemi           0.4 #-0.7016		# Semi-major axis, negative -> AU
+dSemi           -2.0 #-0.7016		# Semi-major axis, negative -> AU
 dLongP          304.05
 
 # EQTIDE Parameters 

@@ -31,7 +31,6 @@ output.c~
 radheat.c~
 radheat.h~
 test/
-tex/
 thermint.c~
 thermint.h~
 util.c~
@@ -63,3 +62,6 @@ vplot_config.py
 *.DailyInsolInit
 *.txt
 *.Laplace
+tex/exoearth.tex~
+tex/outline
+tex/outline~

@@ -1771,12 +1771,14 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TGLOBAL].bNeg = 1;
   output[OUT_TGLOBAL].dNeg = 1; //conversion is hardcoded in write function
   output[OUT_TGLOBAL].iNum = 1;
+  output[OUT_TGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_TGLOBAL] = &WriteTGlobal;
   
   sprintf(output[OUT_ALBEDOGLOBAL].cName,"AlbedoGlobal");
   sprintf(output[OUT_ALBEDOGLOBAL].cDescr,"Global mean bond albedo from POISE");
   output[OUT_ALBEDOGLOBAL].bNeg = 0;
   output[OUT_ALBEDOGLOBAL].iNum = 1;
+  output[OUT_ALBEDOGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
   
   sprintf(output[OUT_TOTICEMASS].cName,"TotIceMass");
@@ -1784,6 +1786,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TOTICEMASS].cNeg,"kg");
   output[OUT_TOTICEMASS].bNeg = 1;
   output[OUT_TOTICEMASS].iNum = 1;
+  output[OUT_TOTICEMASS].iModuleBit = POISE;
   fnWrite[OUT_TOTICEMASS] = &WriteTotIceMass;
   
   sprintf(output[OUT_TOTICEFLOW].cName,"TotIceFlow");
@@ -1791,6 +1794,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TOTICEFLOW].cNeg,"kg");
   output[OUT_TOTICEFLOW].bNeg = 1;
   output[OUT_TOTICEFLOW].iNum = 1;
+  output[OUT_TOTICEFLOW].iModuleBit = POISE;
   fnWrite[OUT_TOTICEFLOW] = &WriteIceFlowTot;
   
   sprintf(output[OUT_TOTICEBALANCE].cName,"TotIceBalance");
@@ -1798,6 +1802,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TOTICEBALANCE].cNeg,"kg");
   output[OUT_TOTICEBALANCE].bNeg = 1;
   output[OUT_TOTICEBALANCE].iNum = 1;
+  output[OUT_TOTICEBALANCE].iModuleBit = POISE;
   fnWrite[OUT_TOTICEBALANCE] = &WriteIceBalanceTot;
   
   sprintf(output[OUT_FLUXINGLOBAL].cName,"FluxInGlobal");
@@ -1810,6 +1815,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FLUXINGLOBAL].dNeg = 1; // Just in case
   sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXINGLOBAL].iNum = 1;
+  output[OUT_FLUXINGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXINGLOBAL] = &WriteFluxInGlobal;
   
   sprintf(output[OUT_FLUXOUTGLOBAL].cName,"FluxOutGlobal");
@@ -1822,6 +1828,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FLUXOUTGLOBAL].dNeg = 1;
   sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum = 1;
+  output[OUT_FLUXOUTGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;
   
   sprintf(output[OUT_TEMPLAT].cName,"TempLat");
@@ -1831,6 +1838,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLAT].dNeg = 1; //conversion is hardcoded in write function
   output[OUT_TEMPLAT].iNum = 1;
   output[OUT_TEMPLAT].bGrid = 1;
+  output[OUT_TEMPLAT].iModuleBit = POISE;
   fnWrite[OUT_TEMPLAT] = &WriteTempLat; 
   
   sprintf(output[OUT_LATITUDE].cName,"Latitude");
@@ -1840,6 +1848,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LATITUDE].dNeg = 1/DEGRAD; 
   output[OUT_LATITUDE].iNum = 1;
   output[OUT_LATITUDE].bGrid = 1;
+  output[OUT_LATITUDE].iModuleBit = POISE;
   fnWrite[OUT_LATITUDE] = &WriteLatitude; 
 
   sprintf(output[OUT_ALBEDOLAT].cName,"AlbedoLat");
@@ -1847,6 +1856,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOLAT].bNeg = 0;
   output[OUT_ALBEDOLAT].iNum = 1;
   output[OUT_ALBEDOLAT].bGrid = 1;
+  output[OUT_ALBEDOLAT].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOLAT] = &WriteAlbedoLat; 
   
   sprintf(output[OUT_ANNUALINSOL].cName,"AnnInsol");
@@ -1856,6 +1866,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ANNUALINSOL].dNeg = 1/40.55185;
   output[OUT_ANNUALINSOL].iNum = 1;
   output[OUT_ANNUALINSOL].bGrid = 1;
+  output[OUT_ANNUALINSOL].iModuleBit = POISE;
   fnWrite[OUT_ANNUALINSOL] = &WriteAnnualInsol; 
   
   sprintf(output[OUT_FLUXMERID].cName,"FluxMerid");
@@ -1865,6 +1876,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FLUXMERID].dNeg = 1e-15;
   output[OUT_FLUXMERID].iNum = 1;
   output[OUT_FLUXMERID].bGrid = 1;
+  output[OUT_FLUXMERID].iModuleBit = POISE;
   fnWrite[OUT_FLUXMERID] = &WriteFluxMerid;  
   
   sprintf(output[OUT_FLUXIN].cName,"FluxIn");
@@ -1874,6 +1886,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FLUXIN].dNeg = 1;
   output[OUT_FLUXIN].iNum = 1;
   output[OUT_FLUXIN].bGrid = 1;
+  output[OUT_FLUXIN].iModuleBit = POISE;
   fnWrite[OUT_FLUXIN] = &WriteFluxIn; 
   
   sprintf(output[OUT_FLUXOUT].cName,"FluxOut");
@@ -1883,6 +1896,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FLUXOUT].dNeg = 1;
   output[OUT_FLUXOUT].iNum = 1;
   output[OUT_FLUXOUT].bGrid = 1;
+  output[OUT_FLUXOUT].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUT] = &WriteFluxOut; 
   
   sprintf(output[OUT_DIVFLUX].cName,"DivFlux");
@@ -1892,6 +1906,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DIVFLUX].dNeg = 1;
   output[OUT_DIVFLUX].iNum = 1;
   output[OUT_DIVFLUX].bGrid = 1;
+  output[OUT_DIVFLUX].iModuleBit = POISE;
   fnWrite[OUT_DIVFLUX] = &WriteDivFlux; 
   
   sprintf(output[OUT_ICEMASS].cName,"IceMass");
@@ -1901,6 +1916,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEMASS].dNeg = 1;
   output[OUT_ICEMASS].iNum = 1;
   output[OUT_ICEMASS].bGrid = 1;
+  output[OUT_ICEMASS].iModuleBit = POISE;
   fnWrite[OUT_ICEMASS] = &WriteIceMass; 
   
   sprintf(output[OUT_ICEHEIGHT].cName,"IceHeight");
@@ -1910,6 +1926,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEHEIGHT].dNeg = 1;
   output[OUT_ICEHEIGHT].iNum = 1;
   output[OUT_ICEHEIGHT].bGrid = 1;
+  output[OUT_ICEHEIGHT].iModuleBit = POISE;
   fnWrite[OUT_ICEHEIGHT] = &WriteIceHeight; 
   
   sprintf(output[OUT_DICEMASSDT].cName,"DIceMassDt");
@@ -1919,6 +1936,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DICEMASSDT].dNeg = 1;
   output[OUT_DICEMASSDT].iNum = 1;
   output[OUT_DICEMASSDT].bGrid = 1;
+  output[OUT_DICEMASSDT].iModuleBit = POISE;
   fnWrite[OUT_DICEMASSDT] = &WriteDIceMassDt; 
   
   sprintf(output[OUT_ICEFLOW].cName,"IceFlow");
@@ -1928,6 +1946,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEFLOW].dNeg = 1;
   output[OUT_ICEFLOW].iNum = 1;
   output[OUT_ICEFLOW].bGrid = 1;
+  output[OUT_ICEFLOW].iModuleBit = POISE;
   fnWrite[OUT_ICEFLOW] = &WriteDIceMassDtFlow; 
   
   sprintf(output[OUT_BEDROCKH].cName,"BedrockH");
@@ -1937,6 +1956,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BEDROCKH].dNeg = 1;
   output[OUT_BEDROCKH].iNum = 1;
   output[OUT_BEDROCKH].bGrid = 1;
+  output[OUT_BEDROCKH].iModuleBit = POISE;
   fnWrite[OUT_BEDROCKH] = &WriteBedrockH; 
   
   sprintf(output[OUT_ENERGYRESL].cName,"EnergyResL");
@@ -1946,6 +1966,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENERGYRESL].dNeg = 1;
   output[OUT_ENERGYRESL].iNum = 1;
   output[OUT_ENERGYRESL].bGrid = 1;
+  output[OUT_ENERGYRESL].iModuleBit = POISE;
   fnWrite[OUT_ENERGYRESL] = &WriteEnergyResL; 
   
   sprintf(output[OUT_ENERGYRESW].cName,"EnergyResW");
@@ -1955,12 +1976,14 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENERGYRESW].dNeg = 1;
   output[OUT_ENERGYRESW].iNum = 1;
   output[OUT_ENERGYRESW].bGrid = 1;
+  output[OUT_ENERGYRESW].iModuleBit = POISE;
   fnWrite[OUT_ENERGYRESW] = &WriteEnergyResW; 
   
   sprintf(output[OUT_SKIPSEAS].cName,"SkipSeas");
   sprintf(output[OUT_SKIPSEAS].cDescr,"Is Seasonal model skipped due to RGH or snowball?");
   output[OUT_SKIPSEAS].bNeg = 0;
   output[OUT_SKIPSEAS].iNum = 1;
+  output[OUT_SKIPSEAS].iModuleBit = POISE;
   fnWrite[OUT_SKIPSEAS] = &WriteSkipSeas;
   
   // sprintf(output[OUT_TIMELAT].cName,"Time");

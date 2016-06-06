@@ -36,7 +36,7 @@ dTCore    6000.0	#6000
 #dDTChiRef 300.     ## def is 100.
 
 #Output
-saOutputOrder	Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -HflowCMB -SurfEnFLuxTot # $
+saOutputOrder	Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -HflowCMB -SurfEnFLuxTot #$
 #		-HflowLatentIC -PowerGravIC $
 #		-RadPowerMan -RadPowerCore -BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan $
 #		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC ChiOC ChiIC DTChi

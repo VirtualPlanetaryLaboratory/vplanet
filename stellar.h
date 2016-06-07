@@ -34,6 +34,8 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_WINDMODEL           1514 // Wind model
 #define OPT_XUVMODEL            1515 // XUV evol model
 #define OPT_HALTENDBARAFFEFGRID 1516 // Halt when we reach the end of the Baraffe grid?
+#define OPT_SATXUVTIME          1517 // XUV saturation time
+#define OPT_XUVBETA             1518 // XUV power law decay exponent
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);

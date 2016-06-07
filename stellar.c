@@ -18,6 +18,8 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLuminosity = src[iBody].dLuminosity;
   dest[iBody].dTemperature = src[iBody].dTemperature;
   dest[iBody].dSatXUVFrac = src[iBody].dSatXUVFrac;
+  dest[iBody].dSatXUVTime = src[iBody].dSatXUVTime;
+  dest[iBody].dXUVBeta = src[iBody].dXUVBeta;
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].iWindModel = src[iBody].iWindModel;
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
@@ -44,6 +46,44 @@ void ReadSatXUVFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   } else 
     if (iFile > 0)
       body[iFile-1].dSatXUVFrac = options->dDefault;
+}
+
+void ReadSatXUVTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dSatXUVTime = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dSatXUVTime = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSatXUVTime = options->dDefault;
+}
+
+void ReadXUVBeta(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    body[iFile-1].dXUVBeta = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dXUVBeta = options->dDefault;
 }
 
 void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -184,6 +224,24 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SATXUVFRAC].iMultiFile = 1;
   fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
 
+  sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
+  sprintf(options[OPT_SATXUVTIME].cDescr,"XUV saturation time");
+  sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
+  options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
+  options[OPT_SATXUVTIME].iType = 0;
+  options[OPT_SATXUVTIME].iMultiFile = 1;
+  options[OPT_SATXUVTIME].dNeg = 1e9*YEARSEC;
+  sprintf(options[OPT_SATXUVTIME].cNeg,"Gyr");
+  fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
+
+  sprintf(options[OPT_XUVBETA].cName,"dXUVBeta");
+  sprintf(options[OPT_XUVBETA].cDescr,"XUV decay power law exponent");
+  sprintf(options[OPT_XUVBETA].cDefault,"1.23");
+  options[OPT_XUVBETA].dDefault = 1.23;
+  options[OPT_XUVBETA].iType = 0;
+  options[OPT_XUVBETA].iMultiFile = 1;
+  fnRead[OPT_XUVBETA] = &ReadXUVBeta;  
+
   sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
   sprintf(options[OPT_STELLARMODEL].cDescr,"Luminosity Evolution Model");
   sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
@@ -320,6 +378,9 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
 
   // Update LXUV
   if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
+  
+    // REINERS wind model. This model has issues, since the XUV luminosity
+    // is WAY too high at early times. I recommend using the RIBAS model.
     double dPer, dLXRay, dLEUV;
     dPer = 2 * PI / body[iBody].dRotRate;
   
@@ -338,12 +399,20 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
     body[iBody].dLXUV = dLXRay + dLEUV;
   } else if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS) {
     
-    // DEBUG! TODO!
+    // RIBAS power-law decay model
+    double dAge = body[iBody].dAge / (1.e9 * YEARSEC);
+    double dTMin = body[iBody].dSatXUVTime / (1.e9 * YEARSEC);
+    if (dAge >= dTMin){
+      body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity * pow(dAge / dTMin, -body[iBody].dXUVBeta);
+    } 
+    else {
+      /* No evolution at times earlier than dSatXUVTime */
+      body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+    }
     
-    body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
-
   } else {
     
+    // Constant XUV fraction
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
     
   }

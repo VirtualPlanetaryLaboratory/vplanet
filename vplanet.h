@@ -416,6 +416,8 @@ typedef struct {
   double dLuminosity;
   double dTemperature;
   double dSatXUVFrac;
+  double dSatXUVTime;
+  double dXUVBeta;
   int iStellarModel;
   int iWindModel;
   int iXUVModel;

@@ -130,11 +130,12 @@ class Output(object):
   '''
   
   '''
-  def __init__(self, sysname = "", pif = "", bodies = []):
+  def __init__(self, sysname = "", pif = "", bodies = [], log = None):
     self.sysname = sysname
     self.pif = pif
     self.bodies = bodies
-
+    self.log = log
+    
   def __getitem__(self, i):
     return self.bodies[i]
     
@@ -143,6 +144,17 @@ class Output(object):
 
   def __repr__(self):
     return "<VPLOT Output: %s>" % self.sysname
+
+class Log(object):
+  '''
+  
+  '''
+  
+  def __init__(self, sysname = ""):
+    self.sysname = sysname
+  
+  def __repr__(self):
+    return "<VPLOT Log File: %s>" % self.sysname
 
 class Body(object):
   '''
@@ -268,6 +280,26 @@ def GetConf():
   conf.__dict__.update(defaults.__dict__)
 
   return conf
+
+def GetLog(sysname = '', path = '.', **kwargs):
+  '''
+  
+  '''
+  
+  # Get the log file
+  lf = [f for f in os.listdir(path) if f.endswith('.log')]
+  if len(lf) > 1:
+    raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
+  elif len(lf) == 0:
+    raise Exception("There doesn't seem to be a log file in this directory.")
+  else:
+    lf = os.path.join(path, lf[0])
+  with open(lf, 'r') as f:
+    logfile = f.readlines()
+  
+  log = Log(sysname = sysname)
+  
+  return log
 
 def GetArrays(path = '.', bodies = [], colors = None):
   '''
@@ -451,6 +483,9 @@ def GetOutput(path = '.', **kwargs):
         parent = body.name
         arr = array(param.array.reshape(I, J), unit = unit, description = description, name = name, parent = parent, color = body.color)
         setattr(getattr(output, body.name), name, arr)
-    
+  
+  # Grab the logfile
+  output.log = GetLog(sysname = output.sysname, path = path, **kwargs)
+  
   return output
   

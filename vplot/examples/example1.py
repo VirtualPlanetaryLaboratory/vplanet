@@ -11,7 +11,7 @@ import vplot as vpl
 import matplotlib.pyplot as plt
 
 # Grab the output from a run
-output = vpl.GetOutput('gl581', colors = ['green', 'yellow'])
+output = vpl.GetOutput('gl581')
 
 # Set up a matplotlib plot as usual
 fig, ax = plt.subplots(2, 2, figsize = (12, 8))

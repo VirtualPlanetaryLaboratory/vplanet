@@ -117,7 +117,7 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   */
 
   *dTmp = body[iBody].dLXUVFlare;
-  *dTmp += fdLXUVStellar(body,system,update,iBody,iBody);
+  *dTmp += body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

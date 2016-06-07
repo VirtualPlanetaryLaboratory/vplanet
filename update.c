@@ -1164,6 +1164,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */
+       
+    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!   
+       
     update[iBody].iLXUV = -1;
     if (update[iBody].iNumLXUV) {
       update[iBody].iLXUV = iVar;

@@ -15,6 +15,7 @@
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
 #define STELLAR_MODEL_CONST           3
+#define STELLAR_MODEL_RIBAS           4
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
@@ -31,7 +32,10 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_STELLARMODEL        1512 // Luminosity evolution model
 #define OPT_TEMPERATURE         1513 // Stellar effective temperature (initial)
 #define OPT_WINDMODEL           1514 // Wind model
-#define OPT_HALTENDBARAFFEFGRID 1515 // Halt when we reach the end of the Baraffe grid?
+#define OPT_XUVMODEL            1515 // XUV evol model
+#define OPT_HALTENDBARAFFEFGRID 1516 // Halt when we reach the end of the Baraffe grid?
+#define OPT_SATXUVTIME          1517 // XUV saturation time
+#define OPT_XUVBETA             1518 // XUV power law decay exponent
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -100,7 +104,6 @@ double fdRadiusFunctionBaraffe(double, double);
 double fdDRotRateDt(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
-double fdLXUVStellar(BODY*,SYSTEM*,UPDATE*,int,int);
 
 
 /* Dummy functions */

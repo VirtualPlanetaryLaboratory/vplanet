@@ -4,17 +4,16 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1       # 1 -> Star
-dMass		1.0 #0.2020390186		# Mass, negative -> Earth masses
+dMass		0.2020390186		# Mass, negative -> Earth masses
 #dRadius		0.00153		# Radius, negative -> Earth radii
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 
 # Binary Parameters
-dEcc            0.0 #0.16048             # Binary eccentricity
+dEcc            0.16048             # Binary eccentricity
 dSemi           0.22405            # Binary semimajor axis 
 dLongP          257.79
-#dInc        0.0011              # Binary inclination
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
@@ -25,11 +24,11 @@ dK2		0.5 #1.5		# Love number of degree 2
 saTidePerts	primary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
-sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
-sWindModel    none                     # Stellar wind model: `reiners` or `none`
-dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
+#sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
+#sWindModel    none                     # Stellar wind model: `reiners` or `none`
+#dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time Semim Ecce LongP
+saOutputOrder	Time # Semim Ecce

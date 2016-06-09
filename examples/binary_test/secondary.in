@@ -4,16 +4,17 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1       # 1 -> Star
-dMass		0.2020390186		# Mass, negative -> Earth masses
+dMass		1.0 #0.2020390186		# Mass, negative -> Earth masses
 #dRadius		0.00153		# Radius, negative -> Earth radii
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 
 # Binary Parameters
-dEcc            0.16048             # Binary eccentricity
+dEcc            0.0 #0.16048             # Binary eccentricity
 dSemi           0.22405            # Binary semimajor axis 
 dLongP          257.79
+dLL13PhiAB      129.84             # Initial binary mean anomaly
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds

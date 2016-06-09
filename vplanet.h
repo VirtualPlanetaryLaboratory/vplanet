@@ -210,7 +210,7 @@ typedef struct {
 
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array and, if using binary
-   * in the primary (0th) body*/
+   * in the secondary (1st (0, 1, ..)) body*/
   double dSemi;          /**< Body's Semi-major Axis */
   double dEcc;           /**< Body's Eccentricity */
   double dMeanMotion;    /**< Body's Mean Motion */
@@ -261,6 +261,10 @@ typedef struct {
   double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
   double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
   double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+  double dLL13PhiAB;    /**< Binary's initial mean anomaly */
+  double dCBPM0;        /**< CBP's initial mean anomaly */
+  double dCBPZeta;      /**< CBP's z oscillation angle (see LL13 eqn 35) */
+  double dCBPPsi;       /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
 
   /* DISTROT parameters */
   int bDistRot;

@@ -441,11 +441,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-    // dflemin3 hack
-    if(control->Evolve.dTime < DAYSEC)
-    {
-      dDt = DAYSEC; // 1st step is a month
-    }
     
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)

@@ -22,6 +22,10 @@
 #define OPT_LL13N0              2030 // LL13 Mean Motion
 #define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
 #define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
+#define OPT_LL13PHIAB           2051 // LL13 Binary Mean Anomaly Initial value
+#define OPT_CBPM0               2052 // CBP Initial mean anomaly
+#define OPT_CBPZETA             2053 // CBP z oscillation phase angle 
+#define OPT_CBPPSI              2054 // CBP R, phi oscillation phase angle
 #define OPT_HALTHOLMAN          2070 // Holman+Wiegert 1999 Instability limit
 #define OPT_BINUSEMATRIX           2080 // Whether or not to include eqns in matrix
 
@@ -67,6 +71,10 @@ void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13N0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13K0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLL13V0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLL13PhiAB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCBPM0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCBPZeta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCBPPsi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltHolmanUnstable(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadBinaryUseMatrix(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 

@@ -41,58 +41,20 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dLongA = src[iBody].dLongA;
   dest[iBody].dLongP = src[iBody].dLongP;
 
+  dest[iBody].dLL13PhiAB = src[iBody].dLL13PhiAB;
+  dest[iBody].dCBPM0 = src[iBody].dCBPM0;
+  dest[iBody].dCBPZeta = src[iBody].dCBPZeta;
+  dest[iBody].dCBPPsi = src[iBody].dCBPPsi;
+
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 // Only use this function for malloc'ing stuff
 // Since nothing has to be malloc'ed for binary, do nothing
-// Just keep for posterity
-// RIP 2016 ~ 2016 #NeverForget
-
-  /*
-  // If ibody is the CBP (body 2, iBodyType 0), init
-  if(body[iBody].iBodyType == 0) // If the body is a planet
-  {
-
-    // Init inital cylindrical positions, velocities
-    // In verify, uses more intelligent starting points!
-    body[iBody].dCBPR = body[iBody].dSemi;
-    body[iBody].dCBPZ = 0.0;
-    body[iBody].dCBPPhi = 0.0;
-    body[iBody].dCBPRDot = 0.0;
-    body[iBody].dCBPZDot = 0.0;
-    body[iBody].dCBPPhiDot = 0.0;
-
-    body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,(body[0].dMass + body[1].dMass + body[iBody].dMass));
-    
-    body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
-    body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
-    body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
-    body[iBody].dLL13K0 = fdEpiFreqK(body,iBody);
-    body[iBody].dLL13V0 = fdEpiFreqV(body,iBody);
-   
-    // Set up initial orbital elements
-    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
-    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
-  }
-
-  // Inits if the body is the secondary
-  if(body[iBody].iBodyType == 1 && iBody == 1)
-  {
-    // Binary's inclination
-    body[iBody].dInc = 0.0; //2.0*asin(body[iBody].dSinc);
-    
-    // Set Initial Poincare H, K using imputted dEcc
-    body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
-    body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
-    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-  }
-
-  */
 }
 
 void InitializeUpdateTmpBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+// No need to allocate anything
 }
 
 /**************** BINARY options ********************/
@@ -217,6 +179,142 @@ void ReadFreeInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dFreeInc = options->dDefault;
 }  
 
+void ReadLL13PhiAB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file
+   * PhiAB goes from [0,360) if in degrees 
+   */
+
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(control->Units[iFile].iAngle == 0) { // Input as radians
+      if(dTmp < 0 || dTmp >= 2*PI) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,2PI).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+    } else { // Input as Degrees
+      if(dTmp < 0 || dTmp >= 360) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,360).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dLL13PhiAB = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dLL13PhiAB = options->dDefault;
+}
+
+void ReadCBPM0(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file
+   * CBPM0 goes from [0,360) if in degrees
+   */
+
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(control->Units[iFile].iAngle == 0) { // Input as radians
+      if(dTmp < 0 || dTmp >= 2*PI) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,2PI).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+    } else { // Input as Degrees
+      if(dTmp < 0 || dTmp >= 360) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,360).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dCBPM0 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dCBPM0 = options->dDefault;
+}
+
+void ReadCBPZeta(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file.
+   * dCBPZeta goes from [0,360) if in degrees
+   */
+
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(control->Units[iFile].iAngle == 0) { // Input as radians
+      if(dTmp < 0 || dTmp >= 2*PI) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,2PI).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+    } else { // Input as degrees
+      if(dTmp < 0 || dTmp >= 360) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,360).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+                            
+    body[iFile-1].dCBPZeta = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dCBPZeta = options->dDefault;
+}
+
+void ReadCBPPsi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file.
+   * dCBPPsi goes from [0,360) if in degrees
+   */
+
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(control->Units[iFile].iAngle == 0) { // Input as radians
+      if(dTmp < 0 || dTmp >= 2*PI) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,2PI).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+    } else { // Input as degrees
+      if(dTmp < 0 || dTmp >= 360) {
+        if(control->Io.iVerbose >= VERBERR)
+          fprintf(stderr,"ERROR: %s must be in the range [0,360).\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dCBPPsi = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dCBPPsi = options->dDefault;
+}
+
 void ReadHaltHolmanUnstable(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -267,6 +365,38 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FREEINC].iType = 2;
   options[OPT_FREEINC].iMultiFile = 1;
   fnRead[OPT_FREEINC] = &ReadFreeInc;
+
+  sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
+  sprintf(options[OPT_LL13PHIAB].cDescr,"Binary Initial Mean Anomaly");
+  sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
+  options[OPT_LL13PHIAB].dDefault = 0.0;
+  options[OPT_LL13PHIAB].iType = 2;
+  options[OPT_LL13PHIAB].iMultiFile = 1;
+  fnRead[OPT_LL13PHIAB] = &ReadLL13PhiAB;
+
+  sprintf(options[OPT_CBPM0].cName,"dCBPM0");
+  sprintf(options[OPT_CBPM0].cDescr,"Circumbinary planet initial mean anomaly");
+  sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
+  options[OPT_CBPM0].dDefault = 0.0;
+  options[OPT_CBPM0].iType = 2;
+  options[OPT_CBPM0].iMultiFile = 1;
+  fnRead[OPT_CBPM0] = &ReadCBPM0;
+
+  sprintf(options[OPT_CBPZETA].cName,"dCBPZeta");
+  sprintf(options[OPT_CBPZETA].cDescr,"Circumbinary planet initial z oscillation phase angle");
+  sprintf(options[OPT_CBPZETA].cDefault,"0.0 degrees");
+  options[OPT_CBPZETA].dDefault = 0.0;
+  options[OPT_CBPZETA].iType = 2;
+  options[OPT_CBPZETA].iMultiFile = 1;
+  fnRead[OPT_CBPZETA] = &ReadCBPZeta;
+
+  sprintf(options[OPT_CBPPSI].cName,"dCBPPsi");
+  sprintf(options[OPT_CBPPSI].cDescr,"Circumbinary planet initial R, phi oscillation phase angle");
+  sprintf(options[OPT_CBPPSI].cDefault,"0.0 degrees");
+  options[OPT_CBPPSI].dDefault = 0.0;
+  options[OPT_CBPPSI].iType = 2;
+  options[OPT_CBPPSI].iMultiFile = 1;
+  fnRead[OPT_CBPPSI] = &ReadCBPPsi;
 
   /* Note: One should never actually set LL13*0 values as they are ALWAYS 
    * calculated during initialization.  I'll leave them here since there
@@ -504,7 +634,21 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
   */
 
+  // For CBP, cannot have dLL13PhiAB set since that is for the binary!
+  if(body[iBody].iBodyType == 0)
+  {
+    if(body[iBody].dLL13PhiAB > TINY)
+    {
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"ERROR: The circumbinary planet cannot have dLL13PhiAB set as that is the BINARY's initial mean anomaly.\n");
+      }
+      exit(EXIT_INPUT);
+    }
+  }
+
   // For binary, only the secondary should have the orbital elements set!
+  // Also, shouldn't have CBPM0 set
   if(body[iBody].iBodyType == 1)
   {
     if(iBody == 0) // Primary!
@@ -518,6 +662,15 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
         }
         exit(EXIT_INPUT);
       }
+    }
+    // Was dCBPM0, dCBPZeta, dCBPPsi set for one of the stars?
+    if(body[iBody].dCBPM0 > TINY || body[iBody].dCBPZeta > TINY || body[iBody].dCBPPsi > TINY)
+    {
+      if(control->Io.iVerbose >= VERBERR)
+      {
+        fprintf(stderr,"ERROR: In binary, only the CBP can have dCBPM0, dCBPZeta, or dCBPPsi set.\n");
+      }
+      exit(EXIT_INPUT);
     }
   }
 
@@ -541,8 +694,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     // dR0, dMeanMotion MUST be set before any of the frequencies
     body[iBody].dR0 = body[iBody].dSemi; // CBPs Guiding Radius initial equal to dSemi, must be set before N0,K0,V0 !!!
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));
-    //body[iBody].dInc = body[iBody].dFreeInc; // CBP initial inc == free inclination
-    //body[iBody].dEcc = body[iBody].dFreeEcc; // CBP initial ecc == free ecc
     body[iBody].dLL13N0 = fdMeanMotionBinary(body,iBody);
     body[iBody].dLL13K0 = fdEpiFreqK(body,iBody);
     body[iBody].dLL13V0 = fdEpiFreqV(body,iBody);
@@ -1417,7 +1568,9 @@ double fdHolmanStability(BODY *body)
   return (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
 }
 
-/* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset */
+/* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset 
+ * Note: When used with the binary, dPhi == dLL13PhiAB
+ */
 double fdMeanAnomaly(double dMeanMotion, double dTime, double dPhi)
 {
   return dMeanMotion * dTime + dPhi;
@@ -1493,7 +1646,9 @@ double fdEpiFreqV(BODY *body, int iBody)
   return sqrt(V0 * tmp1);
 }
 
-/* Circular (azimuthal) motion of the guiding center for a cbp: phi0 */
+/* Circular (azimuthal) motion of the guiding center for a cbp: phi0 
+ * dPsi here is equal to dCBPM0
+ */
 double fdPhi0(double dTime, double dMeanMotion, double dPsi)
 {
   return dMeanMotion * dTime + dPsi;
@@ -1697,14 +1852,12 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
 { 
   int iBody = iaBody[0], k;
 
-  // Note: Assume all phase values (phi, psi, etc...) are 0
-  // Fine because they are arbitary offsets
-  double dPsi = 0.0;
+  double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
-  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,body[iBody].dCBPM0);
   double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = 1. - body[iBody].dFreeEcc*cos(body[iBody].dLL13K0*dTime + dPsi) - fdC0(body,iBody)*cos(M);
@@ -1712,7 +1865,6 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
   double tmp3 = 0.0;
 
   for (k = 1; k < K_MAX; k++)
-
   {
     tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
     tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
@@ -1727,14 +1879,12 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0], k;
 
-  // Note: Assume all phase values (phi, psi, etc...) are 0
-  // Fine because they are arbitrary offsets
-  double dPsi = 0.0;
+  double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
-  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,0);
-  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,body[iBody].dCBPM0);
   double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double phi = phi0 + 2.0*body[iBody].dLL13N0*body[iBody].dFreeEcc*sin(body[iBody].dLL13K0*dTime + dPsi)/body[iBody].dLL13K0;
@@ -1760,30 +1910,25 @@ double fdCBPZBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0];
 
-  // Note: Assume all phase values (phi, psi, etc...) are 0
-  // Fine because they are arbitrary offsets
-  double dXi = 0.0;
+  double dZeta = body[iBody].dCBPZeta;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
-  return body[iBody].dR0*body[iBody].dFreeInc*cos(body[iBody].dLL13V0*dTime + dXi);
+  return body[iBody].dR0*body[iBody].dFreeInc*cos(body[iBody].dLL13V0*dTime + dZeta);
 }
 
 double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0], k;
 
-  // Note: Assume all phase values (phi, psi, etc...) are 0
-  // Fine because they are arbitrary offsets
-  double dPsi = 0.0;
-  double dPhi = 0.0;
+  double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
   double k0 = body[iBody].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,body[iBody].dCBPM0);
   double phi0_dot = body[iBody].dLL13N0;
   double M_dot = body[1].dMeanMotion;
-  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,0);
+  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
   double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = k0*body[iBody].dFreeEcc*sin(k0*dTime + dPsi) + fdC0(body,iBody)*sin(M)*M_dot;
@@ -1807,18 +1952,17 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
   int iBody = iaBody[0], k;
 
   // Set arbitrary phase constants to 0
-  double dPsi = 0.0;
-  double dPhi = 0.0;
+  double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
   // Useful intermediate quantities
   double k0 = body[iBody].dLL13K0;
-  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,0);
+  double phi0 = fdPhi0(dTime,body[iBody].dLL13N0,body[iBody].dCBPM0);
   double phi0_dot = body[iBody].dLL13N0;
   double n0 = body[iBody].dLL13N0;
   double n = body[1].dMeanMotion;
   double M_dot = n;
-  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,0);
+  double M = fdMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
   double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
 
   double tmp1 = n0 + 2.0*n0*body[iBody].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fdD0(body,iBody)*cos(M)*M_dot;
@@ -1842,10 +1986,10 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
   int iBody = iaBody[0];
 
   // Set arbitrary phase constants to 0 for simplicity
-  double dXi = 0.0;
+  double dZeta = body[iBody].dCBPZeta;
   double dTime = body[iBody].dAge; // Time == Age of the body
 
-  return -body[iBody].dR0*body[iBody].dFreeInc*sin(body[iBody].dLL13V0*dTime + dXi)*body[iBody].dLL13V0;
+  return -body[iBody].dR0*body[iBody].dFreeInc*sin(body[iBody].dLL13V0*dTime + dZeta)*body[iBody].dLL13V0;
 }
 
 /* Misc Functions */
@@ -1877,7 +2021,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly
-    meanAnomaly = body[1].dMeanMotion*body[iBody].dAge; // ignore arbitrary phase offset since P_bin << P_cbp for LL13 theory
+    meanAnomaly = body[1].dMeanMotion*body[iBody].dAge + body[1].dLL13PhiAB;
     eccAnomaly = fdMeanToEccentric(meanAnomaly,body[1].dEcc);
     trueAnomaly = fdEccToTrue(eccAnomaly,body[1].dEcc);
 
@@ -1947,4 +2091,6 @@ void binaryDebug(BODY * body)
   fprintf(stderr,"C2-: %lf.\n",fdCMk(2,body,2));
   fprintf(stderr,"C3-: %lf.\n",fdCMk(3,body,2));
 
+  fprintf(stderr,"dCBPM0: %lf.\n",body[2].dCBPM0);
+  fprintf(stderr,"dLL13PhiAB: %lf.\n",body[1].dLL13PhiAB);
 }

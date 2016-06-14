@@ -2071,6 +2071,7 @@ void binaryDebug(BODY * body)
   fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUCM);
   fprintf(stderr,"nk: %lf.\n",body[2].dMeanMotion*YEARSEC);
   fprintf(stderr,"n0: %lf.\n",body[2].dLL13N0*YEARSEC);
+  fprintf(stderr,"nAB: %lf.\n",body[1].dMeanMotion*YEARSEC);
   fprintf(stderr,"k0: %lf.\n",body[2].dLL13K0*YEARSEC);
   fprintf(stderr,"v0: %lf.\n",body[2].dLL13V0*YEARSEC);
   

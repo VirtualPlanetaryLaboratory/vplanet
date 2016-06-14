@@ -13,7 +13,7 @@ bHaltHolmanUnstable   1                   # End simulation if the CBP goes withi
 bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
-dSemi           0.7016		# Semi-major axis, negative -> AU
+dSemi           1.0 #0.7016		# Semi-major axis, negative -> AU
 dLongP          304.05
 dCBPM0          90.0
 dCBPZeta        113.0

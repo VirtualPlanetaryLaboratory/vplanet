@@ -644,6 +644,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECA].bNeg = 1;
   output[OUT_PRECA].dNeg = 1./DEGRAD;
   output[OUT_PRECA].iNum = 1;
+  output[OUT_PRECA].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");

@@ -1058,7 +1058,7 @@ void InitializeLandWater(BODY *body, int iBody) {
 }
 
 void InitializeClimateParams(BODY *body, int iBody) {
-  int i, j;
+  int i, j, count;
   double Toffset, xboundary, TGlobalTmp;
   
   body[iBody].dIceMassTot = 0.0;
@@ -1344,10 +1344,12 @@ void InitializeClimateParams(BODY *body, int iBody) {
     
       /* "burn in" to a quasi equilibrium */
       TGlobalTmp = 0;
-      while (fabs(TGlobalTmp - body[iBody].dTGlobal) > 0.01) {
+      count = 0;
+      while (fabs(TGlobalTmp - body[iBody].dTGlobal) > 0.01 || count < 3) {
         TGlobalTmp = body[iBody].dTGlobal; 
         PoiseSeasonal(body,iBody); 
         printf("TGlobal = %f\n",TGlobalTmp);
+        count += 1;
       }
     } else if (body[iBody].bSkipSeas == 1) {
       printf("Planet started in RGH or snowball, skipping Seasonal model\n");
@@ -3771,6 +3773,13 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
   
   RunSeasNext = IceTime + body[iBody].iReRunSeas*2*PI/body[iBody].dMeanMotion;
   IceDt = body[iBody].iIceTimeStep*2*PI/body[iBody].dMeanMotion;
+  
+  if (body[iBody].iIceTimeStep > 1) {
+    if (body[iBody].dTGlobal < 0) {
+      /* tip toe into snowball state to prevent instability */
+      IceDt = 2*PI/body[iBody].dMeanMotion;
+    }
+  }
   
   if (skip == 0) {
     while (IceTime < evolve->dTime+evolve->dCurrentDt) { 

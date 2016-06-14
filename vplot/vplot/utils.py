@@ -336,6 +336,7 @@ def GetArrays(path = '.', bodies = [], colors = None):
 
     # Grab the body color
     if override_colors:
+      import pdb; pdb.set_trace()
       body.color = colors[b]
     else:
       try:

@@ -271,10 +271,16 @@ def GetConf():
 
   return conf
 
-def GetArrays(path = '.', bodies = [], colors = None):
+def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
   '''
   
   '''
+  
+  # Is this a benchmarking run?
+  if benchmark:
+    logext = '.log.truth'
+  else:
+    logext = '.log'
   
   # Initialize
   output = Output()
@@ -292,7 +298,7 @@ def GetArrays(path = '.', bodies = [], colors = None):
     bodies = [bodies]
   
   # Get the log file
-  lf = [f for f in os.listdir(path) if f.endswith('.log')]
+  lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
     raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:

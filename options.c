@@ -2914,7 +2914,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCUMAN].dDefault = 0;
   options[OPT_VISCUMAN].iType = 2;
   options[OPT_VISCUMAN].iMultiFile = 1;
-  options[OPT_VISCUMAN].bNeg = 0;
+//   options[OPT_VISCUMAN].bNeg = 0;
   fnRead[OPT_VISCUMAN] = &ReadViscUMan;
   
 

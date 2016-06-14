@@ -1304,6 +1304,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
               WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
               WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+                          WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+
             body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
           }
         }

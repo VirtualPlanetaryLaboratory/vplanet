@@ -584,15 +584,19 @@ typedef struct {
   double *daDIceHeightDy;
   double *daDiffusionSea;
   double *daDivFluxAvg;
+  double **daDivFluxDaily;
   double *daEnergyResL;
   double *daEnergyResW;       /**< Energy residuals */
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
   double *daFluxAvg;
+  double **daFluxDaily;
   double *daFluxInAvg;
+  double **daFluxInDaily;
   double *daFluxInLand;
   double *daFluxInWater;
   double *daFluxOutAvg;
+  double **daFluxOutDaily;
   double *daFluxOutLand;
   double *daFluxOutWater;
   double *daFluxSeaIce;

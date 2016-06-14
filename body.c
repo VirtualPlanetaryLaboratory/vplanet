@@ -269,9 +269,10 @@ void CalcXYZobl(BODY *body, int iBody) {
 }
 
 
-void CalcDynEllip(BODY *body, int iBody) {
+double CalcDynEllipEq(BODY *body, int iBody) {
+  /* calculate equilibrium shape of planet using scaling laws and solar system values */
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
-  double nuEarth, EdEarth, EdVenus, dTmp;
+  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
   
   EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
   EdVenus = J2Venus/0.336;
@@ -279,8 +280,9 @@ void CalcDynEllip(BODY *body, int iBody) {
   
   dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
   
-  body[iBody].dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/\
-                            body[iBody].dMass;
+  dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
   
-  if (body[iBody].dDynEllip < EdVenus) body[iBody].dDynEllip = EdVenus;
+  if (dDynEllip < EdVenus) dDynEllip = EdVenus;
+  
+  return dDynEllip;
 }

@@ -276,7 +276,9 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
+  
+  
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */

@@ -2358,6 +2358,24 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   }
 }
 
+
+void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  /* Must verify modules: this is used when distrot+eqtide are called without thermint */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dViscUMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else 
+      body[iFile-1].dViscUMan = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  }
+}
+
 void ReadOptionsModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
   int iBody,iModule;
 
@@ -2889,6 +2907,16 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 1-5");
   sprintf(options[OPT_VERBOSE].cDefault,"3");
   options[OPT_VERBOSE].iType = 1;
+  
+  sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
+  sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");
+  sprintf(options[OPT_VISCUMAN].cDefault,"0");
+  options[OPT_VISCUMAN].dDefault = 0;
+  options[OPT_VISCUMAN].iType = 2;
+  options[OPT_VISCUMAN].iMultiFile = 1;
+  options[OPT_VISCUMAN].bNeg = 0;
+  fnRead[OPT_VISCUMAN] = &ReadViscUMan;
+  
 
 }
 

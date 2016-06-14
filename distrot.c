@@ -835,9 +835,9 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 //     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
-  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
-    CalcDynEllip(body, iBody);
-  }
+  // if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
+//     CalcDynEllipEq(body, iBody);
+//   }
   
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 }
@@ -1005,3 +1005,9 @@ double fdDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
 double fdDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fdObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityALL2(body,system,iaBody);
 }
+
+double fdDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -pow(EDMAN,2)/body[iaBody[0]].dViscUMan*\
+          (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
+}
+

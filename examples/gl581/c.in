@@ -29,6 +29,7 @@ bOutputLapl   0
 
 # DISTROT Parameters
 dPrecA		255
+bCalcDynEllip   1
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds
@@ -80,8 +81,11 @@ saTidePerts	star			# Body name(s) of tidal perturbers
 # Output
 # saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obli PrecA -SurfWaterMass $
 # 	      TMan Tcore -Tglobal -FluxOutGlobal -RadPowerT DeltaT
-saOutputOrder Time Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo $
-	-RotTimeEqtide TidalQ
+saOutputOrder Time $
+# Semim Ecce Inc LongP LongA -RotPer Obliq PrecA CassiniOne CassiniTwo $
+#	-RotTimeEqtide TidalQ DynEllip -OblTimeDistRot -PrecATimeDistRot -XoblTimeDistRot $
+	-RotTimeEqtide obli -OblTimeEqtide -OblTimeDistRot -PrecATimeDistRot -XoblTimeDistRot $
+	-YoblTimeDistRot -ZoblTimeDistRot -DEltaTime
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $
 #		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal $

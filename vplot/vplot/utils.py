@@ -9,6 +9,7 @@ utils.py
 
 from __future__ import division, print_function, absolute_import, unicode_literals
 from . import defaults
+from .log import GetLog
 import os
 import subprocess
 import sys
@@ -17,7 +18,7 @@ import re
 import imp
 
 # Default color sequence
-def_color_seq = ['k', 'b', 'r', 'y', 'g', 'gray']
+def_color_seq = ['#c91111', '#e09401', '#13aed5', '#1321d8', '#642197']
 
 # Default string to include in ``vplot_config.py file`` when creating one
 confstr = \
@@ -130,11 +131,12 @@ class Output(object):
   '''
   
   '''
-  def __init__(self, sysname = "", pif = "", bodies = []):
+  def __init__(self, sysname = "", pif = "", bodies = [], log = None):
     self.sysname = sysname
     self.pif = pif
     self.bodies = bodies
-
+    self.log = log
+    
   def __getitem__(self, i):
     return self.bodies[i]
     
@@ -269,10 +271,16 @@ def GetConf():
 
   return conf
 
-def GetArrays(path = '.', bodies = [], colors = None):
+def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
   '''
   
   '''
+  
+  # Is this a benchmarking run?
+  if benchmark:
+    logext = '.log.truth'
+  else:
+    logext = '.log'
   
   # Initialize
   output = Output()
@@ -290,7 +298,7 @@ def GetArrays(path = '.', bodies = [], colors = None):
     bodies = [bodies]
   
   # Get the log file
-  lf = [f for f in os.listdir(path) if f.endswith('.log')]
+  lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
     raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:
@@ -336,6 +344,7 @@ def GetArrays(path = '.', bodies = [], colors = None):
 
     # Grab the body color
     if override_colors:
+      import pdb; pdb.set_trace()
       body.color = colors[b]
     else:
       try:
@@ -418,7 +427,7 @@ def GetOutput(path = '.', **kwargs):
   path = path.replace('~', os.path.expanduser('~'))
   
   output = GetArrays(path = path, **kwargs)
-  
+
   for body in output.bodies:
     setattr(output, body.name, body)
     
@@ -451,6 +460,8 @@ def GetOutput(path = '.', **kwargs):
         parent = body.name
         arr = array(param.array.reshape(I, J), unit = unit, description = description, name = name, parent = parent, color = body.color)
         setattr(getattr(output, body.name), name, arr)
-    
-  return output
   
+  # Grab the logfile
+  output.log = GetLog(sysname = output.sysname, path = path, **kwargs)
+  
+  return output

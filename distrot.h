@@ -15,14 +15,14 @@ void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 #define OPTSTARTDISTROT        1400 /* Start of DISTROT options */
 #define OPTENDDISTROT          1500 /* End of DISTROT options */
 
-#define OPT_DYNELLIP              1402
 #define OPT_FORCEPRECRATE         1403
 #define OPT_PRECRATE              1404
-#define OPT_CALCDYNELLIP          1405
+
 
 /* Options Functions */
 void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCalcDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsDistRot(OPTIONS*, fnReadOption[]);
 void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
@@ -46,7 +46,6 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUTBODYSTARTDISTROT   1420 /* Start of DISTROT BODY options */
 
 
-#define OUT_PRECA               1421
 #define OUT_XOBL                1422
 #define OUT_YOBL                1423
 #define OUT_ZOBL                1424
@@ -71,7 +70,6 @@ void WriteBodyDPrecADtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
 void WriteBodyDXoblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDYoblADtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDZoblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyXobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyYobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyZobl(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -92,7 +90,6 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 void PropertiesDistRot(BODY*,UPDATE*,int);
 void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void RotateVector(double*,double*,double,int);
-void CalcDynEllip(BODY*,int);
 
 /* DistRot's equations */
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);

@@ -2140,6 +2140,43 @@ void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dPrecA = options->dDefault;
 }  
 
+void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0 || dTmp >= 1) {
+      if (control->Io.iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    body[iFile-1].dDynEllip = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
+  } else
+    if (iFile > 0)
+      body[iFile-1].dDynEllip = options->dDefault;
+    
+}
+
+void ReadCalcDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bCalcDynEllip = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].bCalcDynEllip = options->dDefault;
+//     AssignDefaultInt(options,&body[iFile-1].bCalcDynEllip,files->iNumInputs);
+}
+
 
 
 /*
@@ -2318,6 +2355,24 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
+  }
+}
+
+
+void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  /* Must verify modules: this is used when distrot+eqtide are called without thermint */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dViscUMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else 
+      body[iFile-1].dViscUMan = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
 }
 
@@ -2704,6 +2759,22 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_PRECA] = &ReadPrecA;
   
+  sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
+  sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
+  sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
+  options[OPT_DYNELLIP].dDefault = 0.00328;
+  options[OPT_DYNELLIP].iType = 2;  
+  options[OPT_DYNELLIP].iMultiFile = 1;   
+  fnRead[OPT_DYNELLIP] = &ReadDynEllip;
+  
+  sprintf(options[OPT_CALCDYNELLIP].cName,"bCalcDynEllip");
+  sprintf(options[OPT_CALCDYNELLIP].cDescr,"Calculate dynamical ellipticity from RotRate");
+  sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
+  options[OPT_CALCDYNELLIP].dDefault = 0;
+  options[OPT_CALCDYNELLIP].iType = 0;  
+  options[OPT_CALCDYNELLIP].iMultiFile = 1; 
+  fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
+  
 
   
   /*
@@ -2836,6 +2907,16 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 1-5");
   sprintf(options[OPT_VERBOSE].cDefault,"3");
   options[OPT_VERBOSE].iType = 1;
+  
+  sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
+  sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");
+  sprintf(options[OPT_VISCUMAN].cDefault,"0");
+  options[OPT_VISCUMAN].dDefault = 0;
+  options[OPT_VISCUMAN].iType = 2;
+  options[OPT_VISCUMAN].iMultiFile = 1;
+//   options[OPT_VISCUMAN].bNeg = 0;
+  fnRead[OPT_VISCUMAN] = &ReadViscUMan;
+  
 
 }
 

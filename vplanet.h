@@ -93,7 +93,7 @@
 #define OPTDESCR      128    /* Number of characters in option description */
 #define OUTLEN        48     /* Maximum number of characters in an output column header */
 #define LINE          128   /* Maximum number of characters in a line */
-#define NAMELEN       50
+#define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
 #define MAXARRAY      64    /* Maximum number of options in 
@@ -150,7 +150,7 @@
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
-#define VENVELOPEMASS  1202
+#define VENVELOPEMASS      1203
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -246,6 +246,8 @@ typedef struct {
   int bEigenSet;
   double *dLOrb;
   double *dLOrbTmp;
+  double dRPeri;
+  double dRApo;
 
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
@@ -276,7 +278,9 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
+  
+  
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -418,8 +422,11 @@ typedef struct {
   double dLuminosity;
   double dTemperature;
   double dSatXUVFrac;
+  double dSatXUVTime;
+  double dXUVBeta;
   int iStellarModel;
   int iWindModel;
+  int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
 
   /* PHOTOCHEM Parameters */
@@ -516,11 +523,14 @@ typedef struct {
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  double dPrecA0;            /**< Initial pA value used when distrot is not called */
   int iReRunSeas;
   double dSeaIceConduct;
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
+  double dSeasOutputTime;
+  double dSeasNextOutput;
   int bSkipSeas;
   int bSkipSeasEnabled;
   int bSnowball;
@@ -563,6 +573,8 @@ typedef struct {
 
   /* Arrays for seasonal model */
   double *daAlbedoAvg;
+  double *daAlbedoAvgL;
+  double *daAlbedoAvgW;
   double *daAlbedoLand;
   double *daAlbedoLW;
   double *daAlbedoWater;
@@ -577,15 +589,19 @@ typedef struct {
   double *daDIceHeightDy;
   double *daDiffusionSea;
   double *daDivFluxAvg;
+  double **daDivFluxDaily;
   double *daEnergyResL;
   double *daEnergyResW;       /**< Energy residuals */
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
   double *daFluxAvg;
+  double *daFluxOutAvg;
+  double **daFluxDaily;
   double *daFluxInAvg;
+  double **daFluxInDaily;
   double *daFluxInLand;
   double *daFluxInWater;
-  double *daFluxOutAvg;
+  double **daFluxOutDaily;
   double *daFluxOutLand;
   double *daFluxOutWater;
   double *daFluxSeaIce;
@@ -623,6 +639,8 @@ typedef struct {
   double *daSourceLW;     /**< Combined source function what matrix operates on */
   double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
   double *daTempAvg;
+  double *daTempAvgL;
+  double *daTempAvgW;
   double **daTempDaily;
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
@@ -997,6 +1015,8 @@ typedef struct {
   
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
+  int bHillStab;       /**< halt if 2 planets fail Hill stability crit (technically valid for only 2 planets)*/
+  int bCloseEnc;       /**< halt if any planet pair has orbits too close (crudely comparing inner's apocenter and outer's pericenter)*/
 
   /* POISE */
   int bHaltMinIceDt;  /**< Halt if ice flow time-step falls below a minimum value */

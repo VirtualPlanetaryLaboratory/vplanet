@@ -37,7 +37,6 @@ Minimum Value of ecc and obl: 1.000000e-10
 (LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.000000 
 
 ----- BODY: star ----
-Color: 00ff00
 (Mass) Mass [kg]: 6.563436e+29 
 (Obliquity) Obliquity [rad]: 0.000000 
 (Radius) Radius [m]: 1.163179e+09 
@@ -89,7 +88,6 @@ Output Order: Time[year] RotPer[days] Luminosity[solar*AU^2/year^3] Radius[AU]
 Grid Output Order:
 
 ----- BODY: c ----
-Color: ff0000
 (Mass) Mass [kg]: 5.974200e+24 
 (Obliquity) Obliquity [rad]: 0.410152 
 (Radius) Radius [m]: 6.378100e+06 
@@ -164,7 +162,6 @@ Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] Inc[deg] LongP[deg] Lo
 Grid Output Order:
 
 ----- BODY: d ----
-Color: 0000ff
 (Mass) Mass [kg]: 3.345552e+25 
 (Obliquity) Obliquity [rad]: 0.410152 
 (Radius) Radius [m]: 1.015394e+07 
@@ -251,7 +248,6 @@ Grid Output Order:
 (LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.000000 
 
 ----- BODY: star ----
-Color: 00ff00
 (Mass) Mass [kg]: 6.563436e+29 
 (Obliquity) Obliquity [rad]: 0.000000 
 (Radius) Radius [m]: 1.163179e+09 
@@ -303,7 +299,6 @@ Output Order: Time[year] RotPer[days] Luminosity[solar*AU^2/year^3] Radius[AU]
 Grid Output Order:
 
 ----- BODY: c ----
-Color: ff0000
 (Mass) Mass [kg]: 5.974200e+24 
 (Obliquity) Obliquity [rad]: 0.060659 
 (Radius) Radius [m]: 6.378100e+06 
@@ -378,7 +373,6 @@ Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] Inc[deg] LongP[deg] Lo
 Grid Output Order:
 
 ----- BODY: d ----
-Color: 0000ff
 (Mass) Mass [kg]: 3.345552e+25 
 (Obliquity) Obliquity [rad]: 0.399412 
 (Radius) Radius [m]: 1.015394e+07 

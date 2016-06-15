@@ -67,7 +67,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_RERUNSEAS       1855
 #define OPT_ALBEDOTYPE      1856
 #define OPT_GEOGRAPHY       1857
-
+#define OPT_SEASOUTPUTTIME  1858
 
 #define OPT_CLIMATEMODEL    1899
 
@@ -101,7 +101,6 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TOTICEBALANCE    1827
 #define OUT_SKIPSEAS         1828
 
-
 #define OUT_LATITUDE         1830
 #define OUT_TEMPLAT          1831
 #define OUT_ALBEDOLAT        1832
@@ -118,6 +117,10 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ENERGYRESL       1843
 #define OUT_ENERGYRESW       1844
 #define OUT_BEDROCKH         1845
+#define OUT_TEMPLANDLAT      1846
+#define OUT_TEMPWATERLAT     1847
+#define OUT_ALBEDOLANDLAT    1848
+#define OUT_ALBEDOWATERLAT   1849
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -132,6 +135,7 @@ void WriteAlbedoLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteAnnualInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDailyInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSeasonalFluxes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalIceBalance(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFluxMerid(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFluxIn(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

@@ -32,6 +32,8 @@
 
 #define OUT_MASS                500
 #define OUT_OBL                 510
+#define OUT_PRECA               511
+
 #define OUT_RADIUS              520
 #define OUT_ROTANGMOM		530
 #define OUT_ROTKINENERGY        535
@@ -54,6 +56,8 @@
 #define OUT_ORBKINENERGY        670
 #define OUT_ORBPOTENERGY        680
 #define OUT_ORBENERGY           690
+
+void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,int);
 

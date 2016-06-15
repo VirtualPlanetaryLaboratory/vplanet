@@ -31,7 +31,15 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     // The iNumX and iX members don't need to be copied
 
     dest[iBody].iNumVars = src[iBody].iNumVars;
-
+    
+    dest[iBody].iXobl = src[iBody].iXobl;
+    dest[iBody].iYobl = src[iBody].iYobl;
+    dest[iBody].iZobl = src[iBody].iZobl;
+    dest[iBody].iHecc = src[iBody].iHecc;
+    dest[iBody].iKecc = src[iBody].iKecc;
+    dest[iBody].iPinc = src[iBody].iPinc;
+    dest[iBody].iQinc = src[iBody].iQinc;
+    
     for (iVar=0;iVar<src[iBody].iNumVars;iVar++) {
       dest[iBody].iNumEqns[iVar] = src[iBody].iNumEqns[iVar];
       dest[iBody].iaVar[iVar] = src[iBody].iaVar[iVar];
@@ -97,19 +105,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumZobl=0;
 
     update[iBody].iNumVars=0;
-    
-    /* XXX Hack to get distorb working. Need iGravPerts for following arrays */
-    if (body[iBody].bDistOrb) {
-      if (control->Evolve.iDistOrbModel == RD4) {
-        body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
-        body[iBody].iDistOrbModel = RD4;
-      } else if (control->Evolve.iDistOrbModel == LL2) {
-        /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs. 
-           Number of eigenfrequencies = number of planets. */
-        body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
-        body[iBody].iDistOrbModel = LL2;
-      }
-    }
     
     /* First we must identify how many variables and models must be 
        assigned so we can malloc the update struct. */
@@ -1201,6 +1196,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */
+       
+    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!   
+       
     update[iBody].iLXUV = -1;
     if (update[iBody].iNumLXUV) {
       update[iBody].iLXUV = iVar;

@@ -23,7 +23,8 @@ with warnings.catch_warnings(record=True) as w:
     print("font, which is located in a '.zip' file in the VPLOT directory.")
     print("Take a look at the README in the '.zip' file for details.")
 
-from . import plot, quickplot, utils
+from . import plot, quickplot, utils, benchmark, log
+from .benchmark import Benchmark
 from .utils import GetOutput
 from .plot import plot, show, savefig
 

@@ -835,9 +835,9 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 //     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
-  // if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
-//     CalcDynEllipEq(body, iBody);
-//   }
+  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
+    CalcDynEllipEq(body, iBody);
+  }
   
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 }

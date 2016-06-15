@@ -162,6 +162,28 @@ void WriteObliquity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
+void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bDistRot == 0 && body[iBody].bPoise == 1) {
+    *dTmp = body[iBody].dPrecA;
+  } else {
+    *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+  }
+  
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
+  }
+  while (*dTmp > 2*PI) {
+    *dTmp -= 2*PI;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}  
 
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
@@ -615,6 +637,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBL].iNum = 1;
   output[OUT_OBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_OBL] = &WriteObliquity;
+  
+  sprintf(output[OUT_PRECA].cName,"PrecA");
+  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
+  sprintf(output[OUT_PRECA].cNeg,"Deg");
+  output[OUT_PRECA].bNeg = 1;
+  output[OUT_PRECA].dNeg = 1./DEGRAD;
+  output[OUT_PRECA].iNum = 1;
+  output[OUT_PRECA].iModuleBit = EQTIDE + DISTROT + POISE;
+  fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
@@ -1259,12 +1290,28 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+                                      WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+
+            if (body[iBody].dSeasOutputTime != 0) {
+              body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;
+            }            
           }
           fp = fopen(cPoiseGrid,"w");     
         } else {
           fp = fopen(cPoiseGrid,"a");
         }
-     
+        
+        if (body[iBody].dSeasOutputTime != 0) {
+          if (control->Evolve.dTime >= body[iBody].dSeasNextOutput && iLat == 0) {
+            WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+              WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+              WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+                          WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+
+            body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
+          }
+        }
+          
         for (iGrid=0;iGrid<files->Outfile[iBody].iNumGrid+iExtra;iGrid++) {
           fprintd(fp,dGrid[iGrid],control->Io.iSciNot,control->Io.iDigits);
           fprintf(fp," ");

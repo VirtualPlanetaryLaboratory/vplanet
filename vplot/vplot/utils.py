@@ -344,6 +344,7 @@ def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
 
     # Grab the body color
     if override_colors:
+      import pdb; pdb.set_trace()
       body.color = colors[b]
     else:
       try:
@@ -426,7 +427,7 @@ def GetOutput(path = '.', **kwargs):
   path = path.replace('~', os.path.expanduser('~'))
   
   output = GetArrays(path = path, **kwargs)
-  
+
   for body in output.bodies:
     setattr(output, body.name, body)
     

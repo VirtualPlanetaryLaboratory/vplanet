@@ -5,7 +5,7 @@ dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
 dObliquity   23.44 #23.682    #no Moons yet in vplanet....
-dSemi        1.00000011
+dSemi        1.0000011
 #dSemi        1.7
 dEcc         0.01672 #0.036851
 dInc         5e-5
@@ -28,9 +28,9 @@ dPrecA       0.0
 #dHaltMaxEcc     0.4
 iLatCellNum      151
 #bMEPDiff         1
-bIceSheets       1
-dInitIceLat      90.
-dInitIceHeight   0.
+bIceSheets       0
+#dInitIceLat      90.
+#dInitIceHeight   0.
 #bHadley          1
 dDiffusion        0.44
 #dPlanckA         203.3
@@ -43,17 +43,15 @@ bClimateModel     sea
 iNumYears         4
 iNStepInYear      60
 bSeaIceModel      0
-dIceDepRate       3e-5
+#dIceDepRate       3e-5
 dIceAlbedo        0.6
 dAlbedoLand       0.4
 dAlbedoWater      0.3
 #dHeatCapLand      1.53
 #dHeatCapWater      28.4
 #dMixingDepth      70
-<<<<<<< HEAD
-iIceDt             5
-iReRunSeas         500
-iAlbedoType        fix
+#iIceDt             5
+#iReRunSeas         500
+#iAlbedoType        fix
 bSkipSeasEnabled   0
-=======
->>>>>>> 992b81ca70c77ce2fd657ec88ee4a8eeb47ca3d3
+

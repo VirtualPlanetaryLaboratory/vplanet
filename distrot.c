@@ -33,40 +33,6 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
 
 /**************** DISTROT options ********************/
 
-void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* Cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0 || dTmp >= 1) {
-      if (control->Io.iVerbose >= VERBERR) 
-        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
-    }
-    body[iFile-1].dDynEllip = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dDynEllip,files->iNumInputs);
-    
-}
-
-void ReadCalcDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  int lTmp=-1,bTmp;
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    /* Option was found */
-    body[iFile-1].bCalcDynEllip = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultInt(options,&body[iFile-1].bCalcDynEllip,files->iNumInputs);
-}
-
 void ReadForcePrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -97,22 +63,7 @@ void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 }
 
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
-  
-  sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
-  sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
-  sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
-  options[OPT_DYNELLIP].dDefault = 0.00328;
-  options[OPT_DYNELLIP].iType = 2;  
-  options[OPT_DYNELLIP].iMultiFile = 1;   
-  fnRead[OPT_DYNELLIP] = &ReadDynEllip;
-  
-  sprintf(options[OPT_CALCDYNELLIP].cName,"bCalcDynEllip");
-  sprintf(options[OPT_CALCDYNELLIP].cDescr,"Calculate dynamical ellipticity from RotRate");
-  sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
-  options[OPT_CALCDYNELLIP].dDefault = 0;
-  options[OPT_CALCDYNELLIP].iType = 0;  
-  options[OPT_CALCDYNELLIP].iMultiFile = 1; 
-  fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
+
   
   sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
   sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
@@ -196,16 +147,6 @@ void InitializeYoblDistRotStar(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = malloc(update[iBody].iNumBodies[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]][0] = iBody;
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]][1] = 0;
-}
-
-void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
-  if (body[iBody].bCalcDynEllip == 1) {
-    /* check if bCalcDynEllip and dDynEllip are both set */
-    if (options[OPT_DYNELLIP].iLine[iBody+1] > -1) {
-      fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
-    } 
-    CalcDynEllip(body,iBody);
-  }
 }
  
 void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -604,26 +545,7 @@ void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-
-void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
-  
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  while (*dTmp > 2*PI) {
-    *dTmp -= 2*PI;
-  }
-  
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}  
-  
+ 
 void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
@@ -826,15 +748,6 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
   
-  sprintf(output[OUT_PRECA].cName,"PrecA");
-  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
-  sprintf(output[OUT_PRECA].cNeg,"Deg");
-  output[OUT_PRECA].bNeg = 1;
-  output[OUT_PRECA].dNeg = 1./DEGRAD;
-  output[OUT_PRECA].iNum = 1;
-  output[OUT_PRECA].iModuleBit = DISTROT;
-  fnWrite[OUT_PRECA] = &WriteBodyPrecA;
-  
   sprintf(output[OUT_CASS1].cName,"CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg = 0;
@@ -923,8 +836,10 @@ void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
-    CalcDynEllip(body, iBody);
+    CalcDynEllipEq(body, iBody);
   }
+  
+  body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -946,21 +861,7 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
   }
 }
 
-void CalcDynEllip(BODY *body, int iBody) {
-  double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
-  double nuEarth, EdEarth, EdVenus, dTmp;
-  
-  EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
-  EdVenus = J2Venus/0.336;
-  nuEarth = 2*PI/(DAYSEC);
-  
-  dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
-  
-  body[iBody].dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/\
-                            body[iBody].dMass;
-  
-  if (body[iBody].dDynEllip < EdVenus) body[iBody].dDynEllip = EdVenus;
-}
+
 
 /* Equations used to calculate obliquity/spin evolution */
 double fdCentralTorqueSfac(BODY *body, int iBody) {
@@ -1104,3 +1005,9 @@ double fdDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
 double fdDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fdObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityALL2(body,system,iaBody);
 }
+
+double fdDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -pow(EDMAN,2)/body[iaBody[0]].dViscUMan*\
+          (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
+}
+

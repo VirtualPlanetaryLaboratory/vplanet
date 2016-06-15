@@ -240,7 +240,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dZobl = src[iBody].dZobl;
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
-    dest[iBody].dLXUV = src[iBody].dLXUV;
+    //dest[iBody].dLXUV = src[iBody].dLXUV;
 
     /* Only orbiting bodies retain these parameters unless binary is used*/
     

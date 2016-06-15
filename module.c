@@ -558,7 +558,7 @@ void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
 
 void PropsAuxFlareStellar(BODY *body,UPDATE *update,int iBody) {
   SYSTEM system; // dummy for LXUVStellar
-  body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
+  //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }
 
 /*

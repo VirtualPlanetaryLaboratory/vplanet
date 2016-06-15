@@ -1842,9 +1842,11 @@ void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Totals */
-void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Total Radiogenic Power Production */
-  *dTmp = fdRadPowerMan(update,iBody);
+void WriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Radiogenic Power Production in crust*/
+
+  *dTmp = fdRadPowerCrust(update,iBody);
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1853,9 +1855,26 @@ void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsPower(units,cUnit);
   }
 }
+
+void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Radiogenic Power Production in mantle*/
+
+  *dTmp = fdRadPowerMan(update,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
+
 void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Total Radiogenic Power Production */
+  /* Total Radiogenic Power Production in core*/
+
   *dTmp = fdRadPowerCore(update,iBody);
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1899,6 +1918,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KPOWERMAN].bNeg = 1;
   output[OUT_40KPOWERMAN].dNeg = 1e-12; 
   output[OUT_40KPOWERMAN].iNum = 1;
+  output[OUT_40KPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
   
   sprintf(output[OUT_40KENFLUX].cName,"40KEnFlux");
@@ -1907,6 +1927,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KENFLUX].bNeg = 1;
   output[OUT_40KENFLUX].dNeg = 1;
   output[OUT_40KENFLUX].iNum = 1;
+  output[OUT_40KENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_40KENFLUX] = &Write40KEnFlux;
 
   sprintf(output[OUT_40KDPOWERDT].cName,"D40KPowerDt");
@@ -1915,6 +1936,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KDPOWERDT].bNeg = 1;
   output[OUT_40KDPOWERDT].dNeg = 1e12/1e9; /* XXX */
   output[OUT_40KDPOWERDT].iNum = 1;
+  output[OUT_40KDPOWERDT].iModuleBit = RADHEAT;
   fnWrite[OUT_40KDPOWERDT] = &WriteD40KPowerDt;  //PED: that subr is not written yet?
   
   sprintf(output[OUT_40KDNUMDT].cName,"D40KNumManDt");
@@ -1923,6 +1945,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KDNUMDT].bNeg = 1;
   output[OUT_40KDNUMDT].dNeg = YEARSEC*1e9; 
   output[OUT_40KDNUMDT].iNum = 1;
+  output[OUT_40KDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_40KDNUMDT] = &WriteD40KNumDt;
   
   sprintf(output[OUT_40KTIME].cName,"40KTimescale");
@@ -1931,6 +1954,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KTIME].bNeg = 1;
   output[OUT_40KTIME].dNeg = YEARSEC*1e9;
   output[OUT_40KTIME].iNum = 1;
+  output[OUT_40KTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_40KTIME] = &Write40KTimescale;
   
   sprintf(output[OUT_40KMASSMAN].cName,"40KMassMan");
@@ -1939,6 +1963,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KMASSMAN].bNeg = 1;
   output[OUT_40KMASSMAN].dNeg = MEARTH;
   output[OUT_40KMASSMAN].iNum = 1;
+  output[OUT_40KMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSMAN] = &Write40KMassMan;
   
   sprintf(output[OUT_40KNUMMAN].cName,"40KNumMan");
@@ -1947,6 +1972,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KNUMMAN].bNeg = 1;
   output[OUT_40KNUMMAN].dNeg = EMASSMAN40K/MASS40K;
   output[OUT_40KNUMMAN].iNum = 1;
+  output[OUT_40KNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KNUMMAN] = &Write40KNumMan;
 
   /* Core */
@@ -1956,6 +1982,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KPOWERCORE].bNeg = 1;
   output[OUT_40KPOWERCORE].dNeg = 1e-12; // ergs/s -> TW 
   output[OUT_40KPOWERCORE].iNum = 1;
+  output[OUT_40KPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KPOWERCORE] = &Write40KPowerCore;
   
   sprintf(output[OUT_40KMASSCORE].cName,"40KMassCore");
@@ -1964,6 +1991,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KMASSCORE].bNeg = 1;
   output[OUT_40KMASSCORE].dNeg = MEARTH;
   output[OUT_40KMASSCORE].iNum = 1;
+  output[OUT_40KMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSCORE] = &Write40KMassCore;
   
   sprintf(output[OUT_40KNUMCORE].cName,"40KNumCore");
@@ -1972,6 +2000,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KNUMCORE].bNeg = 1;
   output[OUT_40KNUMCORE].dNeg = EMASSCORE40K/MASS40K;
   output[OUT_40KNUMCORE].iNum = 1;
+  output[OUT_40KNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KNUMCORE] = &Write40KNumCore;
   
   /* Thorium */
@@ -1981,6 +2010,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THPOWERMAN].bNeg = 1;
   output[OUT_232THPOWERMAN].dNeg = 1e-12; 
   output[OUT_232THPOWERMAN].iNum = 1;
+  output[OUT_232THPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THPOWERMAN] = &Write232ThPowerMan;
   
   sprintf(output[OUT_232THENFLUX].cName,"232ThEnFlux");
@@ -1989,6 +2019,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THENFLUX].bNeg = 1;
   output[OUT_232THENFLUX].dNeg = 1;
   output[OUT_232THENFLUX].iNum = 1;
+  output[OUT_232THENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_232THENFLUX] = &Write232ThEnFlux;
 
   sprintf(output[OUT_232THDNUMDT].cName,"D232ThNumManDt");
@@ -1997,6 +2028,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THDNUMDT].bNeg = 1;
   output[OUT_232THDNUMDT].dNeg = YEARSEC*1e9;  
   output[OUT_232THDNUMDT].iNum = 1;
+  output[OUT_232THDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_232THDNUMDT] = &WriteD232ThNumDt;
 
   sprintf(output[OUT_232THTIME].cName,"232ThTimescale");
@@ -2005,6 +2037,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THTIME].bNeg = 1;
   output[OUT_232THTIME].dNeg = YEARSEC*1e9;
   output[OUT_232THTIME].iNum = 1;
+  output[OUT_232THTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_232THTIME] = &Write232ThTimescale;
   
   sprintf(output[OUT_232THMASSMAN].cName,"232ThMassMan");
@@ -2013,6 +2046,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THMASSMAN].bNeg = 1;
   output[OUT_232THMASSMAN].dNeg = MEARTH;
   output[OUT_232THMASSMAN].iNum = 1;
+  output[OUT_232THMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSMAN] = &Write232ThMassMan;
   
   sprintf(output[OUT_232THNUMMAN].cName,"232ThNumMan");
@@ -2021,6 +2055,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THNUMMAN].bNeg = 1;
   output[OUT_232THNUMMAN].dNeg = EMASSMAN232TH/MASS232TH;
   output[OUT_232THNUMMAN].iNum = 1;
+  output[OUT_232THNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THNUMMAN] = &Write232ThNumMan;
 
   /* Core */
@@ -2030,6 +2065,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THPOWERCORE].bNeg = 1;
   output[OUT_232THPOWERCORE].dNeg = 1e-12; 
   output[OUT_232THPOWERCORE].iNum = 1;
+  output[OUT_232THPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THPOWERCORE] = &Write232ThPowerCore;
 
   sprintf(output[OUT_232THMASSCORE].cName,"232ThMassCore");
@@ -2038,6 +2074,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THMASSCORE].bNeg = 1;
   output[OUT_232THMASSCORE].dNeg = MEARTH;
   output[OUT_232THMASSCORE].iNum = 1;
+  output[OUT_232THMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSCORE] = &Write232ThMassCore;
   
   sprintf(output[OUT_232THNUMCORE].cName,"232ThNumCore");
@@ -2046,6 +2083,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THNUMCORE].bNeg = 1;
   output[OUT_232THNUMCORE].dNeg = EMASSCORE232TH/MASS232TH;
   output[OUT_232THNUMCORE].iNum = 1;
+  output[OUT_232THNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THNUMCORE] = &Write232ThNumCore;
     
   /* Uranium 238 */
@@ -2056,6 +2094,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UPOWERMAN].bNeg = 1;
   output[OUT_238UPOWERMAN].dNeg = 1e-12; 
   output[OUT_238UPOWERMAN].iNum = 1;
+  output[OUT_238UPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UPOWERMAN] = &Write238UPowerMan;
   
   sprintf(output[OUT_238UENFLUX].cName,"238UEnFlux");
@@ -2064,6 +2103,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UENFLUX].bNeg = 1;
   output[OUT_238UENFLUX].dNeg = 1;
   output[OUT_238UENFLUX].iNum = 1;
+  output[OUT_238UENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_238UENFLUX] = &Write238UEnFlux;
 
   sprintf(output[OUT_238UDNUMDT].cName,"D238UNumManDt");
@@ -2072,6 +2112,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UDNUMDT].bNeg = 1;
   output[OUT_238UDNUMDT].dNeg = YEARSEC*1e9;
   output[OUT_238UDNUMDT].iNum = 1;
+  output[OUT_238UDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_238UDNUMDT] = &WriteD238UNumDt;
 
   sprintf(output[OUT_238UTIME].cName,"238UTimescale");
@@ -2080,6 +2121,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UTIME].bNeg = 1;
   output[OUT_238UTIME].dNeg = YEARSEC*1e9;
   output[OUT_238UTIME].iNum = 1;
+  output[OUT_238UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_238UTIME] = &Write238UTimescale;
   
   sprintf(output[OUT_238UMASSMAN].cName,"238UMassMan");
@@ -2088,6 +2130,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UMASSMAN].bNeg = 1;
   output[OUT_238UMASSMAN].dNeg = MEARTH;
   output[OUT_238UMASSMAN].iNum = 1;
+  output[OUT_238UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSMAN] = &Write238UMassMan;
   
   sprintf(output[OUT_238UNUMMAN].cName,"238UNumMan");
@@ -2096,6 +2139,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UNUMMAN].bNeg = 1;
   output[OUT_238UNUMMAN].dNeg = 1;
   output[OUT_238UNUMMAN].iNum = 1;
+  output[OUT_238UNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMMAN] = &Write238UNumMan;
 
   /* Core */
@@ -2105,6 +2149,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UPOWERCORE].bNeg = 1;
   output[OUT_238UPOWERCORE].dNeg = 1e-12; 
   output[OUT_238UPOWERCORE].iNum = 1;
+  output[OUT_238UPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UPOWERCORE] = &Write238UPowerCore;
   
   sprintf(output[OUT_238UMASSCORE].cName,"238UMassCore");
@@ -2113,6 +2158,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UMASSCORE].bNeg = 1;
   output[OUT_238UMASSCORE].dNeg = MEARTH;
   output[OUT_238UMASSCORE].iNum = 1;
+  output[OUT_238UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSCORE] = &Write238UMassCore;
   
   sprintf(output[OUT_238UNUMCORE].cName,"238UNumCore");
@@ -2121,6 +2167,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UNUMCORE].bNeg = 1;
   output[OUT_238UNUMCORE].dNeg = 1;
   output[OUT_238UNUMCORE].iNum = 1;
+  output[OUT_238UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMCORE] = &Write238UNumCore;
   
   /* Uranium 235 */
@@ -2131,6 +2178,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UPOWERMAN].bNeg = 1;
   output[OUT_235UPOWERMAN].dNeg = 1e-12; 
   output[OUT_235UPOWERMAN].iNum = 1;
+  output[OUT_235UPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UPOWERMAN] = &Write235UPowerMan;
   
   sprintf(output[OUT_235UENFLUX].cName,"235UEnFlux");
@@ -2139,6 +2187,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UENFLUX].bNeg = 1;
   output[OUT_235UENFLUX].dNeg = 1e-3;
   output[OUT_235UENFLUX].iNum = 1;
+  output[OUT_235UENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_235UENFLUX] = &Write235UEnFlux;
 
   sprintf(output[OUT_235UDNUMDT].cName,"D235UNumManDt");
@@ -2147,6 +2196,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UDNUMDT].bNeg = 1;
   output[OUT_235UDNUMDT].dNeg = YEARSEC*1e9;
   output[OUT_235UDNUMDT].iNum = 1;
+  output[OUT_235UDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_235UDNUMDT] = &WriteD235UNumDt;
 
   sprintf(output[OUT_235UTIME].cName,"235UTimescale");
@@ -2155,6 +2205,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UTIME].bNeg = 1;
   output[OUT_235UTIME].dNeg = YEARSEC*1e9;
   output[OUT_235UTIME].iNum = 1;
+  output[OUT_235UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_235UTIME] = &Write235UTimescale;
   
   sprintf(output[OUT_235UMASSMAN].cName,"235UMassMan");
@@ -2163,6 +2214,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UMASSMAN].bNeg = 1;
   output[OUT_235UMASSMAN].dNeg = MEARTH;
   output[OUT_235UMASSMAN].iNum = 1;
+  output[OUT_235UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSMAN] = &Write235UMassMan;
   
   sprintf(output[OUT_235UNUMMAN].cName,"235UNumMan");
@@ -2171,6 +2223,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UNUMMAN].bNeg = 1;
   output[OUT_235UNUMMAN].dNeg = 1;
   output[OUT_235UNUMMAN].iNum = 1;
+  output[OUT_235UNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMMAN] = &Write235UNumMan;
 
   /* Core */
@@ -2180,6 +2233,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UPOWERCORE].bNeg = 1;
   output[OUT_235UPOWERCORE].dNeg = 1e-12; 
   output[OUT_235UPOWERCORE].iNum = 1;
+  output[OUT_235UPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UPOWERCORE] = &Write235UPowerCore;
 
   sprintf(output[OUT_235UMASSCORE].cName,"235UMassCore");
@@ -2188,6 +2242,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UMASSCORE].bNeg = 1;
   output[OUT_235UMASSCORE].dNeg = MEARTH;
   output[OUT_235UMASSCORE].iNum = 1;
+  output[OUT_235UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSCORE] = &Write235UMassCore;
   
   sprintf(output[OUT_235UNUMCORE].cName,"235UNumCore");
@@ -2196,16 +2251,27 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UNUMCORE].bNeg = 1;
   output[OUT_235UNUMCORE].dNeg = 1;
   output[OUT_235UNUMCORE].iNum = 1;
+  output[OUT_235UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMCORE] = &Write235UNumCore;
       
   /* Totals */
   
+  sprintf(output[OUT_RADPOWERCRUST].cName,"RadPowerCrust");
+  sprintf(output[OUT_RADPOWERCRUST].cDescr,"Total Power Generated by Radiogenic Nuclides in the crust");
+  sprintf(output[OUT_RADPOWERCRUST].cNeg,"TW");
+  output[OUT_RADPOWERCRUST].bNeg = 1;
+  output[OUT_RADPOWERCRUST].dNeg = 1e-12; 
+  output[OUT_RADPOWERCRUST].iNum = 1;
+  output[OUT_RADPOWERCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_RADPOWERCRUST] = &WriteRadPowerCrust;
+
   sprintf(output[OUT_RADPOWERMAN].cName,"RadPowerMan");
-  sprintf(output[OUT_RADPOWERMAN].cDescr,"Total Power Generated by Radiogenic Nuclides in Mantle");
+  sprintf(output[OUT_RADPOWERMAN].cDescr,"Total Power Generated by Radiogenic Nuclides in the mantle");
   sprintf(output[OUT_RADPOWERMAN].cNeg,"TW");
   output[OUT_RADPOWERMAN].bNeg = 1;
   output[OUT_RADPOWERMAN].dNeg = 1e-12; 
   output[OUT_RADPOWERMAN].iNum = 1;
+  output[OUT_RADPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERMAN] = &WriteRadPowerMan;
 
   sprintf(output[OUT_RADPOWERCORE].cName,"RadPowerCore");
@@ -2214,6 +2280,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADPOWERCORE].bNeg = 1;
   output[OUT_RADPOWERCORE].dNeg = 1e-12; 
   output[OUT_RADPOWERCORE].iNum = 1;
+  output[OUT_RADPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERCORE] = &WriteRadPowerCore;
 
   sprintf(output[OUT_RADPOWERTOTAL].cName,"RadPowerTotal");
@@ -2222,6 +2289,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADPOWERTOTAL].bNeg = 1;
   output[OUT_RADPOWERTOTAL].dNeg = 1e-12; 
   output[OUT_RADPOWERTOTAL].iNum = 1;
+  output[OUT_RADPOWERTOTAL].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERTOTAL] = &WriteRadPowerTotal;
 
   sprintf(output[OUT_SURFENFLUXRADHEAT].cName,"SurfEnFluxRadheat");
@@ -2230,6 +2298,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SURFENFLUXRADHEAT].bNeg = 1;
   output[OUT_SURFENFLUXRADHEAT].dNeg = 1; 
   output[OUT_SURFENFLUXRADHEAT].iNum = 1;
+  output[OUT_SURFENFLUXRADHEAT].iModuleBit = RADHEAT;
   fnWrite[OUT_SURFENFLUXRADHEAT] = &WriteSurfEnFluxRadheat;
 
 }
@@ -2331,12 +2400,12 @@ double fdRadPowerCore(UPDATE *update,int iBody) {
 }
 
 double fdRadPowerTot(UPDATE *update,int iBody) {
-  return fdRadPowerMan(update,iBody) + fdRadPowerCore(update,iBody);
+  return fdRadPowerMan(update,iBody) + fdRadPowerCore(update,iBody) + fdRadPowerCrust(update,iBody);
 }
 
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
 double fdSurfEnFluxRadheat(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  return fdRadPowerTot(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+  return (fdRadPowerCrust(update,iBody) + fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 
 double fdRadheatConst(double dNum,double dAge,double dHalfLife) {
@@ -2463,4 +2532,15 @@ double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,body[iaBody[0]].dAge);
 
+}
+
+double fdRadPowerCrust(UPDATE *update,int iBody) {
+  /* This is a fudge to get SurfEnFluxTot to behave. The current Earth 
+     produces 7 TW of of radiogenic power in the crust. I will wave my hands
+     and say that since Earth's crust has been growing with time, while at
+     the same time radioactive decay is decreasing, the two magically
+     cancel out and throughout Earth's history, the crust has always produced
+     7 TW of power. */
+
+  return 7e12;
 }

@@ -8,37 +8,39 @@
 /*! Top-level declarations */
 
 /* How many modules are available? */
-#define EQTIDE        0
-#define RADHEAT       1
-#define ATMESC        2
-#define DISTORB       3
-#define DISTROT       4
-#define STELLAR       5
-#define DYNAMO        6
-#define THERMINT      7
-#define POISE         8
-#define FLARE         9
-#define BINARY        10
+#define EQTIDE        2
+#define RADHEAT       4
+#define ATMESC        8
+#define DISTORB       16
+#define DISTROT       32
+#define STELLAR       64
+#define THERMINT      128
+#define POISE         256
+#define FLARE         512
+#define BINARY        1024
 
-/* Fundamental constants */
+/* Fundamental constants; Some of these are taken from the IAU working
+ group on Fundamental constants, as described in Prsa et al. 2016. */
 
-#define BIGG          6.67408e-11
+#define BIGG          6.67428e-11  // From Luzum et al., 2011; value recommended by IAU NSFA in Prsa et al. 2016
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
 #define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
-/* Units: Calculations are done in SI */
 
+#define EPS           1e-10       // Precision for difference of doubles to be effectively 0
+
+/* Units: Calculations are done in SI */
 #define cLIGHT        299792458.0 
-#define MEARTH        5.9742e24
-#define MSUN          1.98892e30
-#define AUCM          1.49598e11 // XXX Change to AUM
-#define RSUN          6.955e8
+#define MEARTH        5.972186e24 // Prsa et al. 2016   
+#define MSUN          1.988416e30 // Prsa et al. 2016
+#define AUCM          1.49598e11  // XXX Change to AUM
+#define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
-#define REARTH        6.3781e6
-#define RJUP          7.1492e7
-#define MJUP          1.8987e27
+#define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
+#define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
+#define MJUP          1.898130e27 // Prsa et al. 2016
 #define RNEP          2.4764e7
 #define MNEP          1.0244e26
 #define RHOEARTH      5515
@@ -61,8 +63,10 @@
 #define RHOH2O        1000
 #define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
 #define SEDH          10      //depth of sediment layer (m)
-#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDD0         2.5e-14  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
+#define RHOBROCK      3370
+#define BROCKTIME     5000  //relaxation timescale for bedrock 
 
 /* Exit Status */
 
@@ -139,6 +143,7 @@
 #define VXOBL           1401
 #define VYOBL           1402
 #define VZOBL           1403
+#define VDYNELLIP       1404
 
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
@@ -281,7 +286,7 @@ typedef struct {
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
-  double dTidePower;     /**< Body's Internal Tidal Power Dissipation */
+  //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
@@ -465,140 +470,175 @@ typedef struct {
   
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
-  int bClimateModel;
-  int iNumLats;              /**< Number of latitude cells */
-  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
-  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
-  int bAlbedoZA;             /**< Use albedo based on zenith angle */
-  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
-  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
-  int iNDays;                /**< Number of days in planet's year */
-  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
-  double *daLats;            /**< Latitude of each cell (centered) */
-  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
-  double dAstroDist;         /**< Distance between primary and planet */
-  double **daInsol;           /**< Daily insolation at each latitude */
-  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
-  double *daTemp;            /**< Surface temperature in each cell */
-  double dTGlobal;           /**< Global mean temperature at surface */
-  double *daTGrad;           /**< Gradient of temperature (meridional) */
-  double *daAlbedo;          /**< Albedo of each cell */
+
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
-  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
-  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
-  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
-  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
+  double dAlbedoGlobalTmp;
+  double dAlbedoLand;
+  int iAlbedoType;            /**< type of water albedo used (fix or tay) */
+  double dAlbedoWater;  
+  int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  double dAstroDist;         /**< Distance between primary and planet */
+  int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
+  int bClimateModel;
+  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
+  double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
-  double *daDiffusion;       /**< Diffusion coefficient of each latitude boundary */
-  double *daFlux;            /**< Meridional surface heat flux */
-  double *daFluxIn;          /**< Incoming surface flux (insolation) */
-  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
-  double dFluxOutGlobal;     /**< Global mean of outgoing flux */  
-  double *daDivFlux;         /**< Divergence of surface flux */
-  int iWriteLat;             /**< Stores index of latitude to be written in write function */
-  double **dMClim;
-  double **dMEuler;
-  double **dMEulerCopy;
-  double **dInvM;
-  double *dUnitV;
-  double **dMDiff;
-  double *daLambda;
-  double *daSourceF;
-  double *daTempTerms;
-  double *daTmpTemp;
-  double *daTmpTempTerms;
-  double *daDMidPt;
-  double *scale;
-  int *rowswap;
-  int bIceSheets;
-  double *daIceMass;
-  double *daIceHeight;
-  double dIceMassTot;
-//   double *daIceHeight;
-  double dInitIceLat;
-  double dInitIceHeight;
-  double dIceAlbedo;
-  double dSurfAlbedo;
-  double dIceDepRate;
-  
-  /* additional stuff for seasonal model */
-  double *daTempLand;         /**< Temperature over land (by latitude) */
-  double *daTempWater;        /**< Temperature over ocean (by lat) */
-  double *daAlbedoLand;
-  double *daAlbedoWater;
-  double *daFluxOutLand;
-  double *daFluxOutWater;
-  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
-  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
-  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dFluxInGlobalTmp;
+  double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
+  double dFluxOutGlobalTmp;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
+  int iGeography;
+  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  double dHeatCapAnn;        /**< Surface heat capacity in annual model */
   double dHeatCapLand;        /**< Heat capacity of land */
   double dHeatCapWater;       /**< Heat capacity of water */
-  double *daLandFrac;         /**< Fraction of cell which is land */
-  double *daWaterFrac;        /**< Fraction of cell which is water */
-  double dNuLandWater;        /**< Land-ocean interaction term */
-  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  double dIceAlbedo;
+  double dIceBalanceTot;
+  double dIceDepRate;
+  double dIceFlowTot;
+  double dIceMassTot;
+  int bIceSheets;
+  int iIceTimeStep;
+  double dInitIceHeight;
+  double dInitIceLat;
+  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
+  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  int iNDays;                /**< Number of days in planet's year */
   int iNStepInYear;        /**< Number of time steps in a year */  
+  double dNuLandWater;        /**< Land-ocean interaction term */
+  int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
-  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceLW;     /**< Combined source function what matrix operates on */
-  double **dMLand;
-  double **dMWater;
-  double dTGlobalTmp;
-  double dAlbedoGlobalTmp;
-  double dFluxOutGlobalTmp;
-  double dFluxInGlobalTmp;
-  double *daFluxInLand;
-  double *daFluxInWater;
+  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
+  double dPlanckA;           /**< Constant term in Blackbody linear approximation */
+  double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
+  int iReRunSeas;
   double dSeaIceConduct;
-  double *daSeaIceK;
-  double *daFluxSeaIce;
-  double **dMInit;
-  double dCw_dt;
   int bSeaIceModel;
   double dSeasDeltat;
   double dSeasDeltax;
-  double *daTempAnnual;
-  double *daAlbedoAnnual;
-  double *daFluxAnnual;
-  double *daFluxOutAnnual;
-  double *daFluxInAnnual;
-  double *daDivFluxAnnual;
-  double **daIceBalance;
-  double *daIceBalanceAnnual;
-  double *daIceMassTmp;
-  double **daTempDaily;
-  double *daDeclination;           /**< Daily solar declination */
-  double *daDIceHeightDy;
-  double *daIceFlow;
-  double dAlbedoLand;
-  double dAlbedoWater;
-  double *daIceFlowMid;
-  double *daXBoundary;
-  double *daPlanckA;
-  double *daPlanckB;
+  int bSkipSeas;
+  int bSkipSeasEnabled;
+  int bSnowball;
+  double dSurfAlbedo;
+  double dTGlobal;           /**< Global mean temperature at surface */
   double dTGlobalInit;
+  double dTGlobalTmp;
+  int iWriteLat;             /**< Stores index of latitude to be written in write function */
+
+  /* Arrays used by seasonal and annual */
+  double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
+  double *daDivFlux;         /**< Divergence of surface flux */
+  double *daDMidPt;
+  double **daInsol;           /**< Daily insolation at each latitude */
+  double *daFlux;            /**< Meridional surface heat flux */
+  double *daFluxIn;          /**< Incoming surface flux (insolation) */
+  double *daFluxOut;         /**< Outgoing surface flux (longwave) */
+  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daTGrad;           /**< Gradient of temperature (meridional) */
+
+  /* Arrays for annual model */
+  double *daAlbedoAnn;          /**< Albedo of each cell */
+  double *daDiffusionAnn;       /**< Diffusion coefficient of each latitude boundary */
+  double **dMEulerAnn;
+  double **dMEulerCopyAnn;
+  double **dInvMAnn;
+  double *daLambdaAnn;
+  double **dMClim;
+  double **dMDiffAnn;
+  double *daPlanckAAnn;
+  double *daPlanckBAnn;
+  int *rowswapAnn;
+  double *scaleAnn;
+  double *daSourceF;
+  double *daTempAnn;            /**< Surface temperature in each cell */
+  double *daTempTerms;
+  double *daTmpTempAnn;
+  double *daTmpTempTerms;
+  double *dUnitVAnn;
+
+  /* Arrays for seasonal model */
+  double *daAlbedoAvg;
+  double *daAlbedoLand;
+  double *daAlbedoLW;
+  double *daAlbedoWater;
+  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
+  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
+  double *daBasalVel;         /**< Basal velocity of ice */
+  double *daBedrockH;         /**< Height of bedrock (can be negative) */
+  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
+  double *daDeclination;           /**< Daily solar declination */
   double *daDeltaTempL;
   double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
+  double *daDIceHeightDy;
+  double *daDiffusionSea;
+  double *daDivFluxAvg;
   double *daEnergyResL;
   double *daEnergyResW;       /**< Energy residuals */
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
+  double *daFluxAvg;
+  double *daFluxInAvg;
+  double *daFluxInLand;
+  double *daFluxInWater;
+  double *daFluxOutAvg;
+  double *daFluxOutLand;
+  double *daFluxOutWater;
+  double *daFluxSeaIce;
+  double **daIceBalance;
+  double *daIceBalanceAnnual;
+  double *daIceBalanceAvg;
+  double *daIceBalanceTmp;
+  double *daIceFlow;
+  double *daIceFlowAvg;
+  double *daIceFlowMid;
+  double *daIceGamTmp;
+  double *daIceHeight; 
+  double *daIceMass;
+  double *daIceMassTmp;
+  double *daIcePropsTmp;
+  double *daIceSheetDiff;
+  double **daIceSheetMat;
+  double **dInvMSea;
+  double *daLambdaSea;
+  double *daLandFrac;         /**< Fraction of cell which is land */
+  double **dMDiffSea;
+  double **dMEulerCopySea;
+  double **dMEulerSea;
+  double **dMInit;
+  double **dMLand;
+  double **dMWater;
+  double *daPlanckASea;
+  double *daPlanckBSea;
+  int *rowswapSea;
+  double *scaleSea;
+  double *daSeaIceHeight;     /**< Sea ice height by latitude */
+  double *daSeaIceK;
   double *daSedShear;         /**< sediment shear stress (for ice sheets) */
-  double *daBasalVel;         /**< Basal velocity of ice */
-  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
-  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
-  double dIceFlowTot;
-  double dIceBalanceTot;
+  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
+  double *daSourceLW;     /**< Combined source function what matrix operates on */
+  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
+  double *daTempAvg;
+  double **daTempDaily;
+  double *daTempLand;         /**< Temperature over land (by latitude) */
+  double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
+  double *daTempWater;        /**< Temperature over ocean (by lat) */
+  double *daTmpTempSea;
+  double *dUnitVSea;
+  double *daWaterFrac;        /**< Fraction of cell which is water */
+  double *daXBoundary;
+  double *daYBoundary;
 
   // FLARE
   int bFlare;
   double dFlareConst;
   double dFlareExp;
   double dLXUVFlare;
-
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -830,13 +870,16 @@ typedef struct {
   int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
   int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
   int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
+  int iNumDynEllip;      /**< Number of Equations Affecting Dynamical Ellipticity */
   
   int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
   double dDXoblDt;       /**< Total x Derivative */
   int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
   double dDYoblDt;       /**< Total y Derivative */
   int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
-  double dDZoblDt;       /**< Total p Derivative */
+  double dDZoblDt;       /**< Total z Derivative */
+  int iDynEllip;         /**< Variable # Corresponding to dynamical ellipticity */
+  double dDDynEllipDt;   /**< Dynamical Ellipticity Derivative */
   int *iaXoblDistRot;     /**< Equation # Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
   int *iaYoblDistRot;     /**< Equation #s Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
   int *iaZoblDistRot;     /**< Equation #s Corresponding to DistRot's change to z = cos(obl) */
@@ -955,9 +998,12 @@ typedef struct {
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
 
+  /* POISE */
+  int bHaltMinIceDt;  /**< Halt if ice flow time-step falls below a minimum value */
+  int iMinIceDt;    /**< Halt if ice flow time-step falls below this value (number of orbital periods)*/
+
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
-
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -1163,6 +1209,7 @@ typedef struct {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
   int bNeg;              /**< Is There a Negative Option? */
+  int iModuleBit;              /**< Bit flag for module to check output parameters */
   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
   char cNeg[NAMELEN];    /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
@@ -1200,31 +1247,32 @@ typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int
 typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);  
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateDynEllipModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1239,6 +1287,7 @@ typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 typedef struct {
   int *iNumModules; /**< Number of Modules per Body */
   int **iaModule; /**< Module #s that Apply to the Body */
+  int *iBitSum;
 
   /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;
@@ -1331,6 +1380,9 @@ typedef struct {
   fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
   /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
+  /*! Function pointers to finalize dynamical ellipticity */ 
+  fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
+
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
  

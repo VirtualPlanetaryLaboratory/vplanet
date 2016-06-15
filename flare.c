@@ -208,6 +208,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARE].bNeg = 1;
   output[OUT_LXUVFLARE].dNeg = 1./LSUN; 
   output[OUT_LXUVFLARE].iNum = 1;
+  output[OUT_LXUVFLARE].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLARE] = &WriteLXUVFlare;
 }
 

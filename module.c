@@ -51,6 +51,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
   module->iNumModules = malloc(iNumBodies*sizeof(int));
   module->iaModule = malloc(iNumBodies*sizeof(int*));  
+  module->iBitSum = malloc(iNumBodies*sizeof(int*));
 
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
@@ -67,28 +68,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
   module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdateHecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
-  module->fnFinalizeUpdateKecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
-  module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
-  module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
-  module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
-  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
-  module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
-  module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
-  module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
-  module->fnFinalizeUpdateIceMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
-  module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
-  
-  module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
-  module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
-  module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
-  module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
-  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
 
-  // Finalize Binary Primary Variable Functions
   module->fnFinalizeUpdateCBPR = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
   module->fnFinalizeUpdateCBPZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZModule));
   module->fnFinalizeUpdateCBPPhi = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiModule));
@@ -96,6 +76,29 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateCBPZDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZDotModule));
   module->fnFinalizeUpdateCBPPhiDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiDotModule));
 
+  module->fnFinalizeUpdateDynEllip = malloc(iNumBodies*sizeof(fnFinalizeUpdateDynEllipModule));
+  module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
+  module->fnFinalizeUpdateHecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
+  module->fnFinalizeUpdateIceMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
+  module->fnFinalizeUpdateKecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
+  module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
+
+  module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
+  module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
+  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
+
+  module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
+  module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
+  module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
+  module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
+  
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -158,7 +161,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
 
   // Finalize Primary Variable Functions
-  //module->fnFinalizeUpdateEcc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccModule));
   module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
   module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
@@ -167,26 +169,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
-  module->fnFinalizeUpdateHecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHeccModule));
-  module->fnFinalizeUpdateKecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateKeccModule));
-  module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
-  module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
-  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
-  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
-  module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
-  module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
-  module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
-  module->fnFinalizeUpdateIceMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIceMassModule));
-  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
-  module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
-  module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
-  module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
-  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
- 
-  // Finalize Binary Primary Variable Functions
+
   module->fnFinalizeUpdateCBPR[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
   module->fnFinalizeUpdateCBPZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZModule));
   module->fnFinalizeUpdateCBPPhi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiModule));
@@ -194,8 +177,28 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateCBPZDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZDotModule));
   module->fnFinalizeUpdateCBPPhiDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiDotModule));
 
+  module->fnFinalizeUpdateDynEllip[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateDynEllipModule));
+  module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
+  module->fnFinalizeUpdateHecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHeccModule));
+  module->fnFinalizeUpdateIceMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIceMassModule));
+  module->fnFinalizeUpdateKecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateKeccModule));
+  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
-  
+  module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
+  module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
+
+  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
+  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
+  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
+  module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
+  module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
        NULL function. The modules that need actual function will replace them 
@@ -213,31 +216,35 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+
     module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateNULL;
+
+    module->fnFinalizeUpdateDynEllip[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
+
+    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
 
   }
 
@@ -288,7 +295,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   }
 }
 
-void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iFile){
+void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iFile){
   int iNumIndices=0,iNumLines=0,iModule;
   int *lTmp;
   char saTmp[MAXARRAY][OPTLEN];
@@ -304,6 +311,16 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
       LineExit(files->Infile[iFile].cIn,lTmp[0]);
     }
 
+    /* The iBitSum field is to check that every output parameter is part
+       of the input modules. The variables EQTIDE, RADHEAT, etc. are set
+       in vpanet.h. Each module-specific parameter is given the appropriate
+       bit in InitializeOutput. In ReadOutputOrder the field 
+       output->iModuleBit is compared bitwise to module->iBitSum. 
+       Parameters that can be specified for multiple modules are set to 1. 
+    */
+
+    module->iBitSum[iFile-1] = 1;
+
     for (iModule=0;iModule<iNumIndices;iModule++) {
 
       /************************
@@ -312,37 +329,70 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
         body[iFile-1].bEqtide = 1;
+	module->iBitSum[iFile-1] += EQTIDE;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
         body[iFile-1].bRadheat = 1;
+	module->iBitSum[iFile-1] += RADHEAT;
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
         body[iFile-1].bDistOrb = 1;
+	module->iBitSum[iFile-1] += DISTORB;
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
         body[iFile-1].bDistRot = 1;
+	module->iBitSum[iFile-1] += DISTROT;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
 	body[iFile-1].bThermint = 1;
+	module->iBitSum[iFile-1] += THERMINT;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
         body[iFile-1].bAtmEsc = 1;
+	module->iBitSum[iFile-1] += ATMESC;
       } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
 	body[iFile-1].bStellar = 1;
+	module->iBitSum[iFile-1] += STELLAR;
       } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
 	body[iFile-1].bPoise = 1;
+	module->iBitSum[iFile-1] += POISE;
       } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
         body[iFile-1].bBinary = 1;
+	module->iBitSum[iFile-1] += BINARY;
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
+	module->iBitSum[iFile-1] += FLARE;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
     }
-    UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,0);
+    UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
   
     } else {
     if (control->Io.iVerbose >= VERBERR && iFile > 0) 
       fprintf(stderr,"WARNING: %s not present in file %s. No evolution will occur for this body.\n",options->cName,files->Infile[iFile].cIn);
   }
   free(lTmp);
+}
+
+void PrintModuleList(FILE *file,int iBitSum) {
+  if (iBitSum & EQTIDE) 
+    fprintf(file,"EQTIDE ");
+  if (iBitSum & RADHEAT)
+    fprintf(file,"RADHEAT ");
+  if (iBitSum & ATMESC)
+    fprintf(file,"ATMESC ");
+  if (iBitSum & THERMINT)
+    fprintf(file,"THERMINT ");
+  if (iBitSum & STELLAR)
+    fprintf(file,"STELLAR ");
+  if (iBitSum & BINARY)
+    fprintf(file,"BINARY ");
+  if (iBitSum & DISTORB)
+    fprintf(file,"DISTORB ");
+  if (iBitSum & DISTROT)
+    fprintf(file,"DISTROT ");
+  if (iBitSum & FLARE)
+    fprintf(file,"FLARE ");
+  if (iBitSum & POISE)
+    fprintf(file,"POISE ");
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
@@ -490,12 +540,15 @@ void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
-  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+
+  // Maybe don't call? XXX
+  //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
 
   body[iBody].dImK2 = fdImk2Man(body,iBody);
   PropsAuxCPL(body,update,iBody);
-  body[iBody].dTidePower = fdCPLTidePower(body,iBody);
+  // Call dTidePowerMan
+  body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
 }
 
 /* This does not seem to be necessary

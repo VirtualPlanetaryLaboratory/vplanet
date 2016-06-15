@@ -1005,11 +1005,8 @@ void VerifyOrbitEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         LineExit(files->Infile[iBody+1].cIn,options[OPT_ORBSEMI].iLine[iBody+1]);
       }
     }
-    if(iBody > 0)
-    {
-      body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
-      CalcHK(body,iBody);
-    }
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+    CalcHK(body,iBody);
   }
 }
 
@@ -1483,8 +1480,8 @@ void WriteDHeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
-    fsUnitsVel(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
@@ -1499,8 +1496,8 @@ void WriteDKeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
-    fsUnitsVel(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
@@ -1517,7 +1514,7 @@ void WriteDXoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1535,7 +1532,7 @@ void WriteDYoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1553,7 +1550,7 @@ void WriteDZoblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
 }
@@ -1839,6 +1836,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDSEMIDTEQTIDE].bNeg = 1;
   output[OUT_BODYDSEMIDTEQTIDE].dNeg = YEARSEC*1e9/AUCM;
   output[OUT_BODYDSEMIDTEQTIDE].iNum = 1;
+  output[OUT_BODYDSEMIDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_BODYDSEMIDTEQTIDE] = &WriteBodyDsemiDtEqtide;
   
   sprintf(output[OUT_BODYDECCDTEQTIDE].cName,"BodyDeccDt");
@@ -1847,6 +1845,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDECCDTEQTIDE].bNeg = 1;
   output[OUT_BODYDECCDTEQTIDE].dNeg = YEARSEC*1e9;
   output[OUT_BODYDECCDTEQTIDE].iNum = 1;
+  output[OUT_BODYDECCDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_BODYDECCDTEQTIDE] = &WriteBodyDeccDtEqtide;
 
   sprintf(output[OUT_DOBLDTEQTIDE].cName,"DOblDtEqtide");
@@ -1855,6 +1854,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DOBLDTEQTIDE].bNeg = 1;
   output[OUT_DOBLDTEQTIDE].dNeg = YEARSEC*1e9/DEGRAD;
   output[OUT_DOBLDTEQTIDE].iNum = 1;
+  output[OUT_DOBLDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DOBLDTEQTIDE] = &WriteDOblDtEqtide;
   
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
@@ -1863,6 +1863,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DSEMIDTEQTIDE].bNeg = 1;
   output[OUT_DSEMIDTEQTIDE].dNeg = YEARSEC*1e9/AUCM;
   output[OUT_DSEMIDTEQTIDE].iNum = 1;
+  output[OUT_DSEMIDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DSEMIDTEQTIDE] = &WriteDSemiDtEqtide;
   
   sprintf(output[OUT_DECCDTEQTIDE].cName,"DeccDtEqtide");
@@ -1871,11 +1872,13 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DECCDTEQTIDE].bNeg = 1;
   output[OUT_DECCDTEQTIDE].dNeg = YEARSEC*1e9;
   output[OUT_DECCDTEQTIDE].iNum = 1;
+  output[OUT_DECCDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DECCDTEQTIDE] = &WriteDEccDtEqtide;
   
   sprintf(output[OUT_DMMDTEQTIDE].cName,"DMeanMotionDtEqtide");
   sprintf(output[OUT_DMMDTEQTIDE].cDescr,"Total dMeanMotion/dt in EQTIDE");
   output[OUT_DMMDTEQTIDE].iNum = 1;
+  output[OUT_DMMDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DMMDTEQTIDE] = &WriteDMeanMotionDtEqtide;
   
   sprintf(output[OUT_DORBPERDTEQTIDE].cName,"DOrbPerDtEqtide");
@@ -1884,6 +1887,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DORBPERDTEQTIDE].bNeg = 1;
   output[OUT_DORBPERDTEQTIDE].dNeg = YEARSEC*1e9/DAYSEC;
   output[OUT_DORBPERDTEQTIDE].iNum = 1;
+  output[OUT_DORBPERDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DORBPERDTEQTIDE] = &WriteDOrbPerDtEqtide;
   
   sprintf(output[OUT_DROTPERDTEQTIDE].cName,"DRotPerDtEqtide");
@@ -1892,52 +1896,59 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DROTPERDTEQTIDE].bNeg = 1;
   output[OUT_DROTPERDTEQTIDE].dNeg = DAYSEC/(YEARSEC*1e6);
   output[OUT_DROTPERDTEQTIDE].iNum = 1;
+  output[OUT_DROTPERDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DROTPERDTEQTIDE] = &WriteDRotPerDtEqtide;
   
   sprintf(output[OUT_DROTRATEDTEQTIDE].cName,"DRotRateDtEqtide");
   sprintf(output[OUT_DROTRATEDTEQTIDE].cDescr,"Time Rate of Change of Rotation Rate in EQTIDE");
   output[OUT_DROTRATEDTEQTIDE].bNeg = 0;
   output[OUT_DROTRATEDTEQTIDE].iNum = 1;
+  output[OUT_DROTRATEDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DROTRATEDTEQTIDE] = &WriteDRotRateDtEqtide;
 
   sprintf(output[OUT_DHECCDTEQTIDE].cName,"DHEccDtEqtide");
   sprintf(output[OUT_DHECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's h in EQTIDE");
   sprintf(output[OUT_DHECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DHECCDTEQTIDE].bNeg = 1;
-  output[OUT_DHECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DHECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DHECCDTEQTIDE].iNum = 1;
+  output[OUT_DHECCDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DHECCDTEQTIDE] = &WriteDHeccDtEqtide;
 
   sprintf(output[OUT_DKECCDTEQTIDE].cName,"DKEccDtEqtide");
   sprintf(output[OUT_DKECCDTEQTIDE].cDescr,"Time Rate of Change of Poincare's k in EQTIDE");
   sprintf(output[OUT_DKECCDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DKECCDTEQTIDE].bNeg = 1;
-  output[OUT_DKECCDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DKECCDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DKECCDTEQTIDE].iNum = 1;
+  output[OUT_DKECCDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DKECCDTEQTIDE] = &WriteDKeccDtEqtide;
 
   sprintf(output[OUT_DXOBLDTEQTIDE].cName,"DXoblDtEqtide");
   sprintf(output[OUT_DXOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's X in EQTIDE");
   sprintf(output[OUT_DXOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DXOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DXOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DXOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DXOBLDTEQTIDE].iNum = 1;
+  output[OUT_DXOBLDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DXOBLDTEQTIDE] = &WriteDXoblDtEqtide;
 
   sprintf(output[OUT_DYOBLDTEQTIDE].cName,"DYoblDtEqtide");
   sprintf(output[OUT_DYOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Y in EQTIDE");
   sprintf(output[OUT_DYOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DYOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DYOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DYOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DYOBLDTEQTIDE].iNum = 1;
+  output[OUT_DYOBLDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DYOBLDTEQTIDE] = &WriteDYoblDtEqtide;
 
   sprintf(output[OUT_DZOBLDTEQTIDE].cName,"DZoblDtEqtide");
   sprintf(output[OUT_DZOBLDTEQTIDE].cDescr,"Time Rate of Change of Laskar's Z in EQTIDE");
   sprintf(output[OUT_DZOBLDTEQTIDE].cNeg,"/Gyr");
   output[OUT_DZOBLDTEQTIDE].bNeg = 1;
-  output[OUT_DZOBLDTEQTIDE].dNeg = 1./(1e9*YEARSEC);
+  output[OUT_DZOBLDTEQTIDE].dNeg = (1e9*YEARSEC);
   output[OUT_DZOBLDTEQTIDE].iNum = 1;
+  output[OUT_DZOBLDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DZOBLDTEQTIDE] = &WriteDZoblDtEqtide;
 
   /*
@@ -1950,6 +1961,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ECCTIMEEQTIDE].bNeg = 1;
   output[OUT_ECCTIMEEQTIDE].dNeg = 1./YEARSEC;
   output[OUT_ECCTIMEEQTIDE].iNum = 1;
+  output[OUT_ECCTIMEEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_ECCTIMEEQTIDE] = &WriteEccTimescaleEqtide;
   
   sprintf(output[OUT_EQROTPER].cName,"EqRotPer");
@@ -1958,6 +1970,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTPER].bNeg = 1;
   output[OUT_EQROTPER].dNeg = 1./DAYSEC;
   output[OUT_EQROTPER].iNum = 1;
+  output[OUT_EQROTPER].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTPER] = &WriteEqRotPer;
   
   sprintf(output[OUT_EQROTPERCONT].cName,"EqRotPerCont");
@@ -1966,6 +1979,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTPERCONT].bNeg = 1;
   output[OUT_EQROTPERCONT].dNeg = 1./DAYSEC;
   output[OUT_EQROTPERCONT].iNum = 1;
+  output[OUT_EQROTPERCONT].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTPERCONT] = &WriteEqRotPerCont;
   
   sprintf(output[OUT_EQROTPERDISCRETE].cName,"EqRotPerDiscrete");
@@ -1974,6 +1988,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTPERDISCRETE].bNeg = 1;
   output[OUT_EQROTPERDISCRETE].dNeg = 1./DAYSEC;
   output[OUT_EQROTPERDISCRETE].iNum = 1;
+  output[OUT_EQROTPERDISCRETE].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTPERDISCRETE] = &WriteEqRotPerDiscrete;
   
   sprintf(output[OUT_EQROTRATE].cName,"EqRotRate");
@@ -1982,6 +1997,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTRATE].bNeg = 1;
   output[OUT_EQROTRATE].dNeg = DAYSEC;
   output[OUT_EQROTRATE].iNum = 1;
+  output[OUT_EQROTRATE].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTRATE] = &WriteEqRotRate;
   
   sprintf(output[OUT_EQROTRATECONT].cName,"EqRotRateCont");
@@ -1990,6 +2006,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTRATE].bNeg = 1;
   output[OUT_EQROTRATECONT].dNeg = DAYSEC;
   output[OUT_EQROTRATECONT].iNum = 1;
+  output[OUT_EQROTRATECONT].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTRATECONT] = &WriteEqRotRateCont;
   
   sprintf(output[OUT_EQROTRATEDISCRETE].cName,"EqRotRateDiscrete");
@@ -1998,6 +2015,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTRATEDISCRETE].bNeg = 1;
   output[OUT_EQROTRATEDISCRETE].dNeg = DAYSEC;
   output[OUT_EQROTRATEDISCRETE].iNum = 1;
+  output[OUT_EQROTRATEDISCRETE].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTRATEDISCRETE] = &WriteEqRotRateDiscrete;
   
   /*
@@ -2008,18 +2026,22 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_GAMMAROT].cDescr,"Gamma_Rotation");
   output[OUT_GAMMAROT].bNeg = 0;
   output[OUT_GAMMAROT].iNum = 1;
+  output[OUT_GAMMAROT].iModuleBit = EQTIDE;
   fnWrite[OUT_GAMMAROT] = &WriteGammaRot;
   
   sprintf(output[OUT_GAMMAORB].cName,"GammaOrb");
   sprintf(output[OUT_GAMMAORB].cDescr,"Gamma_Orbital");
   output[OUT_GAMMAORB].bNeg = 0;
   output[OUT_GAMMAORB].iNum = 1;
+  output[OUT_GAMMAORB].iModuleBit = EQTIDE;
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
 
+  // + THERMINT?? XXX
   sprintf(output[OUT_IMK2].cName,"ImK2");
   sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
   output[OUT_IMK2].bNeg = 0;
   output[OUT_IMK2].iNum = 1;
+  output[OUT_IMK2].iModuleBit = EQTIDE;
   fnWrite[OUT_IMK2] = &WriteImK2;
 
   /*
@@ -2032,6 +2054,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBLTIMEEQTIDE].bNeg = 1;
   output[OUT_OBLTIMEEQTIDE].dNeg = 1./YEARSEC;
   output[OUT_OBLTIMEEQTIDE].iNum = 1;
+  output[OUT_OBLTIMEEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_OBLTIMEEQTIDE] = &WriteOblTimescaleEqtide;
   
   /*
@@ -2045,6 +2068,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ROTRATETIMEEQTIDE].bNeg = 1;
   output[OUT_ROTRATETIMEEQTIDE].dNeg = 1./YEARSEC;
   output[OUT_ROTRATETIMEEQTIDE].iNum = 1;
+  output[OUT_ROTRATETIMEEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_ROTRATETIMEEQTIDE] = &WriteRotTimescaleEqtide;
   
   sprintf(output[OUT_DROTPERDTEQTIDE].cName,"DRotPerDtEqtide");
@@ -2053,12 +2077,14 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DROTPERDTEQTIDE].bNeg = 1;
   output[OUT_DROTPERDTEQTIDE].dNeg = DAYSEC/(1e6*YEARSEC);
   output[OUT_DROTPERDTEQTIDE].iNum = 1;
+  output[OUT_DROTPERDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DROTPERDTEQTIDE] = &WriteDRotPerDtEqtide;
   
   sprintf(output[OUT_DROTRATEDTEQTIDE].cName,"DRotRateDtEqtide");
   sprintf(output[OUT_DROTRATEDTEQTIDE].cDescr,"Time Rate of Change of Rotational Frequency in EQTIDE");
   output[OUT_DROTRATEDTEQTIDE].bNeg = 0;
   output[OUT_DROTRATEDTEQTIDE].iNum = 1;
+  output[OUT_DROTRATEDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DROTRATEDTEQTIDE] = &WriteDRotRateDtEqtide;
   
   /*
@@ -2072,6 +2098,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SEMITIMEEQTIDE].bNeg = 1;
   output[OUT_SEMITIMEEQTIDE].dNeg = 1./YEARSEC;
   output[OUT_SEMITIMEEQTIDE].iNum = 1;
+  output[OUT_SEMITIMEEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_SEMITIMEEQTIDE] = &WriteSemiTimescaleEqtide;
   
   /*
@@ -2084,6 +2111,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALTAU].bNeg = 1;
   output[OUT_TIDALTAU].dNeg = 1;
   output[OUT_TIDALTAU].iNum = 1;
+  output[OUT_TIDALTAU].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALTAU] = &WriteTidalTau;
   
   sprintf(output[OUT_ENFLUXEQTIDE].cName,"SurfEnFluxEqtide");
@@ -2092,6 +2120,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENFLUXEQTIDE].bNeg = 1;
   output[OUT_ENFLUXEQTIDE].dNeg = 1;
   output[OUT_ENFLUXEQTIDE].iNum = 1;
+  output[OUT_ENFLUXEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_ENFLUXEQTIDE] = &WriteEnergyFluxEqtide;
   
   sprintf(output[OUT_POWEREQTIDE].cName,"PowerEqtide");
@@ -2100,12 +2129,14 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_POWEREQTIDE].bNeg = 1;
   output[OUT_POWEREQTIDE].dNeg = 1e-12;
   output[OUT_POWEREQTIDE].iNum = 1;
+  output[OUT_POWEREQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_POWEREQTIDE] = &WritePowerEqtide;
   
   sprintf(output[OUT_TIDELOCK].cName,"TideLock");
   sprintf(output[OUT_TIDELOCK].cDescr,"Tidally Locked?");
   output[OUT_TIDELOCK].bNeg = 0;
   output[OUT_TIDELOCK].iNum = 1;
+  output[OUT_TIDELOCK].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDELOCK] = &WriteTideLock;
 
 }
@@ -2250,6 +2281,17 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
 
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
+
+  /* These lines for checking the obliquity evolution in an eqtide-only run
+
+  CalcXYZobl(body, iBody);
+
+  if (body[iBody].dPrecA != 0) {
+  printf("pA = %f\n Xobl = %f\n Yobl = %f\n Zobl = %f\n",body[iBody].dPrecA,body[iBody].dXobl,body[iBody].dYobl,body[iBody].dZobl);
+  printf("something\n");
+   }
+  */
+
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
@@ -2403,13 +2445,14 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 
+  // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
+  
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);
   iEpsilon[2]=fiSign(2*dRotRate-dMeanMotion);
   iEpsilon[5]=fiSign(dMeanMotion);
   iEpsilon[8]=fiSign(dRotRate-2*dMeanMotion);
   iEpsilon[9]=fiSign(dRotRate);
-  
 }
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
@@ -2564,6 +2607,7 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
+  double foo;
 
   if (bPrimary(body,iB0))
     iOrbiter = iB1;
@@ -2571,6 +2615,15 @@ double fdCPLDoblDt(BODY *body,int *iaBody) {
     iOrbiter = iB0;
 
   return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  /*
+  foo = body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+
+  if (foo > 0) 
+    printf("obl: %e, dobl/dt: %e\n",body[iB0].dObliquity,foo);
+
+  return foo;
+  */
 }
 
 double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -2579,8 +2632,18 @@ double fdCPLDXoblDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdCPLDYoblDt(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
 
-  return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  //return body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+  foo = body[iaBody[0]].daDoblDtEqtide[iaBody[1]]*cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA);
+
+  /*
+  printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  if (foo != 0)
+    printf("dyobldt: %.16e, sin(PrecA): %.16e\n",foo,sin(body[iaBody[0]].dPrecA));
+  */
+  return foo;
+
 }
 
 double fdCPLDZoblDt(BODY *body,SYSTEM *system,int *iaBody) {

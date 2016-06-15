@@ -69,31 +69,32 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum235UMan=0;
     update[iBody].iNum238UCore=0;
     update[iBody].iNum238UMan=0;
-    update[iBody].iNumHecc=0;
-    update[iBody].iNumKecc=0;
-    update[iBody].iNumPinc=0;
-    update[iBody].iNumQinc=0;
-    update[iBody].iNumRot=0;
-    update[iBody].iNumSemi=0;
-    update[iBody].iNumTMan=0;
-    update[iBody].iNumTCore=0;
-    update[iBody].iNumXobl=0;
-    update[iBody].iNumYobl=0;
-    update[iBody].iNumZobl=0;
-    update[iBody].iNumSurfaceWaterMass=0;
-    update[iBody].iNumEnvelopeMass=0;
-    update[iBody].iNumLuminosity=0;
-    update[iBody].iNumTemperature=0;
-    update[iBody].iNumRadius=0;
-    update[iBody].iNumMass=0;
-    update[iBody].iNumIceMass=0;
     update[iBody].iNumCBPR=0;
     update[iBody].iNumCBPZ=0;
     update[iBody].iNumCBPPhi=0;
     update[iBody].iNumCBPRDot=0;
     update[iBody].iNumCBPZDot=0;
     update[iBody].iNumCBPPhiDot=0;
+    update[iBody].iNumDynEllip=0;
+    update[iBody].iNumEnvelopeMass=0;
+    update[iBody].iNumHecc=0;
+    update[iBody].iNumIceMass=0;
+    update[iBody].iNumKecc=0;
+    update[iBody].iNumLuminosity=0;
     update[iBody].iNumLXUV=0;
+    update[iBody].iNumMass=0;
+    update[iBody].iNumPinc=0;
+    update[iBody].iNumQinc=0;
+    update[iBody].iNumRadius=0;
+    update[iBody].iNumRot=0;
+    update[iBody].iNumSemi=0;
+    update[iBody].iNumSurfaceWaterMass=0;
+    update[iBody].iNumTemperature=0;
+    update[iBody].iNumTMan=0;
+    update[iBody].iNumTCore=0;
+    update[iBody].iNumXobl=0;
+    update[iBody].iNumYobl=0;
+    update[iBody].iNumZobl=0;
 
     update[iBody].iNumVars=0;
     
@@ -417,7 +418,43 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
+    /* Dynamical ellipticity. There are 3 possibilities for dynamical
+       ellipticity: 1) It is a constant; 2) It is calculated from dViscUMan, 
+       which is a constant and set by the option dViscUman (part of DISTROT); 
+       3) It is calculated from dViscUMan, which is set by the mantle 
+       temperature, i.e. THERMINT must be called. Only option #3 requires
+       DynEllip to be a primary variable. */
+
+    update[iBody].iDynEllip = -1;
+    if (update[iBody].iNumDynEllip) {
+      update[iBody].iDynEllip = iVar;
+      update[iBody].iaVar[iVar] = VDYNELLIP;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumDynEllip;
+      update[iBody].pdVar[iVar] = &body[iBody].dDynEllip;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dDynEllip;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateDynEllip[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
     // Poincare's h (Hecc)
     update[iBody].iHecc = -1;
     if (update[iBody].iNumHecc) {
@@ -859,6 +896,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumXobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumXobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumXobl*sizeof(int*));
+        control->Evolve.tmpUpdate[iBody].iXobl = iVar;
       }
 
       iEqn=0;
@@ -889,6 +927,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumYobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumYobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumYobl*sizeof(int*));
+        control->Evolve.tmpUpdate[iBody].iYobl = iVar;
       }
 
       iEqn=0;
@@ -919,6 +958,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumZobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumZobl*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumZobl*sizeof(int*));
+        control->Evolve.tmpUpdate[iBody].iZobl = iVar;
+
       }
 
       iEqn=0;
@@ -1118,44 +1159,44 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
 
     // POISE's ice mass
-    update[iBody].iIceMass = -1;
-    if (update[iBody].iNumIceMass) { 
-      /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
-      control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
-      body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
-      
-      update[iBody].iIceMass = iVar;
-      control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
-      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-        update[iBody].iaIceMass[iLat] = iVar;
-        update[iBody].iaVar[iVar] = VICEMASS;
-        update[iBody].iNumEqns[iVar] = update[iBody].iNumIceMass;
-        update[iBody].pdVar[iVar] = &body[iBody].daIceMass[iLat];
-        update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-        update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
-        update[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-        update[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-
-        if (control->Evolve.iOneStep == RUNGEKUTTA) {
-          
-          control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].daIceMass[iLat];
-          control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumIceMass*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
-        }
-    
-        iEqn=0;
-        for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-          module->fnFinalizeUpdateIceMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iLat);
-      
-        (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
-        update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
-        iVar++;
-      }
-      
-    }
+ //    update[iBody].iIceMass = -1;
+//     if (update[iBody].iNumIceMass) { 
+//       /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
+//       control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+//       body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
+//       
+//       update[iBody].iIceMass = iVar;
+//       control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
+//       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+//         update[iBody].iaIceMass[iLat] = iVar;
+//         update[iBody].iaVar[iVar] = VICEMASS;
+//         update[iBody].iNumEqns[iVar] = update[iBody].iNumIceMass;
+//         update[iBody].pdVar[iVar] = &body[iBody].daIceMass[iLat];
+//         update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+//         update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
+//         update[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+//         update[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+// 
+//         if (control->Evolve.iOneStep == RUNGEKUTTA) {
+//           
+//           control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].daIceMass[iLat];
+//           control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+//           control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumIceMass*sizeof(double));
+//           control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+//           control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+//           control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
+//         }
+//     
+//         iEqn=0;
+//         for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+//           module->fnFinalizeUpdateIceMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iLat);
+//       
+//         (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+//         update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+//         iVar++;
+//       }
+//       
+//     }
 
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property

@@ -39,10 +39,10 @@ bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
 #dTimeStep	100
-dStopTime	1.0e9		# Stop time for evolution
-dOutputTime	1.0e8		# Output timesteps (assuming in body files)
-#dStopTime	4.5e9		# Stop time for evolution
-#dOutputTime	1e6		# Output timesteps (assuming in body files)
+#dStopTime	1.0e9		# Stop time for evolution
+#dOutputTime	1.0e8		# Output timesteps (assuming in body files)
+dStopTime	2e8		# Stop time for evolution
+dOutputTime	1e6		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden. 
 # That should really be documented!

@@ -820,6 +820,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_FREEECC].cDescr,"Free Eccentricity");
   output[OUT_FREEECC].bNeg = 0;
   output[OUT_FREEECC].iNum = 1;
+  output[OUT_FREEECC].iModuleBit = BINARY;
   fnWrite[OUT_FREEECC] = &WriteFreeEcc;
 
   sprintf(output[OUT_FREEINC].cName,"FreeInc");
@@ -828,6 +829,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_FREEINC].bNeg = 1;
   output[OUT_FREEINC].dNeg = 1./DEGRAD;
   output[OUT_FREEINC].iNum = 1;
+  output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeInc;
 
   sprintf(output[OUT_BININC].cName,"dIncBinary");
@@ -836,6 +838,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BININC].bNeg = 1;
   output[OUT_BININC].dNeg = 1./DEGRAD;
   output[OUT_BININC].iNum = 1;
+  output[OUT_BININC].iModuleBit = BINARY;
   fnWrite[OUT_BININC] = &WriteInc;
 
   sprintf(output[OUT_CBPPHI].cName,"CBPPhi");
@@ -844,6 +847,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHI].bNeg = 1;
   output[OUT_CBPPHI].dNeg = 1.0/DEGRAD;
   output[OUT_CBPPHI].iNum = 1;
+  output[OUT_CBPPHI].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHI] = &WriteCBPPhi;
 
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
@@ -852,6 +856,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13N0].bNeg = 1;
   output[OUT_LL13N0].dNeg = 1./YEARSEC;
   output[OUT_LL13N0].iNum = 1;
+  output[OUT_LL13N0].iModuleBit = BINARY;
   fnWrite[OUT_LL13N0] = &WriteLL13N0;
 
   sprintf(output[OUT_LL13K0].cName,"LL13K0");
@@ -860,6 +865,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13K0].bNeg = 1;
   output[OUT_LL13K0].dNeg = 1./YEARSEC;
   output[OUT_LL13K0].iNum = 1;
+  output[OUT_LL13K0].iModuleBit = BINARY;
   fnWrite[OUT_LL13K0] = &WriteLL13K0;
 
   sprintf(output[OUT_LL13V0].cName,"LL13V0");
@@ -868,6 +874,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_LL13V0].bNeg = 1;
   output[OUT_LL13V0].dNeg = 1./YEARSEC;
   output[OUT_LL13V0].iNum = 1;
+  output[OUT_LL13V0].iModuleBit = BINARY;
   fnWrite[OUT_LL13V0] = &WriteLL13V0;
 
   sprintf(output[OUT_CBPR].cName,"CBPR");
@@ -876,6 +883,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPR].cNeg,"AU");
   output[OUT_CBPR].dNeg = 1.0/AUCM;
   output[OUT_CBPR].iNum = 1;
+  output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPR;
 
   sprintf(output[OUT_CBPZ].cName,"CBPZ");
@@ -884,6 +892,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPZ].cNeg,"AU");
   output[OUT_CBPZ].dNeg = 1.0/AUCM;
   output[OUT_CBPZ].iNum = 1;
+  output[OUT_CBPZ].iModuleBit = BINARY;
   fnWrite[OUT_CBPZ] = &WriteCBPZ;
   
   sprintf(output[OUT_CBPRDOT].cName,"CBPRDot");
@@ -892,6 +901,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPRDOT].bNeg = 0;
   output[OUT_CBPRDOT].dNeg = DAYSEC;
   output[OUT_CBPRDOT].iNum = 1;
+  output[OUT_CBPRDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPRDOT] = &WriteCBPRDot;
 
   sprintf(output[OUT_CBPZDOT].cName,"CBPZDot");
@@ -900,6 +910,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPZDOT].bNeg = 0;
   output[OUT_CBPZDOT].dNeg = DAYSEC;
   output[OUT_CBPZDOT].iNum = 1;
+  output[OUT_CBPZDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPZDOT] = &WriteCBPZDot;
 
   sprintf(output[OUT_CBPPHIDOT].cName,"CBPPhiDot");
@@ -908,6 +919,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHIDOT].bNeg = 0;
   output[OUT_CBPPHIDOT].dNeg = DAYSEC;
   output[OUT_CBPPHIDOT].iNum = 1;
+  output[OUT_CBPPHIDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHIDOT] = &WriteCBPPhiDot;
 
 }
@@ -1164,6 +1176,7 @@ void fdComputeEccVector(BODY *body, double *evec, int iBody)
   double v[3] = {body[iBody].dCBPRDot,body[iBody].dCBPPhiDot,body[iBody].dCBPZDot};
   double rCart[3];
   double vCart[3];
+  int i;
      
   // Convert from cyl->cart coords
   fvCylToCartPos(r,rCart);
@@ -1174,7 +1187,7 @@ void fdComputeEccVector(BODY *body, double *evec, int iBody)
   
   double mag_r = sqrt(fdDot(rCart,rCart));
 
-  for(int i = 0; i < 3; i++)
+  for(i = 0; i < 3; i++)
   {
     evec[i] = evec[i]/mu - rCart[i]/mag_r;
   }
@@ -1564,7 +1577,7 @@ double fdDMk(int k, BODY * body, int iBody)
 /* Computes the CBP orbital radius */
 double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) 
 { 
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitary offsets
@@ -1580,7 +1593,8 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
   double tmp2 = 0.0;
   double tmp3 = 0.0;
 
-  for(int k = 1; k < K_MAX; k++)
+  for (k = 1; k < K_MAX; k++)
+
   {
     tmp3 = fdC0k(k,body,iBody)*cos(k*(phi0 - M - varpi));
     tmp3 += fdCPk(k,body,iBody)*cos(k*(phi0 - varpi) - (k+1.)*M);
@@ -1593,7 +1607,7 @@ double fdCBPRBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
@@ -1610,7 +1624,8 @@ double fdCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tot = 0.0;
   double tmp1 = 0.0;
-  for(int k = 1; k < K_MAX; k++)
+
+  for(k = 1; k < K_MAX; k++)
   {
     tmp1 = body[iBody].dLL13N0*fdDk0(k,body,iBody)*sin(k*(phi0-M-varpi))/(k*(body[iBody].dLL13N0-body[1].dMeanMotion));
     tmp1 += body[iBody].dLL13N0*fdDPk(k,body,iBody)*sin(k*(phi0-varpi) - (k+1.)*M)/(k*body[iBody].dLL13N0 - (k+1.)*body[1].dMeanMotion);
@@ -1637,7 +1652,7 @@ double fdCBPZBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Note: Assume all phase values (phi, psi, etc...) are 0
   // Fine because they are arbitrary offsets
@@ -1657,7 +1672,8 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total sum
   double tmp3 = 0.0; // Intermediate sum for each k
-  for(int k = 1; k < K_MAX; k++)
+
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = -fdC0k(k,body,iBody)*sin(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 -= fdCPk(k,body,iBody)*sin(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot -(k+1.)*M_dot);
@@ -1670,7 +1686,7 @@ double fdCBPRDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 {
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], k;
 
   // Set arbitrary phase constants to 0
   double dPsi = 0.0;
@@ -1691,7 +1707,8 @@ double fdCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
   double tmp2 = 0.0; // Total loop sum
   double tmp3 = 0.0; // Intermediate loop sum
-  for(int k = 1; k < K_MAX; k++)
+
+  for(k = 1; k < K_MAX; k++)
   {
     tmp3 = (n0/(k*(n0-n)))*fdDk0(k,body,iBody)*cos(k*(phi0-M-varpi))*k*(phi0_dot-M_dot);
     tmp3 += (n0*fdDPk(k,body,iBody)/(k*n0 - (k+1.)*n))*cos(k*(phi0-varpi)-(k+1.)*M)*(k*phi0_dot-(k+1.)*M_dot);
@@ -1722,7 +1739,7 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
 {
   // Define/init all variables 
-  int iBody = iaBody[0];
+  int iBody = iaBody[0], i;
   double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;
@@ -1737,7 +1754,8 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-  for(int i = 0; i < FLUX_INT_MAX; i++)
+
+  for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly

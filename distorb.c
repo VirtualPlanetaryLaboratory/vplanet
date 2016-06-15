@@ -578,7 +578,7 @@ void InitializeQincDistOrbRD4(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
       body[iBody].iaGravPerts[iPert] = j;
@@ -634,7 +634,7 @@ void InitializeQincDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
   
-  body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
+//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
@@ -1336,7 +1336,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DECCDTDISTORB].cNeg,"1/year");
   output[OUT_DECCDTDISTORB].bNeg = 1;
   output[OUT_DECCDTDISTORB].dNeg = YEARSEC;
-  output[OUT_DECCDTDISTORB].iNum = 1;
+  output[OUT_DECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DECCDTDISTORB] = &WriteBodyDEccDtDistOrb;
   
   sprintf(output[OUT_DSINCDTDISTORB].cName,"DSincDtDistOrb");
@@ -1345,6 +1345,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DSINCDTDISTORB].bNeg = 1;
   output[OUT_DSINCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DSINCDTDISTORB].iNum = 1;
+  output[OUT_DSINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DSINCDTDISTORB] = &WriteBodyDSincDtDistOrb;
  
   sprintf(output[OUT_DINCDTDISTORB].cName,"DIncDtDistOrb");
@@ -1353,6 +1354,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DINCDTDISTORB].bNeg = 1;
   output[OUT_DINCDTDISTORB].dNeg = YEARSEC/DEGRAD;
   output[OUT_DINCDTDISTORB].iNum = 1;
+  output[OUT_DINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DINCDTDISTORB] = &WriteBodyDIncDtDistOrb;
   
   sprintf(output[OUT_DLONGPDTDISTORB].cName,"DLongPDtDistOrb");
@@ -1361,6 +1363,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DLONGPDTDISTORB].bNeg = 1;
   output[OUT_DLONGPDTDISTORB].dNeg = YEARSEC/DEGRAD;
   output[OUT_DLONGPDTDISTORB].iNum = 1;
+  output[OUT_DLONGPDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGPDTDISTORB] = &WriteBodyDLongPDtDistOrb;
   
   sprintf(output[OUT_DLONGADTDISTORB].cName,"DLongADtDistOrb");
@@ -1369,6 +1372,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DLONGADTDISTORB].bNeg = 1;
   output[OUT_DLONGADTDISTORB].dNeg = YEARSEC/DEGRAD;
   output[OUT_DLONGADTDISTORB].iNum = 1;
+  output[OUT_DLONGADTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
   
   sprintf(output[OUT_INC].cName,"Inc");
@@ -1377,11 +1381,13 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_INC].bNeg = 1;
   output[OUT_INC].dNeg = 1./DEGRAD;
   output[OUT_INC].iNum = 1;
+  output[OUT_INC].iModuleBit = DISTORB;
   fnWrite[OUT_INC] = &WriteBodyInc;
   
   sprintf(output[OUT_SINC].cName,"Sinc");
   sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
   output[OUT_SINC].iNum = 1;
+  output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
   
   sprintf(output[OUT_LONGA].cName,"LongA");
@@ -1390,6 +1396,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGA].bNeg = 1;
   output[OUT_LONGA].dNeg = 1./DEGRAD;
   output[OUT_LONGA].iNum = 1;
+  output[OUT_LONGA].iModuleBit = DISTORB;
   fnWrite[OUT_LONGA] = &WriteBodyLongA;
   
   sprintf(output[OUT_ARGP].cName,"ArgP");
@@ -1398,16 +1405,19 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ARGP].bNeg = 1;
   output[OUT_ARGP].dNeg = 1./DEGRAD;
   output[OUT_ARGP].iNum = 1;
+  output[OUT_ARGP].iModuleBit = DISTORB;
   fnWrite[OUT_ARGP] = &WriteBodyArgP; 
 
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
   output[OUT_PINC].iNum = 1;
+  output[OUT_PINC].iModuleBit = DISTORB;
   fnWrite[OUT_PINC] = &WriteBodyPinc;
   
   sprintf(output[OUT_QINC].cName,"Qinc");
   sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in DistOrb");
   output[OUT_QINC].iNum = 1;
+  output[OUT_QINC].iModuleBit = DISTORB;
   fnWrite[OUT_QINC] = &WriteBodyQinc;
   
   sprintf(output[OUT_DHECCDTDISTORB].cName,"DHeccDtDistOrb");
@@ -1416,6 +1426,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DHECCDTDISTORB].bNeg = 1;
   output[OUT_DHECCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DHECCDTDISTORB].iNum = 1;
+  output[OUT_DHECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DHECCDTDISTORB] = &WriteBodyDHeccDtDistOrb;
   
   sprintf(output[OUT_DKECCDTDISTORB].cName,"DKeccDtDistOrb");
@@ -1424,6 +1435,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DKECCDTDISTORB].bNeg = 1;
   output[OUT_DKECCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DKECCDTDISTORB].iNum = 1;
+  output[OUT_DKECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DKECCDTDISTORB] = &WriteBodyDKeccDtDistOrb;
   
   sprintf(output[OUT_DPINCDTDISTORB].cName,"DPincDtDistOrb");
@@ -1432,6 +1444,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DPINCDTDISTORB].bNeg = 1;
   output[OUT_DPINCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DPINCDTDISTORB].iNum = 1;
+  output[OUT_DPINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DPINCDTDISTORB] = &WriteBodyDPincDtDistOrb;
   
   sprintf(output[OUT_DQINCDTDISTORB].cName,"DQincDtDistOrb");
@@ -1440,6 +1453,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DQINCDTDISTORB].bNeg = 1;
   output[OUT_DQINCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DQINCDTDISTORB].iNum = 1;
+  output[OUT_DQINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DQINCDTDISTORB] = &WriteBodyDQincDtDistOrb;
 }
 
@@ -1505,6 +1519,10 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+  if (body[iBody].bPoise) {
+    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+    body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+  }
 }
 
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {

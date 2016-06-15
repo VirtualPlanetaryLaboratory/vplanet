@@ -336,10 +336,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
 }
 
-void InitializeModuleAtmEsc(CONTROL *control,MODULE *module) {
-  /* Anything Here? */
-}
-
 /**************** ATMESC update ****************/
 
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {  
@@ -481,6 +477,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SURFACEWATERMASS].bNeg = 1;
   output[OUT_SURFACEWATERMASS].dNeg = 1./TOMASS;
   output[OUT_SURFACEWATERMASS].iNum = 1;
+  output[OUT_SURFACEWATERMASS].iModuleBit = ATMESC;
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
   
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
@@ -489,6 +486,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENVELOPEMASS].bNeg = 1;
   output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
   output[OUT_ENVELOPEMASS].iNum = 1;
+  output[OUT_ENVELOPEMASS].iModuleBit = ATMESC;
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
 }

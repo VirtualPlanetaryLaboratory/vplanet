@@ -10,3 +10,6 @@ opt:
 profile:
 	-gcc -pg -o vplanet *.c -lm
 
+test:
+	-gcc -o vplanet *.c -lm
+	vtest

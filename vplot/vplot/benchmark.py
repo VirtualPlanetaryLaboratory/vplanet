@@ -70,8 +70,8 @@ def TestAll():
   except:
     raise Exception("Unable to locate vplanet executable. Please make sure it is in your $PATH.")
   
-  # Compile VPLANET
-  subprocess.call(['make', '-C', vplanet_dir, '-s'])
+  # [Deprecated: vtest will be run from the makefile!]
+  # subprocess.call(['make', '-C', vplanet_dir, '-s'])
   
   # Run through each of the tests  
   nerr = 0

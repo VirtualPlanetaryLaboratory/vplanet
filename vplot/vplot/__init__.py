@@ -3,9 +3,9 @@
 
 from __future__ import division, print_function, absolute_import, unicode_literals
 
-__version__ = "0.1.1"
+__version__ = "0.2.1"
 __author__ = "Rodrigo Luger (rodluger@uw.edu)"
-__copyright__ = "Copyright 2015 Rodrigo Luger"
+__copyright__ = "Copyright 2016 Rodrigo Luger"
 
 # Was vplot imported from setup.py?
 try:

@@ -65,3 +65,5 @@ vplot_config.py
 tex/exoearth.tex~
 tex/outline
 tex/outline~
+vplot/build
+vplot/vplot.egg-info

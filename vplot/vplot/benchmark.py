@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+benchmark.py
+------------
+
+'''
+
 from .utils import GetOutput
 import subprocess
 from functools import reduce

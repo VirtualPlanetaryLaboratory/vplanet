@@ -83,7 +83,7 @@ to your code that will affect the output
 the test is checking. Once you're happy with the new version of your module, re-enable
 the relevant tests.
 
-Please keep your test runs **as short as possible**. Runs that take more than 5 seconds
+Please keep your test runs **as short as possible**. Runs that take more than 10 seconds
 to complete will automatically issue an error. Do not run very long simulations in these
 tests; if you'd like to test whether a particular transition/event occurs (such as 
 complete evaporation of an envelope at a certain time), begin and end

@@ -41,7 +41,7 @@ def isclose(val1, val2, tol):
   
   return np.abs(1. - val1 / val2) <= tol
 
-def TestRun(name, compare, tolerance, path, maxtime = 5.):
+def TestRun(name, compare, tolerance, path, maxtime = 10.):
   '''
   
   '''

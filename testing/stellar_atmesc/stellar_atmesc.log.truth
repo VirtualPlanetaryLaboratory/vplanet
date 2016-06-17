@@ -1,7 +1,7 @@
--------- Log file xuvevol.log -------
+-------- Log file stellar_atmesc.log -------
 
 Executable: vplanet
-System Name: xuvevol
+System Name: stellar_atmesc
 Primary Input File: vpl.in
 Body File #1: star.in
 Body File #2: a.in

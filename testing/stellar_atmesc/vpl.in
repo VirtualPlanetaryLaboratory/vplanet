@@ -1,5 +1,5 @@
 # Primary input file for VPLANET
-sSystemName               xuvevol         # System Name
+sSystemName               stellar_atmesc  # System Name
 iVerbose                  0               # Verbosity level
 bOverwrite                1               # Allow file overwrites?
 saBodyFiles               star.in $       # The host star

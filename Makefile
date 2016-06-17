@@ -11,5 +11,7 @@ profile:
 	-gcc -pg -o vplanet *.c -lm
 
 test:
-	-gcc -o vplanet *.c -lm
-	vtest
+	@echo 'Compiling vplanet...'
+	@-gcc -o vplanet *.c -lm
+	@echo 'Running vtest...'
+	@vtest

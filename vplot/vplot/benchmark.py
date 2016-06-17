@@ -92,7 +92,7 @@ def TestAll():
   
   # Tally
   if nerr == 0:
-    print("SUCCESS: All tests passed.")
+    print("All tests passed.")
   elif nerr == 1:
     print("FAILURE: There was 1 error.")
   else:

@@ -36,6 +36,6 @@ if not __VPLOT_SETUP__:
       print("Take a look at the README in the '.zip' file for details.")
 
   from . import plot, quickplot, utils, benchmark, log
-  from .benchmark import Benchmark
+  from .benchmark import TestAll
   from .utils import GetOutput
   from .plot import plot, show, savefig

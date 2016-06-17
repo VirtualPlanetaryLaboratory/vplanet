@@ -69,6 +69,7 @@ class move_ttf(install):
           fontList_path = os.path.join(mpl_cache_dir, file)
           os.remove(fontList_path)
           print("Deleted %s." % fontList_path)
+          
     except:
       warnings.warn("WARNING: An issue occured while installing the custom fonts for vplot.")
 
@@ -96,5 +97,5 @@ setup(name = 'vplot',
       include_package_data = True,
       package_data = {'' : ['fonts/*.ttf']},
       cmdclass={'install' : move_ttf},
-      scripts=['bin/vplot'],
+      scripts=['bin/vplot', 'bin/vtest'],
       zip_safe = False)

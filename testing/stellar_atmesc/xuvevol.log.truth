@@ -1,0 +1,182 @@
+-------- Log file xuvevol.log -------
+
+Executable: vplanet
+System Name: xuvevol
+Primary Input File: vpl.in
+Body File #1: star.in
+Body File #2: a.in
+Allow files to be overwitten: Yes
+Mass Units: Kilograms
+Length Units: Meters
+Time Units: Seconds
+Angle Units: Radians
+
+------- FORMATTING -----
+Verbosity Level: 0
+Crossover Decade for Scientific Notation: 4
+Number of Digits After Decimal: 10
+Integration Method: Runge-Kutta4
+Direction: Forward
+Time Step: 3.1557600000e+07
+Stop Time: 3.1557600000e+16
+Output Interval: 3.1557600000e+12
+Use Variable Timestep: Yes
+dEta: 0.1000000000
+Minimum Value of ecc and obl: 1.0000000000e-10
+
+
+---- INITIAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 0.0000000000 
+(Time) Simulation Time [sec]: 0.0000000000 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 7.3898524997e+39 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -2.2671753767e+39 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -2.2671762528e+39 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 8.7603828679e+32 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: 0.0000000000 
+(LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.0000000000 
+(LXUVTot) Total XUV Luminosity [LSUN]: 6.7275200382e-05 
+
+----- BODY: star ----
+Active Modules: STELLAR 
+Module Bit Sum: 65
+Color: 000000
+(Mass) Mass [kg]: 1.9884160000e+29 
+(Obliquity) Obliquity [rad]: 0.0000000000 
+(PrecA) Body's precession parameter in DistRot [rad]: 0.0000000000 
+(Radius) Radius [Solar]: 1.0038370000 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 2.2568035599e+39 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.6411938621e+32 
+(RotVel) Rotational Velocity [m/sec]: 101.5737120045 
+(BodyType) Type of Body (0 == planet) []: -1.0000000000 
+(RotRate) Rotational Frequency [/sec]: 1.4544410433e-07 
+(RotPer) Rotational Period [sec]: 4.3200000000e+07 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.0000000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.0000000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.0000000000 
+(Eccentricity) Orbital Eccentricity []: -1.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1191729453e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.0000000000 
+(OrbPeriod) Orbital Period [sec]: -1.0000000000 
+(SemiMajorAxis) Semi-major Axis [m]: -1.0000000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 5.1330484981e+39 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.0000000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1191729453e+32 
+----- STELLAR PARAMETERS (star)------
+(Luminosity) Luminosity [LSUN]: 0.0672752004 
+(LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 2.5874042067e+22 
+(Temperature) Effective Temperature [K]: 2935.1074178182 
+(LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.0010000000 
+Output Order: Time[year] Luminosity[LSUN] Radius[Solar] LXUVTot[LSUN] LXUVFrac[]
+Grid Output Order:
+
+----- BODY: a ----
+Active Modules: ATMESC 
+Module Bit Sum: 9
+Color: 000000
+(Mass) Mass [kg]: 5.9721860000e+24 
+(Obliquity) Obliquity [rad]: 0.0000000000 
+(PrecA) Body's precession parameter in DistRot [rad]: 0.0000000000 
+(Radius) Radius [m]: 6.3781000000e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.4169461840e+32 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.6060469540e+27 
+(RotVel) Rotational Velocity [m/sec]: 46.3828520909 
+(BodyType) Type of Body (0 == planet) []: -1.0000000000 
+(RotRate) Rotational Frequency [/sec]: 7.2722052164e-06 
+(RotPer) Rotational Period [sec]: 8.6400000000e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.0000000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.0000000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.0000000000 
+(Eccentricity) Orbital Eccentricity []: 0.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1191729453e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 2.7738576590e-07 
+(OrbPeriod) Orbital Period [sec]: 2.2651433777e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 5.5665415800e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 5.1330484981e+39 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 7.1191729453e+32 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.4238345891e+33 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1191729453e+32 
+----- ATMESC PARAMETERS (a)------
+(SurfWaterMass) Surface Water Mass [kg]: 0.0000000000 
+(EnvelopeMass) Envelope Mass [kg]: 5.9721860000e+23 
+Output Order:
+Grid Output Order:
+
+
+
+---- FINAL SYSTEM PROPERTIES ----
+(Age) System Age [sec]: 3.1557600000e+16 
+(Time) Simulation Time [sec]: 3.1557600000e+16 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 6.8714443466e+39 
+(TotEnergy) Total Energy [kg*m^2/sec^2]: -1.8353825592e+40 
+(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -1.8353832687e+40 
+(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 7.0950491536e+33 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(LongP) Body's Longitude of pericenter in Lagrange [rad]: 0.0000000000 
+(LXUVTot) Total XUV Luminosity [LSUN]: 5.1161536977e-08 
+
+----- BODY: star ----
+Active Modules: STELLAR 
+Module Bit Sum: 65
+Color: 000000
+(Mass) Mass [kg]: 1.9884160000e+29 
+(Obliquity) Obliquity [rad]: 0.0000000000 
+(PrecA) Body's precession parameter in DistRot [rad]: 0.0000000000 
+(Radius) Radius [Solar]: 0.1239999294 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.7385600068e+39 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 6.3831530823e+33 
+(RotVel) Rotational Velocity [m/sec]: 633.4597308504 
+(BodyType) Type of Body (0 == planet) []: -1.0000000000 
+(RotRate) Rotational Frequency [/sec]: 7.3430345310e-06 
+(RotPer) Rotational Period [sec]: 8.5566604385e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.0000000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.0000000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.0000000000 
+(Eccentricity) Orbital Eccentricity []: -1.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1189446533e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: -1.0000000000 
+(OrbPeriod) Orbital Period [sec]: -1.0000000000 
+(SemiMajorAxis) Semi-major Axis [m]: -1.0000000000 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 5.1328838980e+39 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.0000000000 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1189446533e+32 
+----- STELLAR PARAMETERS (star)------
+(Luminosity) Luminosity [LSUN]: 0.0008688476 
+(LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 1.9676727121e+19 
+(Temperature) Effective Temperature [K]: 2810.0013272653 
+(LXUVFrac) X-ray/XUV Luminosity Fraction []: 5.8884365536e-05 
+Output Order: Time[year] Luminosity[LSUN] Radius[Solar] LXUVTot[LSUN] LXUVFrac[]
+Grid Output Order:
+
+----- BODY: a ----
+Active Modules: ATMESC 
+Module Bit Sum: 9
+Color: 000000
+(Mass) Mass [kg]: 5.9719944887e+24 
+(Obliquity) Obliquity [rad]: 0.0000000000 
+(PrecA) Body's precession parameter in DistRot [rad]: 0.0000000000 
+(Radius) Radius [m]: 6.3781000000e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.4168045449e+32 
+(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.6059954526e+27 
+(RotVel) Rotational Velocity [m/sec]: 46.3828520909 
+(BodyType) Type of Body (0 == planet) []: -1.0000000000 
+(RotRate) Rotational Frequency [/sec]: 7.2722052164e-06 
+(RotPer) Rotational Period [sec]: 8.6400000000e+05 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.0000000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.0000000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.0000000000 
+(Eccentricity) Orbital Eccentricity []: 0.0000000000 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1189446533e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 2.7738576577e-07 
+(OrbPeriod) Orbital Period [sec]: 2.2651433788e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 5.5665415800e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 5.1328838980e+39 
+(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 7.1189446533e+32 
+(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.4237889307e+33 
+(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -7.1189446533e+32 
+----- ATMESC PARAMETERS (a)------
+(SurfWaterMass) Surface Water Mass [kg]: 0.0000000000 
+(EnvelopeMass) Envelope Mass [kg]: 5.9702708865e+23 
+Output Order:
+Grid Output Order:

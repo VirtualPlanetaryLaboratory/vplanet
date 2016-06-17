@@ -12,7 +12,18 @@ from functools import reduce
 import numpy as np
 import imp
 import subprocess
-import os
+import os, sys
+import threading
+
+def on_timeout(proc, status):
+  '''
+  Kill process on timeout and note as status['timeout']=True
+  
+  '''
+  
+  # A container used to pass status back to calling thread
+  status['timeout'] = True
+  proc.kill()
 
 def deep_getattr(obj, attr):
   '''
@@ -30,7 +41,7 @@ def isclose(val1, val2, tol):
   
   return np.abs(1. - val1 / val2) <= tol
 
-def TestRun(name, compare, tolerance, path):
+def TestRun(name, compare, tolerance, path, maxtime = 5.):
   '''
   
   '''
@@ -40,10 +51,17 @@ def TestRun(name, compare, tolerance, path):
     if file.endswith('.forward') or file.endswith('.log'):
       os.remove(os.path.join(path, file))
   
-  # Run vplanet
+  # Run vplanet for maxtime. If it takes longer than that, kill it
   os.chdir(path)
-  subprocess.call(['vplanet', 'vpl.in', '-q'])
-
+  status = {'timeout': False}
+  proc = subprocess.Popen(['vplanet', 'vpl.in', '-q'], stdout = sys.stdout, stderr = sys.stderr)
+  timer = threading.Timer(maxtime, on_timeout, (proc, status))
+  timer.start()
+  proc.wait()
+  timer.cancel()
+  if status['timeout']:
+    raise Exception('Test ``%s`` exceeded maximum time. Please limit all test runs to less than %.1f seconds.' % (name, maxtime))
+  
   # Get outputs
   log1 = GetOutput(path = path, benchmark = True).log
   log2 = GetOutput(path = path).log

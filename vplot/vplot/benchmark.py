@@ -19,6 +19,11 @@ import re
 
 certificate = \
 '''
+All tests passed! If you're submitting a pull request, copy and paste
+this certificate into the ``Description`` box:
+
+```
+#!
 ╔═════════════════════════════════════════════════════════════════╗
 ║                                                                 ║      
 ║   ██╗   ██╗██████╗ ██╗      █████╗ ███╗   ██╗███████╗████████╗  ║
@@ -33,6 +38,7 @@ certificate = \
 ║     GIT HASH:      %s║
 ║                                                                 ║
 ╚═════════════════════════════════════════════════════════════════╝
+```
 '''
 
 def on_timeout(proc, status):

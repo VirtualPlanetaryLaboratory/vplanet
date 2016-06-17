@@ -95,7 +95,7 @@ setup(name = 'vplot',
                           'matplotlib >= 1.4.0'
                          ],
       include_package_data = True,
-      package_data = {'' : ['fonts/*.ttf']},
+      package_data = {'vplot' : ['fonts/*.ttf']},
       cmdclass={'install' : move_ttf},
       scripts=['bin/vplot', 'bin/vtest'],
       zip_safe = False)

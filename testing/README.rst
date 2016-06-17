@@ -18,9 +18,23 @@ If all goes well, you'll see the following output:
 
 .. code-block:: bash
    
-   Compiling vplanet...
-   Running vtest...
-   SUCCESS: All tests passed.
+  Compiling vplanet...
+  Running vtest...
+
+  ╔═════════════════════════════════════════════════════════════════╗
+  ║                                                                 ║      
+  ║   ██╗   ██╗██████╗ ██╗      █████╗ ███╗   ██╗███████╗████████╗  ║
+  ║   ██║   ██║██╔══██╗██║     ██╔══██╗████╗  ██║██╔════╝╚══██╔══╝  ║
+  ║   ██║   ██║██████╔╝██║     ███████║██╔██╗ ██║█████╗     ██║     ║
+  ║   ╚██╗ ██╔╝██╔═══╝ ██║     ██╔══██║██║╚██╗██║██╔══╝     ██║     ║
+  ║    ╚████╔╝ ██║     ███████╗██║  ██║██║ ╚████║███████╗   ██║     ║
+  ║     ╚═══╝  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝     ║
+  ║                                                                 ║
+  ║     BUILD PASSING: Fri, 17 Jun 2016 14:56:53                    ║
+  ║     GIT BRANCH:    vplot                                        ║
+  ║     GIT HASH:      e129fff159084b3a1d83ab43e303d45c42e0ac43     ║
+  ║                                                                 ║
+  ╚═════════════════════════════════════════════════════════════════╝
 
 Any discrepancies between new runs and the benchmark runs result in error messages
 printing to the screen:

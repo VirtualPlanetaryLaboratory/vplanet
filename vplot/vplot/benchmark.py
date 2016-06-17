@@ -14,6 +14,26 @@ import imp
 import subprocess
 import os, sys
 import threading
+import time
+import re
+
+certificate = \
+'''
+╔═════════════════════════════════════════════════════════════════╗
+║                                                                 ║      
+║   ██╗   ██╗██████╗ ██╗      █████╗ ███╗   ██╗███████╗████████╗  ║
+║   ██║   ██║██╔══██╗██║     ██╔══██╗████╗  ██║██╔════╝╚══██╔══╝  ║
+║   ██║   ██║██████╔╝██║     ███████║██╔██╗ ██║█████╗     ██║     ║
+║   ╚██╗ ██╔╝██╔═══╝ ██║     ██╔══██║██║╚██╗██║██╔══╝     ██║     ║
+║    ╚████╔╝ ██║     ███████╗██║  ██║██║ ╚████║███████╗   ██║     ║
+║     ╚═══╝  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝     ║
+║                                                                 ║
+║     BUILD PASSING: %s║
+║     GIT BRANCH:    %s║
+║     GIT HASH:      %s║
+║                                                                 ║
+╚═════════════════════════════════════════════════════════════════╝
+'''
 
 def on_timeout(proc, status):
   '''
@@ -88,9 +108,6 @@ def TestAll():
   except:
     raise Exception("Unable to locate vplanet executable. Please make sure it is in your $PATH.")
   
-  # [Deprecated: vtest will be run from the makefile!]
-  # subprocess.call(['make', '-C', vplanet_dir, '-s'])
-  
   # Run through each of the tests  
   nerr = 0
   folders = os.listdir(os.path.join(vplanet_dir, 'testing'))
@@ -109,9 +126,23 @@ def TestAll():
     nerr += TestRun(f, test.params, test.tolerance, os.path.join(vplanet_dir, 'testing', f))
   
   # Tally
-  if nerr == 0:
-    print("All tests passed.")
-  elif nerr == 1:
+  if nerr == 1:
     print("FAILURE: There was 1 error.")
-  else:
+  elif nerr > 1:
     print("FAILURE: There were %d errors." % nerr)
+  else:
+  
+    # Generate certificate
+    GIT_DIR = os.path.join(vplanet_dir, '.git')
+    branches = subprocess.check_output(['git', '--git-dir', GIT_DIR,
+               'branch']).decode('utf-8').replace('\n', '')
+    git_branch = re.findall('\*\s([a-zA-Z0-9_]*)', branches)[0]
+    git_hash = subprocess.check_output(['git', '--git-dir', GIT_DIR, 'rev-parse', 
+               '--verify', 'HEAD']).decode('utf-8').replace('\n', '')
+    now = time.strftime("%a, %d %b %Y %H:%M:%S")
+    
+    git_branch += ' ' * (45 - len(git_branch))
+    git_hash += ' ' * (45 - len(git_hash))
+    now += ' ' * (45 - len(now))
+    
+    print(certificate % (now, git_branch, git_hash))

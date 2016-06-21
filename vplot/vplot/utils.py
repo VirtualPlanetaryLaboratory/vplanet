@@ -130,10 +130,13 @@ class Output(object):
   '''
   
   '''
-  def __init__(self, sysname = "", pif = "", bodies = [], log = None):
+  def __init__(self, sysname = "", pif = "", bodies = None, log = None):
     self.sysname = sysname
     self.pif = pif
-    self.bodies = bodies
+    if bodies is None:
+      self.bodies = list([])
+    else:
+      self.bodies = bodies
     self.log = log
     
   def __getitem__(self, i):

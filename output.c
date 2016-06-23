@@ -639,7 +639,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_OBL] = &WriteObliquity;
   
   sprintf(output[OUT_PRECA].cName,"PrecA");
-  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
+  sprintf(output[OUT_PRECA].cDescr,"Body's precession angle");
   sprintf(output[OUT_PRECA].cNeg,"Deg");
   output[OUT_PRECA].bNeg = 1;
   output[OUT_PRECA].dNeg = 1./DEGRAD;

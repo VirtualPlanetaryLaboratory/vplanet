@@ -6,6 +6,7 @@ benchmark.py
 
 '''
 
+from __future__ import unicode_literals
 from .utils import GetOutput
 import subprocess
 from functools import reduce
@@ -155,4 +156,5 @@ def TestAll():
     git_hash += ' ' * (45 - len(git_hash))
     now += ' ' * (45 - len(now))
     
+    #import pdb; pdb.set_trace()
     print(certificate % (now, git_branch, git_hash))

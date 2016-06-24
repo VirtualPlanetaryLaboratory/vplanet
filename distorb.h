@@ -13,6 +13,7 @@
 #define TEENY				1e-20 // Already a TINY in vplanet.h! XXX
 #define MAXECCDISTORB 0.6627434
 
+
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
 
@@ -33,6 +34,8 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352
 #define OPT_ORMAXECC           1353
+#define OPT_HALTHILLSTAB       1354
+#define OPT_HALTCLOSEENC       1355
 #define OPT_EIGENSET           1370
 #define OPT_EIGENVALUE				 1371
 #define OPT_EIGENVECTOR				 1372
@@ -87,6 +90,9 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DPINCDTDISTORB      1353
 #define OUT_DQINCDTDISTORB      1354
 
+int HaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int HaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+
 void HelpOutputDistOrb(OUTPUT*);
 void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDSincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -114,6 +120,9 @@ void LogDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistOrb Functions */
+double MutualHillRad(BODY*,int,int);
+double MinOrbitSep2D(BODY*,int,int);
+double MinOrbitSep3D(BODY*,int,int);
 double signf(double);
 double fdLaplaceCoeff(double,int,double);
 double fdDerivLaplaceCoeff(int,double,int,double);
@@ -146,6 +155,15 @@ void cross(double*,double*,double*);
 
 void PropsAuxDistOrb(BODY*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+
+double xinit(BODY*,int);
+double yinit(BODY*,int);
+double xangle1(BODY*,int);
+double xangle2(BODY*,int);
+double yangle1(BODY*,int);
+double yangle2(BODY*,int);
+double zangle1(BODY*,int);
+double zangle2(BODY*,int);
 
 double fdSemiMajAxF1(double, int);
 double fdSemiMajAxF2(double, int);

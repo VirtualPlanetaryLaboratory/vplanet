@@ -1480,8 +1480,8 @@ void WriteDHeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
-    fsUnitsVel(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 
@@ -1496,8 +1496,8 @@ void WriteDKeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
-    fsUnitsVel(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
   }
 }
 

@@ -5,14 +5,14 @@ saModules       stellar eqtide
 # Physical Parameters
 dMass         1.0                         # Mass, solar masses
 dRotPeriod      0.005 #0.007
-dRadGyra        0.4             # Radius of gyration (moment of inertia constant)
+dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
 dTidalQ		1.0e5		# Tidal phase lag
-dK2		1.0		# Love number of degree 2
+dK2		0.5		# Love number of degree 2
 sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 saTidePerts	secondary	# Body name(s) of tidal perturbers
 sStellarModel baraffe

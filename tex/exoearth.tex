@@ -31,7 +31,6 @@
 
 \bibliographystyle{apj}
 \usepackage{multicol}
-\usepackage{natbib}
 
 \begin{document}
 
@@ -363,7 +362,38 @@ should be used. we refer to these rotational states as ``discrete'' and
 \subsection{The Coupled Model: \vplanet}
 
 % Fig 14: Milankovitch (Russell)
+
+\subsubsection{Evolution of Tight Binaries}
 % Fig 15: Tight binaries (David)
+A classic study of the evolution of tight binary stars by \citet{ZahnBouchet89} finds that binaries with an orbital period of less than about 8 days tidally
+circularize with the majority of the orbital circularization occurring before the stars reach the Zero Age Main Sequence.  Here we reproduce that 
+result by coupling the stellar evolution models of \citet{Baraffe15} incorporated in the \stellar \ module and the equilibrium tide CPL model via \eqtide.  See Section \ref{sec:models} for a more in-depth discussion of the models.
+
+Adopting the initial conditions used in \citet{ZahnBouchet89}, we model an equal mass $1 \msun$ binary with initial orbital eccentricity $e = 0.3$ and an orbital 
+period of 5 days.  The initial stellar rotation rate to mean motion ratio is set at $\Omega/n = 3$ in line with the estimates \citet{ZahnBouchet89} who 
+assumed conservation of angular momentum during the star's accretion phase.  Both stellar radii of gyration are fixed at $r_g = 0.5$.  For our tidal model, 
+we set $Q = 10^5$ and $k_2 = 0.5$, both reasonable values for stars given the wide range of assumed values in the literature \citep{Barnes13}.
+
+The results of the simulation are depicted in Figure \ref{fig:zahn89}.  Qualitatively, our model is in good agreement with the results of \citet{ZahnBouchet89}
+shown in their Figure 1.  After an initial increase in orbital eccentricity, the binary circularizes within the first $10^6$ years before the ZAMS in line with previous 
+findings.  The transition between increasing to decreasing eccentricity occurs when $e = \sqrt{1/19}$ at the $\Omega/n = 1.5$ transition as expected from the 
+CPL model.  The orbital period peaks around $10^4$ years before declining to a minimum and rising again to a 
+larger period than the initial value.  One difference between the two results is that \citet{ZahnBouchet89} find an increase in $\Omega/n$ from unity to 
+over 2 starting near $10^6$ years before the stars tidally lock again after about $10^9$ years while in our model the stars remain tidally locked after $10^5$ 
+years.  This discrepancy can be explained by the different implementations of the two tidal models (see \citet{Zahn89}) and that \citet{ZahnBouchet89} allowed 
+$r_g$ to vary according to a simple interpolated formula while we held our value fixed.
+
+\begin{figure} 
+\figurenum{15} 
+\plotone{zahn89.pdf} 
+\caption{Coupled stellar and tidal evolution of a solar twin binary from the premain sequence onward calculated in \vplanet \ using the \eqtide \ and \stellar \ 
+modules.  Binary eccentricity evolution is given by the red solid line, the orbital period by the purple dashed line, and the ratio of stellar rotation rate to binary
+mean motion ($\Omega/n$) evolution is given by the blue dot dashed curve.
+The binary's evolution qualitatively agrees with that of an identical system presented in Figure 1 of \citet{ZahnBouchet89}.} 
+\label{fig:zahn89}
+\end{figure}
+
+
 % Fig 16: Tidal heating interiors (Peter)
 % Fig 17: Cassini States (Russell)
 

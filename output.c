@@ -599,7 +599,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGP].bNeg = 1;
   output[OUT_LONGP].dNeg = 1./DEGRAD;
   output[OUT_LONGP].iNum = 1;
-  output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB;
+  output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_LONGP] = &WriteLongP; 
   
   sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");

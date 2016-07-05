@@ -6,7 +6,7 @@ benchmark.py
 
 '''
 
-from __future__ import unicode_literals
+from __future__ import division, print_function, absolute_import, unicode_literals
 from .utils import GetOutput
 import subprocess
 from functools import reduce

@@ -4,7 +4,7 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1       # 1 -> Star
-dMass		0.9678 #0.2020390186		# Mass, negative -> Earth masses
+dMass		0.2020390186		# Mass, negative -> Earth masses
 #dRadius		0.00153		# Radius, negative -> Earth radii
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 dRotPeriod      0.003
@@ -12,8 +12,8 @@ dRotPeriod      0.003
 # The first body in the saBodyFiles list must be the central mass.
 
 # Binary Parameters
-dEcc            0.1602 #0.16048             # Binary eccentricity
-dSemi           0.1276            # Binary semimajor axis 
+dEcc            0.16048             # Binary eccentricity
+dSemi           0.2243            # Binary semimajor axis 
 dLongP          257.79
 dLL13PhiAB      129.84             # Initial binary mean anomaly
 
@@ -33,4 +33,4 @@ saTidePerts	primary		# Body name(s) of tidal perturbers
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time Semim Ecce -RotPer
+saOutputOrder	Time # Semim Ecce -RotPer

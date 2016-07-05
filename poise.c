@@ -536,6 +536,36 @@ void ReadAlbedoWater(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].dAlbedoWater = options->dDefault;
 }
 
+void ReadObliqAmp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dObliqAmp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dObliqAmp = options->dDefault;
+}
+
+void ReadObliqPer(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dObliqPer = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dObliqPer = options->dDefault;
+}
+
 void ReadMixingDepth(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -941,6 +971,22 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FORCEOBLIQ].iType = 2;  
   options[OPT_FORCEOBLIQ].iMultiFile = 1;   
   fnRead[OPT_FORCEOBLIQ] = &ReadForceObliq;
+  
+  sprintf(options[OPT_OBLIQAMP].cName,"dObliqAmp");
+  sprintf(options[OPT_OBLIQAMP].cDescr,"Amplitude of forced obliquity oscill");
+  sprintf(options[OPT_OBLIQAMP].cDefault,"50");
+  options[OPT_OBLIQAMP].dDefault = 50;
+  options[OPT_OBLIQAMP].iType = 2;  
+  options[OPT_OBLIQAMP].iMultiFile = 1;   
+  fnRead[OPT_OBLIQAMP] = &ReadObliqAmp;
+  
+  sprintf(options[OPT_OBLIQPER].cName,"dObliqPer");
+  sprintf(options[OPT_OBLIQPER].cDescr,"Period of forced obliquity oscill");
+  sprintf(options[OPT_OBLIQPER].cDefault,"50000");
+  options[OPT_OBLIQPER].dDefault = 50000;
+  options[OPT_OBLIQPER].iType = 2;  
+  options[OPT_OBLIQPER].iMultiFile = 1;   
+  fnRead[OPT_OBLIQPER] = &ReadObliqPer;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1408,11 +1454,16 @@ void VerifyAstro(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVer
       CalcXYZobl(body,iBody);
     }
   }
-  if (body[iBody].bForceObliq == 1 && body[iBody].bDistRot == 1) {
-    if (iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Cannot set %s == 1 when using DistRot in File:%s\n", options[OPT_FORCEOBLIQ].cName, cFile);
-    exit(EXIT_INPUT);
+  if (body[iBody].bForceObliq == 1) {
+    if (body[iBody].bDistRot == 1) {
+      if (iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Cannot set %s == 1 when using DistRot in File:%s\n", options[OPT_FORCEOBLIQ].cName, cFile);
+      exit(EXIT_INPUT);
+    } else {
+      body[iBody].dObliq0 = body[iBody].dObliquity;
+    }
   }
+  
 }
 
 void VerifyDiffusion(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
@@ -2478,8 +2529,10 @@ void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
 }
 
 void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
-  double A = 50., P = 50000., C = 40.;
-  P *= YEARSEC;
+  double A, P, C;
+  P = body[iBody].dObliqPer*YEARSEC;
+  A = body[iBody].dObliqAmp;
+  C = body[iBody].dObliq0;
   
   body[iBody].dObliquity = (0.5*A*sin(2*PI*evolve->dTime/P)+C)*DEGRAD;
   CalcXYZobl(body,iBody);

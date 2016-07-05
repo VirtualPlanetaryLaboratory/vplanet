@@ -69,6 +69,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GEOGRAPHY       1857
 #define OPT_SEASOUTPUTTIME  1858
 #define OPT_FORCEOBLIQ      1859
+#define OPT_OBLIQAMP        1860
+#define OPT_OBLIQPER		    1861
 
 #define OPT_CLIMATEMODEL    1899
 

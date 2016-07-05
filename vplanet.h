@@ -19,10 +19,9 @@
 #define FLARE         512
 #define BINARY        1024
 
-/* Fundamental constants; Some of these are taken from the IAU working
- group on Fundamental constants, as described in Prsa et al. 2016. */
+/* Fundamental constants */
 
-#define BIGG          6.67428e-11  // From Luzum et al., 2011; value recommended by IAU NSFA in Prsa et al. 2016
+#define BIGG          6.67408e-11
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
@@ -32,15 +31,15 @@
 
 /* Units: Calculations are done in SI */
 #define cLIGHT        299792458.0 
-#define MEARTH        5.972186e24 // Prsa et al. 2016   
-#define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUCM          1.49598e11  // XXX Change to AUM
-#define RSUN          6.957e8     // Prsa et al. 2016
+#define MEARTH        5.9742e24
+#define MSUN          1.98892e30
+#define AUCM          1.49598e11 // XXX Change to AUM
+#define RSUN          6.955e8
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
-#define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
-#define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
-#define MJUP          1.898130e27 // Prsa et al. 2016
+#define REARTH        6.3781e6
+#define RJUP          7.1492e7
+#define MJUP          1.8987e27
 #define RNEP          2.4764e7
 #define MNEP          1.0244e26
 #define RHOEARTH      5515
@@ -143,14 +142,13 @@
 #define VXOBL           1401
 #define VYOBL           1402
 #define VZOBL           1403
-#define VDYNELLIP       1404
 
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
 
 // ATMESC
 #define VSURFACEWATERMASS  1202
-#define VENVELOPEMASS      1203
+#define VENVELOPEMASS  1202
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -422,11 +420,8 @@ typedef struct {
   double dLuminosity;
   double dTemperature;
   double dSatXUVFrac;
-  double dSatXUVTime;
-  double dXUVBeta;
   int iStellarModel;
   int iWindModel;
-  int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
 
   /* PHOTOCHEM Parameters */
@@ -495,7 +490,7 @@ typedef struct {
   double dFluxInGlobalTmp;
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
   double dFluxOutGlobalTmp;
-  int bForceObliq;        
+  int bForceObliq;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
   int iGeography;
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
@@ -521,6 +516,9 @@ typedef struct {
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
+  double dObliqAmp;
+  double dObliqPer;
+  double dObliq0;
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
@@ -596,12 +594,12 @@ typedef struct {
   double *daEnerResLAnn;
   double *daEnerResWAnn;      /**< Annually averaged energy residuals */
   double *daFluxAvg;
-  double *daFluxOutAvg;
   double **daFluxDaily;
   double *daFluxInAvg;
   double **daFluxInDaily;
   double *daFluxInLand;
   double *daFluxInWater;
+  double *daFluxOutAvg;
   double **daFluxOutDaily;
   double *daFluxOutLand;
   double *daFluxOutWater;
@@ -889,16 +887,13 @@ typedef struct {
   int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
   int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
   int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
-  int iNumDynEllip;      /**< Number of Equations Affecting Dynamical Ellipticity */
   
   int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
   double dDXoblDt;       /**< Total x Derivative */
   int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
   double dDYoblDt;       /**< Total y Derivative */
   int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
-  double dDZoblDt;       /**< Total z Derivative */
-  int iDynEllip;         /**< Variable # Corresponding to dynamical ellipticity */
-  double dDDynEllipDt;   /**< Dynamical Ellipticity Derivative */
+  double dDZoblDt;       /**< Total p Derivative */
   int *iaXoblDistRot;     /**< Equation # Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
   int *iaYoblDistRot;     /**< Equation #s Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
   int *iaZoblDistRot;     /**< Equation #s Corresponding to DistRot's change to z = cos(obl) */
@@ -1268,32 +1263,31 @@ typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int
 typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);  
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPRDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPZDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateDynEllipModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1401,9 +1395,6 @@ typedef struct {
   fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
   /*! Function pointers to finalize distrot's Z */ 
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
-  /*! Function pointers to finalize dynamical ellipticity */ 
-  fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
-
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
  

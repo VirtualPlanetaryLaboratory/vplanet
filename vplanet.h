@@ -495,6 +495,7 @@ typedef struct {
   double dFluxInGlobalTmp;
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
   double dFluxOutGlobalTmp;
+  int bForceObliq;        
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
   int iGeography;
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */

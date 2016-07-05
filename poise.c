@@ -310,6 +310,20 @@ void ReadSkipSeasEnabled(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
   }
 }
 
+void ReadForceObliq(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bForceObliq = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    AssignDefaultInt(options,&body[iFile-1].bForceObliq,files->iNumInputs);
+  }
+}
+
 void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -919,6 +933,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SEASOUTPUTTIME].iType = 2;  
   options[OPT_SEASOUTPUTTIME].iMultiFile = 1;   
   fnRead[OPT_SEASOUTPUTTIME] = &ReadSeasOutputTime;
+  
+  sprintf(options[OPT_FORCEOBLIQ].cName,"bForceObliq");
+  sprintf(options[OPT_FORCEOBLIQ].cDescr,"Force obliquity to evolve sinusoidally");
+  sprintf(options[OPT_FORCEOBLIQ].cDefault,"0");
+  options[OPT_FORCEOBLIQ].dDefault = 0;
+  options[OPT_FORCEOBLIQ].iType = 2;  
+  options[OPT_FORCEOBLIQ].iMultiFile = 1;   
+  fnRead[OPT_FORCEOBLIQ] = &ReadForceObliq;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1377,7 +1399,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   }
 } 
 
-void VerifyAstro(BODY *body, int iBody) {
+void VerifyAstro(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVerbose) {
   if (body[iBody].bEqtide == 0) {
     if (body[iBody].bDistOrb == 0) {
       CalcHK(body, iBody);
@@ -1385,6 +1407,11 @@ void VerifyAstro(BODY *body, int iBody) {
     if (body[iBody].bDistRot == 0) {
       CalcXYZobl(body,iBody);
     }
+  }
+  if (body[iBody].bForceObliq == 1 && body[iBody].bDistRot == 1) {
+    if (iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Cannot set %s == 1 when using DistRot in File:%s\n", options[OPT_FORCEOBLIQ].cName, cFile);
+    exit(EXIT_INPUT);
   }
 }
 
@@ -1435,7 +1462,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
   int i, j=0, iLat=0;
   
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
-  VerifyAstro(body,iBody);
+  VerifyAstro(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   VerifySeasOutputTime(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
@@ -2450,6 +2477,14 @@ void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
   while (body[iBody].dPrecA < 0) body[iBody].dPrecA += 2*PI;
 }
 
+void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
+  double A = 50., P = 50000., C = 40.;
+  P *= YEARSEC;
+  
+  body[iBody].dObliquity = (0.5*A*sin(2*PI*evolve->dTime/P)+C)*DEGRAD;
+  CalcXYZobl(body,iBody);
+}
+
 void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
 
@@ -2466,6 +2501,9 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
   
   if (body[iBody].bDistRot == 0) {
     PrecessionExplicit(body,evolve,iBody);
+    if (body[iBody].bForceObliq) {
+      ForceObliq(body,evolve,iBody);
+    }
   }
   
   if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeasEnabled) {

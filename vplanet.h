@@ -500,6 +500,7 @@ typedef struct {
   double dFluxInGlobalTmp;
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
   double dFluxOutGlobalTmp;
+  int bForceObliq;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
   int iGeography;
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
@@ -525,6 +526,9 @@ typedef struct {
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
+  double dObliqAmp;
+  double dObliqPer;
+  double dObliq0;
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */

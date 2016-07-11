@@ -23,23 +23,19 @@ certificate = \
 All tests passed! If you're submitting a pull request, copy and paste
 this certificate into the ``Description`` box:
 
-```
-#!
-╔═════════════════════════════════════════════════════════════════╗
-║                                                                 ║      
-║   ██╗   ██╗██████╗ ██╗      █████╗ ███╗   ██╗███████╗████████╗  ║
-║   ██║   ██║██╔══██╗██║     ██╔══██╗████╗  ██║██╔════╝╚══██╔══╝  ║
-║   ██║   ██║██████╔╝██║     ███████║██╔██╗ ██║█████╗     ██║     ║
-║   ╚██╗ ██╔╝██╔═══╝ ██║     ██╔══██║██║╚██╗██║██╔══╝     ██║     ║
-║    ╚████╔╝ ██║     ███████╗██║  ██║██║ ╚████║███████╗   ██║     ║
-║     ╚═══╝  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝     ║
-║                                                                 ║
-║     BUILD PASSING: %s║
-║     GIT BRANCH:    %s║
-║     GIT HASH:      %s║
-║                                                                 ║
-╚═════════════════════════════════════════════════════════════════╝
-```
+![Commit](https://img.shields.io/badge/commit-%s-lightgrey.svg)
+![Branch](https://img.shields.io/badge/branch-%s-lightgrey.svg)
+![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
+'''
+
+certificate_bad = \
+'''
+One ore more tests failed. If you still want to submit a pull request, copy and paste
+this certificate into the ``Description`` box:
+
+![Commit](https://img.shields.io/badge/commit-%s-lightgrey.svg)
+![Branch](https://img.shields.io/badge/branch-%s-lightgrey.svg)
+![Build](https://img.shields.io/badge/build-failing-red.svg)
 '''
 
 def on_timeout(proc, status):
@@ -132,28 +128,24 @@ def TestAll():
       test.params = []
     nerr += TestRun(f, test.params, test.tolerance, os.path.join(vplanet_dir, 'testing', f))
   
+  # Generate certificate
+  try:
+    GIT_DIR = os.path.join(vplanet_dir, '.git')
+    branches = subprocess.check_output(['git', '--git-dir', GIT_DIR,
+               'branch']).decode('utf-8').replace('\n', '')
+    git_branch = re.findall('\*\s([a-zA-Z0-9_]*)', branches)[0]
+    git_hash = subprocess.check_output(['git', '--git-dir', GIT_DIR, 'rev-parse', 
+               '--verify', '--short', 'HEAD']).decode('utf-8').replace('\n', '')
+  except:
+    git_branch = '???'
+    git_hash = '???'
+  
   # Tally
   if nerr == 1:
     print("FAILURE: There was 1 error.")
+    print(certificate_bad % (git_hash, git_branch))
   elif nerr > 1:
     print("FAILURE: There were %d errors." % nerr)
+    print(certificate_bad % (git_hash, git_branch))
   else:
-  
-    # Generate certificate
-    try:
-      GIT_DIR = os.path.join(vplanet_dir, '.git')
-      branches = subprocess.check_output(['git', '--git-dir', GIT_DIR,
-                 'branch']).decode('utf-8').replace('\n', '')
-      git_branch = re.findall('\*\s([a-zA-Z0-9_]*)', branches)[0]
-      git_hash = subprocess.check_output(['git', '--git-dir', GIT_DIR, 'rev-parse', 
-                 '--verify', 'HEAD']).decode('utf-8').replace('\n', '')
-    except:
-      git_branch = '???'
-      git_hash = '???'
-    now = time.strftime("%a, %d %b %Y %H:%M:%S")
-    
-    git_branch += ' ' * (45 - len(git_branch))
-    git_hash += ' ' * (45 - len(git_hash))
-    now += ' ' * (45 - len(now))
-    
-    print(certificate % (now, git_branch, git_hash))
+    print(certificate % (git_hash, git_branch))

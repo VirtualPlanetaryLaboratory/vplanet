@@ -10,3 +10,8 @@ opt:
 profile:
 	-gcc -pg -o vplanet *.c -lm
 
+test:
+	@echo 'Compiling vplanet...'
+	@-gcc -o vplanet *.c -lm
+	@echo 'Running vtest...'
+	@vtest

@@ -72,34 +72,3 @@ Quick-and-dirty docs
 
 
     Type `vplot -h OPTION_NAME` for info on any option
-
-Custom Plots
-============
-If you run ``vplot`` on the example in ``examples/gl581`` with the default configuration, 
-you get a rather nasty-looking plot:
-
-.. image:: img/gl581_ugly.jpg?raw=True
-   :alt: example
-   :align: center
-   :width: 800px
-
-You can change the number of columns and the size of the figure in ``vplot_config.py``,
-but sometimes you want a little more control over the layout and appearance of the plot.
-As of version ``0.1.1``, you can manipulate ``vplot`` figures within ``python``.
-
-An example custom script is provided in the ``examples/gl581`` directory. Instead of 
-running ``vplot``, run
-
-.. code-block:: bash  
-  
-   python plotme.py
-
-for a fully customized plot:
-
-.. image:: img/gl581_pretty.jpg?raw=True
-   :alt: example
-   :align: center
-   :width: 800px
-
-Take a look at the `plotme.py script <../examples/gl581/plotme.py>`_ for an idea of how to manipulate the figure returned by the 
-call to ``vplot.Plot()``.

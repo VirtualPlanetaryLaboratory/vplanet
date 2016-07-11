@@ -31,7 +31,15 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     // The iNumX and iX members don't need to be copied
 
     dest[iBody].iNumVars = src[iBody].iNumVars;
-
+    
+    dest[iBody].iXobl = src[iBody].iXobl;
+    dest[iBody].iYobl = src[iBody].iYobl;
+    dest[iBody].iZobl = src[iBody].iZobl;
+    dest[iBody].iHecc = src[iBody].iHecc;
+    dest[iBody].iKecc = src[iBody].iKecc;
+    dest[iBody].iPinc = src[iBody].iPinc;
+    dest[iBody].iQinc = src[iBody].iQinc;
+    
     for (iVar=0;iVar<src[iBody].iNumVars;iVar++) {
       dest[iBody].iNumEqns[iVar] = src[iBody].iNumEqns[iVar];
       dest[iBody].iaVar[iVar] = src[iBody].iaVar[iVar];
@@ -69,46 +77,34 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNum235UMan=0;
     update[iBody].iNum238UCore=0;
     update[iBody].iNum238UMan=0;
-    update[iBody].iNumHecc=0;
-    update[iBody].iNumKecc=0;
-    update[iBody].iNumPinc=0;
-    update[iBody].iNumQinc=0;
-    update[iBody].iNumRot=0;
-    update[iBody].iNumSemi=0;
-    update[iBody].iNumTMan=0;
-    update[iBody].iNumTCore=0;
-    update[iBody].iNumXobl=0;
-    update[iBody].iNumYobl=0;
-    update[iBody].iNumZobl=0;
-    update[iBody].iNumSurfaceWaterMass=0;
-    update[iBody].iNumEnvelopeMass=0;
-    update[iBody].iNumLuminosity=0;
-    update[iBody].iNumTemperature=0;
-    update[iBody].iNumRadius=0;
-    update[iBody].iNumMass=0;
-    update[iBody].iNumIceMass=0;
     update[iBody].iNumCBPR=0;
     update[iBody].iNumCBPZ=0;
     update[iBody].iNumCBPPhi=0;
     update[iBody].iNumCBPRDot=0;
     update[iBody].iNumCBPZDot=0;
     update[iBody].iNumCBPPhiDot=0;
+    update[iBody].iNumDynEllip=0;
+    update[iBody].iNumEnvelopeMass=0;
+    update[iBody].iNumHecc=0;
+    update[iBody].iNumIceMass=0;
+    update[iBody].iNumKecc=0;
+    update[iBody].iNumLuminosity=0;
     update[iBody].iNumLXUV=0;
+    update[iBody].iNumMass=0;
+    update[iBody].iNumPinc=0;
+    update[iBody].iNumQinc=0;
+    update[iBody].iNumRadius=0;
+    update[iBody].iNumRot=0;
+    update[iBody].iNumSemi=0;
+    update[iBody].iNumSurfaceWaterMass=0;
+    update[iBody].iNumTemperature=0;
+    update[iBody].iNumTMan=0;
+    update[iBody].iNumTCore=0;
+    update[iBody].iNumXobl=0;
+    update[iBody].iNumYobl=0;
+    update[iBody].iNumZobl=0;
 
     update[iBody].iNumVars=0;
-    
-    /* XXX Hack to get distorb working. Need iGravPerts for following arrays */
-    if (body[iBody].bDistOrb) {
-      if (control->Evolve.iDistOrbModel == RD4) {
-        body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
-        body[iBody].iDistOrbModel = RD4;
-      } else if (control->Evolve.iDistOrbModel == LL2) {
-        /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs. 
-           Number of eigenfrequencies = number of planets. */
-        body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
-        body[iBody].iDistOrbModel = LL2;
-      }
-    }
     
     /* First we must identify how many variables and models must be 
        assigned so we can malloc the update struct. */
@@ -417,7 +413,43 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
+    /* Dynamical ellipticity. There are 3 possibilities for dynamical
+       ellipticity: 1) It is a constant; 2) It is calculated from dViscUMan, 
+       which is a constant and set by the option dViscUman (part of DISTROT); 
+       3) It is calculated from dViscUMan, which is set by the mantle 
+       temperature, i.e. THERMINT must be called. Only option #3 requires
+       DynEllip to be a primary variable. */
+
+    update[iBody].iDynEllip = -1;
+    if (update[iBody].iNumDynEllip) {
+      update[iBody].iDynEllip = iVar;
+      update[iBody].iaVar[iVar] = VDYNELLIP;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumDynEllip;
+      update[iBody].pdVar[iVar] = &body[iBody].dDynEllip;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dDynEllip;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumDynEllip*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateDynEllip[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
     // Poincare's h (Hecc)
     update[iBody].iHecc = -1;
     if (update[iBody].iNumHecc) {
@@ -1164,6 +1196,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */
+       
+    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!   
+       
     update[iBody].iLXUV = -1;
     if (update[iBody].iNumLXUV) {
       update[iBody].iLXUV = iVar;

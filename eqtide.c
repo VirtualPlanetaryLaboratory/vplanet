@@ -1143,6 +1143,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
   /* Change iTidePerts to iNumBodies XXX */
   // XXX - I don't think so 4/11/16
+  // This is definitely broken. The debugger cant dematerialize the variable 07/07/16
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
@@ -2177,10 +2178,17 @@ void LogEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
 }
 
 void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  int iOut,iPert;
+  int iOut,iPert,iStart;
+
+  // This distinction because the central body does not have an orbit
+
+  if (iBody > 0)
+    iStart=OUTSTARTEQTIDE;
+  else
+    iStart=OUTBODYSTARTEQTIDE;
 
   fprintf(fp,"----- EQTIDE PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTBODYSTARTEQTIDE;iOut<OUTENDEQTIDE;iOut++) {
+  for (iOut=iStart;iOut<OUTENDEQTIDE;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }

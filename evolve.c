@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include "vplanet.h"
 
-/* lines where something like iBody == 0 occurs
- * ~18
- */
-
 void PropsAuxNULL(BODY *body,UPDATE *update,int iBody) {
 }
 
@@ -83,7 +79,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
 
-	// The parameter does not require a derivative, but is calculated explicitly as a function of age.
+        // The parameter does not require a derivative, but is calculated explicitly as a function of age.
 	if (update[iBody].iaType[iVar][0] == 0) {
 	  dVarNow = *update[iBody].pdVar[iVar];
 	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
@@ -430,7 +426,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
     /* Now choose the correct timestep */
     dDt = AssignDt(dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
   } else
-    dDt = control->Evolve.dTimeStep;
+      dDt = control->Evolve.dTimeStep;
 
   /* Write out initial conditions */
 
@@ -450,11 +446,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body,control,system,update,fnUpdate,&dDt,iDir);
-    // dflemin3 hack
-    if(control->Evolve.dTime < DAYSEC)
-    {
-      //dDt = DAYSEC;
-    }
     
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)

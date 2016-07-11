@@ -512,8 +512,11 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
       fprintf(stderr,"WARNING: -v set at command line, but %s option set.\n",options->cName);
       fprintf(stderr,"\tiVerbose is set to %d.\n",VERBALL);
     } else if (*iVerbose == 0) {
+      /*
+      These lines defeat the point of setting the ``-q`` flag!
       fprintf(stderr,"WARNING: -q set at command line, but %s option set.\n",options->cName);
       fprintf(stderr,"\tiVerbose is set to 0.\n");
+      */
     } else {
       *iVerbose = iTmp;
     }

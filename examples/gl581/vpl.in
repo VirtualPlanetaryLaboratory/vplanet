@@ -38,19 +38,18 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
-<<<<<<< HEAD
+
 #dTimeStep	100
 #dStopTime	1.0e9		# Stop time for evolution
 #dOutputTime	1.0e8		# Output timesteps (assuming in body files)
-dStopTime	2e8		# Stop time for evolution
-dOutputTime	1e6		# Output timesteps (assuming in body files)
-=======
+#dStopTime	2e8		# Stop time for evolution
+#dOutputTime	1e6		# Output timesteps (assuming in body files)
+
 dTimeStep	1000
 dStopTime	1.0e6		# Stop time for evolution
-#dOutputTime	1.0e8		# Output timesteps (assuming in body files)
+dOutputTime	1000		# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)
->>>>>>> fc342e2f86e3e1e2775859b990b7d5674435b2ec
 
 # Some options are only permitted in the primary file, some are forbidden. 
 # That should really be documented!

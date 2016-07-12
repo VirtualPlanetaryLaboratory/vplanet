@@ -67,6 +67,7 @@
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 #define RHOBROCK      3370
 #define BROCKTIME     5000  //relaxation timescale for bedrock 
+#define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
 
 /* Exit Status */
 
@@ -151,6 +152,7 @@
 // ATMESC
 #define VSURFACEWATERMASS  1202
 #define VENVELOPEMASS      1203
+#define VOXYGENMASS        1204
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -417,6 +419,7 @@ typedef struct {
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
   double dMinSurfaceWaterMass;
+  double dOxygenMass;
   double dEnvelopeMass;
   double dMinEnvelopeMass;
   double dXFrac;
@@ -924,12 +927,15 @@ typedef struct {
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
   int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
+  int iOxygenMass;     /**< Variable # Corresponding to the oxygen mass */
+  int iNumOxygenMass;  /**< Number of Equations Affecting oxygen [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
+  double *pdDOxygenMassDtAtmesc;
 
   /* BINARY */
   int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
@@ -1292,6 +1298,7 @@ typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1379,6 +1386,8 @@ typedef struct {
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
   /*! Function pointers to finalize Surface Water */ 
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize oxygen */ 
+  fnFinalizeUpdateOxygenMassModule **fnFinalizeUpdateOxygenMass;
   /*! Function pointers to finalize Envelope Mass */ 
   fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */ 

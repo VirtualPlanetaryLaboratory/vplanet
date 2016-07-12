@@ -25,6 +25,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_ENVELOPEMASS        1215 // Initial envelope mass
 #define OPT_HALTENVELOPEGONE    1216 // Halt if evaporated?
 #define OPT_MINENVELOPEMASS     1217 // Minimum envelope mass (evaporated below this)
+#define OPT_OXYGENMASS          1218 // Initial oxygen mass
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -55,6 +56,7 @@ void FinalizeUpdateOblAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOxygenMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 
@@ -67,6 +69,7 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 /* Body Properties due to atmospheric escape */
 #define OUT_SURFACEWATERMASS	 1210
 #define OUT_ENVELOPEMASS	     1211
+#define OUT_OXYGENMASS         1212
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -74,8 +77,8 @@ void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);
 
 void WriteSurfaceWaterMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -86,6 +89,9 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
+double fdHZRG14(double,double,double,double);
+void fvLinearFit(double*,double*,int,double*);
+double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

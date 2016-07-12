@@ -85,6 +85,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
 
   module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
@@ -185,6 +186,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
@@ -232,6 +234,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
 

@@ -116,7 +116,8 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 
   */
 
-  *dTmp = body[iBody].dLXUVFlare;
+  // Commented out until FLARE is actually built
+  //*dTmp += body[iBody].dLXUVFlare;
   *dTmp += body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {

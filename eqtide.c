@@ -1723,9 +1723,11 @@ void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* XXX Broken */
+  /* XXX Broken 
 
   *dTmp = fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  */
+  *dTmp = -1;
 
   /* Negative option? */
   strcat(cUnit,"cgs");

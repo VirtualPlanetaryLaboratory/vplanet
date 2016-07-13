@@ -1409,7 +1409,8 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
-    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxThermint; //This is need to print the global var to log.  Needs to be fixed.
+  //    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFlux; //This is need to print the global var to log.  Needs to be fixed.
+  //PD: I commented out the above line bc I don't know what it's for.  SURFENFLUX is called HFLOWSURF in thermint.
 }
 
 /************ THERMINT Logging Functions **************/
@@ -1832,7 +1833,7 @@ double fdSolTempDiffMan(double depth,BODY *body,int iBody) { //Given a depth and
     return solidus-geotherm;
 }
 
-double fdSurfEnFluxThermint(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
+double fdSurfEnFlux(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
 
   /* dHFlowUMan is the energy flux at the top of the mantle, but includes 
      radiogenic heating. Therefore we must subtract off the radiogenic
@@ -1840,5 +1841,8 @@ double fdSurfEnFluxThermint(BODY *body,SYSTEM *system,UPDATE *update,int iBody,i
      part of thermint. */
 
   //return (body[iBody].dHflowUMan - (fdRadPowerMan(update,iBody)+fdRadPowerCore(update,iBody)))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
-  return (body[iBody].dHflowUMan - fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+  //  return (body[iBody].dHflowUMan - fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+
+  // PD: SurfEnFlux should be Total surface power/area.  HflowUMan contains all of mantle, +crust makes it total.
+  return (body[iBody].dHflowUMan+body[iBody].dRadPowerCrust)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }

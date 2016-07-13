@@ -4,6 +4,8 @@ A suite of plotting routines for ``VPLANET``.
 
 Installation
 ============
+PD: type "python setup.py install"
+
 Clone the repository and run the ``setup`` script. 
 It's seriously that easy. You can also edit the ``vplot_config.py`` to specify custom 
 settings. This file is automatically created in the *cwd* when you run ``vplot``.

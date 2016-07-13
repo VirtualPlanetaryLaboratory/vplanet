@@ -531,6 +531,23 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  
+  // Get the RG flux
+  double flux = fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass);
+  
+  // Convert to semi-major axis *at current eccentricity!*
+  *dTmp = pow(4 * PI * flux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -550,6 +567,15 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OXYGENMASS].iNum = 1;
   output[OUT_OXYGENMASS].iModuleBit = ATMESC;
   fnWrite[OUT_OXYGENMASS] = &WriteOxygenMass;
+
+  sprintf(output[OUT_RGLIMIT].cName,"RGLimit");
+  sprintf(output[OUT_RGLIMIT].cDescr,"Runaway Greenhouse Semi-Major Axis");
+  sprintf(output[OUT_RGLIMIT].cNeg,"AU");
+  output[OUT_RGLIMIT].bNeg = 1;
+  output[OUT_RGLIMIT].dNeg = 1. / AUCM;
+  output[OUT_RGLIMIT].iNum = 1;
+  output[OUT_RGLIMIT].iModuleBit = ATMESC;
+  fnWrite[OUT_RGLIMIT] = &WriteRGLimit;
   
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
@@ -596,19 +622,6 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-    /*
-    fprintf(fp,"40K Constant: ");
-    fprintd(fp,body[iBody].d40KConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"232Th Constant: ");
-    fprintd(fp,body[iBody].d232ThConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-
-    fprintf(fp,"238U Constant: ");
-    fprintd(fp,body[iBody].d238UConst,control->Io.iSciNot,control->Io.iDigits);
-    fprintf(fp,"\n");
-    */
   }
 }
 
@@ -647,6 +660,10 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   
   // 2. Check if planet is beyond RG limit; otherwise, assume the
   // cold trap prevents water loss.
+  // NOTE: The RG flux limit below is calculated based on body zero's
+  // spectrum! The Kopparapu+14 limit is for a single star only. This
+  // approximation for a binary is only valid if the two stars have 
+  // similar spectral types, or if body zero dominates the flux.
   double flux;
   if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { 
     flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);
@@ -706,6 +723,10 @@ double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     
   // 2. Check if planet is beyond RG limit; otherwise, assume the
   // cold trap prevents water loss.
+  // NOTE: The RG flux limit below is calculated based on body zero's
+  // spectrum! The Kopparapu+14 limit is for a single star only. This
+  // approximation for a binary is only valid if the two stars have 
+  // similar spectral types, or if body zero dominates the flux.
   double flux;
   if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { 
     flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);

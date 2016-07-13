@@ -71,3 +71,6 @@ vplot/vplot.egg-info
 bigplanet/bigplanet.egg-info
 bigplanet/build
 bigplanet/dist
+bigplanet/Dev
+*.pkl
+*.ipynb_checkpoints

@@ -1691,10 +1691,10 @@ double fdHfluxCMB(BODY *body,int iBody) {
   return fdHfluxLMan(body,iBody);
 }
 double fdHflowUMan(BODY *body,int iBody) {
-  return (AREASURF)*fdHfluxUMan(body,iBody);
+  return (EAREASURF)*fdHfluxUMan(body,iBody);
 }
 double fdHflowLMan(BODY *body,int iBody) {
-  return (AREACMB)*fdHfluxLMan(body,iBody);
+  return (EAREACMB)*fdHfluxLMan(body,iBody);
 }
 double fdHflowCMB(BODY *body,int iBody) {
   return fdHflowLMan(body,iBody);
@@ -1705,7 +1705,7 @@ double fdHflowLatentMan(BODY *body,UPDATE *update,int iBody) {
     return HflowLatentMan;
 }
 double fdHflowMeltMan(BODY *body,int iBody) {
-    double MeltMassDot=1.16*(THERMDIFFUMAN)*(AREASURF)/body[iBody].dBLUMan*(EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)   
+    double MeltMassDot=1.16*(THERMDIFFUMAN)*(EAREASURF)/body[iBody].dBLUMan*(EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)   
     return body[iBody].dEruptEff*MeltMassDot*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
 }
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
@@ -1751,15 +1751,14 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
-  return (body[iBody].dHflowCMB+body[iBody].dPowRadiogMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); 
+  return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN)); 
 }
 
 /* Get TDotCore */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];   //Is this correct?
-  //  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE));   //No IC heat.
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
-  return (-body[iBody].dHflowCMB+body[iBody].dPowRadiogCore)/((EMASSCORE)*(SPECHEATCORE) -areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
+  return (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) -areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
 }
 
 

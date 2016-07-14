@@ -16,15 +16,19 @@ dSemi           -1		# Semi-major axis, negative -> AU
 #40K
 d40KNumMan    -1.0
 d40KNumCore   -3.0
+d40KNumCrust  -1.0
 #232Th
 d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
-d232ThNumCore	-1			# Number of thorium-232 atoms, negative -> Earth
+d232ThNumCore	-1
+d232ThNumCrust	-1
 #235U
 d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 d235UNumCore	-1
+d235UNumCrust	-1
 #238U
 d238UNumMan	-1.0  #-1.16			# Number of uranium-238 atims, negative -> Earth
 d238UNumCore	-1
+d238UNumCrust	-1
 
 ### THERMINT inputs.
 dTMan     3000.0

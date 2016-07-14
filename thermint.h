@@ -44,8 +44,8 @@
 #define EVOLCORE         (4.0)/(3)*PI*ERCORE*ERCORE*ERCORE  //[m^3] volume of total core.
 #define EVOLOC           EVOLCORE-EVOLIC    //[m^3] volume of OC today.
 #define EVOLMAN          EVOL-EVOLCORE      //[m^3] volume of Mantle.
-#define AREASURF         4.0*PI*ERADIUS*ERADIUS //[m2] area of surface
-#define AREACMB          4.0*PI*ERCORE*ERCORE   //[m2] area of CMB.
+#define EAREASURF        4.0*PI*ERADIUS*ERADIUS //[m2] area of surface
+#define EAREACMB         4.0*PI*ERCORE*ERCORE   //[m2] area of CMB.
 // DENSITIES - derived from mass and radius dfns.
 #define EDENS            (EMASS)/(EVOL)         //[kg/m^3] density of E
 #define EDENSMAN         (EMASSMAN)/(EVOLMAN)   //[kg/m^3] density of E mantle.

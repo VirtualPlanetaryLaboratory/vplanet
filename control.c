@@ -38,9 +38,10 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->fnForceBehavior[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnForceBehaviorModule));
     control->fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
 
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-      module->fnInitializeControl[iBody][iModule](control);
-    
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+      module->fnInitializeControl[iBody][iModule](control); 
+      control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
+    }
   }
 }
 

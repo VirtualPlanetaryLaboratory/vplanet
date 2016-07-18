@@ -2469,9 +2469,6 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
   iEpsilon[5]=fiSign(dMeanMotion);
   iEpsilon[8]=fiSign(dRotRate-2*dMeanMotion);
   iEpsilon[9]=fiSign(dRotRate);
-
-  if (iEpsilon[0] != 0)
-    printf("Epsilon != 0!\n");
 }
 
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {

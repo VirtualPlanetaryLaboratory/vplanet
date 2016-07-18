@@ -61,10 +61,12 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
     dest[iBody].dDeccDtEqtide = src[iBody].dDeccDtEqtide;
   }
 
+  for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) 
+    dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
+  
   for (iPert=0;iPert<iNumBodies;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
     dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
-    dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
     dest[iBody].daDoblDtEqtide[iPert] = src[iBody].daDoblDtEqtide[iPert];
 
     if (iTideModel == CPL) {
@@ -1721,9 +1723,11 @@ void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* XXX Broken */
+  /* XXX Broken 
 
   *dTmp = fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  */
+  *dTmp = -1;
 
   /* Negative option? */
   strcat(cUnit,"cgs");

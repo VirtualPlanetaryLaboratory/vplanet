@@ -376,42 +376,43 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 }
 
 void PrintModuleList(FILE *file,int iBitSum) {
-  if (iBitSum & EQTIDE) 
-    fprintf(file,"EQTIDE ");
-  if (iBitSum & RADHEAT)
-    fprintf(file,"RADHEAT ");
+
   if (iBitSum & ATMESC)
     fprintf(file,"ATMESC ");
-  if (iBitSum & THERMINT)
-    fprintf(file,"THERMINT ");
-  if (iBitSum & STELLAR)
-    fprintf(file,"STELLAR ");
   if (iBitSum & BINARY)
     fprintf(file,"BINARY ");
   if (iBitSum & DISTORB)
     fprintf(file,"DISTORB ");
   if (iBitSum & DISTROT)
     fprintf(file,"DISTROT ");
+  if (iBitSum & EQTIDE) 
+    fprintf(file,"EQTIDE ");
   if (iBitSum & FLARE)
     fprintf(file,"FLARE ");
   if (iBitSum & POISE)
     fprintf(file,"POISE ");
+  if (iBitSum & RADHEAT)
+    fprintf(file,"RADHEAT ");
+  if (iBitSum & STELLAR)
+    fprintf(file,"STELLAR ");
+  if (iBitSum & THERMINT)
+    fprintf(file,"THERMINT ");
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
   int iBody;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-      (*body)[iBody].bEqtide = 0;
+      (*body)[iBody].bAtmEsc = 0;
+      (*body)[iBody].bBinary = 1;
       (*body)[iBody].bDistOrb = 0;
       (*body)[iBody].bDistRot = 0;
-      (*body)[iBody].bRadheat = 0;
-      (*body)[iBody].bThermint = 0;
-      (*body)[iBody].bPoise = 0;
-      (*body)[iBody].bStellar = 0;
-      (*body)[iBody].bAtmEsc = 0;
-      (*body)[iBody].bBinary = 0;
+      (*body)[iBody].bEqtide = 0;
       (*body)[iBody].bFlare = 0;
+      (*body)[iBody].bPoise = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bThermint = 0;
   }
 }
 

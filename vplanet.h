@@ -342,6 +342,10 @@ typedef struct {
   double d235UNumCore;
   double d235UPowerCore;
   double d235UMassCore;
+  double dRadPowerTotal;   /**< Total planet Radiogenic Power */
+  double dRadPowerMan;   /**< Total Mantle Radiogenic Power */
+  double dRadPowerCore;   /**< Total Core Radiogenic Power */
+  double dRadPowerCrust;   /**< Total Crust Radiogenic Power */
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */

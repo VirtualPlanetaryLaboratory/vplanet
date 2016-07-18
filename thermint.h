@@ -230,7 +230,7 @@ void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeUpdateThermint(BODY*,UPDATE*,int);
 
 /* Auxiliary Properties */
-void PropsAuxThermint(BODY*,UPDATE*,int);
+void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Output Functinos */
 

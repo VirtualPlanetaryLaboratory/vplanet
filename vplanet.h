@@ -1059,7 +1059,6 @@ typedef struct {
   int iTemp;
 } UNITS;
 
-typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
@@ -1087,7 +1086,6 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
-  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
@@ -1103,8 +1101,6 @@ typedef struct {
   /* DISTORB */
   int iDistOrbModel;
   
-  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
-  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -1131,6 +1127,7 @@ typedef struct {
    matrix through fnForceBehavior. */
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
 typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
@@ -1151,6 +1148,10 @@ typedef struct {
   fnForceBehaviorModule **fnForceBehaviorMulti; /**< Function Pointers to Force Behaviors */
   int *iNumMultiForce;    /**< Number of multi-module ForceBahevior functions */
 
+  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
+  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
+  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
+  
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */

@@ -31,8 +31,12 @@ void InitializeControl(CONTROL *control,MODULE *module) {
   control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->iNumMultiForce = malloc(control->Evolve.iNumBodies*sizeof(int));
 
+  control->fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
+  control->fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
+
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     control->fnForceBehavior[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnForceBehaviorModule));
+    control->fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
       module->fnInitializeControl[iBody][iModule](control);
@@ -45,17 +49,14 @@ void InitializeControl(CONTROL *control,MODULE *module) {
 void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iModule,iSubStep;
 
-  control->Evolve.fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
-  control->Evolve.fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
   control->Evolve.iNumModules = malloc(control->Evolve.iNumBodies*sizeof(int));
-  control->Evolve.iNumMultiProps = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->iNumMultiProps = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-      control->Evolve.fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
       
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {

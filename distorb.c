@@ -807,7 +807,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       body[iBody].iGravPerts = control->Evolve.iNumBodies - 2; //will need to change this for zero mass particles in future
 
       VerifyPerturbersDistOrbRD4(body,control->Evolve.iNumBodies,iBody);
-      control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
+      control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
       
       CalcHK(body,iBody);
       CalcPQ(body,iBody);
@@ -861,7 +861,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     }
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
-    control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
+    control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
     
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
@@ -1669,7 +1669,7 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
-void PropsAuxDistOrb(BODY *body,UPDATE *update,int iBody) { 
+void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) { 
   /* Conflict XXX -- Hopefully this is wrong as there should be no calls to POISE in DISTORB 
   if (body[iBody].bPoise) {
     body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);

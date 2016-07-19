@@ -379,24 +379,26 @@ void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
   // Update LXUV
   if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
   
-    // REINERS wind model. This model has issues, since the XUV luminosity
-    // is WAY too high at early times. I recommend using the RIBAS model.
-    double dPer, dLXRay, dLEUV;
+    // REINERS wind model
+    double dPer, dLXRay, dLXRaySat, dLEUV;
     dPer = 2 * PI / body[iBody].dRotRate;
   
     // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
     dLXRay = 1.e-7 * pow(10., 30.71 - 2.01 * log10(dPer / DAYSEC));
 
-    if (dLXRay / body[iBody].dLuminosity > body[iBody].dSatXUVFrac){
-      // Saturated regime (Reiners, Schussler & Passegger 2014)
-      dLXRay = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
-    }
-  
+    // Saturated regime (Reiners, Schussler & Passegger 2014)
+    dLXRaySat = body[iBody].dLuminosity * pow(10., -3.12 - 0.11 * log10(dPer / DAYSEC));
+    
+    // Take the lesser value
+    if (dLXRay > dLXRaySat) dLXRay = dLXRaySat;
+      
     // Sanz-Forcada et al. (2011), eqn (3)
     dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
   
-    // Based on Miles Timpe's thesis:
-    body[iBody].dLXUV = dLXRay + dLEUV;
+    // NOTE: We should add XRay and EUV to get XUV, but the Sanz-Forcada
+    // model above yields unrealistically high EUV luminosities for M dwarfs.
+    body[iBody].dLXUV = dLXRay;
+    
   } else if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS) {
     
     // RIBAS power-law decay model
@@ -720,6 +722,7 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
   
   double dDRadiusDt = 0;
   double dDJDt = 0;
+  double dOmegaCrit;
   
   // First, let's calculate dR/dt due to contraction/expansion
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -738,23 +741,26 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
   
   // Now, let's calculate dJ/dt due to magnetic braking
   // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
-  // Note that we force dJ/dt = 0 in the first 1e6 years, since the stellar rotation
-  // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
-    if (body[iaBody[0]].dAge > 1.e6 * YEARSEC) {
-      if (body[iaBody[0]].dRotRate >= RM12OMEGACRIT) {
-        dDJDt = -RM12CONST * body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 16. / 3.) 
-                          * pow(body[iaBody[0]].dMass, -2. / 3);
-      } else {
-        dDJDt = -RM12CONST * pow(body[iaBody[0]].dRotRate / RM12OMEGACRIT, 4.) * body[iaBody[0]].dRotRate
-                          * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
-      }
+  if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
+  else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
+  if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {    
+    if (body[iaBody[0]].dRotRate >= dOmegaCrit) {
+      dDJDt = -RM12CONST * body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 16. / 3.) 
+                        * pow(body[iaBody[0]].dMass, -2. / 3);
+    } else {
+      dDJDt = -RM12CONST * pow(body[iaBody[0]].dRotRate / dOmegaCrit, 4.) * body[iaBody[0]].dRotRate
+                        * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
     }
   }
   
-  return 2.5 * dDJDt / (body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius) 
-             - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
-
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  if (body[iaBody[0]].dAge >= 1.e6 * YEARSEC) {
+    return 2.5 * dDJDt / (body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius) 
+               - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
+  } else {
+    return 0.;
+  }
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {

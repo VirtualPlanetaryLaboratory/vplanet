@@ -2534,7 +2534,7 @@ void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
   A = body[iBody].dObliqAmp;
   C = body[iBody].dObliq0;
   
-  body[iBody].dObliquity = (0.5*A*sin(2*PI*evolve->dTime/P)+C)*DEGRAD;
+  body[iBody].dObliquity = (0.5*A*sin(2*PI*evolve->dTime/P))*DEGRAD+C;
   CalcXYZobl(body,iBody);
 }
 

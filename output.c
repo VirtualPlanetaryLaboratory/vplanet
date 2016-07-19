@@ -635,7 +635,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBL].bNeg = 1;
   output[OUT_OBL].dNeg = DEGRAD;
   output[OUT_OBL].iNum = 1;
-  output[OUT_OBL].iModuleBit = EQTIDE + DISTROT;
+  output[OUT_OBL].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_OBL] = &WriteObliquity;
   
   sprintf(output[OUT_PRECA].cName,"PrecA");

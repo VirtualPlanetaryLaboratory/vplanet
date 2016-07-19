@@ -184,7 +184,7 @@ void CountHaltsRadHeat(HALT*,int*);
 void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetRadheat(CONTROL*,MODULE*);
-void PropsAuxRadheat(BODY*,UPDATE*,int);
+void PropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
 void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 
@@ -258,7 +258,7 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_RADPOWERCORE        1191
 #define OUT_RADPOWERCRUST       1192
 #define OUT_RADPOWERTOTAL       1193  
-#define OUT_SURFENFLUXRADHEAT   1195
+#define OUT_SURFENFLUXRADTOTAL  1195
 
 void HelpOutputRadheat(OUTPUT*);
 void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
@@ -327,7 +327,6 @@ double fd40KPowerMan(UPDATE*,int);
 double fd232ThPowerMan(UPDATE*,int);
 double fd238UPowerMan(UPDATE*,int);
 double fd235UPowerMan(UPDATE*,int); 
-double fdRadPowerMan(UPDATE*,int);
 
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
@@ -338,23 +337,26 @@ double fd40KPowerCore(UPDATE*,int);
 double fd232ThPowerCore(UPDATE*,int);
 double fd238UPowerCore(UPDATE*,int);
 double fd235UPowerCore(UPDATE*,int);
-double fdRadPowerCore(UPDATE*,int);
 
 double fd40KPower(UPDATE*,int);
 double fd232ThPower(UPDATE*,int);
 double fd235UPower(UPDATE*,int);
 double fd238UPower(UPDATE*,int);
-double fdRadPowerTot(UPDATE*,int);
+
+double fdRadPowerTotal(BODY*,int);
+double fdRadPowerMan(UPDATE*,int);
+double fdRadPowerCore(UPDATE*,int);
+double fdRadPowerCrust(UPDATE*,int);
 
 double fd40KEnFlux(BODY*,UPDATE*,int);
 double fd232ThEnFlux(BODY*,UPDATE*,int);
 double fd235UEnFlux(BODY*,UPDATE*,int);
 double fd238UEnFlux(BODY*,UPDATE*,int);
-double fdSurfEnFluxRadheat(BODY*,SYSTEM*,UPDATE*,int,int);
+double fdSurfEnFluxRadTotal(BODY*,SYSTEM*,UPDATE*,int,int);
 
 double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD235UNumCoreDt(BODY*,SYSTEM*,int*); 
 
-double fdRadPowerCrust(UPDATE*,int);
+

@@ -10,6 +10,7 @@
 #define LSUN                          3.846e26          // Solar luminosity (W)
 #define TSUN                          5778.             // Solar TEff (K)
 #define RM12OMEGACRIT                 8.56e-6           // Critical angular velocity (1/s) from Reiners & Mohanty (2012)
+#define RM12OMEGACRITFULLYCONVEC      1.82e-6           // Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012)
 #define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)                       
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
@@ -53,7 +54,7 @@ void CountHaltsStellar(HALT*,int*);
 void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetStellar(CONTROL*,MODULE*);
-void PropertiesStellar(BODY*,int);
+void fnPropertiesStellar(BODY*,EVOLVE*,UPDATE*,int);
 void VerifyHaltStellar(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 

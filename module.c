@@ -31,6 +31,9 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
+void PropsAuxNULL(BODY *body,EVOLVE *evolve,UPDATE *update,int iFoo) {
+}
+
 // Functions that are helpful for integrations
 
 double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iBody1) {
@@ -85,6 +88,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
 
   module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
@@ -185,6 +189,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
   module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
   module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
@@ -232,6 +237,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
 
@@ -373,42 +379,43 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 }
 
 void PrintModuleList(FILE *file,int iBitSum) {
-  if (iBitSum & EQTIDE) 
-    fprintf(file,"EQTIDE ");
-  if (iBitSum & RADHEAT)
-    fprintf(file,"RADHEAT ");
+
   if (iBitSum & ATMESC)
     fprintf(file,"ATMESC ");
-  if (iBitSum & THERMINT)
-    fprintf(file,"THERMINT ");
-  if (iBitSum & STELLAR)
-    fprintf(file,"STELLAR ");
   if (iBitSum & BINARY)
     fprintf(file,"BINARY ");
   if (iBitSum & DISTORB)
     fprintf(file,"DISTORB ");
   if (iBitSum & DISTROT)
     fprintf(file,"DISTROT ");
+  if (iBitSum & EQTIDE) 
+    fprintf(file,"EQTIDE ");
   if (iBitSum & FLARE)
     fprintf(file,"FLARE ");
   if (iBitSum & POISE)
     fprintf(file,"POISE ");
+  if (iBitSum & RADHEAT)
+    fprintf(file,"RADHEAT ");
+  if (iBitSum & STELLAR)
+    fprintf(file,"STELLAR ");
+  if (iBitSum & THERMINT)
+    fprintf(file,"THERMINT ");
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
   int iBody;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-      (*body)[iBody].bEqtide = 0;
-      (*body)[iBody].bDistOrb = 0;
-      (*body)[iBody].bDistRot = 0;
-      (*body)[iBody].bRadheat = 0;
-      (*body)[iBody].bThermint = 0;
-      (*body)[iBody].bPoise = 0;
-      (*body)[iBody].bStellar = 0;
       (*body)[iBody].bAtmEsc = 0;
       (*body)[iBody].bBinary = 0;
+      (*body)[iBody].bDistOrb = 0;
+      (*body)[iBody].bDistRot = 0;
+      (*body)[iBody].bEqtide = 0;
       (*body)[iBody].bFlare = 0;
+      (*body)[iBody].bPoise = 0;
+      (*body)[iBody].bRadheat = 0;
+      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bThermint = 0;
   }
 }
 
@@ -437,7 +444,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
       body[iBody].dPowRadiogCore = 0;
       body[iBody].dPowRadiogMan = 0;
     } else
-      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxRadheatThermint;
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxRadheatThermint;
   }
 }
 
@@ -460,8 +467,8 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
          "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
          PropsAuxEqtideThermint. */
       iEqtide = fiGetModuleIntEqtide(module,iBody);
-      control->Evolve.fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
-      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
 }
@@ -481,7 +488,7 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
       fprintf(stderr,"ERROR: Must include module STELLAR ro run module FLARE.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     } else
-      control->Evolve.fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
   }
 }
 
@@ -506,7 +513,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   if (module->iNumModules[iBody] > 1) {
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
-    control->Evolve.fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
+    control->fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
     control->fnForceBehaviorMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnForceBehaviorModule*));
   }
 
@@ -525,7 +532,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
 
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  control->Evolve.iNumMultiProps[iBody] = iNumMultiProps;
+  control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
   if (control->Io.iVerbose >= VERBALL)
     fprintf(stdout,"All of %s's modules verified.\n",body[iBody].cName);
@@ -535,7 +542,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but 
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
@@ -546,7 +553,7 @@ void PropsAuxEqtideThermint(BODY *body,UPDATE *update,int iBody) {
 
 
   body[iBody].dImK2 = fdImk2Man(body,iBody);
-  PropsAuxCPL(body,update,iBody);
+  PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
   body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
 }
@@ -557,12 +564,12 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dPowRadiogCore = fdRadPowerCore(update,iBody);
   body[iBody].dPowRadiogMan = fdRadPowerMan(update,iBody);
 }
 
-void PropsAuxFlareStellar(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }

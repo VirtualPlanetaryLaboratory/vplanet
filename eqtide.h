@@ -101,16 +101,19 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_SEMITIMEEQTIDE      1025
 #define OUT_DHECCDTEQTIDE       1028
 #define OUT_DKECCDTEQTIDE       1030
-#define OUT_DXOBLDTEQTIDE       1033
-#define OUT_DYOBLDTEQTIDE       1036
-#define OUT_DZOBLDTEQTIDE       1040
+
+#define OUT_DXOBLDTEQTIDE       1045
+#define OUT_DYOBLDTEQTIDE       1046
+#define OUT_DZOBLDTEQTIDE       1047
+
+
 
 /* Body Properties due to tidal evolution */
 
 #define OUT_BODYDSEMIDTEQTIDE   1052
-#define OUT_BODYDECCDTEQTIDE    1054
+#define OUT_BODYDECCDTEQTIDE    1053
 
-#define OUT_DOBLDTEQTIDE        1056
+#define OUT_DOBLDTEQTIDE        1054
 #define OUT_DROTPERDTEQTIDE     1058
 #define OUT_DROTRATEDTEQTIDE    1060
 #define OUT_EQROTRATEEQTIDE     1062
@@ -187,7 +190,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropsAuxCPL(BODY*,UPDATE*,int);
+void PropsAuxCPL(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -220,7 +223,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropsAuxCTL(BODY*,UPDATE*,int);
+void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);

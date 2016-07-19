@@ -19,17 +19,17 @@ void InitializeUpdateTmpBodyFlare(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTFLARE         1900 /* Start of FLARE options */
-#define OPTENDFLARE           2000 /* End of FLARE options */
+#define OPTSTARTFLARE         2000 /* Start of FLARE options */
+#define OPTENDFLARE           2100 /* End of FLARE options */
 
-#define OPT_FLARECONST        1910
-#define OPT_FLAREEXP          1920
+#define OPT_FLARECONST        2010
+#define OPT_FLAREEXP          2020
 
 void HelpOptionsFlare(OPTIONS*);
 void InitializeOptionsFlare(OPTIONS*,fnReadOption[]);
 void ReadOptionsFlare(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-void PropertiesFlare(BODY*,UPDATE*,int);
+void PropertiesFlare(BODY*,EVOLVE*,UPDATE*,int);
 void fnForceBehaviorFlare(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */
@@ -48,11 +48,11 @@ void FinalizeUpdateLXUVFlare(BODY*,UPDATE*,int*,int,int,int);
 /* Output Functinos */
 
 /* FLARE 1900 - 1999 */
-#define OUTSTARTFLARE         1900
-#define OUTENDFLARE           2000
+#define OUTSTARTFLARE         2000
+#define OUTENDFLARE           2100
 
 /* Body Properties due to flaring */
-#define OUT_LXUVFLARE         1910
+#define OUT_LXUVFLARE         2010
 
 void HelpOutputFlare(OUTPUT*);
 void InitializeOutputFlare(OUTPUT*,fnWriteOutput[]);

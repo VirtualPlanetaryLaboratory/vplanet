@@ -1536,7 +1536,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 //     }
   }
   
-  control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesPoise;
+  control->fnPropsAux[iBody][iModule] = &PropertiesPoise;
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyPoise;
@@ -2431,7 +2431,7 @@ void Snowball(BODY *body, int iBody) {
 }
 
 
-void PropertiesPoise(BODY *body,UPDATE *update,int iBody) {  
+void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {  
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       CalcDynEllipEq(body, iBody);

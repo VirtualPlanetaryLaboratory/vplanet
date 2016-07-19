@@ -19,6 +19,30 @@
 #define FLARE         512
 #define BINARY        1024
 
+/********************
+ * ADJUST AS NEEDED *       XXX And fix sometime!
+ ********************/
+
+// XXX Obsolete?
+// Note: not obsolete! needed for new module
+// Otherwise,segfaults
+// Increased from 1900->2100 for binary
+/* Module limits:
+ * EQTIDE: 1000 - 1100
+ * RADHEAT: 1100 - 1200
+ * ATMESC: 1200 - 1300
+ * DISTORB: 1300 - 1400
+ * DISTROT: 1400 - 1500
+ * STELLAR: 1500 - 1600
+ * ??: 1600 - 1700
+ * THERMINT: 1700 - 1900
+ * POISE: 1900 - 2000
+ * FLARE: 2000 - 2100
+ * BINARY: 2100 - 2200
+ */
+#define MODULEOPTEND        2200
+#define MODULEOUTEND        2200
+
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
 
@@ -67,6 +91,7 @@
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 #define RHOBROCK      3370
 #define BROCKTIME     5000  //relaxation timescale for bedrock 
+#define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
 
 /* Exit Status */
 
@@ -87,7 +112,6 @@
 
 /* File Limits */
 
-#define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
@@ -102,8 +126,6 @@
 			     * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an 
 			     * input file */
-#define OPTEND        2100  /* Last output number of module options
-			     * Binary is highest for this compiltion */
 
 #define TINY          (1./HUGE)
 
@@ -151,6 +173,7 @@
 // ATMESC
 #define VSURFACEWATERMASS  1202
 #define VENVELOPEMASS      1203
+#define VOXYGENMASS        1204
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -340,6 +363,10 @@ typedef struct {
   double d235UNumCore;
   double d235UPowerCore;
   double d235UMassCore;
+  double dRadPowerTotal;   /**< Total planet Radiogenic Power */
+  double dRadPowerMan;   /**< Total Mantle Radiogenic Power */
+  double dRadPowerCore;   /**< Total Core Radiogenic Power */
+  double dRadPowerCrust;   /**< Total Crust Radiogenic Power */
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */
@@ -417,6 +444,7 @@ typedef struct {
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
   double dMinSurfaceWaterMass;
+  double dOxygenMass;
   double dEnvelopeMass;
   double dMinEnvelopeMass;
   double dXFrac;
@@ -928,12 +956,15 @@ typedef struct {
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
   int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
+  int iOxygenMass;     /**< Variable # Corresponding to the oxygen mass */
+  int iNumOxygenMass;  /**< Number of Equations Affecting oxygen [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
+  double *pdDOxygenMassDtAtmesc;
 
   /* BINARY */
   int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
@@ -1053,7 +1084,6 @@ typedef struct {
   int iTemp;
 } UNITS;
 
-typedef void (*fnPropsAuxModule)(BODY*,UPDATE*,int);
 /* Note this hack -- the second int is for iEqtideModel. This may 
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
@@ -1081,7 +1111,6 @@ typedef struct {
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
-  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model # */
@@ -1097,8 +1126,6 @@ typedef struct {
   /* DISTORB */
   int iDistOrbModel;
   
-  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
-  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -1125,6 +1152,7 @@ typedef struct {
    matrix through fnForceBehavior. */
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
+typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
 typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
@@ -1145,6 +1173,10 @@ typedef struct {
   fnForceBehaviorModule **fnForceBehaviorMulti; /**< Function Pointers to Force Behaviors */
   int *iNumMultiForce;    /**< Number of multi-module ForceBahevior functions */
 
+  fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
+  fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
+  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
+  
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
@@ -1176,10 +1208,10 @@ typedef struct {
 typedef struct {
   char cOut[NAMELEN];       /**< Output File Name */
   int iNumCols;             /**< Number of Columns in Output File */
-  char caCol[NUMOUT][OPTLEN];  /**< Output Value Name */
-  int bNeg[NUMOUT];         /**< Use Negative Option Units? */
+  char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
+  int bNeg[MODULEOUTEND];         /**< Use Negative Option Units? */
   int iNumGrid;             /**< Number of grid outputs */
-  char caGrid[NUMOUT][OPTLEN];  /**< Gridded output name */
+  char caGrid[MODULEOUTEND][OPTLEN];  /**< Gridded output name */
 } OUTFILE;
 
 
@@ -1296,6 +1328,7 @@ typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1383,6 +1416,8 @@ typedef struct {
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
   /*! Function pointers to finalize Surface Water */ 
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
+  /*! Function pointers to finalize oxygen */ 
+  fnFinalizeUpdateOxygenMassModule **fnFinalizeUpdateOxygenMass;
   /*! Function pointers to finalize Envelope Mass */ 
   fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */ 
@@ -1470,25 +1505,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 
-/* Do this stuff with a few functions and some global variables? XXX */
 
-/* This needs to be vectorized VPL 
 
-#define MODULEOPTEND        EQTIDEOPTEND
-#define MODULEOUTEND        EQTIDEOUTEND
-#define MODULEHALTSYSEND    EQTIDEHALTSYSEND
-#define MODULEHALTBODYEND   EQTIDEHALTBODYEND
-*/
-
-/********************
- * ADJUST AS NEEDED *       XXX And fix sometime!
- ********************/
-
-// XXX Obsolete?
-// Note: not obsolete! needed for new module
-// Otherwise,segfaults
-// Increased from 1900->2100 for binary
-#define MODULEOPTEND        2100
-#define MODULEOUTEND        2100
 
 

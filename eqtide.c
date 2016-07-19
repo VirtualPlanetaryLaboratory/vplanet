@@ -61,10 +61,12 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
     dest[iBody].dDeccDtEqtide = src[iBody].dDeccDtEqtide;
   }
 
+  for (iPert=0;iPert<src[iBody].iTidePerts;iPert++) 
+    dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
+  
   for (iPert=0;iPert<iNumBodies;iPert++) {
     dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
     dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
-    dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
     dest[iBody].daDoblDtEqtide[iPert] = src[iBody].daDoblDtEqtide[iPert];
 
     if (iTideModel == CPL) {
@@ -781,7 +783,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
     body[iBody].dTidalF[iPert]=malloc(5*sizeof(double));
 
-  control->Evolve.fnPropsAux[iBody][iModule]=&PropsAuxCTL;
+  control->fnPropsAux[iBody][iModule]=&PropsAuxCTL;
 
   /* Now remove output options unique to CPL. This will prevent segmentation
      faults as memory will not be allocated to some parameters unless CPL
@@ -900,7 +902,7 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   body[iBody].iTidalEpsilon = malloc(control->Evolve.iNumBodies*sizeof(int*));
   for (iPert=0;iPert<control->Evolve.iNumBodies;iPert++)
     body[iBody].iTidalEpsilon[iPert]=malloc(10*sizeof(int));
-  control->Evolve.fnPropsAux[iBody][iModule]=&PropsAuxCPL;
+  control->fnPropsAux[iBody][iModule]=&PropsAuxCPL;
 
   /* Now remove output options unique to CTL. This will prevent segmentation
      faults as memory will not be allocated to some parameters unless CTL
@@ -1143,6 +1145,7 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
   /* Change iTidePerts to iNumBodies XXX */
   // XXX - I don't think so 4/11/16
+  // This is definitely broken. The debugger cant dematerialize the variable 07/07/16
 
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
@@ -1720,9 +1723,11 @@ void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* XXX Broken */
+  /* XXX Broken 
 
   *dTmp = fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  */
+  *dTmp = -1;
 
   /* Negative option? */
   strcat(cUnit,"cgs");
@@ -2177,10 +2182,17 @@ void LogEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
 }
 
 void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
-  int iOut,iPert;
+  int iOut,iPert,iStart;
+
+  // This distinction because the central body does not have an orbit
+
+  if (iBody > 0)
+    iStart=OUTSTARTEQTIDE;
+  else
+    iStart=OUTBODYSTARTEQTIDE;
 
   fprintf(fp,"----- EQTIDE PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTBODYSTARTEQTIDE;iOut<OUTENDEQTIDE;iOut++) {
+  for (iOut=iStart;iOut<OUTENDEQTIDE;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
@@ -2274,7 +2286,7 @@ void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
 
 }
 
-void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -2299,6 +2311,10 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
       iOrbiter = iBody;
     else
       iOrbiter = iIndex;
+
+    /* If tidally locked, assign equilibrium rotational frequency? */
+    if (evolve->bForceEqSpin[iBody]) 
+    body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
     
     fiaCPLEpsilon(body[iBody].dRotRate,body[iOrbiter].dMeanMotion,body[iBody].iTidalEpsilon[iIndex]);
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
@@ -2314,7 +2330,7 @@ void PropsAuxCPL(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxCTL(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   int iPert,iIndex;
 
   if (iBody == 0) {
@@ -2518,10 +2534,14 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
 double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iB0=iaBody[0],iB1=iaBody[1];
 
-  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[0] = central body */
+  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, 
+iaBody[0] = central body */
 
   double dSum=0;
 
+  //printf("%.4e %.4e\n", body[iB0].dTidalZ[iB1],body[iB1].dTidalZ[iB0]);
+  //printf("%d %d %d %d %d : %d %d %d %d %d\n",body[iB0].iTidalEpsilon[iB1][0],body[iB0].iTidalEpsilon[iB1][1],body[iB0].iTidalEpsilon[iB1][2],body[iB0].iTidalEpsilon[iB1][5],body[iB0].iTidalEpsilon[iB1][8],body[iB1].iTidalEpsilon[iB0][0],body[iB1].iTidalEpsilon[iB0][1],body[iB1].iTidalEpsilon[iB0][2],body[iB1].iTidalEpsilon[iB0][5],body[iB1].iTidalEpsilon[iB0][8]);
+  
   // Contribution from orbiter
   dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 

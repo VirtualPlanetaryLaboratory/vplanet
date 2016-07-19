@@ -170,7 +170,7 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
   
   if (iBody >= 1) {
-    control->Evolve.fnPropsAux[iBody][iModule] = &PropertiesDistRot;
+    control->fnPropsAux[iBody][iModule] = &PropertiesDistRot;
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     
     CalcXYZobl(body, iBody);
@@ -871,7 +871,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
 /************* DISTROT Functions ***********/
 
-void PropertiesDistRot(BODY *body,UPDATE *update,int iBody) {
+void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // if (body[iBody].bForcePrecRate) {
 //     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);

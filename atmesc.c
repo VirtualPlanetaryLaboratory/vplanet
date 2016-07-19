@@ -328,10 +328,6 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
 }
 
-void fnPropertiesAtmEsc(BODY *body, UPDATE *update, int iBody) {
-  /* Nothing */
-}
-
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
@@ -372,7 +368,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }

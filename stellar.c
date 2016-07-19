@@ -374,7 +374,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperature;                                 // NOTE: Same here!
 }
 
-void fnPropertiesStellar(BODY *body, UPDATE *update, int iBody) {
+void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
   // Update LXUV
   if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
@@ -454,7 +454,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
-  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
+  control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyStellar;
   
 }

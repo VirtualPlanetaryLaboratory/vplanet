@@ -1057,7 +1057,7 @@ void LogBodyRelations(CONTROL *control,FILE *fp,int iBody) {
 
 void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN];
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   
@@ -1087,7 +1087,7 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
 
 void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN];
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   

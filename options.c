@@ -1854,7 +1854,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           iOut = j;
           if (output[j].bGrid == 1)
             iNumGrid += 1;
-          j = NUMOUT; /* Poor man's break! */
+          j = MODULEOUTEND; /* Poor man's break! */
         } else {
           if (iLen1 < iLen2)
             iLen=iLen1;
@@ -1988,7 +1988,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
           iOut = j;
           if (output[j].bGrid == 1 || output[j].bGrid == 2)
             iNumGrid += 1;
-          j = NUMOUT; /* Poor man's break! */
+          j = MODULEOUTEND; /* Poor man's break! */
         } else {
           if (iLen1 < iLen2)
             iLen=iLen1;

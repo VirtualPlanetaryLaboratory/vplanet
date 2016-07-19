@@ -53,7 +53,7 @@ void CountHaltsStellar(HALT*,int*);
 void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetStellar(CONTROL*,MODULE*);
-void PropertiesStellar(BODY*,int);
+void fnPropertiesStellar(BODY*,EVOLVE*,UPDATE*,int);
 void VerifyHaltStellar(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 

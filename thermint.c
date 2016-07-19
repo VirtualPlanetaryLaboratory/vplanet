@@ -394,7 +394,7 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
 
 /******************************  AUX PROPS  ***********************************************/
 /* Auxiliary Properties */
-void PropsAuxThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);
@@ -469,7 +469,7 @@ void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
-  control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxThermint;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxThermint;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyThermint;
   //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
 }

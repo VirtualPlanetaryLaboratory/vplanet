@@ -44,7 +44,6 @@ void CountHaltsAtmEsc(HALT*,int*);
 void VerifyAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetAtmEsc(CONTROL*,MODULE*);
-void PropertiesAtmEsc(BODY*,int);
 void VerifyHaltAtmEsc(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 

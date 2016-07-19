@@ -153,7 +153,7 @@ void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
 void cross(double*,double*,double*);
 
-void PropsAuxDistOrb(BODY*,UPDATE*,int);
+void PropsAuxDistOrb(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double xinit(BODY*,int);

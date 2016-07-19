@@ -126,8 +126,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTTHERMINT         1700 /* Start of THERMINT options */
-#define OPTENDTHERMINT           1800 /* End of THERMINT options */
+#define OPTSTARTTHERMINT    1700 /* Start of THERMINT options */
+#define OPTENDTHERMINT      1900 /* End of THERMINT options */
 
 /* Scalar Properties */
 #define OPT_TMAN            1710   //Temperature Mantle AVE
@@ -236,7 +236,7 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 /* THERMINT */
 #define OUTSTARTTHERMINT         1700
-#define OUTENDTHERMINT           1800
+#define OUTENDTHERMINT           1900
 
 /* Output Body Properties */
 /* Scalar Properties */

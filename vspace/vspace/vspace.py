@@ -219,7 +219,7 @@ elif numvars >= 1:
     count += 1    #move to next combination
 
 # Just do this block if you want to 
-if(False):
+if(True):
     # Now that all the simulation directories have been populated,
     # Make the submission scripts for hyak
     # Parse input file
@@ -227,13 +227,15 @@ if(False):
     # TODO: allow the input file to include flags to set default things for
     # the .pbs script and for whether or not to run this section    
     
+    # Parallel or parallel_sql?
+    para = "parallel_sql"
     
     destfolder, trialname, infiles, src = vspace_hyak.parseInput(infile=inputf)
         
     # Make command list and .sh files to run the scripts
-    vspace_hyak.makeCommandList(simdir=destfolder,infile=inputf)
+    vspace_hyak.makeCommandList(simdir=destfolder,infile=inputf,para=para)
     
     # Make the submission script
     vspace_hyak.makeHyakVPlanetPBS(script="run_vplanet.pbs",taskargs="vplArgs.txt",
-                           walltime="00:30:00",
+                           walltime="00:30:00",para=para,
                            simdir=destfolder,logdir=destfolder)

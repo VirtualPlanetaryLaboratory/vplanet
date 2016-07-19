@@ -42,39 +42,3 @@ setup(name = 'bigplanet',
                          ],
       include_package_data = True,
       zip_safe = False)
-
-# Add bigplanet to python path
-print("\x1b[01m%s\x1b[39;49;00m" % "Setting up bigplanet...")
-
-# Get home directory
-home = os.path.expanduser('~')
-
-# Command we're adding to the user profile
-pythonpath = os.path.join(os.path.dirname(os.path.realpath(__file__)))
-cmd = '\n\n# Added by bigplanet setup script\nexport PYTHONPATH=${PYTHONPATH}:%s' % (pythonpath)
-
-# Setup success?
-success = False
-
-for file in [foo for foo in ['.bash_profile', '.profile', '.bashrc'] if foo in os.listdir(home)]:
-  
-  with open(os.path.join(home, file), 'r') as f:
-    contents = f.read()
-  
-  # Check if the path is already there  
-  if cmd in contents:
-    success = True
-    break
-  
-  # We're going to add it
-  else:
-    with open(os.path.join(home, file), 'a') as f:
-      print(cmd, file = f)
-    success = True
-        
-if success == False:
-  print("Error adding \x1b[01mvspace\x1b[39;49;00m to your PATH.")
-  print("You will have to add `%s` manually." % path)
-else:
-  print("Success. Navigate to the bigplanet directory and read the README.")
-  print("You may need to restart your terminal.")

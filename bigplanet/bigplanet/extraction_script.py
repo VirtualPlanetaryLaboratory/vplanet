@@ -1,33 +1,26 @@
 """
 
-dflemin3 June 2016
+dflemin3 July 2016
 
-This script extracts data from a suite of VPLANET simulations.
+This script extracts/processes data from a suite of VPLANET simulations.
 
 For a given users' purposes, one must change "src" to where the root data
-dir is located and "archiveName" to whatever the user wishes.  Also, user
-must make sure gpl_data_extraction.py is in their python path.  I've added
-a sys hack to make that work.
+dir is located and "archiveName" to whatever the user wishes.
 
 """
 
 # Imports
-import os
-import sys
-import numpy as np
-
-
 from bigplanet import data_extraction as de
 
 ### Load in the data ###
 
-# Set some archive name
-src = "/Users/dflemin3/Desktop/GM_run"
-archiveName = src + "/" + "GM_suite.npz"
+# Path to the root directory where all the simulation subdirectories live
+src = "/Users/dflemin3/Desktop/GM_run/"
 
-# Archive doesn't exit: load data, make it
-if (not os.path.exists(archiveName)):
-    data = de.extract_data(src)
-    
-    print("Creating archive:",archiveName)
-    np.savez(archiveName,data=data)
+# Define name for the dataset (hdf5 approach)
+dataset = src + "simulation.hdf5"
+
+# Define a data format (overkill here, but useful in general)
+fmt = "hdf5"
+
+data = de.extract_data_hdf5(src=src, dataset=dataset)

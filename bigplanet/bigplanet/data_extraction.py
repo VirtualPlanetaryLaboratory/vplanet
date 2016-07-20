@@ -201,7 +201,7 @@ class Dataset(object):
         return "Name: %s. Size: %d." % (self.data,self.size)
 # end class
 
-def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[]):
+def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],order="None"):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
@@ -216,16 +216,26 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[]):
         dictionary contains each body's output variable names
     infiles : list
         list containing input file names for each body
+    order : str
+        How user wants dataset ordered.  Defaults to "None" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
 
     Returns
     -------
-    None
+    success : int (bool)
+        1 if successful, 0 if not (i.e. halt, sim didn't finish, etc)
     """
 
     # Now loop over each output file to extract the data
     for infile in infiles:
         # Isolate the body name
         infile = infile.replace(".in","")
+
+        # TODO Here's where I would look for halts/sims not finishing
+        # And continue based on whether or not user wants them
+        # if halt or sim didnt finish:
+        # return 0
 
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
@@ -247,10 +257,10 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[]):
                     sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
                                       compression = "gzip")
 
-    return None
+    return 1
 # End function
 
-def extract_data_hdf5(src=".", dataset="simulation.hdf5"):
+def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None"):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -262,10 +272,15 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5"):
         Path to simulation suite directory which contains all simulation sub directories
     dataset : str
         Name (including path) of hdf5 database
+    order : str
+        How user wants dataset ordered.  Defaults to "None" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
 
     Returns
     -------
-    None
+    data : Dataset object
+        See Dataset object docs
     """
 
     # Only run this function if the dataset doesn't exist in the src dir
@@ -281,7 +296,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5"):
         f_set = h5py.File(dataset, "r")
         length = f_set["meta"][0]
         f_set.close()
-        return Dataset(dataset,length)
+        return Dataset(dataset,length,order)
 
     # Get list of all data directories in src to iterate over
     dirs = filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))
@@ -304,21 +319,21 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5"):
         # Group's name == directory
         grp = f_set.create_group(str(counter))
 
-        # Store data from each simulation
-        data_from_dir_hdf5(grp,src + "/" + direct + "/",data_cols,infiles)
+        # Store data from each simulation, increment counter if succesful
+        counter += data_from_dir_hdf5(grp,src + "/" + direct + "/",data_cols,infiles,
+                                      order)
 
-        # Increase counter
-        counter += 1
-
-    # Add dumpy dataset with information about dataset
-    # Currently "meta" only holds the length (number of root level groups)
+    # Add top level dataset with information about dataset
+    # Currently "meta" only holds the length (number of root level groups aka
+    # number of simulations)
+    print("Length:",counter)
     f_set.create_dataset("meta", data=np.array([counter]), dtype="i")
 
     # Close dataset
     f_set.close()
 
     # Create Dataset class to return
-    return Dataset(dataset,counter)
+    return Dataset(dataset,counter,order)
 # End function
 
 def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):

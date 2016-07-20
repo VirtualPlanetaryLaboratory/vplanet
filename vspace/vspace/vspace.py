@@ -219,7 +219,7 @@ elif numvars >= 1:
     count += 1    #move to next combination
 
 # Just do this block if you want to 
-if(True):
+if(False):
     # Now that all the simulation directories have been populated,
     # Make the submission scripts for hyak
     # Parse input file

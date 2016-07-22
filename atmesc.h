@@ -44,7 +44,6 @@ void CountHaltsAtmEsc(HALT*,int*);
 void VerifyAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetAtmEsc(CONTROL*,MODULE*);
-void PropertiesAtmEsc(BODY*,int);
 void VerifyHaltAtmEsc(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 
@@ -70,6 +69,7 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_SURFACEWATERMASS	 1210
 #define OUT_ENVELOPEMASS	     1211
 #define OUT_OXYGENMASS         1212
+#define OUT_RGLIMIT            1213
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -79,6 +79,7 @@ void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);
 void WriteSurfaceWaterMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);

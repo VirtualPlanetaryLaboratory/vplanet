@@ -525,7 +525,7 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUp
   fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
 }
 
-void fnPropertiesBinary(BODY *body, UPDATE *update, int iBody){
+void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
   
   if(body[iBody].iBodyType == 0) // CBP
   {
@@ -729,7 +729,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // Other things that must be set
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
-  control->Evolve.fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
+  control->fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 

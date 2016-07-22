@@ -1057,7 +1057,7 @@ void LogBodyRelations(CONTROL *control,FILE *fp,int iBody) {
 
 void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN];
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   
@@ -1087,7 +1087,7 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
 
 void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iCol,iOut,iSubOut,iExtra=0;
-  char cCol[NUMOUT][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN];
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   
@@ -1178,10 +1178,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Module Bit Sum: %d\n",module->iBitSum[iBody]);
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
-      LogBodyRelations(control,fp,iBody);
       if (output[iOut].iNum > 0) 
         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
+    LogBodyRelations(control,fp,iBody);
     /* Log modules */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       module->fnLogBody[iBody][iModule](body,control,output,system,update,fnWrite,fp,iBody);

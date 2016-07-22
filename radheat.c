@@ -1186,7 +1186,7 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   exit(1);
 }
 */
-void PropsAuxRadheat(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerMan=fdRadPowerMan(update,iBody);
   body[iBody].dRadPowerCore=fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust=fdRadPowerCrust(update,iBody);
@@ -1255,7 +1255,7 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify235U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
-  control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyRadheat;
   //  output[OUT_SURFENFLUXRADTOTAL].fnOutput[iBody][iModule] = &fdSurfEnFluxRadTotal;   //PD: Is this right?
 }

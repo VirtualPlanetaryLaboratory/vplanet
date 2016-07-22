@@ -13,44 +13,44 @@
 #define KEQNTOL                 1.0e-4 /* Tolerance for Kepler eqn computation */
 
 /* Options Info */
-/* For options and output, binary has 2000-2100 */
-#define OPTSTARTBINARY          2000 /* Start of Binary options */
-#define OPTENDBINARY            2100 /* End of Binary options */
+/* For options and output, binary has 2100-2200 */
+#define OPTSTARTBINARY          2100 /* Start of Binary options */
+#define OPTENDBINARY            2200 /* End of Binary options */
 
-#define OPT_FREEECC             2010 // Free eccentricity
-#define OPT_FREEINC             2020 // Free inclination
-#define OPT_LL13N0              2030 // LL13 Mean Motion
-#define OPT_LL13K0              2040 // LL13 Radial epicyclic frequency
-#define OPT_LL13V0              2050 // LL13 Vertical epicyclic frequency
-#define OPT_LL13PHIAB           2051 // LL13 Binary Mean Anomaly Initial value
-#define OPT_CBPM0               2052 // CBP Initial mean anomaly
-#define OPT_CBPZETA             2053 // CBP z oscillation phase angle 
-#define OPT_CBPPSI              2054 // CBP R, phi oscillation phase angle
-#define OPT_HALTHOLMAN          2070 // Holman+Wiegert 1999 Instability limit
-#define OPT_BINUSEMATRIX           2080 // Whether or not to include eqns in matrix
+#define OPT_FREEECC             2110 // Free eccentricity
+#define OPT_FREEINC             2120 // Free inclination
+#define OPT_LL13N0              2130 // LL13 Mean Motion
+#define OPT_LL13K0              2140 // LL13 Radial epicyclic frequency
+#define OPT_LL13V0              2150 // LL13 Vertical epicyclic frequency
+#define OPT_LL13PHIAB           2151 // LL13 Binary Mean Anomaly Initial value
+#define OPT_CBPM0               2152 // CBP Initial mean anomaly
+#define OPT_CBPZETA             2153 // CBP z oscillation phase angle 
+#define OPT_CBPPSI              2154 // CBP R, phi oscillation phase angle
+#define OPT_HALTHOLMAN          2170 // Holman+Wiegert 1999 Instability limit
+#define OPT_BINUSEMATRIX        2180 // Whether or not to include eqns in matrix
 
 /* Output Info */
 
-#define OUTSTARTBINARY          2000
-#define OUTENDBINARY            2100
+#define OUTSTARTBINARY          2100
+#define OUTENDBINARY            2200
 
 // Naming convention same as for OPT_* constants
-#define OUT_FREEECC             2010 
-#define OUT_FREEINC             2020
-#define OUT_BININC              2025
-#define OUT_BINARGP             2026
-#define OUT_BINLONGA            2027
-#define OUT_BINLONGP            2028
-#define OUT_LL13N0              2030
-#define OUT_LL13K0              2040
-#define OUT_LL13V0              2050
-#define OUT_CYLPOS              2060
-#define OUT_CBPR                2061
-#define OUT_CBPZ                2062
-#define OUT_CBPPHI              2063
-#define OUT_CBPRDOT             2064
-#define OUT_CBPZDOT             2065
-#define OUT_CBPPHIDOT           2066
+#define OUT_FREEECC             2110 
+#define OUT_FREEINC             2120
+#define OUT_BININC              2125
+#define OUT_BINARGP             2126
+#define OUT_BINLONGA            2127
+#define OUT_BINLONGP            2128
+#define OUT_LL13N0              2130
+#define OUT_LL13K0              2140
+#define OUT_LL13V0              2150
+#define OUT_CYLPOS              2160
+#define OUT_CBPR                2161
+#define OUT_CBPZ                2162
+#define OUT_CBPPHI              2163
+#define OUT_CBPRDOT             2164
+#define OUT_CBPZDOT             2165
+#define OUT_CBPPHIDOT           2166
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -58,7 +58,7 @@ void AddModuleBinary(MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);
-void fnPropertiesBinary(BODY*,UPDATE*,int);
+void fnPropertiesBinary(BODY*,EVOLVE*,UPDATE*,int);
 void fnForceBehaviorBinary(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */

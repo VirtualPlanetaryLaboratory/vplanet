@@ -25,51 +25,51 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTPOISE       1800 /* Start of POISE options */
-#define OPTENDPOISE         1900 /* End of POISE options */
+#define OPTSTARTPOISE       1900 /* Start of POISE options */
+#define OPTENDPOISE         2000 /* End of POISE options */
 
-#define OPT_LATCELLNUM      1801
-#define OPT_PLANCKA         1802
-#define OPT_PLANCKB         1803
-#define OPT_DIFFUSION       1804
-#define OPT_HEATCAPANN      1805
-#define OPT_HADLEY          1806
-#define OPT_COLDSTART       1807
-#define OPT_FIXICELAT       1808
-#define OPT_ALBEDOZA        1809
-#define OPT_JORMUNGAND      1810
-#define OPT_CALCAB          1811
-#define OPT_TGLOBALEST      1812
-#define OPT_PCO2            1813
-#define OPT_MEPDIFF         1814
-#define OPT_ICESHEETS       1815
-#define OPT_INITICELAT      1816
-#define OPT_INITICEHEIGHT   1817
-#define OPT_ICEALBEDO       1818
-#define OPT_SURFALBEDO      1819
-#define OPT_ICEDEPRATE      1820
-#define OPT_SKIPSEASENABLED 1821
+#define OPT_LATCELLNUM      1901
+#define OPT_PLANCKA         1902
+#define OPT_PLANCKB         1903
+#define OPT_DIFFUSION       1904
+#define OPT_HEATCAPANN      1905
+#define OPT_HADLEY          1906
+#define OPT_COLDSTART       1907
+#define OPT_FIXICELAT       1908
+#define OPT_ALBEDOZA        1909
+#define OPT_JORMUNGAND      1910
+#define OPT_CALCAB          1911
+#define OPT_TGLOBALEST      1912
+#define OPT_PCO2            1913
+#define OPT_MEPDIFF         1914
+#define OPT_ICESHEETS       1915
+#define OPT_INITICELAT      1916
+#define OPT_INITICEHEIGHT   1917
+#define OPT_ICEALBEDO       1918
+#define OPT_SURFALBEDO      1919
+#define OPT_ICEDEPRATE      1920
+#define OPT_SKIPSEASENABLED 1921
 
-//#define OPT_LANDGEOM      1840
-#define OPT_HEATCAPLAND     1842
-#define OPT_HEATCAPWATER    1843
-#define OPT_FRZTSEAICE      1844
-//#define OPT_LATENTHEAT    1845
-#define OPT_ICECONDUCT      1846
-#define OPT_MIXINGDEPTH     1847
-#define OPT_NULANDWATER     1848 
-#define OPT_NSTEPINYEAR     1849
-#define OPT_NUMYEARS        1850 
-#define OPT_SEAICEMODEL     1851
-#define OPT_ALBEDOLAND      1852
-#define OPT_ALBEDOWATER     1853
-#define OPT_ICEDT           1854
-#define OPT_RERUNSEAS       1855
-#define OPT_ALBEDOTYPE      1856
-#define OPT_GEOGRAPHY       1857
-#define OPT_SEASOUTPUTTIME  1858
+//#define OPT_LANDGEOM      1940
+#define OPT_HEATCAPLAND     1942
+#define OPT_HEATCAPWATER    1943
+#define OPT_FRZTSEAICE      1944
+//#define OPT_LATENTHEAT    1945
+#define OPT_ICECONDUCT      1946
+#define OPT_MIXINGDEPTH     1947
+#define OPT_NULANDWATER     1948 
+#define OPT_NSTEPINYEAR     1949
+#define OPT_NUMYEARS        1950 
+#define OPT_SEAICEMODEL     1951
+#define OPT_ALBEDOLAND      1952
+#define OPT_ALBEDOWATER     1953
+#define OPT_ICEDT           1954
+#define OPT_RERUNSEAS       1955
+#define OPT_ALBEDOTYPE      1956
+#define OPT_GEOGRAPHY       1957
+#define OPT_SEASOUTPUTTIME  1958
 
-#define OPT_CLIMATEMODEL    1899
+#define OPT_CLIMATEMODEL    1999
 
 /* Options Functions */
 void HelpOptionsPoise(OPTIONS*);
@@ -88,39 +88,39 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 /* POISE 1800 - 1899 */
 /* System properties 1800-1819, body properties 1820-1899 */
 
-#define OUTSTARTPOISE        1800 /* Start of POISE options */
-#define OUTENDPOISE          1900 /* End of POISE options */
-#define OUTBODYSTARTPOISE    1820 /* Start of POISE BODY options */
+#define OUTSTARTPOISE        1900 /* Start of POISE options */
+#define OUTENDPOISE          2000 /* End of POISE options */
+#define OUTBODYSTARTPOISE    1920 /* Start of POISE BODY options */
 
-#define OUT_TGLOBAL          1821 
-#define OUT_ALBEDOGLOBAL     1822
-#define OUT_FLUXINGLOBAL     1823
-#define OUT_FLUXOUTGLOBAL    1824
-#define OUT_TOTICEMASS       1825
-#define OUT_TOTICEFLOW       1826
-#define OUT_TOTICEBALANCE    1827
-#define OUT_SKIPSEAS         1828
+#define OUT_TGLOBAL          1921 
+#define OUT_ALBEDOGLOBAL     1922
+#define OUT_FLUXINGLOBAL     1923
+#define OUT_FLUXOUTGLOBAL    1924
+#define OUT_TOTICEMASS       1925
+#define OUT_TOTICEFLOW       1926
+#define OUT_TOTICEBALANCE    1927
+#define OUT_SKIPSEAS         1928
 
-#define OUT_LATITUDE         1830
-#define OUT_TEMPLAT          1831
-#define OUT_ALBEDOLAT        1832
-#define OUT_ANNUALINSOL      1833
-#define OUT_DAILYINSOL       1834
-#define OUT_FLUXMERID        1835
-#define OUT_FLUXIN           1836
-#define OUT_FLUXOUT          1837
-#define OUT_DIVFLUX          1838
-#define OUT_ICEMASS          1839
-#define OUT_ICEHEIGHT        1840
-#define OUT_DICEMASSDT       1841
-#define OUT_ICEFLOW          1842
-#define OUT_ENERGYRESL       1843
-#define OUT_ENERGYRESW       1844
-#define OUT_BEDROCKH         1845
-#define OUT_TEMPLANDLAT      1846
-#define OUT_TEMPWATERLAT     1847
-#define OUT_ALBEDOLANDLAT    1848
-#define OUT_ALBEDOWATERLAT   1849
+#define OUT_LATITUDE         1930
+#define OUT_TEMPLAT          1931
+#define OUT_ALBEDOLAT        1932
+#define OUT_ANNUALINSOL      1933
+#define OUT_DAILYINSOL       1934
+#define OUT_FLUXMERID        1935
+#define OUT_FLUXIN           1936
+#define OUT_FLUXOUT          1937
+#define OUT_DIVFLUX          1938
+#define OUT_ICEMASS          1939
+#define OUT_ICEHEIGHT        1940
+#define OUT_DICEMASSDT       1941
+#define OUT_ICEFLOW          1942
+#define OUT_ENERGYRESL       1943
+#define OUT_ENERGYRESW       1944
+#define OUT_BEDROCKH         1945
+#define OUT_TEMPLANDLAT      1946
+#define OUT_TEMPWATERLAT     1947
+#define OUT_ALBEDOLANDLAT    1948
+#define OUT_ALBEDOWATERLAT   1949
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -149,7 +149,7 @@ void LogPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Poise Functions */
-void PropertiesPoise(BODY*,UPDATE*,int);
+void PropertiesPoise(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);

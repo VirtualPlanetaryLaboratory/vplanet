@@ -4,7 +4,7 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1       # 1 -> Star
-dMass		1.0		# Mass, negative -> Earth masses
+dMass		0.3		# Mass, negative -> Earth masses
 dRotPeriod    0.003
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 
@@ -32,4 +32,4 @@ dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosi
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time -Radius Semim Ecce -RotRate -MeanMotion
+saOutputOrder	Time SemimajorAxis Eccentricity -RotRate

@@ -19,6 +19,30 @@
 #define FLARE         512
 #define BINARY        1024
 
+/********************
+ * ADJUST AS NEEDED *       XXX And fix sometime!
+ ********************/
+
+// XXX Obsolete?
+// Note: not obsolete! needed for new module
+// Otherwise,segfaults
+// Increased from 1900->2100 for binary
+/* Module limits:
+ * EQTIDE: 1000 - 1100
+ * RADHEAT: 1100 - 1200
+ * ATMESC: 1200 - 1300
+ * DISTORB: 1300 - 1400
+ * DISTROT: 1400 - 1500
+ * STELLAR: 1500 - 1600
+ * ??: 1600 - 1700
+ * THERMINT: 1700 - 1900
+ * POISE: 1900 - 2000
+ * FLARE: 2000 - 2100
+ * BINARY: 2100 - 2200
+ */
+#define MODULEOPTEND        2200
+#define MODULEOUTEND        2200
+
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
 
@@ -88,7 +112,6 @@
 
 /* File Limits */
 
-#define NUMOUT        2100  /* Number of output parameters 2000->2100 for binary */
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
@@ -103,8 +126,6 @@
 			     * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an 
 			     * input file */
-#define OPTEND        2100  /* Last output number of module options
-			     * Binary is highest for this compiltion */
 
 #define TINY          (1./HUGE)
 
@@ -1192,10 +1213,10 @@ typedef struct {
 typedef struct {
   char cOut[NAMELEN];       /**< Output File Name */
   int iNumCols;             /**< Number of Columns in Output File */
-  char caCol[NUMOUT][OPTLEN];  /**< Output Value Name */
-  int bNeg[NUMOUT];         /**< Use Negative Option Units? */
+  char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
+  int bNeg[MODULEOUTEND];         /**< Use Negative Option Units? */
   int iNumGrid;             /**< Number of grid outputs */
-  char caGrid[NUMOUT][OPTLEN];  /**< Gridded output name */
+  char caGrid[MODULEOUTEND][OPTLEN];  /**< Gridded output name */
 } OUTFILE;
 
 
@@ -1489,25 +1510,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 
-/* Do this stuff with a few functions and some global variables? XXX */
 
-/* This needs to be vectorized VPL 
 
-#define MODULEOPTEND        EQTIDEOPTEND
-#define MODULEOUTEND        EQTIDEOUTEND
-#define MODULEHALTSYSEND    EQTIDEHALTSYSEND
-#define MODULEHALTBODYEND   EQTIDEHALTBODYEND
-*/
-
-/********************
- * ADJUST AS NEEDED *       XXX And fix sometime!
- ********************/
-
-// XXX Obsolete?
-// Note: not obsolete! needed for new module
-// Otherwise,segfaults
-// Increased from 1900->2100 for binary
-#define MODULEOPTEND        2100
-#define MODULEOUTEND        2100
 
 

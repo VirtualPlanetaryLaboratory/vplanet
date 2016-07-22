@@ -428,6 +428,15 @@ typedef struct {
   double dMinEnvelopeMass;
   double dXFrac;
   double dAtmXAbsEff;
+  int iWaterLossModel;
+  double dKTide;
+  double dMDotWater;
+  double dFHRef;
+  double dOxygenEta;
+  double dCrossoverMass;
+  int bRunaway;
+  int iWaterEscapeRegime;
+  double dFHDiffLim;
 
   /* STELLAR Parameters */
   int bStellar;

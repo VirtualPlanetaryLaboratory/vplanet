@@ -453,6 +453,20 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
+      /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and 
+	 check if dTidalQOcean set. These should only be set if THERMINT 
+	 selected. */
+      if (body[iBody].bOceanTides) {
+	if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"WARNING: %s set, but module THERMINT not selected. This feature is ignored.\n",options[OPT_OCEANTIDES].cName);
+	body[iBody].bOceanTides = 0;
+      }
+      if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+	if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"WARNING: %s set, but module THERMINT not selected. This feature is ignored.\n",options[OPT_TIDALQOCEAN].cName);
+	body[iBody].dTidalQOcean = HUGE;
+      }
+
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
       // Now set the "Man" functions as the WriteTidalQ uses them
@@ -460,15 +474,19 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
-      /* When Thermint and Eqtide are called together, care must be taken as 
-         Im(k_2) must be known in order to calculate TidalZ. As the individual 
-         module PropsAux are called prior to PropsAuxMulti, we must call the 
-         "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
-         "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-         PropsAuxEqtideThermint. */
-      iEqtide = fiGetModuleIntEqtide(module,iBody);
-      control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
-      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      if (body[iBody].bOceanTides) {
+	// XXX Deal with ocean tides here.
+      } else {
+	/* When Thermint and Eqtide are called together, care must be taken as 
+	   Im(k_2) must be known in order to calculate TidalZ. As the individual 
+	   module PropsAux are called prior to PropsAuxMulti, we must call the 
+	   "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+	   "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+	   PropsAuxEqtideThermint. */
+	iEqtide = fiGetModuleIntEqtide(module,iBody);
+	control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+	control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      }
     }
   }
 }

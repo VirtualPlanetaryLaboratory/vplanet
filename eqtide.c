@@ -52,7 +52,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dK2 = src[iBody].dK2;
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;
-
+  
   if (iBody > 0) {
     dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -268,6 +268,23 @@ void ReadMaxLockDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   }
 }
 
+/* Split tides into ocean and rocky interior? This should only be specified if THERMINT also called*/
+
+void ReadOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bOceanTides = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    /* Set to default */
+    AssignDefaultInt(options,&body[iFile-1].bOceanTides,files->iNumInputs);
+}
+
 /* Maximum Eccentricity for Synchronous Rotation */
 
 void ReadSyncEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -275,16 +292,16 @@ void ReadSyncEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   int lTmp=-1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile-1].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile-1].cIn,lTmp,control->Io.iVerbose);
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR) 
         fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
-        LineExit(files->Infile[iFile-1].cIn,lTmp);
+        LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Evolve.dSyncEcc[iFile-1] = dTmp;
-    UpdateFoundOption(&files->Infile[iFile-1],options,lTmp,iFile);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0)
       control->Evolve.dSyncEcc[iFile-1] = options->dDefault;
@@ -312,6 +329,30 @@ void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   } else {
     if (iFile > 0)
       body[iFile-1].dTidalQ = options->dDefault;
+  }
+}
+
+/* Tidal Q of the ocean */
+
+void ReadTidalQOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+
+    body[iFile-1].dTidalQOcean = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].dTidalQOcean = options->dDefault;
   }
 }  
 
@@ -452,6 +493,13 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_MAXLOCKDIFF].iMultiFile = 1;
   fnRead[OPT_MAXLOCKDIFF] = &ReadMaxLockDiff;
   
+  sprintf(options[OPT_OCEANTIDES].cName,"bOceanTides");
+  sprintf(options[OPT_OCEANTIDES].cDescr,"Split tides into interior and oceans?");
+  sprintf(options[OPT_OCEANTIDES].cDefault,"0");
+  options[OPT_OCEANTIDES].iType = 0;
+  options[OPT_OCEANTIDES].iMultiFile = 1;
+  fnRead[OPT_OCEANTIDES] = &ReadOceanTides;
+  
   sprintf(options[OPT_SYNCECC].cName,"dSyncEcc");
   sprintf(options[OPT_SYNCECC].cDescr,"Minimum Eccentricity for Non-Synchronous Rotation");
   sprintf(options[OPT_SYNCECC].cDefault,"0");
@@ -467,6 +515,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_TIDALQ].iType = 2;
   options[OPT_TIDALQ].iMultiFile = 1;
   fnRead[OPT_TIDALQ] = &ReadTidalQ;
+  
+  sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
+  sprintf(options[OPT_TIDALQOCEAN].cDescr,"Tidal Quality Factor");
+  sprintf(options[OPT_TIDALQOCEAN].cDefault,"inf");
+  options[OPT_TIDALQOCEAN].dDefault = HUGE;
+  options[OPT_TIDALQOCEAN].iType = 2;
+  options[OPT_TIDALQOCEAN].iMultiFile = 1;
+  fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;
   
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
   sprintf(options[OPT_TIDALTAU].cDescr,"Tidal Time Lag");

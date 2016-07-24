@@ -307,8 +307,7 @@ typedef struct {
   double dPrecRate;
   int bCalcDynEllip;
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
-  
-  
+    
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -317,6 +316,9 @@ typedef struct {
   //char **saTidePerts;
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
+  int bOceanTides;       /**< Split tidal dissipation into rock and oceans? */
+  double dTidalQOcean;   /**< Tidal Q in ocean */
+  //double dTidalQRock;    /**< Tidal Q in interior */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */

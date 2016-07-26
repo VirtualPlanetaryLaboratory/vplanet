@@ -113,7 +113,11 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
   mpl.rcParams['figure.autolayout'] = False
   fig = pl.figure(1, figsize = (conf.figwidth, conf.figheight))
   gs = gridspec.GridSpec(rows, columns)
-  ax = [fig.add_subplot(ss) for ss in gs]
+  for i, ss in enumerate(gs):
+    if i == 0:
+      ax = [fig.add_subplot(gs[0])]
+    else:
+      ax.append(fig.add_subplot(ss, sharex = ax[0]))
 
   # Hide empty subplots
   empty = range(len(yarr), rows*columns)
@@ -242,7 +246,7 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
         # HACK: Plot a line of length zero in the center of the plot so that it will show up on the legend
         foo = ax[i].plot([(xlim[0] + xlim[1])/2.],[(ylim[0] + ylim[1])/2.], conf.line_styles[b], label = body.name)
       ax[i].legend(loc = conf.legend_loc, fontsize = conf.legend_fontsize)
-  
+    
   # Add title
   if conf.title:
     if len(yarr) == 1:

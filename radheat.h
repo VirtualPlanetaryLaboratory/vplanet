@@ -104,10 +104,6 @@
 #define EPOWERCRUST235U  1.03852e+13  //[W] 
 
 //Continental Crust Mass Earth today.  Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust".
-#define ECRUSTMASS       0.0035*(MEARTH)  //[kg]  =0.35% of M_earth (Taylor 95)
-#define ECRUSTDENSITY    2800.   //[kg/m3]
-#define ECRUSTAREA       0.412*(EAREASURF)  //[m2] =41.2% of Earth surface (Taylor 95)
-#define ECRUSTDEPTH      (ECRUSTMASS)/((ECRUSTDENSITY)*(ECRUSTAREA)) //[m] ave depth of CC today ~ 36 km (Taylor 95)
 #define EPOWERCRUSTTOTAL 7e12  //[W] 7 TW (Jaupart et al 2007)  or 6.8 TW (Huang 2013)
 #define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  //[W/kg] crustal heat production density.
 

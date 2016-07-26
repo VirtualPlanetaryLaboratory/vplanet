@@ -13,44 +13,46 @@ dEcc            0.0167		# Eccentricity
 dSemi           -1		# Semi-major axis, negative -> AU
 
 # RADHEAT Parameters
-#40K
+### 40K
 d40KNumMan    -1.0
 d40KNumCore   -3.0
 d40KNumCrust  -1.0
-#232Th
+### 232Th
 d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
 d232ThNumCore	-1
 d232ThNumCrust	-1
-#235U
+### 235U
 d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
 d235UNumCore	-1
 d235UNumCrust	-1
-#238U
+### 238U
 d238UNumMan	-1.0  #-1.16			# Number of uranium-238 atims, negative -> Earth
 d238UNumCore	-1
 d238UNumCrust	-1
 
 ### THERMINT inputs.
-dTMan     3000.0
-dTCore    6000.0	#6000
-#dViscRatioMan 2.7	#5
-#dEruptEff 0.1		#.2
-#dViscRef  5e7	   #1e8
-#dTrefLind 5705.    #def is 5430.
-#dDTChiRef 300.     ## def is 100.
-
+dTMan          3000.0
+dTCore         6000.0	#6000
+dEruptEff      0.1		#.2
+dTrefLind      5650.    #def is 5705.
+dDTChiRef      250.     ## def is 300.
+dFixMeltfactorUMan 1  
+#dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
+dViscJumpMan   2.85
+dViscRef       1.0e8	   #1e8
+dStagLid       1
+dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
+    
 #Output
-saOutputOrder	-Time -TMan -TUMan -TCMB -HflowUMan -HflowMeltMan -HflowLatentMan -HflowCMB -SurfEnFLuxTot $
-		-HflowLatentIC -PowerGravIC $
-		-RadPowerMan -RadPowerCore -RadPowerCrust -RadPowerTotal $
-		-BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan $
-		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC -ChiOC -ChiIC -DTChi
+saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -HflowUMan -HflowCMB -TJumpLMan -TJumpUMan $
+	      -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -ViscMMan
+	    
+#-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
+#		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $
+#		-RadPowerMan -RadPowerCore -RadPowerCrust -RadPowerTotal $
+#		-BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan -FMeltUMan -MeltFactorUMan -MeltMassFluxMan $
+#		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC -ChiOC -ChiIC -DTChi
 
-#-40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan $
-#-40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore $
-
-#saOutputOrder	Time -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan -SurfEnFluxT $
-#		    -40KPowerCore -232ThPowerCore -238UPowerCore -235UPowerCore -RadPowerCore -RadPowerTotal
 
 #bFixOrbit	1
 # Output can be in any order and need only be unambiguous. 

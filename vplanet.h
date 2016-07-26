@@ -374,6 +374,8 @@ typedef struct {
   double dViscUManArr;     /**< Viscosity UMTBL Arrhenius Law */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
+  double dViscMMan;        /**< Viscosity Mid (ave) mantle */  
+  double dViscJumpMan;     /**< Viscosity Jump UM to LM */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
   double dTsolUMan;        /**< Solidus Temperature UMTBL */
@@ -384,11 +386,19 @@ typedef struct {
   double dFMeltLMan;       /**< Melt fraction LMTBL */
   double dMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
   double dMeltfactorLMan;  /**< Melt Phase Factor for Rheology */
+  double dFixMeltfactorUMan;  /**< Melt Phase Factor for Rheology */
+  double dViscMeltB;       /**< Viscosity Melt Factor B */
+  double dViscMeltGamma;   /**< Viscosity Melt Factor Gamma */
+  double dViscMeltDelta;   /**< Viscosity Melt Factor Delta */
+  double dViscMeltXi;      /**< Viscosity Melt Factor Xi */
+  double dViscMeltPhis;    /**< Viscosity Melt Factor Phis */
   double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
   double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
   double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
+  double dMeltMassFluxMan; /**< Mantle upwelling melt mass flux */
   double dK2Man;           /**< Mantle k2 love number */
   double dImk2Man;         /**< Mantle Im(k2) love number */
+  double dRayleighMan;     /**< Mantle Rayleigh Number */
   /* Time Derivatives & Gradients */
   double dTDotMan;         /**< Time deriv of mean mantle temp */
   double dTDotCore;        /**< time deriv of mean core temp */
@@ -402,6 +412,7 @@ typedef struct {
   double dHflowTidalCore;  /**< hflow tidal dissipation in core */
   double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
   double dHflowMeltMan;    /**< Eruptive Melt Hflow from mantle */
+  double dHflowSecMan;     /**< Mantle Secular Heat flow */
   double dMassICDot;       /**< Mass Growth Rate of IC */
   double dHflowLatentIC;   /**< latent hflow from solidification of IC */
   double dPowerGravIC;     /**< latent hflow from solidification of IC */
@@ -428,6 +439,8 @@ typedef struct {
   double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
   double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
   double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
+  double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
+  double dManHFlowPref;    /**< Mantle Hflow Prefix */
   
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */

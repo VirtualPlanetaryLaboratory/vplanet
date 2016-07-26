@@ -17,27 +17,31 @@
 void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].d40KNumMan = src[iBody].d40KNumMan;
   dest[iBody].d40KConstMan = src[iBody].d40KConstMan;
-
   dest[iBody].d40KNumCore = src[iBody].d40KNumCore;
   dest[iBody].d40KConstCore = src[iBody].d40KConstCore;
+  dest[iBody].d40KNumCrust = src[iBody].d40KNumCrust;
+  dest[iBody].d40KConstCrust = src[iBody].d40KConstCrust;
 
   dest[iBody].d232ThNumMan = src[iBody].d232ThNumMan;
   dest[iBody].d232ThConstMan = src[iBody].d232ThConstMan;
-
   dest[iBody].d232ThNumCore = src[iBody].d232ThNumCore;
   dest[iBody].d232ThConstCore = src[iBody].d232ThConstCore;
+  dest[iBody].d232ThNumCrust = src[iBody].d232ThNumCrust;
+  dest[iBody].d232ThConstCrust = src[iBody].d232ThConstCrust;
 
   dest[iBody].d238UNumMan = src[iBody].d238UNumMan;
   dest[iBody].d238UConstMan = src[iBody].d238UConstMan;
-
   dest[iBody].d238UNumCore = src[iBody].d238UNumCore;
   dest[iBody].d238UConstCore = src[iBody].d238UConstCore;
+  dest[iBody].d238UNumCrust = src[iBody].d238UNumCrust;
+  dest[iBody].d238UConstCrust = src[iBody].d238UConstCrust;
 
   dest[iBody].d235UNumMan = src[iBody].d235UNumMan;
   dest[iBody].d235UConstMan = src[iBody].d235UConstMan;
-
   dest[iBody].d235UNumCore = src[iBody].d235UNumCore;
   dest[iBody].d235UConstCore = src[iBody].d235UConstCore;
+  dest[iBody].d235UNumCrust = src[iBody].d235UNumCrust;
+  dest[iBody].d235UConstCrust = src[iBody].d235UConstCrust;
 
   dest[iBody].dRadPowerTotal = src[iBody].dRadPowerTotal;
   dest[iBody].dRadPowerMan = src[iBody].dRadPowerMan;
@@ -139,12 +143,9 @@ void Read40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     if (iFile > 0)
       body[iFile-1].d40KNumMan = options->dDefault;
 }
-
 void Read40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
-
-  //  fflush(stdout);
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
@@ -156,6 +157,51 @@ void Read40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   } else
     if (iFile > 0)
       body[iFile-1].d40KNumCore = options->dDefault;
+}
+void Read40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].d40KPowerCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+       body[iFile-1].d40KPowerCrust = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].d40KPowerCrust = options->dDefault;
+}
+void Read40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d40KMassCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d40KMassCrust = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d40KMassCrust = options->dDefault;
+}
+void Read40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d40KNumCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);  //dTmp=input value, dNegativeDouble=-dNeg (default Value).
+    else
+      body[iFile-1].d40KNumCrust = dTmp;   //units of num are num!
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d40KNumCrust = options->dDefault;
 }
 
 /* Thorium */
@@ -198,7 +244,6 @@ void Read232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (iFile > 0)
       body[iFile-1].d232ThPowerCore = options->dDefault;
 }
-
 void Read232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
@@ -216,7 +261,6 @@ void Read232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d232ThMassMan = options->dDefault;
 }
-
 void Read232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
@@ -234,7 +278,6 @@ void Read232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d232ThMassCore = options->dDefault;
 }
-
 void Read232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
@@ -252,7 +295,6 @@ void Read232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d232ThNumMan = options->dDefault;
 }
-
 void Read232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
@@ -269,6 +311,58 @@ void Read232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   } else
     if (iFile > 0)
       body[iFile-1].d232ThNumCore = options->dDefault;
+}
+void Read232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 232ThMass and 232ThNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d232ThPowerCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+       //      body[iFile-1].d232ThPower = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+       body[iFile-1].d232ThPowerCrust = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d232ThPowerCrust = options->dDefault;
+}
+void Read232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 232ThPower and 232ThNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d232ThMassCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d232ThMassCrust = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d232ThMassCrust = options->dDefault;
+}
+void Read232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 232ThPower and 232ThMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d232ThNumCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d232ThNumCrust = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d232ThNumCrust = options->dDefault;
 }
 
 /* Uranium 238 */
@@ -291,7 +385,6 @@ void Read238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d238UPowerMan = options->dDefault;
 }
-
 void Read238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
@@ -309,7 +402,6 @@ void Read238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d238UMassMan = options->dDefault;
 }
-
 void Read238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
@@ -347,7 +439,6 @@ void Read238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d238UPowerCore = options->dDefault;
 }
-
 void Read238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
@@ -384,6 +475,58 @@ void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].d238UNumCore = options->dDefault;
 }
 
+/* Crust */
+void Read238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 238UMass and 232UNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d238UPowerCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+       body[iFile-1].d238UPowerCrust = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d238UPowerCrust = options->dDefault;
+}
+void Read238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 238UPower and 238UNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d238UMassCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d238UMassCrust = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d238UMassCrust = options->dDefault;
+}
+void Read238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 238UPower and 238UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d238UNumCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d238UNumCrust = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d238UNumCrust = options->dDefault;
+}
 
 /* Uranium 235 PED */
 void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -404,7 +547,6 @@ void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d235UPowerMan = options->dDefault;
 }
-
 void Read235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
@@ -422,7 +564,6 @@ void Read235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d235UMassMan = options->dDefault;
 }
-
 void Read235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
@@ -459,7 +600,6 @@ void Read235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d235UPowerCore = options->dDefault;
 }
-
 void Read235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
@@ -477,7 +617,6 @@ void Read235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d235UMassCore = options->dDefault;
 }
-
 void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
@@ -496,6 +635,60 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
         body[iFile-1].d235UNumCore = options->dDefault;
 }
 
+void Read235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UMass and 232UNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d235UPowerCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+       //      body[iFile-1].d235UPower = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+       body[iFile-1].d235UPowerCrust = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d235UPowerCrust = options->dDefault;
+}
+void Read235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UNum */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].d235UMassCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+      body[iFile-1].d235UMassCrust = dTmp*fdUnitsMass(control->Units[iFile].iMass);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].d235UMassCrust = options->dDefault;
+}
+void Read235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  /* Must verify in conjuction with 235UPower and 235UMass */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+      NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+      if (dTmp < 0)
+        body[iFile-1].d235UNumCrust = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      else
+        body[iFile-1].d235UNumCrust = dTmp;
+      UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)
+        body[iFile-1].d235UNumCrust = options->dDefault;
+}
+
+/* Halts */
 void ReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
@@ -533,7 +726,6 @@ void ReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       if (iFile > 0)
        control->Halt[iFile-1].dMin235UPower = options->dDefault;
 }
-
 
 void ReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -616,6 +808,16 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KMASSCORE].dDefault = 0; 
   sprintf(options[OPT_40KMASSCORE].cNeg,"Earth Masses");
   fnRead[OPT_40KMASSCORE] = &Read40KMassCore;
+
+  sprintf(options[OPT_40KMASSCRUST].cName,"d40KMassCrust");
+  sprintf(options[OPT_40KMASSCRUST].cDescr,"Initial Crust Mass of 40K");
+  sprintf(options[OPT_40KMASSCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_40KMASSCRUST].iType = 2;
+  options[OPT_40KMASSCRUST].iMultiFile = 1;
+  options[OPT_40KMASSCRUST].dNeg = EMASSCRUST40K;
+  options[OPT_40KMASSCRUST].dDefault = 0; 
+  sprintf(options[OPT_40KMASSCRUST].cNeg,"Earth Masses");
+  fnRead[OPT_40KMASSCRUST] = &Read40KMassCrust;
   
   sprintf(options[OPT_40KNUMMAN].cName,"d40KNumMan");
   sprintf(options[OPT_40KNUMMAN].cDescr,"Initial Mantle Number of 40K Atoms");
@@ -637,6 +839,16 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KNUMCORE].cNeg,"Primordial Earth 40K Number");
   fnRead[OPT_40KNUMCORE] = &Read40KNumCore;
 
+  sprintf(options[OPT_40KNUMCRUST].cName,"d40KNumCrust");
+  sprintf(options[OPT_40KNUMCRUST].cDescr,"Initial Crust Number of 40K Atoms");
+  sprintf(options[OPT_40KNUMCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_40KNUMCRUST].iType = 2;
+  options[OPT_40KNUMCRUST].iMultiFile = 1;
+  options[OPT_40KNUMCRUST].dNeg = ENUMCRUST40K;
+  options[OPT_40KNUMCRUST].dDefault = 0;
+  sprintf(options[OPT_40KNUMCRUST].cNeg,"Primordial Earth 40K Number");
+  fnRead[OPT_40KNUMCRUST] = &Read40KNumCrust;
+  
   sprintf(options[OPT_40KPOWERMAN].cName,"d40KPowerMan");
   sprintf(options[OPT_40KPOWERMAN].cDescr,"Initial Mantle Power Production from 40K Atoms");
   sprintf(options[OPT_40KPOWERMAN].cDefault,"Primordial Earth: xx TW");
@@ -657,6 +869,16 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KPOWERCORE].cNeg,"TW");
   fnRead[OPT_40KPOWERCORE] = &Read40KPowerCore;
 
+  sprintf(options[OPT_40KPOWERCRUST].cName,"d40KPowerCrust");
+  sprintf(options[OPT_40KPOWERCRUST].cDescr,"Initial Crust Power Production from 40K Atoms");
+  sprintf(options[OPT_40KPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  options[OPT_40KPOWERCRUST].iType = 2;
+  options[OPT_40KPOWERCRUST].iMultiFile = 1;
+  options[OPT_40KPOWERCRUST].dNeg = EPOWERCRUST40K;  //Earth's POWER of 40K
+  options[OPT_40KPOWERCRUST].dDefault = 0;
+  sprintf(options[OPT_40KPOWERCRUST].cNeg,"TW");
+  fnRead[OPT_40KPOWERCRUST] = &Read40KPowerCrust;
+  
   /* 232Th */
   sprintf(options[OPT_232THMASSMAN].cName,"d232ThMassMan");
   sprintf(options[OPT_232THMASSMAN].cDescr,"Initial Mass of 232Th");
@@ -717,6 +939,36 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THPOWERCORE].dDefault = 0;
   sprintf(options[OPT_232THPOWERCORE].cNeg,"TW");
   fnRead[OPT_232THPOWERCORE] = &Read232ThPowerCore;
+
+  sprintf(options[OPT_232THMASSCRUST].cName,"d232ThMassCrust");
+  sprintf(options[OPT_232THMASSCRUST].cDescr,"Initial Crust Mass of 232Th");
+  sprintf(options[OPT_232THMASSCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_232THMASSCRUST].iType = 2;
+  options[OPT_232THMASSCRUST].iMultiFile = 1;
+  options[OPT_232THMASSCRUST].dNeg = EMASSCRUST232TH;
+  options[OPT_232THMASSCRUST].dDefault = 0;
+  sprintf(options[OPT_232THMASSCRUST].cNeg,"Earth Masses");
+  fnRead[OPT_232THMASSCRUST] = &Read232ThMassCrust; 
+  
+  sprintf(options[OPT_232THNUMCRUST].cName,"d232ThNumCrust");
+  sprintf(options[OPT_232THNUMCRUST].cDescr,"Initial Crust Number of 232Th Atoms");
+  sprintf(options[OPT_232THNUMCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_232THNUMCRUST].iType = 2;
+  options[OPT_232THNUMCRUST].iMultiFile = 1;
+  options[OPT_232THNUMCRUST].dNeg = ENUMCRUST232TH;
+  options[OPT_232THNUMCRUST].dDefault = 0;
+  sprintf(options[OPT_232THNUMCRUST].cNeg,"Primordial Earth 232Th Number");
+  fnRead[OPT_232THNUMCRUST] = &Read232ThNumCrust;
+  
+  sprintf(options[OPT_232THPOWERCRUST].cName,"d232ThPowerCrust");
+  sprintf(options[OPT_232THPOWERCRUST].cDescr,"Initial Crust Power Production from 232Th Atoms");
+  sprintf(options[OPT_232THPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  options[OPT_232THPOWERCRUST].iType = 2;
+  options[OPT_232THPOWERCRUST].iMultiFile = 1;
+  options[OPT_232THPOWERCRUST].dNeg = EPOWERCRUST232TH;  //1e12*1e-7; // cgs
+  options[OPT_232THPOWERCRUST].dDefault = 0;
+  sprintf(options[OPT_232THPOWERCRUST].cNeg,"TW");
+  fnRead[OPT_232THPOWERCRUST] = &Read232ThPowerCrust;
 
   /* 238U*/
   sprintf(options[OPT_238UMASSMAN].cName,"d238UMassMan");
@@ -781,6 +1033,37 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UPOWERCORE].cNeg,"TW");
   fnRead[OPT_238UPOWERCORE] = &Read238UPowerCore;
 
+  sprintf(options[OPT_238UMASSCRUST].cName,"d238UMassCrust");
+  sprintf(options[OPT_238UMASSCRUST].cDescr,"Initial Crust Mass of 238U");
+  sprintf(options[OPT_238UMASSCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_238UMASSCRUST].iType = 2;
+  options[OPT_238UMASSCRUST].iMultiFile = 1;
+  options[OPT_238UMASSCRUST].dNeg = EMASSCRUST238U;
+  options[OPT_238UMASSCRUST].dDefault = 0;
+  sprintf(options[OPT_238UMASSCRUST].cNeg,"Earth Masses");
+  fnRead[OPT_238UMASSCRUST] = &Read238UMassCrust;
+  
+  sprintf(options[OPT_238UNUMCRUST].cName,"d238UNumCrust");
+  sprintf(options[OPT_238UNUMCRUST].cDescr,"Initial Crust Number of 238U Atoms");
+  sprintf(options[OPT_238UNUMCRUST].cDefault,"1");
+  options[OPT_238UNUMCRUST].dDefault = 0;
+  options[OPT_238UNUMCRUST].iType = 2;
+  options[OPT_238UNUMCRUST].iMultiFile = 1;
+  options[OPT_238UNUMCRUST].dNeg = ENUMCRUST238U;
+  options[OPT_238UNUMCRUST].dDefault = 0;
+  sprintf(options[OPT_238UNUMCRUST].cNeg,"Primordial Earth 238U Number");
+  fnRead[OPT_238UNUMCRUST] = &Read238UNumCrust;
+
+  sprintf(options[OPT_238UPOWERCRUST].cName,"d238UPowerCrust");  //section added PED
+  sprintf(options[OPT_238UPOWERCRUST].cDescr,"Initial Crust Power Production from 238U Atoms");
+  sprintf(options[OPT_238UPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  options[OPT_238UPOWERCRUST].iType = 2;
+  options[OPT_238UPOWERCRUST].iMultiFile = 1;
+  options[OPT_238UPOWERCRUST].dNeg = EPOWERCRUST238U;   //1e12*1e-7; // cgs
+  options[OPT_238UPOWERCRUST].dDefault = 0;
+  sprintf(options[OPT_238UPOWERCRUST].cNeg,"TW");
+  fnRead[OPT_238UPOWERCRUST] = &Read238UPowerCrust;
+  
   /* 235U */
   sprintf(options[OPT_235UMASSMAN].cName,"d235UMassMan");  //PED
   sprintf(options[OPT_235UMASSMAN].cDescr,"Initial Mass of 235U");
@@ -807,12 +1090,12 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UPOWERMAN].cDefault,"Primordial Earth: xx TW");
   options[OPT_235UPOWERMAN].iType = 2;
   options[OPT_235UPOWERMAN].iMultiFile = 1;
-  options[OPT_235UPOWERMAN].dNeg = EPOWERMAN235U;   //1e12*1e-7; // cgs
+  options[OPT_235UPOWERMAN].dNeg = EPOWERMAN235U;  
   options[OPT_235UPOWERMAN].dDefault = 0;
   sprintf(options[OPT_235UPOWERMAN].cNeg,"TW");
   fnRead[OPT_235UPOWERMAN] = &Read235UPowerMan;
   
-  sprintf(options[OPT_235UMASSCORE].cName,"d235UMassCore");  //PED
+  sprintf(options[OPT_235UMASSCORE].cName,"d235UMassCore"); 
   sprintf(options[OPT_235UMASSCORE].cDescr,"Initial Core Mass of 235U");
   sprintf(options[OPT_235UMASSCORE].cDefault,"Primordial Earth: xxx");
   options[OPT_235UMASSCORE].iType = 2;
@@ -822,7 +1105,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UMASSCORE].cNeg,"Earth Masses");
   fnRead[OPT_235UMASSCORE] = &Read235UMassCore;
   
-  sprintf(options[OPT_235UNUMCORE].cName,"d235UNumCore");  //PED
+  sprintf(options[OPT_235UNUMCORE].cName,"d235UNumCore"); 
   sprintf(options[OPT_235UNUMCORE].cDescr,"Initial Core Number of 235U Atoms");
   sprintf(options[OPT_235UNUMCORE].cDefault,"1");
   options[OPT_235UNUMCORE].iType = 2;
@@ -837,10 +1120,40 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UPOWERCORE].cDefault,"Primordial Earth: xx TW");
   options[OPT_235UPOWERCORE].iType = 2;
   options[OPT_235UPOWERCORE].iMultiFile = 1;
-  options[OPT_235UPOWERCORE].dNeg = EPOWERCORE235U;   //1e12*1e-7; // cgs
+  options[OPT_235UPOWERCORE].dNeg = EPOWERCORE235U; 
   options[OPT_235UPOWERCORE].dDefault = 0;
   sprintf(options[OPT_235UPOWERCORE].cNeg,"TW");
   fnRead[OPT_235UPOWERCORE] = &Read235UPowerCore;
+
+  sprintf(options[OPT_235UMASSCRUST].cName,"d235UMassCrust"); 
+  sprintf(options[OPT_235UMASSCRUST].cDescr,"Initial Crust Mass of 235U");
+  sprintf(options[OPT_235UMASSCRUST].cDefault,"Primordial Earth: xxx");
+  options[OPT_235UMASSCRUST].iType = 2;
+  options[OPT_235UMASSCRUST].iMultiFile = 1;
+  options[OPT_235UMASSCRUST].dNeg = EMASSCRUST235U;
+  options[OPT_235UMASSCRUST].dDefault = 0;
+  sprintf(options[OPT_235UMASSCRUST].cNeg,"Earth Masses");
+  fnRead[OPT_235UMASSCRUST] = &Read235UMassCrust;
+  
+  sprintf(options[OPT_235UNUMCRUST].cName,"d235UNumCrust"); 
+  sprintf(options[OPT_235UNUMCRUST].cDescr,"Initial Crust Number of 235U Atoms");
+  sprintf(options[OPT_235UNUMCRUST].cDefault,"1");
+  options[OPT_235UNUMCRUST].iType = 2;
+  options[OPT_235UNUMCRUST].iMultiFile = 1;
+  options[OPT_235UNUMCRUST].dNeg = ENUMCRUST235U;
+  options[OPT_235UNUMCRUST].dDefault = 0;
+  sprintf(options[OPT_235UNUMCRUST].cNeg,"Primordial Earth 235U Numer");
+  fnRead[OPT_235UNUMCRUST] = &Read235UNumCrust;
+
+  sprintf(options[OPT_235UPOWERCRUST].cName,"d235UPowerCrust");  //section added PED
+  sprintf(options[OPT_235UPOWERCRUST].cDescr,"Initial Crust Power Production from 235U Atoms");
+  sprintf(options[OPT_235UPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  options[OPT_235UPOWERCRUST].iType = 2;
+  options[OPT_235UPOWERCRUST].iMultiFile = 1;
+  options[OPT_235UPOWERCRUST].dNeg = EPOWERCRUST235U; 
+  options[OPT_235UPOWERCRUST].dDefault = 0;
+  sprintf(options[OPT_235UPOWERCRUST].cNeg,"TW");
+  fnRead[OPT_235UPOWERCRUST] = &Read235UPowerCrust;
 
   sprintf(options[OPT_HALT40KPOWER].cName,"dHalt40KPower");
   sprintf(options[OPT_HALT40KPOWER].cDescr,"Minimum 40K Power");
@@ -912,11 +1225,11 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
   }
 }
 
+/* Assign Nums */
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   // Add an int iFile=iBody+1?XXX
-
+  
   /* Mantle */
-  // XXX Looks like issues here -- maybe from Peter?
   if (options[OPT_40KMASSMAN].iLine[iBody+1] >= 0) {
     //  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
     //      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
@@ -937,18 +1250,24 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   /* Core */
   if (options[OPT_40KMASSCORE].iLine[iBody+1] >= 0) {
     body[iBody].d40KNumCore=body[iBody].d40KMassCore/(MASS40K);
-    //printf("40KMassCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
   }
   if (options[OPT_40KNUMCORE].iLine[iBody+1] >= 0) {
-    // Do nothing bc default Num set.
-    //printf("40KNumCore set, body[iBody].d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KNumCore,ENUMCORE40K);
   }
   if (options[OPT_40KPOWERCORE].iLine[iBody+1] >= 0) {
     body[iBody].d40KNumCore=body[iBody].d40KPowerCore/(ENERGY40K)*(HALFLIFE40K);
-    //printf("40KPowerCore set, .d40KPowerCore=%e, .d40KNumCore=%e, ENUMCORE40K=%e\n",body[iBody].d40KPowerCore,body[iBody].d40KNumCore,ENUMCORE40K);
-    //      exit(1);
   }  
-  body[iBody].d40KConstCore = fd40KConstant(body[iBody].d40KNumCore,dAge);  //moved from above.
+  body[iBody].d40KConstCore = fd40KConstant(body[iBody].d40KNumCore,dAge);
+
+  /* Crust */
+  if (options[OPT_40KMASSCRUST].iLine[iBody+1] >= 0) {
+    body[iBody].d40KNumCrust=body[iBody].d40KMassCrust/(MASS40K);
+  }
+  if (options[OPT_40KNUMCRUST].iLine[iBody+1] >= 0) {
+  }
+  if (options[OPT_40KPOWERCRUST].iLine[iBody+1] >= 0) {
+    body[iBody].d40KNumCrust=body[iBody].d40KPowerCrust/(ENERGY40K)*(HALFLIFE40K);
+  }  
+  body[iBody].d40KConstCrust = fd40KConstant(body[iBody].d40KNumCrust,dAge);
   
 }
 
@@ -956,106 +1275,106 @@ void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_232THMASSMAN].iLine[iBody+1] >= 0) {
       body[iBody].d232ThNumMan=body[iBody].d232ThMassMan/(MASS232TH);
-      //printf("232ThMassMan set, body[iBody].d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
     }
-    if (options[OPT_232THNUMMAN].iLine[iBody+1] >= 0) {
-      //Do nothing, use default.
-      //printf("232ThNumMan set, body[iBody].d232ThKNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThNumMan,ENUMMAN232TH);
+    if (options[OPT_232THNUMMAN].iLine[iBody+1] >= 0) {      //Do nothing, use default.
     }
     if (options[OPT_232THPOWERMAN].iLine[iBody+1] >= 0) {
       body[iBody].d232ThNumMan=body[iBody].d232ThPowerMan/(ENERGY232TH)*(HALFLIFE232TH);
-      //printf("232ThPowerMan set, .d232ThPowerMan=%e, .d232ThNumMan=%e, ENUMMAN232TH=%e\n",body[iBody].d232ThPowerMan,body[iBody].d232ThNumMan,ENUMMAN232TH);
     }
     body[iBody].d232ThConstMan = fd232ThConstant(body[iBody].d232ThNumMan,dAge);
 
     /* Core */
-    //    /*
     if (options[OPT_232THMASSCORE].iLine[iBody+1] >= 0) {
       body[iBody].d232ThNumCore=body[iBody].d232ThMassCore/(MASS232TH);
-      //printf("232ThMassCore set, body[iBody].d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
     }
-    if (options[OPT_232THNUMCORE].iLine[iBody+1] >= 0) {
-      //Do nothing, use default.
-      //printf("232ThNumCore set, body[iBody].d232ThKNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThNumCore,ENUMCORE232TH);
+    if (options[OPT_232THNUMCORE].iLine[iBody+1] >= 0) {      //Do nothing, use default.
     }
     if (options[OPT_232THPOWERCORE].iLine[iBody+1] >= 0) {
       body[iBody].d232ThNumCore=body[iBody].d232ThPowerCore/(ENERGY232TH)*(HALFLIFE232TH);
-      //printf("232ThPowerCore set, .d232ThPowerCore=%e, .d232ThNumCore=%e, ENUMCORE232TH=%e\n",body[iBody].d232ThPowerCore,body[iBody].d232ThNumCore,ENUMCORE232TH);
     }
     body[iBody].d232ThConstCore = fd232ThConstant(body[iBody].d232ThNumCore,dAge);
-    //    */
+
+    /* Crust */
+    if (options[OPT_232THMASSCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d232ThNumCrust=body[iBody].d232ThMassCrust/(MASS232TH);
+    }
+    if (options[OPT_232THNUMCRUST].iLine[iBody+1] >= 0) {      //Do nothing, use default.
+    }
+    if (options[OPT_232THPOWERCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d232ThNumCrust=body[iBody].d232ThPowerCrust/(ENERGY232TH)*(HALFLIFE232TH);
+    }
+    body[iBody].d232ThConstCrust = fd232ThConstant(body[iBody].d232ThNumCrust,dAge);
 }
 
 void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_238UMASSMAN].iLine[iBody+1] >= 0) {
-      /*    printf("238UMass not implemented.\n");
-          exit(1);*/
       body[iBody].d238UNumMan=body[iBody].d238UMassMan/(MASS238U);
-      //printf("238UMassMan set, body[iBody].d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UNumMan,ENUMMAN238U);
     }
     if (options[OPT_238UNUMMAN].iLine[iBody+1] >= 0) {
-      //printf("238UNumMan set, body[iBody].d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UNumMan,ENUMMAN238U);
     }
     if (options[OPT_238UPOWERMAN].iLine[iBody+1] >= 0) {
       body[iBody].d238UNumMan=body[iBody].d238UPowerMan/(ENERGY238U)*(HALFLIFE238U);
-      //printf("238UPowerMan set, .d238UPowerMan=%e, .d238UNumMan=%e, ENUMMAN238U=%e\n",body[iBody].d238UPowerMan,body[iBody].d238UNumMan,ENUMMAN238U);
     }
     body[iBody].d238UConstMan = fd238UConstant(body[iBody].d238UNumMan,dAge);
     /* Core */
     if (options[OPT_238UMASSCORE].iLine[iBody+1] >= 0) {
-      /*    printf("238UMass not implemented.\n");
-          exit(1);*/
       body[iBody].d238UNumCore=body[iBody].d238UMassCore/(MASS238U);
-      //printf("238UMassCore set, body[iBody].d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UNumCore,ENUMCORE238U);
     }
     if (options[OPT_238UNUMCORE].iLine[iBody+1] >= 0) {
-      //printf("238UNumCore set, body[iBody].d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UNumCore,ENUMCORE238U);
     }
     if (options[OPT_238UPOWERCORE].iLine[iBody+1] >= 0) {
       body[iBody].d238UNumCore=body[iBody].d238UPowerCore/(ENERGY238U)*(HALFLIFE238U);
-      //printf("238UPowerCore set, .d238UPowerCore=%e, .d238UNumCore=%e, ENUMCORE238U=%e\n",body[iBody].d238UPowerCore,body[iBody].d238UNumCore,ENUMCORE238U);
     }
     body[iBody].d238UConstCore = fd238UConstant(body[iBody].d238UNumCore,dAge);
-    
+    /* Crust */
+    if (options[OPT_238UMASSCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d238UNumCrust=body[iBody].d238UMassCrust/(MASS238U);
+    }
+    if (options[OPT_238UNUMCRUST].iLine[iBody+1] >= 0) {
+    }
+    if (options[OPT_238UPOWERCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d238UNumCrust=body[iBody].d238UPowerCrust/(ENERGY238U)*(HALFLIFE238U);
+    }
+    body[iBody].d238UConstCrust = fd238UConstant(body[iBody].d238UNumCrust,dAge);    
 }
 
 void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
     /* Mantle */
   if (options[OPT_235UMASSMAN].iLine[iBody+1] >= 0) {
-      /*    printf("235UMass not implemented.\n");
-          exit(1);*/
       body[iBody].d235UNumMan=body[iBody].d235UMassMan/(MASS235U);
-      //printf("235UMassMan set, body[iBody].d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UNumMan,ENUMMAN235U);
   }
   if (options[OPT_235UNUMMAN].iLine[iBody+1] >= 0) {
-    //printf("235UNumMan set, body[iBody].d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UNumMan,ENUMMAN235U);
   }
   if (options[OPT_235UPOWERMAN].iLine[iBody+1] >= 0) {
       body[iBody].d235UNumMan=body[iBody].d235UPowerMan/(ENERGY235U)*(HALFLIFE235U);
-      //printf("235UPowerMan set, .d235UPowerMan=%e, .d235UNumMan=%e, ENUMMAN235U=%e\n",body[iBody].d235UPowerMan,body[iBody].d235UNumMan,ENUMMAN235U);
   }
   body[iBody].d235UConstMan = fd235UConstant(body[iBody].d235UNumMan,dAge);
   /* Core */
   if (options[OPT_235UMASSCORE].iLine[iBody+1] >= 0) {
-      /*    printf("235UMass not implemented.\n");
-          exit(1);*/
       body[iBody].d235UNumCore=body[iBody].d235UMassCore/(MASS235U);
-      //printf("235UMassCore set, body[iBody].d235UNumCore=%e, ENUMCORE235U=%e\n",body[iBody].d235UNumCore,ENUMCORE235U);
   }
   if (options[OPT_235UNUMCORE].iLine[iBody+1] >= 0) {
-    //printf("235UNumCore set, body[iBody].d235UNumCore=%e, ENUMCORE235U=%e\n",body[iBody].d235UNumCore,ENUMCORE235U);
   }
   if (options[OPT_235UPOWERCORE].iLine[iBody+1] >= 0) {
       body[iBody].d235UNumCore=body[iBody].d235UPowerCore/(ENERGY235U)*(HALFLIFE235U);
-      //printf("235UPowerCore set, .d235UPowerCore=%e, .d235UNumCore=%e, ENUMCORE235U=%e\n",body[iBody].d235UPowerCore,body[iBody].d235UNumCore,ENUMCORE235U);
   }
   body[iBody].d235UConstCore = fd235UConstant(body[iBody].d235UNumCore,dAge);
+  /* Crust */
+  if (options[OPT_235UMASSCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d235UNumCrust=body[iBody].d235UMassCrust/(MASS235U);
+  }
+  if (options[OPT_235UNUMCRUST].iLine[iBody+1] >= 0) {
+  }
+  if (options[OPT_235UPOWERCRUST].iLine[iBody+1] >= 0) {
+      body[iBody].d235UNumCrust=body[iBody].d235UPowerCrust/(ENERGY235U)*(HALFLIFE235U);
+  }
+  body[iBody].d235UConstCrust = fd235UConstant(body[iBody].d235UNumCrust,dAge);
 }
 
+/* Verify */
 void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign40KNum(body,options,dAge,iBody);
-
   /* Mantle */
   if (update[iBody].i40KMan >= 0) {
     update[iBody].iaType[update[iBody].i40KMan][0] = 1;
@@ -1076,18 +1395,27 @@ void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double 
     update[iBody].iNumBodies[update[iBody].i40KCore][0]=1;
     update[iBody].iaBody[update[iBody].i40KCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i40KCore][0][0]=iBody;
-    // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i40KCore][0] = fdD40KNumCoreDt(body,system,update[iBody].iaBody[update[iBody].i40KCore][0]);
     update[iBody].pdD40KNumCoreDt = &update[iBody].daDerivProc[update[iBody].i40KCore][0];
     fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
   } else
     update[iBody].pdD40KNumCoreDt = &update[iBody].dZero;
+  /* Crust */
+  if (update[iBody].i40KCrust >= 0) {
+    update[iBody].iaType[update[iBody].i40KCrust][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i40KCrust][0]=1;
+    update[iBody].iaBody[update[iBody].i40KCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i40KCrust][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i40KCrust][0][0]=iBody;
+    update[iBody].daDerivProc[update[iBody].i40KCrust][0] = fdD40KNumCrustDt(body,system,update[iBody].iaBody[update[iBody].i40KCrust][0]);
+    update[iBody].pdD40KNumCrustDt = &update[iBody].daDerivProc[update[iBody].i40KCrust][0];
+    fnUpdate[iBody][update[iBody].i40KCrust][0] = &fdD40KNumCrustDt;
+  } else
+    update[iBody].pdD40KNumCrustDt = &update[iBody].dZero;
 
 }
 
 void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign232ThNum(body,options,dAge,iBody);
-
   /* Mantle */
   if (update[iBody].i232ThMan >= 0) {
     update[iBody].iaType[update[iBody].i232ThMan][0] = 1;
@@ -1107,18 +1435,27 @@ void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doubl
     update[iBody].iNumBodies[update[iBody].i232ThCore][0]=1;
     update[iBody].iaBody[update[iBody].i232ThCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCore][0][0]=iBody;
-    // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(body,system,update[iBody].iaBody[update[iBody].i232ThMan][0]);
     update[iBody].pdD232ThNumCoreDt = &update[iBody].daDerivProc[update[iBody].i232ThCore][0];
     fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
   } else
     update[iBody].pdD232ThNumCoreDt = &update[iBody].dZero;
+  /* Crust */
+  if (update[iBody].i232ThCrust >= 0) {
+    update[iBody].iaType[update[iBody].i232ThCrust][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i232ThCrust][0]=1;
+    update[iBody].iaBody[update[iBody].i232ThCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCrust][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i232ThCrust][0][0]=iBody;
+    update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(body,system,update[iBody].iaBody[update[iBody].i232ThMan][0]);
+    update[iBody].pdD232ThNumCrustDt = &update[iBody].daDerivProc[update[iBody].i232ThCrust][0];
+    fnUpdate[iBody][update[iBody].i232ThCrust][0] = &fdD232ThNumCrustDt;
+  } else
+    update[iBody].pdD232ThNumCrustDt = &update[iBody].dZero;
 }
 
 void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign238UNum(body,options,dAge,iBody);
   /* Mantle */
-
   if (update[iBody].i238UMan >= 0) {
     update[iBody].iaType[update[iBody].i238UMan][0] = 1;
     update[iBody].iNumBodies[update[iBody].i238UMan][0]=1;
@@ -1137,17 +1474,26 @@ void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].iNumBodies[update[iBody].i238UCore][0]=1;
     update[iBody].iaBody[update[iBody].i238UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i238UCore][0][0]=iBody;
-    // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i238UCore][0] = fdD238UNumCoreDt(body,system,update[iBody].iaBody[update[iBody].i238UCore][0]);
     update[iBody].pdD238UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i238UCore][0];
     fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
   } else
     update[iBody].pdD238UNumCoreDt = &update[iBody].dZero;
+  /* Crust */
+  if (update[iBody].i238UCrust >= 0) {
+    update[iBody].iaType[update[iBody].i238UCrust][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i238UCrust][0]=1;
+    update[iBody].iaBody[update[iBody].i238UCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i238UCrust][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i238UCrust][0][0]=iBody;
+    update[iBody].daDerivProc[update[iBody].i238UCrust][0] = fdD238UNumCrustDt(body,system,update[iBody].iaBody[update[iBody].i238UCrust][0]);
+    update[iBody].pdD238UNumCrustDt = &update[iBody].daDerivProc[update[iBody].i238UCrust][0];
+    fnUpdate[iBody][update[iBody].i238UCrust][0] = &fdD238UNumCrustDt;
+  } else
+    update[iBody].pdD238UNumCrustDt = &update[iBody].dZero;
 }
 
-void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) { //PED
+void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign235UNum(body,options,dAge,iBody);
-
   /* Mantle */
   if (update[iBody].i235UMan >= 0) {
     update[iBody].iaType[update[iBody].i235UMan][0] = 1;
@@ -1168,13 +1514,27 @@ void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].iaBody[update[iBody].i235UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCore][0][0]=iBody;
     update[iBody].pdD235UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i235UCore][0];
-    // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(body,system,update[iBody].iaBody[update[iBody].i235UMan][0]);
     fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
   } else
     update[iBody].pdD235UNumCoreDt = &update[iBody].dZero;
+  /* Crust */
+  if (update[iBody].i235UCrust >= 0) {
+    update[iBody].iaType[update[iBody].i235UCrust][0] = 1;
+    update[iBody].iNumBodies[update[iBody].i235UCrust][0]=1;
+    update[iBody].iaBody[update[iBody].i235UCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCrust][0]*sizeof(int));
+    update[iBody].iaBody[update[iBody].i235UCrust][0][0]=iBody;
+    update[iBody].pdD235UNumCrustDt = &update[iBody].daDerivProc[update[iBody].i235UCrust][0];
+    update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(body,system,update[iBody].iaBody[update[iBody].i235UMan][0]);
+    fnUpdate[iBody][update[iBody].i235UCrust][0] = &fdD235UNumCrustDt;
+  } else
+    update[iBody].pdD235UNumCrustDt = &update[iBody].dZero;
 }
 
+<<<<<<< HEAD
+/* Auxs Props */
+void PropsAuxRadheat(BODY *body,UPDATE *update,int iBody) {
+=======
 /*
 double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
   int iModule;
@@ -1187,11 +1547,11 @@ double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
 }
 */
 void PropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+>>>>>>> 42ed5cb64a20e82f5e3d5915bdf777e344879ace
   body[iBody].dRadPowerMan=fdRadPowerMan(update,iBody);
   body[iBody].dRadPowerCore=fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust=fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerTotal=fdRadPowerTotal(body,iBody);
-  /* Nothing */
 }
 
 void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1199,21 +1559,29 @@ void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDA
     body[iBody].d40KNumMan = 0;
   if (body[iBody].d40KNumCore < 0.5)
     body[iBody].d40KNumCore = 0;
+  if (body[iBody].d40KNumCrust < 0.5)
+    body[iBody].d40KNumCrust = 0;
   
   if (body[iBody].d232ThNumMan < 0.5)
     body[iBody].d232ThNumMan = 0;
   if (body[iBody].d232ThNumCore < 0.5)
     body[iBody].d232ThNumCore = 0;
+  if (body[iBody].d232ThNumCrust < 0.5)
+    body[iBody].d232ThNumCrust = 0;
 
   if (body[iBody].d238UNumMan < 0.5)
     body[iBody].d238UNumMan = 0;
   if (body[iBody].d238UNumCore < 0.5)
     body[iBody].d238UNumCore = 0;
+  if (body[iBody].d238UNumCrust < 0.5)
+    body[iBody].d238UNumCrust = 0;
 
   if (body[iBody].d235UNumMan < 0.5)
     body[iBody].d235UNumMan = 0;
   if (body[iBody].d235UNumCore < 0.5)
     body[iBody].d235UNumCore = 0;
+  if (body[iBody].d235UNumCrust < 0.5)
+    body[iBody].d235UNumCrust = 0;
 }
 
 void RadheatExit(FILES *files,char cSpecies[16],int iFile) {
@@ -1280,7 +1648,7 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNum238UMan++;
   }
-  if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0) {  //PED
+  if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum235UMan++;
   }
@@ -1296,9 +1664,25 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
     update[iBody].iNum238UCore++;
   }
-  if (body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {  //PED
+  if (body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum235UCore++;
+  }
+  if (body[iBody].d40KNumCrust > 0 || body[iBody].d40KMassCrust > 0 || body[iBody].d40KPowerCrust > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNum40KCrust++;
+  }
+  if (body[iBody].d232ThNumCrust > 0 || body[iBody].d232ThMassCrust > 0 || body[iBody].d232ThPowerCrust > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNum232ThCrust++;
+  }
+  if (body[iBody].d238UNumCrust > 0 || body[iBody].d238UMassCrust > 0 || body[iBody].d238UPowerCrust > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNum238UCrust++;
+  }
+  if (body[iBody].d235UNumCrust > 0 || body[iBody].d235UMassCrust > 0 || body[iBody].d235UPowerCrust > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNum235UCrust++;
   }
 }
 
@@ -1315,7 +1699,7 @@ void FinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar
   update[iBody].iaModule[iVar][*iEqn] = RAD238UMAN;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
-void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
+void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD235UMAN;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
@@ -1332,9 +1716,26 @@ void FinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVa
   update[iBody].iaModule[iVar][*iEqn] = RAD238UCORE;
   update[iBody].iNum238UCore = (*iEqn)++;
 }
-void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
+void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
   update[iBody].iNum235UCore = (*iEqn)++;
+}
+
+void FinalizeUpdate40KNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+    update[iBody].iaModule[iVar][*iEqn] = RAD40KCORE;
+    update[iBody].iNum40KCrust = (*iEqn)++;
+}
+void FinalizeUpdate232ThNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = RAD232THCORE;
+  update[iBody].iNum232ThCrust = (*iEqn)++;
+}
+void FinalizeUpdate238UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = RAD238UCORE;
+  update[iBody].iNum238UCrust = (*iEqn)++;
+}
+void FinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = RAD235UCORE;
+  update[iBody].iNum235UCrust = (*iEqn)++;
 }
 
 /***************** RADHEAT Halts *****************/
@@ -1554,20 +1955,38 @@ void Write40KNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   /* else nothing, as it is a number */
 }
 
-/* Thorium */
-
-void Write232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get total heat from 232Th */
-  *dTmp = fd232ThPowerMan(update,iBody);
+/* Crust */
+void Write40KPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total power from 40K */
+  *dTmp = fd40KPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else {
+  } else { 
     *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
     fsUnitsPower(units,cUnit);
   }
 }
+void Write40KMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d40KNumCrust*MASS40K;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+void Write40KNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d40KNumCrust;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  }
+  /* else nothing, as it is a number */
+}
 
+/* Thorium */
 void Write232ThEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 232Th */
   *dTmp = fd232ThEnFlux(body,update,iBody);
@@ -1580,7 +1999,6 @@ void Write232ThEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-
 void WriteD232ThNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD232ThNumManDt);
 
@@ -1592,15 +2010,24 @@ void WriteD232ThNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-
 void WritedD232ThPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
-
 void Write232ThTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
 
+void Write232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total heat from 232Th */
+  *dTmp = fd232ThPowerMan(update,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
 void Write232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan*MASS232TH;
   if (output->bDoNeg[iBody]) {
@@ -1611,7 +2038,6 @@ void Write232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write232ThNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan;
   if (output->bDoNeg[iBody]) {
@@ -1633,7 +2059,6 @@ void Write232ThPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     fsUnitsPower(units,cUnit);
   }
 }
-
 void Write232ThMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCore*MASS232TH;
   if (output->bDoNeg[iBody]) {
@@ -1644,7 +2069,6 @@ void Write232ThMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write232ThNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCore;
   if (output->bDoNeg[iBody]) {
@@ -1654,11 +2078,10 @@ void Write232ThNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   /* else nothing, as it is a number */
 }
 
-/* Uranium 238 */
-
-void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get total power from 238U */
-  *dTmp = fd238UPowerMan(update,iBody);
+/* Crust */
+void Write232ThPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total heat from 232Th */
+  *dTmp = fd232ThPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1667,7 +2090,26 @@ void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
+void Write232ThMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d232ThNumCrust*MASS232TH;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+void Write232ThNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d232ThNumCrust;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  }
+  /* else nothing, as it is a number */
+}
 
+/* Uranium 238 */
 void Write238UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 238U */
   *dTmp = fd238UEnFlux(body,update,iBody);
@@ -1679,7 +2121,6 @@ void Write238UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-
 void WriteD238UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD238UNumManDt);
   if (output->bDoNeg[iBody]) {
@@ -1690,15 +2131,25 @@ void WriteD238UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-
 void WritedD238UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
-
 void Write238UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
 
+/* Mantle */
+void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total power from 238U */
+  *dTmp = fd238UPowerMan(update,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
 void Write238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan*MASS238U;
   if (output->bDoNeg[iBody]) {
@@ -1709,7 +2160,6 @@ void Write238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write238UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan;
   if (output->bDoNeg[iBody]) {
@@ -1741,7 +2191,6 @@ void Write238UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write238UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumCore;
   if (output->bDoNeg[iBody]) {
@@ -1751,11 +2200,10 @@ void Write238UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   /* else nothing, as it is a number */
 }
 
-/* Uranium 235 PED */
-
-void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get total power from 235U */
-  *dTmp = -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
+/* Crust */
+void Write238UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total power from 238U */
+  *dTmp = fd238UPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1764,7 +2212,26 @@ void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
+void Write238UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d238UNumCrust*MASS238U;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+void Write238UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d238UNumCrust;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  }
+  /* else nothing, as it is a number */
+}
 
+/* Uranium 235 PED */
 void Write235UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 235U */
   *dTmp = fd235UEnFlux(body,update,iBody);
@@ -1777,7 +2244,6 @@ void Write235UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-
 void WriteD235UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD235UNumManDt);
 
@@ -1789,15 +2255,25 @@ void WriteD235UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-
 void WritedD235UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
-
 void Write235UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
 
+/* Mantle */
+void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total power from 235U */
+  *dTmp = -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
 void Write235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan*MASS235U;
   if (output->bDoNeg[iBody]) {
@@ -1808,7 +2284,6 @@ void Write235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write235UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan;
   if (output->bDoNeg[iBody]) {
@@ -1840,9 +2315,39 @@ void Write235UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-
 void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumCore;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  }
+  /* else nothing, as it is a number */
+}
+
+/* Crust */
+void Write235UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get total power from 235U */
+  *dTmp = fd235UPowerCrust(update,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
+void Write235UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d235UNumCrust*MASS235U;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+void Write235UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].d235UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1853,9 +2358,7 @@ void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 /* Totals */
 void WriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Power Production in crust*/
-
   *dTmp = fdRadPowerCrust(update,iBody);
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1867,9 +2370,7 @@ void WriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Power Production in mantle*/
-
   *dTmp = fdRadPowerMan(update,iBody);
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1881,9 +2382,7 @@ void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
 void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production in core*/
-
   *dTmp = fdRadPowerCore(update,iBody);
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1894,7 +2393,6 @@ void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
-  //  *dTmp = fdRadPowerTot(update,iBody);
   *dTmp = body[iBody].dRadPowerTotal;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1908,7 +2406,6 @@ void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 void WriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Surface Energy Flux */
   *dTmp = fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1922,15 +2419,6 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   /* Potassium */
     //  PED:  Do these default numbers matter??  If so they need to be changed.
-  sprintf(output[OUT_40KPOWERMAN].cName,"40KPowerMan");
-  sprintf(output[OUT_40KPOWERMAN].cDescr,"Total Power Generated by 40K");
-  sprintf(output[OUT_40KPOWERMAN].cNeg,"TW");
-  output[OUT_40KPOWERMAN].bNeg = 1;
-  output[OUT_40KPOWERMAN].dNeg = 1e-12; 
-  output[OUT_40KPOWERMAN].iNum = 1;
-  output[OUT_40KPOWERMAN].iModuleBit = RADHEAT;
-  fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
-  
   sprintf(output[OUT_40KENFLUX].cName,"40KEnFlux");
   sprintf(output[OUT_40KENFLUX].cDescr,"Surface Energy Flux from 40K");
   sprintf(output[OUT_40KENFLUX].cNeg,"W/m^2");
@@ -1966,6 +2454,15 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KTIME].iNum = 1;
   output[OUT_40KTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_40KTIME] = &Write40KTimescale;
+
+  sprintf(output[OUT_40KPOWERMAN].cName,"40KPowerMan");
+  sprintf(output[OUT_40KPOWERMAN].cDescr,"Total Power Generated by 40K");
+  sprintf(output[OUT_40KPOWERMAN].cNeg,"TW");
+  output[OUT_40KPOWERMAN].bNeg = 1;
+  output[OUT_40KPOWERMAN].dNeg = 1e-12; 
+  output[OUT_40KPOWERMAN].iNum = 1;
+  output[OUT_40KPOWERMAN].iModuleBit = RADHEAT;
+  fnWrite[OUT_40KPOWERMAN] = &Write40KPowerMan;
   
   sprintf(output[OUT_40KMASSMAN].cName,"40KMassMan");
   sprintf(output[OUT_40KMASSMAN].cDescr,"Total Mass of 40K");
@@ -2012,6 +2509,34 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_40KNUMCORE].iNum = 1;
   output[OUT_40KNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KNUMCORE] = &Write40KNumCore;
+
+  /* Crust */
+  sprintf(output[OUT_40KPOWERCRUST].cName,"40KPowerCrust");
+  sprintf(output[OUT_40KPOWERCRUST].cDescr,"Crust Power Generated by 40K");
+  sprintf(output[OUT_40KPOWERCRUST].cNeg,"TW");
+  output[OUT_40KPOWERCRUST].bNeg = 1;
+  output[OUT_40KPOWERCRUST].dNeg = 1e-12; // ergs/s -> TW 
+  output[OUT_40KPOWERCRUST].iNum = 1;
+  output[OUT_40KPOWERCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_40KPOWERCRUST] = &Write40KPowerCrust;
+  
+  sprintf(output[OUT_40KMASSCRUST].cName,"40KMassCrust");
+  sprintf(output[OUT_40KMASSCRUST].cDescr,"Total Crust Mass of 40K");
+  sprintf(output[OUT_40KMASSCRUST].cNeg,"Earth Masses");
+  output[OUT_40KMASSCRUST].bNeg = 1;
+  output[OUT_40KMASSCRUST].dNeg = MEARTH;
+  output[OUT_40KMASSCRUST].iNum = 1;
+  output[OUT_40KMASSCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_40KMASSCRUST] = &Write40KMassCrust;
+  
+  sprintf(output[OUT_40KNUMCRUST].cName,"40KNumCrust");
+  sprintf(output[OUT_40KNUMCRUST].cDescr,"Total Crust Number of 40K Atoms");
+  sprintf(output[OUT_40KNUMCRUST].cNeg,"Initial Primordial Earth Number");
+  output[OUT_40KNUMCRUST].bNeg = 1;
+  output[OUT_40KNUMCRUST].dNeg = EMASSCRUST40K/MASS40K;
+  output[OUT_40KNUMCRUST].iNum = 1;
+  output[OUT_40KNUMCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_40KNUMCRUST] = &Write40KNumCrust;
   
   /* Thorium */
   sprintf(output[OUT_232THPOWERMAN].cName,"232ThPowerMan");
@@ -2096,6 +2621,34 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_232THNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THNUMCORE] = &Write232ThNumCore;
     
+  /* Crust */
+  sprintf(output[OUT_232THPOWERCRUST].cName,"232ThPowerCrust");
+  sprintf(output[OUT_232THPOWERCRUST].cDescr,"Total Power Generated by 232Th");
+  sprintf(output[OUT_232THPOWERCRUST].cNeg,"TW");
+  output[OUT_232THPOWERCRUST].bNeg = 1;
+  output[OUT_232THPOWERCRUST].dNeg = 1e-12; 
+  output[OUT_232THPOWERCRUST].iNum = 1;
+  output[OUT_232THPOWERCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_232THPOWERCRUST] = &Write232ThPowerCrust;
+
+  sprintf(output[OUT_232THMASSCRUST].cName,"232ThMassCrust");
+  sprintf(output[OUT_232THMASSCRUST].cDescr,"Total Mass of 232Th");
+  sprintf(output[OUT_232THMASSCRUST].cNeg,"Earth Masses");
+  output[OUT_232THMASSCRUST].bNeg = 1;
+  output[OUT_232THMASSCRUST].dNeg = MEARTH;
+  output[OUT_232THMASSCRUST].iNum = 1;
+  output[OUT_232THMASSCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_232THMASSCRUST] = &Write232ThMassCrust;
+  
+  sprintf(output[OUT_232THNUMCRUST].cName,"232ThNumCrust");
+  sprintf(output[OUT_232THNUMCRUST].cDescr,"Total Number of 232Th Atoms");
+  sprintf(output[OUT_232THNUMCRUST].cNeg,"Initial Primordial Earth Number");
+  output[OUT_232THNUMCRUST].bNeg = 1;
+  output[OUT_232THNUMCRUST].dNeg = EMASSCRUST232TH/MASS232TH;
+  output[OUT_232THNUMCRUST].iNum = 1;
+  output[OUT_232THNUMCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_232THNUMCRUST] = &Write232ThNumCrust;
+  
   /* Uranium 238 */
 
   sprintf(output[OUT_238UPOWERMAN].cName,"238UPowerMan");
@@ -2180,6 +2733,34 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_238UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMCORE] = &Write238UNumCore;
   
+  /* Crust */
+  sprintf(output[OUT_238UPOWERCRUST].cName,"238UPowerCrust");
+  sprintf(output[OUT_238UPOWERCRUST].cDescr,"Total Crust Power Generated by 238U");
+  sprintf(output[OUT_238UPOWERCRUST].cNeg,"TW");
+  output[OUT_238UPOWERCRUST].bNeg = 1;
+  output[OUT_238UPOWERCRUST].dNeg = 1e-12; 
+  output[OUT_238UPOWERCRUST].iNum = 1;
+  output[OUT_238UPOWERCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_238UPOWERCRUST] = &Write238UPowerCrust;
+  
+  sprintf(output[OUT_238UMASSCRUST].cName,"238UMassCrust");
+  sprintf(output[OUT_238UMASSCRUST].cDescr,"Total Crust Mass of 238U");
+  sprintf(output[OUT_238UMASSCRUST].cNeg,"Earth Masses");
+  output[OUT_238UMASSCRUST].bNeg = 1;
+  output[OUT_238UMASSCRUST].dNeg = MEARTH;
+  output[OUT_238UMASSCRUST].iNum = 1;
+  output[OUT_238UMASSCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_238UMASSCRUST] = &Write238UMassCrust;
+  
+  sprintf(output[OUT_238UNUMCRUST].cName,"238UNumCrust");
+  sprintf(output[OUT_238UNUMCRUST].cDescr,"Total Crust Number of 238U Atoms");
+  sprintf(output[OUT_238UNUMCRUST].cNeg,"Initial Primordial Earth Number");
+  output[OUT_238UNUMCRUST].bNeg = 1;
+  output[OUT_238UNUMCRUST].dNeg = 1;
+  output[OUT_238UNUMCRUST].iNum = 1;
+  output[OUT_238UNUMCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_238UNUMCRUST] = &Write238UNumCrust;
+  
   /* Uranium 235 */
   
   sprintf(output[OUT_235UPOWERMAN].cName,"235UPowerMan");
@@ -2263,6 +2844,34 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_235UNUMCORE].iNum = 1;
   output[OUT_235UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMCORE] = &Write235UNumCore;
+
+  /* Crust */
+  sprintf(output[OUT_235UPOWERCRUST].cName,"235UPowerCrust");
+  sprintf(output[OUT_235UPOWERCRUST].cDescr,"Total Crust Power Generated by 235U");
+  sprintf(output[OUT_235UPOWERCRUST].cNeg,"TW");
+  output[OUT_235UPOWERCRUST].bNeg = 1;
+  output[OUT_235UPOWERCRUST].dNeg = 1e-12; 
+  output[OUT_235UPOWERCRUST].iNum = 1;
+  output[OUT_235UPOWERCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_235UPOWERCRUST] = &Write235UPowerCrust;
+
+  sprintf(output[OUT_235UMASSCRUST].cName,"235UMassCrust");
+  sprintf(output[OUT_235UMASSCRUST].cDescr,"Total Crust Mass of 235U");
+  sprintf(output[OUT_235UMASSCRUST].cNeg,"Earth Masses");
+  output[OUT_235UMASSCRUST].bNeg = 1;
+  output[OUT_235UMASSCRUST].dNeg = MEARTH;
+  output[OUT_235UMASSCRUST].iNum = 1;
+  output[OUT_235UMASSCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_235UMASSCRUST] = &Write235UMassCrust;
+  
+  sprintf(output[OUT_235UNUMCRUST].cName,"235UNumCrust");
+  sprintf(output[OUT_235UNUMCRUST].cDescr,"Total Crust Number of 235U Atoms");
+  sprintf(output[OUT_235UNUMCRUST].cNeg,"Initial Primordial Earth Number");
+  output[OUT_235UNUMCRUST].bNeg = 1;
+  output[OUT_235UNUMCRUST].dNeg = 1;
+  output[OUT_235UNUMCRUST].iNum = 1;
+  output[OUT_235UNUMCRUST].iModuleBit = RADHEAT;
+  fnWrite[OUT_235UNUMCRUST] = &Write235UNumCrust;
       
   /* Totals */
   
@@ -2320,19 +2929,15 @@ void FinalizeOutputFunctionRadheat(OUTPUT *output,int iBody,int iModule) {
 /************ RADHEAT Logging Functions **************/
 
 void LogOptionsRadheat(CONTROL *control, FILE *fp) {
-
   /* Anything here?
-
   fprintf(fp,"-------- RADHEAT Options -----\n\n");
   */
 }
 
 //PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
 void LogRadheat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
-
   /* Anything here? 
   int iOut;
-
   fprintf(fp,"\n----- RADHEAT PARAMETERS ------\n");
   for (iOut=OUTSTARTRADHEAT;iOut<OUTBODYSTARTRADHEAT;iOut++) {
     if (output[iOut].iNum > 0)
@@ -2381,11 +2986,16 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdate238UNumManRadheat;
   module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdate235UNumManRadheat;
 
-  //  NEED TO ADD CORE HERE?
   module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdate40KNumCoreRadheat;
   module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
   module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
   module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
+
+  module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &FinalizeUpdate40KNumCrustRadheat;
+  module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &FinalizeUpdate232ThNumCrustRadheat;
+  module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &FinalizeUpdate238UNumCrustRadheat;
+  module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &FinalizeUpdate235UNumCrustRadheat;
+  
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
 
@@ -2409,9 +3019,14 @@ double fdRadPowerCore(UPDATE *update,int iBody) {
   return fd40KPowerCore(update,iBody) + fd232ThPowerCore(update,iBody) + fd238UPowerCore(update,iBody) + fd235UPowerCore(update,iBody);
 }
 
-//double fdRadPowerTot(UPDATE *update,int iBody) {
-  //  return fdRadPowerMan(update,iBody) + fdRadPowerCore(update,iBody) + fdRadPowerCrust(update,iBody);
-//PD: Note total doesn't need update, only body, which has the reservoir powers.
+double fdRadPowerCrust(UPDATE *update,int iBody) {
+  /*
+  return -(*(update[iBody].pdD238UNumCrustDt))*ENERGY238U - (*(update[iBody].pdD235UNumCrustDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCrustDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCrustDt))*ENERGY40K;
+  */
+  return fd40KPowerCrust(update,iBody) + fd232ThPowerCrust(update,iBody) + fd238UPowerCrust(update,iBody) + fd235UPowerCrust(update,iBody);
+}
+
+//PD: Note total doesn't need 'update', only 'body', which has the reservoir powers.
 double fdRadPowerTotal(BODY *body,int iBody) {
   return body[iBody].dRadPowerMan + body[iBody].dRadPowerCore + body[iBody].dRadPowerCrust;
 }
@@ -2437,15 +3052,12 @@ double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can b
 double fd40KConstant(double dNum,double dAge) {  
     return fdRadheatConst(dNum,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
 }
-
 double fd232ThConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE232TH);  //redirects to fdRadheatConst
 }
-
 double fd238UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE238U);  //redirects to fdRadheatConst
 }
-
 double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
 }
@@ -2453,15 +3065,12 @@ double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
 double fd40KPowerMan(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;
 }
-
 double fd232ThPowerMan(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD232ThNumManDt))*ENERGY232TH;
 }
-
 double fd238UPowerMan(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD238UNumManDt))*ENERGY238U;
 }
-
 double fd235UPowerMan(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
 }
@@ -2469,66 +3078,66 @@ double fd235UPowerMan(UPDATE *update,int iBody) {
 double fd40KPowerCore(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
 }
-
 double fd232ThPowerCore(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH;
 }
-
 double fd238UPowerCore(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U;
 }
-
 double fd235UPowerCore(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD235UNumCoreDt))*ENERGY235U;
 }
 
+double fd40KPowerCrust(UPDATE *update,int iBody) {
+  return -(*(update[iBody].pdD40KNumCrustDt))*ENERGY40K;
+}
+double fd232ThPowerCrust(UPDATE *update,int iBody) {
+  return -(*(update[iBody].pdD232ThNumCrustDt))*ENERGY232TH;
+}
+double fd238UPowerCrust(UPDATE *update,int iBody) {
+  return  -(*(update[iBody].pdD238UNumCrustDt))*ENERGY238U;
+}
+double fd235UPowerCrust(UPDATE *update,int iBody) {
+  return  -(*(update[iBody].pdD235UNumCrustDt))*ENERGY235U;
+}
+
 double fd40KPower(UPDATE *update,int iBody) {
-  return fd40KPowerMan(update,iBody) + fd40KPowerCore(update,iBody);
+  return fd40KPowerMan(update,iBody) + fd40KPowerCore(update,iBody) + fd40KPowerCrust(update,iBody);
 }
-
 double fd232ThPower(UPDATE *update,int iBody) {
-  return fd232ThPowerMan(update,iBody) + fd232ThPowerCore(update,iBody);
+  return fd232ThPowerMan(update,iBody) + fd232ThPowerCore(update,iBody) + fd232ThPowerCrust(update,iBody);
 }
-
 double fd238UPower(UPDATE *update,int iBody) {
-  return fd238UPowerMan(update,iBody) + fd238UPowerCore(update,iBody);
+  return fd238UPowerMan(update,iBody) + fd238UPowerCore(update,iBody) + fd238UPowerCrust(update,iBody);
 }
-
 double fd235UPower(UPDATE *update,int iBody) {
-  return fd235UPowerMan(update,iBody) + fd235UPowerCore(update,iBody);
+  return fd235UPowerMan(update,iBody) + fd235UPowerCore(update,iBody) + fd235UPowerCrust(update,iBody);
 }
 
 /* Energy Flux */
 double fd40KEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd40KPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
-
 double fd232ThEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd232ThPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
-
 double fd238UEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd238UPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
-
 double fd235UEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd235UPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 
 /* DN/Dt */
-
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,body[iaBody[0]].dAge);
 }
-
 double fdD232ThNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
-
 double fdD238UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,body[iaBody[0]].dAge);
 }
-
 double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,body[iaBody[0]].dAge);
 }
@@ -2536,27 +3145,38 @@ double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
 double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,body[iaBody[0]].dAge);
 }
-
 double fdD232ThNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
-
 double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,body[iaBody[0]].dAge);
 }
-
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,body[iaBody[0]].dAge);
-
 }
 
-double fdRadPowerCrust(UPDATE *update,int iBody) {
+double fdD40KNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return fdDNumRadDt(body[iaBody[0]].d40KConstCrust,HALFLIFE40K,body[iaBody[0]].dAge);
+}
+double fdD232ThNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return fdDNumRadDt(body[iaBody[0]].d232ThConstCrust,HALFLIFE232TH,body[iaBody[0]].dAge);
+}
+double fdD238UNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return fdDNumRadDt(body[iaBody[0]].d238UConstCrust,HALFLIFE238U,body[iaBody[0]].dAge);
+}
+double fdD235UNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return fdDNumRadDt(body[iaBody[0]].d235UConstCrust,HALFLIFE235U,body[iaBody[0]].dAge);
+}
+
+
+//double fdRadPowerCrust(UPDATE *update,int iBody) {
   /* This is a fudge to get SurfEnFluxTot to behave. The current Earth 
      produces 7 TW of of radiogenic power in the crust. I will wave my hands
      and say that since Earth's crust has been growing with time, while at
      the same time radioactive decay is decreasing, the two magically
      cancel out and throughout Earth's history, the crust has always produced
      7 TW of power. */
-
+/*
   return 7e12;
 }
+*/

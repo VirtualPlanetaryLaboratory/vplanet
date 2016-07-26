@@ -44,8 +44,8 @@
 #define EVOLCORE         (4.0)/(3)*PI*ERCORE*ERCORE*ERCORE  //[m^3] volume of total core.
 #define EVOLOC           EVOLCORE-EVOLIC    //[m^3] volume of OC today.
 #define EVOLMAN          EVOL-EVOLCORE      //[m^3] volume of Mantle.
-#define AREASURF         4.0*PI*ERADIUS*ERADIUS //[m2] area of surface
-#define AREACMB          4.0*PI*ERCORE*ERCORE   //[m2] area of CMB.
+#define EAREASURF        4.0*PI*ERADIUS*ERADIUS //[m2] area of surface
+#define EAREACMB         4.0*PI*ERCORE*ERCORE   //[m2] area of CMB.
 // DENSITIES - derived from mass and radius dfns.
 #define EDENS            (EMASS)/(EVOL)         //[kg/m^3] density of E
 #define EDENSMAN         (EMASSMAN)/(EVOLMAN)   //[kg/m^3] density of E mantle.
@@ -73,17 +73,24 @@
 /* CONVECTION CONSTANTS */
 #define RACRIT           660.          //[-] critical rayleigh number for spherical convection.
 #define CONVEXPON        1./3          //[nd] convective cooling nusselt exponent "beta"
+#define HFLOWREDUCTSTAG  1./25         //[nd] mantle surface heat flow reduction factor for stagnant lid.
+#define STAGLID          0.            //[nd] switch to turn stagnant lid on.  (def=0, ie mobile lid)
+#define MANHFLOWPREF     1.            //[nd] UM heat flow prefix.  mobile lid=1.  staglid=HFLOWREDUCTSTAG. 
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
 #define VISCREF          5e7           //[m2/s] reference kinematic mantle viscosity, def ViscRef.
-#define VISCJUMPULM      2.7           //[nd] viscosity jump from upper to lower mantle, def ViscRatioMan.
+#define VISCJUMPMAN      2.7           //[nd] viscosity jump from upper to lower mantle, def ViscJumpMan.
+#define FIXVISCJUMPMAN   0             //[nd] (default) option to fix viscjumpulm. if =0 then viscLM is computed from TLMan.
+#define VISCJUMPMMAN     10.           //[nd] viscosity jump from upper to average (mid) mantle.
 #define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
-#define MELTB            2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
-#define MELTPHISTAR      0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
-#define MELTDELTA        6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
-#define MELTGAMMA        6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
-#define MELTXI           5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
+#define VISCMELTB        2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
+#define VISCMELTPHIS     0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
+#define VISCMELTDELTA    6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
+#define VISCMELTGAMMA    6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
+#define VISCMELTXI       5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
+#define MELTFACTORUMAN   1.0           //[nd] (Default) viscosity-melt reduction factor "epsilon_phase"
+#define FIXMELTFACTORUMAN 0.0          //[nd] (Default) switch to fix MeltfactorUMan to a constant value.
 /* TIDAL PROPERTIES */
 #define STIFFNESS        3.1217e11     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
 /* MELTING CONSTANTS */
@@ -97,6 +104,13 @@
 #define TREFLIND         5705.0        //[K] lindemann's law reference temp. "T_Fe0" (DB15 A23)
 #define DVLIQDTEMP       8e17          //[m^3/K] approximation of mantle DV_liq/DT.
 #define ERUPTEFF         0.1           //[nd] Default eruption efficiency.
+/* Continental Crust */
+#define ECRUSTMASS       0.0035*(MEARTH)  //[kg]  =0.35% of M_earth (Taylor 95)
+#define ECRUSTDENSITY    2800.         //[kg/m3]
+#define ECRUSTAREA       0.412*(EAREASURF)  //[m2] =41.2% of Earth surface (Taylor 95)
+#define ECRUSTDEPTH      (ECRUSTMASS)/((ECRUSTDENSITY)*(ECRUSTAREA)) //[m] ave depth of CC today ~ 36 km (Taylor 95)
+#define CRUSTACCRFRAC    0.015         //[nd] constant fraction of oceanic crust accreted onto continent.
+#define CRUSTINSOFACT    (65.)/(94.)   //[nd] reduction in hflux through contintental crust today (Jaupart 07, table 3)
 /* CORE CHEMISTRY */
 #define DTCHIREF         300.          //[K] DT_chi>0. liquidus depression present E.
 #define CHI_OC_E         0.18          //[nd] OCore light element concentration present E.
@@ -142,11 +156,12 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
 #define OPT_VISCUMAN        1720   //Viscosity UMTBL
 #define OPT_VISCLMAN        1721   //Viscosity LMTBL
-#define OPT_SHMODUMAN       1723   //Shear modulus UMTBL
-#define OPT_SHMODLMAN       1724   //Shear modulus LMTBL
-#define OPT_FMELTUMAN       1725   //Melt fraction UMTBL
-#define OPT_FMELTLMAN       1726   //Melt fraction LMTBL
-#define OPT_MELTFACTORUMAN  1727   //Melt fraction UMTBL
+#define OPT_SHMODUMAN       1722   //Shear modulus UMTBL
+#define OPT_SHMODLMAN       1723   //Shear modulus LMTBL
+#define OPT_FMELTUMAN       1724   //Melt fraction UMTBL
+#define OPT_FMELTLMAN       1725   //Melt fraction LMTBL
+#define OPT_MELTFACTORUMAN  1726   //Melt fraction UMTB
+#define OPT_FIXMELTFACTORUMAN 1727   //Option to Fix Melt fraction UMTBLL
 #define OPT_MELTFACTORLMAN  1728   //Melt fraction LMTBL
 #define OPT_DEPTHMELTMAN    1729   //Depth to base of UM melt region.
 #define OPT_TDEPTHMELTMAN   1730   //Temp at base of UM melt region.
@@ -154,6 +169,7 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_K2MAN           1732   //Mantle k2 love number
 #define OPT_IMK2MAN         1733   //Mantle Im(k2) love number
 #define OPT_VISCUMANARR     1736   //Viscosity UM Arrhenius
+#define OPT_VISCMMAN        1737   //Viscosity Mid (ave) mantle.
 /* Time Derivatives & Gradients */
 #define OPT_TDOTMAN         1740   //Time deriv of mean mantle temp
 #define OPT_TDOTCORE        1741   //time deriv of mean core temp
@@ -173,6 +189,12 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HFLUXSURF       1760   //hflux surface of mantle
 #define OPT_HFLOWSURF       1761   //hflow surface of mantle
 #define OPT_TIDALPOWMAN     1762   //Tidal Power Mantle
+/* Halts */
+#define OPT_HALTMINTMAN     1763   //Minimum mantle temperature
+#define OPT_HALTMINTCORE    1764   //Minimum core temperature
+/* Stagnant Lid */
+#define OPT_STAGLID         1765   //Stagnant lid switch
+#define OPT_MANHFLOWPREF    1766   //Stagnant lid switch
 /* Core Variables */
 #define OPT_RIC             1770   //IC radius
 #define OPT_DOC             1771   //OC shell thickness
@@ -186,26 +208,37 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_MASSCHIIC       1787   //IC chi Mass
 #define OPT_DTCHI           1788   //Core Liquidus Depression
 /* Constants */
-#define OPT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
+#define OPT_VISCJUMPMAN     1790   //Viscosity ratio UM 2 LM
 #define OPT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OPT_VISCREF         1792   //Reference Viscosity
 #define OPT_TREFLIND        1793   //Reference Temperature Lindemann Core Liquidus
 #define OPT_DTCHIREF        1794   //Reference Core Liquidus Depression
-
-#define OPT_HALTMINTMAN     1798   //Minimum mantle temperature
-#define OPT_HALTMINTCORE    1799   //Minimum core temperature
+#define OPT_VISCMELTB       1795   //Viscosity Melt Factor B
+#define OPT_VISCMELTPHIS    1796   //Viscosity Melt Factor Phi*
+#define OPT_VISCMELTXI      1797   //Viscosity Melt Factor Xi
+#define OPT_VISCMELTGAMMA   1798   //Viscosity Melt Factor Gamma
+#define OPT_VISCMELTDELTA   1799   //Viscosity Melt Factor Delta
 
 /* Options Functions */
 void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscRatioMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltPhis(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMelGamma(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltXi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltDelta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadFixMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
@@ -263,9 +296,12 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_DEPTHMELTMAN    1731   //Depth to base of UM melt region.
 #define OUT_TDEPTHMELTMAN   1732   //Temp at base of UM melt region.
 #define OUT_TJUMPMELTMAN    1733   //Temp jump across UM melt region.
-#define OUT_K2MAN           1734   //Mantle k2 love number
-#define OUT_IMK2MAN         1735   //Mantle Im(k2) love number
-#define OUT_VISCUMANARR     1736   //Viscosity UM Arrhenius
+#define OUT_MELTMASSFLUXMAN 1734   //Mantle melt mass flux.
+#define OUT_K2MAN           1735   //Mantle k2 love number
+#define OUT_IMK2MAN         1736   //Mantle Im(k2) love number
+#define OUT_VISCUMANARR     1737   //Viscosity UM Arrhenius
+#define OUT_RAYLEIGHMAN     1738   //Mantle Rayleigh Number
+#define OUT_VISCMMAN        1739   //Viscosity Mid (ave) mantle.
 /* Time Derivatives & Gradients */
 #define OUT_TDOTMAN         1740   //Time deriv of mean mantle temp
 #define OUT_TDOTCORE        1741   //time deriv of mean core temp
@@ -285,6 +321,7 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_HFLUXSURF       1760   //hflux surface of mantle
 #define OUT_HFLOWSURF       1761   //hflow surface of mantle
 #define OUT_TIDALPOWMAN     1762   //Tidal Power Mantle
+#define OUT_HFLOWSECMAN     1763   //Mantle Secular cooling rate.
 /* Core Variables */
 #define OUT_RIC             1770   //IC radius
 #define OUT_DOC             1771   //OC shell thickness
@@ -299,7 +336,7 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_MASSCHIIC       1787   //IC chi Mass
 #define OUT_DTCHI           1788   //Core Liquidus Depression
 /* Constants */
-#define OUT_VISCRATIOMAN    1790   //Viscosity ratio UM 2 LM
+#define OUT_VISCJUMPMAN   1790   //Viscosity ratio UM 2 LM
 #define OUT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
 #define OUT_VISCREF         1792   //Reference Viscosity
 #define OUT_TREFLIND        1793   //Reference Lindeman Temperature
@@ -324,6 +361,7 @@ void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[])
 void WriteViscUManArr(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteViscMMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -333,10 +371,13 @@ void WriteMeltfactorLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doubl
 void WriteDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTJumpMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMeltMassFluxMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRayleighMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHflowSecMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHfluxLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHflowTidalMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -377,7 +418,8 @@ double fdSignTJumpLMan(BODY*,int);
 double fdViscUManArr(BODY*,int);
 double fdViscUMan(BODY*,int);
 double fdViscLMan(BODY*,int);
-double fdViscRatioMan(BODY*,int);
+double fdViscMMan(BODY*,int);
+double fdViscJumpMan(BODY*,int);
 double fdBLUMan(BODY*,int);
 double fdBLLMan(BODY*,int);
 double fdShmodUMan(BODY*,int);
@@ -395,12 +437,15 @@ double fdTDepthMeltMan(BODY*,int);  //T at bottom of UM melt region.
 double fdSolTempDiffMan(double,BODY*,int);  //difference between solidus and geotherm at a given depth.
 double fdSolidusMan(double);   //solidus at a given depth.
 double fdTJumpMeltMan(BODY*,int);  //temp jump across UM melt region.
+double fdMeltMassFluxMan(BODY*,int);  //upwelling mantle melt mass flux.
 double fdImk2Man(BODY*,int);
 double fdK2Man(BODY*,int);
+double fdRayleighMan(BODY*,int);
 double fdHfluxUMan(BODY*,int);
 double fdHfluxLMan(BODY*,int);
 double fdHfluxCMB(BODY*,int);
 double fdHflowUMan(BODY*,int);
+double fdHflowSecMan(BODY*,int);
 double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
@@ -419,6 +464,7 @@ double fdMassOC(BODY*,int);
 double fdMassChiIC(BODY*,int);
 double fdMassChiOC(BODY*,int);
 double fdDTChi(BODY*,int);
+double fdManHFlowPref(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 

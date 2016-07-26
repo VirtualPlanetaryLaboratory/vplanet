@@ -67,6 +67,45 @@ def get_cols(datadir=".",infiles=[]):
     return data_cols
 # end function
 
+def get_dirs(src,order="None"):
+    """
+    Given a path to where simulation directories live,
+    create a list of directories from which simulation
+    data will be extracted in a user-specified order.
+
+    Parameters
+    ----------
+
+    src : str
+        Path to simulation suite directory which contains all simulation sub directories
+    order : str
+        How user wants dataset ordered.  Defaults to "None" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
+
+    Returns
+    -------
+    dirs : list
+        List of simulation directories ordered by order
+    """
+
+    # No order, return via listdir which does NOT preserve order
+    print("Finding simulation subdirectories in %s ordered by %s." % \
+         (src, order))
+
+    if order == "None":
+        dirs = filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))
+    # Grid order.  Preserves vspace-given order for a grid of simulations
+    elif order == "grid":
+        dirs = sorted(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src)))
+    else:
+        print("Invalid order: %s." % order)
+        print("Valid options: None, grid.")
+        return None
+
+    return dirs
+#end function
+
 def get_infiles(datadir="."):
     """
     Given a directory where simulation data are stored, get the input files
@@ -135,7 +174,7 @@ def data_from_dir(datadir=".",data_cols={},infiles=[]):
     return data
 # end function
 
-def extract_data(src="."):
+def extract_data(src=".",order="None"):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and return it in a nice dictionary for easy processing
@@ -144,6 +183,10 @@ def extract_data(src="."):
     ----------
     src : str
         Path to simulation suite directory which contains all simulation sub directories
+    order : str
+        How user wants dataset ordered.  Defaults to "None" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
 
     Returns
     -------
@@ -152,7 +195,9 @@ def extract_data(src="."):
     """
 
     data = []
-    dirs = filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))
+
+    # Get list of all data directories in src to iterate over
+    dirs = get_dirs(src,order=order)
 
     # Find out what the infiles are based on the first dir
     # Since they're the same in all dirs
@@ -174,34 +219,87 @@ def extract_data(src="."):
 #
 # Below are data extraction functions that work with the hdf5 data format
 #
+# This is the preferred option!
+#
 #############################################################################
 
 class Dataset(object):
     """
     Abstraction class for working with hdf5 datasets using the h5py
-    python wrapper package.
+    python wrapper package for VPLANET data.
     """
 
-    def __init__(self,data = None,size = 0,order="None"):
+    def __init__(self,data = None,size = 0,order="None",number_to_sim=[]):
         self.data = data # Path to hdf5 dataset
         self.size = size # Length of data (number of groups from root)
         self.order = order # How the simulations are ordered
-                            # Defaults to None or ordered "as they were found"
+                            # Defaults to None aka ordered as they were found
+        # Private list
+        self.__number_to_sim = number_to_sim # Translates # to sim name
 
     def get(self, simulation, body, variables, dtype=np.float64):
         """
-        Wrapper for get_data_hdf5 function (see its docs)
+        Wrapper for get_data_hdf5 function (see its docs).  This is a workhorse
+        data accessing function.
+
+        Parameters
+        ----------
+        simulation : int
+            Integer identifier
+        body : string
+            Name of the body
+        variables : string or list of string
+            Name(s) of body's parameters you wish to access
+        dtype : numpy datatype (optional)
+            Datatype of data to retrieve.  99.999% of the time, it's a float64
+
+        Returns
+        -------
+        res : array
+
         """
-        return get_data_hdf5(self.data, simulation, body, variables, dtype=dtype)
+
+        # Enforce array bounds for less-cryptic error message
+        if simulation >= 0 and simulation < self.size:
+            return get_data_hdf5(self.data, simulation, body, variables,
+                                     dtype=dtype)
+        else:
+            print("Invalid simulation number: %d. Dataset size: %d" %
+                  (simulation,self.size))
+            return None
+
+    def sim_name(self,sim):
+        """
+        Given sim #, return the name.  Name is the name of the directory.
+
+        Parameters
+        ----------
+        sim : int
+            Integer identifier
+
+        Returns
+        -------
+        name : string
+            Name of the simulation directory
+        """
+
+        # Enforce array bounds for less-cryptic error message
+        if sim >= 0 and sim < self.size:
+            return self.__number_to_sim[sim]
+        else:
+            print("Invalid simulation number: %d. Dataset size: %d" %
+                  (sim,self.size))
+            return None
 
     def __repr__(self):
         """
-        For pretty prints
+        For pretty prints.
         """
-        return "Name: %s. Size: %d." % (self.data,self.size)
+        return "Name: %s. Size: %d. Order: %s" % (self.data,self.size,self.order)
 # end class
 
-def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],order="None"):
+def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],
+                       compression="gzip"):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
@@ -216,10 +314,9 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],order="None"):
         dictionary contains each body's output variable names
     infiles : list
         list containing input file names for each body
-    order : str
-        How user wants dataset ordered.  Defaults to "None" which means
-        the code loads in the data in whatever order the simulation dirs
-        are in
+    compression : str
+        compression algorithm used to reduce dataset size.  Defaults to gzip.
+        None (no quotes) turns off compression
 
     Returns
     -------
@@ -235,12 +332,14 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],order="None"):
         # TODO Here's where I would look for halts/sims not finishing
         # And continue based on whether or not user wants them
         # if halt or sim didnt finish:
-        # return 0
+        halt = False # some halt-finding function here
+        if halt:
+            return 0
 
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
             if f.endswith(".forward") and (f.find(infile) != -1):
-                # Read in data as pandas dataframe
+                # Read in data as pandas dataframe, use C engine for speed!
                 tmp = pd.read_table(datadir + f,
                                              header=None,
                                              delim_whitespace=True,
@@ -252,15 +351,17 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],order="None"):
                 # numpy array. Subgroup's name is body name
                 sub = grp.create_group(infile)
 
-                # Write columns to subgroup as datasets [allows for dict-like access]
+                # Write columns to subgroup as datasets [allows for POSIX-like access]
                 for col in data_cols[infile + ".in"]:
                     sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
-                                      compression = "gzip")
+                                      compression = compression)
 
+    # Return 1 since 1 new sim was successfully processed/stored
     return 1
 # End function
 
-def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None"):
+def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
+                      compression="gzip"):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -276,6 +377,9 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None"):
         How user wants dataset ordered.  Defaults to "None" which means
         the code loads in the data in whatever order the simulation dirs
         are in
+    compression : str
+        compression algorithm used to reduce dataset size.  Defaults to gzip.
+        None (no quotes) turns off compression
 
     Returns
     -------
@@ -292,14 +396,29 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None"):
 
         # Dataset exists
     else:
-        print("Hdf5 dataset already exists.  Reading from:", dataset)
+        print("Hdf5 dataset already exists.  Reading from: %s." % dataset)
+        print("Using size, order stored in dataset.")
+
+        # Read existing dataset
         f_set = h5py.File(dataset, "r")
+
+        # Load size
         length = f_set["meta"][0]
+
+        # Load order
+        order = f_set["order"][0]
+
+        # Get list to convert from # -> sim name
+        number_to_sim = list(f_set["number_to_sim"])
+
+        # Close dataset, return object handler
         f_set.close()
-        return Dataset(dataset,length,order)
+        return Dataset(dataset,length,order,number_to_sim)
+
+    # Make the dataset!
 
     # Get list of all data directories in src to iterate over
-    dirs = filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))
+    dirs = get_dirs(src,order=order)
 
     # Find out what the infiles are based on the first dir
     # Since they're the same in all dirs
@@ -313,27 +432,49 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None"):
     # Loop over directories (and hence simulation) and get the data
     # User counter for name of group/means to identify simulation
     counter = 0
+
+    # List to store what dir sim # corresponds to
+    number_to_sim = []
     for direct in dirs:
 
         # Create group for each directory, pass to load with data
         # Group's name == directory
         grp = f_set.create_group(str(counter))
 
-        # Store data from each simulation, increment counter if succesful
-        counter += data_from_dir_hdf5(grp,src + "/" + direct + "/",data_cols,infiles,
-                                      order)
+        # store sim - counter mapping
+        number_to_sim.append(direct)
 
+        # Store data from each simulation, increment counter if succesful
+        counter += data_from_dir_hdf5(grp,src + "/" + direct + "/",data_cols,
+                                      infiles,compression=compression)
+
+    # Try to store metadata
     # Add top level dataset with information about dataset
-    # Currently "meta" only holds the length (number of root level groups aka
+    # Meta holds the length (number of root level groups aka
     # number of simulations)
-    print("Length:",counter)
-    f_set.create_dataset("meta", data=np.array([counter]), dtype="i")
+    # number_to_sim is a python dict that maps #->sim name,
+
+    try:
+        # Make variable-length string dtype so hdf5 could understand it
+        string_dt = h5py.special_dtype(vlen=str)
+
+        f_set.create_dataset("meta", data=np.array([counter]), dtype=np.int64)
+        # Note: for python 3, str replaced by bytes
+
+        f_set.create_dataset("order", data=np.array([order]), dtype=string_dt)
+
+        data = np.asarray(number_to_sim, dtype=object)
+        f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
+
+    except:
+        print("Unable to store number_to_sim. Default to empty numpy array.")
+        number_to_sim = np.array([],dtype=object)
 
     # Close dataset
     f_set.close()
 
     # Create Dataset class to return
-    return Dataset(dataset,counter,order)
+    return Dataset(dataset,counter,order,number_to_sim)
 # End function
 
 def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
@@ -367,17 +508,22 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
 
     data = []
     # Open dataset, access data
-    with h5py.File(dataset, "r") as hf:
+    try:
+        with h5py.File(dataset, "r") as hf:
 
-        # Only one variable
-        if type(variables) == str:
-            return np.array(hf.get(path)[variables])
-        # Multiple variables
-        else:
-            for var in variables:
-                data.append(np.array(hf.get(path)[var]))
+            # Only one variable
+            if type(variables) == str:
+                return np.array(hf.get(path)[variables])
+            # Multiple variables
+            else:
+                for var in variables:
+                    data.append(np.array(hf.get(path)[var]))
 
-    return np.asarray(data,dtype=dtype)
+        return np.asarray(data,dtype=dtype)
+    except:
+        print("Invalid get call.  Simulation, body, variable(s) : %s, %s, %s" %
+              (simulation,body,variables))
+        return None
 # end function
 
 #############################################################################
@@ -511,7 +657,7 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
                         res[body][col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
 
     else:
-        print("Invalid format:",fmt)
+        print("Invalid format: %s" % fmt)
         return None
 
     # Convert data dict -> pandas dataframe
@@ -520,12 +666,19 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
 
     # Cache the result?
     if cache != None:
-        print("Caching data at:",cache)
+        print("Caching data at %s" % cache)
         with open(cache, 'wb') as handle:
             pickle.dump(res, handle)
 
     return res
 # End function
+
+#
+# TODO: write function to turn df into matrix for ML stuff
+# will also return some dict giving matrix index <-> body/var name translation
+#
+#
+#
 
 def reduce_dimensions(x, y, z, shape, dims=(-1), reduce_func = np.nanmean):
     """

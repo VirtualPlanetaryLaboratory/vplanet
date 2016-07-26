@@ -86,7 +86,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 
     # Filter our nans
     z[np.isnan(z)] = nan_value
-
+    
     # Set colorbar ranges if not given
     if vmin == None or vmax == None:
         vmin=np.min(z)
@@ -300,7 +300,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
     size = int(np.sqrt(len(combos)))
 
     # If size isn't at least 3, this function isn't for you
-    assert size >=3,"Too few dimensions. Use imshow or contourf instead!"
+    assert size >= 3,"Too few dimensions. Use imshow or contourf instead!"
 
     # Make a figure/axes to plot on
     fig, axes = plt.subplots(size, size, figsize=(size*9,size*8))
@@ -340,19 +340,19 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                     ""]
 
             # LEFT of the diagonal? Marginalize (via mean)
-            combo = combos[i*size + j]
-            xbody, xvar = combo[1].split("_")
-            ybody, yvar = combo[0].split("_")
-
-            x = df[xbody][xvar].values
-            y = df[ybody][yvar].values
-            z = df[color_body][color_name].values
-
-            # Get shape of data
-            tmp_shape = axes_to_shape(combo, shape)
-            tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
-
             if j < i:
+                combo = combos[i*size + j]
+                xbody, xvar = combo[1].split("_")
+                ybody, yvar = combo[0].split("_")
+
+                x = df[xbody][xvar].values
+                y = df[ybody][yvar].values
+                z = df[color_body][color_name].values
+
+                # Get shape of data
+                tmp_shape = axes_to_shape(combo, shape)
+                tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
+
                 plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = left_color_func, nan_value = nan_value, bReduce=bReduce,
                         interp=interp,cmap=lcmap,colorbar=False,origin=origin,vmin=lvmin,
@@ -374,7 +374,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 tmp_shape = axes_to_shape(combo, shape)
                 tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
 
-                plot_red_dim(y, x, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
+                plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = right_color_func, nan_value = nan_value, bReduce=bReduce,
                         interp=interp,cmap=rcmap,colorbar=False,origin=origin,vmin=rvmin,
                                 vmax=rvmax)

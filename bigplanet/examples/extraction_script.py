@@ -22,5 +22,6 @@ dataset = src + "simulation.hdf5"
 
 # Define a data format (overkill here, but useful in general)
 fmt = "hdf5"
+order = "grid"
 
-data = de.extract_data_hdf5(src=src, dataset=dataset)
+data = de.extract_data_hdf5(src=src, dataset=dataset, order=order)

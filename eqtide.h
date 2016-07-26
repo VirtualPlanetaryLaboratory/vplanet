@@ -190,7 +190,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropsAuxCPL(BODY*,UPDATE*,int);
+void PropsAuxCPL(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -223,7 +223,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropsAuxCTL(BODY*,UPDATE*,int);
+void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);

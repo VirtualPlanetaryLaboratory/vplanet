@@ -1531,8 +1531,23 @@ void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].pdD235UNumCrustDt = &update[iBody].dZero;
 }
 
+<<<<<<< HEAD
 /* Auxs Props */
 void PropsAuxRadheat(BODY *body,UPDATE *update,int iBody) {
+=======
+/*
+double fdGetModuleIntRadheat(UPDATE *update,int iBody) {
+  int iModule;
+  for (iModule=0;iModule<update[iBody].iNumModules;iModule++) {
+    if (update[iBody]->iaModule[iModule] == RADHEAT)
+      return iModule;
+  }
+  fprintf(stderr,"ERROR: Radheat not found for body #%d.\n",iBody);
+  exit(1);
+}
+*/
+void PropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+>>>>>>> 42ed5cb64a20e82f5e3d5915bdf777e344879ace
   body[iBody].dRadPowerMan=fdRadPowerMan(update,iBody);
   body[iBody].dRadPowerCore=fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust=fdRadPowerCrust(update,iBody);
@@ -1608,7 +1623,7 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   Verify235U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
-  control->Evolve.fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyRadheat;
   //  output[OUT_SURFENFLUXRADTOTAL].fnOutput[iBody][iModule] = &fdSurfEnFluxRadTotal;   //PD: Is this right?
 }

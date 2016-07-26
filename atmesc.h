@@ -9,6 +9,15 @@
 
 #define TOMASS                  1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define TOHMASS                 TOMASS/9.   // Hydrogen mass in one TO
+#define ATMESC_LB15             0
+#define ATMESC_LBEXACT          1
+#define ATMESC_TIAN             2
+#define ATMESC_ELIM             3
+#define ATMESC_DIFFLIM          4
+#define ATMESC_NONE             5
+#define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
+#define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
+#define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen
 
 void AddModuleAtmEsc(MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
@@ -26,6 +35,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_HALTENVELOPEGONE    1216 // Halt if evaporated?
 #define OPT_MINENVELOPEMASS     1217 // Minimum envelope mass (evaporated below this)
 #define OPT_OXYGENMASS          1218 // Initial oxygen mass
+#define OPT_WATERLOSSMODEL      1219 // Oxygen buildup / water loss model
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -70,6 +80,8 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ENVELOPEMASS	     1211
 #define OUT_OXYGENMASS         1212
 #define OUT_RGLIMIT            1213
+#define OUT_XO                 1214
+#define OUT_ETAO               1215
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -80,6 +92,8 @@ void WriteSurfaceWaterMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,dou
 void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -88,11 +102,15 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fnPropertiesAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 double fdHZRG14(double,double,double,double);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
+double fdAtomicOxygenMixingRatio(double,double);
+double fdInsolation(BODY*,int,int);
+int fbDoesWaterEscape(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

@@ -577,16 +577,10 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-<<<<<<< HEAD
-void PropsAuxRadheatThermint(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
-=======
-void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  body[iBody].dPowRadiogCore = fdRadPowerCore(update,iBody);
-  body[iBody].dPowRadiogMan = fdRadPowerMan(update,iBody);
->>>>>>> 42ed5cb64a20e82f5e3d5915bdf777e344879ace
 }
 
 void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {

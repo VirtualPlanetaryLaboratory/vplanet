@@ -83,6 +83,7 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dHflowLatentMan=src[iBody].dHflowLatentMan;
   dest[iBody].dHflowMeltMan=src[iBody].dHflowMeltMan;
   dest[iBody].dHflowSecMan=src[iBody].dHflowSecMan;
+  dest[iBody].dHflowSurf=src[iBody].dHflowSurf;
   /* Core */
   dest[iBody].dRIC=src[iBody].dRIC;
   dest[iBody].dDRICDTCMB=src[iBody].dDRICDTCMB;
@@ -96,6 +97,15 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMassChiOC=src[iBody].dMassChiOC;
   dest[iBody].dMassChiIC=src[iBody].dMassChiIC;
   dest[iBody].dDTChi=src[iBody].dDTChi;
+  dest[iBody].dHfluxCMBAd=src[iBody].dHfluxCMBAd;
+  dest[iBody].dHfluxCMBConv=src[iBody].dHfluxCMBConv;
+  dest[iBody].dThermConductOC=src[iBody].dThermConductOC;
+  dest[iBody].dRICDot=src[iBody].dRICDot;
+  dest[iBody].dCoreBuoyTherm=src[iBody].dCoreBuoyTherm;
+  dest[iBody].dCoreBuoyCompo=src[iBody].dCoreBuoyCompo;
+  dest[iBody].dCoreBuoyTotal=src[iBody].dCoreBuoyTotal;
+  dest[iBody].dGravICB=src[iBody].dGravICB;
+  dest[iBody].dMagMom=src[iBody].dMagMom;
 }
 
 /**************** RADHEAT options ********************/
@@ -688,6 +698,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
+  body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
   /* Core */
   /* Iterate on Core chemistry before R_ICB */
   body[iBody].dMassIC=fdMassIC(body,iBody);
@@ -702,6 +713,15 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMassICDot=fdMassICDot(body,update,iBody);
   body[iBody].dHflowLatentIC=fdHflowLatentIC(body,update,iBody);
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
+  body[iBody].dHfluxCMBAd=fdHfluxCMBAd(body,iBody);
+  body[iBody].dHfluxCMBConv=fdHfluxCMBConv(body,iBody);
+  body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
+  body[iBody].dRICDot=fdRICDot(body,iBody);
+  body[iBody].dGravICB=fdGravICB(body,iBody);
+  body[iBody].dCoreBuoyTherm=fdCoreBuoyTherm(body,iBody);
+  body[iBody].dCoreBuoyCompo=fdCoreBuoyCompo(body,iBody);
+  body[iBody].dCoreBuoyTotal=fdCoreBuoyTotal(body,iBody);
+  body[iBody].dMagMom=fdMagMom(body,iBody);
 }
 
 void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1098,7 +1118,55 @@ void WriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-
+void WriteThermConductOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dThermConductOC;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteCoreBuoyTherm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dCoreBuoyTherm;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteCoreBuoyCompo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dCoreBuoyCompo;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteCoreBuoyTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dCoreBuoyTotal;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteGravICB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dGravICB;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMagMom;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dRICDot;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 
 /* Heat Flows/Fluxes */
 void WriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1122,9 +1190,30 @@ void WriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+void WriteHfluxCMBAd(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dHfluxCMBAd;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteHfluxCMBConv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dHfluxCMBConv;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
 
 void WriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteHflowSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dHflowSurf;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1579,8 +1668,61 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DTCHI].iNum = 1;
   output[OUT_DTCHI].iModuleBit = THERMINT;
   fnWrite[OUT_DTCHI] = &WriteDTChi;
+  /* CoreBuoyTherm */
+  sprintf(output[OUT_COREBUOYTHERM].cName,"CoreBuoyTherm");
+  sprintf(output[OUT_COREBUOYTHERM].cDescr,"Core Thermal Buoyancy Flux");
+  sprintf(output[OUT_COREBUOYTHERM].cNeg,"m^2/s^3");
+  output[OUT_COREBUOYTHERM].bNeg = 1;
+  output[OUT_COREBUOYTHERM].dNeg = 1; 
+  output[OUT_COREBUOYTHERM].iNum = 1;
+  output[OUT_COREBUOYTHERM].iModuleBit = THERMINT;
+  fnWrite[OUT_COREBUOYTHERM] = &WriteCoreBuoyTherm;
+  /* CoreBuoyCompo */
+  sprintf(output[OUT_COREBUOYCOMPO].cName,"CoreBuoyCompo");
+  sprintf(output[OUT_COREBUOYCOMPO].cDescr,"Core Compositional Buoyancy Flux");
+  sprintf(output[OUT_COREBUOYCOMPO].cNeg,"m^2/s^3");
+  output[OUT_COREBUOYCOMPO].bNeg = 1;
+  output[OUT_COREBUOYCOMPO].dNeg = 1; 
+  output[OUT_COREBUOYCOMPO].iNum = 1;
+  output[OUT_COREBUOYCOMPO].iModuleBit = THERMINT;
+  fnWrite[OUT_COREBUOYCOMPO] = &WriteCoreBuoyCompo;
+  /* CoreBuoyTotal */
+  sprintf(output[OUT_COREBUOYTOTAL].cName,"CoreBuoyTotal");
+  sprintf(output[OUT_COREBUOYTOTAL].cDescr,"Core Total Buoyancy Flux");
+  sprintf(output[OUT_COREBUOYTOTAL].cNeg,"m^2/s^3");
+  output[OUT_COREBUOYTOTAL].bNeg = 1;
+  output[OUT_COREBUOYTOTAL].dNeg = 1; 
+  output[OUT_COREBUOYTOTAL].iNum = 1;
+  output[OUT_COREBUOYTOTAL].iModuleBit = THERMINT;
+  fnWrite[OUT_COREBUOYTOTAL] = &WriteCoreBuoyTotal;
+  /* GravICB */
+  sprintf(output[OUT_GRAVICB].cName,"GravICB");
+  sprintf(output[OUT_GRAVICB].cDescr,"ICB Gravity");
+  sprintf(output[OUT_GRAVICB].cNeg,"m/s^2");
+  output[OUT_GRAVICB].bNeg = 1;
+  output[OUT_GRAVICB].dNeg = 1; 
+  output[OUT_GRAVICB].iNum = 1;
+  output[OUT_GRAVICB].iModuleBit = THERMINT;
+  fnWrite[OUT_GRAVICB] = &WriteGravICB;
+  /* MagMom */
+  sprintf(output[OUT_MAGMOM].cName,"MagMom");
+  sprintf(output[OUT_MAGMOM].cDescr,"Core Magnetic Moment");
+  sprintf(output[OUT_MAGMOM].cNeg,"Am^2");
+  output[OUT_MAGMOM].bNeg = 1;
+  output[OUT_MAGMOM].dNeg = 1./(EMAGMOM); 
+  output[OUT_MAGMOM].iNum = 1;
+  output[OUT_MAGMOM].iModuleBit = THERMINT;
+  fnWrite[OUT_MAGMOM] = &WriteMagMom;
+  /* RICDot */
+  sprintf(output[OUT_RICDOT].cName,"RICDot");
+  sprintf(output[OUT_RICDOT].cDescr,"Inner Core growth rate");
+  sprintf(output[OUT_RICDOT].cNeg,"m/s");
+  output[OUT_RICDOT].bNeg = 1;
+  output[OUT_RICDOT].dNeg = 1; 
+  output[OUT_RICDOT].iNum = 1;
+  output[OUT_RICDOT].iModuleBit = THERMINT;
+  fnWrite[OUT_RICDOT] = &WriteRICDot;
   
-
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
   sprintf(output[OUT_HFLUXUMAN].cName,"HfluxUMan");
@@ -1609,7 +1751,34 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLUXCMB].iNum = 1;
   output[OUT_HFLUXCMB].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXCMB] = &WriteHfluxCMB;
-  /* HFlowUMan */
+  /* HfluxCMBAd */
+  sprintf(output[OUT_HFLUXCMBAD].cName,"HfluxCMBAd");
+  sprintf(output[OUT_HFLUXCMBAD].cDescr,"Adiabatic Heat Flux Core-Mantle Boundary");
+  sprintf(output[OUT_HFLUXCMBAD].cNeg,"W/m^2");
+  output[OUT_HFLUXCMBAD].bNeg = 1;
+  output[OUT_HFLUXCMBAD].dNeg = 1;
+  output[OUT_HFLUXCMBAD].iNum = 1;
+  output[OUT_HFLUXCMBAD].iModuleBit = THERMINT;
+  fnWrite[OUT_HFLUXCMBAD] = &WriteHfluxCMBAd;
+  /* HfluxCMBConv */
+  sprintf(output[OUT_HFLUXCMBCONV].cName,"HfluxCMBConv");
+  sprintf(output[OUT_HFLUXCMBCONV].cDescr,"Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary");
+  sprintf(output[OUT_HFLUXCMBCONV].cNeg,"W/m^2");
+  output[OUT_HFLUXCMBCONV].bNeg = 1;
+  output[OUT_HFLUXCMBCONV].dNeg = 1;
+  output[OUT_HFLUXCMBCONV].iNum = 1;
+  output[OUT_HFLUXCMBCONV].iModuleBit = THERMINT;
+  fnWrite[OUT_HFLUXCMBCONV] = &WriteHfluxCMBConv;
+  /* ThermConductOC */
+  sprintf(output[OUT_THERMCONDUCTOC].cName,"ThermConductOC");
+  sprintf(output[OUT_THERMCONDUCTOC].cDescr,"Thermal Conductivity OC");
+  sprintf(output[OUT_THERMCONDUCTOC].cNeg,"W/m/K");
+  output[OUT_THERMCONDUCTOC].bNeg = 1;
+  output[OUT_THERMCONDUCTOC].dNeg = 1;
+  output[OUT_THERMCONDUCTOC].iNum = 1;
+  output[OUT_THERMCONDUCTOC].iModuleBit = THERMINT;
+  fnWrite[OUT_THERMCONDUCTOC] = &WriteThermConductOC;
+  /* HflowUMan */
   sprintf(output[OUT_HFLOWUMAN].cName,"HflowUMan");
   sprintf(output[OUT_HFLOWUMAN].cDescr,"Heat Flow Upper Mantle");
   sprintf(output[OUT_HFLOWUMAN].cNeg,"TW");
@@ -1672,7 +1841,17 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWSECMAN].iNum = 1;
   output[OUT_HFLOWSECMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWSECMAN] = &WriteHflowSecMan;
+  /* HFlowSurf */
+  sprintf(output[OUT_HFLOWSURF].cName,"HflowSurf");
+  sprintf(output[OUT_HFLOWSURF].cDescr,"Heat Flow Surface Total");
+  sprintf(output[OUT_HFLOWSURF].cNeg,"TW");
+  output[OUT_HFLOWSURF].bNeg = 1;
+  output[OUT_HFLOWSURF].dNeg = 1e-12;
+  output[OUT_HFLOWSURF].iNum = 1;
+  output[OUT_HFLOWSURF].iModuleBit = THERMINT;
+  fnWrite[OUT_HFLOWSURF] = &WriteHflowSurf;
 
+  
   /* HFlowLatentIC */
   sprintf(output[OUT_HFLOWLATENTIC].cName,"HflowLatentIC");
   sprintf(output[OUT_HFLOWLATENTIC].cDescr,"Latent Heat Release at ICB");
@@ -1992,17 +2171,40 @@ double fdRIC(BODY *body,int iBody) {
 
   return dRIC;
 }
+double fdThermConductOC(BODY *body, int iBody) {
+  return (ELECCONDCORE)*(LORENTZNUM)*body[iBody].dTCMB;
+}
+double fdHfluxCMBAd(BODY *body, int iBody) {
+  return body[iBody].dThermConductOC*body[iBody].dTCMB*(ERCORE)/pow(DADCORE,2.);
+}
+double fdHfluxCMBConv(BODY *body, int iBody) {
+  return body[iBody].dHfluxCMB-body[iBody].dHfluxCMBAd;
+}
+double fdGravICB(BODY *body, int iBody) {
+  return (GRAVCMB)*body[iBody].dRIC/(ERCORE);
+}
+double fdRICDot(BODY *body, int iBody) {
+  return -pow((DADCORE),2)/(2*body[iBody].dRIC*(2.*(1.-1/3.*GRUNEISEN)*pow((DADCORE)/(DLIND),2)-1.))*body[iBody].dTDotCore/body[iBody].dTCore;
+}
+double fdCoreBuoyTherm(BODY *body, int iBody) {
+  return (THERMEXPANCORE)*(GRAVCMB)*body[iBody].dHfluxCMBConv/((EDENSCORE)*(SPECHEATCORE));
+}
+double fdCoreBuoyCompo(BODY *body, int iBody) {
+  return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
+}
+double fdCoreBuoyTotal(BODY *body, int iBody) {
+  return body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo;
+}
+double fdMagMom(BODY *body, int iBody) {
+  return 4.*PI*pow((ERCORE),3)*(MAGMOMCOEF)*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
+}
 
-/* All tidal phenomena should exist exclusively in eqtide.c
-
- Heat Flows 
+/* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
 double fdTidalPowMan(BODY *body,int iBody) {
    Peter's version. I think dRotRate should be dMeanMotion.
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-  
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
 }
-
 */
 
 /* Heat Fluxes/flows */
@@ -2017,6 +2219,9 @@ double fdHfluxCMB(BODY *body,int iBody) {
 }
 double fdHflowUMan(BODY *body,int iBody) {
   return body[iBody].dManHFlowPref*(EAREASURF)*fdHfluxUMan(body,iBody);
+}
+double fdHflowSurf(BODY *body,int iBody) {
+  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan;
 }
 double fdHflowLMan(BODY *body,int iBody) {
   return (EAREACMB)*fdHfluxLMan(body,iBody);

@@ -52,11 +52,12 @@
 #define EDENSCORE        (EMASSCORE)/(EVOLCORE) //[kg/m^3] density of E core.
 #define EDENSOC          (EMASSOC)/(EVOLOC)     //[kg/m^3] density of E core.
 #define EDENSIC          (EMASSIC)/(EVOLIC)     //[kg/m^3] density of E IC.
-#define DENSOCLE         700.0              //[kg/m^3] density diff of OC light elements.
+#define DENSANOMICB      700.0                  //[kg/m^3] density diff of OC light elements.
 // Gravity
 #define GRAVSURF         9.8                //[m/s2] Surf gravity in SI
 #define GRAVUMAN         10.5               //[m/s2] UM gravity in SI
 #define GRAVLMAN         10.5               //[m/s2] LM gravity in SI
+#define GRAVCMB          10.6               //[m/s2] CMB gravity
 
 /* THERMAL PROPERTIES */
 #define SPECHEATMAN      1265.0             //[J/kg/K] specfic heat mantle.
@@ -127,10 +128,11 @@
 #define ADJUMPM2LM       1.3           //[nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM"
 #define ADJUMPC2CMB      0.8           //[nd] adiabatic temp jump from ave core to CMB. "epsilon_c"
 /* MAGNETIC DYNAMO PROPERTIES */
-#define MAGPERM          4*PI*1e-7                //[H/m] magnetic permeability constant in SI units.
-#define GAMMADIPOLE      0.2                      //[nd] saturation constant for fast rot dipolar dynamos (OC2006)
-#define ELECCONDCORE     10e5                     //[S/m]  electrical conductivity of core.  How does this convert to cgs??
-#define LORENTZNUM       2.5e-8                   //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.        
+#define MAGPERM          4*PI*1e-7     //[H/m] magnetic permeability constant in SI units.
+#define MAGMOMCOEF       0.2           //[nd] saturation constant for fast rot dipolar dynamos (OC2006)
+#define ELECCONDCORE     10e5          //[S/m]  electrical conductivity of core. 
+#define LORENTZNUM       2.5e-8        //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.
+#define EMAGMOM          80e21         //[Am2] Earth's present day magnetic moment.         
 
 void InitializeControlThermint(CONTROL*);
 void AddModuleThermint(MODULE*,int,int);
@@ -322,10 +324,13 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_HFLOWSURF       1761   //hflow surface of mantle
 #define OUT_TIDALPOWMAN     1762   //Tidal Power Mantle
 #define OUT_HFLOWSECMAN     1763   //Mantle Secular cooling rate.
+#define OUT_HFLUXCMBAD      1764   //CMB Adiabatic heat flux.
+#define OUT_HFLUXCMBCONV    1765   //CMB Super-Adiabatic (convective) heat flux.
 /* Core Variables */
 #define OUT_RIC             1770   //IC radius
 #define OUT_DOC             1771   //OC shell thickness
 #define OUT_DRICDTCMB       1772   //d(R_ic)/d(T_cmb)
+#define OUT_RICDOT          1773   //d(R_ic)/d(t)
 #define OUT_CHIOC           1780   //OC light element concentration chi.
 #define OUT_CHIIC           1781   //IC light element concentration chi.
 #define OUT_THERMCONDUCTOC  1782   //Thermal conductivity OC
@@ -335,12 +340,17 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_MASSCHIOC       1786   //OC chi Mass
 #define OUT_MASSCHIIC       1787   //IC chi Mass
 #define OUT_DTCHI           1788   //Core Liquidus Depression
+#define OUT_COREBUOYTHERM   1789   //Core Thermal buoyancy flux
+#define OUT_COREBUOYCOMPO   1790   //Core Compositional buoyancy flux
+#define OUT_COREBUOYTOTAL   1791   //Core total buoyancy flux
+#define OUT_GRAVICB         1792   //Core ICB gravity
+#define OUT_MAGMOM          1793   //Core dynamo magnetic moment
 /* Constants */
-#define OUT_VISCJUMPMAN   1790   //Viscosity ratio UM 2 LM
-#define OUT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
-#define OUT_VISCREF         1792   //Reference Viscosity
-#define OUT_TREFLIND        1793   //Reference Lindeman Temperature
-#define OUT_DTCHIREF        1794   //Reference Liquidus Depression
+#define OUT_VISCJUMPMAN     1795   //Viscosity ratio UM 2 LM
+#define OUT_ERUPTEFF        1796   //Mantle Melt Eruption Efficiency
+#define OUT_VISCREF         1797   //Reference Viscosity
+#define OUT_TREFLIND        1798   //Reference Lindeman Temperature
+#define OUT_DTCHIREF        1799   //Reference Liquidus Depression
 
 
 void HelpOutputThermint(OUTPUT*);
@@ -398,7 +408,15 @@ void WriteMassIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[
 void WriteMassChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteMassChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDTChi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
+void WriteThermConductOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHfluxCMBAd(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHfluxCMBConv(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCoreBuoyTherm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCoreBuoyCompo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCoreBuoyTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteGravICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMagMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRICDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 /* Logging Functions */
 void LogOptionsThermint(CONTROL*,FILE*);
 void LogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
@@ -454,7 +472,7 @@ double fdMassICDot(BODY*,UPDATE*,int);
 double fdHflowLatentIC(BODY*,UPDATE*,int);
 double fdPowerGravIC(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
-double fdHflowSurfMan(BODY*,int);
+double fdHflowSurf(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
 double fdChiOC(BODY*,int);
@@ -465,9 +483,17 @@ double fdMassChiIC(BODY*,int);
 double fdMassChiOC(BODY*,int);
 double fdDTChi(BODY*,int);
 double fdManHFlowPref(BODY*,int);
+double fdHfluxCMBAd(BODY*,int);
+double fdHfluxCMBConv(BODY*,int);
+double fdThermConductOC(BODY*,int);
+double fdCoreBuoyTherm(BODY*,int);
+double fdCoreBuoyCompo(BODY*,int);
+double fdCoreBuoyTotal(BODY*,int);
+double fdGravICB(BODY*,int);
+double fdMagMom(BODY*,int);
+double fdRICDot(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
-
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
 
 

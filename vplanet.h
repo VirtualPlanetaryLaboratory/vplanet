@@ -456,6 +456,16 @@ typedef struct {
   double dMassChiOC;       /**< OC Chi Mass. */
   double dMassChiIC;       /**< IC Chi Mass. */
   double dDTChi;           /**< Core Liquidus Depression */
+  double dHfluxCMBAd;      /**< CMB Adiabatic Heat flux. */
+  double dHfluxCMBConv;    /**< CMB Convective (super-adiabatic) Heat flux. */
+  double dCoreBuoyTherm;   /**< Core Thermal buoyancy flux */
+  double dCoreBuoyCompo;   /**< Core Compositional buoyancy flux */
+  double dCoreBuoyTotal;   /**< Core total (therm+compo) buoyancy flux */
+  double dMagMomCoef;      /**< Dynamo magnetic moment scaling law dipolarity coefficient (gamma_d in DB14) */
+  double dGravICB;         /**< Gravity at ICB */
+  double dDensAnomICB;     /**< Density anomaly across ICB (Delta rho_chi in DB14). */
+  double dMagMom;          /**< Core Dynamo Magnetic Moment scaling law. */
+  double dRICDot;          /**< Inner core growth rate */
   /* Constants */
   double dViscRatioMan;    /**< Viscosity Ratio Man */
   double dEruptEff;        /**< Mantle melt eruption efficiency */

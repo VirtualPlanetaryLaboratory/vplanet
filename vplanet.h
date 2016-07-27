@@ -18,6 +18,7 @@
 #define POISE         256
 #define FLARE         512
 #define BINARY        1024
+#define GALHABIT      2048
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -39,9 +40,10 @@
  * POISE: 1900 - 2000
  * FLARE: 2000 - 2100
  * BINARY: 2100 - 2200
+ * GALHABIT: 2200 - 2300
  */
-#define MODULEOPTEND        2200
-#define MODULEOUTEND        2200
+#define MODULEOPTEND        2300
+#define MODULEOUTEND        2300
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -59,6 +61,7 @@
 #define MEARTH        5.972186e24 // Prsa et al. 2016   
 #define MSUN          1.988416e30 // Prsa et al. 2016
 #define AUCM          1.49598e11  // XXX Change to AUM
+#define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
@@ -694,6 +697,9 @@ typedef struct {
   double dFlareExp;
   double dLXUVFlare;
   
+  // GALHABIT
+  double dPeriQ;   /**< Pericenter distance */
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -741,6 +747,8 @@ typedef struct {
   double *dLOrb;
   
   double dTotEnInit;     /**< System's Initial Energy */
+  
+  double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
 
 } SYSTEM;
 
@@ -951,6 +959,22 @@ typedef struct {
       chi = cos(obliq) derivative due to DISTROT. */
   double **padDZoblDtDistRot;
 
+  /* GALHABIT */
+  int iNumPeriQ;
+  int iNumArgP;
+  
+  int iPeriQ;
+  int iArgP;
+  double dDPeriQDt;
+  double dDArgPDt;
+  
+  int *iaPeriQGalHabit;
+  int *iaArgPGalHabit;
+  
+  double **padDPeriQDtGalHabit;
+  double **padDArgPDtGalHabit;
+  
+  
   /* ATMESC */         
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */

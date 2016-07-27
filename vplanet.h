@@ -276,7 +276,7 @@ typedef struct {
   int bBinary;          /** Apply BINARY module? */
   int bBinaryUseMatrix; /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;         /** < CBP radius */
+  double dCBPR;         /** < CBP orbital radius */
   double dCBPZ;         /** < CBP height above/below the orbital plane */
   double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
   double dCBPRDot;      /** < CBP radial orbital velocity */

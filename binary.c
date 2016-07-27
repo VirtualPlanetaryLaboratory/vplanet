@@ -1021,6 +1021,19 @@ void WriteCBPRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+// Write the circumbinary planet guiding radius (CBPR0)
+void WriteCBPR0Binary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dR0;
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 void WriteCBPZBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dCBPZ;
@@ -1155,6 +1168,15 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
+
+  sprintf(output[OUT_CBPR0].cName,"R0");
+  sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
+  output[OUT_CBPR0].bNeg = 1;
+  sprintf(output[OUT_CBPR0].cNeg,"AU");
+  output[OUT_CBPR0].dNeg = 1.0/AUCM;
+  output[OUT_CBPR0].iNum = 1;
+  output[OUT_CBPR0].iModuleBit = BINARY;
+  fnWrite[OUT_CBPR0] = &WriteCBPR0Binary;
 
   sprintf(output[OUT_CBPZ].cName,"CBPZ");
   sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane");

@@ -20,7 +20,7 @@ def readme():
 
 # Setup!
 setup(name = 'bigplanet',
-      version = "0.11",
+      version = "0.12",
       description = 'VPLANET Data Analysis Tools',
       long_description = readme(),
       classifiers = [

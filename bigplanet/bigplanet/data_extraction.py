@@ -132,6 +132,73 @@ def get_infiles(datadir="."):
     return infiles
 # end function
 
+def halt_check(direct,TOL=1.0e-6):
+    """
+    Parse simulation's logfile to check if the simulation ran to completion.  If the simulation halted
+    for some reason, find the halt code (not implemented in VPLANET yet) and return to user.
+
+    Parameters
+    ----------
+    direct : str
+        Path to simulation directory
+    TOL : float (optional)
+        Tolerance for float comparisons (for stop time to actual stop time comparison)
+
+    Returns
+    -------
+    halt : int
+        Indicates whether or not sim completed.  0 == sim completed, halt != 0 is the halt code
+        and indicates the simulation ended before reaching the stop time.  Defaults to 1.
+
+    Example
+    -------
+    >> direct = "/Users/dflemin3/Desktop/vplanet/examples/binary_test/"
+    >> halt_check(direct)
+       0 # Simulation ran to completion!
+    """
+
+    # Find the log file
+    logcount = 0
+    for file in os.listdir(direct):
+        if file.endswith(".log"):
+            logfile = direct + file
+            logcount = logcount +1
+
+    # Ensure there aren't two+ or 0 logfiles for whatever reason
+    assert logcount == 1, "ERROR: There can only be one (log)! Number of logs: %d" % logcount
+
+    # Parse logfile
+    stoptime = -1.0
+    lasttime = 0.0
+    halt = 0
+    with open(logfile) as f:
+        content = f.readlines()
+
+        for line in content:
+            line.replace("\n","")
+
+            # Parse for stop time
+            # Line looks like: Stop Time: 3.155760e+09
+            if "Stop Time:" in line:
+                stoptime = float(line.split()[-1])
+                continue
+
+            # Parse for actual sim ending time
+            # Line looks like: (Age) System Age [sec] 3.155760e+09 # if it finished, of course
+            if "(Age) System Age" in line:
+                lasttime = float(line.split()[-1])
+                continue
+
+            # TODO: once implemented in VPLANET, search for halt code
+
+    # Logfile parsed, see if it finished
+    if np.fabs(lasttime - stoptime) < TOL and halt == 0:
+        return halt
+    # Didn't finish
+    else:
+        return 1
+# end function
+
 def data_from_dir(datadir=".",data_cols={},infiles=[]):
     """
     Given a directory where simulation data are stored, the name of each body's output
@@ -298,16 +365,19 @@ class Dataset(object):
         return "Name: %s. Size: %d. Order: %s" % (self.data,self.size,self.order)
 # end class
 
-def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],
-                       compression="gzip"):
+def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols={},infiles=[],
+                       compression="gzip",remove_halts=True):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
 
     Parameters
     ----------
-    grp : HDF5 group
+    f_set : HDF5 group
+        root dir-level hdf5 group
+    grpname : string
         Name of the hdf5 dataset group that will contain directory's simulation data
+        Named after sim #
     datadir : str
         Name of directory where simulation results are kept
     data_cols : dict
@@ -317,6 +387,8 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
         None (no quotes) turns off compression
+    remove_halts : bool
+        Whether or not to exclude simulations that did not run to completion
 
     Returns
     -------
@@ -324,17 +396,25 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],
         1 if successful, 0 if not (i.e. halt, sim didn't finish, etc)
     """
 
+    # If user wants to, look for halts/sims not finishing
+    if remove_halts:
+        halt = halt_check(datadir)
+    else:
+        halt = 0
+
+    # Did it halt? ... assuming user cares
+    if halt != 0:
+        return 0
+
+    # No halt, make the group!
+    # Create group for each directory
+    # Group's name == directory path
+    grp = f_set.create_group(grpname)
+    
     # Now loop over each output file to extract the data
     for infile in infiles:
         # Isolate the body name
         infile = infile.replace(".in","")
-
-        # TODO Here's where I would look for halts/sims not finishing
-        # And continue based on whether or not user wants them
-        # if halt or sim didnt finish:
-        halt = False # some halt-finding function here
-        if halt:
-            return 0
 
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
@@ -361,7 +441,7 @@ def data_from_dir_hdf5(grp, datadir=".",data_cols={},infiles=[],
 # End function
 
 def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
-                      compression="gzip"):
+                      compression="gzip",remove_halts=True):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -380,6 +460,8 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
         None (no quotes) turns off compression
+    remove_halts : bool
+        Whether or not to exclude simulations that did not run to completion
 
     Returns
     -------
@@ -402,14 +484,26 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
         # Read existing dataset
         f_set = h5py.File(dataset, "r")
 
-        # Load size
-        length = f_set["meta"][0]
+        try:
+            # Load size
+            length = f_set["meta"][0]
+        except:
+            print("Failed to load length.  Defaulting to 1000.")
+            length = 1000
 
-        # Load order
-        order = f_set["order"][0]
+        try:
+            # Load order
+            order = f_set["order"][0]
+        except:
+            print("Failed to load order.  Defaulting to None.")
+            order = 'None'
 
-        # Get list to convert from # -> sim name
-        number_to_sim = list(f_set["number_to_sim"])
+        try:
+            # Get list to convert from # -> sim name
+            number_to_sim = list(f_set["number_to_sim"])
+        except:
+            print("Failed to load number_to_sim.  Defaulting to [].")
+            number_to_sim = []
 
         # Close dataset, return object handler
         f_set.close()
@@ -439,15 +533,22 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
 
         # Create group for each directory, pass to load with data
         # Group's name == directory
-        grp = f_set.create_group(str(counter))
+        #grp = f_set.create_group(str(counter))
 
         # store sim - counter mapping
-        number_to_sim.append(direct)
+        #number_to_sim.append(direct)
 
         # Store data from each simulation, increment counter if succesful
-        counter += data_from_dir_hdf5(grp,src + "/" + direct + "/",data_cols,
-                                      infiles,compression=compression)
-
+        res = data_from_dir_hdf5(f_set,str(counter),src + "/" + direct + "/",data_cols,
+                                      infiles,compression=compression,
+                                      remove_halts=remove_halts)
+        
+        # Increment counter (keeps track of valid parsed simulation dirs)
+        counter += res
+        if res != 0:
+            # store sim - counter mapping
+            number_to_sim.append(direct)
+            
     # Try to store metadata
     # Add top level dataset with information about dataset
     # Meta holds the length (number of root level groups aka
@@ -673,12 +774,93 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
     return res
 # End function
 
-#
-# TODO: write function to turn df into matrix for ML stuff
-# will also return some dict giving matrix index <-> body/var name translation
-#
-#
-#
+def df_to_matrix(df,color_last=False,color_body=None,color_var=None):
+    """
+    Obviously docs go here.
+
+    Parameters
+    ----------
+    df : dict of dataframes
+        1 dataframe for each body
+        Data frame containing simulation initial values for variables specified by user and
+        any additional aggregate values.  1 row == 1 simulation.
+    color_last : bool
+        Whether or not to put a color variable as the last column in the matrix
+    color_body : str
+        Name of the body of the color variable
+    color_var : str
+        Name of the color variable
+
+    Returns
+    -------
+    arr : 2D numpy array
+    keys : dict
+        Dict where key : value pair is index : body_variable
+
+    Example
+    -------
+    >> arr, keys = df_to_matrix(df,color_last=True,color_body="cbp",color_var="InitEcc")
+    """
+
+    # Figure out dimensions for the output matrix
+    # Simultaneously, extract keys
+    keys = {}
+    ii = 0
+
+    for key in df.keys():
+        for cols in df[key].columns:
+            keys[str(ii)] = key + "_" + cols
+
+            # Iterate counter
+            ii = ii + 1
+
+    # Scale counter to make it index-like (i.e. [0,number])
+    ii = ii - 1
+
+    # Make the color variable last
+    if color_last:
+        tmp = color_body + "_" + color_var
+
+        # Make sure it's actually in the out keys dict
+        if tmp in keys.values():
+
+            # Find where color_var is
+            for ex_key, ex_value in keys.items():
+                if ex_value == tmp:
+
+                    # Set holder to where the color_var currently is
+                    holder = str(ex_key)
+
+                    # Got it! Make the switch
+                    # Set other key to where color_var was
+                    keys[holder] = keys[str(ii)]
+                    keys[str(ii)] = tmp
+                    break
+
+                else:
+                    pass
+
+    # Make matrix
+    arr = np.zeros((len(df[df.keys()[0]]),ii+1))
+
+    # Store data in said matrix
+    # Make sure matrix is ordered according to
+    # keys, values in keys
+    for key in keys.values(): # All the keys
+        # Find where var is
+            for ex_key, ex_value in keys.items():
+                if ex_value == key:
+                    # Split key since it's body_var
+                    word = key.split("_")
+                    body = word[0]
+                    var = word[1]
+
+                    # Now store into the matrix!
+                    arr[:,int(ex_key)] = df[body][var]
+                    break
+
+    return arr, keys
+# End function
 
 def reduce_dimensions(x, y, z, shape, dims=(-1), reduce_func = np.nanmean):
     """

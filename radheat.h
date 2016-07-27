@@ -23,8 +23,20 @@
 // M=N*m ,[N]=number, [m]=kg/1 atom
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
+// 26Al -- Masses, numbers and powers from Wikipedia XXX Check!
+#define ENERGY26AL        0//6.4153392709791e-13 // [J]
+#define MASS26AL          26*ATOMMASS // [kg]  Mass of a 26Al atom.
+#define HALFLIFE26AL      2.26267992e13  // [s] 
+/* Mantle */
+#define EMASSMAN26AL      9.854e22  //[kg]  mass of 26Mg on Earth
+#define ENUMMAN26AL       2.2824e48  //[num] number of 26Mg atoms on Earth
+#define EPOWERMAN26AL     1.009e35  //[W]  Power from 26Al if all Earth's 26Mg was 26Al
+/* Core */
+#define EMASSCORE26AL     9.854e19  //[kg]
+#define ENUMCORE26AL      2.2824e45  //[num] 
+#define EPOWERCORE26AL    1.009e35  //[W] 
+
 // 40K
-#define RAD40KMAN        10
 #define ENERGY40K        2.13371243669e-13 // [J?] -- weighting both Ar and Ca decay chains
 #define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
 #define HALFLIFE40K      5.736527e+16  //3.9762576e+16  //[s] 
@@ -33,13 +45,11 @@
 #define ENUMMAN40K       8.8692227e+42  //[num] number of 40K atoms in E mantle at 4.5Ga
 #define EPOWERMAN40K     3.29892e+13  //[W]  Power from 40K in Earths Mantle at 4.5 Ga 
 /* Core */
-#define RAD40KCORE       11
 #define EMASSCORE40K     3.90916e+17  //[kg]
 #define ENUMCORE40K      3.1214255e+42  //[num] 
 #define EPOWERCORE40K    1.16102e+13  //[W] 
 
 //232TH
-#define RAD232THMAN      12
 #define HALFLIFE232TH    6.3752726e+17 //4.4338428e17   // seconds
 #define MASS232TH        232.0377*ATOMMASS
 #define ENERGY232TH      6.833606619959e-12 // W
@@ -54,7 +64,6 @@
 #define EPOWERCORE232TH  4.93267e+10  //[W] 
 
 //238U
-#define RAD238UMAN       14
 #define HALFLIFE238U     2.0359742e+17  //1.409993568e17 // seconds
 #define MASS238U         238.050788268*ATOMMASS
 #define ENERGY238U       8.28293620554e-12 // [J]
@@ -63,13 +72,11 @@
 #define ENUMMAN238U      1.16*2.2505054e+41  //[num] 
 #define EPOWERMAN238U    1.16*9.18017e+12  //[W] 
 /* Core */
-#define RAD238UCORE      15
 #define EMASSCORE238U    7.83780e+14  //[kg]
 #define ENUMCORE238U     1.7619456e+39  //[num]
 #define EPOWERCORE238U   7.18726e+10  //[W]
 
 //235U
-#define RAD235UMAN       16
 #define HALFLIFE235U     3.2038174e+16  // seconds
 #define MASS235U         235.0439299*ATOMMASS
 #define ENERGY235U       6.55516e-12    // J
@@ -78,7 +85,6 @@
 #define ENUMMAN235U      9.0058843e+40  //[num] 
 #define EPOWERMAN235U    1.84187e+13  //[W]
 /* Core */
-#define RAD235UCORE      17
 #define EMASSCORE235U    2.50786e+14  //[kg]
 #define ENUMCORE235U     7.0508058e+38  //[num]
 #define EPOWERCORE235U   1.44202e+11  //[W] 
@@ -95,6 +101,12 @@ void BodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_87RBNUM             1122
 #define OPT_87RBPOWER            1124
 
+#define OPT_26ALMASSMAN            1110
+#define OPT_26ALMASSCORE           1111
+#define OPT_26ALNUMMAN             1112
+#define OPT_26ALNUMCORE            1113 
+#define OPT_26ALPOWERMAN           1114
+#define OPT_26ALPOWERCORE          1115
 #define OPT_40KMASSMAN            1110
 #define OPT_40KMASSCORE           1111
 #define OPT_40KNUMMAN             1112
@@ -135,6 +147,9 @@ void HelpOptionsRadheat(OPTIONS*);
 void Read40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void Read40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void Read40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void Read232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void Read232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void Read232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -145,6 +160,9 @@ void Read235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void Read235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void Read235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 
+void Read26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void Read40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void Read40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void Read40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -158,6 +176,7 @@ void Read235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void Read235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);  //PED
 
+// XXX Need to add 26Al
 void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -191,6 +210,7 @@ void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 /* Update functions */
 void InitializeUpdateRadheat(BODY*,UPDATE*,int);
 void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
@@ -206,53 +226,65 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 #define OUTENDRADHEAT           1200
 
 /* Body Properties due to radiogenic heating */
-#define OUT_40KPOWERMAN	        1110
-#define OUT_40KPOWERCORE        1111
-#define OUT_40KENFLUX	        1112
-#define OUT_40KDPOWERDT	        1114
-#define OUT_40KDNUMDT           1115
-#define OUT_40KPOWERTIME        1116
-#define OUT_40KMASSMAN	        1118
-#define OUT_40KMASSCORE	        1119
-#define OUT_40KNUMMAN           1120
-#define OUT_40KNUMCORE          1121
-#define OUT_40KTIME             1125
+#define OUT_26ALPOWERMAN	1110
+#define OUT_26ALPOWERCORE       1111
+#define OUT_26ALENFLUX	        1112
+#define OUT_26ALDPOWERDT	1113
+#define OUT_26ALDNUMDT          1114
+#define OUT_26ALPOWERTIME       1115
+#define OUT_26ALMASSMAN	        1116
+#define OUT_26ALMASSCORE	1117
+#define OUT_26ALNUMMAN          1118
+#define OUT_26ALNUMCORE         1119
+#define OUT_26ALTIME            1120
 
-#define OUT_232THPOWERMAN       1130
-#define OUT_232THPOWERCORE      1131
-#define OUT_232THENFLUX         1132
-#define OUT_232THPOWERDT        1134
-#define OUT_232THDNUMDT	        1135
-#define OUT_232THPOWERTIME	1136
-#define OUT_232THMASSMAN        1138
-#define OUT_232THMASSCORE       1139
-#define OUT_232THNUMMAN         1140
-#define OUT_232THNUMCORE        1141
-#define OUT_232THTIME           1145
+#define OUT_40KPOWERMAN	        1125
+#define OUT_40KPOWERCORE        1126
+#define OUT_40KENFLUX	        1127
+#define OUT_40KDPOWERDT	        1128
+#define OUT_40KDNUMDT           1129
+#define OUT_40KPOWERTIME        1130
+#define OUT_40KMASSMAN	        1131
+#define OUT_40KMASSCORE	        1132
+#define OUT_40KNUMMAN           1133
+#define OUT_40KNUMCORE          1134
+#define OUT_40KTIME             1135
+
+#define OUT_232THPOWERMAN       1140
+#define OUT_232THPOWERCORE      1141
+#define OUT_232THENFLUX         1142
+#define OUT_232THPOWERDT        1143
+#define OUT_232THDNUMDT	        1144
+#define OUT_232THPOWERTIME	1145
+#define OUT_232THMASSMAN        1146
+#define OUT_232THMASSCORE       1147
+#define OUT_232THNUMMAN         1148
+#define OUT_232THNUMCORE        1149
+#define OUT_232THTIME           1150
 
 #define OUT_238UPOWERMAN        1150
 #define OUT_238UPOWERCORE       1151
 #define OUT_238UENFLUX	        1152
-#define OUT_D238UPOWERDT	1154
-#define OUT_238UDNUMDT	        1155
-#define OUT_238UPOWERTIME	1156
-#define OUT_238UMASSMAN	        1158
-#define OUT_238UMASSCORE        1159
-#define OUT_238UNUMMAN          1160
-#define OUT_238UNUMCORE         1161
-#define OUT_238UTIME            1165
+#define OUT_D238UPOWERDT	1153
+#define OUT_238UDNUMDT	        1154
+#define OUT_238UPOWERTIME	1155
+#define OUT_238UMASSMAN	        1156
+#define OUT_238UMASSCORE        1157
+#define OUT_238UNUMMAN          1158
+#define OUT_238UNUMCORE         1159
+#define OUT_238UTIME            1160
 
-#define OUT_235UPOWERMAN        1170  
-#define OUT_235UPOWERCORE       1171  
-#define OUT_235UENFLUX	        1172
-#define OUT_D235UPOWERDT	1174
-#define OUT_235UDNUMDT	        1175 
-#define OUT_235UPOWERTIME	1176
-#define OUT_235UMASSMAN	        1178
-#define OUT_235UMASSCORE        1179
-#define OUT_235UNUMMAN          1180
-#define OUT_235UNUMCORE         1181 
-#define OUT_235UTIME            1185
+#define OUT_235UPOWERMAN        1165  
+#define OUT_235UPOWERCORE       1166  
+#define OUT_235UENFLUX	        1167
+#define OUT_D235UPOWERDT	1168
+#define OUT_235UDNUMDT	        1169 
+#define OUT_235UPOWERTIME	1170
+#define OUT_235UMASSMAN	        1171
+#define OUT_235UMASSCORE        1172
+#define OUT_235UNUMMAN          1173
+#define OUT_235UNUMCORE         1174 
+#define OUT_235UTIME            1175
 
 #define OUT_RADPOWERMAN         1190  
 #define OUT_RADPOWERCORE        1191
@@ -264,6 +296,16 @@ void HelpOutputRadheat(OUTPUT*);
 void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionRadheat(OUTPUT*,int,int);
 void FinalizeOutputFunctionRadheat(OUTPUT*,int,int);
+
+void Write26AlPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteD26AlPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void Write40KPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write40KEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -318,26 +360,31 @@ void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 /* RadHeat functions */
 void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
+double fd26AlConstant(double,double);
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
 double fd235UConstant(double,double);  
 
+double fd26AlPowerMan(UPDATE*,int);
 double fd40KPowerMan(UPDATE*,int);
 double fd232ThPowerMan(UPDATE*,int);
 double fd238UPowerMan(UPDATE*,int);
 double fd235UPowerMan(UPDATE*,int); 
 
+double fdD26AlNumManDt(BODY*,SYSTEM*,int*);
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*);
 double fdD235UNumManDt(BODY*,SYSTEM*,int*); 
 
+double fd26AlPowerCore(UPDATE*,int);
 double fd40KPowerCore(UPDATE*,int);
 double fd232ThPowerCore(UPDATE*,int);
 double fd238UPowerCore(UPDATE*,int);
 double fd235UPowerCore(UPDATE*,int);
 
+double fd26AlPower(UPDATE*,int);
 double fd40KPower(UPDATE*,int);
 double fd232ThPower(UPDATE*,int);
 double fd235UPower(UPDATE*,int);
@@ -348,12 +395,14 @@ double fdRadPowerMan(UPDATE*,int);
 double fdRadPowerCore(UPDATE*,int);
 double fdRadPowerCrust(UPDATE*,int);
 
+double fd26AlEnFlux(BODY*,UPDATE*,int);
 double fd40KEnFlux(BODY*,UPDATE*,int);
 double fd232ThEnFlux(BODY*,UPDATE*,int);
 double fd235UEnFlux(BODY*,UPDATE*,int);
 double fd238UEnFlux(BODY*,UPDATE*,int);
 double fdSurfEnFluxRadTotal(BODY*,SYSTEM*,UPDATE*,int,int);
 
+double fdD26AlNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD40KNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCoreDt(BODY*,SYSTEM*,int*);

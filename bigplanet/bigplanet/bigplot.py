@@ -17,7 +17,7 @@ Should I make a submodule for each data type?
 """
 
 def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
-                 reduce_func = np.nanmean, nan_value = 1.0, bReduce=True,
+                 reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                 interp="gaussian",cmap="viridis",colorbar=True,aspect="auto",
                  origin="lower",vmin=None,vmax=None,**kwargs):
     """
@@ -117,7 +117,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 # End function
 
 def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
-                         reduce_func = np.nanmean, nan_value = 1.0, bReduce=True,
+                         reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                          interp="gaussian",cmap="viridis",levels=20,clines=False,
                          colorbar=False,origin="lower",**kwargs):
     """
@@ -225,7 +225,7 @@ def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     return None
 # End function
 
-def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_color_func = np.nanmean, nan_value = 1.0,
+def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_color_func = np.nanmean, nan_value = 0.0,
                  bReduce=True,interp="nearest",lcmap="viridis_r",rcmap="magma_r",levels=None,clines=False,
                  origin="lower",save=False,right_color_func = np.std,**kwargs):
     """
@@ -311,7 +311,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
     lvmax = np.max(df[color_body][color_name])
 
     rvmin = 0.0
-    rvmax = np.std(df[color_body][color_name])/2.0
+    rvmax = np.std(df[color_body][color_name])
 
     # Iterate over combos going left->right->down->repeat
     # along the axes
@@ -326,6 +326,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 continue
 
             # Make labels
+            """
             # Along the y axis?
             if j == 0:
                 label = ["",combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1], ""]
@@ -334,7 +335,9 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 label = [combos[i*size + j][0].split("_")[0] + " " + combos[i*size + j][0].split("_")[1], "", ""]
             else:
                 label = None
+            """
 
+            # Make subplot axis labels
             label = [combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1],
                     combos[i*size + j][0].split("_")[0] + " " + combos[i*size + j][0].split("_")[1],
                     ""]
@@ -366,6 +369,11 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 ybody, yvar = combo[1].split("_")
                 xbody, xvar = combo[0].split("_")
 
+                # Exchange labels
+                tmp_lab = label[0]
+                label[0] = label[1]
+                label[1] = tmp_lab
+                
                 x = df[xbody][xvar].values
                 y = df[ybody][yvar].values
                 z = df[color_body][color_name].values

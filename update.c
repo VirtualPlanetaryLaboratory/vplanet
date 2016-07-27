@@ -104,7 +104,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumXobl=0;
     update[iBody].iNumYobl=0;
     update[iBody].iNumZobl=0;
-
+    update[iBody].iNumPeriQ=0;
+    update[iBody].iNumArgP=0;
+    
     update[iBody].iNumVars=0;
     
     /* First we must identify how many variables and models must be 
@@ -1224,6 +1226,67 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 //       
 //     }
 
+    // Pericenter distance
+    update[iBody].iPeriQ = -1;
+    if (update[iBody].iNumPeriQ) {
+      update[iBody].iPeriQ = iVar;
+      update[iBody].iaVar[iVar] = VPERIQ;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumPeriQ;
+      update[iBody].pdVar[iVar] = &body[iBody].dPeriQ;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dPeriQ;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumPeriQ*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdatePeriQ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }  
+  
+    // Argument of Pericenter 
+    update[iBody].iArgP = -1;
+    if (update[iBody].iNumArgP) {
+      update[iBody].iArgP = iVar;
+      update[iBody].iaVar[iVar] = VARGP;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumArgP;
+      update[iBody].pdVar[iVar] = &body[iBody].dArgP;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumArgP*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dArgP;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumArgP*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumArgP*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumArgP*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateArgP[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+        
+    
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */

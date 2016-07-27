@@ -197,6 +197,10 @@
 // FLARE
 #define VLXUV           1901
 
+//GALHABIT
+#define VPERIQ          2201
+#define VARGP           2202
+
 /* Now define the structs */
 
 /*!
@@ -698,6 +702,7 @@ typedef struct {
   double dLXUVFlare;
   
   // GALHABIT
+  int bGalHabit;
   double dPeriQ;   /**< Pericenter distance */
   
 } BODY;
@@ -1359,6 +1364,8 @@ typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePeriQModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateArgPModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1470,6 +1477,9 @@ typedef struct {
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
   /*! Function pointers to finalize dynamical ellipticity */ 
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
+  
+  fnFinalizeUpdatePeriQModule **fnFinalizeUpdatePeriQ;
+  fnFinalizeUpdateArgPModule **fnFinalizeUpdateArgP;
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;

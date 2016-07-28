@@ -491,7 +491,7 @@ double fdCoreBuoyCompo(BODY*,int);
 double fdCoreBuoyTotal(BODY*,int);
 double fdGravICB(BODY*,int);
 double fdMagMom(BODY*,int);
-double fdRICDot(BODY*,int);
+double fdRICDot(BODY*,UPDATE*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);

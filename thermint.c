@@ -716,7 +716,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHfluxCMBAd=fdHfluxCMBAd(body,iBody);
   body[iBody].dHfluxCMBConv=fdHfluxCMBConv(body,iBody);
   body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
-  body[iBody].dRICDot=fdRICDot(body,iBody);
+  body[iBody].dRICDot=fdRICDot(body,update,iBody);
   body[iBody].dGravICB=fdGravICB(body,iBody);
   body[iBody].dCoreBuoyTherm=fdCoreBuoyTherm(body,iBody);
   body[iBody].dCoreBuoyCompo=fdCoreBuoyCompo(body,iBody);
@@ -1707,7 +1707,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /* MagMom */
   sprintf(output[OUT_MAGMOM].cName,"MagMom");
   sprintf(output[OUT_MAGMOM].cDescr,"Core Magnetic Moment");
-  sprintf(output[OUT_MAGMOM].cNeg,"Am^2");
+  sprintf(output[OUT_MAGMOM].cNeg,"EMAGMOM");
   output[OUT_MAGMOM].bNeg = 1;
   output[OUT_MAGMOM].dNeg = 1./(EMAGMOM); 
   output[OUT_MAGMOM].iNum = 1;
@@ -2183,8 +2183,10 @@ double fdHfluxCMBConv(BODY *body, int iBody) {
 double fdGravICB(BODY *body, int iBody) {
   return (GRAVCMB)*body[iBody].dRIC/(ERCORE);
 }
-double fdRICDot(BODY *body, int iBody) {
-  return -pow((DADCORE),2)/(2*body[iBody].dRIC*(2.*(1.-1/3.*GRUNEISEN)*pow((DADCORE)/(DLIND),2)-1.))*body[iBody].dTDotCore/body[iBody].dTCore;
+double fdRICDot(BODY *body,UPDATE *update, int iBody) {
+  double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((DADCORE)/(DLIND),2)-1.));
+  return -1*pow((DADCORE),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
+  //  return 1/denom;
 }
 double fdCoreBuoyTherm(BODY *body, int iBody) {
   return (THERMEXPANCORE)*(GRAVCMB)*body[iBody].dHfluxCMBConv/((EDENSCORE)*(SPECHEATCORE));
@@ -2193,7 +2195,12 @@ double fdCoreBuoyCompo(BODY *body, int iBody) {
   return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
 }
 double fdCoreBuoyTotal(BODY *body, int iBody) {
-  return body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo;
+  if (body[iBody].dRIC > 0.) {
+    return  (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
+  } else {
+    return body[iBody].dCoreBuoyTherm;
+  }
+  //  return (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
 }
 double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*(MAGMOMCOEF)*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);

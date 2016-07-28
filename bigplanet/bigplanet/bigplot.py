@@ -12,7 +12,11 @@ ROUTINES FOR REGULARLY GRIDDED DATA
 The below functions only work/make sense for some N-dimensional
 simulation grid.
 
-Should I make a submodule for each data type?
+Note: For regularly gridded data, no simulations can be thrown away, i.e.
+when running data_extraction, you CANNOT have excluded halted simulations.
+If you did that, then the data will have been created from a grid, but the grid
+will be likely missing chunks and hence the dimensionality reduction algorithms
+will fail.
 
 """
 

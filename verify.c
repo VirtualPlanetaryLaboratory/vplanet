@@ -340,49 +340,49 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
  */
 
 void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char cFile[],int iVerbose) {
-
+  int iFile=iBody+1;
 
   /* !!!!!! --- Mass and Radius ARE ALWAYS UPDATED AND CORRECT --- !!!!!! */
 
   /* First see if mass and radius and nothing else set, i.e. the user input the default parameters */
-  if (options[OPT_MASS].iLine[iBody] > -1 && options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] == -1&& options[OPT_MASSRAD].iLine[iBody] == -1) 
+  if (options[OPT_MASS].iLine[iFile] > -1 && options[OPT_RADIUS].iLine[iFile] > -1 && options[OPT_DENSITY].iLine[iFile] == -1&& options[OPT_MASSRAD].iLine[iFile] == -1) 
     return;
 
   /* Was anything set> */
-  if (options[OPT_MASS].iLine[iBody] == -1 && options[OPT_RADIUS].iLine[iBody] == -1 && options[OPT_DENSITY].iLine[iBody] == -1) {
+  if (options[OPT_MASS].iLine[iFile] == -1 && options[OPT_RADIUS].iLine[iFile] == -1 && options[OPT_DENSITY].iLine[iFile] == -1) {
     if (iVerbose >= VERBERR) 
       fprintf(stderr,"ERROR: Must set at least one of %s, %s, and %s.\n",options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName);
     exit(EXIT_INPUT);
   }
 
   /* Were all set? */
-  if (options[OPT_MASS].iLine[iBody] > -1 && options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) {
-    VerifyTripleExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
+  if (options[OPT_MASS].iLine[iFile] > -1 && options[OPT_RADIUS].iLine[iFile] > -1 && options[OPT_DENSITY].iLine[iFile] > -1) {
+    VerifyTripleExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iFile],options[OPT_RADIUS].iLine[iFile],options[OPT_DENSITY].iLine[iFile],cFile,iVerbose);
     exit(EXIT_INPUT);
   }
 
   /* Was mass set? */
-  if (options[OPT_MASS].iLine[iBody] > -1) {
+  if (options[OPT_MASS].iLine[iFile] > -1) {
   
     /* Can only set 1 other */
-    if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_MASSRAD].iLine[iBody] > -1) 
-      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_MASSRAD].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],cFile,iVerbose);
+    if (options[OPT_RADIUS].iLine[iFile] > -1 && options[OPT_MASSRAD].iLine[iFile] > -1) 
+      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_MASSRAD].cName,options[OPT_MASS].iLine[iFile],options[OPT_RADIUS].iLine[iFile],options[OPT_MASSRAD].iLine[iFile],cFile,iVerbose);
 
-    if (options[OPT_RADIUS].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) 
-      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_RADIUS].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
+    if (options[OPT_RADIUS].iLine[iFile] > -1 && options[OPT_DENSITY].iLine[iFile] > -1) 
+      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_RADIUS].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iFile],options[OPT_RADIUS].iLine[iFile],options[OPT_DENSITY].iLine[iFile],cFile,iVerbose);
 
-    if (options[OPT_MASSRAD].iLine[iBody] > -1 && options[OPT_DENSITY].iLine[iBody] > -1) 
-      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_MASSRAD].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
+    if (options[OPT_MASSRAD].iLine[iFile] > -1 && options[OPT_DENSITY].iLine[iFile] > -1) 
+      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_MASSRAD].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iFile],options[OPT_MASSRAD].iLine[iFile],options[OPT_DENSITY].iLine[iFile],cFile,iVerbose);
     
     /* Only Mass and something else set */ 
 
-    if (options[OPT_RADIUS].iLine[iBody] > -1)
+    if (options[OPT_RADIUS].iLine[iFile] > -1)
       /* Mass and radius were the only two set - Nothing to do */
       return;
-    if (options[OPT_DENSITY].iLine[iBody] > -1) 
+    if (options[OPT_DENSITY].iLine[iFile] > -1) 
       /* Must get radius from density */
       body->dRadius = fdDensityMassToRadius(body->dDensity,body->dMass);
-    if (options[OPT_MASSRAD].iLine[iBody] > -1) 
+    if (options[OPT_MASSRAD].iLine[iFile] > -1) 
       /* Must get radius from relationship */
       body->dRadius = fdMassToRad(body->dMass,control->iMassRad[iBody]);
 
@@ -390,16 +390,16 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char c
   }
 
   /* Was radius set, but not mass? */
-  if (options[OPT_RADIUS].iLine[iBody] > -1) {
-    if (options[OPT_MASSRAD].iLine[iBody] >= -1 && options[OPT_DENSITY].iLine[iBody] >= -1) 
-      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_MASSRAD].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iBody],options[OPT_MASSRAD].iLine[iBody],options[OPT_DENSITY].iLine[iBody],cFile,iVerbose);
+  if (options[OPT_RADIUS].iLine[iFile] > -1) {
+    if (options[OPT_MASSRAD].iLine[iFile] >= -1 && options[OPT_DENSITY].iLine[iFile] >= -1) 
+      VerifyTwoOfThreeExit(options[OPT_MASS].cName,options[OPT_MASSRAD].cName,options[OPT_DENSITY].cName,options[OPT_MASS].iLine[iFile],options[OPT_MASSRAD].iLine[iFile],options[OPT_DENSITY].iLine[iFile],cFile,iVerbose);
 
     /* Only Radius and something else set */
 
-    if (options[OPT_MASSRAD].iLine[iBody] > -1) 
+    if (options[OPT_MASSRAD].iLine[iFile] > -1) 
       /* Must get mass from relationship */
       body->dMass=fdRadToMass(body->dRadius,control->iMassRad[iBody]);
-    if (options[OPT_DENSITY].iLine[iBody] > -1)
+    if (options[OPT_DENSITY].iLine[iFile] > -1)
       /* Must get mass from density */
       body->dMass=fdMassFromRadiusDensity(body->dRadius,body->dDensity);
   }
@@ -472,7 +472,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
-    VerifyMassRad(&body[iBody],control,options,iBody+1,files->Infile[iBody+1].cIn,control->Io.iVerbose);
+    VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       // Must initialize entire body struct before verifying modules

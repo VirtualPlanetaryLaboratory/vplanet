@@ -360,6 +360,21 @@ void ReadManHFlowPref(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dManHFlowPref = options->dDefault;
 }
+void ReadMagMomCoef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dMagMomCoef = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dManHFlowPref = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dMagMomCoef = options->dDefault;
+}
 
 void ReadHaltMinTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -2195,6 +2210,7 @@ double fdCoreBuoyCompo(BODY *body, int iBody) {
   return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
 }
 double fdCoreBuoyTotal(BODY *body, int iBody) {
+  //PD: Why do we need this if statement?
   if (body[iBody].dRIC > 0.) {
     return  (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
   } else {
@@ -2256,15 +2272,18 @@ double fdHflowSecMan(BODY *body,int iBody) {
 
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
   if (body[iBody].dRIC>0) {   //If IC exists.
-    /* OLD VERSION no Le depression.
-       double dn_rc2=pow((DADCORE)/(ERCORE),2.0); 
-       return -(body[iBody].dRIC/(2.0*body[iBody].dTCMB))*dn_rc2/( dn_rc2*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0 ); //DB14 (32)   
-    */
-    /* NEW VERSION with Le depression */
+    /* Old Version: from DB14 equations */
+    /*
     double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
     double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
     double denom=pow((DADCORE)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
     return (1./2)*pow((DADCORE),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
+    */
+    /* Newer Version: From notes on 4/23/15 */
+    double gamma_core2=2.*(1-1./(3.*GRUNEISEN));
+    double a_drdt=-2.*gamma_core2*body[iBody].dRIC/pow(DLIND,2)*body[iBody].dTrefLind*exp(-gamma_core2*pow(body[iBody].dRIC/dl,2));
+b_drdt=3.*dt_fe/chi_oc_e*mass_ic*mass_chi_total*(core_partition-1.)/(mass_core+mass_ic*(core_partition-1.))^2*(1./r_ic) ;coef
+dri_dTcmb2=t_icb/t_cmb/(a_drdt+b_drdt+2.*r_ic*t_icb/dn^2)  ;notes 4/23/15.
   } else {                    //If no IC.
     return 0;
   }

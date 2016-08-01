@@ -46,7 +46,7 @@ dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
 #Output
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
 	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-		-MagMom
+		-MagMom -RadPowerTot
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
 #		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $

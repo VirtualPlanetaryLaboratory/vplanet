@@ -116,63 +116,64 @@ void BodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPTSTARTRADHEAT            1100 /* Start of RADHEAT options */
 #define OPTENDRADHEAT              1200 /* End of RADHEAT options */
 
-#define OPT_87RBMASS               1120
-#define OPT_87RBNUM                1122
-#define OPT_87RBPOWER              1124
-
 #define OPT_26ALMASSMAN            1110
 #define OPT_26ALMASSCORE           1111
 #define OPT_26ALNUMMAN             1112
 #define OPT_26ALNUMCORE            1113 
 #define OPT_26ALPOWERMAN           1114
 #define OPT_26ALPOWERCORE          1115
-#define OPT_40KMASSMAN            1110
-#define OPT_40KMASSCORE           1111
-#define OPT_40KNUMMAN             1112
-#define OPT_40KNUMCORE            1113
-#define OPT_40KPOWERMAN           1114
-#define OPT_40KPOWERCORE          1115
-#define OPT_87RBMASS              1120
-#define OPT_87RBNUM               1122
-#define OPT_87RBPOWER             1124
-#define OPT_232THMASSMAN          1130
-#define OPT_232THMASSCORE         1131
-#define OPT_232THNUMMAN           1132
-#define OPT_232THNUMCORE          1133
-#define OPT_232THPOWERMAN         1134
-#define OPT_232THPOWERCORE        1135
-#define OPT_238UMASSMAN           1140
-#define OPT_238UMASSCORE          1141
-#define OPT_238UNUMMAN            1142
-#define OPT_238UNUMCORE           1143
-#define OPT_238UPOWERMAN          1144
-#define OPT_238UPOWERCORE         1145
-#define OPT_235UMASSMAN           1150  
-#define OPT_235UMASSCORE          115
-#define OPT_235UNUMMAN            1152
-#define OPT_235UNUMCORE           1153
-#define OPT_235UPOWERMAN          1154
-#define OPT_235UPOWERCORE         1155
-#define OPT_40KMASSCRUST           1160
-#define OPT_40KNUMCRUST            1161
-#define OPT_40KPOWERCRUST          1162
-#define OPT_232THMASSCRUST         1163
-#define OPT_232THNUMCRUST          1164
-#define OPT_232THPOWERCRUST        1165
-#define OPT_238UMASSCRUST          1166
-#define OPT_238UNUMCRUST           1167
-#define OPT_238UPOWERCRUST         1168
-#define OPT_235UMASSCRUST          1169
-#define OPT_235UNUMCRUST           1170
-#define OPT_235UPOWERCRUST         1171
 
-#define OPT_HALT40KPOWER          1173
-#define OPT_HALTMIN87RBPOWER      1174
-#define OPT_HALT232THPOWER        1175
-#define OPT_HALT238UPOWER	  1176
-#define OPT_HALT235UPOWER         1177  
-#define OPT_HALTRADPOWER          1180  
+#define OPT_40KMASSMAN             1120
+#define OPT_40KMASSCORE            1121
+#define OPT_40KNUMMAN              1122
+#define OPT_40KNUMCORE             1123
+#define OPT_40KPOWERMAN            1124
+#define OPT_40KPOWERCORE           1125
+#define OPT_40KMASSCRUST           1126
+#define OPT_40KNUMCRUST            1127
+#define OPT_40KPOWERCRUST          1128
 
+// Not currently coded
+#define OPT_87RBMASS               1130
+#define OPT_87RBNUM                1131
+#define OPT_87RBPOWER              1132
+
+#define OPT_232THMASSMAN           1135
+#define OPT_232THMASSCORE          1136
+#define OPT_232THNUMMAN            1137
+#define OPT_232THNUMCORE           1138
+#define OPT_232THPOWERMAN          1139
+#define OPT_232THPOWERCORE         1140
+#define OPT_232THMASSCRUST         1141
+#define OPT_232THNUMCRUST          1142
+#define OPT_232THPOWERCRUST        1143
+
+#define OPT_235UMASSMAN            1145  
+#define OPT_235UMASSCORE           1146
+#define OPT_235UNUMMAN             1147
+#define OPT_235UNUMCORE            1148
+#define OPT_235UPOWERMAN           1149
+#define OPT_235UPOWERCORE          1150
+#define OPT_235UMASSCRUST          1151
+#define OPT_235UNUMCRUST           1152
+#define OPT_235UPOWERCRUST         1153
+
+#define OPT_238UMASSMAN            1155
+#define OPT_238UMASSCORE           1156
+#define OPT_238UNUMMAN             1157
+#define OPT_238UNUMCORE            1158
+#define OPT_238UPOWERMAN           1159
+#define OPT_238UPOWERCORE          1160
+#define OPT_238UMASSCRUST          1161
+#define OPT_238UNUMCRUST           1162
+#define OPT_238UPOWERCRUST         1163
+
+#define OPT_HALT40KPOWER           1190
+#define OPT_HALTMIN87RBPOWER       1191
+#define OPT_HALT232THPOWER         1192
+#define OPT_HALT238UPOWER	   1193
+#define OPT_HALT235UPOWER          1194  
+#define OPT_HALTRADPOWER           1195  
 
 /* Options Functions */
 void HelpOptionsRadheat(OPTIONS*);

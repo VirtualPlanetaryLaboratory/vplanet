@@ -225,6 +225,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyNULL;
     module->fnInitializeBody[iBody][iModule] = &InitializeBodyNULL;
 
+    module->fnFinalizeUpdate26AlNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate26AlNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;

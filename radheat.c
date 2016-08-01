@@ -907,27 +907,27 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   /* 26Al */
   sprintf(options[OPT_26ALMASSMAN].cName,"d26AlMassMan");
   sprintf(options[OPT_26ALMASSMAN].cDescr,"Initial Mantle Mass of 26Al");
-  sprintf(options[OPT_26ALMASSMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_26ALMASSMAN].cDefault,"Primordial Earth: 0");
   options[OPT_26ALMASSMAN].iType = 2;
   options[OPT_26ALMASSMAN].iMultiFile = 1;
-  options[OPT_26ALMASSMAN].dNeg = EMASSMAN26AL;
+  options[OPT_26ALMASSMAN].dNeg = MEARTH;
   options[OPT_26ALMASSMAN].dDefault = 0; 
   sprintf(options[OPT_26ALMASSMAN].cNeg,"Earth Masses");
   fnRead[OPT_26ALMASSMAN] = &Read26AlMassMan;
 
   sprintf(options[OPT_26ALMASSCORE].cName,"d26AlMassCore");
   sprintf(options[OPT_26ALMASSCORE].cDescr,"Initial Core Mass of 26Al");
-  sprintf(options[OPT_26ALMASSCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_26ALMASSCORE].cDefault,"Primordial Earth: 0");
   options[OPT_26ALMASSCORE].iType = 2;
   options[OPT_26ALMASSCORE].iMultiFile = 1;
-  options[OPT_26ALMASSCORE].dNeg = EMASSCORE26AL;
+  options[OPT_26ALMASSCORE].dNeg = MEARTH;
   options[OPT_26ALMASSCORE].dDefault = 0; 
   sprintf(options[OPT_26ALMASSCORE].cNeg,"Earth Masses");
   fnRead[OPT_26ALMASSCORE] = &Read26AlMassCore;
   
   sprintf(options[OPT_26ALNUMMAN].cName,"d26AlNumMan");
   sprintf(options[OPT_26ALNUMMAN].cDescr,"Initial Mantle Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_26ALNUMMAN].cDefault,"Primordial Earth: 0");
   options[OPT_26ALNUMMAN].iType = 2;
   options[OPT_26ALNUMMAN].iMultiFile = 1;
   options[OPT_26ALNUMMAN].dNeg = ENUMMAN26AL;
@@ -937,7 +937,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALNUMCORE].cName,"d26AlNumCore");
   sprintf(options[OPT_26ALNUMCORE].cDescr,"Initial Core Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_26ALNUMCORE].cDefault,"Primordial Earth: 0");
   options[OPT_26ALNUMCORE].iType = 2;
   options[OPT_26ALNUMCORE].iMultiFile = 1;
   options[OPT_26ALNUMCORE].dNeg = ENUMCORE26AL;
@@ -947,7 +947,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALPOWERMAN].cName,"d26AlPowerMan");
   sprintf(options[OPT_26ALPOWERMAN].cDescr,"Initial Mantle Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERMAN].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_26ALPOWERMAN].cDefault,"Primordial Earth: 0 TW");
   options[OPT_26ALPOWERMAN].iType = 2;
   options[OPT_26ALPOWERMAN].iMultiFile = 1;
   options[OPT_26ALPOWERMAN].dNeg = EPOWERMAN26AL;  //Earth's POWER of 26Al
@@ -957,7 +957,7 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALPOWERCORE].cName,"d26AlPowerCore");
   sprintf(options[OPT_26ALPOWERCORE].cDescr,"Initial Core Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERCORE].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_26ALPOWERCORE].cDefault,"Primordial Earth: 0 TW");
   options[OPT_26ALPOWERCORE].iType = 2;
   options[OPT_26ALPOWERCORE].iMultiFile = 1;
   options[OPT_26ALPOWERCORE].dNeg = EPOWERCORE26AL;  //Earth's POWER of 26Al
@@ -1403,6 +1403,33 @@ void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 }
 
 /* Assign Nums */
+void Assign26AlNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
+  // Add an int iFile=iBody+1?XXX
+  
+  /* Mantle */
+  if (options[OPT_26ALMASSMAN].iLine[iBody+1] >= 0) {
+    body[iBody].d26AlNumMan=body[iBody].d26AlMassMan/(MASS26AL);
+  }
+  if (options[OPT_26ALNUMMAN].iLine[iBody+1] >= 0) {
+    // Do nothing bc default Num set.
+  }
+  if (options[OPT_26ALPOWERMAN].iLine[iBody+1] >= 0) {
+    body[iBody].d26AlNumMan=body[iBody].d26AlPowerMan/(ENERGY26AL)*(HALFLIFE26AL);
+  }  
+  body[iBody].d26AlConstMan = fd26AlConstant(body[iBody].d26AlNumMan,dAge);  //Get the constant given num and age.
+  
+  /* Core */
+  if (options[OPT_26ALMASSCORE].iLine[iBody+1] >= 0) {
+    body[iBody].d26AlNumCore=body[iBody].d26AlMassCore/(MASS26AL);
+  }
+  if (options[OPT_26ALNUMCORE].iLine[iBody+1] >= 0) {
+  }
+  if (options[OPT_26ALPOWERCORE].iLine[iBody+1] >= 0) {
+    body[iBody].d26AlNumCore=body[iBody].d26AlPowerCore/(ENERGY26AL)*(HALFLIFE26AL);
+  }  
+  body[iBody].d26AlConstCore = fd26AlConstant(body[iBody].d26AlNumCore,dAge);
+}
+
 void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   // Add an int iFile=iBody+1?XXX
   
@@ -1551,7 +1578,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
 
 /* Verify */
 void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-  Assign40KNum(body,options,dAge,iBody);
+  Assign26AlNum(body,options,dAge,iBody);
 
   /* Mantle */
   if (update[iBody].i26AlMan >= 0) {
@@ -1841,54 +1868,75 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
      or < dMinRadPower, they will me removed from update[iBody] in 
      ForceBehavior.
   */
+
+  // Mantle
   if (body[iBody].d26AlNumMan > 0 || body[iBody].d26AlMassMan > 0 || body[iBody].d26AlPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum26AlMan++;
   }
+
   if (body[iBody].d40KNumMan > 0 || body[iBody].d40KMassMan > 0 || body[iBody].d40KPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum40KMan++;
   }
+
   if (body[iBody].d232ThNumMan > 0 || body[iBody].d232ThMassMan > 0 || body[iBody].d232ThPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum232ThMan++;
   }
+
   if (body[iBody].d238UNumMan > 0 || body[iBody].d238UMassMan > 0 || body[iBody].d238UPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum238UMan++;
   }
+
   if (body[iBody].d235UNumMan > 0 || body[iBody].d235UMassMan > 0 || body[iBody].d235UPowerMan > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum235UMan++;
   }
+
+  // Core
+  if (body[iBody].d26AlNumCore > 0 || body[iBody].d26AlMassCore > 0 || body[iBody].d26AlPowerCore > 0) {
+    update[iBody].iNumVars++;
+    update[iBody].iNum26AlCore++;
+  }
+
   if (body[iBody].d40KNumCore > 0 || body[iBody].d40KMassCore > 0 || body[iBody].d40KPowerCore > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum40KCore++;
   }
+
   if (body[iBody].d232ThNumCore > 0 || body[iBody].d232ThMassCore > 0 || body[iBody].d232ThPowerCore > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum232ThCore++;
   }
+
   if (body[iBody].d238UNumCore > 0 || body[iBody].d238UMassCore > 0 || body[iBody].d238UPowerCore > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum238UCore++;
   }
+
   if (body[iBody].d235UNumCore > 0 || body[iBody].d235UMassCore > 0 || body[iBody].d235UPowerCore > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum235UCore++;
   }
+
+  // Crust
   if (body[iBody].d40KNumCrust > 0 || body[iBody].d40KMassCrust > 0 || body[iBody].d40KPowerCrust > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum40KCrust++;
   }
+
   if (body[iBody].d232ThNumCrust > 0 || body[iBody].d232ThMassCrust > 0 || body[iBody].d232ThPowerCrust > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum232ThCrust++;
   }
+
   if (body[iBody].d238UNumCrust > 0 || body[iBody].d238UMassCrust > 0 || body[iBody].d238UPowerCrust > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum238UCrust++;
   }
+
   if (body[iBody].d235UNumCrust > 0 || body[iBody].d235UMassCrust > 0 || body[iBody].d235UPowerCrust > 0) {
     update[iBody].iNumVars++;
     update[iBody].iNum235UCrust++;
@@ -2740,7 +2788,7 @@ void WriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
 void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
-  /* Aliminum */
+  /* Aluminum */
     //  PED:  Do these default numbers matter??  If so they need to be changed.
   sprintf(output[OUT_26ALPOWERMAN].cName,"26AlPowerMan");
   sprintf(output[OUT_26ALPOWERMAN].cDescr,"Total Power Generated by 26Al");
@@ -2788,10 +2836,10 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALTIME] = &Write26AlTimescale;
   
   sprintf(output[OUT_26ALMASSMAN].cName,"26AlMassMan");
-  sprintf(output[OUT_26ALMASSMAN].cDescr,"Total Mass of 26Al");
+  sprintf(output[OUT_26ALMASSMAN].cDescr,"Mass of Mantle in 26Al");
   sprintf(output[OUT_26ALMASSMAN].cNeg,"Earth Masses");
   output[OUT_26ALMASSMAN].bNeg = 1;
-  output[OUT_26ALMASSMAN].dNeg = MEARTH;
+  output[OUT_26ALMASSMAN].dNeg = 1./MEARTH;
   output[OUT_26ALMASSMAN].iNum = 1;
   output[OUT_26ALMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALMASSMAN] = &Write26AlMassMan;
@@ -2800,7 +2848,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALNUMMAN].cDescr,"Total Number of 26Al Atoms");
   sprintf(output[OUT_26ALNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_26ALNUMMAN].bNeg = 1;
-  output[OUT_26ALNUMMAN].dNeg = EMASSMAN26AL/MASS26AL;
+  output[OUT_26ALNUMMAN].dNeg = 1;
   output[OUT_26ALNUMMAN].iNum = 1;
   output[OUT_26ALNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALNUMMAN] = &Write26AlNumMan;
@@ -2816,10 +2864,10 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALPOWERCORE] = &Write26AlPowerCore;
   
   sprintf(output[OUT_26ALMASSCORE].cName,"26AlMassCore");
-  sprintf(output[OUT_26ALMASSCORE].cDescr,"Total Core Mass of 26Al");
+  sprintf(output[OUT_26ALMASSCORE].cDescr,"Mass of core in 26Al");
   sprintf(output[OUT_26ALMASSCORE].cNeg,"Earth Masses");
   output[OUT_26ALMASSCORE].bNeg = 1;
-  output[OUT_26ALMASSCORE].dNeg = MEARTH;
+  output[OUT_26ALMASSCORE].dNeg = 1./MEARTH;
   output[OUT_26ALMASSCORE].iNum = 1;
   output[OUT_26ALMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALMASSCORE] = &Write26AlMassCore;
@@ -3571,7 +3619,7 @@ double fd235UEnFlux(BODY *body,UPDATE *update,int iBody) {
 
 /* DN/Dt */
 double fdD26AlNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,body[iaBody[0]].dAge);
+  return fdDNumRadDt(body[iaBody[0]].d26AlConstMan,HALFLIFE26AL,body[iaBody[0]].dAge);
 }
 
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
@@ -3588,7 +3636,7 @@ double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdD26AlNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
-  return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,body[iaBody[0]].dAge);
+  return fdDNumRadDt(body[iaBody[0]].d26AlConstCore,HALFLIFE26AL,body[iaBody[0]].dAge);
 }
 
 double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {

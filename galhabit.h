@@ -60,7 +60,7 @@ void LogGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* GalHabit Functions */
-void PropsAuxGalHabit(BODY*,EVOLVE*,UPDATE*,int);
+void PropertiesGalHabit(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* GalHabit derivatives */

@@ -1538,6 +1538,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "poise.h"
 #include "binary.h"
 #include "flare.h"
+#include "galhabit.h"
 
 
 

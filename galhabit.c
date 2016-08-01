@@ -15,11 +15,13 @@
 #include "output.h"
 
 void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
+    dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dPeriQ = src[iBody].dPeriQ;
     dest[iBody].dArgP = src[iBody].dArgP;
+    dest[iBody].dInc = src[iBody].dInc;
 }
 
-/**************** DISTROT options ********************/
+/**************** GALHABIT options ********************/
 
 void ReadGalacDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
 /* This parameter can exist in any file, but only once */
@@ -64,7 +66,7 @@ void ReadOptionsGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /******************* Verify GALHABIT ******************/
 
 void InitializePeriQGalHabit(BODY *body,UPDATE *update,int iBody) {
-  update[iBody].iaType[update[iBody].iPeriQ][0] = 2;
+  update[iBody].iaType[update[iBody].iPeriQ][0] = 1;
   update[iBody].padDPeriQDtGalHabit[0] = &update[iBody].daDerivProc[update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]];
   update[iBody].iNumBodies[update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]]=2;
   update[iBody].iaBody[update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]]*sizeof(int));
@@ -85,12 +87,14 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   if (iBody >= 1) {
+    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
+    
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
     InitializePeriQGalHabit(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[iPert]] = &fdGalHabitDPeriQDt;
+    fnUpdate[iBody][update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]] = &fdGalHabitDPeriQDt;
     
     InitializeArgPGalHabit(body,update,iBody);
-    fnUpdate[iBody][update[iBody].iArgP][update[iBody].iaArgPGalHabit[iPert]] = &fdGalHabitDArgPDt;
+    fnUpdate[iBody][update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]] = &fdGalHabitDArgPDt;
 
     control->fnForceBehavior[iBody][iModule]=&ForceBehaviorGalHabit;
     control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyGalHabit;
@@ -98,7 +102,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 }
 
 
-/***************** DISTROT Update *****************/
+/***************** GALHABIT Update *****************/
 void InitializeUpdateGalHabit(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
     if (update[iBody].iNumPeriQ == 0)
@@ -126,16 +130,16 @@ void FinalizeUpdateArgPGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 
-/***************** DISTROT Halts *****************/
+/***************** GALHABIT Halts *****************/
 
-void CountHaltsDistRot(HALT *halt,int *iNumHalts) { 
+void CountHaltsGalHabit(HALT *halt,int *iNumHalts) { 
 }
 
-void VerifyHaltDistRot(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+void VerifyHaltGalHabit(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
 }
 
 
-/************* DISTROT Outputs ******************/
+/************* GALHABIT Outputs ******************/
 
 void WriteBodyPeriQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
  
@@ -167,29 +171,29 @@ void FinalizeOutputFunctionGalHabit(OUTPUT *output,int iBody,int iModule) {
 }
 
 
-/************ DISTROT Logging Functions **************/
+/************ GALHABIT Logging Functions **************/
 
-void LogOptionsDistRot(CONTROL *control, FILE *fp) {
+void LogOptionsGalHabit(CONTROL *control, FILE *fp) {
 
-  fprintf(fp,"-------- DISTROT Options -----\n\n");
+  fprintf(fp,"-------- GALHABIT Options -----\n\n");
   
 }
 
-void LogDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+void LogGalHabit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut;
 
-  fprintf(fp,"\n----- DISTROT PARAMETERS ------\n");
-  for (iOut=OUTSTARTDISTROT;iOut<OUTBODYSTARTDISTROT;iOut++) {
+  fprintf(fp,"\n----- GALHABIT PARAMETERS ------\n");
+  for (iOut=OUTSTARTGALHABIT;iOut<OUTBODYSTARTGALHABIT;iOut++) {
     if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
   }
 }
 
-void LogBodyDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+void LogBodyGalHabit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
 
-  fprintf(fp,"-----DISTROT PARAMETERS (%s)------\n",body[iBody].cName);
-  for (iOut=OUTBODYSTARTDISTROT;iOut<OUTENDDISTROT;iOut++) {
+  fprintf(fp,"-----GALHABIT PARAMETERS (%s)------\n",body[iBody].cName);
+  for (iOut=OUTBODYSTARTGALHABIT;iOut<OUTENDGALHABIT;iOut++) {
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
@@ -199,39 +203,77 @@ void LogBodyDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
 
-//   module->iaModule[iBody][iModule] = DISTROT;
-// 
-//   module->fnCountHalts[iBody][iModule] = &CountHaltsDistRot;
-//   module->fnLogBody[iBody][iModule] = &LogBodyDistRot;
-// 
-//   module->fnReadOptions[iBody][iModule] = &ReadOptionsDistRot;
-//   module->fnVerify[iBody][iModule] = &VerifyDistRot;
-//   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistRot;
-// 
-//   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistRot;
-//   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistRot;
-//   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblDistRot;
-//   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblDistRot;
-//   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblDistRot;
-// 
-//   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-//   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistRot;
+  module->iaModule[iBody][iModule] = GALHABIT;
+
+  module->fnCountHalts[iBody][iModule] = &CountHaltsGalHabit;
+  module->fnLogBody[iBody][iModule] = &LogBodyGalHabit;
+
+  module->fnReadOptions[iBody][iModule] = &ReadOptionsGalHabit;
+  module->fnVerify[iBody][iModule] = &VerifyGalHabit;
+  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltGalHabit;
+
+  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateGalHabit;
+  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputGalHabit;
+  module->fnFinalizeUpdatePeriQ[iBody][iModule] = &FinalizeUpdatePeriQGalHabit;
+  module->fnFinalizeUpdateArgP[iBody][iModule] = &FinalizeUpdateArgPGalHabit;
+
+  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
+  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionGalHabit;
 
 }
 
 /************* GALHABIT Functions ***********/
 void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {  
-
+  while (body[iBody].dArgP > 2*PI) {
+    body[iBody].dArgP -= 2*PI;
+  }
+  while (body[iBody].dArgP < 0) {
+    body[iBody].dArgP += 2*PI;
+  }
+  
+  body[iBody].dEcc = 1.0 - body[iBody].dPeriQ/body[iBody].dSemi;
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  while (body[iBody].dArgP > 2*PI) {
+    body[iBody].dArgP -= 2*PI;
+  }
+  while (body[iBody].dArgP < 0) {
+    body[iBody].dArgP += 2*PI;
+  }
+}
 
+double nsMinus6to15(double dMagV) {
+  /* distribution of stars with mag: -6 <= MV <= 15 from Heisler, Tremaine & Alcock 1987
+     !!! may need to be updated !!! */
+  double dNs;
+  
+  dNs = 0.00358*pow(10.,(0.04*dMagV))/pow(1.0+1.8345*pow(10.,(-0.21*dMagV)),3.4) * \
+        (1.0 - 0.15*pow(10.,(-0.25*fabs(dMagV-15.0))));
+  
+  return dNs;
+}
+
+double NearbyStarDist(double dMagV) {
+  double dNs;
+  
+  if (dMagV <= -6.0) {
+    dNs = 0.0;
+  } else if (dMagV > 19.0) {
+    dNs = 0.0;
+  } else if (dMagV > 15.0) {
+    dNs = nsMinus6to15(15.0);
+  } else {
+    dNs = nsMinus6to15(dMagV);
+  }
+  
+  return dNs;
 }
 
 //--------------Galactic stuff!--------------------------------------------------------------
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system.dGalacDensity/pow(AUPC,3), dMu, dEcc;
+  double dRho = system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
   dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
   
@@ -240,12 +282,12 @@ double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system.dGalacDensity/pow(AUPC,3), dMu, dEcc;
+  double dRho = system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
   dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
 
-  return 2*PI*KGAUSS*KGAUSS*dRho*sqrt(pow(body[iaBody[0]].dSemi,3)/(dMu*(1.0-pow(dEcc,2)))*\
-      (1.-pow(dEcc,2)-5.*(1.-pow(dEcc,2)-pow(cos(body[iaBody[0]].dInc),2)*\
-      pow(sin(body[iaBody[0]].dArgP),2.0)/DAYSEC*AUCM;
+  return 2*PI*KGAUSS*KGAUSS*dRho*sqrt(pow(body[iaBody[0]].dSemi/AUCM,3)/(dMu*(1.0-pow(dEcc,2))))*\
+      (1.-pow(dEcc,2)-5.*(1.-pow(dEcc,2)-pow(cos(body[iaBody[0]].dInc),2))*\
+      pow(sin(body[iaBody[0]].dArgP),2.0))/DAYSEC;
 }
 

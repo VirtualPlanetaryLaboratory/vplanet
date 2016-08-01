@@ -104,7 +104,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
   module->fnFinalizeUpdatePeriQ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePeriQModule));
-  module->fnFinalizeUpdateArgP = malloc(iNumBodies*sizeof(fnFinalizeUpdateArgPModule)):
+  module->fnFinalizeUpdateArgP = malloc(iNumBodies*sizeof(fnFinalizeUpdateArgPModule));
   
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));

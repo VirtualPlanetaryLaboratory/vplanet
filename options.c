@@ -1655,6 +1655,75 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dLongP = options->dDefault;
 }  
 
+/* Argument of pericenter */
+
+void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+    
+    body[iFile-1].dArgP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dArgP = options->dDefault;
+}  
+
+/* Inclination */
+
+void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 180) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dInc = dTmp; 
+    body[iFile-1].dSinc = sin(0.5*dTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0) {
+      body[iFile-1].dInc = options->dDefault;
+      body[iFile-1].dSinc = sin(0.5*options->dDefault);
+    }
+}  
+
 /*
  *
  *   M
@@ -2747,6 +2816,27 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dNeg = AUCM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
+  
+  sprintf(options[OPT_INC].cName,"dInc");
+  sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
+  sprintf(options[OPT_INC].cDefault,"0");
+  options[OPT_INC].dDefault = 0.0;
+  options[OPT_INC].iType = 2;  
+  options[OPT_INC].iMultiFile = 1; 
+//   options[OPT_INC].dNeg = DEGRAD;
+//   sprintf(options[OPT_INC].cNeg,"Degrees");
+  fnRead[OPT_INC] = &ReadInc;
+  
+  sprintf(options[OPT_ARGP].cName,"dArgP");
+  sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
+  sprintf(options[OPT_ARGP].cDefault,"0");
+  options[OPT_ARGP].dDefault = 0.0;
+  options[OPT_ARGP].iType = 2;  
+  options[OPT_ARGP].iMultiFile = 1; 
+//   options[OPT_ARGP].dNeg = DEGRAD;
+//   sprintf(options[OPT_ARGP].cNeg,"Degrees");
+  fnRead[OPT_ARGP] = &ReadArgP;
+  
 
   /*
    * P
@@ -2957,6 +3047,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsPoise(options,fnRead);
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
+  InitializeOptionsGalHabit(options,fnRead);
 
 }
  

@@ -48,40 +48,6 @@ void InitializeUpdateTmpBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,i
 
 /**************** DISTORB options ********************/
 
-/* Inclination */
-
-void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (control->Units[iFile].iAngle == 0) {
-      if (dTmp < 0 || dTmp > PI) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
-      }
-    } else {
-      if (dTmp < 0 || dTmp > 180) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
-      }
-      /* Change to radians */
-      dTmp *= DEGRAD;
-    }
-
-    //body[iFile-1].dInc = dTmp; 
-    body[iFile-1].dSinc = sin(0.5*dTmp);
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dSinc = options->dDefault;
-}  
-
 /* Longitude of ascending node */
 
 void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -115,38 +81,7 @@ void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dLongA = options->dDefault;
 }  
 
-/* Argument of pericenter */
 
-void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (control->Units[iFile].iAngle == 0) {
-      if (dTmp < 0 || dTmp > 2*PI) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
-      }
-    } else {
-      if (dTmp < 0 || dTmp > 360) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
-      }
-      /* Change to radians */
-      dTmp *= DEGRAD;
-    }
-    
-    body[iFile-1].dArgP = dTmp; 
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
-    if (iFile > 0)
-      body[iFile-1].dArgP = options->dDefault;
-}  
 
 void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -319,16 +254,6 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   
-  sprintf(options[OPT_INC].cName,"dInc");
-  sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
-  sprintf(options[OPT_INC].cDefault,"0");
-  options[OPT_INC].dDefault = 0.0;
-  options[OPT_INC].iType = 2;  
-  options[OPT_INC].iMultiFile = 1; 
-//   options[OPT_INC].dNeg = DEGRAD;
-//   sprintf(options[OPT_INC].cNeg,"Degrees");
-  fnRead[OPT_INC] = &ReadInc;
-  
   sprintf(options[OPT_LONGA].cName,"dLongA");
   sprintf(options[OPT_LONGA].cDescr,"Longitude of ascending node of planet's orbital plane");
   sprintf(options[OPT_LONGA].cDefault,"0");
@@ -338,16 +263,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_LONGA] = &ReadLongA;
-  
-  sprintf(options[OPT_ARGP].cName,"dArgP");
-  sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
-  sprintf(options[OPT_ARGP].cDefault,"0");
-  options[OPT_ARGP].dDefault = 0.0;
-  options[OPT_ARGP].iType = 2;  
-  options[OPT_ARGP].iMultiFile = 1; 
-//   options[OPT_ARGP].dNeg = DEGRAD;
-//   sprintf(options[OPT_ARGP].cNeg,"Degrees");
-  fnRead[OPT_ARGP] = &ReadArgP;
   
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
@@ -1364,25 +1279,6 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }  
 
-void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double varpi, Omega;
-  
-  varpi = atan2(body[iBody].dHecc, body[iBody].dKecc);
-  Omega = atan2(body[iBody].dPinc, body[iBody].dQinc);
-  *dTmp = varpi - Omega;
-  
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}    
-
 void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = body[iBody].dPinc;
@@ -1548,16 +1444,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGA].dNeg = 1./DEGRAD;
   output[OUT_LONGA].iNum = 1;
   output[OUT_LONGA].iModuleBit = DISTORB;
-  fnWrite[OUT_LONGA] = &WriteBodyLongA;
-  
-  sprintf(output[OUT_ARGP].cName,"ArgP");
-  sprintf(output[OUT_ARGP].cDescr,"Body's argument of pericenter in DistOrb");
-  sprintf(output[OUT_ARGP].cNeg,"Deg");
-  output[OUT_ARGP].bNeg = 1;
-  output[OUT_ARGP].dNeg = 1./DEGRAD;
-  output[OUT_ARGP].iNum = 1;
-  output[OUT_ARGP].iModuleBit = DISTORB;
-  fnWrite[OUT_ARGP] = &WriteBodyArgP; 
+  fnWrite[OUT_LONGA] = &WriteBodyLongA; 
 
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");

@@ -27,9 +27,7 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTDISTORB        1300 /* Start of DISTORB options */
 #define OPTENDDISTORB          1400 /* End of DISTORB options */
 
-#define OPT_INC                1301
 #define OPT_LONGA              1302
-#define OPT_ARGP               1304
 #define OPT_DFCRIT             1350
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352
@@ -74,7 +72,6 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_INC                 1321
 #define OUT_SINC                1322
 #define OUT_LONGA               1323
-#define OUT_ARGP                1325
 
 #define OUT_PINC                1333
 #define OUT_QINC                1334

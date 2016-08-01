@@ -105,6 +105,7 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCoreBuoyCompo=src[iBody].dCoreBuoyCompo;
   dest[iBody].dCoreBuoyTotal=src[iBody].dCoreBuoyTotal;
   dest[iBody].dGravICB=src[iBody].dGravICB;
+  dest[iBody].dMagMomCoef=src[iBody].dMagMomCoef;
   dest[iBody].dMagMom=src[iBody].dMagMom;
 }
 
@@ -369,7 +370,7 @@ void ReadMagMomCoef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (dTmp < 0)   //if input value lt 0
       body[iFile-1].dMagMomCoef = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
    else
-     body[iFile-1].dManHFlowPref = dTmp;  //no units.
+     body[iFile-1].dMagMomCoef = dTmp;  //no units.
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
@@ -588,6 +589,17 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MANHFLOWPREF].dDefault = MANHFLOWPREF; 
   sprintf(options[OPT_MANHFLOWPREF].cNeg,"Default is MANHFLOWPREF");
   fnRead[OPT_MANHFLOWPREF] = &ReadManHFlowPref;
+
+   /* MagMomCoef */
+  sprintf(options[OPT_MAGMOMCOEF].cName,"dMagMomCoef");
+  sprintf(options[OPT_MAGMOMCOEF].cDescr,"Magnetic Moment Coefficient");
+  sprintf(options[OPT_MAGMOMCOEF].cDefault,"Default is MAGMOMCOEF");
+  options[OPT_MAGMOMCOEF].iType = 2;
+  options[OPT_MAGMOMCOEF].iMultiFile = 1;
+  options[OPT_MAGMOMCOEF].dNeg = MAGMOMCOEF;
+  options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF; 
+  sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
+  fnRead[OPT_MAGMOMCOEF] = &ReadMagMomCoef;
   
   /* Halt at Minimum Mantle Temperature */
   sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
@@ -1960,6 +1972,7 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"body.ViscMeltB=%e Delta=%e Gamma=%e Xi=%e Phis=%e \n",body[iBody].dViscMeltB,body[iBody].dViscMeltDelta,body[iBody].dViscMeltGamma,body[iBody].dViscMeltXi,body[iBody].dViscMeltPhis);
   fprintf(fp,"body.dFixMeltfactorUMan=%f .dMeltfactorUMan=%e \n",body[iBody].dFixMeltfactorUMan,body[iBody].dMeltfactorUMan);
   fprintf(fp,"body.dStagLid=%f dManHFlowPref=%f \n",body[iBody].dStagLid,body[iBody].dManHFlowPref);
+  fprintf(fp,"body.dMagMomCoef=%f \n",body[iBody].dMagMomCoef);
 }
 
 void AddModuleThermint(MODULE *module,int iBody,int iModule) {
@@ -2219,7 +2232,7 @@ double fdCoreBuoyTotal(BODY *body, int iBody) {
   //  return (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
 }
 double fdMagMom(BODY *body, int iBody) {
-  return 4.*PI*pow((ERCORE),3)*(MAGMOMCOEF)*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
+  return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
 }
 
 /* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
@@ -2273,17 +2286,17 @@ double fdHflowSecMan(BODY *body,int iBody) {
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
   if (body[iBody].dRIC>0) {   //If IC exists.
     /* Old Version: from DB14 equations */
-    /*
     double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
     double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
     double denom=pow((DADCORE)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
     return (1./2)*pow((DADCORE),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
-    */
+
     /* Newer Version: From notes on 4/23/15 */
-    double gamma_core2=2.*(1-1./(3.*GRUNEISEN));
+    /*    double gamma_core2=2.*(1-1./(3.*GRUNEISEN));
     double a_drdt=-2.*gamma_core2*body[iBody].dRIC/pow(DLIND,2)*body[iBody].dTrefLind*exp(-gamma_core2*pow(body[iBody].dRIC/dl,2));
 b_drdt=3.*dt_fe/chi_oc_e*mass_ic*mass_chi_total*(core_partition-1.)/(mass_core+mass_ic*(core_partition-1.))^2*(1./r_ic) ;coef
 dri_dTcmb2=t_icb/t_cmb/(a_drdt+b_drdt+2.*r_ic*t_icb/dn^2)  ;notes 4/23/15.
+    */
   } else {                    //If no IC.
     return 0;
   }

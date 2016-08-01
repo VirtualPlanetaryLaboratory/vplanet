@@ -465,7 +465,6 @@ typedef struct {
   double dGravICB;         /**< Gravity at ICB */
   double dDensAnomICB;     /**< Density anomaly across ICB (Delta rho_chi in DB14). */
   double dMagMom;          /**< Core Dynamo Magnetic Moment scaling law. */
-  double dMagMomCoef;          /**< Core Dynamo Magnetic Moment scaling law. */
   double dRICDot;          /**< Inner core growth rate */
   /* Constants */
   double dViscRatioMan;    /**< Viscosity Ratio Man */

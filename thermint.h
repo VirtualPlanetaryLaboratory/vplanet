@@ -209,6 +209,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_MASSCHIOC       1786   //OC chi Mass
 #define OPT_MASSCHIIC       1787   //IC chi Mass
 #define OPT_DTCHI           1788   //Core Liquidus Depression
+/* Dynamo Parameters */
+#define OPT_MAGMOMCOEF      1789   //Magnetic Moment Scaling Coef (gamma_dip)
 /* Constants */
 #define OPT_VISCJUMPMAN     1790   //Viscosity ratio UM 2 LM
 #define OPT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
@@ -241,6 +243,7 @@ void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
@@ -491,7 +494,7 @@ double fdCoreBuoyCompo(BODY*,int);
 double fdCoreBuoyTotal(BODY*,int);
 double fdGravICB(BODY*,int);
 double fdMagMom(BODY*,int);
-double fdRICDot(BODY*,int);
+double fdRICDot(BODY*,UPDATE*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);

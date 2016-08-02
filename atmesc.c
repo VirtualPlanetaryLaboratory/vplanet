@@ -32,6 +32,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bRunaway = src[iBody].bRunaway;
   dest[iBody].iWaterEscapeRegime = src[iBody].iWaterEscapeRegime;
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
+  dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
 }
 
 /**************** ATMESC options ********************/
@@ -59,6 +60,29 @@ void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   } else 
     if (iFile > 0)
       body[iFile-1].iWaterLossModel = ATMESC_LBEXACT;
+}
+
+void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"lo",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_LOP12;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12 or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
 }
 
 void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -270,6 +294,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_WATERLOSSMODEL].iType = 3;
   options[OPT_WATERLOSSMODEL].iMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
+
+  sprintf(options[OPT_PLANETRADIUSMODEL].cName,"sPlanetRadiusModel");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDefault,"NONE");
+  options[OPT_PLANETRADIUSMODEL].iType = 3;
+  options[OPT_PLANETRADIUSMODEL].iMultiFile = 1;
+  fnRead[OPT_PLANETRADIUSMODEL] = &ReadPlanetRadiusModel;
   
   sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
   sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
@@ -366,6 +397,28 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
 
   update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
   fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+}
+
+void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  // Assign radius
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+    body[iBody].dRadius = fdLopezRadius(body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 1., body[iBody].dAge, 0);
+
+    if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
+      // User specified radius, but we're reading it from the grid! 
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  }
+
+  update[iBody].iaType[update[iBody].iRadius][0] = 0;
+  update[iBody].iNumBodies[update[iBody].iRadius][0] = 1;
+  update[iBody].iaBody[update[iBody].iRadius][0] = malloc(update[iBody].iNumBodies[update[iBody].iRadius][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
+
+  update[iBody].pdRadiusAtmesc = &update[iBody].daDerivProc[update[iBody].iRadius][0];   // NOTE: This points to the VALUE of the radius
+  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: Same here!
 }
 
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -501,7 +554,15 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
-
+  
+  // Radius evolution
+  if (update[iBody].iNumRadius > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
+    exit(EXIT_INPUT);
+  }
+  VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
@@ -529,6 +590,12 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumMass == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumMass++;
+  }
+  
+  if (body[iBody].dRadius > 0) {
+    if (update[iBody].iNumRadius == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumRadius++;
   }
   
 }
@@ -567,6 +634,11 @@ void FinalizeUpdateRotAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iB
 
 void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
+}
+
+void FinalizeUpdateRadiusAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumRadius = (*iEqn)++;
 }
 
 /***************** ATMESC Halts *****************/
@@ -649,6 +721,19 @@ void WriteOxygenMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 }
 
+void WritePlanetRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadius;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+}
+
 void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dEnvelopeMass;
 
@@ -698,6 +783,15 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SURFACEWATERMASS].iNum = 1;
   output[OUT_SURFACEWATERMASS].iModuleBit = ATMESC;
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
+
+  sprintf(output[OUT_PLANETRADIUS].cName,"PlanetRadius");
+  sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet Radius");
+  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth Radii");
+  output[OUT_PLANETRADIUS].bNeg = 1;
+  output[OUT_PLANETRADIUS].dNeg = 1./REARTH;
+  output[OUT_PLANETRADIUS].iNum = 1;
+  output[OUT_PLANETRADIUS].iModuleBit = ATMESC;
+  fnWrite[OUT_PLANETRADIUS] = &WritePlanetRadius;
 
   sprintf(output[OUT_OXYGENMASS].cName,"OxygenMass");
   sprintf(output[OUT_OXYGENMASS].cDescr,"Oxygen Mass");
@@ -793,6 +887,8 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
   module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateOxygenMassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
@@ -853,6 +949,19 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
   return 0;
+}
+
+double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
+    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    if (!isnan(foo)) 
+      return foo;
+    else 
+      return body[iaBody[0]].dRadius;
+  }
+  else
+    return body[iaBody[0]].dRadius;
 }
 
 /************* ATMESC Helper Functions ************/
@@ -916,7 +1025,10 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   // assuming atmosphere is well-mixed up to the photolysis layer
   double NO2 = dOxygenMass / (32 * ATOMMASS);
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
-  return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
+  if (NH2O > 0)
+    return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
+  else
+    return 0.;
 }
 
 double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {

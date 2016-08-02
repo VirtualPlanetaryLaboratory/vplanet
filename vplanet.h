@@ -143,17 +143,20 @@
 #define VMASS        1006
 
 // RADHEAT
-#define VNUM40KMAN      1101
-#define VNUM232THMAN    1102
-#define VNUM238UMAN     1103
-#define VNUM235UMAN     1104
-#define VNUM40KCORE     1105
-#define VNUM232THCORE   1106
-#define VNUM238UCORE    1107
-#define VNUM235UCORE    1108
-/* INTERIOR THERMAL */   // Use 1200's ok??
-#define VTMAN     1201
-#define VTCORE    1202
+#define VNUM26ALMAN     1100
+#define VNUM26ALCORE    1105
+#define VNUM40KMAN      1110
+#define VNUM232THMAN    1115
+#define VNUM238UMAN     1120
+#define VNUM235UMAN     1125
+#define VNUM40KCORE     1130
+#define VNUM232THCORE   1135
+#define VNUM238UCORE    1140
+#define VNUM235UCORE    1145
+
+// THERMINT
+#define VTMAN           1201
+#define VTCORE          1202
 
 //DistOrb
 #define VHECC           1301
@@ -327,6 +330,15 @@ typedef struct {
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;             /**< Apply Module RADHEAT? */
+  double d26AlConstMan;      /**< Body's Mantle 26Al Decay Constant */
+  double d26AlNumMan;        /**< Body's Mantle Number of Aluminum-26 Atoms */
+  double d26AlPowerMan;      /**< Body's Mantle Internal Power Due to Aluminum-26 Decay */
+  double d26AlMassMan;       /**< Body's Mantle Total Mass of Aluminum-26 */
+  double d26AlConstCore;       
+  double d26AlNumCore;
+  double d26AlPowerCore;
+  double d26AlMassCore;
+
   double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
   double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
   double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
@@ -339,6 +351,7 @@ typedef struct {
   double d40KNumCrust;
   double d40KPowerCrust;
   double d40KMassCrust;
+
   double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
   double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
   double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
@@ -485,6 +498,7 @@ typedef struct {
   double dXFrac;
   double dAtmXAbsEff;
   int iWaterLossModel;
+  int iPlanetRadiusModel;
   double dKTide;
   double dMDotWater;
   double dFHRef;
@@ -879,37 +893,45 @@ typedef struct {
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
 
-  /* RADHEAT */
+  /* RADHEAT Mantle */
+  int i26AlMan;            /**< Variable # Corresponding to Aluminum-26 */
   int i40KMan;             /**< Variable # Corresponding to Potassium-40 */
   int i232ThMan;           /**< Variable # Corresponding to Thorium-232 */
   int i238UMan;            /**< Variable # Corresponding to Uranium-238 */
   int i235UMan;
+  int iNum26AlMan;         /**< Number of Equations Affecting Aluminum-26 [1] */
   int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
   int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
   int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
   int iNum235UMan;
+  double dD26AlNumManDt;   /**< Total Aluminum-26 Derivative */
   double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
   double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
   double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
   double dD235UNumManDt; 
+  double *pdD26AlNumManDt;
   double *pdD40KNumManDt;
   double *pdD232ThNumManDt;
   double *pdD238UNumManDt;
   double *pdD235UNumManDt;
 
-  /* RADHEAT CORE */
+  /* RADHEAT Core */
+  int i26AlCore;
   int i40KCore;
   int i232ThCore;
   int i238UCore;
   int i235UCore;
+  int iNum26AlCore;
   int iNum40KCore;
   int iNum232ThCore;
   int iNum238UCore;
   int iNum235UCore; 
+  double dD26AlNumCoreDt;
   double dD40KNumCoreDt;
   double dD232ThNumCoreDt;
   double dD238UNumCoreDt;
   double dD235UNumCoreDt; 
+  double *pdD26AlNumCoreDt;
   double *pdD40KNumCoreDt;
   double *pdD232ThNumCoreDt;
   double *pdD238UNumCoreDt;
@@ -1023,6 +1045,7 @@ typedef struct {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;
+  double *pdRadiusAtmesc;
 
   /* BINARY */
   int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
@@ -1358,6 +1381,8 @@ typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
 //All primary variables need a FinalizeUpdate function
 //typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdate26AlNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate26AlNumManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate40KNumCrustModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate40KNumManModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1437,6 +1462,10 @@ typedef struct {
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
   // Finalize Primary Variable function pointers
+  /*! Function pointers to finalize Core's potassium-40 */ 
+  fnFinalizeUpdate26AlNumCoreModule **fnFinalizeUpdate26AlNumCore;
+  /*! Function pointers to finalize Mantle's potassium-40 */ 
+  fnFinalizeUpdate26AlNumManModule **fnFinalizeUpdate26AlNumMan;
   /*! Function pointers to finalize Core's potassium-40 */ 
   fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
   /*! Function pointers to finalize Crust's potassium-40 */ 
@@ -1565,6 +1594,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "eqtide.h"
 #include "radheat.h"
 #include "atmesc.h"
+#include "lopez2012.h"
 #include "stellar.h"
 #include "baraffe2015.h"
 #include "distorb.h"

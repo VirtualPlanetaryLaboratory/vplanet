@@ -754,6 +754,10 @@ typedef struct {
   double dTotEnInit;     /**< System's Initial Energy */
   
   double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
+  double *dPassingStarR;
+  double *dPassingStarV;
+  double dPassingStarImpact; /**< impact parameter for passing star */
+  int iSeed;
 
 } SYSTEM;
 

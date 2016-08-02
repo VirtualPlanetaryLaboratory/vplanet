@@ -42,6 +42,20 @@ void ReadGalacDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     AssignDefaultDouble(options,&system->dGalacDensity,files->iNumInputs);
 }
 
+void ReadRandSeed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  int iTmp;
+
+  AddOptionInt(files->Infile[iFile].cIn,options->cName,&iTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    system->iSeed = iTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    AssignDefaultInt(options,&system->iSeed,files->iNumInputs);
+}
+
 void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
@@ -50,6 +64,14 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_GALACDENSITY].iType = 2;  
   options[OPT_GALACDENSITY].iMultiFile = 0;   
   fnRead[OPT_GALACDENSITY] = &ReadGalacDensity;
+  
+  sprintf(options[OPT_RANDSEED].cName,"iRandSeed");
+  sprintf(options[OPT_RANDSEED].cDescr,"Seed for random number generator (stellar encounters)");
+  sprintf(options[OPT_RANDSEED].cDefault,"42"); //need to find updated value
+  options[OPT_RANDSEED].dDefault = 42;
+  options[OPT_RANDSEED].iType = 1;  
+  options[OPT_RANDSEED].iMultiFile = 0;   
+  fnRead[OPT_RANDSEED] = &ReadRandSeed;
 }
 
 
@@ -88,6 +110,14 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
 
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  int i;
+  
+  srand(system->iSeed);
+  
+  for (i=0;i<=20;i++) {
+    
+  
+  }
 
   if (iBody >= 1) {
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
@@ -246,6 +276,34 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   }
 }
 
+double random_double() {
+  double n;
+  
+  n = (double)rand()/RAND_MAX;
+  return n;
+}
+
+double StarVelocities(SYSTEM *system, double dSigma) {
+  /* get passing star velocities from dispersion = dSigma, using Box-Muller method*/
+  double u1, u2, z0, z1;
+  
+  u1 = random_double();
+  u2 = random_double();
+  
+  z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
+  z1 = sqrt(-2.0*log(u1))*sin(2.0*PI*u2);
+  
+  system->dPassingStarV[0] = z0*dSigma;
+  system->dPassingStarV[1] = z1*dSigma;
+  
+  u1 = random_double();
+  u2 = random_double();
+  
+  z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
+  
+  system->dPassingStarV[2] = z0*dSigma;
+}
+
 int testrand() { 
   char cOut[NAMELEN];
   FILE *fOut;
@@ -265,7 +323,6 @@ int testrand() {
   return 0;
 }
     
-
 double nsMinus6to15(double dMagV) {
   /* distribution of stars with mag: -6 <= MV <= 15 from Heisler, Tremaine & Alcock 1987
      !!! may need to be updated !!! */

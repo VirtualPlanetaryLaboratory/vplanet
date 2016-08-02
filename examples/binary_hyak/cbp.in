@@ -70,7 +70,7 @@ dLongP          304.05
 ##dViscRef  1e8
 
 # Output
-saOutputOrder Time SemimajorAxis Eccentricity IncBinary LongPBinary #TMan TCore SurfWater Envelop
+saOutputOrder Time R0 FreeEcc Eccentricity IncBinary LongPBinary #TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

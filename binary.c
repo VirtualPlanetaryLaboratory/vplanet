@@ -2020,10 +2020,12 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
  * received by the CBP from the 2 stars averaged over 1 CBP orbit
  * Assumes binary orb elements don't vary much over 1 CBP orbit
  */
-double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
+double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
 {
   // Define/init all variables 
-  int iBody = iaBody[0], i;
+  int i;
+  int iaBody[] = {iBody};
+  SYSTEM * system;
   double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;
@@ -2038,7 +2040,6 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-
   for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
@@ -2050,7 +2051,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
     radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
     radius /= (1.0 + body[1].dEcc*cos(trueAnomaly));
     
-    // Radial position of each star
+    // Radial position of each star (- accounts for 180 deg phase offset) 
     r1 = body[1].dMass*radius/(body[0].dMass+body[1].dMass);
     r2 = -body[0].dMass*radius/(body[0].dMass+body[1].dMass);
 
@@ -2078,6 +2079,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
     flux += (L0/(4.0*PI*r1) + L1/(4.0*PI*r2));
   
     // Increment body's age aka time
+    // Need to do it this way for CBP cyl pos calculations
     body[iBody].dAge += step;
   }
 

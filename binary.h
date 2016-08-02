@@ -177,5 +177,5 @@ double fdCBPZDotBinary(BODY*,SYSTEM*,int*);
 double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
-double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);
+double fdFluxExactBinary(BODY*,int,double,double);
 void binaryDebug(BODY*);

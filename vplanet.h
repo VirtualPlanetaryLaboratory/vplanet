@@ -498,6 +498,7 @@ typedef struct {
   double dXFrac;
   double dAtmXAbsEff;
   int iWaterLossModel;
+  int iPlanetRadiusModel;
   double dKTide;
   double dMDotWater;
   double dFHRef;
@@ -1044,6 +1045,7 @@ typedef struct {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;
+  double *pdRadiusAtmesc;
 
   /* BINARY */
   int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
@@ -1592,6 +1594,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "eqtide.h"
 #include "radheat.h"
 #include "atmesc.h"
+#include "lopez2012.h"
 #include "stellar.h"
 #include "baraffe2015.h"
 #include "distorb.h"

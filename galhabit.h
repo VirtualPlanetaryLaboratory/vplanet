@@ -19,6 +19,7 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPTENDGALHABIT          2300 /* End of GALHABIT options */
 
 #define OPT_GALACDENSITY       2201
+#define OPT_RANDSEED           2202
 
 /* Options Functions */
 #define OPT_PERIQ              2201
@@ -66,3 +67,4 @@ void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
+double random_double();

@@ -45,10 +45,6 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUTENDDISTROT          1500 /* End of DISTROT options */
 #define OUTBODYSTARTDISTROT   1420 /* Start of DISTROT BODY options */
 
-
-#define OUT_XOBL                1422
-#define OUT_YOBL                1423
-#define OUT_ZOBL                1424
 #define OUT_CASS1               1430
 #define OUT_CASS2               1431
 

@@ -33,6 +33,9 @@
 #define OUT_MASS                500
 #define OUT_OBL                 510
 #define OUT_PRECA               511
+#define OUT_XOBL                513
+#define OUT_YOBL                515
+#define OUT_ZOBL                517
 
 #define OUT_RADIUS              520
 #define OUT_ROTANGMOM		530

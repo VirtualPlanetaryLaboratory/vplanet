@@ -33,8 +33,8 @@ class move_ttf(install):
   def run(self):
     '''
     Performs the usual install process and then copies the True Type fonts 
-    that come with clearplot into matplotlib's True Type font directory, 
-    and deletes the matplotlib fontList.cache 
+    into matplotlib's True Type font directory, and deletes the matplotlib 
+    fontList.cache 
     
     '''
     

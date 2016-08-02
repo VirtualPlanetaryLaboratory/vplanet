@@ -63,6 +63,8 @@ void LogBodyGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 /* GalHabit Functions */
 void PropertiesGalHabit(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+double random_double();
+int testrand();
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);

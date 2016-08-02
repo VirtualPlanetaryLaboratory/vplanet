@@ -74,6 +74,9 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_RANDSEED] = &ReadRandSeed;
 }
 
+
+
+
 void ReadOptionsGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
@@ -301,6 +304,25 @@ double StarVelocities(SYSTEM *system, double dSigma) {
   system->dPassingStarV[2] = z0*dSigma;
 }
 
+int testrand() { 
+  char cOut[NAMELEN];
+  FILE *fOut;
+  double n;
+  int i;
+  
+  sprintf(cOut,"randoms");
+  fOut = fopen(cOut,"w");
+  
+  for (i=0;i<=100000;i++) {
+    n = random_double();
+    fprintd(fOut,n,4,6);
+    fprintf(fOut,"\n");
+  }
+  fclose(fOut);
+  
+  return 0;
+}
+    
 double nsMinus6to15(double dMagV) {
   /* distribution of stars with mag: -6 <= MV <= 15 from Heisler, Tremaine & Alcock 1987
      !!! may need to be updated !!! */
@@ -311,6 +333,28 @@ double nsMinus6to15(double dMagV) {
   
   return dNs;
 }
+
+double mag2mass(double dMagV) {
+  double dlogMass;
+  
+  if (dMagV > 0) {
+    dlogMass = -0.0928*dMagV + 0.448;
+  } else { 
+    dlogMass = -0.271*dMagV + 0.448;
+  }
+  
+  return pow(10.0,dlogMass);
+}
+
+double VelocityDist(double dMagV, double dVel) {
+  double sigma, df;
+  
+  /* sigma from heisler+ 1987 */
+  
+  df = pow(2*PI*pow(sigma,2),-1.5)*4*PI*pow(dVel,2.0)*exp(-pow(dVel,2.0)/(2*pow(sigma,2.)));
+  return df;
+}
+
 
 double NearbyStarDist(double dMagV) {
   double dNs;

@@ -132,7 +132,9 @@
 #define MAGMOMCOEF       0.2           //[nd] saturation constant for fast rot dipolar dynamos (OC2006)
 #define ELECCONDCORE     10e5          //[S/m]  electrical conductivity of core. 
 #define LORENTZNUM       2.5e-8        //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.
-#define EMAGMOM          80e21         //[Am2] Earth's present day magnetic moment.         
+#define EMAGMOM          80e21         //[Am2] Earth's present day magnetic moment.
+#define EPRESSWIND       2.6761e-9     //[N/m2] Earth's SW pressure: Psw=m_proton*n_sw*v_sw^2 (DB13)
+#define EMAGPAUSERAD     9.103*(ERADIUS)  //[m] Earth's magnetopause radius (DB13)
 
 void InitializeControlThermint(CONTROL*);
 void AddModuleThermint(MODULE*,int,int);
@@ -334,20 +336,22 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_DOC             1771   //OC shell thickness
 #define OUT_DRICDTCMB       1772   //d(R_ic)/d(T_cmb)
 #define OUT_RICDOT          1773   //d(R_ic)/d(t)
-#define OUT_CHIOC           1780   //OC light element concentration chi.
-#define OUT_CHIIC           1781   //IC light element concentration chi.
-#define OUT_THERMCONDUCTOC  1782   //Thermal conductivity OC
-#define OUT_THERMCONDUCTIC  1783   //Thermal conductivity IC
-#define OUT_MASSOC          1784   //OC Mass
-#define OUT_MASSIC          1785   //IC Mass
-#define OUT_MASSCHIOC       1786   //OC chi Mass
-#define OUT_MASSCHIIC       1787   //IC chi Mass
-#define OUT_DTCHI           1788   //Core Liquidus Depression
-#define OUT_COREBUOYTHERM   1789   //Core Thermal buoyancy flux
-#define OUT_COREBUOYCOMPO   1790   //Core Compositional buoyancy flux
-#define OUT_COREBUOYTOTAL   1791   //Core total buoyancy flux
-#define OUT_GRAVICB         1792   //Core ICB gravity
-#define OUT_MAGMOM          1793   //Core dynamo magnetic moment
+#define OUT_CHIOC           1774   //OC light element concentration chi.
+#define OUT_CHIIC           1775   //IC light element concentration chi.
+#define OUT_THERMCONDUCTOC  1776   //Thermal conductivity OC
+#define OUT_THERMCONDUCTIC  1777   //Thermal conductivity IC
+#define OUT_MASSOC          1778   //OC Mass
+#define OUT_MASSIC          1779   //IC Mass
+#define OUT_MASSCHIOC       1780   //OC chi Mass
+#define OUT_MASSCHIIC       1781   //IC chi Mass
+#define OUT_DTCHI           1782   //Core Liquidus Depression
+#define OUT_COREBUOYTHERM   1783   //Core Thermal buoyancy flux
+#define OUT_COREBUOYCOMPO   1784   //Core Compositional buoyancy flux
+#define OUT_COREBUOYTOTAL   1785   //Core total buoyancy flux
+#define OUT_GRAVICB         1786   //Core ICB gravity
+#define OUT_MAGMOM          1787   //Core dynamo magnetic moment
+#define OUT_PRESSWIND       1788   //Stellar wind pressure at planet
+#define OUT_MAGPAUSERAD     1789   //Magnetopause Radius
 /* Constants */
 #define OUT_VISCJUMPMAN     1795   //Viscosity ratio UM 2 LM
 #define OUT_ERUPTEFF        1796   //Mantle Melt Eruption Efficiency
@@ -418,8 +422,10 @@ void WriteCoreBuoyTherm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double
 void WriteCoreBuoyCompo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCoreBuoyTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteGravICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMagMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRICDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMagMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePresSWind(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteMagPauseRad(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 /* Logging Functions */
 void LogOptionsThermint(CONTROL*,FILE*);
 void LogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
@@ -493,8 +499,10 @@ double fdCoreBuoyTherm(BODY*,int);
 double fdCoreBuoyCompo(BODY*,int);
 double fdCoreBuoyTotal(BODY*,int);
 double fdGravICB(BODY*,int);
-double fdMagMom(BODY*,int);
 double fdRICDot(BODY*,UPDATE*,int);
+double fdMagMom(BODY*,int);
+double fdPresSWind(BODY*,int);
+double fdMagPauseRad(BODY*,int);
 
 void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);

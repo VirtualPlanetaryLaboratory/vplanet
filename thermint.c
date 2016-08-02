@@ -107,6 +107,8 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dGravICB=src[iBody].dGravICB;
   dest[iBody].dMagMomCoef=src[iBody].dMagMomCoef;
   dest[iBody].dMagMom=src[iBody].dMagMom;
+  dest[iBody].dPresSWind=src[iBody].dPresSWind;
+  dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
 }
 
 /**************** RADHEAT options ********************/
@@ -749,6 +751,8 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dCoreBuoyCompo=fdCoreBuoyCompo(body,iBody);
   body[iBody].dCoreBuoyTotal=fdCoreBuoyTotal(body,iBody);
   body[iBody].dMagMom=fdMagMom(body,iBody);
+  body[iBody].dPresSWind=fdPresSWind(body,iBody);
+  body[iBody].dMagPauseRad=fdMagPauseRad(body,iBody);
 }
 
 void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1189,6 +1193,20 @@ void WriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 }
 void WriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRICDot;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WritePresSWind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dPresSWind;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteMagPauseRad(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dMagPauseRad;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1749,6 +1767,24 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RICDOT].iNum = 1;
   output[OUT_RICDOT].iModuleBit = THERMINT;
   fnWrite[OUT_RICDOT] = &WriteRICDot;
+  /* PresSWind */
+  sprintf(output[OUT_PRESSWIND].cName,"PresSWind");
+  sprintf(output[OUT_PRESSWIND].cDescr,"Stellar wind pressure at body");
+  sprintf(output[OUT_PRESSWIND].cNeg,"EPRESSWIND");
+  output[OUT_PRESSWIND].bNeg = 1;
+  output[OUT_PRESSWIND].dNeg = 1./(EPRESSWIND); 
+  output[OUT_PRESSWIND].iNum = 1;
+  output[OUT_PRESSWIND].iModuleBit = THERMINT;
+  fnWrite[OUT_PRESSWIND] = &WritePresSWind;
+  /* MagPauseRad */
+  sprintf(output[OUT_MAGPAUSERAD].cName,"MagPauseRad");
+  sprintf(output[OUT_MAGPAUSERAD].cDescr,"Magnetopause Radius");
+  sprintf(output[OUT_MAGPAUSERAD].cNeg,"EMAGPAUSERAD");
+  output[OUT_MAGPAUSERAD].bNeg = 1;
+  output[OUT_MAGPAUSERAD].dNeg = 1./(EMAGPAUSERAD); 
+  output[OUT_MAGPAUSERAD].iNum = 1;
+  output[OUT_MAGPAUSERAD].iModuleBit = THERMINT;
+  fnWrite[OUT_MAGPAUSERAD] = &WriteMagPauseRad;
   
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
@@ -2233,6 +2269,12 @@ double fdCoreBuoyTotal(BODY *body, int iBody) {
 }
 double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
+}
+double fdPresSWind(BODY *body, int iBody) {
+  return (EPRESSWIND);
+}
+double fdMagPauseRad(BODY *body, int iBody) {
+  return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);
 }
 
 /* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 

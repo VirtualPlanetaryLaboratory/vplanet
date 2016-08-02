@@ -24,17 +24,17 @@
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
 // 26Al -- Masses, numbers and powers from Wikipedia XXX Check!
-#define ENERGY26AL        0//6.4153392709791e-13 // [J]
+#define ENERGY26AL        6.4153392709791e-13 // [J]
 #define MASS26AL          26*ATOMMASS // [kg]  Mass of a 26Al atom.
 #define HALFLIFE26AL      2.26267992e13  // [s] 
 /* Mantle */
-#define EMASSMAN26AL      9.854e22  //[kg]  mass of 26Mg on Earth
-#define ENUMMAN26AL       2.2824e48  //[num] number of 26Mg atoms on Earth
-#define EPOWERMAN26AL     1.009e35  //[W]  Power from 26Al if all Earth's 26Mg was 26Al
+#define EMASSMAN26AL      4.6e18      //9.9866e22   //9.854e22  //[kg]  mass of 26Mg on Earth
+#define ENUMMAN26AL       1.0654e41   //2.31311e45  //2.2824e48  //[num] number of 26Mg atoms on Earth
+#define EPOWERMAN26AL     2.0944e15   //4.54700e19  //1.009e35  //[W]  Power from 26Al if all Earth's 26Mg was 26Al
 /* Core */
-#define EMASSCORE26AL     9.854e19  //[kg]
-#define ENUMCORE26AL      2.2824e45  //[num] 
-#define EPOWERCORE26AL    1.009e35  //[W] 
+#define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  //2.1417e20  //9.854e19  //[kg]
+#define ENUMCORE26AL      1e-2*(ENUMMAN26AL)  //4.9606e42  //2.2824e45  //[num] 
+#define EPOWERCORE26AL    1e-2*(EPOWERMAN26AL)  //9.7513e16  //1.009e35  //[W] 
 
 // 40K
 #define ENERGY40K        2.13371243669e-13 // [J?] -- weighting both Ar and Ca decay chains

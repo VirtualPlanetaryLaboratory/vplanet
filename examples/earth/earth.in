@@ -14,8 +14,8 @@ dSemi           -1		# Semi-major axis, negative -> AU
 
 # RADHEAT Parameters
 ### 26Al
-d26AlMassMan	-0.0165		# Earth masses
-d26AlMassCore	-1.65e-5	# Earth masses
+d26AlMassMan	0		# Earth masses
+d26AlMassCore	0	        # Earth masses
 
 ### 40K
 d40KNumMan    -1.0
@@ -49,16 +49,11 @@ dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
 dMagMomCoef    0.15
     
 #Output
-<<<<<<< HEAD
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
 	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -RICDot
-=======
-saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#		-MagMom -RadPowerTot
-	    -26AlMassMan -26AlMassCore 
->>>>>>> 66d1cdc70c9c0a5bc6d295d8513c4ca4158a4281
+		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -RICDot $
+		-26AlPowerMan
+#	    -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
 #		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $

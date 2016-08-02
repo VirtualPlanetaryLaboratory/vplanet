@@ -246,8 +246,6 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   }
 }
 
-
-
 int testrand() { 
   char cOut[NAMELEN];
   FILE *fOut;

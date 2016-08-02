@@ -107,7 +107,7 @@ def TestAll():
   
   # Get VPLANET path
   try:
-    vplanet_dir = os.path.dirname(subprocess.check_output(['which', 'vplanet']).decode('utf-8'))
+    vplanet_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
   except:
     raise Exception("Unable to locate vplanet executable. Please make sure it is in your $PATH.")
   

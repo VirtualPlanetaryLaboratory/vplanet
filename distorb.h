@@ -149,6 +149,7 @@ void RecalcEigenVals(BODY*,EVOLVE*,SYSTEM*);
 void kepler_eqn(BODY*, int);
 void inv_plane(BODY*,SYSTEM*,int);
 void cross(double*,double*,double*);
+void osc2cart(BODY*, int);
 
 void PropsAuxDistOrb(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

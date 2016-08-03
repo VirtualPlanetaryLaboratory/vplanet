@@ -763,6 +763,7 @@ typedef struct {
   double dEncounterRad;
   double dDeltaTEnc;  /**< time since last encounter */
   double dEncounterTime; /**< characteristic encounter time */
+  double dMinAllowed;  /**< minimum allowed close approach of body to host */
   int iSeed;
 
 } SYSTEM;

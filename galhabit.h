@@ -76,3 +76,4 @@ void GetStarMass(SYSTEM*);
 void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
 void VelocityDisp(SYSTEM*);
+void CalcImpactParam(SYSTEM*);

@@ -149,6 +149,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarV = malloc(3*sizeof(double));
     system->dEncounterTime = 13.1/1e6/YEARSEC;  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
+    system->dMinAllowed = 10.0*AUCM; //set to 10 au for now.
   }
   
   
@@ -314,7 +315,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   double dpEnc, dp;
-
+  
   while (body[iBody].dArgP > 2*PI) {
     body[iBody].dArgP -= 2*PI;
   }
@@ -330,14 +331,36 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     GetStarMass(system);
     GetStarVelocity(system); 
     /* next calculate impact parameter */
+    CalcImpactParam(system);
     
     /* then move the orbiter, get all distances/velocities, check for disruption */
+    AdvanceMA(body,iBody);
+    osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
+    iDisrupt = check_disrupt(body,system,iBody);
     
     /* apply the impulse */
     
     /* reset the DeltaT */
     system->dDeltaTEnc = 0.0;
   }
+}
+
+int check_disrupt(BODY* body, SYSTEM *system, int iBody) {
+  /* rather crude for the time being. checks that pericenter and apocenter are ok and 
+     e < 1 */
+  double apo;
+  
+  apo = body[iBody].dSemi*(1.0+body[iBody].dEcc);
+  
+  if (body[iBody].dPeriQ < system->dMinAllowed) {
+    return 1;
+  } else if (apo > system->dEncounterRad) {
+    return 1;
+  } else if (body[iBody].dEcc > 1.0) {
+    return 1;
+  } else {
+    return 0;
+  }   
 }
 
 double random_double() {
@@ -378,15 +401,15 @@ void GetStarVelocity(SYSTEM *system) {
   z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
   z1 = sqrt(-2.0*log(u1))*sin(2.0*PI*u2);
   
-  system->dPassingStarV[0] = z0*dSigma;
-  system->dPassingStarV[1] = z1*dSigma;
+  system->dPassingStarV[0] = z0*dSigma/1000.0;  //scale with sigma and convert to m/s
+  system->dPassingStarV[1] = z1*dSigma/1000.0;
   
   u1 = random_double();
   u2 = random_double();
   
   z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
   
-  system->dPassingStarV[2] = z0*dSigma;
+  system->dPassingStarV[2] = z0*dSigma/1000.0;
 }
     
 double nsMinus6to15(double dMagV) {
@@ -483,6 +506,33 @@ void GetStarPosition(SYSTEM *system) {
   system->dPassingStarR[0] = r*sintheta*cos(phi);
   system->dPassingStarR[1] = r*sintheta*sin(phi);
   system->dPassingStarR[2] = r*costheta;
+}
+
+void CalcImpactParam(SYSTEM *system) {
+  double vsq = 0.0, dtime = 0.0;
+  double x, y, z, r;
+  int i;
+  
+  for (i=0;i<=2;i++) {
+    vsq += pow(system->dPassingStarV[i],2);
+    dtime += -system->dPassingStarR[i]*system->dPassingStarV[i];
+  }
+  dtime /= vsq;
+  
+  x = system->dPassingStarV[0]*dtime + system->dPassingStarR[0];
+  y = system->dPassingStarV[1]*dtime + system->dPassingStarR[1];
+  z = system->dPassingStarV[2]*dtime + system->dPassingStarR[2];
+  r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+  
+  system->dPassingStarImpact = r;
+}
+
+void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {
+  double dTmp, dTauNext;
+    
+  dTmp = body[iBody].dMeanA;
+ 
+  body[iBody].dMeanA = (dTmp + body[iBody].dMeanMotion*system->dDeltaTEnc) % (2*PI);
 }
 
 void testrand(SYSTEM *system) { 

@@ -56,6 +56,26 @@ void ReadRandSeed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     AssignDefaultInt(options,&system->iSeed,files->iNumInputs);
 }
 
+
+void ReadEncounterRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  double dTmp;
+    
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+//     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      system->dEncounterRad = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else 
+      system->dEncounterRad = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultDouble(options,&system->dEncounterRad,files->iNumInputs);
+}
+
 void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
@@ -72,6 +92,14 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RANDSEED].iType = 1;  
   options[OPT_RANDSEED].iMultiFile = 0;   
   fnRead[OPT_RANDSEED] = &ReadRandSeed;
+  
+  sprintf(options[OPT_ENCOUNTERRAD].cName,"dEncounterRad");
+  sprintf(options[OPT_ENCOUNTERRAD].cDescr,"Radius at which stellar encounters occur");
+  sprintf(options[OPT_ENCOUNTERRAD].cDefault,"206265 AU"); 
+  options[OPT_ENCOUNTERRAD].dDefault = 206265.0*AUCM;
+  options[OPT_ENCOUNTERRAD].iType = 2;  
+  options[OPT_ENCOUNTERRAD].iMultiFile = 0;   
+  fnRead[OPT_ENCOUNTERRAD] = &ReadEncounterRad;
 }
 
 
@@ -111,14 +139,31 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i;
+  int n;
+  double dSigma;
   
   srand(system->iSeed);
   
-  for (i=0;i<=20;i++) {
-    
-  
+  if (iBody == 1) {
+    system->dPassingStarR = malloc(3*sizeof(double));
+    system->dPassingStarV = malloc(3*sizeof(double));
+    system->dEncounterTime = 13.1/1e6/YEARSEC;  //need to update this, most likely XXX
+    system->dDeltaTEnc = 0.0;
   }
-
+  
+  
+//   
+//   GetStarMass(system);
+//   GetStarVelocity(system);
+//   GetStarPosition(system);
+ 
+//   testrand(system);
+  
+  // for (i=0;i<=10;i++) {
+//     n = (int)((double)rand()*20/RAND_MAX)-3;
+//     printf("%d\n",n);
+//   }
+  
   if (iBody >= 1) {
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     
@@ -268,11 +313,30 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  double dpEnc, dp;
+
   while (body[iBody].dArgP > 2*PI) {
     body[iBody].dArgP -= 2*PI;
   }
   while (body[iBody].dArgP < 0) {
     body[iBody].dArgP += 2*PI;
+  }
+  
+  system->dDeltaTEnc += evolve->dCurrentDt;
+  dpEnc = 1.0-exp(-system->dEncounterTime*system->dDeltaTEnc); //probability encounter will occur
+  dp = random_double();
+  if (dp < dpEnc) {
+    GetStarPosition(system);
+    GetStarMass(system);
+    GetStarVelocity(system); 
+    /* next calculate impact parameter */
+    
+    /* then move the orbiter, get all distances/velocities, check for disruption */
+    
+    /* apply the impulse */
+    
+    /* reset the DeltaT */
+    system->dDeltaTEnc = 0.0;
   }
 }
 
@@ -283,9 +347,30 @@ double random_double() {
   return n;
 }
 
-double StarVelocities(SYSTEM *system, double dSigma) {
+int random_int(int n) {
+  if ((n - 1) == RAND_MAX) {
+    return rand();
+  } else {
+    // Chop off all of the values that would cause skew...
+    long end = RAND_MAX / n; // truncate skew
+    assert (end > 0L);
+    end *= n;
+
+    // ... and ignore results from rand() that fall above that limit.
+    // (Worst case the loop condition should succeed 50% of the time,
+    // so we can expect to bail out of this loop pretty quickly.)
+    int r;
+    while ((r = rand()) >= end);
+
+    return r % n;
+  }
+}
+
+void GetStarVelocity(SYSTEM *system) {
   /* get passing star velocities from dispersion = dSigma, using Box-Muller method*/
-  double u1, u2, z0, z1;
+  double u1, u2, z0, z1, dSigma;
+  VelocityDisp(system);
+  dSigma = system->dPassingStarSigma;
   
   u1 = random_double();
   u2 = random_double();
@@ -302,25 +387,6 @@ double StarVelocities(SYSTEM *system, double dSigma) {
   z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
   
   system->dPassingStarV[2] = z0*dSigma;
-}
-
-int testrand() { 
-  char cOut[NAMELEN];
-  FILE *fOut;
-  double n;
-  int i;
-  
-  sprintf(cOut,"randoms");
-  fOut = fopen(cOut,"w");
-  
-  for (i=0;i<=100000;i++) {
-    n = random_double();
-    fprintd(fOut,n,4,6);
-    fprintf(fOut,"\n");
-  }
-  fclose(fOut);
-  
-  return 0;
 }
     
 double nsMinus6to15(double dMagV) {
@@ -346,13 +412,34 @@ double mag2mass(double dMagV) {
   return pow(10.0,dlogMass);
 }
 
-double VelocityDist(double dMagV, double dVel) {
-  double sigma, df;
+void VelocityDisp(SYSTEM* system) {
+  double dSigma, dMagV;
   
-  /* sigma from heisler+ 1987 */
+  dMagV = system->dPassingStarMagV;
   
-  df = pow(2*PI*pow(sigma,2),-1.5)*4*PI*pow(dVel,2.0)*exp(-pow(dVel,2.0)/(2*pow(sigma,2.)));
-  return df;
+  if (dMagV <= -2) {
+    dSigma = 8.5;
+  } else if ((dMagV > -2) && (dMagV <= 0)) {
+    dSigma = 11.4;
+  } else if ((dMagV > 0) && (dMagV <= 2)) {
+    dSigma = 13.7;
+  } else if ((dMagV > 2) && (dMagV <= 3)) {
+    dSigma = 16.8;
+  } else if ((dMagV > 3) && (dMagV <= 4)) {
+    dSigma = 20.9;
+  } else if ((dMagV > 4) && (dMagV <= 5)) {
+    dSigma = 22.6;
+  } else if ((dMagV > 5) && (dMagV <= 6)) {
+    dSigma = 24.0;
+  } else if ((dMagV > 6) && (dMagV <= 7)) {
+    dSigma = 25.0;
+  } else if ((dMagV > 7) && (dMagV <= 9)) {
+    dSigma = 24.7;  
+  } else if ((dMagV > 9) && (dMagV <= 15)) {
+    dSigma = 24.1;  
+  }
+  
+  system->dPassingStarSigma =  dSigma;
 }
 
 
@@ -371,6 +458,60 @@ double NearbyStarDist(double dMagV) {
   
   return dNs;
 }
+
+void GetStarMass(SYSTEM *system) {
+  double ns = 0, dTmp = 100, dMagV;
+  
+  while (dTmp > ns) {
+    dMagV = (double)(random_int(19)-3); //draw stellar magnitude (-3<dMagV<15)
+    dTmp = random_double()*0.014;       //if dTmp exceeds the number density, reject dMagV
+    ns = NearbyStarDist(dMagV);         //get number density at dMagV
+  }
+  
+  system->dPassingStarMagV = dMagV;
+  //now get the mass of the star
+  system->dPassingStarMass = mag2mass(dMagV);
+}
+
+void GetStarPosition(SYSTEM *system) {
+  double r = system->dEncounterRad, costheta, phi, sintheta;
+  
+  costheta = random_double()*2 - 1;
+  sintheta = sqrt(fabs(1.0-pow(costheta,2)));
+  phi = random_double()*2*PI;
+  
+  system->dPassingStarR[0] = r*sintheta*cos(phi);
+  system->dPassingStarR[1] = r*sintheta*sin(phi);
+  system->dPassingStarR[2] = r*costheta;
+}
+
+void testrand(SYSTEM *system) { 
+  char cOut[NAMELEN];
+  FILE *fOut;
+  double n = 0, m, y = 100;
+  int i;
+  
+  sprintf(cOut,"randoms");
+  fOut = fopen(cOut,"w");
+  
+  for (i=0;i<=100000;i++) {
+    while (y > n) {
+        m = (double)(random_int(19)-3);
+        y = random_double()*0.014;
+        n = NearbyStarDist(m);
+    }
+    
+    fprintd(fOut,m,4,6);
+    fprintf(fOut,"\n");
+    y = 100;
+    n = 0;
+  }
+  fclose(fOut);
+  
+  //return 0;
+}
+    
+    
 
 //--------------Galactic stuff!--------------------------------------------------------------
 

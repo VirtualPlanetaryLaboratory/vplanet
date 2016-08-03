@@ -15,15 +15,15 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 cColor ff0000
 
 # Orbital Properties
-dEcc            0.6			# Eccentricity
+dEcc            0.5			# Eccentricity
 dSemi           -15000.0			# Semi-major axis, negative -> AU
-dInc    90
+dInc   40.0
 
 # DISTORB Parameters
 #dInc		3
 #dLongA		33
 #dLongP		100
-dArgP       135
+dArgP       90
 #sOrbitModel rd4
 #dDfcrit     0.1
 #bOutputLapl   0

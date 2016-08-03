@@ -757,6 +757,12 @@ typedef struct {
   double *dPassingStarR;
   double *dPassingStarV;
   double dPassingStarImpact; /**< impact parameter for passing star */
+  double dPassingStarMass;
+  double dPassingStarSigma;
+  double dPassingStarMagV;
+  double dEncounterRad;
+  double dDeltaTEnc;  /**< time since last encounter */
+  double dEncounterTime; /**< characteristic encounter time */
   int iSeed;
 
 } SYSTEM;

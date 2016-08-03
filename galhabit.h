@@ -20,9 +20,10 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 
 #define OPT_GALACDENSITY       2201
 #define OPT_RANDSEED           2202
+#define OPT_ENCOUNTERRAD       2203
 
 /* Options Functions */
-#define OPT_PERIQ              2201
+#define OPT_PERIQ              2221
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 // 
@@ -64,9 +65,14 @@ void LogBodyGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 void PropertiesGalHabit(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 double random_double();
-int testrand();
+void testrand(SYSTEM*);
+double NearbyStarDist(double);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
 double random_double();
+void GetStarMass(SYSTEM*);
+void GetStarVelocity(SYSTEM*);
+void GetStarPosition(SYSTEM*);
+void VelocityDisp(SYSTEM*);

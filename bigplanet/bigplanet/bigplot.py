@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
-import seaborn as sns
+#import seaborn as sns
 
 """
 
@@ -335,16 +335,21 @@ def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.
             # LEFT of the diagonal? Marginalize (via mean)
             if j < i:
                 combo = combos[i*size + j]
-                xbody, xvar = combo[1].split("_")
-                ybody, yvar = combo[0].split("_")
+                xcombo = combo[1]
+                ycombo = combo[0]
 
-                x = df[xbody][xvar].values
-                y = df[ybody][yvar].values
+                x = df[xcombo].values
+                y = df[ycombo].values
                 z = df[color_by].values
 
                 # Get shape of data
                 tmp_shape = axes_to_shape(combo, shape)
-                tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
+
+                # Get dimensions to marginalize over
+                xkey, xvar = xcombo.split("_")
+                ykey, yvar = ycombo.split("_")
+
+                tmp_dims = get_dims(dims, xkey, xvar, ykey, yvar)
 
                 plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = left_color_func, nan_value = nan_value, bReduce=bReduce,
@@ -356,21 +361,26 @@ def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.
 
                 # Note: here x, y are switched for readbility
                 combo = combos[i*size + j]
-                ybody, yvar = combo[1].split("_")
-                xbody, xvar = combo[0].split("_")
+                ycombo = combo[1]
+                xcombo = combo[0]
 
                 # Exchange labels
                 tmp_lab = label[0]
                 label[0] = label[1]
                 label[1] = tmp_lab
 
-                x = df[xbody][xvar].values
-                y = df[ybody][yvar].values
+                x = df[ycombo].values
+                y = df[xcombo].values
                 z = df[color_by].values
 
                 # Get shape of data
                 tmp_shape = axes_to_shape(combo, shape)
-                tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
+
+                # Get dimensions to marginalize over
+                xkey, xvar = xcombo.split("_")
+                ykey, yvar = ycombo.split("_")
+
+                tmp_dims = get_dims(dims, xkey, xvar, ykey, yvar)
 
                 plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = right_color_func, nan_value = nan_value, bReduce=bReduce,
@@ -453,6 +463,7 @@ def create_axes_combos(df,color_by="cbp_DampTime"):
     return list(itertools.product(cols,cols))
 
     # Old code
+    '''
     variables = []
 
     for key in df.keys():
@@ -470,9 +481,9 @@ def create_axes_combos(df,color_by="cbp_DampTime"):
 
         variables = variables + tmp
 
-
     # Get only unique combinations
     return list(itertools.product(variables,variables))
+    '''
 # end function
 
 def get_shape(shape, key1, var1, key2, var2):

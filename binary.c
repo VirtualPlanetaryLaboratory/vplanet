@@ -720,9 +720,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   // Inits if the body is the secondary (sets required binary parameters)
   if(body[iBody].iBodyType == 1 && iBody == 1)
   {
-    // Binary's inclination... in the plane or else
-    body[iBody].dInc = 0.0; //2.0*asin(body[iBody].dSinc);
- 
     // Set Initial Poincare H, K using imputted dEcc
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
     body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
@@ -732,7 +729,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   // Inits for stars: General
   if(body[iBody].iBodyType == 1)
   {
-    body[iBody].dInc = 0.0;
+    body[iBody].dInc = 0.0; // Binary in the plane
     body[iBody].dArgP = 0.0;
     body[iBody].dLongA = 0.0;
     body[iBody].dCBPR = 0.0;

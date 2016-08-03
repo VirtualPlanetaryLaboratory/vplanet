@@ -8,7 +8,7 @@ dMass		0.0 			# Mass, negative -> Earth masses
 
 # Binary Properties
 dFreeEcc        0.045                   # Free Eccentricity
-dFreeInc        0.0 #0.3083                     # Free Inclination [deg]
+dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
@@ -70,7 +70,7 @@ dLongP          304.05
 ##dViscRef  1e8
 
 # Output
-saOutputOrder Time R0 FreeEcc Eccentricity IncBinary LongPBinary #TMan TCore SurfWater Envelop
+saOutputOrder Time R0 FreeEcc Eccentricity BinaryInc BinaryLongP #TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

@@ -4,6 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
+import seaborn as sns
 
 """
 
@@ -90,7 +91,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 
     # Filter our nans
     z[np.isnan(z)] = nan_value
-    
+
     # Set colorbar ranges if not given
     if vmin == None or vmax == None:
         vmin=np.min(z)
@@ -229,7 +230,7 @@ def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     return None
 # End function
 
-def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_color_func = np.nanmean, nan_value = 0.0,
+def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.nanmean, nan_value = 0.0,
                  bReduce=True,interp="nearest",lcmap="viridis_r",rcmap="magma_r",levels=None,clines=False,
                  origin="lower",save=False,right_color_func = np.std,**kwargs):
     """
@@ -239,18 +240,15 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 
     Parameters
     ----------
-    df: dict of dateframes produced by the "aggrategate_data" fn
-        1 dataframe for each body
+    df: dateframe produced by the "aggrategate_data" fn
         Data frame containing simulation initial values for variables specified by user and
         any additional aggregate values.  1 row == 1 simulation.
     shape : dict of dict
         Dictionary containing body and variable and dimensional length of that variable, e.g.
         shape = {"secondary" : {"Eccentricity" : 5}} indicates that this simulation suite was
         run for 5 values of the secondary eccentricity.
-    color_body : str
-        name of body who's variable you'll color by
-    color_name : str
-        name of color_body's color-by-variable
+    color_by : str
+        Name of body_var to color output by
     left_color_func : function
         function used to marginalize.  typically numpy.nanmean or some similar variant
     right_color_func : function
@@ -291,14 +289,14 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
     >>> dims = {"secondary" : {"Eccentricity" : 0, "SemimajorAxis" : 1}, "cbp": {"Eccentricity" : 2,
     >>>                                                                        "SemimajorAxis" : 3}}
 
-    >>> fig, axes = red_dim_grid(df, shape, color_body="cbp",color_name="DampTime", interp="nearest",
+    >>> fig, axes = red_dim_grid(df, shape, color_by="cbp_DampTime", interp="nearest",
     >>>                        lcmap="viridis_r",rcmap="plasma_r",save=True, right_color_func = np.std)
-        (plot)
+        (plot saved to confusogram.pdf)
     """
 
     # Using df, shape, color_name, make a list containing all the axes
     # combinations
-    combos = create_axes_combos(df,color_name=color_name)
+    combos = create_axes_combos(df,color_by=color_by)
 
     # Length of size of plot square == number of variables varied in simulation suite
     size = int(np.sqrt(len(combos)))
@@ -311,11 +309,11 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 
     # Get colorbar ranges
     # Is there something smarter I can do here?
-    lvmin = np.min(df[color_body][color_name])
-    lvmax = np.max(df[color_body][color_name])
+    lvmin = np.min(df[color_by])
+    lvmax = np.max(df[color_by])
 
     rvmin = 0.0
-    rvmax = np.std(df[color_body][color_name])
+    rvmax = np.std(df[color_by])
 
     # Iterate over combos going left->right->down->repeat
     # along the axes
@@ -328,18 +326,6 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
             if i == j:
                 fig.delaxes(axes[i,j])
                 continue
-
-            # Make labels
-            """
-            # Along the y axis?
-            if j == 0:
-                label = ["",combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1], ""]
-            # Along the x axis?
-            elif i == (size-1):
-                label = [combos[i*size + j][0].split("_")[0] + " " + combos[i*size + j][0].split("_")[1], "", ""]
-            else:
-                label = None
-            """
 
             # Make subplot axis labels
             label = [combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1],
@@ -354,7 +340,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 
                 x = df[xbody][xvar].values
                 y = df[ybody][yvar].values
-                z = df[color_body][color_name].values
+                z = df[color_by].values
 
                 # Get shape of data
                 tmp_shape = axes_to_shape(combo, shape)
@@ -377,10 +363,10 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 tmp_lab = label[0]
                 label[0] = label[1]
                 label[1] = tmp_lab
-                
+
                 x = df[xbody][xvar].values
                 y = df[ybody][yvar].values
-                z = df[color_body][color_name].values
+                z = df[color_by].values
 
                 # Get shape of data
                 tmp_shape = axes_to_shape(combo, shape)
@@ -423,7 +409,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 #
 ###################################################################
 
-def create_axes_combos(df,color_name="DampTime"):
+def create_axes_combos(df,color_by="cbp_DampTime"):
     """
     Parse a shape nested dictionary to derive a shape tuple where the user defined
     parameters are the first two values of the tuple.  This function is used to create
@@ -437,7 +423,7 @@ def create_axes_combos(df,color_name="DampTime"):
         1 dataframe for each body
         Data frame containing simulation initial values for variables specified by user and
         any additional aggregate values.  1 row == 1 simulation.
-    color_name : str
+    color_by : str
         column in one of df's dataframes that will be the variable that describes (gives a color
         to) each simulation.  It is ignored from the combinations since we wouldn't color by a
         variable that also is plotted along an axis.
@@ -456,6 +442,17 @@ def create_axes_combos(df,color_name="DampTime"):
         ('cbp_Ecce', 'secondary_SemiMajorAxis'),
         ('secondary_Eccentricity', 'secondary_SemiMajorAxis')]
     """
+
+    # Get columns
+    cols = list(df.columns)
+
+    # Remove color_by
+    cols.remove(color_by)
+
+    # Return permutations
+    return list(itertools.product(cols,cols))
+
+    # Old code
     variables = []
 
     for key in df.keys():
@@ -464,8 +461,8 @@ def create_axes_combos(df,color_name="DampTime"):
         tmp = list(df[key].columns.values)
 
         # If color variable in list, remove it
-        if color_name in tmp:
-            tmp.remove(color_name)
+        if color_by in tmp:
+            tmp.remove(color_by)
 
         # Add body's name to variable for clarity
         for i in range(0,len(tmp)):

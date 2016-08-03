@@ -199,6 +199,8 @@ def halt_check(direct,TOL=1.0e-6):
         return 1
 # end function
 
+# The below functions are deprecated "dict" style
+'''
 def data_from_dir(datadir=".",data_cols={},infiles=[]):
     """
     Given a directory where simulation data are stored, the name of each body's output
@@ -281,6 +283,7 @@ def extract_data(src=".",order="None"):
 
     return data
 #end function
+'''
 
 #############################################################################
 #
@@ -410,7 +413,7 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols={},infiles=[],
     # Create group for each directory
     # Group's name == directory path
     grp = f_set.create_group(grpname)
-    
+
     # Now loop over each output file to extract the data
     for infile in infiles:
         # Isolate the body name
@@ -531,24 +534,17 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
     number_to_sim = []
     for direct in dirs:
 
-        # Create group for each directory, pass to load with data
-        # Group's name == directory
-        #grp = f_set.create_group(str(counter))
-
-        # store sim - counter mapping
-        #number_to_sim.append(direct)
-
         # Store data from each simulation, increment counter if succesful
         res = data_from_dir_hdf5(f_set,str(counter),src + "/" + direct + "/",data_cols,
                                       infiles,compression=compression,
                                       remove_halts=remove_halts)
-        
+
         # Increment counter (keeps track of valid parsed simulation dirs)
         counter += res
         if res != 0:
             # store sim - counter mapping
             number_to_sim.append(direct)
-            
+
     # Try to store metadata
     # Add top level dataset with information about dataset
     # Meta holds the length (number of root level groups aka
@@ -629,11 +625,11 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
 
 #############################################################################
 #
-# Below are misc data processing functions
+# Below are misc data processing functions for regularly gridded data
 #
 #############################################################################
 
-def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={},
+def aggregate_data(data=None, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={},
                    cache="cache.pkl",fmt="hdf5",ind = 0,**kwargs):
     """
     Iterate through data and return the initial conditions for each simulation in addition
@@ -666,8 +662,7 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
 
     Returns
     -------
-    ret : dict of dataframes
-        1 dataframe for each body
+    ret : dataframes
         Data frame containing simulation initial values for variables specified by user and
         any additional aggregate values.  1 row == 1 simulation.
 
@@ -681,7 +676,7 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
         >>> df = aggregate_data(data, bodies=bodies, funcs={"cbp" : {"Semim" : np.mean}},
                             new_cols=new_cols,cache="cache.pkl",fmt=fmt,**kw)
 
-        >>> df["cbp"]["Ecce"]
+        >>> df["cbp_Ecce"]
             (some pandas Series)
     """
 
@@ -691,23 +686,27 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
         with open(cache, 'rb') as handle:
             return pickle.load(handle)
 
+    # User forgot to specify data and cache
+    if data == None:
+        print("No data or cache provided!")
+        return None
+
     res = {}
 
     # Define default function
     def default_func(arr, ind):
         return arr[ind]
 
-    if fmt == "dict":
+    if fmt == "hdf5":
         # Init data
         for body in bodies.keys():
-            res[body] = {}
             # Loop over variables
             for var in bodies[body]:
-                res[body][var] = np.zeros(len(data))
+                res[body + "_" + var] = np.zeros(data.size)
             # Loop over new columns, if there are any
             if body in new_cols.keys():
                 for col in new_cols[body].keys():
-                    res[body][col] = np.zeros(len(data))
+                    res[body + "_" + col] = np.zeros(data.size)
 
         # Loop over simulations
         for i in range(0,data.size):
@@ -719,51 +718,20 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
                     # Apply function to data
                     # No function given or empty dict
                     if body not in funcs.keys() or var not in funcs[body].keys() or funcs[body] == None:
-                        res[body][var][i] = default_func(data[i][body][var],ind)
+                        res[body + "_" + var][i] = default_func(data.get(i, body, var),ind)
                     else:
-                        res[body][var][i] = funcs[body][var](data[i][body][var])
+                        res[body + "_" + var][i] = funcs[body][var](data.get(i, body, var))
                 # Loop over new cols, if there are any for this body
                 if body in new_cols.keys():
                     for col in new_cols[body].keys():
-                        res[body][col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
-
-    elif fmt == "hdf5":
-        # Init data
-        for body in bodies.keys():
-            res[body] = {}
-            # Loop over variables
-            for var in bodies[body]:
-                res[body][var] = np.zeros(data.size)
-            # Loop over new columns, if there are any
-            if body in new_cols.keys():
-                for col in new_cols[body].keys():
-                    res[body][col] = np.zeros(data.size)
-
-        # Loop over simulations
-        for i in range(0,data.size):
-            # Loop over bodies
-            for body in bodies.keys():
-                # Loop over variables
-                for var in bodies[body]:
-
-                    # Apply function to data
-                    # No function given or empty dict
-                    if body not in funcs.keys() or var not in funcs[body].keys() or funcs[body] == None:
-                        res[body][var][i] = default_func(data.get(i, body, var),ind)
-                    else:
-                        res[body][var][i] = funcs[body][var](data.get(i, body, var))
-                # Loop over new cols, if there are any for this body
-                if body in new_cols.keys():
-                    for col in new_cols[body].keys():
-                        res[body][col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
+                        res[body + "_" + col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
 
     else:
         print("Invalid format: %s" % fmt)
         return None
 
     # Convert data dict -> pandas dataframe
-    for key in res.keys():
-        res[key] = pd.DataFrame(res[key])
+    res = pd.DataFrame(res)
 
     # Cache the result?
     if cache != None:
@@ -776,7 +744,7 @@ def aggregate_data(data, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_cols={
 
 def df_to_matrix(df,color_last=False,color_body=None,color_var=None):
     """
-    Obviously docs go here.
+    This function is super obsolete.
 
     Parameters
     ----------

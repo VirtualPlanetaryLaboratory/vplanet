@@ -46,6 +46,8 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCBPZeta = src[iBody].dCBPZeta;
   dest[iBody].dCBPPsi = src[iBody].dCBPPsi;
 
+  dest[iBody].bBinary = src[iBody].bBinary;
+  dest[iBody].bBinaryUseMatrix = src[iBody].bBinaryUseMatrix;
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -727,6 +729,20 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
   }
 
+  // Inits for stars: General
+  if(body[iBody].iBodyType == 1)
+  {
+    body[iBody].dInc = 0.0;
+    body[iBody].dArgP = 0.0;
+    body[iBody].dLongA = 0.0;
+    body[iBody].dCBPR = 0.0;
+    body[iBody].dCBPRDot = 0.0;
+    body[iBody].dCBPZ = 0.0;
+    body[iBody].dCBPZDot = 0.0;
+    body[iBody].dCBPPhi = 0.0;
+    body[iBody].dCBPPhiDot = 0.0;
+  }
+
   // Other things that must be set
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
@@ -1088,7 +1104,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeIncBinary;
 
-  sprintf(output[OUT_BININC].cName,"IncBinary");
+  sprintf(output[OUT_BININC].cName,"BinaryInc");
   sprintf(output[OUT_BININC].cDescr,"CBP's Inclination in Binary");
   sprintf(output[OUT_BININC].cNeg,"Deg");
   output[OUT_BININC].bNeg = 1;
@@ -1106,7 +1122,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BINARGP].iModuleBit = BINARY;
   fnWrite[OUT_BINARGP] = &WriteArgPBinary;
 
-  sprintf(output[OUT_BINLONGA].cName,"LongABinary");
+  sprintf(output[OUT_BINLONGA].cName,"BinaryLongA");
   sprintf(output[OUT_BINLONGA].cDescr,"CBP's Longitude of the Ascending Node in Binary");
   sprintf(output[OUT_BINLONGA].cNeg,"Deg");
   output[OUT_BINLONGA].bNeg = 1;
@@ -1115,7 +1131,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BINLONGA].iModuleBit = BINARY;
   fnWrite[OUT_BINLONGA] = &WriteLongABinary;
 
-  sprintf(output[OUT_BINLONGP].cName,"LongPBinary");
+  sprintf(output[OUT_BINLONGP].cName,"BinaryLongP");
   sprintf(output[OUT_BINLONGP].cDescr,"CBP's Longitude of Perihelion in Binary");
   sprintf(output[OUT_BINLONGP].cNeg,"Deg");
   output[OUT_BINLONGP].bNeg = 1;

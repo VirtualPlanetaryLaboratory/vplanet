@@ -378,6 +378,21 @@ void ReadMagMomCoef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dMagMomCoef = options->dDefault;
 }
+void ReadPresSWind(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dPresSWind = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dPresSWind = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dPresSWind = options->dDefault;
+}
 
 void ReadHaltMinTMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -602,6 +617,16 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF; 
   sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
   fnRead[OPT_MAGMOMCOEF] = &ReadMagMomCoef;
+  /* PresSWind */
+  sprintf(options[OPT_PRESSWIND].cName,"dPresSWind");
+  sprintf(options[OPT_PRESSWIND].cDescr,"Stellar Wind Pressure at body");
+  sprintf(options[OPT_PRESSWIND].cDefault,"Default is EPRESSWIND");
+  options[OPT_PRESSWIND].iType = 2;
+  options[OPT_PRESSWIND].iMultiFile = 1;
+  options[OPT_PRESSWIND].dNeg = EPRESSWIND;
+  options[OPT_PRESSWIND].dDefault = EPRESSWIND; 
+  sprintf(options[OPT_PRESSWIND].cNeg,"Default is EPRESSWIND");
+  fnRead[OPT_PRESSWIND] = &ReadPresSWind;
   
   /* Halt at Minimum Mantle Temperature */
   sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
@@ -2008,7 +2033,7 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"body.ViscMeltB=%e Delta=%e Gamma=%e Xi=%e Phis=%e \n",body[iBody].dViscMeltB,body[iBody].dViscMeltDelta,body[iBody].dViscMeltGamma,body[iBody].dViscMeltXi,body[iBody].dViscMeltPhis);
   fprintf(fp,"body.dFixMeltfactorUMan=%f .dMeltfactorUMan=%e \n",body[iBody].dFixMeltfactorUMan,body[iBody].dMeltfactorUMan);
   fprintf(fp,"body.dStagLid=%f dManHFlowPref=%f \n",body[iBody].dStagLid,body[iBody].dManHFlowPref);
-  fprintf(fp,"body.dMagMomCoef=%f \n",body[iBody].dMagMomCoef);
+  fprintf(fp,"body.dMagMomCoef=%f body.dPresSWind=%e \n",body[iBody].dMagMomCoef,body[iBody].dPresSWind);
 }
 
 void AddModuleThermint(MODULE *module,int iBody,int iModule) {
@@ -2271,7 +2296,7 @@ double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
 }
 double fdPresSWind(BODY *body, int iBody) {
-  return (EPRESSWIND);
+  return body[iBody].dPresSWind;   //Place holder for a proper equation later.       //(EPRESSWIND);
 }
 double fdMagPauseRad(BODY *body, int iBody) {
   return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);

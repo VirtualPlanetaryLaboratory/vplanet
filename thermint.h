@@ -199,6 +199,8 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 /* Stagnant Lid */
 #define OPT_STAGLID         1765   //Stagnant lid switch
 #define OPT_MANHFLOWPREF    1766   //Stagnant lid switch
+/* Stellar Wind */
+#define OPT_PRESSWIND       1767   //Stellar wind pressure
 /* Core Variables */
 #define OPT_RIC             1770   //IC radius
 #define OPT_DOC             1771   //OC shell thickness
@@ -246,6 +248,7 @@ void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);

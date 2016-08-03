@@ -47,13 +47,14 @@ dViscRef       1.0e8	   #1e8
 dStagLid       1
 dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
 dMagMomCoef    0.15
+dPresSWind     -0.2
     
 #Output
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
 	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -RICDot $
-		-26AlPowerMan
-#	    -26AlMassMan -26AlMassCore 
+		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
+
+#		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
 #		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $

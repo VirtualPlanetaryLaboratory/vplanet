@@ -623,7 +623,113 @@ def get_dims(dims, key1, var1, key2, var2):
 # end function
 
 """
-FOR IRREGULAR/RANDOM DATA
+FOR IRREGULAR/RANDOM DATA (or also gridded!)
 
 """
-# TODO
+def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magma_r",
+              alpha=0.5):
+    """
+    Plot a series of scatter plots of 1 dataframe column (z_var) vs every other column 
+    with the option to have one parameter size points and another parameter color the points.
+
+    Parameters
+    ----------
+    df : Pandas dataframe
+    z_var : string
+        column name of dependent variable
+    size_var : string (optional)
+        column name that determines size of points
+    color_var : string (optional)
+        column name that determines color of points
+    cmap : string (optional)
+        matplotlib colormap name
+    alpha : float (optional)
+        alpha (shade) parameter which ranges from [0,1]
+    
+    Returns
+    -------
+    fig : matplotlib figure object
+    axes : array of matplotlib axis objects
+    
+    Example
+    -------
+    >>> fig, axes = multiscatter(df,z_var="cbp_DampTime",size_var="secondary_Eccentricity",
+                               color_var="secondary_SemimajorAxis")
+        (plot)
+
+    """
+    
+    # Can't color/size points by the dependent variable!
+    assert(z_var != size_var and z_var != color_var), "Can't color/size points by the dependent variable!"
+    
+    # Set default color if none given
+    if color_var != None:
+        color = df[color_var]
+    else:
+        color = "black"
+        
+    # Set default size if none given
+    if size_var != None:
+        # Compute point sizes by normalizing data
+        s = 10. + 240.*(df[size_var] - df[size_var].min())/np.ptp(df[size_var])
+    else:
+        s = 50
+
+    # Get size for square grid of plots, leave space blank
+    size = len(df.columns)
+    grid_size = int(np.sqrt(size))
+
+    # Make subplots
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(grid_size*9,grid_size*8))
+    axes = axes.flatten()
+
+    # dependent var (y coor for all scatter plots)
+    z = df[z_var]    
+
+    # Iterate over all things, scatter plot "z" value vs sim variables
+    ii = 0
+    # Loop over columns == simulation variables
+    for col in df.columns.values:
+        if col != z_var:
+            im = axes[ii].scatter(df[col],z,c=color,s=s,alpha=alpha,cmap=cmap)
+
+            # Format axes with labels, limits
+            axes[ii].set_ylabel(z_var.split("_")[0] + " " + z_var.split("_")[1])
+            axes[ii].set_xlabel(col.split("_")[0] + " " + col.split("_")[1])
+            axes[ii].set_ylim(z.min()-0.05*z.min(),z.max()+0.05*z.max())
+
+            # Increment ii
+            ii = ii + 1
+
+        else:
+            pass
+
+    # Add colorbar?
+    if color_var != None:
+        
+        cbar = fig.colorbar(im, ax=axes.ravel().tolist())
+        cbar.ax.set_ylabel((color_var.split("_")[0] + " " + color_var.split("_")[1]), rotation=270,
+                          labelpad = 25)
+
+    # Add legend that displays typical point sizes?
+    if size_var != None:
+    
+        # Dummy plots for range of points
+        sizes = s.max()
+        s_inv = df[size_var].max()
+        l1 = plt.scatter([],[], s=sizes/4., color="black")
+        l2 = plt.scatter([],[], s=2.*sizes/4., color="black")
+        l3 = plt.scatter([],[], s=3.*sizes/4., color="black")
+        l4 = plt.scatter([],[], s=sizes, color="black")
+
+        # Labels for points
+        labels = ["%.2f" % (s_inv/4.), "%.2f" % (s_inv/2.), 
+                  "%.2f" % (3.*s_inv/4.), "%.2f" % s_inv]
+
+        # Fancy legend relative to last axis
+        leg = axes[-1].legend([l1, l2, l3, l4], labels, ncol=4, frameon=False, fontsize=15, loc = 8, borderpad = 1.0,
+                              handletextpad=1, scatterpoints = 1, bbox_to_anchor=(-.1, -0.3), 
+                              title = size_var.split("_")[0] + " " + size_var.split("_")[1])
+    
+    
+    return fig, axes

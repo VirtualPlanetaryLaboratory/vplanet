@@ -15,6 +15,7 @@
 #define ATMESC_ELIM             3
 #define ATMESC_DIFFLIM          4
 #define ATMESC_NONE             5
+#define ATMESC_LOP12            6
 #define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
 #define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen
@@ -36,6 +37,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_MINENVELOPEMASS     1217 // Minimum envelope mass (evaporated below this)
 #define OPT_OXYGENMASS          1218 // Initial oxygen mass
 #define OPT_WATERLOSSMODEL      1219 // Oxygen buildup / water loss model
+#define OPT_PLANETRADIUSMODEL   1220 // Gaseous planet radius model (for atmesc)
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -66,6 +68,7 @@ void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateOxygenMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRadiusAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 
@@ -82,6 +85,7 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_RGLIMIT            1213
 #define OUT_XO                 1214
 #define OUT_ETAO               1215
+#define OUT_PLANETRADIUS       1216
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -111,6 +115,7 @@ double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
 double fdAtomicOxygenMixingRatio(double,double);
 double fdInsolation(BODY*,int,int);
 int fbDoesWaterEscape(BODY*,int);
+double fdPlanetRadius(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

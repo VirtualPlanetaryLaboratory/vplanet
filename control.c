@@ -26,6 +26,8 @@ void BodyCopyNULL(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
+  control->bOutputLapl=0; // XXX Shouldn't be module-specific lines here.
+  
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
@@ -56,7 +58,8 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   control->Evolve.tmpUpdate = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));
-
+  InitializeBodyModules(&control->Evolve.tmpBody,control->Evolve.iNumBodies);
+  
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
       

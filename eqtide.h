@@ -106,8 +106,6 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DYOBLDTEQTIDE       1046
 #define OUT_DZOBLDTEQTIDE       1047
 
-
-
 /* Body Properties due to tidal evolution */
 
 #define OUT_BODYDSEMIDTEQTIDE   1052

@@ -1266,7 +1266,9 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
     fprintf(fp,"\n");
     fclose(fp);
-   
+
+    // XXX Module-specific output should be present in this file
+    
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
       dTmp = malloc(1*sizeof(double));

@@ -523,6 +523,8 @@ Centauri. In the next sections we apply quantitative models of the
 processes described in this section to full stellar system in order to
 explore the possible histories of Proxima b in detail.
 
+% Still to explore: Eu->Radiogenic, lifetimes of M dwarf disks, GCMs of tidally-locked planets 
+
 \section{Models\label{sec:models}}
 
 In this section we describe the models we use to consider the
@@ -591,6 +593,70 @@ how \vplanet~unifies these modules and integrates the system forward.
 
 \section{Discussion\label{sec:disc}}
 % Rory
+
+\subsection{Is Proxima b Habitable?}
+
+That Proxima b may be only slightly larger than Earth and absorbs a
+similar amount of stellar radiation, the probability that Proxima b is
+habitable may be non-zero. But to answer the question of it is
+habitable or not, a quantitative definition of {\it habitable} is
+required. The underlying assumption in the concept of the HZ is that
+surface water must be present on the planet. This choice is powerful
+for many reasons, such as the necessity of all life on Earth to
+require it, and it could be reasonably calculated for a planet with an
+Earth-like atmosphere. However, as described above, the probability that water is on the surface is extremely complex for Proxima b.
+
+but it cannot factor in all the pathways in
+which water can be transported between different resevoirs and/or lost
+to space. 
+
+A practical restating of this subsection's title is therefore ``What
+is the probability that more than $w_{hab}$ is currently present on
+the surace of Proxima b?'' In that case, the total surface water
+$w_{surf}$ must be greater than $w_{hab}$, $P(w_{surf} >
+w_{hab})$. Adopting this definition of habitability, the probability
+can be viewed in terms of a simple mass balance system, where
+\begin{equation}
+  w_{tot} = w_{int} + w_{surf} + w_{atm}.
+  \label{eq:waterbal}
+\end{equation}
+and $W$ is the total water content of the planet. Crucially, $W$ is
+not constant, that is $W~=~W(t)$. Water may be delivered by external
+bodies, destroyed in the stratosphere, etc. At this time, the most one
+can say about Proxima b is that $P((w_{surf} > w_{hab})~=~P_{hab}$ is in the
+range [0,1], and it could be some time before those limits move.
+
+Nonetheless, this refinement of the exoplanetary meaning of
+``habitable'' makes the question approachable. One solution is to
+solve the equation
+\begin
+  w_{surf} = \integral_0^{t_*}\frac{dw_{surf}}{dt}(c_1,...c_N,t)~dt,
+  \label{eq:surfwater}
+\end{equation}
+where $c_1,...,c_N$ are constants and $N$ is the total number of
+parameters that must be tracked to solve for $w_{surf}$
+self-consistently.
+
+Of course, this merely kicks the complexity in identifying $N$, but,
+as shown here, one can build such a model if one assumes all processes
+can be represented by coupled ordinary differential equations.  For
+Proxima b, the physical processes are wide-ranging, but it seems the
+most pressing danger is complete desiccation, $W=0$. As we have shown,
+there are plausible scenarios for Proxima b in which $W>0$ today,
+which is a promising start, but a proper calculation of $P_{hab}$
+would require a comprehensive search of parameter space convolved with
+the observations. Such a survey is beyond the scope as the parameter
+space to search has a large number of dimensions; for this study $N =
+36$, and the number of weakly constrained parameters is of order 50,
+suggesting a proper anlysis could require the scanning of $\sim$100
+dimensions to produce a robust estimate for $P_{hab}$ at this time.
+
+But such a definition of habitability offers a path to answer the
+question quantitatively. If no plausible simulation, meaning both
+self-consistent and consistent with all observational data, predicts
+that surface water maybe present, then one may state with some
+certainty that it is not habitable.
+
 
 \section{Conclusions\label{sec:concl}}
 % Rory

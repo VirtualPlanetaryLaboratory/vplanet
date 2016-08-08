@@ -1,0 +1,605 @@
+\documentclass[preprint,12pt]{aastex}
+
+\def\mearth{{\rm\,M_\oplus}}
+\def\rearth{{\rm\,R_\oplus}}
+\def\msun{{\rm\,M_\odot}}
+\def\rsun{{\rm\,R_\odot}}
+\def\lsun{{\rm\,L_\odot}}
+\def\gsim{~\rlap{$>$}{\lower 1.0ex\hbox{$\sim$}}}
+\def\lsim{~\rlap{$<$}{\lower 1.0ex\hbox{$\sim$}}}
+\def\etal{{\it et al.\thinspace}}
+\def\wpmsq{W m$^{-2}$}
+\def\etal{{\it et al.\thinspace}}
+\def\eg{{\it e.g.\ }}
+\def\etc{{\it etc.\ }}
+\def\ie{{\it i.e.\ }}
+\def\cf{{\it c.f.\ }}
+\def\acen{{$\alpha$~Cen}}
+
+\def\tess{{\it TESS}}
+\def\kepler{{\it Kepler}}
+\def\jwst{{\it JWST}}
+
+\def\vplanet{\texttt{\footnotesize{VPLANET}}}
+\def\atmesc{\texttt{\footnotesize{ATMESC}}}
+\def\distorb{\texttt{\footnotesize{DISTORB}}}
+\def\distrot{\texttt{\footnotesize{DISTROT}}}
+\def\eqtide{\texttt{\footnotesize{EQTIDE}}}
+\def\poise{\texttt{\footnotesize{POISE}}}
+\def\radheat{\texttt{\footnotesize{RADHEAT}}}
+\def\thermint{\texttt{\footnotesize{THERMINT}}}
+\def\stellar{\texttt{\footnotesize{STELLAR}}}
+\def\galevol{\texttt{\footnotesize{GALEVOL}}}
+
+\bibliographystyle{apj}
+\usepackage{multicol}
+
+\begin{document}
+
+\title{The Habitability of Proxima Centauri b I: Environmental Context}
+\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
+\altaffiltext{1}{Astronomy Department, University of Washington, Box 951580, Seattle, WA 98195}
+\altaffiltext{2}{NASA Astrobiology Institute -- Virtual Planetary Laboratory Lead Team, USA}
+\altaffiltext{3}{E-mail: rory@astro.washington.edu}
+
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction\label{sec:intro}}
+
+The discovery of Proxima Centauri b, hereafter Proxima b, heralds a
+new era in the exploration of exoplanets. Although very little is
+currently known about it and its environment, the planet is likely
+terrestrial and receives an incident flux that places it in the
+``habitable zone'' (HZ)
+\citep{Kasting93,Selsis07,Kopparapu13}. Moreover, Proxima b is
+distinct from other discoveries in that it is the first potentially
+habitable planet that could be directly characterized by space
+telescopes such as WFIRST and concept missions such as LUVOIR, HDST,
+and HabEx. Such remote sensing is possible because the angular
+separation of the planet and star as viewed from Earth is
+37 mas. Proxima b will likely be the first exoplanet to be
+spectroscopically probed for active biology.
+
+The interpretation of these spectra require a firm understanding of
+the history of Proxima b and its host system. Proxima b exists in an
+environment that is significantly different from Earth and has likely
+experienced different phenomena that could preclude or promote the
+development of life. When viewed across interstellar distances,
+biology is best understood as a planetary process; life is a global
+phenomenon that alters geochemical and photochemical
+processes. Spectroscopic indicators of life, \ie biosignatures, can
+only be identified if the abiotic processes on a planet are understood
+-- no single feature in a spectrum is a ``smoking gun'' for life on
+all planets. A robust detection of extraterrestrial life requires that
+all plausible non-biological sources for all observed spectral
+features can be ruled out. This requirement is a tall order,
+especially in light of the expected diversity of terrestrial
+exoplanets in the galaxy, but Proxima b may offer the best opportunity
+to begin the scientific process of searching for unambiguous signs of
+life.
+
+In this study we leverage the known (but sparse) data on Proxima b and
+its host system to predict the range of evolutionary pathways that the
+planet may have experienced. As we show below, many histories are
+possible and depend on factors ranging from the cooling rate of b's
+core, to the orbital evolution of the stellar system through the Milky
+Way, and everywhere in between. The evolution of Proxima b, and by
+extension its potential habitability, depends on physical processes
+that have tended to be studied by scientists that work in different
+fields, such as geophysics and astrophysics. However, for the purpose
+of interpreting Proxima b, these divisions must be eradicated. Our
+examination of Proxima b will draw on simple, but realistic, models
+that have been developed in the fields of geophysics, planetary
+science, atmospheric science and astrophysics. From this synthesis, we
+identify numerous obstacles and opportunities for life to develop on
+Proxima b, as well as lay a foundation for the future interpretation
+of spectroscopic observations.
+
+This paper is organized as follows. In $\S$~\ref{sec:obs} we review
+the observational data on the system and the immediate implications
+for habitability. In $\S$~\ref{sec:models} we describe models to
+simulate the evolution of the system, with a focus on habitability. In
+this section we introduce a new software package called \vplanet,
+which couples physical models of planetary interiors, atmospheres,
+spins and orbits, stellar evolution, and galactic effects. In
+$\S$~\ref{sec:results} we present results of these models. An
+exhaustive analysis of all histories is too large to present here, so
+in this section we present highlights and end-member cases that
+bracket the plausible ranges. In $\S$~\ref{sec:disc} we discuss the
+results and identify additional observations that could improve
+modeling efforts and connect our results to the companion paper
+\citep{Meadows16}. Finally in $\S$~\ref{sec:concl} we draw our
+conclusions.
+
+\section{Observational Constraints \label{sec:obs}}
+
+In this section we review what is known about the triple star system
+Alpha Centauri (hereafter \acen) of which Proxima Centauri may be a
+member. This star system has been studied carefully for centuries as
+it is the closest to Earth. We will first review the direct
+observational data, then we will make whatever inferences are possible
+from those data, and finally we qualitatively consider how these data
+constrain the possibility for life to exist on Proxima b, which will
+then guide the models described in the next section.
+
+\subsection{Properties of the Proxima Planetary System}
+
+Precious little data exist for Proxima b. The radial velocity data
+reveal a planet with a minimum mass $m$ of 1.27~$\mearth$, an orbital period $P$
+of 11.186 days, and an orbital eccentricity $e$ less than 0.35 and
+\cite{AngladaEscude16} report a mean longitude $\lambda$ of $110^\circ$. These
+data are the extent of the direct observational data on the planet,
+but even the minimum mass relies on uncertain estimates of the mass of
+the host star, described below.
+
+Proxima b may not be the only planet orbiting Proxima
+Centauri. The Doppler data suggest the presence of another planetary
+mass companion with an orbital period near 215 days, but it is not
+definitive yet \citep{AngladaEscude16}. If present, the planet has a
+projected mass of $\lesssim~10~\mearth$, consistent with previous
+non-detections \citep{EndlKurster08,Barnes14,Lurie14}. The orbital
+eccentricity and it relative inclination to Proxima b's orbit are also
+unknown, but as described below, could take any value that permits
+dynamical stability. Additional, lower mass and/or more distant,
+planetary companions could also be present in the system.
+
+\subsection{Properties of the Host Star}
+
+As Proxima Centauri is the closest star to Earth, it has been studied
+extensively since its discovery 100 years ago \citep{Innes1915}.  It
+has a radius $R_*$ of $0.14~\rsun$, a temperature $T_{eff}$ of 3050 K, a
+luminosity $L_*$ of $0.00155~\lsun$~\citep{Boyajian12}, and a rotation
+period $P_*$ of 83 days \citep{Benedict98}. \cite{Wood01} searched for
+evidence of stellar winds, but found none, indicating mass loss rates
+$\dot{M}_*$ less than 20\% of our Sun's, \ie
+$<4~\times~10^{-15}~\msun/\textrm{yr}$. Proxima Centauri possesses a
+much larger magnetic field ($B~=~600~\pm~150$~G) than our Sun (1 G)
+\citep{ReinersBasri08}, but somewhat low compared to the majority of
+low mass stars.
+
+Like our Sun, Proxima Centauri's luminosity varies slowly with time
+due to starspots \citep{Benedict93}. HST observations of Proxima
+Centauri found variations up to 70 mmag in $V$ \citep{Benedict98},
+which, corresponds to about a 17.5\% change with a period of 83.5 days
+(\ie the rotation period). Moreover, \citep{Benedict98} found evidence
+for two discrete modes of variability, one lower amplitude mode
+($\Delta~V~\sim~30$~mmag) with a period of $\sim 42$ days, and a
+larger amplitude mode ($\Delta~V~\sim~60$~mmag with a period of 83
+days. These periods are a factor of 2 of each other, leading
+\cite{Benedict98} to suggest that sometimes a large spot (or cluster
+of spots) is present on one hemisphere only, while at other times
+smaller spots exist on opposite hemispheres. Regardless, incident
+stellar radiation (``instellation'') variations of 17\% could impact
+atmospheric evolution and surface conditions of a planet (the sun's
+variation is of order 0.1\% \citep{Willson81}).
+
+Additionally the magnetic field strength may vary with
+time. \cite{Cincunegui07} monitored the H and K CaII lines, which are
+indicators of chromospheric activity, as well as H$\alpha$ for 7 years
+and found modest evidence for a 442 day cycle in stellar
+activity. Although it is unclear the strength of Proxima's magnetic
+field at the orbit of planet b, it could contribute to the stability
+of b's atmosphere and potentially affect any putative life on b.
+
+Proxima Centauri is a known flare star
+\citep{Shapley51}\footnote{Although Shapley is the sole author of his
+  1951 manuscript, the bulk of the work was performed by two female
+  assistants, C.D. Boyd, and V.M. Nail.}  and indeed several flares
+were reported during the Pale Red Dot campaign
+\cite{AngladaEscude16}. \cite{Walker81} performed the first study of
+the frequency of flares as a function of energy, finding that high
+energy events ($\sim~10^{30}$ erg) occurred about once per day, while
+lower energy events ($\sim~10^{28}$ erg) occurred about once per
+hour. Numerous observational campaigns since then have continued to
+find flaring at about this frequency
+\citep{Benedict98,AngladaEscude16}.
+
+\subsection{Properties of the Stellar System}
+
+Proxima Centauri is $\approx~15,000$ AU from two larger stars, Alpha
+Centauri A and B (hereafter \acen~A and B), but all three have the
+same motion through the galaxy. Finally, the proper motion and radial
+velocity of the center of mass of \acen~A and B permit the calculation
+of the system's velocity relative to the local standard of
+rest. \cite{Poveda96} find the three velocities are ($U,V,W$) =
+(-25,-2,13) km/s for the center of mass. This velocity implies the
+system is currently approaching Earth, and is on a roughly circular
+orbit around the galaxy with an eccentricity of 0.07
+\cite{AllenHerrera98}.
+
+A recent, careful analysis of astrometric and HARPS RV data by
+\cite{PourbaixBoffin16} found the masses of the two stars to be 1.133
+and $0.972~\msun$, respectively, with an orbital eccentricity of 0.52
+and a period of 79.91 years. The similarities between both A and B and
+the Sun, as well as their low apparent magnitudes, has allowed
+detailed studies of their spectral and photometric properties. These
+two stars (as well as Proxima) form a foundation in stellar astrophysics,
+and hence a great deal is known about A and B. However, as we describe
+below, many uncertainties still remain regarding these two stars.
+
+The spectra of \acen~A and B can provide information about the stars
+temperature, gravitational acceleration in the photosphere, rotation
+rate, and composition. That these features can be measured turns out
+to be critical for our analysis of the evolution of Proxima b. Proxima
+Centauri is a low mass star and hence its composition is far more
+difficult to measure than for G and K dwarfs like \acen~ A and
+B. Recently, \cite{HinkelKane13} completed a reanalysis of published
+compositional studies, rejecting the studies of \citep{Laird85} and
+\citep{NeuforgeMagain97} because they were too different from the
+other 5 they considered, and found the means of metallicities [Fe/H]
+of the two stars to be +0.28 and +0.31 and with a large spread of 0.16
+and 0.11, respectively. While it is frustrating that different groups
+have arrived at significantly different iron abundances, it is certain
+the stars are more metal-rich than the Sun. 
+
+\citep{HinkelKane13} go on to examine 21 other elements, including C,
+O, Mg, Al, Si, Ca, and Eu. These elements can be important for the
+bulk composition and/or are tracers of other species that are relevant
+to planetary processes. In nearly all cases, the relative abundance of
+these elements to Fe is statistically indistinguishable from the solar
+ratios. Exceptions are Na, Zn and Eu in \acen~A, and V, Zn, Ba
+and Nd in \acen~B. The discrepancies between the two stars is
+somewhat surprising given their likely birth from the same molecular
+cloud. On the other hand, the high eccentricity of their orbit could
+point toward a capture during the open cluster phase (cite). For all
+elements beside Eu, the elemental abundances relative to Fe are larger
+than in the Sun. In particular, it seems likely that the stars are
+significantly enriched in Zn.
+
+\acen~A and B are large enough and bright enough for asteroseismic
+studies that can reveal physical properties and ages of stars to a few
+percent, for high enough quality data (cite). Indeed, these two stars
+are central to the field of asteroseismology, and have been studied in
+exquisite detail. However, significant uncertainties persist in our
+understanding of these stars, despite all the observational
+advantages.
+
+A recent study undertook a comprehensive Bayesian analysis of \acen~A
+with priors on radius, composition, and mass derived from
+interferometric, spectroscopic and astrometric measurements,
+respectively \citep{Bazot16}. Their adopted metallicity constraint
+comes from \citep{NeuforgeMagain97} via \citep{Thoul03}, which was
+rejected by the \citep{HinkelKane13} analysis. They also used an older
+mass measurement from \citep{Pourbaix02}, which is slightly smaller
+than the updated mass from \citep{PourbaixBoffin16}. They then used an
+asteroseismic code to determine the physical characteristics of
+A. Although the mass of A is similar to the Sun at $1.1~\msun$, the
+simulations of Bazot et al., found that \acen~A's core lies at the
+radiative/convective boundary and the transition between pp- and
+CNO-dominated energy production chains in the core. Previous results
+found the age of \acen~A to be 4.85 Gyr with a convective core
+\citep{Thevenin02}, or 6.41 Gyr without a convective core
+\citep{Thoul03}. The ambiguity is further increased by uncertainty in
+the efficiency of the $^{14}$N(p,$\gamma$)$^{15}$O reaction rate in
+the CNO cycle, and by uncertainty regarding the possibility of
+convective overshooting of hydrogen into the core. They also consider
+the role of ``microscopic diffusion'' which is the settling heavy
+elements over long time intervals. All these uncertainties
+prevent a precise and accurate measurement of \acen~A's
+age. Combining the different model predictions and include 1$\sigma$
+uncertainties, the age of \acen~A is between 3.4 and 5.9 Gyr,
+with a mean of 4.78 Gyr.
+
+\acen~B has also been studied via asteroseismology, but as with A, the
+results have not been consistent. \cite{Lundkvist14} find significant
+discrepancies between their ``Asteroseismology Made Easy'' age (1.5
+Gyr) with other values, but with uncertainties in excess of 4 Gyr. The
+asteroseismic oscillations on B are much smaller than on A, which make
+analyses more difficult \citep[see, \eg][]{CarrierBourban03},
+leading to the large uncertainty. Combining studies of A and B, we
+must conclude that the ages of the two stars are uncertain to at least
+25\%. Given the difficulty in measuring B's asteroseismic pulsations,
+we will rely on A's asteroseismic data and assume the age of A and B
+to be $4.8^{+1.1}_{-1.4}$.
+
+\subsection{Inferences from the Observational Data}
+
+Because Proxima b was discovered indirectly, its properties and
+evolution depend critically on our knowledge of the host star's
+properties. Although many properties are known, the mass $M_{Prox}$,
+age, $T$, and composition are not. The spectra and luminosity suggest
+the mass of Proxima is $\sim~0.12~\msun$ \citep{Delfosse00}. If we
+adopt this value, then the semi-major axis of b's orbit is 0.0485~AU
+and the planet received 65\% of the instellation as Earth receives
+from the Sun \cite{AngladaEscude16}.  Note that \cite{Sahu14}
+suggested that Proxima's proper motion sent it close enough to two
+background stars for the general relativistic deflection of their
+light by Proxima to be detectable with HST and should allow the determination of
+$M_{Prox}$ to better than 10\%, but those results are not available
+yet.
+
+Additional inferences rely on the assumption that Proxima formed with
+the \acen~binary.  The similarities in the proper motion and parallax
+between Proxima and \acen~immediately led to speculation as to whether
+the stars are ``physically connected or members of the same drift''
+\citep{Voute1917}, \ie are they bound or members of a moving group?
+The intervening century has failed to resolve this central
+question. If Proxima is just a random star in the solar neighborhood,
+\cite{MatthewsGilmore93} concluded that probability that Proxima would
+appear so close to \acen~is about 1 in a million, suggesting it is
+very likely the stars are somehow associated with each other. Using
+updated kinematic information, \citep{Anosova94} conclude that Proxima
+is not bound, but instead part of a moving group consisting of about a
+dozen stellar systems. \cite{WertheimerLaughlin06}'s reanalysis found
+that the observational data favor a configuration that is at the
+boundary between bound and unbound orbits. However, their best fit
+bound orbit is implausibly large as the semi-major axis is 1.31 pc,
+\ie larger than the distance from Earth to
+Proxima. \cite{MatvienkoOrlov14} also failed to unequivocally resolve
+the issue, and conclude that RV precision of better than 20 m/s is
+required to determine if Proxima is bound, which should be available
+in the data from \citep{AngladaEscude16}. Perhaps the discovery data
+for Proxima b will also resolve this long-standing questions.
+
+Regardless of whether Proxima is bound or not, the very low
+probability that the stars would be so close to each other strongly
+supports the hypothesis that the stars formed in the same star
+cluster. We will assume that they are associated and have
+approximately equal ages and similar compositions. An age near 5 Gyr
+for Proxima is also consistent with its rotation period and relatively
+modest activity levels and magnetic field \citep{ReinersBasri08}.
+
+The radial velocity data combined with a$M_{Prox}$ only provide a
+minimum mass, but significantly larger planet masses are unlikely
+geometrically, and very large masses can be excluded because they
+would incite detectable astrometric signals (note that the minimum
+mass solution predicts an astrometric orbit of the star of $\sim$1
+microsecond of arc). It is very likely the planet has a mass less than
+10~$\mearth$, and probably $<~3~\mearth$. We will assume the latter
+possibility is true, and hence the planet is likely rocky, based on
+statistical inferences of the population of \kepler~planets
+\cite{WeissMarcy14,Rogers15}. However, even at the minimum mass, we
+cannot exclude the possibility that Proxima b possesses a significant
+hydrogen envelope. Such a world is unlikely to be habitable \citep[but
+  see][]{PierrehumbertGaidos11} and hence we cannot at this time state
+unequivocally that Proxima b is not a ``mini-Neptune'', let alone if
+it is habitable.
+
+If non-gaseous, the composition is still highly uncertain and depends
+on the unknown formation process. Several possibilities exist
+according to recent theoretical studies: 1) the planet formed {\it in
+  situ} from local material; 2) the planet formed at a larger
+semi-major axis and migrated in while Proxima still possessed a
+protoplanetary disk; or 3) an instability in the system occurred that
+impulsively changed b's orbit. For case 1, the planet may be depleted
+in volatile material \citep{Raymond07,Lissauer07}, but could still
+possess a significant water inventory \citep{Mulders15}. For case 2,
+the planet would have likely formed beyond the snowline and hence
+could be very water-rich \citep{CarterBond12}. For case 3, the planet
+could be either volatile-rich or poor depending on its initial
+formation location as well as the details of the instability, such as
+the frequency of impacts that occurred in its aftermath. We conclude
+that all options are possible given the data and for simplicity will
+assume the planet is Earth-like in composition. If we adopt the
+silicate planet scaling law of \cite{Sotin07}, the radius of a
+$1.3~\mearth$ planet is $1.07~\rearth$.
+
+\subsection{Implications for Proxima b's Evolution and Habitability}
+
+Given the above observations and their immediate implications, this
+planet may be able to support life. All life on Earth requires three
+basic ingredients: Water, energy, and the bioessential elements of C,
+H, O, N, S and P. Additionally these ingredients must be present in an
+environment that is stable in terms of temperature, pressure and pH
+for long periods of time. As we describe in this subsection, these
+properties are possible on Proxima b and hence the planet is
+potentially habitable, defined here to mean liquid water persisting on
+the surface for long timescales.
+
+Proxima's luminosity and effective temperature combined with b's
+orbital semi-major axis place the planet in the habitable zone (HZ) of
+Proxima and nearly in the same relative position of Earth in the Sun's
+HZ. More specifically, the planet receives about 65\% of Earth's
+instellation, which places b in the ``optimistic'' HZ, meaning that it
+would be very likely if the modern Earth would likely be habitable if
+it received that instellation. Even allowing for observational
+uncertainties, \cite{AngladaEscude16} find that the planet is in this
+optimistic HZ.
+
+However, its habitability depends on many more factors than just the
+instellation. The planet must form with water and physical processes
+cannot subsequently remove it. Additionally, even if water is present,
+the evolution of Proxima depends on many other factors involving
+stellar effects, the planet's internal properties, and the
+gravitational influence of the other members of the stellar system.
+
+The host star is about 10 times smaller and less massive than the Sun,
+the temperature is about half that of the Sun, and the luminosity is
+just 0.1\% that of the Sun. These differences are significant and can
+have a profound effect on the evolution of Proxima b. Low mass stars
+can take billions of years to begin fusing hydrogen into helium in
+their cores, and the star's luminosity can change during that
+time. Specifically, the star contracts at constant temperature and so
+the star's luminosity drops with time. For the case of Proxima, this
+stage lasted $\sim~1$~Gyr \cite{Baraffe15} and hence Proxima b
+could have spend significant time interior to the HZ, \ie in a runaway
+greenhouse state like Venus. This ``pre-main sequence'' phase could
+either strip away a primordial hydrogen atmosphere to reveal a
+``habitable evaporated core'' \citep{Luger15}, or, if b formed as a
+terrestrial planet, it could desiccate that planet and build up an
+oxygen-dominated atmosphere \citep{LugerBarnes15}. Thus, the large
+early luminosity of the star could either be a help or hindrance for
+b's habitability.
+
+Low mass stars also show significant activity, \ie flares, coronal
+mass ejections, and bursts of high energy radiation
+\citep[\eg][]{West08}. This activity can change the composition of the
+atmosphere through photochemistry, or even completely strip the
+atmosphere away. The tight orbit of Proxima b places it at risk of
+atmospheric stripping by these phenomena. A planetary magnetic field
+could increase the probability of atmospheric retention by deflecting
+charged particles, or it could decrease it by funneling high energy
+particles into the magnetic poles and providing enough energy to
+atmospheric particles to achieve escape velocity. Either way, the
+frequency of flaring and other high energy events, as well as the
+likelihood that Proxima b possesses a magnetic field, would be
+invaluable in assessing the longevity of Proxima b's atmosphere.
+
+The close-in orbit also introduces the possibility that tidal effects
+can be significant on the planet. Tides can affect the planet in five
+ways. First, they could cause the rotation rate to evolve to a
+frequency that is equal to or similar to the orbital frequency, a
+process typically called tidal locking
+\citep{Dole64,Kasting93,Barnes16}. Second, they can drive the planet's
+obliquity $\psi$ to zero or $\pi$ such that the planet has no seasons
+\citep{Heller11}. Third, they can cause the orbital eccentricity to
+change, usually (but not always) driving the orbit toward a circular
+shape \citep{Darwin1880}. Fourth, they can cause frictional heating in
+the interior called tidal heating
+\citep{Peale79,Jackson08c,Barnes13}. Finally, the can cause the
+semi-major axis to decay as orbital energy is transformed into
+frictional heat \citep{Darwin1880,Barnes08}. Except in extreme cases,
+these processes are unlikely to sterilize a planet, but they can
+profoundly affect the planet's evolution.
+
+Although the abundances of elements relative to iron in \acen~A and B,
+and by extension Proxima, are similar to the Sun's, there is no
+guarantee that the abundance pattern is matched inside Proxima
+b. Planet formation is often a stochastic process and composition
+depends on the impact history of a given world. The planet could have
+formed near its current location, which would have been relatively hot
+early on and the planet could be relatively depleted in volatiles
+\citep{Raymond07,Mulders15}. These studies may even overestimate
+volatile abundances as they ignored the high luminosities that late M
+dwarfs have during planet formation. Alternatively the planet could
+have formed beyond the snowline and migrated in either while the gas
+disk was still present, or later during a large scale dynamical
+instability (see below). In those cases, the planet could be
+volatile-rich.
+
+The depletion of Eu in \acen~A is also of note as it is often a tracer
+of radioactive material like $^{232}$Th and $^{238}$U
+\citep{Young14}. These isotopes are primary drivers of the internal
+energy of Earth, and hence if they are depleted in Proxima b, it
+internal evolution could be markedly different than Earth's. However,
+since no depletion is observed in \acen~B, it is far from clear that
+such a depletion exists.
+
+The presence of additional planets can change the orbit and obliquity
+of planet b through gravitational perturbations. These interactions
+can change the orbital angular momentum of b and drive oscillations in
+$e$, the inclination $i$, longitude of periastron $\varpi$, and
+longitude of ascending node $\Omega$. Changes in inclination can lead
+to changes in $\psi$ as the planet's rotational axis is likely fixed
+in inertial space while the orbital plane precesses. These variations
+can significantly affect climate evolution and possibly even the
+planet's potential to support life \citep{Armstrong14}.
+
+If Proxima is bound to \acen~A and B, then perturbations by passing
+stars and torques by the galactic tide can cause drifts in Proxima's
+orbit about A and B \citep{Kaib13}. During epochs of high
+eccentricity, Proxima may swoop so close to A and B that their gravity
+is able disrupt Proxima's planetary system. This could have occurred
+at any time in Proxima's past and can lead to a total rearrangement of
+the system. Thus, should additional planets exist in the Proxima
+planetary system, could be present on almost any orbit, with large
+eccentricities and large mutual inclinations with b's orbital plane.
+
+The metallicity of Proxima Centauri is quite high for the solar
+neighborhood, which has a mean of -0.11 and standard deviation of 0.18
+\citep{AllendePrieto04}. Indeed, recent simulations of stellar
+metallicity distributions in the galaxy find that at the sun's
+galactic radius $R_{gal}$ of $\sim$8 kpc, stars cannot form with
+[Fe/H]$ > +0.15$ \citep{Loebman16}. The discrepancy can be resolved by
+invoking radial migration \citep{SellwoodBinney02} in which stars on
+nearly circular orbits are able to ride corotation resonances with
+spiral arms inward and outward. \cite{Loebman16} find that with
+migration, the metallicity distribution of stars in the Sloan Digital
+Sky Survey III's Apache Point Observatory Galactic Evolution
+Experiment \citep{Hayden15} is reproduced.  Furthermore, Loebman et
+al.\ find that stars in the solar neighborhood with [Fe/H] $> +0.25$
+must have formed at $R_{gal} < 4.5$~kpc. We conclude that this system
+has migrated outward at least 3.5~kpc, probably more. As the surface
+density scale length of the galaxy is $\sim$2.5 kpc, this implies that
+the density of stars at their formation radius was at least 5 times
+higher than the solar radius.
+
+The observed and inferred constraints for the evolution of Proxima b
+are numerous, but the plausible range of evolutionary pathways is
+diverse. The proximity of two solar-type stars complicates the
+dynamics, but allows the extension of their properties to Proxima
+Centauri. In the next sections we apply quantitative models of the
+processes described in this section to full stellar system in order to
+explore the possible histories of Proxima b in detail.
+
+\section{Models\label{sec:models}}
+
+In this section we describe the models we use to consider the
+evolution and potential habitability of Proxima b. We generally use
+published models that are common to different disciplines of
+science. Although the models come from disparate sources, we have
+compiled them all into a new software program called \vplanet. This
+code is designed to simulate exoplanet evolution, with a focus on
+habitability. The problem of habitability is interdisciplinary, but we
+find it convenient to break the problem down into more manageable
+chunks, which we call ``modules,'' that are applied when
+applicable. At this time, \vplanet~consists of simple models that are
+all representable as an ordinary differential equation. Below we
+describe qualitatively the modules and direct the reader to the
+references for a quantitative description. We then briefly describe
+how \vplanet~unifies these modules and integrates the system forward.
+
+\subsection{Stellar Evolution: \stellar}
+% Rodrigo
+
+\subsection{Orbital Evolution: \distorb}
+% Russell
+
+\subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
+% Russell
+
+\subsection{Radiogenic Heating: \radheat}
+% Peter
+
+\subsection{Geophyiscal Evolution: \thermint}
+% Peter
+
+\subsection{Atmospheric Escape: \atmesc}
+% Rodrigo
+
+\subsection{Tidal Evolution: \eqtide}
+% Rory
+
+\subsection{Galactic Effects: \galevol}
+% Russell/Tom
+
+\subsection{The Coupled Model: \vplanet}
+% Rory
+
+\section{Results\label{sec:results}}
+% All
+
+\subsection{Galactic Evolution}
+% Russell
+
+\subsection{Orbital/Rotational/Tidal Evolution}
+% Russell/Rory/Diego?
+
+\subsection{Stellar/Atmospheric Evolution}
+% Rodrigo
+
+\subsection{Internal Evolution}
+% Peter/Rory/Ben
+
+\subsubsection{Evolution without Tidal Heating}
+
+\subsubsection{Evolution with Tidal Heating}
+
+\subsubsection{Magnetic Fields}
+
+
+\section{Discussion\label{sec:disc}}
+% Rory
+
+\section{Conclusions\label{sec:concl}}
+% Rory
+
+\vspace{1cm}
+This work was supported by the NASA Astrobiology Institute's Virtual
+Planetary Laboratory under Cooperative Agreement number NNA13AA93A.
+
+
+\bibliography{bib}
+
+\end{document}  

@@ -1714,9 +1714,9 @@ void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   /* Broken XXX */
-
-  *dTmp = fdGammaOrb(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
-
+  //*dTmp = fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  *dTmp=-1;
+  
   /* Negative option? */
   strcat(cUnit,"cgs");
 }

@@ -755,8 +755,14 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
   
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  //
+  // The equation below comes from conservation of angular momentum:
+  // 
+  // dw/dt = d(I/J)/dt = (1/I) * dJ/dt - (J/I^2) * dI/dt
+  //
+  // where dJ/dt is due to winds and dI/dt is due to contraction.
   if (body[iaBody[0]].dAge >= 1.e6 * YEARSEC) {
-    return 2.5 * dDJDt / (body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius) 
+    return dDJDt / (body[iaBody[0]].dRadGyra * body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius) 
                - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
   } else {
     return 0.;

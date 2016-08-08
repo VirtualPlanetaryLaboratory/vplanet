@@ -7,25 +7,6 @@
  * the two models.
 */ 
 
-
-/* lines where something like if iBody == 0 count occurs
- * ~790
- * ~975
- * ~1098
- * ~1186
- * ~1280
- * ~1304
- * ~1370
- * ~2200
- * ~2210
- * ~2260
- * ~2306
- * ~2480
- * ~2493
- * ~2681
- * ~2696
- */
-
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -49,10 +30,12 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
   dest[iBody].dImK2 = src[iBody].dImK2;
+  dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
   dest[iBody].dK2 = src[iBody].dK2;
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;
-  
+  dest[iBody].bOceanTides = src[iBody].bOceanTides;
+
   if (iBody > 0) {
     dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -71,6 +54,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
 
     if (iTideModel == CPL) {
       dest[iBody].dTidalQ = src[iBody].dTidalQ;
+      dest[iBody].dTidalQOcean = src[iBody].dTidalQOcean;
       for (iIndex=0;iIndex<10;iIndex++)
           dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }    
@@ -356,6 +340,28 @@ void ReadTidalQOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   }
 }  
 
+void ReadTidalQOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+
+    body[iFile-1].dTidalQOcean = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if(iFile > 0)
+      body[iFile-1].dTidalQOcean = options->dDefault;
+  }
+}
+
 /* Time lag */
 
 void ReadTidalTau(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -433,6 +439,22 @@ void ReadTidePerts(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     }
   }
   free(lTmp);
+}
+
+// Include effects of ocean tides?
+void ReadEqtideOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bOceanTides = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].bOceanTides = 0; // Default to no ocean tides
 }
 
 void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
@@ -517,13 +539,13 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   fnRead[OPT_TIDALQ] = &ReadTidalQ;
   
   sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
-  sprintf(options[OPT_TIDALQOCEAN].cDescr,"Tidal Quality Factor");
-  sprintf(options[OPT_TIDALQOCEAN].cDefault,"inf");
-  options[OPT_TIDALQOCEAN].dDefault = HUGE;
+  sprintf(options[OPT_TIDALQOCEAN].cDescr,"Ocean Tidal Quality Factor");
+  sprintf(options[OPT_TIDALQOCEAN].cDefault,"100");
+  options[OPT_TIDALQOCEAN].dDefault = 100;
   options[OPT_TIDALQOCEAN].iType = 2;
   options[OPT_TIDALQOCEAN].iMultiFile = 1;
   fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;
-  
+
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
   sprintf(options[OPT_TIDALTAU].cDescr,"Tidal Time Lag");
   sprintf(options[OPT_TIDALTAU].cDefault,"1 Second");
@@ -545,6 +567,13 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDEPERTS].cDefault,"none");
   options[OPT_TIDEPERTS].iType = 13;
   fnRead[OPT_TIDEPERTS] = &ReadTidePerts;
+
+  sprintf(options[OPT_OCEANTIDES].cName,"bOceanTides");
+  sprintf(options[OPT_OCEANTIDES].cDescr,"Include tidal dissapation due to oceans?");
+  sprintf(options[OPT_OCEANTIDES].cDefault,"0");
+  options[OPT_OCEANTIDES].iType = 0;
+  fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
+
 }
 
 void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

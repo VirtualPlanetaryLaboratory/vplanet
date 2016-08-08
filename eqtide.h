@@ -38,7 +38,8 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_TIDEPERTS           1042
 #define OPT_TIDALTAU            1045
 #define OPT_TIDALQ              1050
-#define OPT_TIDALQOCEAN         1052
+#define OPT_TIDALQOCEAN         1051
+#define OPT_OCEANTIDES          1052
 
 #define OUT_ECCA                1055
 
@@ -55,9 +56,11 @@ void ReadMaxLockDiff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSyncEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalQOcean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
 void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5

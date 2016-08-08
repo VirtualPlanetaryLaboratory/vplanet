@@ -470,6 +470,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
 void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iEqtide;
 
+  // Eqtide, not thermint
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
       /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and 
@@ -488,24 +489,34 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
+      
+      // No ocean contribution
+      body[iBody].dImK2Ocean = 0.0;
+      body[iBody].dTidalQOcean = 0.0;
+
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
-      if (body[iBody].bOceanTides) {
-	// XXX Deal with ocean tides here.
-      } else {
-	/* When Thermint and Eqtide are called together, care must be taken as 
-	   Im(k_2) must be known in order to calculate TidalZ. As the individual 
-	   module PropsAux are called prior to PropsAuxMulti, we must call the 
-	   "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
-	   "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-	   PropsAuxEqtideThermint. */
-	iEqtide = fiGetModuleIntEqtide(module,iBody);
-	control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
-	control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      /* When Thermint and Eqtide are called together, care must be taken as 
+         Im(k_2) must be known in order to calculate TidalZ. As the individual 
+         module PropsAux are called prior to PropsAuxMulti, we must call the 
+         "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
+         "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
+         PropsAuxEqtideThermint. */
+
+      // If using ocean tides...
+      //Convert Q_ocean -> Im(k2)_ocean
+      // Will later be combined with ImK2 from Thermint
+      if(body[iBody].bOceanTides)
+      {
+        body[iBody].dImK2Ocean = body[iBody].dK2/body[iBody].dTidalQOcean;
       }
+
+      iEqtide = fiGetModuleIntEqtide(module,iBody);
+      control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
 }
@@ -588,13 +599,21 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // Maybe don't call? XXX
   //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
-
-  body[iBody].dImK2 = fdImk2Man(body,iBody);
-  PropsAuxCPL(body,evolve,update,iBody);
-  // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
+  // Include tidal dissapation due to oceans:
+  if(body[iBody].bOceanTides)
+  {
+    // Im(K_2) is harmonic mean of mantle and oceam component
+    body[iBody].dImK2 = 1.0/(1./(fdImk2Man(body,iBody)) + 1./(body[iBody].dImK2Ocean));
+  }
+  // No oceans, thermint dictates ImK2
+  else 
+  {
+    body[iBody].dImK2 = fdImk2Man(body,iBody);
+    PropsAuxCPL(body,evolve,update,iBody);
+    // Call dTidePowerMan
+    body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
+  }
 }
-
 /* This does not seem to be necessary
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;

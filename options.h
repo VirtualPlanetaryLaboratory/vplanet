@@ -50,11 +50,16 @@
 #define OPT_HALTMINSEMI		345
 #define OPT_HALTPOSDEDT         350 
 
+#define OPT_HECC                360 
+
 #define OPT_INTEGRATIONMETHOD   400
+
+#define OPT_KECC                450 
 
 #define OPT_LOG		        500
 #define OPT_LOGFILE		510
 #define OPT_LONGP               515
+#define OPT_LXUV                517 
 
 #define OPT_MASS		520
 #define OPT_MASSRAD	        525
@@ -85,9 +90,9 @@
 #define OPT_ROTRATE	        665
 #define OPT_ROTVEL              680
 
-#define OUT_XOBL                1422
-#define OUT_YOBL                1423
-#define OUT_ZOBL                1424
+#define OPT_XOBL                700 
+#define OPT_YOBL                710 
+#define OPT_ZOBL                720 
 
 void InitializeOptions(OPTIONS*,fnReadOption*);
 void ReadOptions(BODY**,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE**,fnReadOption*,char[]);

@@ -107,13 +107,16 @@ def TestAll():
   
   # Get VPLANET path
   try:
-    vplanet_dir = os.path.dirname(subprocess.check_output(['which', 'vplanet']).decode('utf-8'))
+    vplanet_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
   except:
     raise Exception("Unable to locate vplanet executable. Please make sure it is in your $PATH.")
   
   # Run through each of the tests  
   nerr = 0
-  folders = os.listdir(os.path.join(vplanet_dir, 'testing'))
+  try:
+    folders = os.listdir(os.path.join(vplanet_dir, 'testing'))
+  except:
+    raise Exception("VTEST is confused. Is `%s` the correct vplanet source code directory? Please contact Rodrigo Luger (rodluger@uw.edu) for help." % vplanet_dir)
   folders = [f for f in folders if os.path.exists(os.path.join(vplanet_dir, 'testing', f, 'test.py'))]
   for f in folders:
     testfile = os.path.join(vplanet_dir, 'testing', f, 'test.py')

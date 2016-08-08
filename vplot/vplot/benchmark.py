@@ -113,7 +113,10 @@ def TestAll():
   
   # Run through each of the tests  
   nerr = 0
-  folders = os.listdir(os.path.join(vplanet_dir, 'testing'))
+  try:
+    folders = os.listdir(os.path.join(vplanet_dir, 'testing'))
+  except:
+    raise Exception("VTEST is confused. Is `%s` the correct vplanet source code directory? Please contact Rodrigo Luger (rodluger@uw.edu) for help." % vplanet_dir)
   folders = [f for f in folders if os.path.exists(os.path.join(vplanet_dir, 'testing', f, 'test.py'))]
   for f in folders:
     testfile = os.path.join(vplanet_dir, 'testing', f, 'test.py')

@@ -31,6 +31,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
   dest[iBody].dImK2 = src[iBody].dImK2;
   dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
+  dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
   dest[iBody].dK2 = src[iBody].dK2;
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;

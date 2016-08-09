@@ -318,6 +318,7 @@ typedef struct {
   double dTidalQ;	 /**< Body's Tidal Q */
   //double dTidalQRock;    /**< Tidal Q in interior */
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
+  double dK2Ocean;       /**< Body's Love Number associated with ocean */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */

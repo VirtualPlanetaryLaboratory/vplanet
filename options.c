@@ -1701,6 +1701,12 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 
 void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
 
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
@@ -1759,6 +1765,7 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       body[iFile-1].dInc = options->dDefault;
       body[iFile-1].dSinc = sin(0.5*options->dDefault);
     }
+}
 
 /* LXUV -- currently unsupported */
 void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {

@@ -604,6 +604,9 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
+
+    
+
     // Im(K_2) is harmonic mean of mantle and oceam component
     body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;
     PropsAuxCPL(body,evolve,update,iBody);

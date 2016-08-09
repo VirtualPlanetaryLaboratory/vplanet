@@ -2354,6 +2354,8 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
 
+  // TODO: K2ocean comp here
+
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
   body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);  
 

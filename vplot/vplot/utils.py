@@ -174,9 +174,9 @@ class Param(object):
   '''
   
   '''
-  def __init__(self, name = "", descr = "", unit = "", array = []):
+  def __init__(self, name = "", description = "", unit = "", array = []):
     self.name = name
-    self.descr = descr
+    self.description = description
     self.unit = unit
     self.array = array
   
@@ -184,10 +184,10 @@ class Param(object):
     '''
     
     '''
-    if short or len(self.descr) > maxsz:
+    if short or len(self.description) > maxsz:
       lbl = self.name
     else:
-      lbl = self.descr
+      lbl = self.description
     if self.unit != "":
       return "%s (%s)" % (lbl, self.unit)
     else:
@@ -224,16 +224,16 @@ def GetParamDescriptions():
   
   stroutput = [x for x in stroutput.split('\n') if len(x)]
 
-  descr = {}
+  description = {}
   for out in stroutput:
     if out.startswith('[-]'):
       n, d, u = re.search('\[-\](.*) -- (.*). \[(.*)\]', out).groups()
-      descr.update({n: d})
+      description.update({n: d})
     else:
       n, d = re.search('(.*) -- (.*).', out).groups()
-      descr.update({n: d})
+      description.update({n: d})
 
-  return descr
+  return description
 
 def GetConf():
   '''
@@ -394,7 +394,7 @@ def GetParams(outputorder, file):
     
     '''
     
-    descr = GetParamDescriptions()
+    description = GetParamDescriptions()
     
     # This workaround takes care of units that contain spaces
     while True:
@@ -417,7 +417,7 @@ def GetParams(outputorder, file):
       for line in file:
         array.append(float(line.split()[j]))
       array = np.array(array)
-      params.append(Param(name = name, unit = unit, descr = descr[name], array = array))
+      params.append(Param(name = name, unit = unit, description = description[name], array = array))
     
     return params
     
@@ -435,7 +435,7 @@ def GetOutput(path = '.', **kwargs):
     
     # Forward file params
     for param in getattr(output, body.name).params:
-      description = param.descr
+      description = param.description
       unit = param.unit
       name = param.name
       parent = body.name
@@ -457,7 +457,7 @@ def GetOutput(path = '.', **kwargs):
         if name == 'Time':
           # We don't want to overwrite the time array!
           continue
-        description = param.descr
+        description = param.description
         unit = param.unit
         parent = body.name
         arr = array(param.array.reshape(I, J), unit = unit, description = description, name = name, parent = parent, color = body.color)

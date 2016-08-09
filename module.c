@@ -63,13 +63,19 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
   // Finalize Primary Variable Functions
   //module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
+  module->fnFinalizeUpdate26AlNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumCoreModule));
+  module->fnFinalizeUpdate26AlNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumManModule));
   module->fnFinalizeUpdate40KNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCrustModule));
   module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCrustModule));
   module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCrustModule));
   module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
   module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCrustModule));
   module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
 
   module->fnFinalizeUpdateCBPR = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
@@ -170,13 +176,19 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
 
   // Finalize Primary Variable Functions
+  module->fnFinalizeUpdate26AlNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumCoreModule));
+  module->fnFinalizeUpdate26AlNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumManModule));
   module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCrustModule));
   module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
   module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCrustModule));
   module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
   module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCrustModule));
   module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCrustModule));
   module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
 
   module->fnFinalizeUpdateCBPR[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
@@ -221,13 +233,19 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyNULL;
     module->fnInitializeBody[iBody][iModule] = &InitializeBodyNULL;
 
+    module->fnFinalizeUpdate26AlNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate26AlNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateNULL;
@@ -463,8 +481,9 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
     if (!body[iBody].bRadheat) {
       if (control->Io.iVerbose > VERBINPUT)
         fprintf(stderr,"WARNING: Module THERMINT selected for %s, but RADHEAT not selected.\n",body[iBody].cName);
-      body[iBody].dPowRadiogCore = 0;
-      body[iBody].dPowRadiogMan = 0;
+      body[iBody].dRadPowerCore = 0.;
+      body[iBody].dRadPowerCrust = 0.;
+      body[iBody].dRadPowerMan = 0.;
     } else
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxRadheatThermint;
   }
@@ -587,8 +606,9 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 */
 
 void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  body[iBody].dPowRadiogCore = fdRadPowerCore(update,iBody);
-  body[iBody].dPowRadiogMan = fdRadPowerMan(update,iBody);
+  body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
+  body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
+  body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
 }
 
 void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {

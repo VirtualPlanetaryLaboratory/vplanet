@@ -1189,7 +1189,7 @@ void ReadOutputTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
-    /* Convert timestep to cgs */
+    /* Convert output time to cgs */
     control->Io.dOutputTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1212,7 +1212,7 @@ void ReadStopTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
-    /* Convert timestep to cgs */
+    /* Convert stop time to cgs */
     control->Evolve.dStopTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1547,6 +1547,27 @@ void ReadHaltPosDeDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
 /*
  *
+ * H
+ *
+ */
+
+/* Hecc -- currently this is not supported. XXX */
+void ReadHecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dHecc = options->dDefault;
+}  
+
+/*
+ *
  * I
  *
  */
@@ -1575,6 +1596,27 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
   } 
   /* If not input, VerifyIntegration assigns default */
 }
+
+/*
+ *
+ * K
+ *
+ */
+
+/* Kecc -- currently unsupported. XXX */
+void ReadKecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dKecc = options->dDefault;
+}  
 
 /*
  *
@@ -1658,12 +1700,7 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 /* Argument of pericenter */
 
 void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2*PI) {
@@ -1722,6 +1759,20 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       body[iFile-1].dInc = options->dDefault;
       body[iFile-1].dSinc = sin(0.5*options->dDefault);
     }
+
+/* LXUV -- currently unsupported */
+void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dLXUV = options->dDefault;
 }  
 
 /*
@@ -1764,16 +1815,17 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (memcmp(sLower(cTmp),"r",1) == 0) {
       /* Reid & Hawley 2000 */
-      control->iMassRad[iFile-1]=1;
+      // XXX Should change number to #define'd variables!
+      control->iMassRad[iFile-1]=0;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
-      control->iMassRad[iFile-1]=2;
+      control->iMassRad[iFile-1]=1;
     } else if (memcmp(sLower(cTmp),"b",1) == 0) {
       /* Bayless & Orosz 2006 */
-      control->iMassRad[iFile-1]=3;
+      control->iMassRad[iFile-1]=2;
     } else if (memcmp(sLower(cTmp),"s",1) == 0) {
       /* Sotin et al 2007 */
-      control->iMassRad[iFile-1]=4;
+      control->iMassRad[iFile-1]=3;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
@@ -2459,6 +2511,71 @@ void ReadOptionsModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,
 
 /*
  *
+ * X
+ *
+ */
+
+/* Xobl -- currently this is not supported. XXX */
+void ReadXobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dXobl = options->dDefault;
+}  
+
+/*
+ *
+ * Y
+ *
+ */
+
+/* Yobl -- currently this is not supported. XXX */
+void ReadYobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dYobl = options->dDefault;
+}  
+
+/*
+ *
+ * Z
+ *
+ */
+
+/* Zobl -- currently this is not supported. XXX */
+void ReadZobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
+    exit(EXIT_INPUT);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dZobl = options->dDefault;
+}  
+
+
+
+/*
+ *
  * Master Read Options Subroutine
  *
  */
@@ -2675,6 +2792,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTPOSDEDT].iType= 0;
   fnRead[OPT_HALTPOSDEDT] = &ReadHaltPosDeDt;
   
+  /*
+   *
+   * H
+   *
+   */
+
+  sprintf(options[OPT_HECC].cName,"dHecc");
+  sprintf(options[OPT_HECC].cDescr,"Poincare's h -- Unsuppoted!");
+  sprintf(options[OPT_HECC].cDefault,"-1");
+  options[OPT_HECC].dDefault = -1;
+  options[OPT_HECC].iType = 2;
+  fnRead[OPT_HECC] = &ReadHecc;
   
   /*
    *
@@ -2687,6 +2816,19 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INTEGRATIONMETHOD].cDefault,"Runge-Kutta4");
   options[OPT_INTEGRATIONMETHOD].iType=4;
   fnRead[OPT_INTEGRATIONMETHOD] = &ReadIntegrationMethod;
+  
+  /*
+   *
+   * K
+   *
+   */ 
+
+  sprintf(options[OPT_KECC].cName,"dKecc");
+  sprintf(options[OPT_KECC].cDescr,"Poincare's k -- Unsuppoted!");
+  sprintf(options[OPT_KECC].cDefault,"-1");
+  options[OPT_KECC].dDefault = -1;
+  options[OPT_KECC].iType = 2;
+  fnRead[OPT_KECC] = &ReadKecc;
   
   /*
    *
@@ -2715,6 +2857,13 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 //   options[OPT_LONGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   fnRead[OPT_LONGP] = &ReadLongP;
+  
+  sprintf(options[OPT_LXUV].cName,"dLXUV");
+  sprintf(options[OPT_LXUV].cDescr,"Total XUV Luminosity -- Unsuppoted!");
+  sprintf(options[OPT_LXUV].cDefault,"-1");
+  options[OPT_LXUV].dDefault = -1;
+  options[OPT_LXUV].iType = 2;
+  fnRead[OPT_LXUV] = &ReadLXUV;
   
   /*
    *
@@ -3010,6 +3159,44 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 //   options[OPT_VISCUMAN].bNeg = 0;
   fnRead[OPT_VISCUMAN] = &ReadViscUMan;
   
+  /*
+   *
+   * X
+   *
+   */
+
+  sprintf(options[OPT_XOBL].cName,"dXobl");
+  sprintf(options[OPT_XOBL].cDescr,"Deitrick's X -- Unsuppoted!");
+  sprintf(options[OPT_XOBL].cDefault,"-1");
+  options[OPT_XOBL].dDefault = -1;
+  options[OPT_XOBL].iType = 2;
+  fnRead[OPT_XOBL] = &ReadXobl;
+
+  /*
+   *
+   * Y
+   *
+   */
+
+  sprintf(options[OPT_YOBL].cName,"dYobl");
+  sprintf(options[OPT_YOBL].cDescr,"Deitrick's Y -- Unsuppoted!");
+  sprintf(options[OPT_YOBL].cDefault,"-1");
+  options[OPT_YOBL].dDefault = -1;
+  options[OPT_YOBL].iType = 2;
+  fnRead[OPT_YOBL] = &ReadYobl;
+
+  /*
+   *
+   * Z
+   *
+   */
+
+  sprintf(options[OPT_ZOBL].cName,"dZobl");
+  sprintf(options[OPT_ZOBL].cDescr,"Deitrick's Z -- Unsuppoted!");
+  sprintf(options[OPT_ZOBL].cDefault,"-1");
+  options[OPT_ZOBL].dDefault = -1;
+  options[OPT_ZOBL].iType = 2;
+  fnRead[OPT_ZOBL] = &ReadZobl;
 
 }
 

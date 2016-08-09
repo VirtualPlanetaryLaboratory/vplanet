@@ -31,11 +31,10 @@ if not __VPLOT_SETUP__:
     findfont('Palatino Linotype')
     if len(w):
       print(w[-1].message)
-      print("Unable to locate font 'Palatino Linotype'. Please install this")
-      print("font, which is located in a '.zip' file in the VPLOT directory.")
-      print("Take a look at the README in the '.zip' file for details.")
+      print("Unable to locate font 'Palatino Linotype'. Please contact")
+      print("Rodrigo Luger (rodluger@uw.edu) for help installing it.")
 
   from . import plot, quickplot, utils, benchmark, log
   from .benchmark import TestAll
   from .utils import GetOutput
-  from .plot import plot, show, savefig
+  from .plot import plot, show, savefig, colors

@@ -23,9 +23,67 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
   dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
+  dest[iBody].iWaterLossModel = src[iBody].iWaterLossModel;
+  dest[iBody].dKTide = src[iBody].dKTide;
+  dest[iBody].dMDotWater = src[iBody].dMDotWater;
+  dest[iBody].dFHRef = src[iBody].dFHRef;
+  dest[iBody].dOxygenEta = src[iBody].dOxygenEta;
+  dest[iBody].dCrossoverMass = src[iBody].dCrossoverMass;
+  dest[iBody].bRunaway = src[iBody].bRunaway;
+  dest[iBody].iWaterEscapeRegime = src[iBody].iWaterEscapeRegime;
+  dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
+  dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
 }
 
 /**************** ATMESC options ********************/
+
+void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"lb15",4)) {
+      body[iFile-1].iWaterLossModel = ATMESC_LB15;
+    } else if (!memcmp(sLower(cTmp),"lbex",4)) {
+      body[iFile-1].iWaterLossModel = ATMESC_LBEXACT;  
+    } else if (!memcmp(sLower(cTmp),"tian",4)) {
+      body[iFile-1].iWaterLossModel = ATMESC_TIAN; 
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, or TIAN.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iWaterLossModel = ATMESC_LBEXACT;
+}
+
+void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"lo",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_LOP12;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12 or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
+}
 
 void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -46,7 +104,6 @@ void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     if (iFile > 0)
       body[iFile-1].dXFrac = options->dDefault;
 }
-
 
 void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -231,6 +288,20 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OXYGENMASS].iMultiFile = 1;
   fnRead[OPT_OXYGENMASS] = &ReadOxygenMass;
   
+  sprintf(options[OPT_WATERLOSSMODEL].cName,"sWaterLossModel");
+  sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water Loss and Oxygen Buildup Model");
+  sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
+  options[OPT_WATERLOSSMODEL].iType = 3;
+  options[OPT_WATERLOSSMODEL].iMultiFile = 1;
+  fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
+
+  sprintf(options[OPT_PLANETRADIUSMODEL].cName,"sPlanetRadiusModel");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDefault,"NONE");
+  options[OPT_PLANETRADIUSMODEL].iType = 3;
+  options[OPT_PLANETRADIUSMODEL].iMultiFile = 1;
+  fnRead[OPT_PLANETRADIUSMODEL] = &ReadPlanetRadiusModel;
+  
   sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
   sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
   sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
@@ -328,6 +399,28 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
 }
 
+void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  // Assign radius
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+    body[iBody].dRadius = fdLopezRadius(body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 1., body[iBody].dAge, 0);
+
+    if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
+      // User specified radius, but we're reading it from the grid! 
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  }
+
+  update[iBody].iaType[update[iBody].iRadius][0] = 0;
+  update[iBody].iNumBodies[update[iBody].iRadius][0] = 1;
+  update[iBody].iaBody[update[iBody].iRadius][0] = malloc(update[iBody].iNumBodies[update[iBody].iRadius][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
+
+  update[iBody].pdRadiusAtmesc = &update[iBody].daDerivProc[update[iBody].iRadius][0];   // NOTE: This points to the VALUE of the radius
+  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: Same here!
+}
+
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
@@ -337,6 +430,101 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)
     // Let's remove its envelope.
     body[iBody].dEnvelopeMass = 0;
+  
+}
+
+void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+  
+  // Ktide (due to body zero only). WARNING: not suited for binary...
+  double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) * 
+               body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
+  if (xi > 1)
+    body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+  else
+    body[iBody].dKTide = 0;
+  
+  // The XUV flux
+  double fxuv = fdInsolation(body, iBody, 1);
+  
+  // Reference hydrogen flux
+  body[iBody].dFHRef = (body[iBody].dAtmXAbsEff * fxuv * body[iBody].dRadius) /
+                       (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
+  
+  // Surface gravity
+  double g = (BIGG * body[iBody].dMass) / (body[iBody].dRadius * body[iBody].dRadius);
+  
+  // Oxygen mixing ratio
+  double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass, body[iBody].dOxygenMass);
+  
+  // Diffusion-limited H escape rate
+  body[iBody].dFHDiffLim = BDIFF * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * THERMT * (1. + XO / (1. - XO)));
+  
+  // Is water escaping?
+  if (!fbDoesWaterEscape(body, iBody)) {
+    
+    body[iBody].dOxygenEta = 0;
+    body[iBody].dCrossoverMass = 0;
+    body[iBody].bRunaway = 0;
+    body[iBody].iWaterEscapeRegime = ATMESC_NONE;
+    body[iBody].dMDotWater = 0;
+  
+  } else {
+    
+    body[iBody].bRunaway = 1;
+    
+    // Select an escape/oxygen buildup model
+    if (body[iBody].iWaterLossModel == ATMESC_LB15) {
+      
+      // Luger and Barnes (2015)
+      double x = (KBOLTZ * THERMT * body[iBody].dFHRef) / (10 * BDIFF * g * ATOMMASS);
+      if (x < 1) {
+        body[iBody].dOxygenEta = 0;
+        body[iBody].dCrossoverMass = ATOMMASS + 1.5 * KBOLTZ * THERMT * body[iBody].dFHRef / (BDIFF * g);
+      } else {
+        body[iBody].dOxygenEta = (x - 1) / (x + 8);
+        body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * THERMT * body[iBody].dFHRef / (6 * BDIFF * g);
+      }
+      
+    } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) | (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
+    
+      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * THERMT);
+      double FH;
+      double rat;
+    
+      // Get the crossover mass
+      if (body[iBody].dFHRef < x) {
+        
+        // mcross < mo
+        body[iBody].dCrossoverMass = ATOMMASS + (1. / (1. - XO)) * (KBOLTZ * THERMT * body[iBody].dFHRef) / (BDIFF * g);
+        FH = body[iBody].dFHRef;
+        rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+        body[iBody].dOxygenEta = 0;
+      
+      } else {
+        
+        // mcross >= mo
+        double num = 1. + (XO / (1. - XO)) * QOH * QOH;
+        double den = 1. + (XO / (1. - XO)) * QOH;
+        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * THERMT * body[iBody].dFHRef) / (1 + XO * (QOH - 1) * BDIFF * g);
+        rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+        FH = body[iBody].dFHRef * pow(1. + (XO / (1. + XO)) * QOH * rat, -1);
+        body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
+                
+      }
+    
+    }
+    
+    if ((XO > 0.5) & (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+      // Schaefer et al. (2016) prescription, section 2.2
+      body[iBody].iWaterEscapeRegime = ATMESC_DIFFLIM;
+      body[iBody].dOxygenEta = 0;
+      body[iBody].dMDotWater = body[iBody].dFHDiffLim * (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius);
+    } else {
+      // In the Tian model, oxygen escapes when it's the dominant species. I think this is wrong...
+      body[iBody].iWaterEscapeRegime = ATMESC_ELIM;
+      body[iBody].dMDotWater = body[iBody].dFHRef * (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius);
+    }
+  }
   
 }
 
@@ -366,8 +554,17 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
-
+  
+  // Radius evolution
+  if (update[iBody].iNumRadius > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
+    exit(EXIT_INPUT);
+  }
+  VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
+  control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }
@@ -393,6 +590,12 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumMass == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumMass++;
+  }
+  
+  if (body[iBody].dRadius > 0) {
+    if (update[iBody].iNumRadius == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumRadius++;
   }
   
 }
@@ -433,6 +636,10 @@ void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
   /* Nothing */
 }
 
+void FinalizeUpdateRadiusAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumRadius = (*iEqn)++;
+}
 
 /***************** ATMESC Halts *****************/
 
@@ -514,6 +721,19 @@ void WriteOxygenMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 }
 
+void WritePlanetRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadius;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+}
+
 void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dEnvelopeMass;
 
@@ -543,6 +763,16 @@ void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   }
 }
 
+void WriteOxygenMixingRatio(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass, body[iBody].dOxygenMass);
+  strcpy(cUnit,"");
+}
+
+void WriteOxygenEta(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dOxygenEta;
+  strcpy(cUnit,"");
+}
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -553,6 +783,15 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SURFACEWATERMASS].iNum = 1;
   output[OUT_SURFACEWATERMASS].iModuleBit = ATMESC;
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
+
+  sprintf(output[OUT_PLANETRADIUS].cName,"PlanetRadius");
+  sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet Radius");
+  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth Radii");
+  output[OUT_PLANETRADIUS].bNeg = 1;
+  output[OUT_PLANETRADIUS].dNeg = 1./REARTH;
+  output[OUT_PLANETRADIUS].iNum = 1;
+  output[OUT_PLANETRADIUS].iModuleBit = ATMESC;
+  fnWrite[OUT_PLANETRADIUS] = &WritePlanetRadius;
 
   sprintf(output[OUT_OXYGENMASS].cName,"OxygenMass");
   sprintf(output[OUT_OXYGENMASS].cDescr,"Oxygen Mass");
@@ -571,6 +810,20 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RGLIMIT].iNum = 1;
   output[OUT_RGLIMIT].iModuleBit = ATMESC;
   fnWrite[OUT_RGLIMIT] = &WriteRGLimit;
+  
+  sprintf(output[OUT_XO].cName,"XO");
+  sprintf(output[OUT_XO].cDescr,"Atomic Oxygen Mixing Ratio in Upper Atmosphere");
+  output[OUT_XO].bNeg = 0;
+  output[OUT_XO].iNum = 1;
+  output[OUT_XO].iModuleBit = ATMESC;
+  fnWrite[OUT_XO] = &WriteOxygenMixingRatio;
+
+  sprintf(output[OUT_ETAO].cName,"EtaO");
+  sprintf(output[OUT_ETAO].cDescr,"Oxygen Eta Parameter (Luger and Barnes 2015)");
+  output[OUT_ETAO].bNeg = 0;
+  output[OUT_ETAO].iNum = 1;
+  output[OUT_ETAO].iModuleBit = ATMESC;
+  fnWrite[OUT_ETAO] = &WriteOxygenEta;
   
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
@@ -634,6 +887,8 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
   module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateOxygenMassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
 
   //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
@@ -643,138 +898,149 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 /************* ATMESC Functions ************/
 
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-  // TODO: Add diffusion-limited escape option
-
-  // TODO: The checks below need to be moved. Ideally we'd 
-  // just remove this equation from the matrix if the
-  // escape conditions are not met.
   
-  // 1. Check if there's hydrogen to be lost; this happens first 
-  if (body[iaBody[0]].dEnvelopeMass > 0)
-    return 0;
+  if (body[iaBody[0]].bRunaway) {
+    
+    // This takes care of both energy-limited and diffusion limited escape!
+    return -(9. / (1 + 8 * body[iaBody[0]].dOxygenEta)) * body[iaBody[0]].dMDotWater;
   
-  // 2. Check if planet is beyond RG limit; otherwise, assume the
-  // cold trap prevents water loss.
-  // NOTE: The RG flux limit below is calculated based on body zero's
-  // spectrum! The Kopparapu+14 limit is for a single star only. This
-  // approximation for a binary is only valid if the two stars have 
-  // similar spectral types, or if body zero dominates the flux.
-  double flux;
-  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { 
-    flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);
-  }
-  else { 
-    flux = body[0].dLuminosity / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  }
-
-  if (flux < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iaBody[0]].dEcc, body[iaBody[0]].dMass))
-    return 0;
-      
-  // Compute Erkaev's tidal enhancement factor
-  double elim, fxuv, xi, ktide;
-  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
-       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
-  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-  else ktide = 0;
-
-  // If planet is a CBP, compute flux from 2 stars
-  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { 
-    // CBP
-    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV);
-  }
-  else { 
-    // Normal single-star planet
-    fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  }
-
-  // Rodrigo and Barnes (2015)
-  double T = 400.;                  // Average thermospheric temperature (K, Venus)
-  double b = 4.8e19 * pow(T, 0.75); // binary diffusion coefficient (m^-1 s^-1)
-  double g = (BIGG * body[iaBody[0]].dMass) / (body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
-  double FHREF = (body[iaBody[0]].dAtmXAbsEff * fxuv * body[iaBody[0]].dRadius) /
-                 (4 * BIGG * body[iaBody[0]].dMass * ktide * ATOMMASS);
-  double x = (KBOLTZ * T * FHREF) / (10 * b * g * ATOMMASS);
-  double eta;
-  if (x < 1)
-    eta = 0;
-  else
-    eta = (x - 1) / (x + 8);
-  double MDOTEL = FHREF * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  } else {
+    
+    return 0.;
   
-  return -(9. / (1 + 8 * eta)) * MDOTEL;
+  }
 }
 
 double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-
-  // TODO: The checks below need to be moved. Ideally we'd 
-  // just remove this equation from the matrix if the
-  // escape conditions are not met.
   
-  // 1. Check if there's hydrogen to be lost; this happens first 
-  if (body[iaBody[0]].dEnvelopeMass > 0)
-    return 0;
+  if (body[iaBody[0]].bRunaway) {
+    if (body[iaBody[0]].iWaterLossModel == ATMESC_LB15) {
     
-  // 2. Check if planet is beyond RG limit; otherwise, assume the
-  // cold trap prevents water loss.
-  // NOTE: The RG flux limit below is calculated based on body zero's
-  // spectrum! The Kopparapu+14 limit is for a single star only. This
-  // approximation for a binary is only valid if the two stars have 
-  // similar spectral types, or if body zero dominates the flux.
-  double flux;
-  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { 
-    flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);
-  }
-  else { 
-    flux = body[0].dLuminosity / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  }
-  if (flux < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iaBody[0]].dEcc, body[iaBody[0]].dMass))
-    return 0;
+      // Rodrigo and Barnes (2015)
+      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
+      else
+        return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
+        
+    } else {
   
-  // 3. Check if there's still water left
-  if (body[iaBody[0]].dSurfaceWaterMass <= 0)
-    return 0;
+      // Exact
+      return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
   
-  // Rodrigo and Barnes (2015)
-  double T = 400.;                  // Average thermospheric temperature (K, Venus)
-  double b = 4.8e19 * pow(T, 0.75); // binary diffusion coefficient (m^-1 s^-1)
-  return (320. * PI * BIGG * ATOMMASS * ATOMMASS * b * body[iaBody[0]].dMass) / (KBOLTZ * T);
+    }
+  } else {
+  
+    return 0.;
+    
+  }
+  
 }
 
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
-  // TODO: Currently this is just Erkaev's model. Add other escape regimes
-  
+
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
   if (body[iaBody[0]].dEnvelopeMass <= 0){
     return 0;
   }
-  double elim, fxuv, xi, ktide;
   
-  xi = (pow(body[iaBody[0]].dMass / (3. * body[0].dMass), (1. / 3)) * 
-       body[iaBody[0]].dSemi) / (body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac);
-  if (xi > 1)	ktide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-  else ktide = 0;
-
-  // If planet is a CBP, compute flux from 2 stars
-  if(body[iaBody[0]].bBinary == 1 && body[iaBody[0]].iBodyType == 0) { // CBP
-    fxuv = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV); 
-  }
-  else { // normal single-star planet
-    fxuv = body[0].dLXUV / (4 * PI * pow(body[iaBody[0]].dSemi, 2) * 
-           pow((1 - body[iaBody[0]].dEcc * body[iaBody[0]].dEcc), 0.5));
-  }
-
-  elim = PI * pow(body[iaBody[0]].dRadius, 3) * pow(body[iaBody[0]].dXFrac, 2) * 
-         body[iaBody[0]].dAtmXAbsEff * fxuv / (BIGG * body[iaBody[0]].dMass * ktide);
-
-  return -elim;
+  return -body[iaBody[0]].dFHRef * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
   return 0;
+}
+
+double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
+    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    if (!isnan(foo)) 
+      return foo;
+    else 
+      return body[iaBody[0]].dRadius;
+  }
+  else
+    return body[iaBody[0]].dRadius;
+}
+
+/************* ATMESC Helper Functions ************/
+
+double fdInsolation(BODY *body, int iBody, int iXUV) {
+  
+  double flux;
+  
+  if (body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { 
+    
+    // Body orbits two stars
+    
+    // TODO: BUG: DAVE: I moved the insolation calculation here. It is now
+    // called from fnPropsAux, which takes as argument **iBody**, not **iaBody**.
+    // This makes the lines below uncallable from this function. Is there an easy
+    // way around this? Can you code up a modified version of `fdFluxExactBinary`
+    // that can be called from here? Let me know. For now I'm just raising an error.
+    
+    fprintf(stderr,"ERROR: ATMESC not currently working with BINARY.");
+    exit(EXIT_EXE);
+    
+    /*
+    if (iXUV)
+      flux = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV);
+    else
+      flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);
+    */
+    
+  } else { 
+  
+    // Body orbits one star
+    if (iXUV)
+      flux = body[0].dLXUV / (4 * PI * pow(body[iBody].dSemi, 2) * 
+             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    else
+      flux = body[0].dLuminosity / (4 * PI * pow(body[iBody].dSemi, 2) * 
+             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+  }
+  
+  return flux;
+
+}
+
+int fbDoesWaterEscape(BODY *body, int iBody) {
+  // TODO: The checks below need to be moved. Ideally we'd 
+  // just remove this equation from the matrix if the
+  // escape conditions are not met.
+  
+  // 1. Check if there's hydrogen to be lost; this happens first 
+  if (body[iBody].dEnvelopeMass > 0)
+    return 0;
+  
+  // 2. Check if planet is beyond RG limit; otherwise, assume the
+  // cold trap prevents water loss.
+  // NOTE: The RG flux limit below is calculated based on body zero's
+  // spectrum! The Kopparapu+14 limit is for a single star only. This
+  // approximation for a binary is only valid if the two stars have 
+  // similar spectral types, or if body zero dominates the flux.
+  
+  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+    return 0;
+  
+  // 3. Is there still water to be lost?
+  else if (body[iBody].dSurfaceWaterMass <= 0)
+    return 0;
+  
+  else
+    return 1;
+}
+
+double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
+  // Mixing ratio X_O of atomic oxygen in the upper atmosphere
+  // assuming atmosphere is well-mixed up to the photolysis layer
+  double NO2 = dOxygenMass / (32 * ATOMMASS);
+  double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
+  if (NH2O > 0)
+    return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
+  else
+    return 0.;
 }
 
 double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {

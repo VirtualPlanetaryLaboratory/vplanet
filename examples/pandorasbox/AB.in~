@@ -1,6 +1,5 @@
 sName		AB		# Body's name
-    			# Modules to apply, exact spelling required
-
+ 
 # Physical Parameters
 dMass		2		# Mass, negative -> Earth masses
 dRadius		0.0026		# Radius, negative -> Earth radii
@@ -14,7 +13,7 @@ cColor 00ff00
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
-dTidalQ		1e6		# Tidal phase lag
+#dTidalQ		1e6		# Tidal phase lag
 #dK2		0.299		# Love number of degree 2
 #sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 #sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare

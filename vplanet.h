@@ -704,6 +704,13 @@ typedef struct {
   // GALHABIT
   int bGalHabit;
   double dPeriQ;   /**< Pericenter distance */
+  int iDisrupt;
+  double dHostBinSemi;
+  double dHostBinEcc;
+  double dHostBinInc;
+  double dHostBinArgP;
+  double dHostBinLongA;
+  int bHostBinary;
   
 } BODY;
 
@@ -756,14 +763,21 @@ typedef struct {
   double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
   double *dPassingStarR;
   double *dPassingStarV;
-  double dPassingStarImpact; /**< impact parameter for passing star */
+  double dPassingStarVRad;
+  double dPassingStarRMag;
+  double *dPassingStarImpact; /**< 3D impact parameter for passing star */
   double dPassingStarMass;
   double dPassingStarSigma;
   double dPassingStarMagV;
   double dEncounterRad;
   double dDeltaTEnc;  /**< time since last encounter */
-  double dEncounterTime; /**< characteristic encounter time */
+  double dEncounterRate; /**< characteristic encounter time */
   double dMinAllowed;  /**< minimum allowed close approach of body to host */
+  double dCloseEncTime;  /**< time of new close encounter */
+  double dLastEncTime;  /**< time of last encounter */
+  double dNextEncT;
+  int iNEncounters;
+
   int iSeed;
 
 } SYSTEM;

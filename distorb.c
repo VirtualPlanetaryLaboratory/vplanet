@@ -1249,7 +1249,11 @@ void WriteBodySinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }  
 
 void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = 2.*asin(sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)));  
+  if (body[iBody].bDistOrb) {
+    *dTmp = 2.*asin(sqrt(pow(body[iBody].dPinc,2)+pow(body[iBody].dQinc,2)));  
+  } else if (body[iBody].bGalHabit) {
+    *dTmp = body[iBody].dInc;
+  }
   
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1261,7 +1265,11 @@ void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 }  
 
 void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  if (body[iBody].bDistOrb) {
+    *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  } else if (body[iBody].bGalHabit) {
+    *dTmp = body[iBody].dLongA;
+  }
   
   while (*dTmp < 0.0) {
     *dTmp += 2*PI;
@@ -1428,7 +1436,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_INC].bNeg = 1;
   output[OUT_INC].dNeg = 1./DEGRAD;
   output[OUT_INC].iNum = 1;
-  output[OUT_INC].iModuleBit = DISTORB;
+  output[OUT_INC].iModuleBit = DISTORB+GALHABIT;
   fnWrite[OUT_INC] = &WriteBodyInc;
   
   sprintf(output[OUT_SINC].cName,"Sinc");
@@ -1443,7 +1451,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGA].bNeg = 1;
   output[OUT_LONGA].dNeg = 1./DEGRAD;
   output[OUT_LONGA].iNum = 1;
-  output[OUT_LONGA].iModuleBit = DISTORB;
+  output[OUT_LONGA].iModuleBit = DISTORB+GALHABIT;
   fnWrite[OUT_LONGA] = &WriteBodyLongA; 
 
   sprintf(output[OUT_PINC].cName,"Pinc");

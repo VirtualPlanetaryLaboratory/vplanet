@@ -24,6 +24,12 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Functions */
 #define OPT_PERIQ              2221
+#define OPT_HOSTBINARY         2250
+#define OPT_HOSTBINSEMI        2251
+#define OPT_HOSTBINECC         2252
+#define OPT_HOSTBININC         2253
+#define OPT_HOSTBINARGP        2254
+#define OPT_HOSTBINLONGA       2255
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 // 
@@ -51,6 +57,7 @@ void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUTBODYSTARTGALHABIT    2220 /* Start of GALHABIT BODY options */
 
 #define OUT_PERIQ               2220
+#define OUT_NENCOUNTERS         2221
 
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -77,3 +84,6 @@ void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
 void VelocityDisp(SYSTEM*);
 void CalcImpactParam(SYSTEM*);
+void ApplyDeltaV(BODY*,SYSTEM*,int);
+void AdvanceMA(BODY*,SYSTEM*,int);
+void NextEncounterTime(SYSTEM*,double);

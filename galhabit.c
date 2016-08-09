@@ -76,6 +76,154 @@ void ReadEncounterRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       AssignDefaultDouble(options,&system->dEncounterRad,files->iNumInputs);
 }
 
+void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bHostBinary = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bHostBinary,files->iNumInputs);
+}
+
+void ReadHostBinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dHostBinSemi = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dHostBinSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dHostBinSemi = options->dDefault;
+}
+
+void ReadHostBinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0 || dTmp >= 1) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    body[iFile-1].dHostBinEcc = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+
+  } else
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dHostBinEcc,files->iNumInputs);
+}
+
+/* argument of pericenter */
+void ReadHostBinArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+    
+    body[iFile-1].dHostBinArgP = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dHostBinArgP = options->dDefault;
+}  
+
+void ReadHostBinLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > 2*PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 360) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+    
+    body[iFile-1].dHostBinLongA = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dHostBinLongA = options->dDefault;
+}  
+
+
+void ReadHostBinInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (control->Units[iFile].iAngle == 0) {
+      if (dTmp < 0 || dTmp > PI) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+    } else {
+      if (dTmp < 0 || dTmp > 180) {
+        if (control->Io.iVerbose >= VERBERR)
+            fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
+        LineExit(files->Infile[iFile].cIn,lTmp);        
+      }
+      /* Change to radians */
+      dTmp *= DEGRAD;
+    }
+
+    body[iFile-1].dHostBinInc = dTmp; 
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0) {
+      body[iFile-1].dHostBinInc = options->dDefault;
+    }
+}  
+
 void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
@@ -100,6 +248,56 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ENCOUNTERRAD].iType = 2;  
   options[OPT_ENCOUNTERRAD].iMultiFile = 0;   
   fnRead[OPT_ENCOUNTERRAD] = &ReadEncounterRad;
+  
+  sprintf(options[OPT_HOSTBINARY].cName,"bHostBinary");
+  sprintf(options[OPT_HOSTBINARY].cDescr,"Model primary as binary with quadrupole moment?");
+  sprintf(options[OPT_HOSTBINARY].cDefault,"0");
+  options[OPT_HOSTBINARY].dDefault = 0;
+  options[OPT_HOSTBINARY].iType = 0;  
+  options[OPT_HOSTBINARY].iMultiFile = 0; 
+  fnRead[OPT_HOSTBINARY] = &ReadHostBinary;
+  
+  sprintf(options[OPT_HOSTBINECC].cName,"dHostBinEcc");
+  sprintf(options[OPT_HOSTBINECC].cDescr,"eccentricity of host binary");
+  sprintf(options[OPT_HOSTBINECC].cDefault,"0.51"); 
+  options[OPT_HOSTBINECC].dDefault = 0.51;
+  options[OPT_HOSTBINECC].iType = 2;  
+  options[OPT_HOSTBINECC].iMultiFile = 0;   
+  fnRead[OPT_HOSTBINECC] = &ReadHostBinEcc;
+  
+  sprintf(options[OPT_HOSTBINSEMI].cName,"dHostBinSemi");
+  sprintf(options[OPT_HOSTBINSEMI].cDescr,"Semi-major of host binary");
+  sprintf(options[OPT_HOSTBINSEMI].cDefault,"17.57 AU"); 
+  options[OPT_HOSTBINSEMI].dDefault = 17.57*AUCM;
+  options[OPT_HOSTBINSEMI].iType = 2;  
+  options[OPT_HOSTBINSEMI].iMultiFile = 0;
+  options[OPT_HOSTBINSEMI].dNeg = AUCM;
+  sprintf(options[OPT_HOSTBINSEMI].cNeg,"AU");   
+  fnRead[OPT_HOSTBINSEMI] = &ReadHostBinSemi;
+  
+  sprintf(options[OPT_HOSTBININC].cName,"dHostBinInc");
+  sprintf(options[OPT_HOSTBININC].cDescr,"inclination of host binary");
+  sprintf(options[OPT_HOSTBININC].cDefault,"60.0"); 
+  options[OPT_HOSTBININC].dDefault = 60.0*DEGRAD;
+  options[OPT_HOSTBININC].iType = 2;  
+  options[OPT_HOSTBININC].iMultiFile = 0;   
+  fnRead[OPT_HOSTBININC] = &ReadHostBinInc;
+  
+  sprintf(options[OPT_HOSTBINARGP].cName,"dHostBinArgP");
+  sprintf(options[OPT_HOSTBINARGP].cDescr,"Arg periapse of host binary");
+  sprintf(options[OPT_HOSTBINARGP].cDefault,"0.0"); 
+  options[OPT_HOSTBINARGP].dDefault = 0.0;
+  options[OPT_HOSTBINARGP].iType = 2;  
+  options[OPT_HOSTBINARGP].iMultiFile = 0;   
+  fnRead[OPT_HOSTBINARGP] = &ReadHostBinArgP;
+  
+  sprintf(options[OPT_HOSTBINLONGA].cName,"dHostBinLongA");
+  sprintf(options[OPT_HOSTBINLONGA].cDescr,"Long of ascending node of host binary");
+  sprintf(options[OPT_HOSTBINLONGA].cDefault,"0.0"); 
+  options[OPT_HOSTBINLONGA].dDefault = 0.0;
+  options[OPT_HOSTBINLONGA].iType = 2;  
+  options[OPT_HOSTBINLONGA].iMultiFile = 0;   
+  fnRead[OPT_HOSTBINLONGA] = &ReadHostBinLongA;
 }
 
 
@@ -147,9 +345,14 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   if (iBody == 1) {
     system->dPassingStarR = malloc(3*sizeof(double));
     system->dPassingStarV = malloc(3*sizeof(double));
-    system->dEncounterTime = 13.1/1e6/YEARSEC;  //need to update this, most likely XXX
+    system->dPassingStarImpact = malloc(3*sizeof(double));
+    system->dEncounterRate = 13.1/1e6/YEARSEC;  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
     system->dMinAllowed = 10.0*AUCM; //set to 10 au for now.
+    system->dLastEncTime = 0.0;
+    system->dCloseEncTime = 0.0;
+    system->iNEncounters = 0;
+    NextEncounterTime(system,0); 
   }
   
   
@@ -211,10 +414,26 @@ void FinalizeUpdateArgPGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 
 /***************** GALHABIT Halts *****************/
 
+/* disruption? */
+int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
+
+  if (body[iBody].iDisrupt == 1) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: body %d disrupted",iBody);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+
+  return 0;
+}
+
 void CountHaltsGalHabit(HALT *halt,int *iNumHalts) { 
+  (*iNumHalts)++;
 }
 
 void VerifyHaltGalHabit(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+  control->fnHalt[iBody][(*iHalt)++] = &HaltDisrupt;
 }
 
 
@@ -232,6 +451,11 @@ void WriteBodyPeriQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     fsUnitsLength(units->iLength,cUnit);
   }
 }
+
+void WriteNEncounters(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = (double)system->iNEncounters;
+}
   
 void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -243,6 +467,14 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PERIQ].iNum = 1;
   output[OUT_PERIQ].iModuleBit = GALHABIT;
   fnWrite[OUT_PERIQ] = &WriteBodyPeriQ;
+  
+  sprintf(output[OUT_NENCOUNTERS].cName,"NEncounters");
+  sprintf(output[OUT_NENCOUNTERS].cDescr,"cumulative number of stellar encounters");
+  sprintf(output[OUT_NENCOUNTERS].cNeg," ");
+  output[OUT_NENCOUNTERS].bNeg = 0;
+  output[OUT_NENCOUNTERS].iNum = 1;
+  output[OUT_NENCOUNTERS].iModuleBit = GALHABIT;
+  fnWrite[OUT_NENCOUNTERS] = &WriteNEncounters;
 }
 
 void FinalizeOutputFunctionGalHabit(OUTPUT *output,int iBody,int iModule) {
@@ -314,7 +546,8 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dpEnc, dp;
+  double dp;
+
   
   while (body[iBody].dArgP > 2*PI) {
     body[iBody].dArgP -= 2*PI;
@@ -323,25 +556,38 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
-  system->dDeltaTEnc += evolve->dCurrentDt;
-  dpEnc = 1.0-exp(-system->dEncounterTime*system->dDeltaTEnc); //probability encounter will occur
-  dp = random_double();
-  if (dp < dpEnc) {
+  
+  if (evolve->dTime + evolve->dCurrentDt >= system->dNextEncT) {
+    system->dCloseEncTime = evolve->dTime + evolve->dCurrentDt;
     GetStarPosition(system);
     GetStarMass(system);
-    GetStarVelocity(system); 
+    system->dPassingStarVRad = 1.0;
+    while (system->dPassingStarVRad >= 0) {
+      GetStarVelocity(system); 
+    }
     /* next calculate impact parameter */
-    CalcImpactParam(system);
+    CalcImpactParam(system); 
     
     /* then move the orbiter, get all distances/velocities, check for disruption */
-    AdvanceMA(body,iBody);
+    AdvanceMA(body,system,iBody);
     osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
-    iDisrupt = check_disrupt(body,system,iBody);
-    
+    body[iBody].iDisrupt = check_disrupt(body,system,iBody);
+  
     /* apply the impulse */
+    ApplyDeltaV(body,system,iBody);
+    cart2osc(body,evolve->iNumBodies);
+    body[iBody].dInc = 2*asin(body[iBody].dSinc);
+    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
     
-    /* reset the DeltaT */
-    system->dDeltaTEnc = 0.0;
+    system->dLastEncTime = system->dCloseEncTime;
+    system->iNEncounters += 1;
+    NextEncounterTime(system,system->dCloseEncTime);
+    // if (system->dCloseEncTime > evolve->dTime+evolve->dCurrentDt) {
+//       printf("Close encounter time = %f\n",system->dCloseEncTime/YEARSEC);
+//       printf("Start of time setp = %f\n",evolve->dTime/YEARSEC);
+//       printf("End of time step = %f\n",(evolve->dTime+evolve->dCurrentDt)/YEARSEC);
+//     }
   }
 }
 
@@ -392,6 +638,7 @@ int random_int(int n) {
 void GetStarVelocity(SYSTEM *system) {
   /* get passing star velocities from dispersion = dSigma, using Box-Muller method*/
   double u1, u2, z0, z1, dSigma;
+  int i;
   VelocityDisp(system);
   dSigma = system->dPassingStarSigma;
   
@@ -401,15 +648,20 @@ void GetStarVelocity(SYSTEM *system) {
   z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
   z1 = sqrt(-2.0*log(u1))*sin(2.0*PI*u2);
   
-  system->dPassingStarV[0] = z0*dSigma/1000.0;  //scale with sigma and convert to m/s
-  system->dPassingStarV[1] = z1*dSigma/1000.0;
+  system->dPassingStarV[0] = z0*dSigma*1000.0;  //scale with sigma and convert to m/s
+  system->dPassingStarV[1] = z1*dSigma*1000.0;
   
   u1 = random_double();
   u2 = random_double();
   
   z0 = sqrt(-2.0*log(u1))*cos(2.0*PI*u2);
   
-  system->dPassingStarV[2] = z0*dSigma/1000.0;
+  system->dPassingStarV[2] = z0*dSigma*1000.0;
+  system->dPassingStarVRad = 0;
+  for (i=0;i<=2;i++) {
+    system->dPassingStarVRad += system->dPassingStarV[i]*system->dPassingStarR[i];
+  }
+  system->dPassingStarVRad /= system->dPassingStarRMag;
 }
     
 double nsMinus6to15(double dMagV) {
@@ -493,7 +745,7 @@ void GetStarMass(SYSTEM *system) {
   
   system->dPassingStarMagV = dMagV;
   //now get the mass of the star
-  system->dPassingStarMass = mag2mass(dMagV);
+  system->dPassingStarMass = mag2mass(dMagV)*MSUN;
 }
 
 void GetStarPosition(SYSTEM *system) {
@@ -506,6 +758,7 @@ void GetStarPosition(SYSTEM *system) {
   system->dPassingStarR[0] = r*sintheta*cos(phi);
   system->dPassingStarR[1] = r*sintheta*sin(phi);
   system->dPassingStarR[2] = r*costheta;
+  system->dPassingStarRMag = r;
 }
 
 void CalcImpactParam(SYSTEM *system) {
@@ -519,20 +772,66 @@ void CalcImpactParam(SYSTEM *system) {
   }
   dtime /= vsq;
   
-  x = system->dPassingStarV[0]*dtime + system->dPassingStarR[0];
-  y = system->dPassingStarV[1]*dtime + system->dPassingStarR[1];
-  z = system->dPassingStarV[2]*dtime + system->dPassingStarR[2];
-  r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+  system->dPassingStarImpact[0] = system->dPassingStarV[0]*dtime + system->dPassingStarR[0];
+  system->dPassingStarImpact[1] = system->dPassingStarV[1]*dtime + system->dPassingStarR[1];
+  system->dPassingStarImpact[2] = system->dPassingStarV[2]*dtime + system->dPassingStarR[2];
+//   r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
   
-  system->dPassingStarImpact = r;
+//   system->dCloseEncTime += dtime;
+}
+
+void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
+  double dRelativeImpactx, dRelativeImpacty, dRelativeImpactz, dRelativeImpactrsq;
+  double dRelativeVx, dRelativeVy, dRelativeVz, dRelativeV;
+  double dPassingStarImpactrsq, dPassingStarV;
+  double dDeltaVx, dDeltaVy, dDeltaVz;
+
+  dRelativeImpactx = system->dPassingStarImpact[0]-body[iBody].dCartPos[0]*AUCM;
+  dRelativeImpacty = system->dPassingStarImpact[1]-body[iBody].dCartPos[1]*AUCM;
+  dRelativeImpactz = system->dPassingStarImpact[2]-body[iBody].dCartPos[2]*AUCM;
+  dRelativeImpactrsq = pow(dRelativeImpactx,2) + pow(dRelativeImpacty,2) + \
+                          pow(dRelativeImpactz,2);           
+                          
+  dRelativeVx = system->dPassingStarV[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
+  dRelativeVy = system->dPassingStarV[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
+  dRelativeVz = system->dPassingStarV[2]-body[iBody].dCartVel[2]*AUCM/DAYSEC;
+
+  dRelativeV = sqrt(pow(dRelativeVx,2)+pow(dRelativeVy,2)+pow(dRelativeVz,2));
+  
+  dPassingStarImpactrsq = pow(system->dPassingStarImpact[0],2) + pow(system->dPassingStarImpact[1],2) + \
+                          pow(system->dPassingStarImpact[2],2);
+  dPassingStarV = pow(system->dPassingStarV[0],2) + pow(system->dPassingStarV[1],2) + \
+                          pow(system->dPassingStarV[2],2);
+
+  dDeltaVx = 2*BIGG*system->dPassingStarMass * (1.0/(dRelativeV*dRelativeImpactrsq)*dRelativeImpactx\
+            - 1.0/(dPassingStarV*dPassingStarImpactrsq)*system->dPassingStarImpact[0]);
+  dDeltaVy = 2*BIGG*system->dPassingStarMass * (1.0/(dRelativeV*dRelativeImpactrsq)*dRelativeImpacty\
+            - 1.0/(dPassingStarV*dPassingStarImpactrsq)*system->dPassingStarImpact[1]);
+  dDeltaVz = 2*BIGG*system->dPassingStarMass * (1.0/(dRelativeV*dRelativeImpactrsq)*dRelativeImpactz\
+            - 1.0/(dPassingStarV*dPassingStarImpactrsq)*system->dPassingStarImpact[2]);
+            
+  body[iBody].dCartVel[0] += dDeltaVx/AUCM*DAYSEC;
+  body[iBody].dCartVel[1] += dDeltaVy/AUCM*DAYSEC;
+  body[iBody].dCartVel[2] += dDeltaVz/AUCM*DAYSEC;
 }
 
 void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {
-  double dTmp, dTauNext;
+  double dTmp, dTime;
     
   dTmp = body[iBody].dMeanA;
+  dTime = system->dCloseEncTime - system->dLastEncTime;
  
-  body[iBody].dMeanA = (dTmp + body[iBody].dMeanMotion*system->dDeltaTEnc) % (2*PI);
+  body[iBody].dMeanA = (dTmp + body[iBody].dMeanMotion*dTime);
+  while (body[iBody].dMeanA >= 2*PI) {
+    body[iBody].dMeanA -= 2*PI;
+  }
+}
+
+void NextEncounterTime(SYSTEM *system, double dTime) {
+  double dp;
+  
+  dp = random_double();
+  system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
 }
 
 void testrand(SYSTEM *system) { 
@@ -560,8 +859,264 @@ void testrand(SYSTEM *system) {
   
   //return 0;
 }
+
+double dX2TimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged x^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = 1./64.*pow(a,2)*( 24.+36.*pow(e,2)+4.*(2.+3.*pow(e,2))*cos(2*i)-\
+              10.*pow(e,2)*cos(2*(i-w))+20.*pow(e,2)*cos(2*w)-10.*pow(e,2)*cos(2*(i+w))-\
+              20.*pow(e,2)*cos(i+2*w-2*Om)-4*cos(2*(i-Om))-\
+              6.*pow(e,2)*cos(2*(i-Om))+5.*pow(e,2)*cos(2*(i-w-Om))+\
+              30.*pow(e,2)*cos(2*(w-Om))+5.*pow(e,2)*cos(2*(i+w-Om))+8.*cos(2*Om)+\
+              12*pow(e,2)*cos(2*Om)-4*cos(2*(i+Om))-6*pow(e,2)*cos(2*(i+Om))+\
+              5.*pow(e,2)*cos(2*(i-w+Om))+30.*pow(e,2)*cos(2*(w+Om))+\
+              5.*pow(e,2)*cos(2*(i+w+Om))-20.*pow(e,2)*cos(i-2*w+2*Om)+\
+              20.*pow(e,2)*cos(i-2*(w+Om))+20.*pow(e,2)*cos(i+2*(w+Om)) );
+  
+  return dTmp;
+} 
+
+double dY2TimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged y^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = -1./64.*pow(a,2)*( -24.-36.*pow(e,2)-4.*(2.+3.*pow(e,2))*cos(2*i)+\
+              10.*pow(e,2)*cos(2*(i-w))-20.*pow(e,2)*cos(2*w)+10.*pow(e,2)*cos(2*(i+w))-\
+              20.*pow(e,2)*cos(i+2*w-2*Om)-4*cos(2*(i-Om))-\
+              6.*pow(e,2)*cos(2*(i-Om))+5.*pow(e,2)*cos(2*(i-w-Om))+\
+              30.*pow(e,2)*cos(2*(w-Om))+5.*pow(e,2)*cos(2*(i+w-Om))+8.*cos(2*Om)+\
+              12*pow(e,2)*cos(2*Om)-4*cos(2*(i+Om))-6*pow(e,2)*cos(2*(i+Om))+\
+              5.*pow(e,2)*cos(2*(i-w+Om))+30.*pow(e,2)*cos(2*(w+Om))+\
+              5.*pow(e,2)*cos(2*(i+w+Om))-20.*pow(e,2)*cos(i-2*w+2*Om)+\
+              20.*pow(e,2)*cos(i-2*(w+Om))+20.*pow(e,2)*cos(i+2*(w+Om)) );
+  
+  return dTmp;
+} 
+
+double dZ2TimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged z^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = 1./4*pow(a,2)*(2.0+3.*pow(e,2)-5.*pow(e,2)*cos(2*w))*pow(sin(i),2);
+  
+  return dTmp;
+} 
     
-    
+double dXYTimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged z^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = 1./16.*pow(a,2)*(20.*pow(e,2)*cos(i)*cos(2*Om)*sin(2*Om) + \
+            (5.*pow(e,2)*(3+cos(2*i))*cos(2*w)+2*(2.+3.*pow(e,2))*pow(sin(i),2))*sin(2*Om));
+  
+  return dTmp;
+} 
+
+double dXZTimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged z^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = 1./4.*pow(a,2)*sin(i)*(5.*pow(e,2)*cos(Om)*sin(2.*w)+\
+            cos(i)*(-2.-3*pow(e,2)+5*pow(e,2)*cos(2.*w))*sin(Om));
+  
+  return dTmp;
+}   
+
+double dYZTimeAvg(BODY *body) {
+  /* calculate host binary's time-averaged z^2 */
+  double dTmp, a, i, e, w, Om;
+  a = body[0].dHostBinSemi;
+  e = body[0].dHostBinEcc;
+  i = body[0].dHostBinInc;
+  w = body[0].dHostBinArgP;
+  Om = body[0].dHostBinLongA;
+  
+  dTmp = 1./4.*pow(a,2)*sin(i)*(-cos(i)*(-2.-3*pow(e,2)+5.*pow(e,2)*cos(2*w))*cos(Om) +\
+                  5.*pow(e,2)*sin(2*w)*sin(Om) );
+  
+  return dTmp;
+}
+
+// double dX2r5TimeAvg(BODY *body, int iBody) {
+//   double dTmp, a, e, i, Om;
+//   
+//   a = body[iBody].dSemi;
+//   e = body[iBody].dEcc;
+//   i = body[iBody].dInc;
+//   Om = body[iBody].dLongA;
+//   
+//   dTmp = ( 3.0+cos(2*i)+2.*cos(2*Om)*pow(sin(i),2.) )/(8.*pow(a,3)*pow((1-pow(e,2)),1.5);
+//   
+//   return dTmp;
+// }
+
+
+double dDADeDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = 3.*e*( 3.+cos(2*i)+2.*cos(2*Om)*pow(sin(i),2) )/(8.*pow(a,3)*pow((1.-pow(e,2)),2.5));
+  
+  return dTmp;
+}
+
+double dDADiDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = ( -2.*sin(2*i)+4.*cos(2*Om)*cos(i)*sin(i) )/(8.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDADOmDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = -( sin(2*Om)*pow(sin(i),2) )/(2.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDBDeDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = 3.*e*( 3.+cos(2*i)-2.*cos(2*Om)*pow(sin(i),2) )/(8.*pow(a,3)*pow((1.-pow(e,2)),2.5));
+  
+  return dTmp;
+}
+
+double dDBDiDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = ( -2.*sin(2*i)-4.*cos(2*Om)*cos(i)*sin(i) )/(8.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDBDOmDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = ( sin(2*Om)*pow(sin(i),2) )/(2.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDCDeDist(BODY *body, int iBody) {
+  double dTmp, a, e, i;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  
+  dTmp = -( 3.*e*pow(sin(i),2) )/(2.*pow(a,3)*pow((1.-pow(e,2)),2.5));
+  
+  return dTmp;
+}
+
+double dDCDiDist(BODY *body, int iBody) {
+  double dTmp, a, e, i;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  
+  dTmp = -( cos(i)*sin(i) )/(pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDDDeDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = -3.*e*(sin(2*Om)*pow(sin(i),2))/(4.*pow(a,3)*pow((1.-pow(e,2)),2.5));
+  
+  return dTmp;
+}
+
+double dDDDiDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = (sin(2*Om)*cos(i)*sin(i))/(2.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
+
+double dDDDOmDist(BODY *body, int iBody) {
+  double dTmp, a, e, i, Om;
+  
+  a = body[iBody].dSemi;
+  e = body[iBody].dEcc;
+  i = body[iBody].dInc;
+  Om = body[iBody].dLongA;
+  
+  dTmp = (cos(2*Om)*pow(sin(i),2))/(2.*pow(a,3)*pow((1.-pow(e,2)),1.5));
+  
+  return dTmp;
+}
 
 //--------------Galactic stuff!--------------------------------------------------------------
 

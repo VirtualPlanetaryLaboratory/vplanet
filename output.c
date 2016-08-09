@@ -504,7 +504,7 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
   // XXX This doesn't work with just eqtide!
 
-  *dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
+  *dTmp = body[iBody].dK2/body[iBody].dImK2;
   //*dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   strcpy(cUnit,"");
 }

@@ -32,7 +32,6 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_HALTSYNCROT         1025
 #define OPT_K2                  1027 /* Change to LOVEK2 */
 #define OPT_MAXLOCKDIFF         1030
-#define OPT_OCEANTIDES          1032
 #define OPT_SYNCECC             1035
 #define OPT_TIDEMODEL           1040
 #define OPT_TIDEPERTS           1042

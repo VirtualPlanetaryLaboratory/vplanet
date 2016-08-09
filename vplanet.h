@@ -313,17 +313,11 @@ typedef struct {
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
-  //char **saTidePerts;
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
-<<<<<<< Updated upstream
-  int bOceanTides;       /**< Split tidal dissipation into rock and oceans? */
-  double dTidalQOcean;   /**< Tidal Q in ocean */
   //double dTidalQRock;    /**< Tidal Q in interior */
-=======
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
->>>>>>> Stashed changes
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */

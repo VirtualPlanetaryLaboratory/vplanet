@@ -484,9 +484,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
 	if (control->Io.iVerbose >= VERBINPUT)
 	  fprintf(stderr,"WARNING: %s set, but module THERMINT not selected. This feature is ignored.\n",options[OPT_TIDALQOCEAN].cName);
-	body[iBody].dTidalQOcean = HUGE;
-      }
-
+	
+        body[iBody].bOceanTides = 0;
+        body[iBody].dTidalQOcean = HUGE;
+        }
+      
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
       
@@ -603,7 +605,10 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   if(body[iBody].bOceanTides)
   {
     // Im(K_2) is harmonic mean of mantle and oceam component
-    body[iBody].dImK2 = 1.0/(1./(fdImk2Man(body,iBody)) + 1./(body[iBody].dImK2Ocean));
+    body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;
+    PropsAuxCPL(body,evolve,update,iBody);
+    // Call dTidePowerMan
+    body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
   }
   // No oceans, thermint dictates ImK2
   else 

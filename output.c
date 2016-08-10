@@ -1208,10 +1208,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
   }
 }
 
-void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],int iEnd) {
+void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],time_t dStartTime,int iEnd) {
   char cTime[OPTLEN];
   FILE *fp;
-  double dDt;
+  double dDt,dTotTime;
 
   /* Get derivatives */
   PropertiesAuxiliary(body,control,update);
@@ -1242,6 +1242,13 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 
+  if (iEnd) {
+    dTotTime = difftime(time(NULL),dStartTime);
+    fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    if (control->Io.iVerbose >= VERBPROG)
+      printf("Runtime = %f s\n", dTotTime);
+  }
+  
   fclose(fp);
 }
 

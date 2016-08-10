@@ -1580,7 +1580,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  */
 
 #include <assert.h>
-
+#include <time.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

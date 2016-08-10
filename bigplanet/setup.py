@@ -28,7 +28,8 @@ def read(path, encoding='utf-8'):
         return fp.read()
 
 def version(path):
-    """Obtain the packge version from a python file e.g. pkg/__init__.py
+    """
+    Obtain the packge version from a python file e.g. pkg/__init__.py
     See <https://packaging.python.org/en/latest/single_source_version.html>.
     """
     version_file = read(path)
@@ -61,8 +62,7 @@ setup(name = 'bigplanet',
       install_requires = [
                           'numpy',
                           'matplotlib >= 1.4.0',
-                          'pandas',
-                          'seaborn',
+                          'pandas'
                          ],
       include_package_data = True,
       zip_safe = False)

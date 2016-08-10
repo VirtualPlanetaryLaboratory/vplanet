@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: dflemin3
+@author: dflemin3 2016
 """
 
 __version__ = "0.12"

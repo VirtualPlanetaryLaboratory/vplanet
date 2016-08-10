@@ -225,7 +225,7 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].bBinary != 1) { // Not doing binary
     if (iBody > 0) {
-      if (body[iBody].bDistOrb) {
+      if (body[iBody].bDistOrb || body[iBody].bEqtide) {
         *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
       } else if (body[iBody].bGalHabit) {
         *dTmp = body[iBody].dEcc;

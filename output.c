@@ -1,3 +1,4 @@
+
 /************************ OUTPUT.C **********************/
 /*
  * Rory Barnes, Wed May  7 16:38:28 PDT 2014
@@ -388,13 +389,29 @@ void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Multiple modules can contribute to this output */
-  int iModule;
+  /* Multiple modules can contribute to this output */
+  //int iModule;
 
+  /* Surface Energy Flux is complicated because it either all comes
+     through thermint, or it can be from eqtide and/or radheat. */
+
+  if (body[iBody].bThermint) 
+    *dTmp = fdHflowSurf(body,iBody);
+  else {
+    *dTmp=0;
+    if (body[iBody].bEqtide)
+      *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
+    if (body[iBody].bRadheat)
+      *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
+  }
+    
+  /* This is the old way
   *dTmp=0;
   for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
     // Only module reference in file, can this be changed? XXX
     *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
-
+    */
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

@@ -49,7 +49,7 @@ axes.hold                     : True
 axes.facecolor                : w
 axes.edgecolor                : k
 axes.linewidth                : 1.0
-axes.grid                     : True
+axes.grid                     : False
 axes.grid.which               : major
 axes.grid.axis                : both
 axes.titlesize                : 24
@@ -96,7 +96,7 @@ ytick.labelsize               : large
 ytick.direction               : in
 
 # GRIDS
-grid.color                    : k
+grid.color                    : w
 grid.linestyle                : :
 grid.linewidth                : 0.5
 grid.alpha                    : 0.1

@@ -29,7 +29,7 @@
 \def\radheat{\texttt{\footnotesize{RADHEAT}}}
 \def\thermint{\texttt{\footnotesize{THERMINT}}}
 \def\stellar{\texttt{\footnotesize{STELLAR}}}
-\def\galevol{\texttt{\footnotesize{GALEVOL}}}
+\def\galevol{\texttt{\footnotesize{GALHABIT}}}
 
 \bibliographystyle{apj}
 \usepackage{multicol}
@@ -404,6 +404,8 @@ the evolution of Proxima depends on many other factors involving
 stellar effects, the planet's internal properties, and the
 gravitational influence of the other members of the stellar system.
 
+% Formation and disk lifetime
+
 The host star is about 10 times smaller and less massive than the Sun,
 the temperature is about half that of the Sun, and the luminosity is
 just 0.1\% that of the Sun. These differences are significant and can
@@ -453,6 +455,8 @@ frictional heat \citep{Darwin1880,Barnes08}. Except in extreme cases,
 these processes are unlikely to sterilize a planet, but they can
 profoundly affect the planet's evolution.
 
+% GCMs
+
 Although the abundances of elements relative to iron in \acen~A and B,
 and by extension Proxima, are similar to the Sun's, there is no
 guarantee that the abundance pattern is matched inside Proxima
@@ -474,7 +478,10 @@ of radioactive material like $^{232}$Th and $^{238}$U
 energy of Earth, and hence if they are depleted in Proxima b, it
 internal evolution could be markedly different than Earth's. However,
 since no depletion is observed in \acen~B, it is far from clear that
-such a depletion exists.
+such a depletion exists. One interesting radiogenic possibility is
+that the planet could form sufficiently quickly ($\sim~1$~Myr) that
+\al~could still provide energy to the planet's interior. Hence any
+simulation of b's evolution should also consider its role.
 
 The presence of additional planets can change the orbit and obliquity
 of planet b through gravitational perturbations. These interactions
@@ -543,6 +550,21 @@ how \vplanet~unifies these modules and integrates the system forward.
 \subsection{Stellar Evolution: \stellar}
 % Rodrigo
 
+\subsection{Atmospheric Escape: \atmesc}
+% Rodrigo
+
+\subsection{Tidal Evolution: \eqtide}
+% Rory
+To model the tidal evolution of the Proxima system, we will use a
+simple, but commonly-used model called the ``constant-phase-lag''
+model \citep{Goldreich66,Greenberg09,Heller11}. This model reduces the
+evolution to a single parameter $Q$ which sets the timescale for the
+tidal evolution. While this model has known shortcoming
+\citep{TuomaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
+accurate picture of tidal evolution, and is the model \cite{Kasting93}
+used to calculate the ``tidal lock radius''. For this study, we use
+the model described in \citep{Heller11}.
+
 \subsection{Orbital Evolution: \distorb}
 % Russell
 
@@ -555,17 +577,29 @@ how \vplanet~unifies these modules and integrates the system forward.
 \subsection{Geophyiscal Evolution: \thermint}
 % Peter
 
-\subsection{Atmospheric Escape: \atmesc}
-% Rodrigo
-
-\subsection{Tidal Evolution: \eqtide}
-% Rory
-
-\subsection{Galactic Effects: \galevol}
+\subsection{Galactic Effects: \galhabit}
 % Russell/Tom
 
 \subsection{The Coupled Model: \vplanet}
 % Rory
+The previous modules are combined into a single software program
+called \vplanet. This code is written in C and is designed to be
+modular so that for any given body, only specific modules are applied
+and specific parameters integrated forward. Parameters are integrated
+using a 4th order Runge-Kutta scheme with a timestep equal to $\eta$
+times the shortest timescale for all active parameters, \ie
+$x/(dx/dt)$ where $x$ is a parameter. We find converged results if
+$\eta < 0.01$. A more complete and quantitative description of
+\vplanet~will be presented soon (Barnes et al., in prep.). 
+
+Each individual model is validated against observations in our Solar
+System or in stellar systems. When possible, conserved quantities are
+also tracked and required to maintain in acceptable limits. While a
+validation against a single system or uniform data set, not such
+observation exists for a full \vplanet~simulation. Matching
+simulations to systems like Proxima Centauri is likely the only way to
+convincinly validate the code.
+
 
 \section{Results\label{sec:results}}
 % All
@@ -573,27 +607,95 @@ how \vplanet~unifies these modules and integrates the system forward.
 \subsection{Galactic Evolution}
 % Russell
 
+% Fig. 1: Sample R_gal vs. time
+% Fig. 2: Encounter frequency vs. R_gal
+% Fig. 3: Sample evolution of Prox's orbit: a) semi, peri, apo, b) incl
+
 \subsection{Orbital/Rotational/Tidal Evolution}
 % Russell/Rory/Diego?
 
-\subsection{Stellar/Atmospheric Evolution}
+% Fig 4: Tides only: a) Rotation, b) Obliquity, c) Eccentricity, d) Semi
+% Fig 5: Low e/i case: a) Eccentricity, b) LongPeri, c) Inclination, d) LongNode
+% Fig 6: High e/i case: a-d
+% Fig 7: a) Rotation, b) obliquity for both cases
+
+\subsection{Stellar Evolution}
 % Rodrigo
+
+% Fig. 8: Evolution of a) stellar radius, b) luminosity, c) XUV, d) magnetic field, e) rotation  
+% Fig. 9: Evolution of HZ, with b's current orbit shown
+
+% Can tidal evolution allow b to ``surf'' the HZ??
 
 \subsection{Internal Evolution}
 % Peter/Rory/Ben
 
 \subsubsection{Evolution without Tidal Heating}
 
+%Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
+%       - one set with 26Al, one w/o
+
 \subsubsection{Evolution with Tidal Heating}
+
+% Fig 11: Same as 10, but c) include TidePower
+% Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 
 \subsubsection{Magnetic Fields}
 
+% Fig 13: a) MagMom, b) WindPres, c) MagRad
+%       - one set of curves w/tidal heat, one w/o
+
+\subsection{Atmospheric Evolution}
+% Rodrigo
+
+% Fig. 14: a) water content, b) oxygen content
+% Fig. 15: HEC plots: a) habitable example, b) envelope decreases, but remains, c) envelope lost, then water lost
+% Fig 16: Reservoirs of water with time
 
 \section{Discussion\label{sec:disc}}
-% Rory
+% All
+
+1) Proxima b is a habitable. We find that some scenarios allow for the
+planet to currently support surface water. In particular, the
+``habitable evaporated core'' \citep{Luger15} is particularly
+promising as it can avoid both the high-luminosity pre-main sequence
+phase and any devastating tidal heating that may occur while the
+planet ``surfs'' the HZ migration, or during circularization after
+orbital destabilization. Such a world may be enriched in deuterium
+that remained during hydrogren escape, and it may also be geothermally
+active if it is young and enriched in potassium.
+
+2) Proxima b is in a Venus-like state. Proxima spent signficant time
+in a runaway greenhouse prior to the arrival of the HZ, and hence it
+may have developed a dense CO$_2$ atmosphere as has occurred on
+Venus. In this case, the planet is uninhabitable as the surface
+temperature is too hot for liquid water, and the higher surface
+temperature results from greenhouse warming by CO$_2$
+
+3) Proxima b has an oxygen-rich atmosphere. If Proxima b formed with a
+large water inventory, the pre-MS phase may have photolyzed water
+vapor and the hydrogen escaped. Although oxygen is highly reactive,
+thousands of bars of oxygen can be liberated through this mechanism
+\citep{LugerBarnes15} and hence all sinks for it may become
+saturated. In principle, thousands of bars of oxygen could
+remain. This planet is unlikely to be habitable, as the oxygen builds
+up early on, and large amounts of free oxygen are likely to stifle the
+pre-biotic chemistry necessary for life to originate.
 
 \section{Conclusions\label{sec:concl}}
 % Rory
+We have performed a comprehensive analysis of the evolution of the
+Proxima Centauri planetary system with a specific focus on planet b's
+habitability. We find that many disparate factors are important,
+including from the stellar system's orbit in the galaxy
+($\S$~\ref{sec:results}.1), the orbital and rotational evolution of
+the planets ($\S$~\ref{sec:results}.2), the stellar evolution
+($\S$~\ref{sec:results}.3), geophysical evolution
+($\S$~\ref{sec:results}.4), and atmospheric evolution
+($\S$~\ref{sec:results}.5). We find that many evolutionary pathways
+are admitted by the data and hence the planet may currently exist in
+many possible states.
+
 
 \vspace{1cm}
 This work was supported by the NASA Astrobiology Institute's Virtual

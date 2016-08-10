@@ -51,6 +51,7 @@
 #define OUT_CBPRDOT             2164
 #define OUT_CBPZDOT             2165
 #define OUT_CBPPHIDOT           2166
+#define OUT_CBPR0               2167
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void InitializeControlBinary(CONTROL*);
@@ -117,6 +118,7 @@ void WriteLL13N0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*
 void WriteLL13K0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13V0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPRBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPR0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPZBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPZDotBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPPhiBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -175,5 +177,5 @@ double fdCBPZDotBinary(BODY*,SYSTEM*,int*);
 double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
-double fdFluxExactBinary(BODY*,SYSTEM*,int*,double,double);
+double fdFluxExactBinary(BODY*,int,double,double);
 void binaryDebug(BODY*);

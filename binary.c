@@ -46,6 +46,8 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCBPZeta = src[iBody].dCBPZeta;
   dest[iBody].dCBPPsi = src[iBody].dCBPPsi;
 
+  dest[iBody].bBinary = src[iBody].bBinary;
+  dest[iBody].bBinaryUseMatrix = src[iBody].bBinaryUseMatrix;
 }
 
 void InitializeBodyBinary(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
@@ -718,13 +720,24 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   // Inits if the body is the secondary (sets required binary parameters)
   if(body[iBody].iBodyType == 1 && iBody == 1)
   {
-    // Binary's inclination... in the plane or else
-    body[iBody].dInc = 0.0; //2.0*asin(body[iBody].dSinc);
- 
     // Set Initial Poincare H, K using imputted dEcc
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
     body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
     body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
+  }
+
+  // Inits for stars: General
+  if(body[iBody].iBodyType == 1)
+  {
+    body[iBody].dInc = 0.0; // Binary in the plane
+    body[iBody].dArgP = 0.0;
+    body[iBody].dLongA = 0.0;
+    body[iBody].dCBPR = 0.0;
+    body[iBody].dCBPRDot = 0.0;
+    body[iBody].dCBPZ = 0.0;
+    body[iBody].dCBPZDot = 0.0;
+    body[iBody].dCBPPhi = 0.0;
+    body[iBody].dCBPPhiDot = 0.0;
   }
 
   // Other things that must be set
@@ -1021,6 +1034,19 @@ void WriteCBPRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+// Write the circumbinary planet guiding radius (CBPR0)
+void WriteCBPR0Binary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dR0;
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 void WriteCBPZBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dCBPZ;
@@ -1075,7 +1101,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeIncBinary;
 
-  sprintf(output[OUT_BININC].cName,"IncBinary");
+  sprintf(output[OUT_BININC].cName,"BinaryInc");
   sprintf(output[OUT_BININC].cDescr,"CBP's Inclination in Binary");
   sprintf(output[OUT_BININC].cNeg,"Deg");
   output[OUT_BININC].bNeg = 1;
@@ -1093,7 +1119,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BINARGP].iModuleBit = BINARY;
   fnWrite[OUT_BINARGP] = &WriteArgPBinary;
 
-  sprintf(output[OUT_BINLONGA].cName,"LongABinary");
+  sprintf(output[OUT_BINLONGA].cName,"BinaryLongA");
   sprintf(output[OUT_BINLONGA].cDescr,"CBP's Longitude of the Ascending Node in Binary");
   sprintf(output[OUT_BINLONGA].cNeg,"Deg");
   output[OUT_BINLONGA].bNeg = 1;
@@ -1102,7 +1128,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_BINLONGA].iModuleBit = BINARY;
   fnWrite[OUT_BINLONGA] = &WriteLongABinary;
 
-  sprintf(output[OUT_BINLONGP].cName,"LongPBinary");
+  sprintf(output[OUT_BINLONGP].cName,"BinaryLongP");
   sprintf(output[OUT_BINLONGP].cDescr,"CBP's Longitude of Perihelion in Binary");
   sprintf(output[OUT_BINLONGP].cNeg,"Deg");
   output[OUT_BINLONGP].bNeg = 1;
@@ -1155,6 +1181,15 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
+
+  sprintf(output[OUT_CBPR0].cName,"R0");
+  sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
+  output[OUT_CBPR0].bNeg = 1;
+  sprintf(output[OUT_CBPR0].cNeg,"AU");
+  output[OUT_CBPR0].dNeg = 1.0/AUCM;
+  output[OUT_CBPR0].iNum = 1;
+  output[OUT_CBPR0].iModuleBit = BINARY;
+  fnWrite[OUT_CBPR0] = &WriteCBPR0Binary;
 
   sprintf(output[OUT_CBPZ].cName,"CBPZ");
   sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane");
@@ -1998,10 +2033,12 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
  * received by the CBP from the 2 stars averaged over 1 CBP orbit
  * Assumes binary orb elements don't vary much over 1 CBP orbit
  */
-double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, double L1)
+double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
 {
   // Define/init all variables 
-  int iBody = iaBody[0], i;
+  int i;
+  int iaBody[] = {iBody};
+  SYSTEM * system;
   double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;
@@ -2016,7 +2053,6 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
   double dAge = body[iBody].dAge; // Save body[iaBody[0]].dAge so this function doesn't actually change it
 
   // Loop over steps in CBP orbit, add flux due to each star at each step
-
   for(i = 0; i < FLUX_INT_MAX; i++)
   {
     // Get binary position by solving kepler's eqn
@@ -2028,7 +2064,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
     radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
     radius /= (1.0 + body[1].dEcc*cos(trueAnomaly));
     
-    // Radial position of each star
+    // Radial position of each star (- accounts for 180 deg phase offset) 
     r1 = body[1].dMass*radius/(body[0].dMass+body[1].dMass);
     r2 = -body[0].dMass*radius/(body[0].dMass+body[1].dMass);
 
@@ -2056,6 +2092,7 @@ double fdFluxExactBinary(BODY *body,SYSTEM *system,int *iaBody, double L0, doubl
     flux += (L0/(4.0*PI*r1) + L1/(4.0*PI*r2));
   
     // Increment body's age aka time
+    // Need to do it this way for CBP cyl pos calculations
     body[iBody].dAge += step;
   }
 

@@ -4,7 +4,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
-#import seaborn as sns
 
 """
 
@@ -623,13 +622,15 @@ def get_dims(dims, key1, var1, key2, var2):
 # end function
 
 """
+
 FOR IRREGULAR/RANDOM DATA (or also gridded!)
 
 """
+
 def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magma_r",
               alpha=0.5):
     """
-    Plot a series of scatter plots of 1 dataframe column (z_var) vs every other column 
+    Plot a series of scatter plots of 1 dataframe column (z_var) vs every other column
     with the option to have one parameter size points and another parameter color the points.
 
     Parameters
@@ -645,12 +646,12 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
         matplotlib colormap name
     alpha : float (optional)
         alpha (shade) parameter which ranges from [0,1]
-    
+
     Returns
     -------
     fig : matplotlib figure object
     axes : array of matplotlib axis objects
-    
+
     Example
     -------
     >>> fig, axes = multiscatter(df,z_var="cbp_DampTime",size_var="secondary_Eccentricity",
@@ -658,16 +659,16 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
         (plot)
 
     """
-    
+
     # Can't color/size points by the dependent variable!
     assert(z_var != size_var and z_var != color_var), "Can't color/size points by the dependent variable!"
-    
+
     # Set default color if none given
     if color_var != None:
         color = df[color_var]
     else:
         color = "black"
-        
+
     # Set default size if none given
     if size_var != None:
         # Compute point sizes by normalizing data
@@ -684,7 +685,7 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
     axes = axes.flatten()
 
     # dependent var (y coor for all scatter plots)
-    z = df[z_var]    
+    z = df[z_var]
 
     # Iterate over all things, scatter plot "z" value vs sim variables
     ii = 0
@@ -706,14 +707,14 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
 
     # Add colorbar?
     if color_var != None:
-        
+
         cbar = fig.colorbar(im, ax=axes.ravel().tolist())
         cbar.ax.set_ylabel((color_var.split("_")[0] + " " + color_var.split("_")[1]), rotation=270,
                           labelpad = 25)
 
     # Add legend that displays typical point sizes?
     if size_var != None:
-    
+
         # Dummy plots for range of points
         sizes = s.max()
         s_inv = df[size_var].max()
@@ -723,13 +724,26 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
         l4 = plt.scatter([],[], s=sizes, color="black")
 
         # Labels for points
-        labels = ["%.2f" % (s_inv/4.), "%.2f" % (s_inv/2.), 
+        labels = ["%.2f" % (s_inv/4.), "%.2f" % (s_inv/2.),
                   "%.2f" % (3.*s_inv/4.), "%.2f" % s_inv]
 
         # Fancy legend relative to last axis
         leg = axes[-1].legend([l1, l2, l3, l4], labels, ncol=4, frameon=False, fontsize=15, loc = 8, borderpad = 1.0,
-                              handletextpad=1, scatterpoints = 1, bbox_to_anchor=(-.1, -0.3), 
+                              handletextpad=1, scatterpoints = 1, bbox_to_anchor=(-.1, -0.3),
                               title = size_var.split("_")[0] + " " + size_var.split("_")[1])
-    
-    
+
+
     return fig, axes
+# End Function
+
+"""
+
+Misc
+
+"""
+
+# Tell module what it's allowed to import
+__all__ = [plot_red_dim,
+           plot_red_dim_contour,
+           red_dim_grid,
+           multiscatter]

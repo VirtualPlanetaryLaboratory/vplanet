@@ -866,3 +866,15 @@ def reduce_dimensions(x, y, z, shape, dims=(-1), reduce_func = np.nanmean):
 
     return x, y, z
 # End function
+
+"""
+
+Misc
+
+"""
+
+# Tell module what it's allowed to import
+__all__ = [reduce_dimensions,
+           aggregate_data,
+           Dataset,
+           extract_data_hdf5]

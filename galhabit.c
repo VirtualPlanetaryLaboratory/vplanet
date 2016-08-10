@@ -680,6 +680,8 @@ double mag2mass(double dMagV) {
   
   if (dMagV > 0) {
     dlogMass = -0.0928*dMagV + 0.448;
+  } else if (dMagV == -4) {
+    dlogMass = -0.18708664335714442;
   } else { 
     dlogMass = -0.271*dMagV + 0.448;
   }
@@ -692,7 +694,9 @@ void VelocityDisp(SYSTEM* system) {
   
   dMagV = system->dPassingStarMagV;
   
-  if (dMagV <= -2) {
+  if (dMagV == -4) {
+    dSigma = 36.6;
+  } else if ((dMagV <= -2) && (dMagV != -4)) {
     dSigma = 8.5;
   } else if ((dMagV > -2) && (dMagV <= 0)) {
     dSigma = 11.4;
@@ -721,8 +725,11 @@ void VelocityDisp(SYSTEM* system) {
 double NearbyStarDist(double dMagV) {
   double dNs;
   
-  if (dMagV <= -6.0) {
+  if (dMagV <= -5.0) {
     dNs = 0.0;
+  } else if (dMagV == -4.0) {
+    //white dwarf hack
+    dNs = 0.008;
   } else if (dMagV > 19.0) {
     dNs = 0.0;
   } else if (dMagV > 15.0) {
@@ -738,7 +745,7 @@ void GetStarMass(SYSTEM *system) {
   double ns = 0, dTmp = 100, dMagV;
   
   while (dTmp > ns) {
-    dMagV = (double)(random_int(19)-3); //draw stellar magnitude (-3<dMagV<15)
+    dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
     dTmp = random_double()*0.014;       //if dTmp exceeds the number density, reject dMagV
     ns = NearbyStarDist(dMagV);         //get number density at dMagV
   }

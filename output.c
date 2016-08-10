@@ -526,6 +526,13 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   strcpy(cUnit,"");
 }
 
+void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   
+  *dTmp = body[iBody].dImK2;
+   
+  strcpy(cUnit,"");
+}
+
 void WriteXobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dXobl;
@@ -845,6 +852,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBENERGY].iNum = 1;
   output[OUT_ORBENERGY].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
+
+  sprintf(output[OUT_IMK2].cName,"ImK2");
+  sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
+  output[OUT_IMK2].bNeg = 0;
+  output[OUT_IMK2].iNum = 1;
+  output[OUT_IMK2].iModuleBit = EQTIDE + THERMINT;
+  fnWrite[OUT_IMK2] = &WriteImK2;
 
   sprintf(output[OUT_TIDALQ].cName,"TidalQ");
   sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");

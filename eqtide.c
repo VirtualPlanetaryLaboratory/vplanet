@@ -1459,6 +1459,20 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Only makes sense if we're modelleing ocean tides
+  if(body[iBody].bOceanTides)
+  {
+    *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  }
+  else
+  {
+    *dTmp = -1;
+  }
+  strcpy(cUnit,"");
+}
+
 void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
 
@@ -1824,12 +1838,14 @@ void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcat(cUnit,"cgs");
 }
 
+/* dflemin3: moved to output.c
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dImK2;
 
   strcpy(cUnit,"");
 }
+*/
 
 void WriteK2Ocean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
@@ -1960,6 +1976,13 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DOBLDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DOBLDTEQTIDE] = &WriteDOblDtEqtide;
   
+  sprintf(output[OUT_TIDALQOCEAN].cName,"OceanTidalQ");
+  sprintf(output[OUT_TIDALQOCEAN].cDescr,"Ocean Tidal Q");
+  output[OUT_TIDALQOCEAN].bNeg = 0;
+  output[OUT_TIDALQOCEAN].iNum = 1;
+  output[OUT_TIDALQOCEAN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALQOCEAN] = WriteTidalQOcean;
+
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");
@@ -2140,14 +2163,16 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
 
   // + THERMINT?? XXX
+  /* dflemin3: 08/10/2016: moved to output.c
   sprintf(output[OUT_IMK2].cName,"ImK2");
   sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
   output[OUT_IMK2].bNeg = 0;
   output[OUT_IMK2].iNum = 1;
   output[OUT_IMK2].iModuleBit = EQTIDE;
   fnWrite[OUT_IMK2] = &WriteImK2;
+  */
 
-  sprintf(output[OUT_K2OCEAN].cName,"K2Ocean");
+  sprintf(output[OUT_K2OCEAN].cName,"OceanK2");
   sprintf(output[OUT_K2OCEAN].cDescr,"Im(k_2)_Ocean");
   output[OUT_K2OCEAN].bNeg = 0;
   output[OUT_K2OCEAN].iNum = 1;

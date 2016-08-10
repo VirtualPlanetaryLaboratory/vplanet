@@ -31,8 +31,8 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
   dest[iBody].dImK2 = src[iBody].dImK2;
   dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
-  dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
   dest[iBody].dK2 = src[iBody].dK2;
+  dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;
   dest[iBody].bOceanTides = src[iBody].bOceanTides;
@@ -208,7 +208,6 @@ void ReadHaltSyncRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 }
 
 /* k_2 - Love Number of degree 2 */
-
 void ReadK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -227,6 +226,27 @@ void ReadK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *sy
   } else 
     if (iFile > 0)
       body[iFile-1].dK2 = options->dDefault;
+}
+
+/* Love number of degree 2 for the ocean */
+void ReadK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dK2Ocean = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dK2Ocean = options->dDefault;
 }
 
 /* Maximum allowable offset between primary's spin period and its
@@ -484,7 +504,15 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_K2].iType = 2;
   options[OPT_K2].iMultiFile = 1;
   fnRead[OPT_K2] = &ReadK2;
-  
+
+  sprintf(options[OPT_K2OCEAN].cName,"dK2Ocean");
+  sprintf(options[OPT_K2OCEAN].cDescr,"Ocean's Love Number of Degree 2");
+  sprintf(options[OPT_K2OCEAN].cDefault,"0.05");
+  options[OPT_K2OCEAN].dDefault = 0.05;
+  options[OPT_K2OCEAN].iType = 2;
+  options[OPT_K2OCEAN].iMultiFile = 1;
+  fnRead[OPT_K2OCEAN] = &ReadK2Ocean;
+
   sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
   sprintf(options[OPT_MAXLOCKDIFF].cDescr,"Maximum relative difference between spin and equilibrium spin rates to force equilibrium spin rate");
   sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
@@ -518,8 +546,8 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   
   sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
   sprintf(options[OPT_TIDALQOCEAN].cDescr,"Ocean Tidal Quality Factor");
-  sprintf(options[OPT_TIDALQOCEAN].cDefault,"100");
-  options[OPT_TIDALQOCEAN].dDefault = 100;
+  sprintf(options[OPT_TIDALQOCEAN].cDefault,"12.5");
+  options[OPT_TIDALQOCEAN].dDefault = 12.5;
   options[OPT_TIDALQOCEAN].iType = 2;
   options[OPT_TIDALQOCEAN].iMultiFile = 1;
   fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;
@@ -1803,6 +1831,13 @@ void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+void WriteK2Ocean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dK2Ocean;
+
+  strcpy(cUnit,"");
+}
+
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   /* XXX Need to change after switch to [XYZ]obl
@@ -2111,6 +2146,13 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2].iNum = 1;
   output[OUT_IMK2].iModuleBit = EQTIDE;
   fnWrite[OUT_IMK2] = &WriteImK2;
+
+  sprintf(output[OUT_K2OCEAN].cName,"K2Ocean");
+  sprintf(output[OUT_K2OCEAN].cDescr,"Im(k_2)_Ocean");
+  output[OUT_K2OCEAN].bNeg = 0;
+  output[OUT_K2OCEAN].iNum = 1;
+  output[OUT_K2OCEAN].iModuleBit = EQTIDE;
+  fnWrite[OUT_K2OCEAN] = &WriteK2Ocean;
 
   /*
    * O

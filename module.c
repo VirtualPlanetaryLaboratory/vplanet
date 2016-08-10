@@ -494,6 +494,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       
       // No ocean contribution
       body[iBody].dImK2Ocean = 0.0;
+      body[iBody].dK2Ocean = 0.0;
       body[iBody].dTidalQOcean = 0.0;
 
       // Now set the "Man" functions as the WriteTidalQ uses them
@@ -513,7 +514,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       // Will later be combined with ImK2 from Thermint
       if(body[iBody].bOceanTides)
       {
-        body[iBody].dImK2Ocean = body[iBody].dK2/body[iBody].dTidalQOcean;
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
       }
 
       iEqtide = fiGetModuleIntEqtide(module,iBody);
@@ -604,11 +605,10 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
-
-    
-
     // Im(K_2) is harmonic mean of mantle and oceam component
-    body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;
+    // weighted by the love number of each component
+    body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
+    //body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;
     PropsAuxCPL(body,evolve,update,iBody);
     // Call dTidePowerMan
     body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);

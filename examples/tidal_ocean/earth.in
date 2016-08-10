@@ -10,14 +10,15 @@ dObliquity	23.5
 dRadGyra	0.5
 
 # Orbital Properties
-dEcc            0.2 #0.0167		# Eccentricity
-dSemi           0.06		# Semi-major axis, negative -> AU
+dEcc            0.1 #0.0167		# Eccentricity
+dSemi           0.05		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
 #dTidalQ         1.0e2              # Tidal phase lag
 bOceanTides     1                   # Whether or not to include the effects of ocean tides
-dTidalQOcean    100                 # Tidal phase lag of the ocean
-dK2             1.5                 # Love number of degree 2
+dTidalQOcean    12.5                 # Tidal phase lag of the ocean
+dK2             0.3                 # Love number of degree 2
+dK2Ocean        0.05
 saTidePerts     sun 
 
 # RADHEAT Parameters
@@ -58,7 +59,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -TMan -TUMan -TLMan -TCMB -TCore SemimajorAxis Eccentricity
+saOutputOrder Time TidalQ -TMan -TUMan -TLMan -TCMB -TCore SemimajorAxis Eccentricity -RadPowerTot -PowerEqtide
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

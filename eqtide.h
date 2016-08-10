@@ -31,6 +31,7 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_HALTTIDELOCK        1020
 #define OPT_HALTSYNCROT         1025
 #define OPT_K2                  1027 /* Change to LOVEK2 */
+#define OPT_K2OCEAN             1028
 #define OPT_MAXLOCKDIFF         1030
 #define OPT_SYNCECC             1035
 #define OPT_TIDEMODEL           1040
@@ -51,6 +52,7 @@ void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadK2Ocean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadMaxLockDiff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSyncEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -130,6 +132,7 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_GAMMAORB            1080
 
 #define OUT_IMK2                1082
+#define OUT_K2OCEAN             1083
 
 #define OUT_TIDALQ              1084
 #define OUT_TIDALTAU            1086
@@ -168,6 +171,8 @@ void WriteEqSurfEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*
 void WriteTidalQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalTau(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTideLock(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteImK2(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void WriteK2Ocean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputEqtide(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */

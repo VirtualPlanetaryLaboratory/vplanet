@@ -37,4 +37,4 @@ if not __VPLOT_SETUP__:
   from . import plot, quickplot, utils, benchmark, log
   from .benchmark import TestAll
   from .utils import GetOutput
-  from .plot import plot, show, savefig
+  from .plot import plot, show, savefig, colors

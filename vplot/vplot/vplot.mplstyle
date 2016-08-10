@@ -96,7 +96,7 @@ ytick.labelsize               : large
 ytick.direction               : in
 
 # GRIDS
-grid.color                    : k
+grid.color                    : w
 grid.linestyle                : :
 grid.linewidth                : 0.5
 grid.alpha                    : 0.1

@@ -37,7 +37,7 @@
 \begin{document}
 
 \title{The Habitability of Proxima Centauri b I: Environmental Context}
-\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
+\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, David P. Fleming, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
 \altaffiltext{1}{Astronomy Department, University of Washington, Box 951580, Seattle, WA 98195}
 \altaffiltext{2}{NASA Astrobiology Institute -- Virtual Planetary Laboratory Lead Team, USA}
 \altaffiltext{3}{E-mail: rory@astro.washington.edu}
@@ -562,12 +562,38 @@ how \vplanet~unifies these modules and integrates the system forward.
 
 \subsection{Tidal Evolution: \eqtide}
 % Rory
+To model the tidal evolution of the Proxima system, we will use a
+simple, but commonly-used model called the ``constant-phase-lag''
+model \citep{Goldreich66,Greenberg09,Heller11}. This model reduces the
+evolution to a single parameter $Q$ which sets the timescale for the
+tidal evolution. While this model has known shortcoming
+\citep{TuomaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
+accurate picture of tidal evolution, and is the model \cite{Kasting93}
+used to calculate the ``tidal lock radius''. For this study, we use
+the model described in \citep{Heller11}.
 
 \subsection{Galactic Effects: \galevol}
 % Russell/Tom
 
 \subsection{The Coupled Model: \vplanet}
 % Rory
+The previous modules are combined into a single software program
+called \vplanet. This code is written in C and is designed to be
+modular so that for any given body, only specific modules are applied
+and specific parameters integrated forward. Parameters are integrated
+using a 4th order Runge-Kutta scheme with a timestep equal to $\eta$
+times the shortest timescale for all active parameters, \ie
+$x/(dx/dt)$ where $x$ is a parameter. We find converged results if
+$\eta < 0.01$. A more complete and quantitative description of
+\vplanet~will be presented soon (Barnes et al., in prep.). 
+
+Each individual model is validated against observations in our Solar
+System or in stellar systems. When possible, conserved quantities are
+also tracked and required to maintain in acceptable limits. While a
+validation against a single system or uniform data set, not such
+observation exists for a full \vplanet~simulation. Matching
+simulations to systems like Proxima Centauri is likely the only way to
+convincinly validate the code.
 
 \section{Results\label{sec:results}}
 % All
@@ -575,87 +601,86 @@ how \vplanet~unifies these modules and integrates the system forward.
 \subsection{Galactic Evolution}
 % Russell
 
+% Fig. 1: Sample R_gal vs. time
+% Fig. 2: Encounter frequency vs. R_gal
+% Fig. 3: Sample evolution of Prox's orbit: a) semi, peri, apo, b) incl
+
 \subsection{Orbital/Rotational/Tidal Evolution}
 % Russell/Rory/Diego?
+
+We begin exploring the dynamical properties of the orbits and spins by
+considering the tidal evolution of planet b if it is in isolation. In
+this case, we need only apply \eqtide~to both Proxima and b and track
+$a, e, P_{rot},$ and $\psi$. We find that if planet b has $Q~=~12$,
+then an initially Earth-like rotation state becomes tidally locked in
+$\sim~10^4$ years, so it seems likely that if b formed near its
+current location, then it formed in a tidally locked state and with
+negligible obliquity.
+
+Unlike the rotational angular momentum, the orbit can evolve
+signficantly. In the top two panels of Fig.~\ref{fig:eqtide}, we
+consider orbits that begin at $a~=~0.05$~AU and with different
+eccentricities of 0.05 (dotted curves), 0.1 (solid curves) and 0.2
+(dashed curves). In all cases $a$ and $e$ decrease and the amound of
+inward migration depends on the initial eccentricity, which takes 2--3
+Gyr to damp to $\sim~0.01$.
+
+The equilibrium tide model posits that the lost rotational and orbital
+energy is transformed in frictional heating inside the planet. The
+bottom pabel of Fig.~\ref{fig:eqtide} shows the average surface energy
+flux as a function of time. We address the geophysical implications of
+this tidal heating in $\S$~\ref{sec:results}.4.2. Note that if planet
+b begins with a rotation period of 1 days and an obliquity of
+$23.5^\circ$, then the initial surface energy flux due to tidal
+heating is $\sim~1000$~W/m$^{2}$.
+
+\begin{figure} 
+\begin{center}
+\includegraphics[width=0.75\textwidth]{eqtide.ps}
+\end{center}
+\caption{Evolution of planet b's eccentricity (top), semi-major axis (middle), and tidal heating surface flux (bottom) assuming that initially $a~=~0.05$~AU and $e~=$~0.05 (dotted), 0.1 (solid) or 0.2 (dashed). For reference the best fit semi-major axis and surface energy fluxes of Io and the modern Earth are shown by dashed black lines.}
+\label{fig:eqtide}
+\end{figure}
+
+% Fig 5: Low e/i case: a) Eccentricity, b) LongPeri, c) Inclination, d) LongNode
+% Fig 6: High e/i case: a-d
+% Fig 7: a) Rotation, b) obliquity for both cases
 
 \subsection{Stellar/Atmospheric Evolution}
 % Rodrigo
 
+% Fig. 8: Evolution of a) stellar radius, b) luminosity, c) XUV, d) magnetic field, e) rotation  
+% Fig. 9: Evolution of HZ, with b's current orbit shown
+
+% Can tidal evolution allow b to ``surf'' the HZ??
+
 \subsection{Internal Evolution}
-% Peter/Rory/Ben
+% Peter/Rory/Ben/David
 
 \subsubsection{Evolution without Tidal Heating}
+% Ben
+
+%Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
+%       - one set with 26Al, one w/o
 
 \subsubsection{Evolution with Tidal Heating}
+% Peter 
+
+% Fig 11: Same as 10, but c) include TidePower
+
+% David:
+% Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 
 \subsubsection{Magnetic Fields}
 
+% Fig 13: a) MagMom, b) WindPres, c) MagRad 
+%       - one set of curves w/tidal heat, one w/o
 
 \section{Discussion\label{sec:disc}}
 % Rory
 
 \subsection{Is Proxima b Habitable?}
 
-That Proxima b may be only slightly larger than Earth and absorbs a
-similar amount of stellar radiation, the probability that Proxima b is
-habitable may be non-zero. But to answer the question of it is
-habitable or not, a quantitative definition of {\it habitable} is
-required. The underlying assumption in the concept of the HZ is that
-surface water must be present on the planet. This choice is powerful
-for many reasons, such as the necessity of all life on Earth to
-require it, and it could be reasonably calculated for a planet with an
-Earth-like atmosphere. However, as described above, the probability that water is on the surface is extremely complex for Proxima b.
-
-but it cannot factor in all the pathways in
-which water can be transported between different resevoirs and/or lost
-to space. 
-
-A practical restating of this subsection's title is therefore ``What
-is the probability that more than $w_{hab}$ is currently present on
-the surace of Proxima b?'' In that case, the total surface water
-$w_{surf}$ must be greater than $w_{hab}$, $P(w_{surf} >
-w_{hab})$. Adopting this definition of habitability, the probability
-can be viewed in terms of a simple mass balance system, where
-\begin{equation}
-  w_{tot} = w_{int} + w_{surf} + w_{atm}.
-  \label{eq:waterbal}
-\end{equation}
-and $W$ is the total water content of the planet. Crucially, $W$ is
-not constant, that is $W~=~W(t)$. Water may be delivered by external
-bodies, destroyed in the stratosphere, etc. At this time, the most one
-can say about Proxima b is that $P((w_{surf} > w_{hab})~=~P_{hab}$ is in the
-range [0,1], and it could be some time before those limits move.
-
-Nonetheless, this refinement of the exoplanetary meaning of
-``habitable'' makes the question approachable. One solution is to
-solve the equation
-\begin
-  w_{surf} = \integral_0^{t_*}\frac{dw_{surf}}{dt}(c_1,...c_N,t)~dt,
-  \label{eq:surfwater}
-\end{equation}
-where $c_1,...,c_N$ are constants and $N$ is the total number of
-parameters that must be tracked to solve for $w_{surf}$
-self-consistently.
-
-Of course, this merely kicks the complexity in identifying $N$, but,
-as shown here, one can build such a model if one assumes all processes
-can be represented by coupled ordinary differential equations.  For
-Proxima b, the physical processes are wide-ranging, but it seems the
-most pressing danger is complete desiccation, $W=0$. As we have shown,
-there are plausible scenarios for Proxima b in which $W>0$ today,
-which is a promising start, but a proper calculation of $P_{hab}$
-would require a comprehensive search of parameter space convolved with
-the observations. Such a survey is beyond the scope as the parameter
-space to search has a large number of dimensions; for this study $N =
-36$, and the number of weakly constrained parameters is of order 50,
-suggesting a proper anlysis could require the scanning of $\sim$100
-dimensions to produce a robust estimate for $P_{hab}$ at this time.
-
-But such a definition of habitability offers a path to answer the
-question quantitatively. If no plausible simulation, meaning both
-self-consistent and consistent with all observational data, predicts
-that surface water maybe present, then one may state with some
-certainty that it is not habitable.
 
 
 \section{Conclusions\label{sec:concl}}

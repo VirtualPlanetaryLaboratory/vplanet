@@ -98,9 +98,11 @@ void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].iStellarModel = STELLAR_MODEL_BARAFFE;
     } else if (!memcmp(sLower(cTmp),"no",2)) {
       body[iFile-1].iStellarModel = STELLAR_MODEL_NONE;
+    } else if (!memcmp(sLower(cTmp),"pr",2)) {
+      body[iFile-1].iStellarModel = STELLAR_MODEL_PROXIMACEN;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE, PROXIMACE, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -320,6 +322,13 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
       if (control->Io.iVerbose >= VERBINPUT) 
         printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
+  } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge);
+    if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
+      // User specified luminosity, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
   }
 
   update[iBody].iaType[update[iBody].iLuminosity][0] = 0;
@@ -336,6 +345,13 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   // Assign radius
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
     body[iBody].dRadius = fdRadiusFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
+      // User specified radius, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    body[iBody].dRadius = fdRadiusFunctionProximaCen(body[iBody].dAge);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT) 
@@ -358,6 +374,13 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   // Assign temperature
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
     body[iBody].dTemperature = fdTemperatureFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
+      // User specified temperature, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT) 
+        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    body[iBody].dTemperature = fdTemperatureFunctionProximaCen(body[iBody].dAge);
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT) 
@@ -698,6 +721,10 @@ double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody) {
     foo = fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    foo = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
     return body[iaBody[0]].dLuminosity;
@@ -709,6 +736,10 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
     foo = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    foo = fdRadiusFunctionProximaCen(body[iaBody[0]].dAge);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
@@ -775,6 +806,10 @@ double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
     foo = fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
     return body[iaBody[0]].dTemperature;
@@ -839,6 +874,36 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
     else
       fprintf(stderr,"ERROR: Undefined error in fdBaraffe().\n");
     exit(EXIT_INT);
+  }
+}
+
+double fdLuminosityFunctionProximaCen(double dAge) {
+  int iError;
+  double L = fdProximaCenStellar(PROXIMACEN_L, dAge, &iError);
+  if (iError == PROXIMACEN_ERROR)
+    return NAN;
+  else {
+    return L;
+  }
+}
+
+double fdTemperatureFunctionProximaCen(double dAge) {
+  int iError;
+  double L = fdProximaCenStellar(PROXIMACEN_T, dAge, &iError);
+  if (iError == PROXIMACEN_ERROR)
+    return NAN;
+  else {
+    return L;
+  }
+}
+
+double fdRadiusFunctionProximaCen(double dAge) {
+  int iError;
+  double L = fdProximaCenStellar(PROXIMACEN_R, dAge, &iError);
+  if (iError == PROXIMACEN_ERROR)
+    return NAN;
+  else {
+    return L;
   }
 }
 

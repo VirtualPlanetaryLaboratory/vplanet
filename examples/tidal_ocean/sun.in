@@ -3,7 +3,7 @@ sName		sun		# Body's name
 saModules stellar eqtide
 
 # Physical Parameters
-dMass		0.2             # Mass, negative -> Earth masses
+dMass		0.12             # Mass, negative -> Earth masses
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
 dRotPeriod      0.003
 

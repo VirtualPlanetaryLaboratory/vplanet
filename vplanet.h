@@ -1643,7 +1643,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  */
 
 #include <assert.h>
-
+#include <time.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"
@@ -1663,6 +1663,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "lopez2012.h"
 #include "stellar.h"
 #include "baraffe2015.h"
+#include "proximacenstellar.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

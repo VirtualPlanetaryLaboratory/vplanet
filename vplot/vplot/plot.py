@@ -14,7 +14,7 @@ __all__ = ['plot', 'colors']
 class colors(object):
   red = '#c91111'
   orange = '#e09401'
-  light_blue = '#13aed5'
+  pale_blue = '#13aed5'
   dark_blue = '#1321d8'
   purple = '#642197'
   

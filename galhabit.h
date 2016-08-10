@@ -74,6 +74,7 @@ void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***
 double random_double();
 void testrand(SYSTEM*);
 double NearbyStarDist(double);
+int check_disrupt(BODY*,SYSTEM*,int);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);

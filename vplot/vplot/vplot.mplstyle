@@ -1,7 +1,7 @@
 # LINES
-lines.linewidth               : 1.0               # line width in points
+lines.linewidth               : 2.0               # line width in points
 lines.linestyle               : -                 # solid line
-lines.marker                  : .                 # the default marker
+lines.marker                  : None              # the default marker
 lines.markeredgewidth         : 0.5               # the line width around the marker symbol
 lines.markersize              : 5                 # markersize, in points
 lines.dash_joinstyle          : round             # miter|round|bevel
@@ -96,7 +96,7 @@ ytick.labelsize               : large
 ytick.direction               : in
 
 # GRIDS
-grid.color                    : k
+grid.color                    : w
 grid.linestyle                : :
 grid.linewidth                : 0.5
 grid.alpha                    : 0.1

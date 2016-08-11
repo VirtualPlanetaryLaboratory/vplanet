@@ -521,8 +521,30 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
   // XXX This doesn't work with just eqtide!
 
-  *dTmp = body[iBody].dK2/body[iBody].dImK2;
-  //*dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  // Case: Just eqtide, no thermint, no oceans
+  if(body[iBody].bEqtide && !body[iBody].bThermint && !body[iBody].bOceanTides)
+  {
+    *dTmp = body[iBody].dK2/body[iBody].dImK2;
+  }
+  // Case: Eqtide and thermint, no oceans or just therminit
+  else if((body[iBody].bEqtide && body[iBody].bThermint && !body[iBody].bOceanTides) || (!body[iBody].bEqtide && body[iBody].bThermint))
+  {
+    // Use Driscoll + Barnes eqn 4 to compute
+     *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+    //*dTmp = fdK2Man(body,iBody)/fdImk2Man(body,iBody);
+  }
+  // Case: Eqtide, thermint and oceans
+  else if(body[iBody].bEqtide && body[iBody].bThermint && body[iBody].bOceanTides)
+  {
+    *dTmp = body[iBody].dK2/body[iBody].dImK2;
+  }
+  // Case: 
+  // Base case
+  else
+  {
+    *dTmp = -1;
+  }
+  
   strcpy(cUnit,"");
 }
 
@@ -530,6 +552,13 @@ void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
    
   *dTmp = body[iBody].dImK2;
    
+  strcpy(cUnit,"");
+}
+
+void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    
+  *dTmp = body[iBody].dK2;
+     
   strcpy(cUnit,"");
 }
 
@@ -859,6 +888,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2].iNum = 1;
   output[OUT_IMK2].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_IMK2] = &WriteImK2;
+
+  sprintf(output[OUT_K2].cName,"K2");
+  sprintf(output[OUT_K2].cDescr,"k_2");
+  output[OUT_K2].bNeg = 0;
+  output[OUT_K2].iNum = 1;
+  output[OUT_K2].iModuleBit = EQTIDE + THERMINT;
+  fnWrite[OUT_K2] = &WriteK2;
 
   sprintf(output[OUT_TIDALQ].cName,"TidalQ");
   sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");

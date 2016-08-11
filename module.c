@@ -474,34 +474,44 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
       /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and 
-	 check if dTidalQOcean set. These should only be set if THERMINT 
+	 check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT 
 	 selected. */
       if (body[iBody].bOceanTides) {
 	if (control->Io.iVerbose >= VERBINPUT)
-	  fprintf(stderr,"WARNING: %s set, but module THERMINT not selected. This feature is ignored.\n",options[OPT_OCEANTIDES].cName);
-	body[iBody].bOceanTides = 0;
+	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
+        exit(EXIT_INPUT);  
       }
       if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
 	if (control->Io.iVerbose >= VERBINPUT)
-	  fprintf(stderr,"WARNING: %s set, but module THERMINT not selected. This feature is ignored.\n",options[OPT_TIDALQOCEAN].cName);
-	
-        body[iBody].bOceanTides = 0;
-        body[iBody].dTidalQOcean = HUGE;
+	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_TIDALQOCEAN].cName);
+	exit(EXIT_INPUT);
         }
+      if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_K2OCEAN].cName);
+        exit(EXIT_INPUT);
+      }
       
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
       
-      // No ocean contribution
+      // No ocean contribution if not using thermint
       body[iBody].dImK2Ocean = 0.0;
       body[iBody].dK2Ocean = 0.0;
-      body[iBody].dTidalQOcean = 0.0;
+      body[iBody].dTidalQOcean = HUGE;
 
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
+     
+      // If dTidalQ or K2 set, ignore/warn user as thermint computes these
+      if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_TIDALQ].cName);
+      }
+
       /* When Thermint and Eqtide are called together, care must be taken as 
          Im(k_2) must be known in order to calculate TidalZ. As the individual 
          module PropsAux are called prior to PropsAuxMulti, we must call the 
@@ -511,10 +521,28 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
       // If using ocean tides...
       //Convert Q_ocean -> Im(k2)_ocean
-      // Will later be combined with ImK2 from Thermint
       if(body[iBody].bOceanTides)
       {
+        // Make sure both dK2Ocean AND dTidalQOcean are set, otherwise exit
+        if(!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1))
+        {
+          fprintf(stderr,"ERROR: %s and/or %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
+          fprintf(stderr,"Must both be set when using EQTIDE and THERMINT with bOceanTides == True.\n");
+          exit(EXIT_INPUT);
+        }
+
+        // Otherwise, we're good! set ImK2 for the ocean component
         body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
+      }
+      // If you're not using bOceanTides and Ocean params are set, warn user
+      else
+      {
+        if(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 || options[OPT_K2OCEAN].iLine[iBody+1] > -1)
+        {
+          if (control->Io.iVerbose >= VERBINPUT)
+            fprintf(stderr,"WARNING: %s or %s set, but bOceanTides==0. Ocean effects ignored.\n",options[OPT_TIDALQOCEAN].cName,options[OPT_K2OCEAN].cName);
+        }
+
       }
 
       iEqtide = fiGetModuleIntEqtide(module,iBody);
@@ -536,7 +564,7 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
 
   if (body[iBody].bFlare) {
     if (!body[iBody].bStellar) {
-      fprintf(stderr,"ERROR: Must include module STELLAR ro run module FLARE.\n");
+      fprintf(stderr,"ERROR: Must include module STELLAR to run module FLARE.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     } else
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
@@ -548,11 +576,21 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
   // If binary AND eqtide are called for a body, the body MUST be a star
   if(body[iBody].bBinary) {
     if(body[iBody].bEqtide) {
-      if(body[iBody].iBodyType != 1) { // Body isn't a star!
+      // Body isn't a star!
+      if(body[iBody].iBodyType != 1) {
         fprintf(stderr,"ERROR: If both binary AND eqtide are used for a body, the body MUST be a star.\n");
         fprintf(stderr,"Errant body iBody, bBinary, bEqtide: %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
+
+      // Body is a star, but has an ocean!
+      if(body[iBody].bOceanTides)
+      {
+        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides set!\n");
+        fprintf(stderr,"Body %d is a star and hence cannot have an ocean.\n",iBody);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+
     }
   }
 
@@ -605,7 +643,7 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
-    // Im(K_2) is harmonic mean of mantle and oceam component
+    // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
     //body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;

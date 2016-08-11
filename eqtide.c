@@ -496,7 +496,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_HALTSYNCROT].iType = 0;
   options[OPT_HALTSYNCROT].iMultiFile = 1;
   fnRead[OPT_HALTSYNCROT] = &ReadHaltSyncRot;
-  
+ 
   sprintf(options[OPT_K2].cName,"dK2");
   sprintf(options[OPT_K2].cDescr,"Love Number of Degree 2");
   sprintf(options[OPT_K2].cDefault,"1");
@@ -594,6 +594,13 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 /******************* Verify EQTIDE ******************/
 
+/* If using oceans, must be with Eqtide + Thermint
+ * and all proper options MUST be set
+ */
+void VerifyOceansEqtide(BODY *body, int iBody)
+{
+//TODO
+}
 
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {

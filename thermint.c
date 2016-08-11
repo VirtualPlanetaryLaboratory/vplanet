@@ -1096,14 +1096,14 @@ void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   } else { }
 }
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dK2Man;
+    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else { }
 }
 void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dImk2Man;
+  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
   strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

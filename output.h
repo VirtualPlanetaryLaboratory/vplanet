@@ -36,8 +36,6 @@
 #define OUT_XOBL                513
 #define OUT_YOBL                515
 #define OUT_ZOBL                517
-#define OUT_TIDALQ              518
-#define OUT_IMK2
 
 #define OUT_RADIUS              520
 #define OUT_ROTANGMOM		530
@@ -48,6 +46,9 @@
 #define OUT_ROTPER              560
 
 #define OUT_SURFENFLUX          580
+#define OUT_TIDALQ              581
+#define OUT_IMK2                582
+#define OUT_K2                  583
 
 #define OUT_HECC                600
 #define OUT_KECC                605

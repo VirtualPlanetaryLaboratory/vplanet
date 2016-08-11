@@ -15,11 +15,9 @@ dSemi           0.0483		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
 dTidalQ         12.5              # Tidal phase lag
-bOceanTides     0                   # Whether or not to include the effects of ocean tides
-#dTidalQOcean    12.5                 # Tidal phase lag of the ocean
 dK2             0.3                 # Love number of degree 2
-#dK2Ocean        0.05
-saTidePerts     sun 
+dMaxLockDiff    0.1
+saTidePerts     star 
 
 # RADHEAT Parameters
 ### 26Al

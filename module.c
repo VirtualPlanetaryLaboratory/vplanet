@@ -647,14 +647,14 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   if(body[iBody].bOceanTides)
   {
     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-    
+
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
 
     PropsAuxCPL(body,evolve,update,iBody);
     // Call dTidePowerMan
-    body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
+    body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);//fdCPLTidePower(body,iBody);
   }
   // No oceans, thermint dictates ImK2
   else 
@@ -664,7 +664,7 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     
     PropsAuxCPL(body,evolve,update,iBody);
     // Call dTidePowerMan
-    body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
+    body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);//fdCPLTidePower(body,iBody);
   }
 }
 /* This does not seem to be necessary

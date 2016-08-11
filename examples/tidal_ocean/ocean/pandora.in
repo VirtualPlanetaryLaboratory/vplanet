@@ -19,6 +19,7 @@ bOceanTides     1                   # Whether or not to include the effects of o
 dTidalQOcean    12.5                 # Tidal phase lag of the ocean
 dK2             0.3                 # Love number of degree 2
 dK2Ocean        0.05
+dMaxLockDiff    0.1
 saTidePerts     star 
 
 # RADHEAT Parameters

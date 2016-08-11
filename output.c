@@ -396,7 +396,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
      through thermint, or it can be from eqtide and/or radheat. */
 
   if (body[iBody].bThermint) 
-    *dTmp = fdHflowSurf(body,iBody);
+    *dTmp = fdHflowSurf(body,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius); // dflemin3 hack
   else {
     *dTmp=0;
     if (body[iBody].bEqtide)
@@ -404,7 +404,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     if (body[iBody].bRadheat)
       *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
-    
+
   /* This is the old way
   *dTmp=0;
   for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)

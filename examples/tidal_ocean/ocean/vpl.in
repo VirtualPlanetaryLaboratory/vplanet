@@ -1,5 +1,5 @@
 # Example primary input file for VPLANET
-sSystemName	tidal_pandora		# System Name
+sSystemName	ocean		# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -36,7 +36,7 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
-dStopTime	1.0e9 #7.0e9   	# Stop time for evolution
+dStopTime	7.0e9   	# Stop time for evolution
 dOutputTime	1.0e7		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden. 

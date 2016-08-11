@@ -2614,7 +2614,7 @@ void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
   /* Note that this is different from Heller et al (2011) because 
      we now use Im(k_2) which equals k_2/Q. The value of Im(k_2) is set in
-     VerifyEqtideTherming in module.c 
+     VerifyEqtideThermint in module.c 
   */
   body[iBody].dTidalZ[iPert] = 3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion); 
 }

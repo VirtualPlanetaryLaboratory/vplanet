@@ -502,6 +502,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
+      // XXX is this right?
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
@@ -640,13 +641,17 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // Maybe don't call? XXX
   //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
+  // Reset K2 to be function of K2Man and/or K2Ocean? XXX
+
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+    
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
-    //body[iBody].dImK2 = body[iBody].dImk2Man + body[iBody].dImK2Ocean;
+
     PropsAuxCPL(body,evolve,update,iBody);
     // Call dTidePowerMan
     body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
@@ -654,7 +659,9 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   // No oceans, thermint dictates ImK2
   else 
   {
-    body[iBody].dImK2 = fdImk2Man(body,iBody);
+    body[iBody].dImK2 = body[iBody].dImk2Man;
+    body[iBody].dK2 = body[iBody].dK2Man;
+    
     PropsAuxCPL(body,evolve,update,iBody);
     // Call dTidePowerMan
     body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);

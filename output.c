@@ -396,7 +396,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
      through thermint, or it can be from eqtide and/or radheat. */
 
   if (body[iBody].bThermint) 
-    *dTmp = fdHflowSurf(body,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius); // dflemin3 hack
+    *dTmp = fdHfluxSurf(body,iBody);
   else {
     *dTmp=0;
     if (body[iBody].bEqtide)

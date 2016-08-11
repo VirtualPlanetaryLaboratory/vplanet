@@ -38,6 +38,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_OXYGENMASS          1218 // Initial oxygen mass
 #define OPT_WATERLOSSMODEL      1219 // Oxygen buildup / water loss model
 #define OPT_PLANETRADIUSMODEL   1220 // Gaseous planet radius model (for atmesc)
+#define OPT_INSTANTO2SINK       1221 // Gaseous planet radius model (for atmesc)
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);

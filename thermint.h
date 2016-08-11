@@ -485,6 +485,7 @@ double fdHflowLatentIC(BODY*,UPDATE*,int);
 double fdPowerGravIC(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
 double fdHflowSurf(BODY*,int);
+double fdHfluxSurf(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
 double fdChiOC(BODY*,int);

@@ -29,7 +29,7 @@
 \def\radheat{\texttt{\footnotesize{RADHEAT}}}
 \def\thermint{\texttt{\footnotesize{THERMINT}}}
 \def\stellar{\texttt{\footnotesize{STELLAR}}}
-\def\galevol{\texttt{\footnotesize{GALHABIT}}}
+\def\galhabit{\texttt{\footnotesize{GALHABIT}}}
 
 \bibliographystyle{apj}
 \usepackage{multicol}
@@ -37,7 +37,7 @@
 \begin{document}
 
 \title{The Habitability of Proxima Centauri b I: Environmental Context}
-\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
+\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, David P. Fleming, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
 \altaffiltext{1}{Astronomy Department, University of Washington, Box 951580, Seattle, WA 98195}
 \altaffiltext{2}{NASA Astrobiology Institute -- Virtual Planetary Laboratory Lead Team, USA}
 \altaffiltext{3}{E-mail: rory@astro.washington.edu}
@@ -72,7 +72,7 @@ processes. Spectroscopic indicators of life, \ie biosignatures, can
 only be identified if the abiotic processes on a planet are understood
 -- no single feature in a spectrum is a ``smoking gun'' for life on
 all planets. A robust detection of extraterrestrial life requires that
-all plausible non-biological sources for all observed spectral
+all plausible non-biological sources for an observed spectral
 features can be ruled out. This requirement is a tall order,
 especially in light of the expected diversity of terrestrial
 exoplanets in the galaxy, but Proxima b may offer the best opportunity
@@ -83,12 +83,12 @@ In this study we leverage the known (but sparse) data on Proxima b and
 its host system to predict the range of evolutionary pathways that the
 planet may have experienced. As we show below, many histories are
 possible and depend on factors ranging from the cooling rate of b's
-core, to the orbital evolution of the stellar system through the Milky
+core to the orbital evolution of the stellar system through the Milky
 Way, and everywhere in between. The evolution of Proxima b, and by
 extension its potential habitability, depends on physical processes
 that have tended to be studied by scientists that work in different
 fields, such as geophysics and astrophysics. However, for the purpose
-of interpreting Proxima b, these divisions must be eradicated. Our
+of interpreting Proxima b, these divisions must be dismantled. Our
 examination of Proxima b will draw on simple, but realistic, models
 that have been developed in the fields of geophysics, planetary
 science, atmospheric science and astrophysics. From this synthesis, we
@@ -480,7 +480,7 @@ internal evolution could be markedly different than Earth's. However,
 since no depletion is observed in \acen~B, it is far from clear that
 such a depletion exists. One interesting radiogenic possibility is
 that the planet could form sufficiently quickly ($\sim~1$~Myr) that
-\al~could still provide energy to the planet's interior. Hence any
+$^{26}Al$ could still provide energy to the planet's interior. Hence any
 simulation of b's evolution should also consider its role.
 
 The presence of additional planets can change the orbit and obliquity
@@ -530,6 +530,8 @@ Centauri. In the next sections we apply quantitative models of the
 processes described in this section to full stellar system in order to
 explore the possible histories of Proxima b in detail.
 
+% Still to explore: Eu->Radiogenic, lifetimes of M dwarf disks, GCMs of tidally-locked planets 
+
 \section{Models\label{sec:models}}
 
 In this section we describe the models we use to consider the
@@ -577,6 +579,21 @@ the model described in \citep{Heller11}.
 \subsection{Geophyiscal Evolution: \thermint}
 % Peter
 
+\subsection{Atmospheric Escape: \atmesc}
+% Rodrigo
+
+\subsection{Tidal Evolution: \eqtide}
+% Rory
+To model the tidal evolution of the Proxima system, we will use a
+simple, but commonly-used model called the ``constant-phase-lag''
+model \citep{Goldreich66,Greenberg09,Heller11}. This model reduces the
+evolution to a single parameter $Q$ which sets the timescale for the
+tidal evolution. While this model has known shortcoming
+\citep{TuomaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
+accurate picture of tidal evolution, and is the model \cite{Kasting93}
+used to calculate the ``tidal lock radius''. For this study, we use
+the model described in \citep{Heller11}.
+
 \subsection{Galactic Effects: \galhabit}
 % Russell/Tom
 
@@ -600,7 +617,6 @@ observation exists for a full \vplanet~simulation. Matching
 simulations to systems like Proxima Centauri is likely the only way to
 convincinly validate the code.
 
-
 \section{Results\label{sec:results}}
 % All
 
@@ -614,7 +630,40 @@ convincinly validate the code.
 \subsection{Orbital/Rotational/Tidal Evolution}
 % Russell/Rory/Diego?
 
-% Fig 4: Tides only: a) Rotation, b) Obliquity, c) Eccentricity, d) Semi
+We begin exploring the dynamical properties of the orbits and spins by
+considering the tidal evolution of planet b if it is in isolation. In
+this case, we need only apply \eqtide~to both Proxima and b and track
+$a, e, P_{rot},$ and $\psi$. We find that if planet b has $Q~=~12$,
+then an initially Earth-like rotation state becomes tidally locked in
+$\sim~10^4$ years, so it seems likely that if b formed near its
+current location, then it formed in a tidally locked state and with
+negligible obliquity.
+
+Unlike the rotational angular momentum, the orbit can evolve
+signficantly. In the top two panels of Fig.~\ref{fig:eqtide}, we
+consider orbits that begin at $a~=~0.05$~AU and with different
+eccentricities of 0.05 (dotted curves), 0.1 (solid curves) and 0.2
+(dashed curves). In all cases $a$ and $e$ decrease and the amound of
+inward migration depends on the initial eccentricity, which takes 2--3
+Gyr to damp to $\sim~0.01$.
+
+The equilibrium tide model posits that the lost rotational and orbital
+energy is transformed in frictional heating inside the planet. The
+bottom pabel of Fig.~\ref{fig:eqtide} shows the average surface energy
+flux as a function of time. We address the geophysical implications of
+this tidal heating in $\S$~\ref{sec:results}.4.2. Note that if planet
+b begins with a rotation period of 1 days and an obliquity of
+$23.5^\circ$, then the initial surface energy flux due to tidal
+heating is $\sim~1000$~W/m$^{2}$.
+
+\begin{figure} 
+\begin{center}
+\includegraphics[width=0.75\textwidth]{eqtide.ps}
+\end{center}
+\caption{Evolution of planet b's eccentricity (top), semi-major axis (middle), and tidal heating surface flux (bottom) assuming that initially $a~=~0.05$~AU and $e~=$~0.05 (dotted), 0.1 (solid) or 0.2 (dashed). For reference the best fit semi-major axis and surface energy fluxes of Io and the modern Earth are shown by dashed black lines.}
+\label{fig:eqtide}
+\end{figure}
+
 % Fig 5: Low e/i case: a) Eccentricity, b) LongPeri, c) Inclination, d) LongNode
 % Fig 6: High e/i case: a-d
 % Fig 7: a) Rotation, b) obliquity for both cases
@@ -628,14 +677,24 @@ convincinly validate the code.
 % Can tidal evolution allow b to ``surf'' the HZ??
 
 \subsection{Internal Evolution}
-% Peter/Rory/Ben
+% Peter/Rory/Ben/David
 
 \subsubsection{Evolution without Tidal Heating}
+% Ben
+
+%Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
+%       - one set with 26Al, one w/o
 
 %Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
 %       - one set with 26Al, one w/o
 
 \subsubsection{Evolution with Tidal Heating}
+% Peter 
+
+% Fig 11: Same as 10, but c) include TidePower
+
+% David:
+% Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 
 % Fig 11: Same as 10, but c) include TidePower
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
@@ -681,6 +740,10 @@ saturated. In principle, thousands of bars of oxygen could
 remain. This planet is unlikely to be habitable, as the oxygen builds
 up early on, and large amounts of free oxygen are likely to stifle the
 pre-biotic chemistry necessary for life to originate.
+
+\subsection{Is Proxima b Habitable?}
+
+
 
 \section{Conclusions\label{sec:concl}}
 % Rory

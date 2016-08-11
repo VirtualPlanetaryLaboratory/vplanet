@@ -275,7 +275,7 @@ typedef struct {
   int bBinary;          /** Apply BINARY module? */
   int bBinaryUseMatrix; /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;         /** < CBP radius */
+  double dCBPR;         /** < CBP orbital radius */
   double dCBPZ;         /** < CBP height above/below the orbital plane */
   double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
   double dCBPRDot;      /** < CBP radial orbital velocity */
@@ -1580,7 +1580,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  */
 
 #include <assert.h>
-
+#include <time.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"
@@ -1600,6 +1600,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "lopez2012.h"
 #include "stellar.h"
 #include "baraffe2015.h"
+#include "proximacenstellar.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

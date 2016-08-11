@@ -10,11 +10,10 @@
 #include <assert.h>
 #include <string.h>
 #include "vplanet.h"
-#include <time.h>
 
 int main(int argc,char *argv[]) {
-  time_t start, end;
-  start = time(NULL);
+  time_t dStartTime;
+  dStartTime = time(NULL);
   
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
@@ -106,7 +105,7 @@ int main(int argc,char *argv[]) {
   control.Evolve.bFirstStep=1;
 
   if (control.Io.bLog) {
-    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,0);
+    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,0);
     if (control.Io.iVerbose >= VERBPROG)
       printf("Log file written.\n");
   }
@@ -118,15 +117,12 @@ int main(int argc,char *argv[]) {
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {
-      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,1);
+      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,1);
       if (control.Io.iVerbose >= VERBPROG)
 	printf("Log file updated.\n");
     }
   }
 
-  end = time(NULL);
-  if (control.Io.iVerbose >= VERBPROG)
-    printf("Runtime = %f s\n", difftime(end,start));
   exit(0);
 
 }

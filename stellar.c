@@ -102,7 +102,7 @@ void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].iStellarModel = STELLAR_MODEL_PROXIMACEN;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE, PROXIMACE, or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE, PROXIMACEN, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);

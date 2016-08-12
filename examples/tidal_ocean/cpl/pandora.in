@@ -20,7 +20,7 @@ dMaxLockDiff    0.1
 saTidePerts     star
     
 #Output
-saOutputOrder Time TidalQ SemimajorAxis Eccentricity -SurfEnFluxTot
+saOutputOrder Time TidalQ K2 ImK2 SemimajorAxis Eccentricity -SurfEnFluxTot
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

@@ -233,6 +233,8 @@ double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
 void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
+double fdSurfEnFluxOcean(BODY*,int);
+double fdTidePowerOcean(BODY*,int);
 
 /* Equilibrium parameters */
 double fdCTLTidePowerEq(BODY,double);

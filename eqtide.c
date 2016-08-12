@@ -2590,6 +2590,20 @@ double fdCPLTidePower(BODY *body,int iBody) {
   return dOrbPow + dRotPow;
 }
 
+/* Tidal Power due to Ocean Tides */
+double fdTidePowerOcean(BODY *body, int iBody) {
+
+  // Total CPL Tide Power = Ocean + Man contributions
+  return fdCPLTidePower(body,iBody) - fdTidalPowMan(body,iBody);
+}
+
+/* Surface Energy Flux due to Ocean Tides */
+double fdSurfEnFluxOcean(BODY *body,int iBody) {
+
+  // Total Ocean Tide power / surface area of body
+  return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
+}
+
 double fdGammaRot(double dEccSq,double dPsi,int *epsilon) {
   return 4*epsilon[0] + dEccSq*(-20*epsilon[0] + 49*epsilon[1] + epsilon[2]) + 2*sin(dPsi)*sin(dPsi)*(-2*epsilon[0] + epsilon[8] + epsilon[9]);
 }

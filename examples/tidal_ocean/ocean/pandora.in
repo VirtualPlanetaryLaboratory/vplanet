@@ -17,7 +17,7 @@ dSemi           0.0483		# Semi-major axis, negative -> AU
 #dTidalQ         100              # Tidal phase lag
 bOceanTides     1                   # Whether or not to include the effects of ocean tides
 dTidalQOcean    12.5                 # Tidal phase lag of the ocean
-dK2             0.3                 # Love number of degree 2
+#dK2             0.3                 # Love number of degree 2
 dK2Ocean        0.05
 dMaxLockDiff    0.1
 saTidePerts     star 
@@ -60,7 +60,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -TMan -TCore SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
+saOutputOrder Time TidalQ K2 ImK2 -TMan -TCore SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

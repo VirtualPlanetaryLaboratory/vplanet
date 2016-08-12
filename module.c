@@ -502,7 +502,6 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
-      // XXX is this right?
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
@@ -511,6 +510,10 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT)
           fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_TIDALQ].cName);
+      }
+      if (options[OPT_K2].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_K2].cName);
       }
 
       /* When Thermint and Eqtide are called together, care must be taken as 

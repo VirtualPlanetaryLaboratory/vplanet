@@ -394,15 +394,21 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
   /* Surface Energy Flux is complicated because it either all comes
      through thermint, or it can be from eqtide and/or radheat. */
+  *dTmp=0;
 
-  if (body[iBody].bThermint) 
-    *dTmp = fdHfluxSurf(body,iBody);
-  else {
-    *dTmp=0;
-    if (body[iBody].bEqtide)
-      *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
-    if (body[iBody].bRadheat)
-      *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
+  if (body[iBody].bThermint) { 
+    *dTmp += fdHfluxSurf(body,iBody);
+    
+    if(body[iBody].bOceanTides)
+    {
+       *dTmp += fdSurfEnFluxOcean(body,iBody);
+    }
+  
+  } else {
+  if (body[iBody].bEqtide)
+    *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
+  if (body[iBody].bRadheat)
+    *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
 
   /* This is the old way
@@ -519,8 +525,6 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX This doesn't work with just eqtide!
-
   // Case: Just eqtide, no thermint, no oceans
   if(body[iBody].bEqtide && !body[iBody].bThermint && !body[iBody].bOceanTides)
   {
@@ -530,8 +534,8 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   else if((body[iBody].bEqtide && body[iBody].bThermint && !body[iBody].bOceanTides) || (!body[iBody].bEqtide && body[iBody].bThermint))
   {
     // Use Driscoll + Barnes eqn 4 to compute
-     *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-    //*dTmp = fdK2Man(body,iBody)/fdImk2Man(body,iBody);
+    // *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+    *dTmp = fdK2Man(body,iBody)/fdImk2Man(body,iBody);
   }
   // Case: Eqtide, thermint and oceans
   else if(body[iBody].bEqtide && body[iBody].bThermint && body[iBody].bOceanTides)
@@ -550,8 +554,22 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    
-  *dTmp = body[iBody].dImK2;
-   
+  // Eqtide + Thermint + Oceans or just eqtide
+  if((body[iBody].bEqtide && body[iBody].bOceanTides && body[iBody].bThermint) || (body[iBody].bEqtide && !body[iBody].bThermint))
+  {
+    *dTmp = body[iBody].dImK2;
+  }
+  // Eqtide + Thermint, no oceans or just thermint
+  else if((body[iBody].bEqtide && body[iBody].bThermint && !body[iBody].bOceanTides) || (!body[iBody].bEqtide && body[iBody].bThermint))
+  {
+    *dTmp = fdImk2Man(body,iBody);
+  }
+  // Else...?
+  else
+  {
+    *dTmp = body[iBody].dImK2;
+  }
+
   strcpy(cUnit,"");
 }
 

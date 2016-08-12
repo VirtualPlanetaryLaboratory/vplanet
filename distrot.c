@@ -881,7 +881,7 @@ void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     CalcDynEllip(body, iBody);
   }
     */
-    CalcDynEllipEq(body, iBody);
+    body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
   }
   
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);

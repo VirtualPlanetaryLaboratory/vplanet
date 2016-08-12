@@ -79,6 +79,8 @@ dArgP       90
 # # POISE
 # iLatCellNum	151
 
+dGalacDensity    0.102
+
 # Output
 saOutputOrder Time Ecce PeriQ ArgP Inc LongA NEncounters DeltaT 
 

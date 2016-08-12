@@ -29,7 +29,7 @@
 \def\radheat{\texttt{\footnotesize{RADHEAT}}}
 \def\thermint{\texttt{\footnotesize{THERMINT}}}
 \def\stellar{\texttt{\footnotesize{STELLAR}}}
-\def\galevol{\texttt{\footnotesize{GALEVOL}}}
+\def\galhabit{\texttt{\footnotesize{GALHABIT}}}
 
 \bibliographystyle{apj}
 \usepackage{multicol}
@@ -547,9 +547,30 @@ how \vplanet~unifies these modules and integrates the system forward.
 
 \subsection{Orbital Evolution: \distorb}
 % Russell
+The model for orbital evolution, \distorb (for ``disturbing function orbit evolution''), uses the 4th order secular disturbing function from \cite{MurrayDermott99} (see their Appendix B), with equations of motion given by Lagrange's planetary equations. To avoid potential singularities in the equations of motion, we utilize the variables:
+\begin{align}
+h & = e \sin{\varpi} \\
+k & = e \cos{\varpi} \\
+p & = \sin{\frac{i}{2}} \sin{\Omega} \label{eqnp}\\
+q & = \sin{\frac{i}{2}} \cos{\Omega} \label{eqnq},
+\end{align}
+rather than the standard osculating elements $(e,i,\varpi,\Omega)$. This variable transformation is straight-forward, if tedious, so we do not reproduce it here. The resulting form of the disturbing function and Lagrange's equations will be explicitly stated in forthcoming works \citep{Barnes2016, Deitrick2016}. Lagrange's equations in this form can also be found in \cite{Berger1991}. 
+
+We apply this model to the Proxima b and a possible longer period companion, hinted at in the RV data. This secular (i.e. long-term averaged) model does not account for the effects of mean-motion resonances, however, since we apply this to well-separated planets here, it is adequate for much of our parameter space. Since the model is 4th order in $e$ and $i$, it can account for coupling of eccentricity and inclination, although it does begin to break down at higher eccentricity or mutual inclination. Thus a comparison with N-Body modeling is provided where necessary. 
 
 \subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
 % Russell
+Our obliquity model, \distrot (for ``disturbing function rotation evolution''), uses the equations of motion developed in \cite{Kinoshita1975, Kinoshita1977} and utilized extensively by \cite{Laskar1986,Laskar1993a,Laskar1993b,Armstrong14}. It treats the planet as an oblate spheroid (having an axisymmetric equatorial bulge), with a shape induced by the rotation. The planet then is subject to a torque from the host star, which causes axial precession, and changes in its orbital plane due to perturbations from a companion planet, which directly change the obliquity angle. This model is thus dependent on \distorb, as it depends on the eccentricity, the longitude of ascending node $(\Omega)$, and the derivatives $dp/dt, dq/dt$ (Equation \ref{eqnp} and \ref{eqnq}).
+
+The equations for obliquity and precession angle $(d\psi/dt, dp_A/dt)$, also contain a singularity at $\psi = 0$, so we transform to the variables:
+\begin{align}
+\xi & = \sin{\psi} \sin{p_A} \\
+\zeta & = \sin{\psi} \cos{p_A} \\
+\chi & = \cos{\psi}.
+\end{align}
+The third variable, $\chi$ is necessary to preserve domain information. Hence, we ultimately have three variables to integrate rather than two, however, the addition of a third variable/equation does not produce appreciable slow down.
+
+In the presence of strong tidal effects, as we would expect at Proxima b's orbital distance, the obliquity damps extremely quickly (in a few hundred kyr). Because of this, we do not expect this planet to have significant obliquity variations. Our purpose for including this model in our study is to look for Cassini states \citep{Colombo1966}---in the presence of strong tidal effects and perturbations from companion planets, the planet's obliquity damps to some non-zero value, as we observe for Mercury and a number of solar system satellites, including Earth's moon.
 
 \subsection{Radiogenic Heating: \radheat}
 % Peter
@@ -572,8 +593,11 @@ accurate picture of tidal evolution, and is the model \cite{Kasting93}
 used to calculate the ``tidal lock radius''. For this study, we use
 the model described in \citep{Heller11}.
 
-\subsection{Galactic Effects: \galevol}
+\subsection{Galactic Effects: \galhabit}
 % Russell/Tom
+Prox Cen is tenuously bound, if it is gravitationally bound at all, to the binary $\alpha$ Cen A and B. Because of this, it is worthwhile to investigate the effects of the galactic environment on Prox Cen's orbit. We model the changes produced by galactic tides and stellar encounters using the equations and prescriptions developed by \cite{Heisler1986, Heisler1987} for the Oort cloud (Prox Cen is arguably a high mass Oort cloud object, for $\alpha$ Cen A and B). We utilize an updated galactic density of $\rho_0 = 0.102$ \citep{Holmberg2000} and treat $\alpha$ Cen A and B as a single point mass with $M = 2.1$ M$_{\odot}$ (with the recently updated masses given by \cite{PourbaixBoffin16}). This is somewhat crude approach, as the two stars produce a significant quadrupole moment associated with their orbits---a back-of-the-envelope calculation indicates that the torque associated with this quadrupole potential would be equal to the galactic tidal torque at $\sim 2000$ au. Hence, the effect of the binary host should be minor though still important at Prox Cen's estimated distance of $~15,000$ au, especially if the star has significant eccentricity. However, the modeling of the triple system in a comprehensive way is sufficiently complicated \citep[see, i.e.][]{Harrington1968, Ford2000} to place it beyond the scope of this work. Instead, we restrict ourselves to the secular effects of galactic tides and passing stars and will revisit the triple star dynamics in a future work. 
+
+If Prox Cen is gravitationally bound, galactic tides and stellar encounters can pump its eccentricity to values large enough to cause disruption from the system, and/or a periastron distance so close to the binary $\alpha$ Cen that we would expect consequences for any planetary system, such as eccentricity excitation. In such situations, Proxima b may have significant tidal heating despite the circularization time scale. 
 
 \subsection{The Coupled Model: \vplanet}
 % Rory

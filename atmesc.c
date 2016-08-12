@@ -73,11 +73,13 @@ void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (!memcmp(sLower(cTmp),"lo",2)) {
       body[iFile-1].iPlanetRadiusModel = ATMESC_LOP12;
+    } else if (!memcmp(sLower(cTmp),"pr",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_PROXCENB;
     } else if (!memcmp(sLower(cTmp),"no",2)) {
       body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12 or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12, PROXCENB or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -426,7 +428,15 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
 
   // Assign radius
   if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-    body[iBody].dRadius = fdLopezRadius(body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 1., body[iBody].dAge, 0);
+    body[iBody].dRadius = fdLopezRadius(body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 10., body[iBody].dAge, 1);
+
+    if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
+      // User specified radius, but we're reading it from the grid! 
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
+    body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge);
 
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid! 
@@ -982,13 +992,14 @@ double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
-    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 10., body[iaBody[0]].dAge, 1);
     if (!isnan(foo)) 
       return foo;
     else 
       return body[iaBody[0]].dRadius;
-  }
-  else
+  } else if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_PROXCENB) {
+    return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge);
+  } else
     return body[iaBody[0]].dRadius;
 }
 

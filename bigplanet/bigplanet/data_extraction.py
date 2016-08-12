@@ -422,22 +422,26 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols={},infiles=[],
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
             if f.endswith(".forward") and (f.find(infile) != -1):
-                # Read in data as pandas dataframe, use C engine for speed!
-                tmp = pd.read_table(datadir + f,
+                
+              try:
+                  # Read in data as pandas dataframe, use C engine for speed!
+                  tmp = pd.read_table(datadir + f,
                                              header=None,
                                              delim_whitespace=True,
                                              engine="c",
                                              names=data_cols[infile + ".in"],
                                              dtype=np.float64)
 
-                # Create corresponding hdf5 subgroup for body, store data as
-                # numpy array. Subgroup's name is body name
-                sub = grp.create_group(infile)
+                  # Create corresponding hdf5 subgroup for body, store data as
+                  # numpy array. Subgroup's name is body name
+                  sub = grp.create_group(infile)
 
-                # Write columns to subgroup as datasets [allows for POSIX-like access]
-                for col in data_cols[infile + ".in"]:
-                    sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
-                                      compression = compression)
+                  # Write columns to subgroup as datasets [allows for POSIX-like access]
+                  for col in data_cols[infile + ".in"]:
+                      sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
+                                          compression = compression)
+              except:
+                pass
 
     # Return 1 since 1 new sim was successfully processed/stored
     return 1

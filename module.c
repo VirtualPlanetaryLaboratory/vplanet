@@ -505,7 +505,10 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
-     
+    
+      // Init the multimodule force behavior
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideThermint;
+
       // If dTidalQ or K2 set, ignore/warn user as thermint computes these
       if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT)
@@ -697,4 +700,43 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   }
-} 
+}
+
+void ForceBehaviorAtmsecEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+  
+  // Loop over non-star bodies
+  int iBody;
+  
+  for(iBody = 1; iBody < evolve->iNumBodies; i++)
+  {
+    // If body 1 is a star (aka using binary), pass
+    if(iBody == 1 && body[iBody].bBinary)
+      continue;
+
+    // Case: No water -> no ocean tides
+    if(body[iBody].bOceanTides && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) && (body[iBody].dSurfaceWaterMass > 0.))
+    {
+      body[iBody].bOceanTides = 0;
+    }
+
+    // Case: Water, but you're in runaway greenhouse regime, so all water in atm.  No surface water -> no oceans
+    if(body[iBody].bOceanTides && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
+    {
+      body[iBody].bOceanTides = 0;
+    }
+
+    //
+
+  }
+  
+}
+
+
+
+
+
+
+
+
+
+

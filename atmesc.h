@@ -16,6 +16,7 @@
 #define ATMESC_DIFFLIM          4
 #define ATMESC_NONE             5
 #define ATMESC_LOP12            6
+#define ATMESC_PROXCENB         7
 #define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
 #define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen

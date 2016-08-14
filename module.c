@@ -506,9 +506,6 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
     
-      // Init the multimodule force behavior
-      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideThermint;
-
       // If dTidalQ or K2 set, ignore/warn user as thermint computes these
       if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT)
@@ -567,6 +564,26 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
   }
 }
 
+void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  // If you're using alllll of these, include the force behavior!
+  // Also, you MUST have surface water information set if you're using bOceanTides
+  if(body[iBody].bEqtide) 
+  {
+    if(body[iBody].bThermint)
+    {
+      if(body[iBody].bAtmEsc)
+      {
+        // TODO: ocean stuff
+
+        // Set force behavior
+        control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorAtmescEqtideThermint;
+      }
+    }
+  }
+
+}
+
 void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bFlare) {
@@ -623,7 +640,9 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
+  VerifyModuleMultiAtmescEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
@@ -702,41 +721,32 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
   }
 }
 
-void ForceBehaviorAtmsecEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   
   // Loop over non-star bodies
   int iBody;
   
-  for(iBody = 1; iBody < evolve->iNumBodies; i++)
+  for(iBody = 1; iBody < evolve->iNumBodies; iBody++)
   {
     // If body 1 is a star (aka using binary), pass
     if(iBody == 1 && body[iBody].bBinary)
       continue;
 
     // Case: No water -> no ocean tides
-    if(body[iBody].bOceanTides && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) && (body[iBody].dSurfaceWaterMass > 0.))
+    if(body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
     {
       body[iBody].bOceanTides = 0;
     }
-
-    // Case: Water, but you're in runaway greenhouse regime, so all water in atm.  No surface water -> no oceans
-    if(body[iBody].bOceanTides && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
+    // Case: Water but it's in the atmosphere (this is when body actively loses water!)
+    else if((body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
+    } 
+    // Case: Water and on the surface! (this is when body does NOT actively lose water!)
+    else if((body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
+    {
+      body[iBody].bOceanTides = 1;
     }
-
-    //
-
   }
-  
 }
-
-
-
-
-
-
-
-
-
 

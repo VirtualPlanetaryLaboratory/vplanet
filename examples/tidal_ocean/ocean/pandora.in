@@ -16,7 +16,7 @@ dSemi           0.0483		# Semi-major axis, negative -> AU
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
 dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-dSurfWaterMass            -1.0           # Initial surface water (Earth oceans) 
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
 dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?
 bHaltEnvelopeGone         0               # Halt when evaporated?
@@ -69,7 +69,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass
+saOutputOrder Time TidalQ -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

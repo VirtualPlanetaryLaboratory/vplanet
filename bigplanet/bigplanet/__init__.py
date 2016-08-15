@@ -3,7 +3,7 @@
 @author: dflemin3 2016
 """
 
-__version__ = "0.12"
+__version__ = "0.13"
 __author__ = "David Fleming (dflemin3@uw.edu)"
 __copyright__ = "Copyright 2016 David Fleming"
 

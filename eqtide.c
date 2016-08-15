@@ -31,11 +31,14 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
   dest[iBody].dImK2 = src[iBody].dImK2;
   dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
+  dest[iBody].dImK2Env = src[iBody].dImK2Env;
   dest[iBody].dK2 = src[iBody].dK2;
   dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
+  dest[iBody].dK2Env = src[iBody].dK2Env;
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;
   dest[iBody].bOceanTides = src[iBody].bOceanTides;
+  dest[iBody].bEnvTides = src[iBody].bEnvTides;
 
   if (iBody > 0) {
     dest[iBody].dEcc = src[iBody].dEcc;
@@ -56,6 +59,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
     if (iTideModel == CPL) {
       dest[iBody].dTidalQ = src[iBody].dTidalQ;
       dest[iBody].dTidalQOcean = src[iBody].dTidalQOcean;
+      dest[iBody].dTidalQEnv = src[iBody].dTidalQEnv;
       for (iIndex=0;iIndex<10;iIndex++)
           dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }    
@@ -249,6 +253,27 @@ void ReadK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dK2Ocean = options->dDefault;
 }
 
+/* Love number of degree 2 for the gaseous envelope */
+void ReadK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dK2Env = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dK2Env = options->dDefault;
+}
+
 /* Maximum allowable offset between primary's spin period and its
    equilibrium spin period. */
 
@@ -271,23 +296,6 @@ void ReadMaxLockDiff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       control->Evolve.dMaxLockDiff[iFile-1] = options->dDefault;
   }
-}
-
-/* Split tides into ocean and rocky interior? This should only be specified if THERMINT also called*/
-
-void ReadOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bOceanTides = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    /* Set to default */
-    AssignDefaultInt(options,&body[iFile-1].bOceanTides,files->iNumInputs);
 }
 
 /* Maximum Eccentricity for Synchronous Rotation */
@@ -357,6 +365,29 @@ void ReadTidalQOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   } else {
     if(iFile > 0)
       body[iFile-1].dTidalQOcean = options->dDefault;
+  }
+}
+
+/* Tidal Q of the envelope */
+void ReadTidalQEnv(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+
+    body[iFile-1].dTidalQEnv = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if(iFile > 0)
+      body[iFile-1].dTidalQEnv = options->dDefault;
   }
 }
 
@@ -455,6 +486,22 @@ void ReadEqtideOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].bOceanTides = 0; // Default to no ocean tides
 }
 
+// Include effects of envelope tides?
+void ReadEqtideEnvTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bEnvTides = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].bEnvTides = 0; // Default to no envelope tides
+}
+
 void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
 
   sprintf(options[OPT_DISCRETEROT].cName,"bDiscreteRot");
@@ -513,6 +560,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_K2OCEAN].iMultiFile = 1;
   fnRead[OPT_K2OCEAN] = &ReadK2Ocean;
 
+  sprintf(options[OPT_K2ENV].cName,"dK2Env");
+  sprintf(options[OPT_K2ENV].cDescr,"Envelope's Love Number of Degree 2");
+  sprintf(options[OPT_K2ENV].cDefault,"1.0");
+  options[OPT_K2ENV].dDefault = 1.0;
+  options[OPT_K2ENV].iType = 2;
+  options[OPT_K2ENV].iMultiFile = 1;
+  fnRead[OPT_K2ENV] = &ReadK2Env;
+
   sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
   sprintf(options[OPT_MAXLOCKDIFF].cDescr,"Maximum relative difference between spin and equilibrium spin rates to force equilibrium spin rate");
   sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
@@ -522,12 +577,19 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   fnRead[OPT_MAXLOCKDIFF] = &ReadMaxLockDiff;
   
   sprintf(options[OPT_OCEANTIDES].cName,"bOceanTides");
-  sprintf(options[OPT_OCEANTIDES].cDescr,"Split tides into interior and oceans?");
+  sprintf(options[OPT_OCEANTIDES].cDescr,"Include effects of ocean tides");
   sprintf(options[OPT_OCEANTIDES].cDefault,"0");
   options[OPT_OCEANTIDES].iType = 0;
   options[OPT_OCEANTIDES].iMultiFile = 1;
-  fnRead[OPT_OCEANTIDES] = &ReadOceanTides;
+  fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
   
+  sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
+  sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");
+  sprintf(options[OPT_ENVTIDES].cDefault,"0");
+  options[OPT_ENVTIDES].iType = 0;
+  options[OPT_ENVTIDES].iMultiFile = 1;
+  fnRead[OPT_ENVTIDES] = &ReadEqtideEnvTides;
+
   sprintf(options[OPT_SYNCECC].cName,"dSyncEcc");
   sprintf(options[OPT_SYNCECC].cDescr,"Minimum Eccentricity for Non-Synchronous Rotation");
   sprintf(options[OPT_SYNCECC].cDefault,"0");
@@ -551,6 +613,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_TIDALQOCEAN].iType = 2;
   options[OPT_TIDALQOCEAN].iMultiFile = 1;
   fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;
+
+  sprintf(options[OPT_TIDALQENV].cName,"dTidalQEnv");
+  sprintf(options[OPT_TIDALQENV].cDescr,"Envelope Tidal Quality Factor");
+  sprintf(options[OPT_TIDALQENV].cDefault,"1.0e4");
+  options[OPT_TIDALQENV].dDefault = 1.0e4;
+  options[OPT_TIDALQENV].iType = 2;
+  options[OPT_TIDALQENV].iMultiFile = 1;
+  fnRead[OPT_TIDALQENV] = &ReadTidalQEnv;
 
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
   sprintf(options[OPT_TIDALTAU].cDescr,"Tidal Time Lag");
@@ -593,14 +663,6 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     
 
 /******************* Verify EQTIDE ******************/
-
-/* If using oceans, must be with Eqtide + Thermint
- * and all proper options MUST be set
- */
-void VerifyOceansEqtide(BODY *body, int iBody)
-{
-//TODO
-}
 
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {
@@ -1480,6 +1542,20 @@ void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   strcpy(cUnit,"");
 }
 
+void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Only makes sense if we're modelling envelope tides
+  if(body[iBody].bEnvTides)
+  {
+    *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+  }
+  else
+  {
+    *dTmp = -1;
+  }
+  strcpy(cUnit,"");
+}
+
 void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
 
@@ -1861,6 +1937,14 @@ void WriteK2Ocean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   strcpy(cUnit,"");
 }
 
+void WriteK2Env(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  
+  *dTmp = body[iBody].dK2Env;
+
+  strcpy(cUnit,"");
+
+}
+
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   /* XXX Need to change after switch to [XYZ]obl
@@ -1989,6 +2073,13 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQOCEAN].iNum = 1;
   output[OUT_TIDALQOCEAN].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQOCEAN] = WriteTidalQOcean;
+
+  sprintf(output[OUT_TIDALQENV].cName,"EnvTidalQ");
+  sprintf(output[OUT_TIDALQENV].cDescr,"Envelope Tidal Q");
+  output[OUT_TIDALQENV].bNeg = 0;
+  output[OUT_TIDALQENV].iNum = 1;
+  output[OUT_TIDALQENV].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALQENV] = WriteTidalQEnv;
 
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
@@ -2180,11 +2271,18 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   */
 
   sprintf(output[OUT_K2OCEAN].cName,"OceanK2");
-  sprintf(output[OUT_K2OCEAN].cDescr,"Im(k_2)_Ocean");
+  sprintf(output[OUT_K2OCEAN].cDescr,"K2_Ocean");
   output[OUT_K2OCEAN].bNeg = 0;
   output[OUT_K2OCEAN].iNum = 1;
   output[OUT_K2OCEAN].iModuleBit = EQTIDE;
   fnWrite[OUT_K2OCEAN] = &WriteK2Ocean;
+
+  sprintf(output[OUT_K2ENV].cName,"EnvK2");
+  sprintf(output[OUT_K2ENV].cDescr,"K2_Env");
+  output[OUT_K2ENV].bNeg = 0;
+  output[OUT_K2ENV].iNum = 1;
+  output[OUT_K2ENV].iModuleBit = EQTIDE;
+  fnWrite[OUT_K2ENV] = &WriteK2Env;
 
   /*
    * O

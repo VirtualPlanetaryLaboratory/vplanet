@@ -19,6 +19,7 @@ void InitializeBodyModules(BODY**,int);
 void VerifyModuleMulti(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxDistOrbDistRot(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxRadheatThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);

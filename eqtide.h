@@ -32,6 +32,7 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_HALTSYNCROT         1025
 #define OPT_K2                  1027 /* Change to LOVEK2 */
 #define OPT_K2OCEAN             1028
+#define OPT_K2ENV               1029
 #define OPT_MAXLOCKDIFF         1030
 #define OPT_SYNCECC             1035
 #define OPT_TIDEMODEL           1040
@@ -40,6 +41,8 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_TIDALQ              1050
 #define OPT_TIDALQOCEAN         1051
 #define OPT_OCEANTIDES          1052
+#define OPT_TIDALQENV           1053
+#define OPT_ENVTIDES            1054
 
 #define OUT_ECCA                1055
 
@@ -53,15 +56,18 @@ void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2Ocean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadK2Env(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadMaxLockDiff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSyncEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQOcean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalQEnv(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
 void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
@@ -136,9 +142,11 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 
 //#define OUT_TIDALQ              1084
 #define OUT_TIDALQOCEAN         1085
+#define OUT_TIDALQENV           1084
 #define OUT_TIDALTAU            1086
 #define OUT_TIDELOCK            1088
 #define OUT_ROTRATETIMEEQTIDE   1090
+#define OUT_K2ENV               1091
 #define OUT_OBLTIMEEQTIDE       1092
 #define OUT_POWEREQTIDE         1094
 #define OUT_ENFLUXEQTIDE        1096
@@ -174,7 +182,9 @@ void WriteTidalTau(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,cha
 void WriteTideLock(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 //void WriteImK2(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
 void WriteK2Ocean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteK2Env(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalQOcean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTidalQEnv(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputEqtide(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */

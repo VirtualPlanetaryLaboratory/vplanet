@@ -538,15 +538,17 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
         // Otherwise, we're good! set ImK2 for the ocean component
         body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
       }
-      // If you're not using bOceanTides and Ocean params are set, warn user
+      // If you're not using bOceanTides and Ocean params are set, exit
       else
       {
         if(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 || options[OPT_K2OCEAN].iLine[iBody+1] > -1)
         {
           if (control->Io.iVerbose >= VERBINPUT)
-            fprintf(stderr,"WARNING: %s or %s set, but bOceanTides==0. Ocean effects ignored.\n",options[OPT_TIDALQOCEAN].cName,options[OPT_K2OCEAN].cName);
+          {
+            fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQOCEAN].cName,options[OPT_K2OCEAN].cName);
+            exit(EXIT_INPUT);
+          }
         }
-
       }
 
       iEqtide = fiGetModuleIntEqtide(module,iBody);
@@ -568,17 +570,75 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
 
   // If you're using alllll of these, include the force behavior!
   // Also, you MUST have surface water information set if you're using bOceanTides
+  // Note: VerifyEqtideThermint handles all things oceans
   if(body[iBody].bEqtide) 
   {
     if(body[iBody].bThermint)
     {
       if(body[iBody].bAtmEsc)
       {
-        // TODO: ocean stuff
+        // If modelling envelope tides
+        if(body[iBody].bEnvTides)
+        {
+          // Make sure both dK2Env AND dTidalQEnv are set, otherwise exit
+          if(!(options[OPT_TIDALQENV].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1))
+          {
+            fprintf(stderr,"ERROR: %s and/or %s not set.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+            fprintf(stderr,"Must both be set when using EQTIDE, THERMINT and ATMESC with bEnvTides == True.\n");
+            exit(EXIT_INPUT);
+          }
+           
+          // Otherwise, we're good! set ImK2 for the envelope component
+          body[iBody].dImK2Ocean = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+        }
+        // Not modelling envelope tides
+        else
+        {
+          // Envelope tidal parameters can't be set
+          if(options[OPT_TIDALQENV].iLine[iBody+1] > -1 || options[OPT_K2ENV].iLine[iBody+1] > -1)
+          {
+            if (control->Io.iVerbose >= VERBINPUT)
+            {
+              fprintf(stderr,"ERROR: %s or %s set, but bEnvTides == 0.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+              exit(EXIT_INPUT);
+            }
+          }
+
+          // Zero things out so envelope can't play a role
+          body[iBody].dTidalQEnv = HUGE;
+          body[iBody].dK2Env = 0.0;
+          body[iBody].dImK2Env = 0.0;
+        }
+        
+        // Set function pointers so models play nice
 
         // Set force behavior
         control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorAtmescEqtideThermint;
+     
+        // Switch PropAuxEqtideThermint -> PropsAuxAtmescEqtideThermint
+        control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtideThermint;
       }
+      // No AtmEsc 
+      else
+      {
+        // Can't have any tidal envelope parameters set
+        if(options[OPT_TIDALQENV].iLine[iBody+1] > -1 || options[OPT_K2ENV].iLine[iBody+1] > -1)
+        {
+          if (control->Io.iVerbose >= VERBINPUT)
+          { 
+            fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+            exit(EXIT_INPUT);
+          }
+        }
+      }
+    }
+    // Eqtide and atmesc set, not thermint
+    /* Here, Eqtide+Thermint multi verify ensures ocean tides are handled properly so
+     * instead, we do ???
+     */
+    else
+    {
+      // TODO
     }
   }
 
@@ -641,6 +701,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
 
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
+  // Always call after VerifyModuleMultiEqtideThermint !!
   VerifyModuleMultiAtmescEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
@@ -691,6 +752,10 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     // Call dTidePowerMan
     body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);//fdCPLTidePower(body,iBody);
   }
+}
+
+void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+ // TODO
 }
 /* This does not seem to be necessary
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
@@ -747,6 +812,8 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     {
       body[iBody].bOceanTides = 1;
     }
+
+    // TODO: checks to turn atm tidal effects on/off
   }
 }
 

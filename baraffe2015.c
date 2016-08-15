@@ -146,18 +146,18 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 
 	if (iOrder == 1) {
 		result = fdBaraffeBiLinear(iMLEN,iALEN,data,xi,yi,dx,dy);
-		if isnan(result) {
+		if (isnan(result)) {
 			*iError = STELLAR_ERR_ISNAN;
 			return 0;
 		}
 		return result;
 	} else if (iOrder == 3) {
 		result = fdBaraffeBiCubic(iMLEN,iALEN,data,xi,yi,dx,dy);
-		if isnan(result) {
+		if (isnan(result)) {
 			// Maybe we can still linearly interpolate. Let's check:
 			if (dx == 0){
         for (dyi = 0; dyi<2; dyi++){
-          if isnan(data[xi][yi+dyi]){
+          if (isnan(data[xi][yi+dyi])){
             // Hopeless; you're bounded by
             // a NaN on at least one side
             *iError = STELLAR_ERR_ISNAN;
@@ -166,7 +166,7 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
         }
 			} else if (dy == 0){
 				for (dxi = 0; dxi<2; dxi++){
-					if isnan(data[xi+dxi][yi]){
+					if (isnan(data[xi+dxi][yi])){
 						// Hopeless; you're bounded by
 						// a NaN on at least one side
 						*iError = STELLAR_ERR_ISNAN;
@@ -176,7 +176,7 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 			} else {
         for (dxi = 0; dxi<2; dxi++){
           for (dyi = 0; dyi<2; dyi++){
-            if isnan(data[xi+dxi][yi+dyi]){
+            if (isnan(data[xi+dxi][yi+dyi])){
               // Hopeless; you're bounded by
               // a NaN on at least one side
               *iError = STELLAR_ERR_ISNAN;

@@ -48,7 +48,7 @@ def plot(ax, x, y, **kwargs):
 
   return l
 
-def make_pretty(fig):
+def make_pretty(fig, tight_layout = True):
   '''
   
   '''
@@ -82,25 +82,26 @@ def make_pretty(fig):
         axis.set_ylabel('%s (%s)' % (ylabel, yoffset_text))
   
   # Use tight layout
-  pl.tight_layout()
+  if tight_layout:
+    pl.tight_layout()
   
   # Make space for a title, if any
   if any([t.get_position()[1] > 0.95 for t in fig.texts]):
     fig.subplots_adjust(top=0.9)
 
-def show(**kwargs):
+def show(tight_layout = True, **kwargs):
   '''
   
   '''
   
-  make_pretty(pl.gcf())
+  make_pretty(pl.gcf(), tight_layout = tight_layout)
   pl.show(**kwargs)
 
-def savefig(bbox_inches = 'tight', **kwargs):
+def savefig(bbox_inches = 'tight', tight_layout = True, **kwargs):
   '''
   
   '''
   
   fig = pl.gcf()
-  make_pretty(fig)
+  make_pretty(fig, tight_layout = tight_layout)
   fig.savefig(bbox_inches = bbox_inches, **kwargs)

@@ -1605,6 +1605,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "stellar.h"
 #include "baraffe2015.h"
 #include "proximacenstellar.h"
+#include "proximacenbradius.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

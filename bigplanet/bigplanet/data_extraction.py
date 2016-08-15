@@ -40,29 +40,43 @@ def get_cols(datadir=".",infiles=[]):
         with open(datadir+infile) as f:
             lines = f.readlines()
 
-            # Loop over all line in the input file
-            for line in lines:
-                line = str(line).rstrip("\n")
+            # Loop over all lines in the input file
+            for ii in range(0,len(lines)):
+                line = lines[ii]
+                line = str(line).strip(' \t\n\r') # Remove all kinds of whitespace from sides
 
                 # Is this the saOutputOrder line and it isn't commented out?
-                if line.find("saOutputOrder") != -1 and "#saOutputOrder" not in line:
+                if line.find("saOutputOrder") != -1 and line[0] != "#":
                     cols = line.split()[1:] # ignore saOutputOrder
 
+                    # Add all lines below it that have a "$", the line continuation character
+                    while("$" in str(lines[ii]).strip(' \t\n\r')):
+                        
+                        # Move to next line
+                        ii = ii + 1
+                            
+                        cols = cols + str(lines[ii]).strip(' \t\n\r').split()
+                    
                     # Remove any - if there are any
                     # Also ignore commented out (#) stuff
                     good_cols = []
-                    for i in range(0,len(cols)):
-                        if "#" in cols[i]: # First time this goes, rest of stuff is ignored
+                    for jj in range(0,len(cols)):
+                        if "#" in cols[jj]: # First time this goes, rest of stuff is ignored
                             break
-                        else:
-                            # Get rid of - sign
-                            cols[i] = cols[i].replace("-", "")
 
-                            # Column name is good and processed, so add it
-                            good_cols.append(cols[i])
+                        # Get rid of - sign if it's there
+                        cols[jj] = cols[jj].replace("-", "")
 
-            # Save the columns!
-            data_cols[infile] = good_cols
+                        # Column name is good and processed, so add it
+                        good_cols.append(cols[jj])
+                        
+                        # Get rid of $ sign if it's there
+                        if "$" in good_cols:
+                            good_cols.remove("$")
+            
+                    # Save the columns, break out of this infile!
+                    data_cols[infile] = good_cols
+                    break
 
     return data_cols
 # end function

@@ -12,12 +12,16 @@ ROUTINES FOR REGULARLY GRIDDED DATA
 The below functions only work/make sense for some N-dimensional
 simulation grid.
 
-Should I make a submodule for each data type?
+Note: For regularly gridded data, no simulations can be thrown away, i.e.
+when running data_extraction, you CANNOT have excluded halted simulations.
+If you did that, then the data will have been created from a grid, but the grid
+will be likely missing chunks and hence the dimensionality reduction algorithms
+will fail.
 
 """
 
 def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
-                 reduce_func = np.nanmean, nan_value = 1.0, bReduce=True,
+                 reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                 interp="gaussian",cmap="viridis",colorbar=True,aspect="auto",
                  origin="lower",vmin=None,vmax=None,**kwargs):
     """
@@ -117,7 +121,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 # End function
 
 def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
-                         reduce_func = np.nanmean, nan_value = 1.0, bReduce=True,
+                         reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                          interp="gaussian",cmap="viridis",levels=20,clines=False,
                          colorbar=False,origin="lower",**kwargs):
     """
@@ -225,7 +229,7 @@ def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     return None
 # End function
 
-def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_color_func = np.nanmean, nan_value = 1.0,
+def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.nanmean, nan_value = 0.0,
                  bReduce=True,interp="nearest",lcmap="viridis_r",rcmap="magma_r",levels=None,clines=False,
                  origin="lower",save=False,right_color_func = np.std,**kwargs):
     """
@@ -235,18 +239,15 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 
     Parameters
     ----------
-    df: dict of dateframes produced by the "aggrategate_data" fn
-        1 dataframe for each body
+    df: dateframe produced by the "aggrategate_data" fn
         Data frame containing simulation initial values for variables specified by user and
         any additional aggregate values.  1 row == 1 simulation.
     shape : dict of dict
         Dictionary containing body and variable and dimensional length of that variable, e.g.
         shape = {"secondary" : {"Eccentricity" : 5}} indicates that this simulation suite was
         run for 5 values of the secondary eccentricity.
-    color_body : str
-        name of body who's variable you'll color by
-    color_name : str
-        name of color_body's color-by-variable
+    color_by : str
+        Name of body_var to color output by
     left_color_func : function
         function used to marginalize.  typically numpy.nanmean or some similar variant
     right_color_func : function
@@ -287,31 +288,31 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
     >>> dims = {"secondary" : {"Eccentricity" : 0, "SemimajorAxis" : 1}, "cbp": {"Eccentricity" : 2,
     >>>                                                                        "SemimajorAxis" : 3}}
 
-    >>> fig, axes = red_dim_grid(df, shape, color_body="cbp",color_name="DampTime", interp="nearest",
+    >>> fig, axes = red_dim_grid(df, shape, color_by="cbp_DampTime", interp="nearest",
     >>>                        lcmap="viridis_r",rcmap="plasma_r",save=True, right_color_func = np.std)
-        (plot)
+        (plot saved to confusogram.pdf)
     """
 
     # Using df, shape, color_name, make a list containing all the axes
     # combinations
-    combos = create_axes_combos(df,color_name=color_name)
+    combos = create_axes_combos(df,color_by=color_by)
 
     # Length of size of plot square == number of variables varied in simulation suite
     size = int(np.sqrt(len(combos)))
 
     # If size isn't at least 3, this function isn't for you
-    assert size >=3,"Too few dimensions. Use imshow or contourf instead!"
+    assert size >= 3,"Too few dimensions. Use imshow or contourf instead!"
 
     # Make a figure/axes to plot on
     fig, axes = plt.subplots(size, size, figsize=(size*9,size*8))
 
     # Get colorbar ranges
     # Is there something smarter I can do here?
-    lvmin = np.min(df[color_body][color_name])
-    lvmax = np.max(df[color_body][color_name])
+    lvmin = np.min(df[color_by])
+    lvmax = np.max(df[color_by])
 
     rvmin = 0.0
-    rvmax = np.std(df[color_body][color_name])/2.0
+    rvmax = np.std(df[color_by])
 
     # Iterate over combos going left->right->down->repeat
     # along the axes
@@ -325,34 +326,30 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
                 fig.delaxes(axes[i,j])
                 continue
 
-            # Make labels
-            # Along the y axis?
-            if j == 0:
-                label = ["",combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1], ""]
-            # Along the x axis?
-            elif i == (size-1):
-                label = [combos[i*size + j][0].split("_")[0] + " " + combos[i*size + j][0].split("_")[1], "", ""]
-            else:
-                label = None
-
+            # Make subplot axis labels
             label = [combos[i*size + j][1].split("_")[0] + " " + combos[i*size + j][1].split("_")[1],
                     combos[i*size + j][0].split("_")[0] + " " + combos[i*size + j][0].split("_")[1],
                     ""]
 
             # LEFT of the diagonal? Marginalize (via mean)
-            combo = combos[i*size + j]
-            xbody, xvar = combo[1].split("_")
-            ybody, yvar = combo[0].split("_")
-
-            x = df[xbody][xvar].values
-            y = df[ybody][yvar].values
-            z = df[color_body][color_name].values
-
-            # Get shape of data
-            tmp_shape = axes_to_shape(combo, shape)
-            tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
-
             if j < i:
+                combo = combos[i*size + j]
+                xcombo = combo[1]
+                ycombo = combo[0]
+
+                x = df[xcombo].values
+                y = df[ycombo].values
+                z = df[color_by].values
+
+                # Get shape of data
+                tmp_shape = axes_to_shape(combo, shape)
+
+                # Get dimensions to marginalize over
+                xkey, xvar = xcombo.split("_")
+                ykey, yvar = ycombo.split("_")
+
+                tmp_dims = get_dims(dims, xkey, xvar, ykey, yvar)
+
                 plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = left_color_func, nan_value = nan_value, bReduce=bReduce,
                         interp=interp,cmap=lcmap,colorbar=False,origin=origin,vmin=lvmin,
@@ -363,18 +360,28 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 
                 # Note: here x, y are switched for readbility
                 combo = combos[i*size + j]
-                ybody, yvar = combo[1].split("_")
-                xbody, xvar = combo[0].split("_")
+                ycombo = combo[1]
+                xcombo = combo[0]
 
-                x = df[xbody][xvar].values
-                y = df[ybody][yvar].values
-                z = df[color_body][color_name].values
+                # Exchange labels
+                tmp_lab = label[0]
+                label[0] = label[1]
+                label[1] = tmp_lab
+
+                x = df[ycombo].values
+                y = df[xcombo].values
+                z = df[color_by].values
 
                 # Get shape of data
                 tmp_shape = axes_to_shape(combo, shape)
-                tmp_dims = get_dims(dims, xbody, xvar, ybody, yvar)
 
-                plot_red_dim(y, x, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
+                # Get dimensions to marginalize over
+                xkey, xvar = xcombo.split("_")
+                ykey, yvar = ycombo.split("_")
+
+                tmp_dims = get_dims(dims, xkey, xvar, ykey, yvar)
+
+                plot_red_dim(x, y, z, tmp_shape, fig, axes[i,j], labels=label, dims=tmp_dims,
                          reduce_func = right_color_func, nan_value = nan_value, bReduce=bReduce,
                         interp=interp,cmap=rcmap,colorbar=False,origin=origin,vmin=rvmin,
                                 vmax=rvmax)
@@ -411,7 +418,7 @@ def red_dim_grid(df, shape, dims, color_body="cbp",color_name="DampTime", left_c
 #
 ###################################################################
 
-def create_axes_combos(df,color_name="DampTime"):
+def create_axes_combos(df,color_by="cbp_DampTime"):
     """
     Parse a shape nested dictionary to derive a shape tuple where the user defined
     parameters are the first two values of the tuple.  This function is used to create
@@ -425,7 +432,7 @@ def create_axes_combos(df,color_name="DampTime"):
         1 dataframe for each body
         Data frame containing simulation initial values for variables specified by user and
         any additional aggregate values.  1 row == 1 simulation.
-    color_name : str
+    color_by : str
         column in one of df's dataframes that will be the variable that describes (gives a color
         to) each simulation.  It is ignored from the combinations since we wouldn't color by a
         variable that also is plotted along an axis.
@@ -444,6 +451,18 @@ def create_axes_combos(df,color_name="DampTime"):
         ('cbp_Ecce', 'secondary_SemiMajorAxis'),
         ('secondary_Eccentricity', 'secondary_SemiMajorAxis')]
     """
+
+    # Get columns
+    cols = list(df.columns)
+
+    # Remove color_by
+    cols.remove(color_by)
+
+    # Return permutations
+    return list(itertools.product(cols,cols))
+
+    # Old code
+    '''
     variables = []
 
     for key in df.keys():
@@ -452,8 +471,8 @@ def create_axes_combos(df,color_name="DampTime"):
         tmp = list(df[key].columns.values)
 
         # If color variable in list, remove it
-        if color_name in tmp:
-            tmp.remove(color_name)
+        if color_by in tmp:
+            tmp.remove(color_by)
 
         # Add body's name to variable for clarity
         for i in range(0,len(tmp)):
@@ -461,9 +480,9 @@ def create_axes_combos(df,color_name="DampTime"):
 
         variables = variables + tmp
 
-
     # Get only unique combinations
     return list(itertools.product(variables,variables))
+    '''
 # end function
 
 def get_shape(shape, key1, var1, key2, var2):
@@ -603,7 +622,128 @@ def get_dims(dims, key1, var1, key2, var2):
 # end function
 
 """
-FOR IRREGULAR/RANDOM DATA
+
+FOR IRREGULAR/RANDOM DATA (or also gridded!)
 
 """
-# TODO
+
+def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magma_r",
+              alpha=0.5):
+    """
+    Plot a series of scatter plots of 1 dataframe column (z_var) vs every other column
+    with the option to have one parameter size points and another parameter color the points.
+
+    Parameters
+    ----------
+    df : Pandas dataframe
+    z_var : string
+        column name of dependent variable
+    size_var : string (optional)
+        column name that determines size of points
+    color_var : string (optional)
+        column name that determines color of points
+    cmap : string (optional)
+        matplotlib colormap name
+    alpha : float (optional)
+        alpha (shade) parameter which ranges from [0,1]
+
+    Returns
+    -------
+    fig : matplotlib figure object
+    axes : array of matplotlib axis objects
+
+    Example
+    -------
+    >>> fig, axes = multiscatter(df,z_var="cbp_DampTime",size_var="secondary_Eccentricity",
+                               color_var="secondary_SemimajorAxis")
+        (plot)
+
+    """
+
+    # Can't color/size points by the dependent variable!
+    assert(z_var != size_var and z_var != color_var), "Can't color/size points by the dependent variable!"
+
+    # Set default color if none given
+    if color_var != None:
+        color = df[color_var]
+    else:
+        color = "black"
+
+    # Set default size if none given
+    if size_var != None:
+        # Compute point sizes by normalizing data
+        s = 10. + 240.*(df[size_var] - df[size_var].min())/np.ptp(df[size_var])
+    else:
+        s = 50
+
+    # Get size for square grid of plots, leave space blank
+    size = len(df.columns)
+    grid_size = int(np.sqrt(size))
+
+    # Make subplots
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(grid_size*9,grid_size*8))
+    axes = axes.flatten()
+
+    # dependent var (y coor for all scatter plots)
+    z = df[z_var]
+
+    # Iterate over all things, scatter plot "z" value vs sim variables
+    ii = 0
+    # Loop over columns == simulation variables
+    for col in df.columns.values:
+        if col != z_var:
+            im = axes[ii].scatter(df[col],z,c=color,s=s,alpha=alpha,cmap=cmap)
+
+            # Format axes with labels, limits
+            axes[ii].set_ylabel(z_var.split("_")[0] + " " + z_var.split("_")[1])
+            axes[ii].set_xlabel(col.split("_")[0] + " " + col.split("_")[1])
+            axes[ii].set_ylim(z.min()-0.05*z.min(),z.max()+0.05*z.max())
+
+            # Increment ii
+            ii = ii + 1
+
+        else:
+            pass
+
+    # Add colorbar?
+    if color_var != None:
+
+        cbar = fig.colorbar(im, ax=axes.ravel().tolist())
+        cbar.ax.set_ylabel((color_var.split("_")[0] + " " + color_var.split("_")[1]), rotation=270,
+                          labelpad = 25)
+
+    # Add legend that displays typical point sizes?
+    if size_var != None:
+
+        # Dummy plots for range of points
+        sizes = s.max()
+        s_inv = df[size_var].max()
+        l1 = plt.scatter([],[], s=sizes/4., color="black")
+        l2 = plt.scatter([],[], s=2.*sizes/4., color="black")
+        l3 = plt.scatter([],[], s=3.*sizes/4., color="black")
+        l4 = plt.scatter([],[], s=sizes, color="black")
+
+        # Labels for points
+        labels = ["%.2f" % (s_inv/4.), "%.2f" % (s_inv/2.),
+                  "%.2f" % (3.*s_inv/4.), "%.2f" % s_inv]
+
+        # Fancy legend relative to last axis
+        leg = axes[-1].legend([l1, l2, l3, l4], labels, ncol=4, frameon=False, fontsize=15, loc = 8, borderpad = 1.0,
+                              handletextpad=1, scatterpoints = 1, bbox_to_anchor=(-.1, -0.3),
+                              title = size_var.split("_")[0] + " " + size_var.split("_")[1])
+
+
+    return fig, axes
+# End Function
+
+"""
+
+Misc
+
+"""
+
+# Tell module what it's allowed to import
+__all__ = [plot_red_dim,
+           plot_red_dim_contour,
+           red_dim_grid,
+           multiscatter]

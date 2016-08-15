@@ -16,6 +16,7 @@
 #define ATMESC_DIFFLIM          4
 #define ATMESC_NONE             5
 #define ATMESC_LOP12            6
+#define ATMESC_PROXCENB         7
 #define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
 #define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen
@@ -38,6 +39,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_OXYGENMASS          1218 // Initial oxygen mass
 #define OPT_WATERLOSSMODEL      1219 // Oxygen buildup / water loss model
 #define OPT_PLANETRADIUSMODEL   1220 // Gaseous planet radius model (for atmesc)
+#define OPT_INSTANTO2SINK       1221 // Gaseous planet radius model (for atmesc)
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);

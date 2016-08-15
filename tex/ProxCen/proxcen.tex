@@ -72,7 +72,7 @@ processes. Spectroscopic indicators of life, \ie biosignatures, can
 only be identified if the abiotic processes on a planet are understood
 -- no single feature in a spectrum is a ``smoking gun'' for life on
 all planets. A robust detection of extraterrestrial life requires that
-all plausible non-biological sources for all observed spectral
+all plausible non-biological sources for an observed spectral
 features can be ruled out. This requirement is a tall order,
 especially in light of the expected diversity of terrestrial
 exoplanets in the galaxy, but Proxima b may offer the best opportunity
@@ -83,12 +83,12 @@ In this study we leverage the known (but sparse) data on Proxima b and
 its host system to predict the range of evolutionary pathways that the
 planet may have experienced. As we show below, many histories are
 possible and depend on factors ranging from the cooling rate of b's
-core, to the orbital evolution of the stellar system through the Milky
+core to the orbital evolution of the stellar system through the Milky
 Way, and everywhere in between. The evolution of Proxima b, and by
 extension its potential habitability, depends on physical processes
 that have tended to be studied by scientists that work in different
 fields, such as geophysics and astrophysics. However, for the purpose
-of interpreting Proxima b, these divisions must be eradicated. Our
+of interpreting Proxima b, these divisions must be dismantled. Our
 examination of Proxima b will draw on simple, but realistic, models
 that have been developed in the fields of geophysics, planetary
 science, atmospheric science and astrophysics. From this synthesis, we
@@ -404,6 +404,8 @@ the evolution of Proxima depends on many other factors involving
 stellar effects, the planet's internal properties, and the
 gravitational influence of the other members of the stellar system.
 
+% Formation and disk lifetime
+
 The host star is about 10 times smaller and less massive than the Sun,
 the temperature is about half that of the Sun, and the luminosity is
 just 0.1\% that of the Sun. These differences are significant and can
@@ -453,6 +455,8 @@ frictional heat \citep{Darwin1880,Barnes08}. Except in extreme cases,
 these processes are unlikely to sterilize a planet, but they can
 profoundly affect the planet's evolution.
 
+% GCMs
+
 Although the abundances of elements relative to iron in \acen~A and B,
 and by extension Proxima, are similar to the Sun's, there is no
 guarantee that the abundance pattern is matched inside Proxima
@@ -474,7 +478,10 @@ of radioactive material like $^{232}$Th and $^{238}$U
 energy of Earth, and hence if they are depleted in Proxima b, it
 internal evolution could be markedly different than Earth's. However,
 since no depletion is observed in \acen~B, it is far from clear that
-such a depletion exists.
+such a depletion exists. One interesting radiogenic possibility is
+that the planet could form sufficiently quickly ($\sim~1$~Myr) that
+$^{26}Al$ could still provide energy to the planet's interior. Hence any
+simulation of b's evolution should also consider its role.
 
 The presence of additional planets can change the orbit and obliquity
 of planet b through gravitational perturbations. These interactions
@@ -544,6 +551,21 @@ how \vplanet~unifies these modules and integrates the system forward.
 
 \subsection{Stellar Evolution: \stellar}
 % Rodrigo
+
+\subsection{Atmospheric Escape: \atmesc}
+% Rodrigo
+
+\subsection{Tidal Evolution: \eqtide}
+% Rory
+To model the tidal evolution of the Proxima system, we will use a
+simple, but commonly-used model called the ``constant-phase-lag''
+model \citep{Goldreich66,Greenberg09,Heller11}. This model reduces the
+evolution to a single parameter $Q$ which sets the timescale for the
+tidal evolution. While this model has known shortcoming
+\citep{TuomaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
+accurate picture of tidal evolution, and is the model \cite{Kasting93}
+used to calculate the ``tidal lock radius''. For this study, we use
+the model described in \citep{Heller11}.
 
 \subsection{Orbital Evolution: \distorb}
 % Russell
@@ -670,7 +692,7 @@ heating is $\sim~1000$~W/m$^{2}$.
 % Fig 6: High e/i case: a-d
 % Fig 7: a) Rotation, b) obliquity for both cases
 
-\subsection{Stellar/Atmospheric Evolution}
+\subsection{Stellar Evolution}
 % Rodrigo
 
 % Fig. 8: Evolution of a) stellar radius, b) luminosity, c) XUV, d) magnetic field, e) rotation  
@@ -687,6 +709,9 @@ heating is $\sim~1000$~W/m$^{2}$.
 %Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
 %       - one set with 26Al, one w/o
 
+%Fig 10: a) Tcore, b) Tman, c) RadPowerTot, d) SufEnFlux 
+%       - one set with 26Al, one w/o
+
 \subsubsection{Evolution with Tidal Heating}
 % Peter 
 
@@ -695,13 +720,50 @@ heating is $\sim~1000$~W/m$^{2}$.
 % David:
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 
+% Fig 11: Same as 10, but c) include TidePower
+% Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
+
 \subsubsection{Magnetic Fields}
 
-% Fig 13: a) MagMom, b) WindPres, c) MagRad 
+% Fig 13: a) MagMom, b) WindPres, c) MagRad
 %       - one set of curves w/tidal heat, one w/o
 
+\subsection{Atmospheric Evolution}
+% Rodrigo
+
+% Fig. 14: a) water content, b) oxygen content
+% Fig. 15: HEC plots: a) habitable example, b) envelope decreases, but remains, c) envelope lost, then water lost
+% Fig 16: Reservoirs of water with time
+
 \section{Discussion\label{sec:disc}}
-% Rory
+% All
+
+1) Proxima b is a habitable. We find that some scenarios allow for the
+planet to currently support surface water. In particular, the
+``habitable evaporated core'' \citep{Luger15} is particularly
+promising as it can avoid both the high-luminosity pre-main sequence
+phase and any devastating tidal heating that may occur while the
+planet ``surfs'' the HZ migration, or during circularization after
+orbital destabilization. Such a world may be enriched in deuterium
+that remained during hydrogren escape, and it may also be geothermally
+active if it is young and enriched in potassium.
+
+2) Proxima b is in a Venus-like state. Proxima spent signficant time
+in a runaway greenhouse prior to the arrival of the HZ, and hence it
+may have developed a dense CO$_2$ atmosphere as has occurred on
+Venus. In this case, the planet is uninhabitable as the surface
+temperature is too hot for liquid water, and the higher surface
+temperature results from greenhouse warming by CO$_2$
+
+3) Proxima b has an oxygen-rich atmosphere. If Proxima b formed with a
+large water inventory, the pre-MS phase may have photolyzed water
+vapor and the hydrogen escaped. Although oxygen is highly reactive,
+thousands of bars of oxygen can be liberated through this mechanism
+\citep{LugerBarnes15} and hence all sinks for it may become
+saturated. In principle, thousands of bars of oxygen could
+remain. This planet is unlikely to be habitable, as the oxygen builds
+up early on, and large amounts of free oxygen are likely to stifle the
+pre-biotic chemistry necessary for life to originate.
 
 \subsection{Is Proxima b Habitable?}
 
@@ -709,6 +771,18 @@ heating is $\sim~1000$~W/m$^{2}$.
 
 \section{Conclusions\label{sec:concl}}
 % Rory
+We have performed a comprehensive analysis of the evolution of the
+Proxima Centauri planetary system with a specific focus on planet b's
+habitability. We find that many disparate factors are important,
+including from the stellar system's orbit in the galaxy
+($\S$~\ref{sec:results}.1), the orbital and rotational evolution of
+the planets ($\S$~\ref{sec:results}.2), the stellar evolution
+($\S$~\ref{sec:results}.3), geophysical evolution
+($\S$~\ref{sec:results}.4), and atmospheric evolution
+($\S$~\ref{sec:results}.5). We find that many evolutionary pathways
+are admitted by the data and hence the planet may currently exist in
+many possible states.
+
 
 \vspace{1cm}
 This work was supported by the NASA Astrobiology Institute's Virtual

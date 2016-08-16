@@ -1,6 +1,6 @@
 # Earthlike parameters
 sName		pandora			# Body's name
-saModules 	radheat thermint eqtide
+saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
@@ -13,11 +13,27 @@ dRadGyra	0.5
 dEcc            0.1		# Eccentricity
 dSemi           0.0483		# Semi-major axis, negative -> AU
 
+# ATMESC Properties
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
+dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-4          # Planet is desiccated when water content drops below this (Earth oceans)
+dMinEnvelopeMass          -1.e-4
+# sPlanetRadiusModel        proximacenb     # ???
+
 # Eqtide Properties
-#dTidalQ         12.5              # Tidal phase lag
-#dK2             0.3                 # Love number of degree 2
+bOceanTides     1                   # Whether or not to include the effects of ocean tides
+dTidalQOcean    12.5                 # Tidal phase lag of the ocean
+dK2             0.3                 # Love number of degree 2
+dK2Ocean        0.05
 dMaxLockDiff    0.1
 saTidePerts     star 
+bEnvTides       1                 # Whether or not to include the effects of gaseous envelope tides
+dTidalQEnv      1.0e4
+dK2Env          0.3
 
 # RADHEAT Parameters
 ### 26Al
@@ -57,7 +73,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2 -TMan -TCore SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
+saOutputOrder Time TidalQ OceanTidalQ -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

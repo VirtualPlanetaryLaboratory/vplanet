@@ -496,9 +496,9 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
       
       // No ocean contribution if not using thermint
-      body[iBody].dImK2Ocean = 0.0;
+      body[iBody].dImK2Ocean = -1.0e-12;
       body[iBody].dK2Ocean = 0.0;
-      body[iBody].dTidalQOcean = HUGE;
+      body[iBody].dTidalQOcean = -1.0;
 
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
@@ -549,6 +549,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
             exit(EXIT_INPUT);
           }
         }
+
+        // No ocean contribution
+        body[iBody].dImK2Ocean = -1.0e-12;
+        body[iBody].dK2Ocean = 0.0;
+        body[iBody].dTidalQOcean = -1.0;
       }
 
       iEqtide = fiGetModuleIntEqtide(module,iBody);
@@ -589,7 +594,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
           }
            
           // Otherwise, we're good! set ImK2 for the envelope component
-          body[iBody].dImK2Ocean = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+          body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
         }
         // Not modelling envelope tides
         else
@@ -605,9 +610,9 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
           }
 
           // Zero things out so envelope can't play a role
-          body[iBody].dTidalQEnv = HUGE;
           body[iBody].dK2Env = 0.0;
-          body[iBody].dImK2Env = 0.0;
+          body[iBody].dImK2Env = -1.0e-12;
+          body[iBody].dTidalQEnv = -1.0;
         }
         
         // Set function pointers so models play nice
@@ -630,15 +635,12 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
             exit(EXIT_INPUT);
           }
         }
+
+        // Zero things out so envelope can't play a role
+        body[iBody].dK2Env = 0.0;
+        body[iBody].dImK2Env = -1.0e-12;
+        body[iBody].dTidalQEnv = -1.0;
       }
-    }
-    // Eqtide and atmesc set, not thermint
-    /* Here, Eqtide+Thermint multi verify ensures ocean tides are handled properly so
-     * instead, we do ???
-     */
-    else
-    {
-      // TODO
     }
   }
 
@@ -724,11 +726,6 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
-  // Maybe don't call? XXX
-  //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
-
-  // Reset K2 to be function of K2Man and/or K2Ocean? XXX
-
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
@@ -737,25 +734,68 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
-
-    PropsAuxCPL(body,evolve,update,iBody);
-    // Call dTidePowerMan
-    body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);//fdCPLTidePower(body,iBody);
   }
   // No oceans, thermint dictates ImK2
   else 
   {
     body[iBody].dImK2 = body[iBody].dImk2Man;
     body[iBody].dK2 = body[iBody].dK2Man;
-    
-    PropsAuxCPL(body,evolve,update,iBody);
-    // Call dTidePowerMan
-    body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);//fdCPLTidePower(body,iBody);
   }
+
+  PropsAuxCPL(body,evolve,update,iBody);
+  // Call dTidePowerMan
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
- // TODO
+  // Set the mantle parameters first
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+
+  // Case: No oceans, no envelope
+  if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
+  {
+    // Mantle controls evoltion via thermint
+    body[iBody].dImK2 = body[iBody].dImk2Man;
+    body[iBody].dK2 = body[iBody].dK2Man;
+  }
+  // Case: Oceans, no envelope:
+  else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
+  {
+    // Oceans dominate
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+     
+    // Im(K_2) is weighted sum of mantle and oceam component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
+  }
+  // Case: No oceans, envelope (envelope evap while in runaway):
+  else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
+  {
+    // Envelope dominates
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+   
+    // Im(K_2) is weighted sum of mantle and enevelope component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Env/body[iBody].dK2Env);
+  }
+  // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
+  else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
+  {
+    // Envelope and ocean!
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+
+    // Im(K_2) is weighted sum of mantle, envelope and ocean component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Env/body[iBody].dK2Env);
+  }
+  else
+    assert(0); // Unknown envelope + ocean behavior
+
+  // Finally, call EQTIDE props aux then set mantle tidal power
+  PropsAuxCPL(body,evolve,update,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+
 }
 /* This does not seem to be necessary
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
@@ -797,23 +837,53 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     if(iBody == 1 && body[iBody].bBinary)
       continue;
 
+    // Keeps track of whether or not bOceanTides or bEnvTides were initially set
+    // to ensure they don't get turned back on by force behavior
+    // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
+    int bOceans = 0;
+    int bEnv = 0;
+
+    // Ocean check
+    if(body[iBody].dTidalQOcean < 0)
+      bOceans = 0;
+    else
+      bOceans = 1;
+
+    // Env check
+    if(body[iBody].dTidalQEnv < 0)
+      bEnv = 0;
+    else
+      bEnv = 1;
+
+    // Note: With these checks, only do anything if user intended to model them 
+    // i.e. if bOceanTides == 1 from initial conditions
+
     // Case: No water -> no ocean tides
-    if(body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)
+    if(bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass))
     {
       body[iBody].bOceanTides = 0;
     }
-    // Case: Water but it's in the atmosphere (this is when body actively loses water!)
-    else if((body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
+    // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
     } 
     // Case: Water and on the surface! (this is when body does NOT actively lose water!)
-    else if((body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 1;
     }
 
-    // TODO: checks to turn atm tidal effects on/off
+    // Check to see if the envelope is gone: when dEnvelopeMass <= dMinEnvelopeMass
+    if(bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass))
+    {
+      body[iBody].bEnvTides = 0;
+    }
+    // Still have the envelope!
+    else if(bEnv && (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
+    {
+      body[iBody].bEnvTides = 1;
+    }
   }
 }
 

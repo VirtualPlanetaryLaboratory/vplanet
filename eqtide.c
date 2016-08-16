@@ -1530,29 +1530,15 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // Only makes sense if we're modelleing ocean tides
-  if(body[iBody].bOceanTides)
-  {
-    *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
-  }
-  else
-  {
-    *dTmp = -1;
-  }
+  *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  
   strcpy(cUnit,"");
 }
 
 void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // Only makes sense if we're modelling envelope tides
-  if(body[iBody].bEnvTides)
-  {
-    *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
-  }
-  else
-  {
-    *dTmp = -1;
-  }
+  *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+ 
   strcpy(cUnit,"");
 }
 

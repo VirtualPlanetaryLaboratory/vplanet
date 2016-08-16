@@ -396,10 +396,25 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
      through thermint, or it can be from eqtide and/or radheat. */
   *dTmp=0;
 
+  int bOcean = 0;
+  int bEnv = 0;
+
+  // From initial conditions, did we want to model ocean tidal effects?
+  if(body[iBody].dTidalQOcean < 0)
+    bOcean = 0;
+  else
+    bOcean = 1;
+
+  // Same as ocean, but for envelope
+  if(body[iBody].dTidalQEnv < 0)
+    bEnv = 0;
+  else
+    bEnv = 1;
+
   if (body[iBody].bThermint) { 
     *dTmp += fdHfluxSurf(body,iBody);
     
-    if(body[iBody].bOceanTides)
+    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv))
     {
        *dTmp += fdSurfEnFluxOcean(body,iBody);
     }
@@ -524,6 +539,8 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // EDIT FOR ENVELOPE CASE AS WELL XXX
 
   // Case: Just eqtide, no thermint, no oceans
   if(body[iBody].bEqtide && !body[iBody].bThermint && !body[iBody].bOceanTides)

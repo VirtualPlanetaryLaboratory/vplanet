@@ -282,7 +282,7 @@ typedef struct {
   int bBinary;          /** Apply BINARY module? */
   int bBinaryUseMatrix; /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;         /** < CBP radius */
+  double dCBPR;         /** < CBP orbital radius */
   double dCBPZ;         /** < CBP height above/below the orbital plane */
   double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
   double dCBPRDot;      /** < CBP radial orbital velocity */
@@ -509,6 +509,7 @@ typedef struct {
   double dAtmXAbsEff;
   int iWaterLossModel;
   int iPlanetRadiusModel;
+  int bInstantO2Sink;
   double dKTide;
   double dMDotWater;
   double dFHRef;
@@ -1664,6 +1665,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "stellar.h"
 #include "baraffe2015.h"
 #include "proximacenstellar.h"
+#include "proximacenbradius.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

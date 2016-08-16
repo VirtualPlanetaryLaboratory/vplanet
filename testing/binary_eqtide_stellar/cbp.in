@@ -17,4 +17,4 @@ dSemi           0.7016		# Semi-major axis, negative -> AU
 dLongP          304.05
 
 # Output
-saOutputOrder Time Semim Ecce LongABinary IncBinary LongPBinary #TMan TCore SurfWater Envelop
+saOutputOrder Time Semim Ecce BinaryLongA BinaryInc BinaryLongP #TMan TCore SurfWater Envelop

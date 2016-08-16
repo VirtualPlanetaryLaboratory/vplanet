@@ -1,4 +1,4 @@
-/***************** BARAFFE2015.C *********************** 
+/***************** PROXIMACENSTELLAR.C *********************** 
  *
  * Rodrigo Luger, Summer 2016
  *
@@ -47,7 +47,7 @@ double fdProximaCenInterpolate(int iALEN, double const xarr[iALEN], double const
     
   // Calculate
   result = fdProximaCenLinear(iALEN,data,xi,dx);
-  if isnan(result) {
+  if (isnan(result)) {
     *iError = PROXIMACEN_ERROR;
     return 0;
   }

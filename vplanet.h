@@ -839,6 +839,10 @@ typedef struct {
   double dLastEncTime;  /**< time of last encounter */
   double dNextEncT;
   int iNEncounters;
+  double dRForm;  /**< galactic formation radius */
+  double dTMigration;  /**< time of radial migration */
+  int bRadialMigr;    /**< use radial migration */
+  double dScalingF;    /**< scaling factor for radial migration */
 
   int iSeed;
 

@@ -40,29 +40,43 @@ def get_cols(datadir=".",infiles=[]):
         with open(datadir+infile) as f:
             lines = f.readlines()
 
-            # Loop over all line in the input file
-            for line in lines:
-                line = str(line).rstrip("\n")
+            # Loop over all lines in the input file
+            for ii in range(0,len(lines)):
+                line = lines[ii]
+                line = str(line).strip(' \t\n\r') # Remove all kinds of whitespace from sides
 
                 # Is this the saOutputOrder line and it isn't commented out?
-                if line.find("saOutputOrder") != -1 and "#saOutputOrder" not in line:
+                if line.find("saOutputOrder") != -1 and line[0] != "#":
                     cols = line.split()[1:] # ignore saOutputOrder
 
+                    # Add all lines below it that have a "$", the line continuation character
+                    while("$" in str(lines[ii]).strip(' \t\n\r')):
+                        
+                        # Move to next line
+                        ii = ii + 1
+                            
+                        cols = cols + str(lines[ii]).strip(' \t\n\r').split()
+                    
                     # Remove any - if there are any
                     # Also ignore commented out (#) stuff
                     good_cols = []
-                    for i in range(0,len(cols)):
-                        if "#" in cols[i]: # First time this goes, rest of stuff is ignored
+                    for jj in range(0,len(cols)):
+                        if "#" in cols[jj]: # First time this goes, rest of stuff is ignored
                             break
-                        else:
-                            # Get rid of - sign
-                            cols[i] = cols[i].replace("-", "")
 
-                            # Column name is good and processed, so add it
-                            good_cols.append(cols[i])
+                        # Get rid of - sign if it's there
+                        cols[jj] = cols[jj].replace("-", "")
 
-            # Save the columns!
-            data_cols[infile] = good_cols
+                        # Column name is good and processed, so add it
+                        good_cols.append(cols[jj])
+                        
+                        # Get rid of $ sign if it's there
+                        if "$" in good_cols:
+                            good_cols.remove("$")
+            
+                    # Save the columns, break out of this infile!
+                    data_cols[infile] = good_cols
+                    break
 
     return data_cols
 # end function
@@ -422,29 +436,37 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols={},infiles=[],
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
             if f.endswith(".forward") and (f.find(infile) != -1):
-                # Read in data as pandas dataframe, use C engine for speed!
-                tmp = pd.read_table(datadir + f,
+                
+                # For unexpected reasons, this *could* fail, so just chalk it up to
+                # some crazy, unanticipated error.  Maybe vplanet output error?
+                # This should never happen and if it does, who knows
+                try:
+                    # Read in data as pandas dataframe, use C engine for speed!
+                    tmp = pd.read_table(datadir + f,
                                              header=None,
                                              delim_whitespace=True,
                                              engine="c",
                                              names=data_cols[infile + ".in"],
                                              dtype=np.float64)
 
-                # Create corresponding hdf5 subgroup for body, store data as
-                # numpy array. Subgroup's name is body name
-                sub = grp.create_group(infile)
+                    # Create corresponding hdf5 subgroup for body, store data as
+                    # numpy array. Subgroup's name is body name
+                    sub = grp.create_group(infile)
 
-                # Write columns to subgroup as datasets [allows for POSIX-like access]
-                for col in data_cols[infile + ".in"]:
-                    sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
-                                      compression = compression)
+                    # Write columns to subgroup as datasets [allows for POSIX-like access]
+                    for col in data_cols[infile + ".in"]:
+                        sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
+                                          compression = compression)
+                except:
+                    pass
 
     # Return 1 since 1 new sim was successfully processed/stored
     return 1
 # End function
 
 def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
-                      compression="gzip",remove_halts=True):
+                      compression="gzip",remove_halts=False,cadence=None,
+                     skip_body=None):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -465,6 +487,14 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
         None (no quotes) turns off compression
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
+    cadence : int (optional)
+        Cadence at which function outputs what sim number it's on.  
+        Ex: cadence == 1,000 -> every 1,000 sims processed, function outputs sim number
+    skip_body : list (optional)
+        Bodies to not process.  Ex: Have a body, primary, who either has no output or
+        the user doesn't care what its output is and hence does not want to save it.
+        if skip_body = ["primary.in"], the body primary with input file primary.in will
+        be ignored from all data processing
 
     Returns
     -------
@@ -520,6 +550,14 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
     # Find out what the infiles are based on the first dir
     # Since they're the same in all dirs
     infiles = get_infiles(src + "/" + dirs[0] + "/")
+    
+    # Skip any bodies?
+    if skip_body != None:
+        for sbody in skip_body:
+            if sbody in infiles:
+                infiles.remove(sbody)
+                print("Skipped %s." % sbody)
+    
     print("Infiles:",infiles)
 
     # Get the names of the output variables for each body
@@ -544,6 +582,10 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="None",
         if res != 0:
             # store sim - counter mapping
             number_to_sim.append(direct)
+            
+        # Output progress to user?
+        if cadence != None and counter % int(cadence) == 0:
+            print("Simulations processed so far: %d" % counter)
 
     # Try to store metadata
     # Add top level dataset with information about dataset
@@ -637,8 +679,8 @@ def aggregate_data(data=None, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_c
 
     Parameters
     ----------
-    data : iterable
-        master data array produced by extract_data
+    data : DataSet object
+        master data object produced by extract_data_hdf5
     bodies : dict
         body names are keys and values are list of body variables to extract
     funcs : dict of dict
@@ -651,9 +693,9 @@ def aggregate_data(data=None, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_c
         where i is the simulation number and body is the str name of the body.
     cache : str
         Name of the cache file
-    fmt : str
+    fmt : str (optional)
         Name of data format.  If hdf5, will use those data accessing utilities.
-        Options: "dict", "hdf5".  Note: if using "hdf5", data is the name of the
+        Options: "hdf5".  Note: if using "hdf5", data is the name of the
         dataset.
     ind : int
         Index of variable's array to select.  Defaults to initial condition
@@ -742,92 +784,88 @@ def aggregate_data(data=None, bodies={"cbp" : ["Eccentricity"]}, funcs={}, new_c
     return res
 # End function
 
-def df_to_matrix(df,color_last=False,color_body=None,color_var=None):
+def add_column(data, df=None, new_cols={}, cache=None, fmt="hdf5", **kwargs):
     """
-    This function is super obsolete.
+    Add a new column computed as some user-defined function of simulation output 
+    to a dataframe made by aggregate_data.
 
     Parameters
     ----------
-    df : dict of dataframes
-        1 dataframe for each body
-        Data frame containing simulation initial values for variables specified by user and
-        any additional aggregate values.  1 row == 1 simulation.
-    color_last : bool
-        Whether or not to put a color variable as the last column in the matrix
-    color_body : str
-        Name of the body of the color variable
-    color_var : str
-        Name of the color variable
+    data : DataSet object
+        master data object produced by extract_data_hdf5
+    df : pandas dataframe
+        df produced/read in by aggregate_data
+    new_cols : dict
+        Nested dict which caries function and name of data to be added to the dataframe
+        Example: new_cols = {"cbp" : {"DampTime" : custom_function}}
+        The custom_function takes the following args: data,i,body,**kwargs
+        where i is the simulation number and body is the str name of the body.
+    cache : str
+        Name of the cache file (a .pkl pickle file)
+    fmt : str
+        Name of data format.  If hdf5, will use those data accessing utilities.
+        Options: "hdf5".  Note: if using "hdf5", data is the name of the
+        dataset.
+    kwargs : dict
+        keyword arguments to be passed to new_cols functions
 
     Returns
     -------
-    arr : 2D numpy array
-    keys : dict
-        Dict where key : value pair is index : body_variable
+    ret : dataframes
+        Same dataframe as produced by aggregate_data but with additional columns specified
+        by new_cols
 
     Example
     -------
-    >> arr, keys = df_to_matrix(df,color_last=True,color_body="cbp",color_var="InitEcc")
+
+    >>> def mean_func(data,i,body,fmt="hdf5",**kwargs):
+    >>>    return np.mean(data.get(i,body,"Eccentricity"))
+
+    >>> new_cols = {"cbp" : {"MeanEcc" : mean_func}}
+    >>> df = add_column(df,new_cols=new_cols,cache=src+"trivial_cache.pkl")
+    >>> df["cbp_MeanEcc"]
+        (some pandas Series)
     """
+    
+    # User forgot to specify cache or df
+    if cache == None and df == None:
+        print("No cache or dataframe provided! Provide a cache path or dataframe.")
+        return None
 
-    # Figure out dimensions for the output matrix
-    # Simultaneously, extract keys
-    keys = {}
-    ii = 0
+    res = {}
+    
+    # Init data
+    for body in new_cols.keys():
+        # Loop over variables
+        for var in new_cols[body]:
+            # Make sure that column doesn't already exist, if so ignore
+            next_col = body + "_" + var
+            if next_col not in df.columns:
+                res[next_col] = np.zeros(len(df))
 
-    for key in df.keys():
-        for cols in df[key].columns:
-            keys[str(ii)] = key + "_" + cols
+    # Loop over simulations
+    for i in range(0,len(df)):
+        # Loop over bodies
+        for body in new_cols.keys():
+            # Loop over variables
+            for col in new_cols[body]:
+                next_col = body + "_" + col
+                if next_col in res.keys():
+                    res[next_col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
+    
+    # Convert data dict -> pandas dataframe
+    res = pd.DataFrame(res)
+    
+    # Now merge the two
+    df = pd.concat([df, res], axis=1)
+    
+    # Cache the result
+    if cache != None:
+        print("Caching data at %s" % cache)
+        with open(cache, 'wb') as handle:
+            pickle.dump(df, handle)
 
-            # Iterate counter
-            ii = ii + 1
-
-    # Scale counter to make it index-like (i.e. [0,number])
-    ii = ii - 1
-
-    # Make the color variable last
-    if color_last:
-        tmp = color_body + "_" + color_var
-
-        # Make sure it's actually in the out keys dict
-        if tmp in keys.values():
-
-            # Find where color_var is
-            for ex_key, ex_value in keys.items():
-                if ex_value == tmp:
-
-                    # Set holder to where the color_var currently is
-                    holder = str(ex_key)
-
-                    # Got it! Make the switch
-                    # Set other key to where color_var was
-                    keys[holder] = keys[str(ii)]
-                    keys[str(ii)] = tmp
-                    break
-
-                else:
-                    pass
-
-    # Make matrix
-    arr = np.zeros((len(df[df.keys()[0]]),ii+1))
-
-    # Store data in said matrix
-    # Make sure matrix is ordered according to
-    # keys, values in keys
-    for key in keys.values(): # All the keys
-        # Find where var is
-            for ex_key, ex_value in keys.items():
-                if ex_value == key:
-                    # Split key since it's body_var
-                    word = key.split("_")
-                    body = word[0]
-                    var = word[1]
-
-                    # Now store into the matrix!
-                    arr[:,int(ex_key)] = df[body][var]
-                    break
-
-    return arr, keys
+    return df
 # End function
 
 def reduce_dimensions(x, y, z, shape, dims=(-1), reduce_func = np.nanmean):

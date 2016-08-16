@@ -21,6 +21,9 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GALACDENSITY       2201
 #define OPT_RANDSEED           2202
 #define OPT_ENCOUNTERRAD       2203
+#define OPT_RFORM              2204
+#define OPT_TMIGRATION         2205
+#define OPT_RADIALMIGR         2206
 
 /* Options Functions */
 #define OPT_PERIQ              2221
@@ -80,6 +83,7 @@ int check_disrupt(BODY*,SYSTEM*,int);
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
 double random_double();
+double mag2mass(double);
 void GetStarMass(SYSTEM*);
 void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
@@ -88,3 +92,4 @@ void CalcImpactParam(SYSTEM*);
 void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
 void NextEncounterTime(SYSTEM*,double);
+void CalcEncounterRate(SYSTEM*);

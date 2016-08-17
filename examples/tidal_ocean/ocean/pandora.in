@@ -71,8 +71,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
-
+saOutputOrder Time TidalQ -RotRate Obli -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $

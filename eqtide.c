@@ -2470,6 +2470,7 @@ double fdEqRotRate(BODY body,double dMeanMotion,double dEcc,int iTideModel,int b
   assert(0);
 }
 
+// dTidalRadius
 void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
@@ -2708,6 +2709,7 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
   iEpsilon[9]=fiSign(dRotRate);
 }
 
+// dTidal Radius
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
   /* Note that this is different from Heller et al (2011) because 
@@ -2859,9 +2861,11 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
      rate and override this derivative. XXX This derivative should
      be removed from the update matrix in that case*/
 
+// dTidalRadius
   return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
 }
 
+// dTidalRadius
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
   double foo;

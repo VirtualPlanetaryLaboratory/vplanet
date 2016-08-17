@@ -57,7 +57,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2 -TMan -TCore SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
+saOutputOrder Time -RotRate Obliquity TidalQ K2 ImK2 -TMan -TCore SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

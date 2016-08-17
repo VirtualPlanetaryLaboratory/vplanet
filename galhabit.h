@@ -83,6 +83,8 @@ double NearbyStarDist(double);
 int check_disrupt(BODY*,SYSTEM*,int);
 double DarkMatterDensity(SYSTEM*,double);
 double ISMDensity(SYSTEM*,double);
+void CalcMeanVelDispSolar(SYSTEM*);
+
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);

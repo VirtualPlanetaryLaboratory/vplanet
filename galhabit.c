@@ -500,6 +500,8 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   int i;
   int n;
   double dSigma, dDMR, dStarR, dGasR;
+  char cOut[NAMELEN];
+  FILE *fOut;
   
   srand(system->iSeed);
   
@@ -541,6 +543,11 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 //   }
   
   if (iBody >= 1) {
+    sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
+    fOut = fopen(cOut."w");
+    fprintf(fOut,"#time MV mass sigma impx impy impz u v w V Rx Ry Rz R\n");
+    fclose(fOut);
+    
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;

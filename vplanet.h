@@ -842,8 +842,11 @@ typedef struct {
   double dRForm;  /**< galactic formation radius */
   double dTMigration;  /**< time of radial migration */
   int bRadialMigr;    /**< use radial migration */
-  double dScalingF;    /**< scaling factor for radial migration */
-
+  double dScalingFTot;    /**< scaling factor for radial migration */
+  double dScalingFStars;    /**< scaling factor for radial migration */
+  double dGasDensity;  /**< density of local ism */
+  double dDMDensity;   /**< density of local dark matter */
+  double dStarScaleL;  /**< scale length of stellar disk */
   int iSeed;
 
 } SYSTEM;

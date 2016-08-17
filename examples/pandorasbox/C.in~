@@ -82,7 +82,7 @@ dArgP       90
 dGalacDensity    0.102
 iRandSeed     42
 dRForm 5.0
-dTMigration 1
+dTMigration 1e9
 bRadialMigr 1
 
 # Output

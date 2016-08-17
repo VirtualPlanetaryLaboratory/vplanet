@@ -24,6 +24,9 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_RFORM              2204
 #define OPT_TMIGRATION         2205
 #define OPT_RADIALMIGR         2206
+#define OPT_GASDENSITY         2207
+#define OPT_DMDENSITY          2208
+#define OPT_STARSCALEL         2209
 
 /* Options Functions */
 #define OPT_PERIQ              2221
@@ -78,6 +81,8 @@ double random_double();
 void testrand(SYSTEM*);
 double NearbyStarDist(double);
 int check_disrupt(BODY*,SYSTEM*,int);
+double DarkMatterDensity(SYSTEM*,double);
+double ISMDensity(SYSTEM*,double);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);

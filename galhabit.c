@@ -63,6 +63,25 @@ void ReadRForm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     AssignDefaultDouble(options,&system->dRForm,files->iNumInputs);
 }
 
+void ReadStarScaleL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than or equal to 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    system->dStarScaleL = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    AssignDefaultDouble(options,&system->dStarScaleL,files->iNumInputs);
+}
+
 void ReadTMigration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
 /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -92,6 +111,44 @@ void ReadRadialMigr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultInt(options,&system->bRadialMigr,files->iNumInputs);
+}
+
+void ReadGasDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than or equal to 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    system->dGasDensity = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    AssignDefaultDouble(options,&system->dGasDensity,files->iNumInputs);
+}
+
+void ReadDMDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than or equal to 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    system->dDMDensity = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    AssignDefaultDouble(options,&system->dDMDensity,files->iNumInputs);
 }
 
 void ReadRandSeed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -279,8 +336,8 @@ void ReadHostBinInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
-  sprintf(options[OPT_GALACDENSITY].cDefault,"0.185"); //need to find updated value
-  options[OPT_GALACDENSITY].dDefault = 0.185;
+  sprintf(options[OPT_GALACDENSITY].cDefault,"0.102"); //need to find updated value
+  options[OPT_GALACDENSITY].dDefault = 0.102;
   options[OPT_GALACDENSITY].iType = 2;  
   options[OPT_GALACDENSITY].iMultiFile = 0;   
   fnRead[OPT_GALACDENSITY] = &ReadGalacDensity;
@@ -326,6 +383,30 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RADIALMIGR].iType = 0;  
   options[OPT_RADIALMIGR].iMultiFile = 0; 
   fnRead[OPT_RADIALMIGR] = &ReadRadialMigr;
+  
+  sprintf(options[OPT_GASDENSITY].cName,"dGasDensity");
+  sprintf(options[OPT_GASDENSITY].cDescr,"Local ISM density");
+  sprintf(options[OPT_GASDENSITY].cDefault,"0.05 Msun pc^3"); 
+  options[OPT_GASDENSITY].dDefault = 0.05;
+  options[OPT_GASDENSITY].iType = 2;  
+  options[OPT_GASDENSITY].iMultiFile = 0;   
+  fnRead[OPT_GASDENSITY] = &ReadGasDensity;
+  
+  sprintf(options[OPT_DMDENSITY].cName,"dDMDensity");
+  sprintf(options[OPT_DMDENSITY].cDescr,"Local dark matter density");
+  sprintf(options[OPT_DMDENSITY].cDefault,"0.01 Msun pc^3"); 
+  options[OPT_DMDENSITY].dDefault = 0.01;
+  options[OPT_DMDENSITY].iType = 2;  
+  options[OPT_DMDENSITY].iMultiFile = 0;   
+  fnRead[OPT_DMDENSITY] = &ReadDMDensity;
+  
+  sprintf(options[OPT_STARSCALEL].cName,"dStarScaleL");
+  sprintf(options[OPT_STARSCALEL].cDescr,"Stellar radial scale length in MW");
+  sprintf(options[OPT_STARSCALEL].cDefault,"2.4 kpc"); 
+  options[OPT_STARSCALEL].dDefault = 2.4;
+  options[OPT_STARSCALEL].iType = 2;  
+  options[OPT_STARSCALEL].iMultiFile = 0;   
+  fnRead[OPT_STARSCALEL] = &ReadStarScaleL;
   
   sprintf(options[OPT_HOSTBINARY].cName,"bHostBinary");
   sprintf(options[OPT_HOSTBINARY].cDescr,"Model primary as binary with quadrupole moment?");
@@ -418,7 +499,7 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i;
   int n;
-  double dSigma;
+  double dSigma, dDMR, dStarR, dGasR;
   
   srand(system->iSeed);
   
@@ -427,9 +508,15 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarV = malloc(3*sizeof(double));
     system->dPassingStarImpact = malloc(3*sizeof(double));
     if (system->bRadialMigr) {
-      system->dScalingF = 1.5; //XXX some power law to go here
+      dDMR = DarkMatterDensity(system, system->dRForm);
+      dStarR = (system->dGalacDensity-system->dGasDensity-system->dDMDensity)*\
+              exp(-(system->dRForm-8)/system->dStarScaleL);
+      dGasR = ISMDensity(system, system->dRForm);
+      system->dScalingFTot = (dDMR+dStarR+dGasR)/system->dGalacDensity; //scale factor for total density (star+gas+dm)
+      system->dScalingFStars = dStarR/(system->dGalacDensity-system->dGasDensity-system->dDMDensity);
     } else {
-      system->dScalingF = 1.0;
+      system->dScalingFTot = 1.0;
+      system->dScalingFStars = 1.0;
     }
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
@@ -636,7 +723,8 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   if (system->bRadialMigr) {
     if (evolve->dTime >= system->dTMigration) {
       // time of migration passed? move to solar neighborhood
-      system->dScalingF = 1.0; 
+      system->dScalingFTot = 1.0; 
+      system->dScalingFStars = 1.0;
       CalcEncounterRate(system);
       system->bRadialMigr = 0;  //don't recalculate this stuff again
     }
@@ -789,7 +877,7 @@ void CalcEncounterRate(SYSTEM* system) {
   for (i=-4;i<=15;i++) {
     system->dPassingStarMagV = (double)i;
     VelocityDisp(system);
-    dn = system->dScalingF*NearbyStarDist(system->dPassingStarMagV);
+    dn = system->dScalingFStars*NearbyStarDist(system->dPassingStarMagV);
     
     dEncR += system->dPassingStarSigma*1000*dn*pow(AUCM*206265,-3.0);
   }
@@ -827,7 +915,7 @@ void VelocityDisp(SYSTEM* system) {
     dSigma = 24.1;  
   }
   
-  system->dPassingStarSigma = system->dScalingF*dSigma; //XXX not sure if this scaling will be the same as density
+  system->dPassingStarSigma = dSigma; //XXX not sure if this scaling will be the same as density
 }
 
 
@@ -851,12 +939,13 @@ double NearbyStarDist(double dMagV) {
 }
 
 void GetStarMass(SYSTEM *system) {
-  double ns = 0, dTmp = 100, dMagV;
+  double ns = 0, dTmp = 100, dMagV, dMaxN;
+  dMaxN = system->dScalingFStars*NearbyStarDist(15);
   
   while (dTmp > ns) {
     dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
-    dTmp = random_double()*0.014;       //if dTmp exceeds the number density, reject dMagV
-    ns = system->dScalingF*NearbyStarDist(dMagV);         //get number density at dMagV
+    dTmp = random_double()*dMaxN;       //if dTmp exceeds the number density, reject dMagV
+    ns = system->dScalingFStars*NearbyStarDist(dMagV);         //get number density at dMagV
   }
   
   system->dPassingStarMagV = dMagV;
@@ -975,6 +1064,25 @@ void testrand(SYSTEM *system) {
   
   //return 0;
 }
+
+double DarkMatterDensity(SYSTEM *system, double dRad) {
+  /* halo model from Kordopatis+ 2015 */
+  double dR0 = 8.0, gamma = -2.0, beta = 2.21, q = 0.8, z = 0.025, r0 = 1.09, rc = 1000.0;
+  double dmR, dm8, drho_R;
+  dm8 = sqrt(pow(8,2)+pow(z/q,2));
+  dmR = sqrt(pow(dRad,2)+pow(z/q,2));
+
+  drho_R = pow(dm8/dmR,gamma)*pow((1+dm8/r0)/(1+dmR/r0),beta-gamma)*exp(-1*(pow(dmR,2)-pow(dm8,2))/pow(rc,2));
+  
+  return drho_R*system->dDMDensity; //convert to Msun pc^-3
+}
+
+double ISMDensity(SYSTEM *system, double dRad) {
+  double dRd = 2*system->dStarScaleL, dRh = 4.0, drho_R;
+  
+  drho_R = exp(-(dRad-8)/dRd-dRh/dRad+dRh/8)*system->dGasDensity;
+  return drho_R;
+}  
 
 double dX2TimeAvg(BODY *body) {
   /* calculate host binary's time-averaged x^2 */
@@ -1237,7 +1345,7 @@ double dDDDOmDist(BODY *body, int iBody) {
 //--------------Galactic stuff!--------------------------------------------------------------
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingF*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
   dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
   
@@ -1246,7 +1354,7 @@ double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingF*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
   dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
 

@@ -4,7 +4,7 @@ saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
-dRadius		-1.0  			# Radius, negative -> Earth radii
+dRadius		-1.07  			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
@@ -24,12 +24,9 @@ dMinSurfWaterMass         -1.0e-4          # Planet is desiccated when water con
 dMinEnvelopeMass          -1.0e-4
 
 # Eqtide Properties
-#dTidalQ         100              # Tidal phase lag
 bOceanTides     1                   # Whether or not to include the effects of ocean tides
 dTidalQOcean    12.5                 # Tidal phase lag of the ocean
-#dK2             0.3                 # Love number of degree 2
 dK2Ocean        0.05
-bEnvTides       0
 dMaxLockDiff    0.1
 saTidePerts     star 
 

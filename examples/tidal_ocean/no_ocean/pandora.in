@@ -4,7 +4,7 @@ saModules 	radheat thermint eqtide
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
-dRadius		-1.0  			# Radius, negative -> Earth radii
+dRadius		-1.07 			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
@@ -14,8 +14,6 @@ dEcc            0.1		# Eccentricity
 dSemi           0.0483		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
-#dTidalQ         12.5              # Tidal phase lag
-#dK2             0.3                 # Love number of degree 2
 dMaxLockDiff    0.1
 saTidePerts     star 
 

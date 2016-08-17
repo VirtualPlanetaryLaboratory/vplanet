@@ -571,6 +571,93 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
   }
 }
 
+void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  /* Ensure that if using Lopez et al radius models, ATMESC uses Lopez et al radius for atmespheric escape
+   * while EQTIDE uses a "tidal radius" as it is likely that the radius of the envelope does not really
+   * impact tides since the tidal evolution has such a strong (r^5) radius dependent.  Effectively, we assume
+   * that the core/ocean size of stuff controls that evolution while the atmosphere contributes to the Tidal
+   * Q, k_2 and Im(k_2) for the world
+   */
+
+  // If this is the star (body 0 or body 1 in binary), ignore
+  if(iBody == 0 || (body[iBody].bBinary && iBody == 1))
+    return;
+
+  if(body[iBody].bEqtide)
+  {
+    // CTL hack.  Pretty sure EQTIDE CTL is broken, but this will prevent additional hiccups
+    // Ignore everything after this 
+    if(control->Evolve.iEqtideModel == CTL)
+    {
+      body[iBody].dTidalRadius = body[iBody].dRadius;
+      return;
+    }
+
+    // Using ATMESC?
+    if(body[iBody].bAtmEsc)
+    {
+      
+      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius 
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
+
+      // Using tidal radus
+      if(body[iBody].bUseTidalRadius)
+      {
+        // If any tidal radius option is set, the other must be set as well!
+        if(!((options[OPT_TIDALRADIUS].iLine[iBody+1] > -1) && (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)))
+        {
+          fprintf(stderr,"ERROR: if bTidalRadius == 1, must set %s.\n",options[OPT_TIDALRADIUS].cName);
+          exit(EXIT_INPUT);
+        }
+      }
+      // Not using tidal radius
+      else
+      {
+        // Since no tidal radius specified, dRadius better be (or a radius evolution model)
+        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1))
+        {
+          fprintf(stderr,"ERROR: Using EQTIDE and bUseTidalRadius == 0 but %s or %s not set!\n",options[OPT_RADIUS].cName,options[OPT_PLANETRADIUSMODEL].cName);
+          exit(EXIT_INPUT);
+        }
+      
+        // If dTidalRadius set, warn user since it's not considered
+        if(options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)
+        {
+          if(control->Io.iVerbose >= VERBINPUT)
+          {
+            fprintf(stderr,"WARNING: %s set but disregarded since bUseTidalRadius == 0.\n",options[OPT_TIDALRADIUS].cName);
+          }
+        }
+
+        body[iBody].dTidalRadius = body[iBody].dRadius;
+      }
+    }
+    // Not using ATMESC
+    else
+    {
+      // Using tidal radius without atmesc doesn't make sense, just need to set radius
+      if(!(options[OPT_RADIUS].iLine[iBody+1] > -1))
+      {
+        fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);
+        exit(EXIT_INPUT);
+      }
+     
+      // If dTidalRadius or bUseTidalRadius set, ignore and warn user as they do nothing
+      if((options[OPT_USETIDALRADIUS].iLine[iBody+1] > -1) || (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1))
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+        {
+          fprintf(stderr,"WARNING: %s and/or %s set for EQTIDE while ATMESC not used and hence will be ignored.\n",options[OPT_USETIDALRADIUS].cName,options[OPT_TIDALRADIUS].cName);
+        }
+      }
+
+      // TidalRadius == radius as without ATMESC, planet radius doesn't evolve
+      body[iBody].dTidalRadius = body[iBody].dRadius;
+    }
+  }
+
+}
+
 void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   // If you're using alllll of these, include the force behavior!
@@ -701,6 +788,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   
   VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
+  VerifyModuleMultiAtmescEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   // Always call after VerifyModuleMultiEqtideThermint !!
@@ -719,6 +808,16 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
 /*
  * Auxiliary Properties for multi-module calculations
  */
+
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // This function controls how tidal radius is set.
+
+  // If bUseTidalRadius == 0, dTidalRadius <- dRadius
+  if(!body[iBody].bUseTidalRadius)
+    body[iBody].dTidalRadius = body[iBody].dRadius;
+
+  // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models
+}
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but 
@@ -780,6 +879,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
     body[iBody].dImK2 = body[iBody].dK2*(body[iBody].dImk2Man/body[iBody].dK2Man + body[iBody].dImK2Env/body[iBody].dK2Env);
   }
   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
+  // Also, envelope and ocean are mutually exclusive so envelope dominates
   else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
   {
     // Envelope and ocean!
@@ -827,7 +927,7 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
 }
 
 void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
-  
+
   // Loop over non-star bodies
   int iBody;
   

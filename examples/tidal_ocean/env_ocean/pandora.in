@@ -1,6 +1,6 @@
 # Earthlike parameters
 sName		pandora			# Body's name
-saModules 	radheat thermint eqtide #atmesc
+saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
@@ -14,25 +14,27 @@ dEcc            0.1		# Eccentricity
 dSemi           0.0483		# Semi-major axis, negative -> AU
 
 # ATMESC Properties
-#dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-#dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-#dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
-#dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
-#bHaltSurfaceDesiccated    0               # Halt when dry?
-#bHaltEnvelopeGone         0               # Halt when evaporated?
-#dMinSurfWaterMass         -1.e-4          # Planet is desiccated when water content drops below this (Earth oceans)
-#dMinEnvelopeMass          -1.e-4
-# sPlanetRadiusModel        proximacenb     # ???
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
+dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+dMinEnvelopeMass          -1.e-5
+sPlanetRadiusModel        proximacenb     
 
 # Eqtide Properties
-#bOceanTides     1                   # Whether or not to include the effects of ocean tides
-#dTidalQOcean    12.5                 # Tidal phase lag of the ocean
-#dK2Ocean        0.05
+bOceanTides     1                   # Whether or not to include the effects of ocean tides
+dTidalQOcean    12.5                 # Tidal phase lag of the ocean
+dK2Ocean        0.05
 dMaxLockDiff    0.1
 saTidePerts     star 
-#bEnvTides       1                 # Whether or not to include the effects of gaseous envelope tides
-#dTidalQEnv      1.0e4
-#dK2Env          0.3
+bEnvTides       1                 # Whether or not to include the effects of gaseous envelope tides
+dTidalQEnv      1.0e4
+dK2Env          0.3
+bUseTidalRadius 1
+dTidalRadius    -1.07
 
 # RADHEAT Parameters
 ### 26Al
@@ -72,8 +74,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -RotRate Obli OceanTidalQ -TMan -TCore $ 
-SemimajorAxis Eccentricity -SurfEnFluxTot #-SurfWaterMass -EnvelopeMass
+saOutputOrder Time TidalQ -Radius SemimajorAxis Eccentricity -TidalRadius -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

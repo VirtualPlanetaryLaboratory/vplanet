@@ -39,6 +39,8 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dPrecA = src[iBody].dPrecA;
   dest[iBody].bOceanTides = src[iBody].bOceanTides;
   dest[iBody].bEnvTides = src[iBody].bEnvTides;
+  dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
+  dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
 
   if (iBody > 0) {
     dest[iBody].dEcc = src[iBody].dEcc;
@@ -230,6 +232,24 @@ void ReadK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *sy
   } else 
     if (iFile > 0)
       body[iFile-1].dK2 = options->dDefault;
+}
+
+void ReadTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      body[iFile-1].dTidalRadius = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTidalRadius = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTidalRadius = options->dDefault;
 }
 
 /* Love number of degree 2 for the ocean */
@@ -486,6 +506,22 @@ void ReadEqtideOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].bOceanTides = 0; // Default to no ocean tides
 }
 
+// Use fixed tidal radius?
+void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseTidalRadius = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].bUseTidalRadius = 0; // Default to no
+}
+
 // Include effects of envelope tides?
 void ReadEqtideEnvTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -536,7 +572,17 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_HALTTIDELOCK].iType = 0;
   options[OPT_HALTTIDELOCK].iMultiFile = 1;
   fnRead[OPT_HALTTIDELOCK] = &ReadHaltTideLock;
-  
+
+  sprintf(options[OPT_TIDALRADIUS].cName,"dTidalRadius");
+  sprintf(options[OPT_TIDALRADIUS].cDescr,"Eqtide Tidal Radius");
+  sprintf(options[OPT_TIDALRADIUS].cDefault,"1 Earth Radius");
+  options[OPT_TIDALRADIUS].dDefault = REARTH;
+  options[OPT_TIDALRADIUS].iType = 2;
+  options[OPT_TIDALRADIUS].iMultiFile = 1;
+  options[OPT_TIDALRADIUS].dNeg = REARTH;
+  sprintf(options[OPT_TIDALRADIUS].cNeg,"Earth radii");
+  fnRead[OPT_TIDALRADIUS] = &ReadTidalRadius;
+
   sprintf(options[OPT_HALTSYNCROT].cName,"bHaltSyncRot");
   sprintf(options[OPT_HALTSYNCROT].cDescr,"Halt if Secondary's rotation becomes syncrhonous?");
   sprintf(options[OPT_HALTSYNCROT].cDefault,"0");
@@ -582,7 +628,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_OCEANTIDES].iType = 0;
   options[OPT_OCEANTIDES].iMultiFile = 1;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
-  
+
+  sprintf(options[OPT_USETIDALRADIUS].cName,"bUseTidalRadius");
+  sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations");
+  sprintf(options[OPT_USETIDALRADIUS].cDefault,"0");
+  options[OPT_USETIDALRADIUS].iType = 0;
+  options[OPT_USETIDALRADIUS].iMultiFile = 1;
+  fnRead[OPT_USETIDALRADIUS] = &ReadUseTidalRadius;
+
   sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
   sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");
   sprintf(options[OPT_ENVTIDES].cDefault,"0");
@@ -1508,6 +1561,18 @@ void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 }
 
+void WriteTidalRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dTidalRadius;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dFoo;
   int iPert;
@@ -2060,6 +2125,15 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQOCEAN].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQOCEAN] = WriteTidalQOcean;
 
+  sprintf(output[OUT_TIDALRADIUS].cName,"TidalRadius");
+  sprintf(output[OUT_TIDALRADIUS].cDescr,"Tidal Radius");
+  output[OUT_TIDALRADIUS].bNeg = 1;
+  sprintf(output[OUT_TIDALRADIUS].cNeg,"Earth");
+  output[OUT_TIDALRADIUS].dNeg = 1./REARTH;
+  output[OUT_TIDALRADIUS].iNum = 1;
+  output[OUT_TIDALRADIUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALRADIUS] = &WriteTidalRadius;
+
   sprintf(output[OUT_TIDALQENV].cName,"EnvTidalQ");
   sprintf(output[OUT_TIDALQENV].cDescr,"Envelope Tidal Q");
   output[OUT_TIDALQENV].bNeg = 0;
@@ -2470,9 +2544,9 @@ double fdEqRotRate(BODY body,double dMeanMotion,double dEcc,int iTideModel,int b
   assert(0);
 }
 
-// dTidalRadius
+// dflemin3: dRadius -> dTidalRadius
 void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
-  body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
+  body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
 
 int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
@@ -2683,6 +2757,7 @@ double fdTidePowerOcean(BODY *body, int iBody) {
 }
 
 /* Surface Energy Flux due to Ocean Tides */
+// dflemin3: dRadius -> dTidalRadius
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
 
   // Total Ocean Tide power / surface area of body
@@ -2709,14 +2784,14 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
   iEpsilon[9]=fiSign(dRotRate);
 }
 
-// dTidal Radius
+// dflemin3: dRadius -> dTidalRadius
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
   /* Note that this is different from Heller et al (2011) because 
      we now use Im(k_2) which equals k_2/Q. The value of Im(k_2) is set in
      VerifyEqtideThermint in module.c 
   */
-  body[iBody].dTidalZ[iPert] = 3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)/(pow(dSemi,9)*dMeanMotion); 
+  body[iBody].dTidalZ[iPert] = 3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dTidalRadius,5)/(pow(dSemi,9)*dMeanMotion); 
 }
 
 /*
@@ -2861,11 +2936,11 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
      rate and override this derivative. XXX This derivative should
      be removed from the update matrix in that case*/
 
-// dTidalRadius
-  return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
+// dflemin3: dRadius -> dTidalRadius
+  return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dTidalRadius*body[iB0].dTidalRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
 }
 
-// dTidalRadius
+// dflemin3: dRadius -> dTidalRadius
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
   double foo;
@@ -2875,7 +2950,7 @@ double fdCPLDoblDt(BODY *body,int *iaBody) {
   else
     iOrbiter = iB0;
 
-  return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
+  return body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dTidalRadius*body[iB0].dTidalRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));
 
   /*
   foo = body[iB0].dTidalZ[iB1]*sin(body[iB0].dObliquity)/(4*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dRadius*body[iB0].dRadius*body[iOrbiter].dMeanMotion*body[iB0].dRotRate) * (body[iB0].iTidalEpsilon[iB1][0]*(1-body[iB0].dTidalChi[iB1]) + (body[iB0].iTidalEpsilon[iB1][8]-body[iB0].iTidalEpsilon[iB1][9])*(1 + body[iB0].dTidalChi[iB1]));

@@ -311,6 +311,8 @@ typedef struct {
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
   int bEnvTides;         /**< Have Q contribution from the envelope as well? */
+  int bUseTidalRadius;      /**< Set a fixed tidal radius? */
+  double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */

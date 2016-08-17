@@ -24,6 +24,8 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPTSTARTEQTIDE          1000 /* Start of Eqtide options */
 #define OPTENDEQTIDE            1100 /* End of Eqtide options */
 
+#define OPT_USETIDALRADIUS      1001
+#define OPT_TIDALRADIUS         1002
 #define OPT_DISCRETEROT         1005
 #define OPT_FIXORBIT            1007
 #define OPT_FORCEEQSPIN         1010 
@@ -63,11 +65,13 @@ void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQOcean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalQEnv(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
 void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
@@ -101,6 +105,7 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 /* EQTIDE 1000 - 1999 */
 /* System properties 1000-1049, body properties 1050-1099 */
 #define OUTSTARTEQTIDE          1000
+#define OUT_TIDALRADIUS         1005
 #define OUTBODYSTARTEQTIDE      1050
 #define OUTENDEQTIDE            1100
 
@@ -186,6 +191,7 @@ void WriteK2Env(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]
 void WriteTidalQOcean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalQEnv(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputEqtide(OUTPUT*,fnWriteOutput[]);
+void WriteTidalRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsEqtide(CONTROL*,FILE*);

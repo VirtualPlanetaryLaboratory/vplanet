@@ -516,7 +516,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       system->dScalingFStars = dStarR/(system->dGalacDensity-system->dGasDensity-system->dDMDensity);
       // system->dScalingFVelDisp = 1; //temporary, just to get solar neighborhood velocity dispersion
 //       CalcMeanVelDispSolar(system);
-      system->dScalingFVelDisp = exp(-(system->dRForm-8)/(2*system->dStarScaleL));
+      system->dScalingFVelDisp = exp(-(system->dRForm-8)/(2*system->dStarScaleL)); //based on Minchev+ 2012
     } else {
       system->dScalingFTot = 1.0;
       system->dScalingFStars = 1.0;

@@ -844,9 +844,11 @@ typedef struct {
   int bRadialMigr;    /**< use radial migration */
   double dScalingFTot;    /**< scaling factor for radial migration */
   double dScalingFStars;    /**< scaling factor for radial migration */
+  double dScalingFVelDisp;
   double dGasDensity;  /**< density of local ism */
   double dDMDensity;   /**< density of local dark matter */
   double dStarScaleL;  /**< scale length of stellar disk */
+  double dVelDispSolar;
   int iSeed;
 
 } SYSTEM;

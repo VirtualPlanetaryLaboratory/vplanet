@@ -514,9 +514,13 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       dGasR = ISMDensity(system, system->dRForm);
       system->dScalingFTot = (dDMR+dStarR+dGasR)/system->dGalacDensity; //scale factor for total density (star+gas+dm)
       system->dScalingFStars = dStarR/(system->dGalacDensity-system->dGasDensity-system->dDMDensity);
+      // system->dScalingFVelDisp = 1; //temporary, just to get solar neighborhood velocity dispersion
+//       CalcMeanVelDispSolar(system);
+      system->dScalingFVelDisp = exp(-(system->dRForm-8)/(2*system->dStarScaleL));
     } else {
       system->dScalingFTot = 1.0;
       system->dScalingFStars = 1.0;
+      system->dScalingFVelDisp = 1.0;
     }
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
@@ -725,6 +729,7 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       // time of migration passed? move to solar neighborhood
       system->dScalingFTot = 1.0; 
       system->dScalingFStars = 1.0;
+      system->dScalingFVelDisp = 1.0;
       CalcEncounterRate(system);
       system->bRadialMigr = 0;  //don't recalculate this stuff again
     }
@@ -886,6 +891,23 @@ void CalcEncounterRate(SYSTEM* system) {
   system->dEncounterRate = dEncR;
 }
 
+void CalcMeanVelDispSolar(SYSTEM* system) {
+  double dMeanS = 0, dn, dnTot=0;
+  int i;
+  
+  for (i=-4;i<=15;i++) {
+    system->dPassingStarMagV = (double)i;
+    VelocityDisp(system);
+    dn = NearbyStarDist(system->dPassingStarMagV);
+    
+    dMeanS += system->dPassingStarSigma*dn;
+    dnTot += dn;
+  }
+  dMeanS /= dnTot;
+  
+  system->dVelDispSolar = dMeanS;
+}
+
 void VelocityDisp(SYSTEM* system) {
   double dSigma, dMagV;
   
@@ -915,7 +937,7 @@ void VelocityDisp(SYSTEM* system) {
     dSigma = 24.1;  
   }
   
-  system->dPassingStarSigma = dSigma; //XXX not sure if this scaling will be the same as density
+  system->dPassingStarSigma = system->dScalingFVelDisp*dSigma; //XXX not sure if this scaling will be the same as density
 }
 
 

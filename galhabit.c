@@ -509,6 +509,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarR = malloc(3*sizeof(double));
     system->dPassingStarV = malloc(3*sizeof(double));
     system->dPassingStarImpact = malloc(3*sizeof(double));
+    system->dHostApexVel = malloc(3*sizeof(double));
     if (system->bRadialMigr) {
       dDMR = DarkMatterDensity(system, system->dRForm);
       dStarR = (system->dGalacDensity-system->dGasDensity-system->dDMDensity)*\
@@ -538,8 +539,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 //   GetStarMass(system);
 //   GetStarVelocity(system);
 //   GetStarPosition(system);
- 
-//   testrand(system);
+   testrand(system);
   
   // for (i=0;i<=10;i++) {
 //     n = (int)((double)rand()*20/RAND_MAX)-3;
@@ -548,7 +548,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   
   if (iBody >= 1) {
     sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
-    fOut = fopen(cOut."w");
+    fOut = fopen(cOut,"w");
     fprintf(fOut,"#time MV mass sigma impx impy impz u v w V Rx Ry Rz R\n");
     fclose(fOut);
     
@@ -871,12 +871,25 @@ double nsMinus6to15(double dMagV) {
 double mag2mass(double dMagV) {
   double dlogMass;
   
-  if (dMagV > 0) {
-    dlogMass = -0.0928*dMagV + 0.448;
-  } else if (dMagV == -4) {
-    dlogMass = -0.18708664335714442;
-  } else { 
-    dlogMass = -0.271*dMagV + 0.448;
+  // if (dMagV > 0) {
+//     dlogMass = -0.0928*dMagV + 0.448;
+//   } else if (dMagV == -4) {
+//     dlogMass = -0.18708664335714442;
+//   } else { 
+//     dlogMass = -0.271*dMagV + 0.448;
+//   }
+  if (dMagV > 10 && dMagV < 15) {
+    dlogMass = 1e-3*(0.3 + 1.87*dMagV + 7.614*pow(dMagV,2) - 1.698*pow(dMagV,3) +\
+                      0.06096*pow(dMagV,4));
+  } else if (dMagV >= 15) {
+    dlogMass = 1e-3*(0.3 + 1.87*15 + 7.614*pow(15,2) - 1.698*pow(15,3) +\
+                      0.06096*pow(15,4));
+  } else if (dMagV <= 10 && dMagV >= -5.7) {
+    dlogMass = 0.477 - 0.135*dMagV + 1.228e-2*pow(dMagV,2) - 6.734e-4*pow(dMagV,3);
+  } else if (dMagV < -5.7 && dMagV >= -6.7) {
+    dlogMass = log10(0.9); //white dwarfs
+  } else if (dMagV < -6.7) {
+    dlogMass = log10(4.0); //giants
   }
   
   return pow(10.0,dlogMass);
@@ -920,51 +933,160 @@ void VelocityDisp(SYSTEM* system) {
   
   dMagV = system->dPassingStarMagV;
   
-  if (dMagV == -4) {
-    dSigma = 36.6;
-  } else if ((dMagV <= -2) && (dMagV != -4)) {
-    dSigma = 8.5;
-  } else if ((dMagV > -2) && (dMagV <= 0)) {
-    dSigma = 11.4;
-  } else if ((dMagV > 0) && (dMagV <= 2)) {
-    dSigma = 13.7;
-  } else if ((dMagV > 2) && (dMagV <= 3)) {
-    dSigma = 16.8;
-  } else if ((dMagV > 3) && (dMagV <= 4)) {
-    dSigma = 20.9;
-  } else if ((dMagV > 4) && (dMagV <= 5)) {
-    dSigma = 22.6;
-  } else if ((dMagV > 5) && (dMagV <= 6)) {
-    dSigma = 24.0;
-  } else if ((dMagV > 6) && (dMagV <= 7)) {
-    dSigma = 25.0;
-  } else if ((dMagV > 7) && (dMagV <= 9)) {
-    dSigma = 24.7;  
-  } else if ((dMagV > 9) && (dMagV <= 15)) {
-    dSigma = 24.1;  
+  // if (dMagV == -4) {
+//     dSigma = 36.6;
+//   } else if ((dMagV <= -2) && (dMagV != -4)) {
+//     dSigma = 8.5;
+//   } else if ((dMagV > -2) && (dMagV <= 0)) {
+//     dSigma = 11.4;
+//   } else if ((dMagV > 0) && (dMagV <= 2)) {
+//     dSigma = 13.7;
+//   } else if ((dMagV > 2) && (dMagV <= 3)) {
+//     dSigma = 16.8;
+//   } else if ((dMagV > 3) && (dMagV <= 4)) {
+//     dSigma = 20.9;
+//   } else if ((dMagV > 4) && (dMagV <= 5)) {
+//     dSigma = 22.6;
+//   } else if ((dMagV > 5) && (dMagV <= 6)) {
+//     dSigma = 24.0;
+//   } else if ((dMagV > 6) && (dMagV <= 7)) {
+//     dSigma = 25.0;
+//   } else if ((dMagV > 7) && (dMagV <= 9)) {
+//     dSigma = 24.7;  
+//   } else if ((dMagV > 9) && (dMagV <= 15)) {
+//     dSigma = 24.1;  
+//   }
+
+  if (dMagV >= -5.7 && dMagV <= -0.2) {
+    dSigma = 14.7;
+  } else if (dMagV > -0.2 && dMagV <= 1.3) {
+    dSigma = 19.7;
+  } else if (dMagV > 1.3 && dMagV <= 2.4) {
+    dSigma = 23.7;
+  } else if (dMagV > 2.4 && dMagV <= 3.6) {
+    dSigma = 29.1;
+  } else if (dMagV > 3.6 && dMagV <= 4.0) {
+    dSigma = 36.2;
+  } else if (dMagV > 4.0 && dMagV <= 4.7) {
+    dSigma = 37.4;
+  } else if (dMagV > 4.7 && dMagV <= 5.5) {
+    dSigma = 39.2;
+  } else if (dMagV > 5.5 && dMagV <= 6.4) {
+    dSigma = 34.1;
+  } else if (dMagV > 6.4 && dMagV <= 8.1) {
+    dSigma = 43.4;
+  } else if (dMagV > 8.1 && dMagV <= 9.9) {
+    dSigma = 42.7;
+  } else if (dMagV > 9.9) {
+    dSigma = 41.8;
+  } else if (dMagV < -5.7 && dMagV >= -6.7) {
+    dSigma = 63.4;  //white dwarfs
+  } else if (dMagV < -6.7) {
+    dSigma = 41.0;  //giants
   }
   
   system->dPassingStarSigma = system->dScalingFVelDisp*dSigma; //XXX not sure if this scaling will be the same as density
 }
 
-
-double NearbyStarDist(double dMagV) {
-  double dNs;
+void VelocityApex(SYSTEM* system) {
+  double dVel, dMagV, phi, theta;
   
-  if (dMagV <= -5.0) {
-    dNs = 0.0;
-  } else if (dMagV == -4.0) {
-    //white dwarf hack
-    dNs = 0.008;
-  } else if (dMagV > 19.0) {
-    dNs = 0.0;
-  } else if (dMagV > 15.0) {
-    dNs = nsMinus6to15(15.0);
-  } else {
-    dNs = nsMinus6to15(dMagV);
+  dMagV = system->dPassingStarMagV;
+
+  if (dMagV >= -5.7 && dMagV <= -0.2) {
+    dVel = 18.6;
+  } else if (dMagV > -0.2 && dMagV <= 1.3) {
+    dVel = 17.1;
+  } else if (dMagV > 1.3 && dMagV <= 2.4) {
+    dVel = 13.7;
+  } else if (dMagV > 2.4 && dMagV <= 3.6) {
+    dVel = 17.1;
+  } else if (dMagV > 3.6 && dMagV <= 4.0) {
+    dVel = 17.1;
+  } else if (dMagV > 4.0 && dMagV <= 4.7) {
+    dVel = 26.4;
+  } else if (dMagV > 4.7 && dMagV <= 5.5) {
+    dVel = 23.9;
+  } else if (dMagV > 5.5 && dMagV <= 6.4) {
+    dVel = 19.8;
+  } else if (dMagV > 6.4 && dMagV <= 8.1) {
+    dVel = 25.0;
+  } else if (dMagV > 8.1 && dMagV <= 9.9) {
+    dVel = 17.3;
+  } else if (dMagV > 9.9) {
+    dVel = 23.3;
+  } else if (dMagV < -5.7 && dMagV >= -6.7) {
+    dVel = 38.3; //white dwarfs
+  } else if (dMagV < -6.7) {
+    dVel = 21.0;  //giants
   }
   
-  return dNs;
+  system->dHostApexVelMag = dVel; 
+  
+  phi = random_double()*PI;
+  theta = random_double()*2*PI;
+  system->dHostApexVel[0] = dVel*sin(phi)*cos(theta);
+  system->dHostApexVel[1] = dVel*sin(phi)*sin(theta);
+  system->dHostApexVel[2] = dVel*cos(phi);
+}
+
+
+double NearbyStarDist(double dMagV) {
+  double dNs, w;
+  
+//   if (dMagV <= -5.0) {
+//     dNs = 0.0;
+//   } else if (dMagV == -4.0) {
+//     //white dwarf hack
+//     dNs = 0.008;
+//   } else if (dMagV > 19.0) {
+//     dNs = 0.0;
+//   } else if (dMagV > 15.0) {
+//     dNs = nsMinus6to15(15.0);
+//   } else {
+//     dNs = nsMinus6to15(dMagV);
+//   }
+//   above, Heisler distribution, below Garcia-Sanchez distribution
+  
+  if (dMagV >= -5.7 && dMagV <= -0.2) {
+    w = (5.7-0.2);
+    dNs = 0.06/w;
+  } else if (dMagV > -0.2 && dMagV <= 1.3) {
+    w = (1.3+0.2);
+    dNs = 0.27/w;
+  } else if (dMagV > 1.3 && dMagV <= 2.4) {
+    w = 2.4-1.3;
+    dNs = 0.44/w;
+  } else if (dMagV > 2.4 && dMagV <= 3.6) {
+    w = 3.6-2.4;
+    dNs = 1.41/w;
+  } else if (dMagV > 3.6 && dMagV <= 4.0) {
+    w = 4.-3.6;
+    dNs = 0.64/w;
+  } else if (dMagV > 4.0 && dMagV <= 4.7) {
+    w = 4.7-4.;
+    dNs = 1.52/w;
+  } else if (dMagV > 4.7 && dMagV <= 5.5) {
+    w = 5.5-4.7;
+    dNs = 2.34/w;
+  } else if (dMagV > 5.5 && dMagV <= 6.4) {
+    w = 6.4-5.5;
+    dNs = 2.68/w;
+  } else if (dMagV > 6.4 && dMagV <= 8.1) {
+    w = 8.1-6.4;
+    dNs = 5.26/w;
+  } else if (dMagV > 8.1 && dMagV <= 9.9) {
+    w = 9.9-8.1;
+    dNs = 8.72/w;
+  } else if (dMagV > 9.9) {
+    w = 18-9.9;
+    dNs = 41.55/w;
+  } else if (dMagV < -5.7 && dMagV >= -6.7) {
+    dNs = 3.0;  //white dwarfs
+  } else if (dMagV < -6.7) {
+    dNs = 0.43;  //giants
+  }
+  return dNs/1000; //divide by 1000 to match Heisler's units
 }
 
 void GetStarMass(SYSTEM *system) {
@@ -972,7 +1094,8 @@ void GetStarMass(SYSTEM *system) {
   dMaxN = system->dScalingFStars*NearbyStarDist(15);
   
   while (dTmp > ns) {
-    dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
+    //dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
+    dMagV = (random_double()*25.7-7.7);
     dTmp = random_double()*dMaxN;       //if dTmp exceeds the number density, reject dMagV
     ns = system->dScalingFStars*NearbyStarDist(dMagV);         //get number density at dMagV
   }
@@ -1079,8 +1202,8 @@ void testrand(SYSTEM *system) {
   
   for (i=0;i<=100000;i++) {
     while (y > n) {
-        m = (double)(random_int(19)-3);
-        y = random_double()*0.014;
+        m = (random_double()*23.7-5.7);
+        y = random_double()*20;
         n = NearbyStarDist(m);
     }
     

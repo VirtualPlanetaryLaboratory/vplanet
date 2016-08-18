@@ -849,6 +849,8 @@ typedef struct {
   double dDMDensity;   /**< density of local dark matter */
   double dStarScaleL;  /**< scale length of stellar disk */
   double dVelDispSolar;
+  double dHostApexVelMag;
+  double *dHostApexVel;
   int iSeed;
 
 } SYSTEM;

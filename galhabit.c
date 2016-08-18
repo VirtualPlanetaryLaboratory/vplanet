@@ -510,6 +510,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarV = malloc(3*sizeof(double));
     system->dPassingStarImpact = malloc(3*sizeof(double));
     system->dHostApexVel = malloc(3*sizeof(double));
+    system->dRelativeVel = malloc(3*sizeof(double));
     if (system->bRadialMigr) {
       dDMR = DarkMatterDensity(system, system->dRForm);
       dStarR = (system->dGalacDensity-system->dGasDensity-system->dDMDensity)*\
@@ -556,6 +557,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dGSBinMag[11] = 9.0;
     system->dGSBinMag[12] = 13.0;
     
+    system->dEncounterRateMV = malloc(13*sizeof(double));
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
     system->dMinAllowed = 10.0*AUCM; //set to 10 au for now.
@@ -571,7 +573,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 //   GetStarMass(system);
 //   GetStarVelocity(system);
 //   GetStarPosition(system);
-   testrand(system);
+//   testrand(system);
   
   // for (i=0;i<=10;i++) {
 //     n = (int)((double)rand()*20/RAND_MAX)-3;
@@ -581,7 +583,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   if (iBody >= 1) {
     sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
     fOut = fopen(cOut,"w");
-    fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
+    fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz\n");
     fclose(fOut);
     
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
@@ -909,7 +911,7 @@ void GetStarVelocity(SYSTEM *system) {
   double u1, u2, z0, z1, dSigma;
   int i;
   VelocityDisp(system);
-  dSigma = system->dPassingStarSigma;
+  dSigma = system->dPassingStarSigma/sqrt(3.);  //sqrt(3) to account for 3 dimensions
   
   u1 = random_double();
   u2 = random_double();
@@ -982,11 +984,29 @@ void CalcEncounterRate(SYSTEM* system) {
     dn = system->dScalingFStars*system->dGSNumberDens[i];
     dVRel = sqrt(pow(system->dHostApexVelMag,2)+pow(system->dPassingStarSigma,2));
     
+    system->dEncounterRateMV[i] = PI*pow(system->dEncounterRad,2)*dVRel*1000*dn*pow(AUCM*206265,-3.0)*YEARSEC*1e6;
     dEncR += dVRel*1000*dn*pow(AUCM*206265,-3.0);
   }
+  
   dEncR *= PI*pow(system->dEncounterRad,2);
   
   system->dEncounterRate = dEncR;
+}
+
+void GetStarMass(SYSTEM *system) {
+  double fs = 0, dTmp = 100, dMagV, dMaxN;
+  dMaxN = system->dEncounterRateMV[12];
+  
+  while (dTmp > fs) {
+    //dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
+    dMagV = (random_double()*25.7-7.7);
+    dTmp = random_double()*dMaxN;       //if dTmp exceeds the frequency, reject dMagV
+    fs = NearbyStarFrEnc(system,dMagV);         //get frequency at dMagV
+  }
+  
+  system->dPassingStarMagV = dMagV;
+  //now get the mass of the star
+  system->dPassingStarMass = mag2mass(dMagV)*MSUN;
 }
 
 void CalcMeanVelDispSolar(SYSTEM* system) {
@@ -1063,7 +1083,7 @@ void VelocityDisp(SYSTEM* system) {
     dSigma = 41.0;  //giants
   }
   
-  system->dPassingStarSigma = system->dScalingFVelDisp*dSigma; //XXX not sure if this scaling will be the same as density
+  system->dPassingStarSigma = system->dScalingFVelDisp*dSigma;
 }
 
 void VelocityApex(SYSTEM* system) {
@@ -1099,6 +1119,7 @@ void VelocityApex(SYSTEM* system) {
     dVel = 21.0;  //giants
   }
   
+  dVel *= 1000.0;
   system->dHostApexVelMag = dVel; 
   
   phi = random_double()*PI;
@@ -1154,7 +1175,7 @@ double NearbyStarDist(double dMagV) {
     dNs = 0.44/w;
   } else if (dMagV > 2.4 && dMagV <= 3.6) {
     w = 3.6-2.4;
-    dNs = 1.41/w;
+    dNs = 1.42/w;
   } else if (dMagV > 3.6 && dMagV <= 4.0) {
     w = 4.-3.6;
     dNs = 0.64/w;
@@ -1184,21 +1205,39 @@ double NearbyStarDist(double dMagV) {
   return dNs/1000; //divide by 1000 to get number/pc^3
 }
 
-void GetStarMass(SYSTEM *system) {
-  double ns = 0, dTmp = 100, dMagV, dMaxN;
-  dMaxN = system->dScalingFStars*NearbyStarDist(15);
+double NearbyStarFrEnc(SYSTEM* system, double dMagV) {
+  double dFs, w;
   
-  while (dTmp > ns) {
-    //dMagV = (double)(random_int(20)-4); //draw stellar magnitude (-3<dMagV<15)
-    dMagV = (random_double()*25.7-7.7);
-    dTmp = random_double()*dMaxN;       //if dTmp exceeds the number density, reject dMagV
-    ns = system->dScalingFStars*NearbyStarDist(dMagV);         //get number density at dMagV
+  if (dMagV >= -5.7 && dMagV <= -0.2) {
+    dFs = system->dEncounterRateMV[2]/(5.7-0.2);
+  } else if (dMagV > -0.2 && dMagV <= 1.3) {
+    dFs = system->dEncounterRateMV[3]/(1.3+0.2);
+  } else if (dMagV > 1.3 && dMagV <= 2.4) {
+    dFs = system->dEncounterRateMV[4]/(2.4-1.3);
+  } else if (dMagV > 2.4 && dMagV <= 3.6) {
+    dFs = system->dEncounterRateMV[5]/(3.6-2.4);
+  } else if (dMagV > 3.6 && dMagV <= 4.0) {
+    dFs = system->dEncounterRateMV[6]/(4.0-3.6);
+  } else if (dMagV > 4.0 && dMagV <= 4.7) {
+    dFs = system->dEncounterRateMV[7]/(4.7-4.);
+  } else if (dMagV > 4.7 && dMagV <= 5.5) {
+    dFs = system->dEncounterRateMV[8]/(5.5-4.7);
+  } else if (dMagV > 5.5 && dMagV <= 6.4) {
+    dFs = system->dEncounterRateMV[9]/(6.4-5.5);
+  } else if (dMagV > 6.4 && dMagV <= 8.1) {
+    dFs = system->dEncounterRateMV[10]/(8.1-6.4);
+  } else if (dMagV > 8.1 && dMagV <= 9.9) {
+    dFs = system->dEncounterRateMV[11]/(9.9-8.1);
+  } else if (dMagV > 9.9) {
+    dFs = system->dEncounterRateMV[12]/(18.0-9.9);
+  } else if (dMagV < -5.7 && dMagV >= -6.7) {
+    dFs = system->dEncounterRateMV[1];  //white dwarfs
+  } else if (dMagV < -6.7) {
+    dFs = system->dEncounterRateMV[0];  //giants
   }
-  
-  system->dPassingStarMagV = dMagV;
-  //now get the mass of the star
-  system->dPassingStarMass = mag2mass(dMagV)*MSUN;
+  return dFs;
 }
+
 
 void GetStarPosition(SYSTEM *system) {
   double r = system->dEncounterRad, costheta, phi, sintheta;

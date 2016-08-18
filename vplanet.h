@@ -856,6 +856,7 @@ typedef struct {
   double dRelativeVelMag;
   double *dGSNumberDens;
   double *dGSBinMag;
+  double *dEncounterRateMV; 
   int iSeed;
 
 } SYSTEM;

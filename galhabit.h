@@ -86,6 +86,7 @@ double ISMDensity(SYSTEM*,double);
 void CalcMeanVelDispSolar(SYSTEM*);
 void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
+double NearbyStarFrEnc(SYSTEM*,double);
 
 
 

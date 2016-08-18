@@ -37,7 +37,7 @@
 \begin{document}
 
 \title{The Habitability of Proxima Centauri b I: Environmental Context}
-\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, David P. Fleming, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
+\author{Rory Barnes\altaffilmark{1,2,3}, Russell Deitrick\altaffilmark{1,2}, Rodrigo Luger\altaffilmark{1,2}, Peter E. Driscoll\altaffilmark{4,2}, Thomas R. Quinn\altaffilmark{1,2}, David P. Fleming\altaffilmark{1}, Benjamin Guyer, Diego V. McDonald, Victoria S. Meadows, Giada Arney, David Crisp, Shawn D. Domagal-Goldman, Andrew Lincowski, Jacob Lustig-Yeager, Eddie Schwieterman}
 \altaffiltext{1}{Astronomy Department, University of Washington, Box 951580, Seattle, WA 98195}
 \altaffiltext{2}{NASA Astrobiology Institute -- Virtual Planetary Laboratory Lead Team, USA}
 \altaffiltext{3}{E-mail: rory@astro.washington.edu}
@@ -694,6 +694,36 @@ heating is $\sim~1000$~W/m$^{2}$.
 % Fig 11: Same as 10, but c) include TidePower
 
 % David:
+Since a possible path towards habitability for Proxima b is the ``habitable evaporated core'' scenario of \citet{Luger15},
+we seek to model how the presence of a hydrogen envelope and surface oceans impact the tidal and
+orbital evolution of Proxima b.  To sufficiently model such as system, we necessarily need to consider the hydrodynamic
+escape of both hydrogen and water, the variation of planet radius with envelope mass, the tidal contribution of the envelope and the oceans, and the evolution of 
+the thermal interior in the context of the adopted CPL tidal model.  For details of each individual physical model, we refer the reader to the sections describing 
+the atmospheric escape physics, \atmesc, the tidal evolution module, \eqtide, and the Earth-calibrated coupled geophysical interior models of \radheat \ and 
+\thermint.
+
+For the ``envelope'' and ``ocean'' cases, we model the combined tidal contributions of the envelope and oceans via the following relation for the net tidal $Q$:
+\begin{equation}
+\label{eqn:Q_hec}
+\frac{1}{Q} = \frac{1}{Q_{interior}} + \frac{1}{Q_{ocean}} + \frac{1}{Q_{envelope}}
+\end{equation}
+where we remove $1/Q_i$ from the summation if we neglect the $i$th's component contribution to Proxima b's net tidal interaction.  We compute Proxima b's net 
+2nd Love number via
+\begin{equation}
+\label{eqn:k2_hec}
+k_2 = k_{2_{interior}} + k_{2_{ocean}}+ k_{2_{envelope}}
+\end{equation}
+where again we remove $k_{2_{i}}$ from the summation if we neglect the $i$th's component contribution to Proxima b's net tidal interaction.  In the general case 
+when a hydrogen envelope is present, we only consider the tidal effects of the interior and the envelope as any water is likely to be super critical due to the high 
+pressure exerted by the envelope (citation?).  When an envelope is not present, we only include the tidal contribution of surface oceans if the planet is not in the runaway 
+greenhouse limit since all water would be present in the atmosphere (citation?).
+%% equation 1-2 citations?
+
+We identify four reasonable boundary cases that bracket the potential past tidal evolution of Proxima b: a simple case, ``CPL'', which assumes a constant tidal 
+$Q = 12.5$ analogous to the simulations seen in Figure \ref{fig:eqtide}, the ``no ocean'' case which assumes the tidal
+interaction is dominated by the planet's interior given by the coupled geophysical interior models of \radheat \ and \thermint, the ``ocean'' case  which generalize the ``no ocean'' by assuming Proxima b had initially 10 Earth oceans of water with $Q_{ocean} = 12.5$, and the ``envelope'' case which again generalizes
+``no ocean'' by adding on a hydrogen envelope that has an initial mass fraction of $0.001$ of the planet's total mass and $Q_{envelope} = 10^4$ similar to that of mini-Neptunes (citation).
+
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 
 % Fig 11: Same as 10, but c) include TidePower
@@ -763,6 +793,7 @@ many possible states.
 \vspace{1cm}
 This work was supported by the NASA Astrobiology Institute's Virtual
 Planetary Laboratory under Cooperative Agreement number NNA13AA93A.
+David Fleming is supported by an NSF IGERT DGE-1258485 fellowship.
 
 
 \bibliography{bib}

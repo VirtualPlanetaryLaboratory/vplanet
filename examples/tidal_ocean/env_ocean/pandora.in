@@ -32,7 +32,7 @@ dMaxLockDiff    0.1
 saTidePerts     star 
 bEnvTides       1                 # Whether or not to include the effects of gaseous envelope tides
 dTidalQEnv      1.0e4
-dK2Env          0.3
+dK2Env          0.05
 bUseTidalRadius 1
 dTidalRadius    -1.07
 

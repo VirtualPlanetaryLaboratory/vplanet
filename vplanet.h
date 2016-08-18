@@ -851,6 +851,11 @@ typedef struct {
   double dVelDispSolar;
   double dHostApexVelMag;
   double *dHostApexVel;
+  double *dRelativeVel;
+  double dRelativeVelRad;
+  double dRelativeVelMag;
+  double *dGSNumberDens;
+  double *dGSBinMag;
   int iSeed;
 
 } SYSTEM;

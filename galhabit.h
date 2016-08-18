@@ -84,6 +84,9 @@ int check_disrupt(BODY*,SYSTEM*,int);
 double DarkMatterDensity(SYSTEM*,double);
 double ISMDensity(SYSTEM*,double);
 void CalcMeanVelDispSolar(SYSTEM*);
+void VelocityApex(SYSTEM*);
+void GetRelativeVelocity(SYSTEM*);
+
 
 
 /* GalHabit derivatives */

@@ -81,9 +81,9 @@ dArgP       90
 
 dGalacDensity    0.102
 iRandSeed     42
-dRForm 5.0
+dRForm 4.5
 dTMigration 1e9
-bRadialMigr 1
+bRadialMigr 0
 
 # Output
 saOutputOrder Time Ecce PeriQ ArgP Inc LongA NEncounters DeltaT 

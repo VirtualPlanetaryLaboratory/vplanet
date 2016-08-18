@@ -525,6 +525,37 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       system->dScalingFStars = 1.0;
       system->dScalingFVelDisp = 1.0;
     }
+    
+    system->dGSNumberDens = malloc(13*sizeof(double));
+    system->dGSNumberDens[0] = 0.43e-3;
+    system->dGSNumberDens[1] = 3e-3;
+    system->dGSNumberDens[2] = 0.06e-3;
+    system->dGSNumberDens[3] = 0.27e-3;
+    system->dGSNumberDens[4] = 0.44e-3;
+    system->dGSNumberDens[5] = 1.42e-3;
+    system->dGSNumberDens[6] = 0.64e-3;
+    system->dGSNumberDens[7] = 1.52e-3;
+    system->dGSNumberDens[8] = 2.34e-3;
+    system->dGSNumberDens[9] = 2.68e-3;
+    system->dGSNumberDens[10] = 5.26e-3;
+    system->dGSNumberDens[11] = 8.72e-3;
+    system->dGSNumberDens[12] = 41.55e-3;
+    
+    system->dGSBinMag = malloc(13*sizeof(double));
+    system->dGSBinMag[0] = -7.0;
+    system->dGSBinMag[1] = -6.0;
+    system->dGSBinMag[2] = -5.0;
+    system->dGSBinMag[3] = 0.0;
+    system->dGSBinMag[4] = 2.0;
+    system->dGSBinMag[5] = 3.0;
+    system->dGSBinMag[6] = 3.8;
+    system->dGSBinMag[7] = 4.2;
+    system->dGSBinMag[8] = 5.0;
+    system->dGSBinMag[9] = 6.0;
+    system->dGSBinMag[10] = 7.0;
+    system->dGSBinMag[11] = 9.0;
+    system->dGSBinMag[12] = 13.0;
+    
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
     system->dMinAllowed = 10.0*AUCM; //set to 10 au for now.
@@ -532,6 +563,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dCloseEncTime = 0.0;
     system->iNEncounters = 0;
     NextEncounterTime(system,0); 
+    
   }
   
   
@@ -549,7 +581,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   if (iBody >= 1) {
     sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
     fOut = fopen(cOut,"w");
-    fprintf(fOut,"#time MV mass sigma impx impy impz u v w V Rx Ry Rz R\n");
+    fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
     fclose(fOut);
     
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
@@ -730,6 +762,8 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   double dp;
+  char cOut[NAMELEN];
+  FILE *fOut;
   
   if (system->bRadialMigr) {
     if (evolve->dTime >= system->dTMigration) {
@@ -749,14 +783,14 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
-  
   if (evolve->dTime + evolve->dCurrentDt >= system->dNextEncT) {
     system->dCloseEncTime = evolve->dTime + evolve->dCurrentDt;
     GetStarPosition(system);
     GetStarMass(system);
-    system->dPassingStarVRad = 1.0;
-    while (system->dPassingStarVRad >= 0) {
+    system->dRelativeVelRad = 1.0;
+    while (system->dRelativeVelRad >= 0) {
       GetStarVelocity(system); 
+      GetRelativeVelocity(system);
     }
     /* next calculate impact parameter */
     CalcImpactParam(system); 
@@ -776,11 +810,53 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     system->dLastEncTime = system->dCloseEncTime;
     system->iNEncounters += 1;
     NextEncounterTime(system,system->dCloseEncTime);
-    // if (system->dCloseEncTime > evolve->dTime+evolve->dCurrentDt) {
-//       printf("Close encounter time = %f\n",system->dCloseEncTime/YEARSEC);
-//       printf("Start of time setp = %f\n",evolve->dTime/YEARSEC);
-//       printf("End of time step = %f\n",(evolve->dTime+evolve->dCurrentDt)/YEARSEC);
-//     }
+  
+    /* write out encounter info */
+    sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
+    fOut = fopen(cOut,"a");
+    //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
+    
+    fprintd(fOut,evolve->dTime/YEARSEC,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarMagV,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarMass,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarSigma,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarImpact[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarImpact[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarImpact[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarV[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarV[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarV[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dRelativeVel[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dRelativeVel[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dRelativeVel[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dHostApexVel[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dHostApexVel[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dHostApexVel[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarR[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarR[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,system->dPassingStarR[2],4,6);
+    fprintf(fOut,"\n");
+    
+    fclose(fOut);
+    
   }
 }
 
@@ -896,17 +972,19 @@ double mag2mass(double dMagV) {
 }
 
 void CalcEncounterRate(SYSTEM* system) {
-  double dEncR = 0, dn;
+  double dEncR = 0, dn, dVRel;
   int i;
   
-  for (i=-4;i<=15;i++) {
-    system->dPassingStarMagV = (double)i;
+  for (i=0;i<=12;i++) {
+    system->dPassingStarMagV = system->dGSBinMag[i];
     VelocityDisp(system);
-    dn = system->dScalingFStars*NearbyStarDist(system->dPassingStarMagV);
+    VelocityApex(system);
+    dn = system->dScalingFStars*system->dGSNumberDens[i];
+    dVRel = sqrt(pow(system->dHostApexVelMag,2)+pow(system->dPassingStarSigma,2));
     
-    dEncR += system->dPassingStarSigma*1000*dn*pow(AUCM*206265,-3.0);
+    dEncR += dVRel*1000*dn*pow(AUCM*206265,-3.0);
   }
-  dEncR *= pow(2,1.5)*pow(PI,0.5)*pow(system->dEncounterRad,2);
+  dEncR *= PI*pow(system->dEncounterRad,2);
   
   system->dEncounterRate = dEncR;
 }
@@ -1030,6 +1108,23 @@ void VelocityApex(SYSTEM* system) {
   system->dHostApexVel[2] = dVel*cos(phi);
 }
 
+void GetRelativeVelocity(SYSTEM* system) {
+  int i;
+  double dVsq;
+  VelocityApex(system);
+  
+  system->dRelativeVel[0] = system->dPassingStarV[0] - system->dHostApexVel[0];
+  system->dRelativeVel[1] = system->dPassingStarV[1] - system->dHostApexVel[1];
+  system->dRelativeVel[2] = system->dPassingStarV[2] - system->dHostApexVel[2];
+  dVsq = 0;
+  system->dRelativeVelRad = 0;
+  for (i=0;i<=2;i++) {
+    dVsq += pow(system->dRelativeVel[i],2);
+    system->dRelativeVelRad += system->dRelativeVel[i]*system->dPassingStarR[i];
+  }
+  system->dRelativeVelMag = sqrt(dVsq);
+  system->dRelativeVelRad /= system->dPassingStarRMag;
+}
 
 double NearbyStarDist(double dMagV) {
   double dNs, w;
@@ -1086,7 +1181,7 @@ double NearbyStarDist(double dMagV) {
   } else if (dMagV < -6.7) {
     dNs = 0.43;  //giants
   }
-  return dNs/1000; //divide by 1000 to match Heisler's units
+  return dNs/1000; //divide by 1000 to get number/pc^3
 }
 
 void GetStarMass(SYSTEM *system) {
@@ -1124,14 +1219,14 @@ void CalcImpactParam(SYSTEM *system) {
   int i;
   
   for (i=0;i<=2;i++) {
-    vsq += pow(system->dPassingStarV[i],2);
-    dtime += -system->dPassingStarR[i]*system->dPassingStarV[i];
+    vsq += pow(system->dRelativeVel[i],2);
+    dtime += -system->dPassingStarR[i]*system->dRelativeVel[i];
   }
   dtime /= vsq;
   
-  system->dPassingStarImpact[0] = system->dPassingStarV[0]*dtime + system->dPassingStarR[0];
-  system->dPassingStarImpact[1] = system->dPassingStarV[1]*dtime + system->dPassingStarR[1];
-  system->dPassingStarImpact[2] = system->dPassingStarV[2]*dtime + system->dPassingStarR[2];
+  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dPassingStarR[0];
+  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dPassingStarR[1];
+  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dPassingStarR[2];
 //   r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
   
 //   system->dCloseEncTime += dtime;
@@ -1149,16 +1244,15 @@ void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
   dRelativeImpactrsq = pow(dRelativeImpactx,2) + pow(dRelativeImpacty,2) + \
                           pow(dRelativeImpactz,2);           
                           
-  dRelativeVx = system->dPassingStarV[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
-  dRelativeVy = system->dPassingStarV[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
-  dRelativeVz = system->dPassingStarV[2]-body[iBody].dCartVel[2]*AUCM/DAYSEC;
+  dRelativeVx = system->dRelativeVel[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
+  dRelativeVy = system->dRelativeVel[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
+  dRelativeVz = system->dRelativeVel[2]-body[iBody].dCartVel[2]*AUCM/DAYSEC;
 
   dRelativeV = sqrt(pow(dRelativeVx,2)+pow(dRelativeVy,2)+pow(dRelativeVz,2));
   
   dPassingStarImpactrsq = pow(system->dPassingStarImpact[0],2) + pow(system->dPassingStarImpact[1],2) + \
                           pow(system->dPassingStarImpact[2],2);
-  dPassingStarV = pow(system->dPassingStarV[0],2) + pow(system->dPassingStarV[1],2) + \
-                          pow(system->dPassingStarV[2],2);
+  dPassingStarV = system->dRelativeVelMag;
 
   dDeltaVx = 2*BIGG*system->dPassingStarMass * (1.0/(dRelativeV*dRelativeImpactrsq)*dRelativeImpactx\
             - 1.0/(dPassingStarV*dPassingStarImpactrsq)*system->dPassingStarImpact[0]);

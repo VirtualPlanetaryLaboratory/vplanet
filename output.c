@@ -540,59 +540,33 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // EDIT FOR ENVELOPE CASE AS WELL XXX
-
-  // Case: Just eqtide, no thermint, no oceans
-  if(body[iBody].bEqtide && !body[iBody].bThermint && !body[iBody].bOceanTides)
-  {
-    *dTmp = body[iBody].dK2/body[iBody].dImK2;
-  }
-  // Case: Eqtide and thermint, no oceans or just therminit
-  else if((body[iBody].bEqtide && body[iBody].bThermint && !body[iBody].bOceanTides) || (!body[iBody].bEqtide && body[iBody].bThermint))
-  {
-    // Use Driscoll + Barnes eqn 4 to compute
-    // *dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  // Just thermint, not eqtide
+  if(body[iBody].bThermint && !body[iBody].bEqtide)
     *dTmp = fdK2Man(body,iBody)/fdImk2Man(body,iBody);
-  }
-  // Case: Eqtide, thermint and oceans
-  else if(body[iBody].bEqtide && body[iBody].bThermint && body[iBody].bOceanTides)
-  {
-    *dTmp = body[iBody].dK2/body[iBody].dImK2;
-  }
-  // Case: 
-  // Base case
   else
-  {
-    *dTmp = -1;
-  }
+    *dTmp = body[iBody].dK2/body[iBody].dImK2;
   
   strcpy(cUnit,"");
 }
 
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-   
-  // Eqtide + Thermint + Oceans or just eqtide
-  if((body[iBody].bEqtide && body[iBody].bOceanTides && body[iBody].bThermint) || (body[iBody].bEqtide && !body[iBody].bThermint))
-  {
-    *dTmp = body[iBody].dImK2;
-  }
-  // Eqtide + Thermint, no oceans or just thermint
-  else if((body[iBody].bEqtide && body[iBody].bThermint && !body[iBody].bOceanTides) || (!body[iBody].bEqtide && body[iBody].bThermint))
-  {
+  
+  // Just thermint, no eqtide
+  if(body[iBody].bThermint && !body[iBody].bEqtide)
     *dTmp = fdImk2Man(body,iBody);
-  }
-  // Else...?
   else
-  {
     *dTmp = body[iBody].dImK2;
-  }
 
   strcpy(cUnit,"");
 }
 
 void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    
-  *dTmp = body[iBody].dK2;
+  
+  // If just thermint
+  if(body[iBody].bThermint && !body[iBody].bEqtide)
+    *dTmp = fdK2Man(body,iBody);
+  else
+    *dTmp = body[iBody].dK2;
      
   strcpy(cUnit,"");
 }

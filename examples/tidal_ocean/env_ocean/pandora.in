@@ -74,7 +74,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -Radius SemimajorAxis Eccentricity -TidalRadius -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
+saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -TidalRadius -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

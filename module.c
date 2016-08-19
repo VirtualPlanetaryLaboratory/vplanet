@@ -629,6 +629,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
           }
         }
 
+        // No tidal radius given -> just use specified radius
         body[iBody].dTidalRadius = body[iBody].dRadius;
       }
     }
@@ -655,7 +656,6 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
       body[iBody].dTidalRadius = body[iBody].dRadius;
     }
   }
-
 }
 
 void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -816,7 +816,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   if(!body[iBody].bUseTidalRadius)
     body[iBody].dTidalRadius = body[iBody].dRadius;
 
-  // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models
+  // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models)
 }
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -840,6 +840,10 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     body[iBody].dImK2 = body[iBody].dImk2Man;
     body[iBody].dK2 = body[iBody].dK2Man;
   }
+
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5)
+    body[iBody].dK2 = 1.5;
 
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
@@ -891,6 +895,10 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
   }
   else
     assert(0); // Unknown envelope + ocean behavior
+
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5)
+    body[iBody].dK2 = 1.5;
 
   // Finally, call EQTIDE props aux then set mantle tidal power
   PropsAuxCPL(body,evolve,update,iBody);

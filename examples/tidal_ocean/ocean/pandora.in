@@ -11,7 +11,7 @@ dRadGyra	0.5
 
 # Orbital Properties
 dEcc            0.1		# Eccentricity
-dSemi           0.0483		# Semi-major axis, negative -> AU
+dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
@@ -20,13 +20,13 @@ dSurfWaterMass            -10.0           # Initial surface water (Earth oceans)
 dEnvelopeMass             0.0 #-0.001          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?
 bHaltEnvelopeGone         0               # Halt when evaporated?
-dMinSurfWaterMass         -1.0e-4          # Planet is desiccated when water content drops below this (Earth oceans)
-dMinEnvelopeMass          -1.0e-4
+dMinSurfWaterMass         -1.0e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+dMinEnvelopeMass          -1.0e-5
 
 # Eqtide Properties
 bOceanTides     1                   # Whether or not to include the effects of ocean tides
-dTidalQOcean    12.5                 # Tidal phase lag of the ocean
-dK2Ocean        0.05
+dTidalQOcean    12                 # Tidal phase lag of the ocean
+dK2Ocean        0.01
 dMaxLockDiff    0.1
 saTidePerts     star 
 
@@ -68,7 +68,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ -RotRate Obli -TMan -TCore SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
+saOutputOrder Time TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $

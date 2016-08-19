@@ -1,6 +1,6 @@
 # Earthlike parameters
 sName		pandora			# Body's name
-saModules 	radheat thermint #eqtide
+saModules 	radheat thermint eqtide
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
@@ -11,11 +11,11 @@ dRadGyra	0.5
 
 # Orbital Properties
 dEcc            0.1		# Eccentricity
-dSemi           0.0483		# Semi-major axis, negative -> AU
+dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
-#dMaxLockDiff    0.1
-#saTidePerts     star 
+dMaxLockDiff    0.1
+saTidePerts     star 
 
 # RADHEAT Parameters
 ### 26Al
@@ -24,7 +24,7 @@ d26AlMassCore	0	        # Earth masses
 
 ### 40K
 d40KNumMan    -1.0
-d40KNumCore   -3.0 #-1.0
+d40KNumCore   -1.0
 d40KNumCrust  -1.0
 ### 232Th
 d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
@@ -55,7 +55,7 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2 -TMan -TCore #SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
+saOutputOrder Time TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

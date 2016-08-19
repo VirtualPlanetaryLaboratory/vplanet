@@ -1,5 +1,5 @@
 sName		star		# Body's name
-saModules stellar #eqtide
+saModules stellar eqtide
 
 # Physical Parameters
 dMass		0.118             # Mass, negative -> Earth masses
@@ -11,10 +11,10 @@ dRotPeriod      83
 
 # EQTIDE Parameters
 #dTidalTau	-1		# Tidal time lag, negative -> seconds
-#dTidalQ		1.0e6		# Tidal phase lag
-#dK2		0.5		# Love number of degree 2
-#sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
-#saTidePerts	pandora		# Body name(s) of tidal perturbers
+dTidalQ		1.0e6		# Tidal phase lag
+dK2		0.5		# Love number of degree 2
+sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
+saTidePerts	pandora		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel proximacen              # Stellar evolutin model: `baraffe` or `none`

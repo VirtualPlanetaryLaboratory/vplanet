@@ -20,6 +20,7 @@ void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBo
     dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dPeriQ = src[iBody].dPeriQ;
     dest[iBody].dArgP = src[iBody].dArgP;
+    dest[iBody].dLongP = src[iBody].dLongP;
     dest[iBody].dInc = src[iBody].dInc;
 }
 
@@ -751,19 +752,26 @@ void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
 }
 
 /************* GALHABIT Functions ***********/
-void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {  
+void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) { 
+  body[iBody].dLongP = body[iBody].dLongA + body[iBody].dArgP; 
   while (body[iBody].dArgP > 2*PI) {
     body[iBody].dArgP -= 2*PI;
   }
   while (body[iBody].dArgP < 0) {
     body[iBody].dArgP += 2*PI;
   }
+  while (body[iBody].dLongP > 2*PI) {
+    body[iBody].dLongP -= 2*PI;
+  }
+  while (body[iBody].dLongP < 0) {
+    body[iBody].dLongP += 2*PI;
+  }
   
   body[iBody].dEcc = 1.0 - body[iBody].dPeriQ/body[iBody].dSemi;
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dp;
+  double dp, dkzi, dVMax;
   char cOut[NAMELEN];
   FILE *fOut;
   
@@ -790,10 +798,16 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     GetStarPosition(system);
     GetStarMass(system);
     system->dRelativeVelRad = 1.0;
-    while (system->dRelativeVelRad >= 0) {
+    system->dRelativeVelMag = 1.0;
+    dkzi = 10.0;
+    dVMax = 1.0;
+    while (dkzi > system->dRelativeVelMag/dVMax || system->dRelativeVelRad >= 0) {
       GetStarVelocity(system); 
       GetRelativeVelocity(system);
+      dkzi = random_double();
+      dVMax = system->dHostApexVelMag + 3.0*system->dPassingStarSigma*1000.0;
     }
+    
     /* next calculate impact parameter */
     CalcImpactParam(system); 
     
@@ -982,7 +996,7 @@ void CalcEncounterRate(SYSTEM* system) {
     VelocityDisp(system);
     VelocityApex(system);
     dn = system->dScalingFStars*system->dGSNumberDens[i];
-    dVRel = sqrt(pow(system->dHostApexVelMag,2)+pow(system->dPassingStarSigma,2));
+    dVRel = sqrt(pow(system->dHostApexVelMag/1000,2)+pow(system->dPassingStarSigma,2));
     
     system->dEncounterRateMV[i] = PI*pow(system->dEncounterRad,2)*dVRel*1000*dn*pow(AUCM*206265,-3.0)*YEARSEC*1e6;
     dEncR += dVRel*1000*dn*pow(AUCM*206265,-3.0);

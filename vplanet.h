@@ -305,8 +305,7 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
-  
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */  
   
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -523,7 +522,8 @@ typedef struct {
   int iWindModel;
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
-
+  double iHZModel;
+  
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -1267,6 +1267,7 @@ typedef struct {
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
+
 } CONTROL;
 
 /* The INFILE struct contains all the information 

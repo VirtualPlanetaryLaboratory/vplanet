@@ -858,6 +858,7 @@ typedef struct {
   double *dGSBinMag;
   double *dEncounterRateMV; 
   int iSeed;
+  double dGalaxyAge;  /**< present day age of galaxy */
 
 } SYSTEM;
 

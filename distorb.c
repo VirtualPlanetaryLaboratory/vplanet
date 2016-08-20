@@ -2734,11 +2734,17 @@ void cart2osc(BODY *body, int iNumBodies) {
     if (body[iBody].dEcc != 0) {
       sinw = sinwf*cosf - coswf*sinf;
       cosw = sinwf*sinf + coswf*cosf;
+      body[iBody].dArgP = atan2(sinw,cosw);
       body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
       if (body[iBody].dLongP >= 2.*PI) {
         body[iBody].dLongP -= 2.*PI;
       } else if (body[iBody].dLongP < 0.0) {
         body[iBody].dLongP += 2.*PI;
+      }
+      if (body[iBody].dArgP >= 2.*PI) {
+        body[iBody].dArgP -= 2.*PI;
+      } else if (body[iBody].dArgP < 0.0) {
+        body[iBody].dArgP += 2.*PI;
       }
     }
     

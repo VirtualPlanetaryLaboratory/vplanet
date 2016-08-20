@@ -500,13 +500,15 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i;
   int n;
-  double dSigma, dDMR, dStarR, dGasR;
+  double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
   char cOut[NAMELEN];
   FILE *fOut;
   
   srand(system->iSeed);
   
   if (iBody == 1) {
+    system->dGalaxyAge = 1e10*YEARSEC;
+    dCurrentAge = system->dGalaxyAge-control->Evolve.dStopTime;
     system->dPassingStarR = malloc(3*sizeof(double));
     system->dPassingStarV = malloc(3*sizeof(double));
     system->dPassingStarImpact = malloc(3*sizeof(double));
@@ -527,6 +529,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       system->dScalingFStars = 1.0;
       system->dScalingFVelDisp = 1.0;
     }
+    system->dScalingFVelDisp *= sqrt(dCurrentAge/system->dGalaxyAge);
     
     system->dGSNumberDens = malloc(13*sizeof(double));
     system->dGSNumberDens[0] = 0.43e-3;
@@ -561,7 +564,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dEncounterRateMV = malloc(13*sizeof(double));
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
-    system->dMinAllowed = 10.0*AUCM; //set to 10 au for now.
+    system->dMinAllowed = 40.0*AUCM; //set to 40 au for now...
     system->dLastEncTime = 0.0;
     system->dCloseEncTime = 0.0;
     system->iNEncounters = 0;
@@ -674,6 +677,11 @@ void WriteNEncounters(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
  
   *dTmp = (double)system->iNEncounters;
 }
+
+void WriteFVelDisp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = system->dScalingFVelDisp;
+}
   
 void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -693,6 +701,14 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NENCOUNTERS].iNum = 1;
   output[OUT_NENCOUNTERS].iModuleBit = GALHABIT;
   fnWrite[OUT_NENCOUNTERS] = &WriteNEncounters;
+  
+  sprintf(output[OUT_FVELDISP].cName,"FVelDisp");
+  sprintf(output[OUT_FVELDISP].cDescr,"Scaling factor for velocity dispersion");
+  sprintf(output[OUT_FVELDISP].cNeg," ");
+  output[OUT_FVELDISP].bNeg = 0;
+  output[OUT_FVELDISP].iNum = 1;
+  output[OUT_FVELDISP].iModuleBit = GALHABIT;
+  fnWrite[OUT_FVELDISP] = &WriteFVelDisp;
 }
 
 void FinalizeOutputFunctionGalHabit(OUTPUT *output,int iBody,int iModule) {
@@ -771,16 +787,19 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dp, dkzi, dVMax;
+  double dp, dkzi, dVMax, dCurrentAge;
   char cOut[NAMELEN];
   FILE *fOut;
   
+  dCurrentAge = system->dGalaxyAge-evolve->dStopTime+evolve->dTime;
+  system->dScalingFVelDisp *= sqrt((dCurrentAge+evolve->dCurrentDt)/dCurrentAge);
+
   if (system->bRadialMigr) {
     if (evolve->dTime >= system->dTMigration) {
       // time of migration passed? move to solar neighborhood
       system->dScalingFTot = 1.0; 
-      system->dScalingFStars = 1.0;
-      system->dScalingFVelDisp = 1.0;
+      system->dScalingFStars = 1.0;    
+      system->dScalingFVelDisp = sqrt(dCurrentAge/system->dGalaxyAge);
       CalcEncounterRate(system);
       system->bRadialMigr = 0;  //don't recalculate this stuff again
     }
@@ -1334,8 +1353,9 @@ void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {
 void NextEncounterTime(SYSTEM *system, double dTime) {
   double dp;
   
-  dp = random_double();
-  system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
+  // dp = random_double();
+//   system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
+  system->dNextEncT = 1e10*YEARSEC;
 }
 
 void testrand(SYSTEM *system) { 

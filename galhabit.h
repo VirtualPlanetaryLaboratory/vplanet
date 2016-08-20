@@ -64,6 +64,7 @@ void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
 
 #define OUT_PERIQ               2220
 #define OUT_NENCOUNTERS         2221
+#define OUT_FVELDISP            2222
 
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

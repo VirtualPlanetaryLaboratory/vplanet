@@ -18,9 +18,11 @@
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dOxygenMass = src[iBody].dOxygenMass;
+  dest[iBody].dOxygenMantleMass = src[iBody].dOxygenMantleMass;
   dest[iBody].dEnvelopeMass = src[iBody].dEnvelopeMass;
   dest[iBody].dXFrac = src[iBody].dXFrac;
-  dest[iBody].dAtmXAbsEff = src[iBody].dAtmXAbsEff;
+  dest[iBody].dAtmXAbsEffH = src[iBody].dAtmXAbsEffH;
+  dest[iBody].dAtmXAbsEffH2O = src[iBody].dAtmXAbsEffH2O;
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
   dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
   dest[iBody].iWaterLossModel = src[iBody].iWaterLossModel;
@@ -123,7 +125,7 @@ void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dXFrac = options->dDefault;
 }
 
-void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadAtmXAbsEffH(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -136,11 +138,31 @@ void ReadAtmXAbsEff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);	
     }
-    body[iFile-1].dAtmXAbsEff = dTmp;
+    body[iFile-1].dAtmXAbsEffH = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
     if (iFile > 0)
-      body[iFile-1].dAtmXAbsEff = options->dDefault;
+      body[iFile-1].dAtmXAbsEffH = options->dDefault;
+}
+
+void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    body[iFile-1].dAtmXAbsEffH2O = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dAtmXAbsEffH2O = options->dDefault;
 }
 
 void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -179,6 +201,26 @@ void ReadOxygenMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   } else 
     if (iFile > 0)
       body[iFile-1].dOxygenMass = options->dDefault;
+}
+
+void ReadOxygenMantleMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);	
+    }
+    body[iFile-1].dOxygenMantleMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dOxygenMantleMass = options->dDefault;
 }
 
 void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -280,13 +322,21 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
   
-  sprintf(options[OPT_ATMXABSEFF].cName,"dAtmXAbsEff");
-  sprintf(options[OPT_ATMXABSEFF].cDescr,"X-ray/XUV absorption efficiency (epsilon)");
-  sprintf(options[OPT_ATMXABSEFF].cDefault,"0.15");
-  options[OPT_ATMXABSEFF].dDefault = 0.15;
-  options[OPT_ATMXABSEFF].iType = 2;
-  options[OPT_ATMXABSEFF].iMultiFile = 1;
-  fnRead[OPT_ATMXABSEFF] = &ReadAtmXAbsEff;
+  sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
+  sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
+  options[OPT_ATMXABSEFFH].dDefault = 0.15;
+  options[OPT_ATMXABSEFFH].iType = 2;
+  options[OPT_ATMXABSEFFH].iMultiFile = 1;
+  fnRead[OPT_ATMXABSEFFH] = &ReadAtmXAbsEffH;
+
+  sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
+  sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
+  options[OPT_ATMXABSEFFH2O].dDefault = 0.30;
+  options[OPT_ATMXABSEFFH2O].iType = 2;
+  options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
+  fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
 
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
@@ -305,6 +355,14 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OXYGENMASS].iType = 2;
   options[OPT_OXYGENMASS].iMultiFile = 1;
   fnRead[OPT_OXYGENMASS] = &ReadOxygenMass;
+
+  sprintf(options[OPT_OXYGENMANTLEMASS].cName,"dOxygenMantleMass");
+  sprintf(options[OPT_OXYGENMANTLEMASS].cDescr,"Initial Oxygen Mass in the Mantle");
+  sprintf(options[OPT_OXYGENMANTLEMASS].cDefault,"0");
+  options[OPT_OXYGENMANTLEMASS].dDefault = 0;
+  options[OPT_OXYGENMANTLEMASS].iType = 2;
+  options[OPT_OXYGENMANTLEMASS].iMultiFile = 1;
+  fnRead[OPT_OXYGENMANTLEMASS] = &ReadOxygenMantleMass;
   
   sprintf(options[OPT_WATERLOSSMODEL].cName,"sWaterLossModel");
   sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water Loss and Oxygen Buildup Model");
@@ -402,6 +460,17 @@ void VerifyOxygenMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
 }
 
+void VerifyOxygenMantleMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  update[iBody].iaType[update[iBody].iOxygenMantleMass][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iOxygenMantleMass][0] = 1;
+  update[iBody].iaBody[update[iBody].iOxygenMantleMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iOxygenMantleMass][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iOxygenMantleMass][0][0] = iBody;
+
+  update[iBody].pdDOxygenMantleMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iOxygenMantleMass][0];
+  fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
+}
+
 void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   update[iBody].iaType[update[iBody].iEnvelopeMass][0] = 1;
@@ -479,8 +548,8 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // The XUV flux
   double fxuv = fdInsolation(body, iBody, 1);
   
-  // Reference hydrogen flux
-  body[iBody].dFHRef = (body[iBody].dAtmXAbsEff * fxuv * body[iBody].dRadius) /
+  // Reference hydrogen flux for the water loss
+  body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * fxuv * body[iBody].dRadius) /
                        (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
   
   // Surface gravity
@@ -571,6 +640,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyOxygenMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+    VerifyOxygenMantleMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     bAtmEsc = 1;
   }
   
@@ -615,6 +685,10 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumOxygenMass == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumOxygenMass++;
+    
+    if (update[iBody].iNumOxygenMantleMass == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumOxygenMantleMass++;
   }
   
   if (body[iBody].dEnvelopeMass > 0) {
@@ -647,6 +721,11 @@ void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int
 void FinalizeUpdateOxygenMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumOxygenMass = (*iEqn)++;
+}
+
+void FinalizeUpdateOxygenMantleMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumOxygenMantleMass = (*iEqn)++;
 }
 
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -756,6 +835,19 @@ void WriteOxygenMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 }
 
+void WriteOxygenMantleMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dOxygenMantleMass;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) / (4. * PI * pow(body[iBody].dRadius, 4)));
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+
+}
+
 void WritePlanetRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadius;
 
@@ -836,6 +928,15 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OXYGENMASS].iNum = 1;
   output[OUT_OXYGENMASS].iModuleBit = ATMESC;
   fnWrite[OUT_OXYGENMASS] = &WriteOxygenMass;
+
+  sprintf(output[OUT_OXYGENMANTLEMASS].cName,"OxygenMantleMass");
+  sprintf(output[OUT_OXYGENMANTLEMASS].cDescr,"Mass of Oxygen in Mantle");
+  sprintf(output[OUT_OXYGENMANTLEMASS].cNeg,"bars");
+  output[OUT_OXYGENMANTLEMASS].bNeg = 1;
+  output[OUT_OXYGENMANTLEMASS].dNeg = 1;
+  output[OUT_OXYGENMANTLEMASS].iNum = 1;
+  output[OUT_OXYGENMANTLEMASS].iModuleBit = ATMESC;
+  fnWrite[OUT_OXYGENMANTLEMASS] = &WriteOxygenMantleMass;
 
   sprintf(output[OUT_RGLIMIT].cName,"RGLimit");
   sprintf(output[OUT_RGLIMIT].cDescr,"Runaway Greenhouse Semi-Major Axis");
@@ -921,6 +1022,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
   module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateOxygenMassAtmEsc;
+  module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] = &FinalizeUpdateOxygenMantleMassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
   module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
@@ -974,6 +1076,32 @@ double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   
 }
 
+double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
+    
+  if ((body[iaBody[0]].bRunaway) && (body[iaBody[0]].bInstantO2Sink) && (body[iaBody[0]].dSurfaceWaterMass > 0)) {
+    
+    if (body[iaBody[0]].iWaterLossModel == ATMESC_LB15) {
+    
+      // Rodrigo and Barnes (2015)
+      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
+      else
+        return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
+        
+    } else {
+
+      // Exact
+      return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
+  
+    }
+  } else {
+  
+    return 0.;
+    
+  }
+  
+}
+
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
@@ -981,7 +1109,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
   }
   
-  return -body[iaBody[0]].dFHRef * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

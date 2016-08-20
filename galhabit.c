@@ -913,70 +913,70 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     NextEncounterTime(system,system->dCloseEncTime);
   
     /* write out encounter info */
-    sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
-    fOut = fopen(cOut,"a");
-    //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
-    
-    fprintd(fOut,evolve->dTime/YEARSEC,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarMagV,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarMass,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarSigma,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarImpact[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarImpact[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarImpact[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarV[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarV[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarV[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dRelativeVel[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dRelativeVel[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dRelativeVel[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dHostApexVel[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dHostApexVel[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dHostApexVel[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarR[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarR[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,system->dPassingStarR[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeImpact[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeImpact[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
-    fprintf(fOut," ");
-
-    fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
-    fprintf(fOut," ");
-    fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
-    
-    fprintf(fOut,"\n");
-    
-    fclose(fOut);
+    // sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
+//     fOut = fopen(cOut,"a");
+//     //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
+//     
+//     fprintd(fOut,evolve->dTime/YEARSEC,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarMagV,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarMass,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarSigma,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarImpact[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarImpact[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarImpact[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarV[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarV[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarV[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dRelativeVel[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dRelativeVel[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dRelativeVel[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dHostApexVel[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dHostApexVel[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dHostApexVel[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarR[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarR[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,system->dPassingStarR[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeImpact[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeImpact[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
+//     fprintf(fOut," ");
+// 
+//     fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+//     fprintf(fOut," ");
+//     fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+//     
+//     fprintf(fOut,"\n");
+//     
+//     fclose(fOut);
     
   }
 }

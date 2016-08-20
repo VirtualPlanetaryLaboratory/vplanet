@@ -1220,6 +1220,12 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   	seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
   }
 
+  // BUG BUG BUG BUG BUG BUG BUG (August 20, 2016)
+  // Something is wrong with this linear fit in the first ~5 Myr, as it diverges.
+  // This ***does not*** affect ANY calculations for Proxima Cen b, since the planet
+  // remains in the RG for the correct amount of time regardless of this issue.
+  // But I do need to address this soon.
+  
   fvLinearFit(daLogMP,seff,3,daCoeffs);
   
   return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUCM * AUCM);

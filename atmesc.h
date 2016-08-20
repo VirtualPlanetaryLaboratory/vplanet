@@ -32,7 +32,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_HALTDESICCATED      1211 // Halt if desiccated?
 #define OPT_MINSURFACEWATERMASS 1212 // Minimum surface water mass (desiccated below this)
 #define OPT_XFRAC               1213 // X-ray absorption radius as a fraction of planet radius
-#define OPT_ATMXABSEFF          1214 // Absorption efficiency (epsilon)
+#define OPT_ATMXABSEFFH         1214 // Hydrogen Absorption efficiency (epsilon)
 #define OPT_ENVELOPEMASS        1215 // Initial envelope mass
 #define OPT_HALTENVELOPEGONE    1216 // Halt if evaporated?
 #define OPT_MINENVELOPEMASS     1217 // Minimum envelope mass (evaporated below this)
@@ -40,6 +40,8 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_WATERLOSSMODEL      1219 // Oxygen buildup / water loss model
 #define OPT_PLANETRADIUSMODEL   1220 // Gaseous planet radius model (for atmesc)
 #define OPT_INSTANTO2SINK       1221 // Gaseous planet radius model (for atmesc)
+#define OPT_ATMXABSEFFH2O       1222 // Water Absorption efficiency (epsilon)
+#define OPT_OXYGENMANTLEMASS    1223 // Initial oxygen mass in mantle
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -70,6 +72,7 @@ void FinalizeUpdateRotAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSemiAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateOxygenMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOxygenMantleMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateRadiusAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
@@ -88,6 +91,7 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_XO                 1214
 #define OUT_ETAO               1215
 #define OUT_PLANETRADIUS       1216
+#define OUT_OXYGENMANTLEMASS   1217
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -96,6 +100,7 @@ void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);
 
 void WriteSurfaceWaterMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMantleMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -114,6 +119,7 @@ double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 double fdHZRG14(double,double,double,double);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
+double fdDOxygenMantleMassDt(BODY*,SYSTEM*,int*);
 double fdAtomicOxygenMixingRatio(double,double);
 double fdInsolation(BODY*,int,int);
 int fbDoesWaterEscape(BODY*,int);

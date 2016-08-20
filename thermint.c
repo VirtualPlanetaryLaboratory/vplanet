@@ -2350,6 +2350,10 @@ double fdHflowSecMan(BODY *body,int iBody) {
   return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dTidalPowMan-body[iBody].dRadPowerMan;
 }
 
+double fdHfluxSurf(BODY *body,int iBody) {
+  return fdHflowSurf(body,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+}
+
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
   if (body[iBody].dRIC>0) {   //If IC exists.
     /* Old Version: from DB14 equations */

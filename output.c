@@ -1,3 +1,4 @@
+
 /************************ OUTPUT.C **********************/
 /*
  * Rory Barnes, Wed May  7 16:38:28 PDT 2014
@@ -388,13 +389,29 @@ void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Multiple modules can contribute to this output */
-  int iModule;
+  /* Multiple modules can contribute to this output */
+  //int iModule;
 
+  /* Surface Energy Flux is complicated because it either all comes
+     through thermint, or it can be from eqtide and/or radheat. */
+
+  if (body[iBody].bThermint) 
+    *dTmp = fdHfluxSurf(body,iBody);
+  else {
+    *dTmp=0;
+    if (body[iBody].bEqtide)
+      *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
+    if (body[iBody].bRadheat)
+      *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
+  }
+    
+  /* This is the old way
   *dTmp=0;
   for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
     // Only module reference in file, can this be changed? XXX
     *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
-
+    */
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1191,10 +1208,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
   }
 }
 
-void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],int iEnd) {
+void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],time_t dStartTime,int iEnd) {
   char cTime[OPTLEN];
   FILE *fp;
-  double dDt;
+  double dDt,dTotTime;
 
   /* Get derivatives */
   PropertiesAuxiliary(body,control,update);
@@ -1225,6 +1242,13 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 
+  if (iEnd) {
+    dTotTime = difftime(time(NULL),dStartTime);
+    fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    if (control->Io.iVerbose >= VERBPROG)
+      printf("Runtime = %f s\n", dTotTime);
+  }
+  
   fclose(fp);
 }
 

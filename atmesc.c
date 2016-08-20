@@ -1140,22 +1140,10 @@ double fdInsolation(BODY *body, int iBody, int iXUV) {
   if (body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { 
     
     // Body orbits two stars
-    
-    // TODO: BUG: DAVE: I moved the insolation calculation here. It is now
-    // called from fnPropsAux, which takes as argument **iBody**, not **iaBody**.
-    // This makes the lines below uncallable from this function. Is there an easy
-    // way around this? Can you code up a modified version of `fdFluxExactBinary`
-    // that can be called from here? Let me know. For now I'm just raising an error.
-    
-    fprintf(stderr,"ERROR: ATMESC not currently working with BINARY.");
-    exit(EXIT_EXE);
-    
-    /*
     if (iXUV)
-      flux = fdFluxExactBinary(body,system,iaBody,body[0].dLXUV,body[1].dLXUV);
+      flux = fdFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
     else
-      flux = fdFluxExactBinary(body,system,iaBody,body[0].dLuminosity,body[1].dLuminosity);
-    */
+      flux = fdFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
     
   } else { 
   

@@ -276,7 +276,7 @@ typedef struct {
   int bBinary;          /** Apply BINARY module? */
   int bBinaryUseMatrix; /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;           /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;         /** < CBP radius */
+  double dCBPR;         /** < CBP orbital radius */
   double dCBPZ;         /** < CBP height above/below the orbital plane */
   double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
   double dCBPRDot;      /** < CBP radial orbital velocity */
@@ -306,8 +306,7 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
-  
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */  
   
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -526,7 +525,8 @@ typedef struct {
   int iWindModel;
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
-
+  double iHZModel;
+  
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -1273,6 +1273,7 @@ typedef struct {
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
+
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -1590,7 +1591,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  */
 
 #include <assert.h>
-
+#include <time.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

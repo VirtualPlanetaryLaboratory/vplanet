@@ -19,10 +19,11 @@
 #define STELLAR_MODEL_RIBAS           4
 #define STELLAR_MODEL_PROXIMACEN      5
 
+#define HZ_MODEL_KOPPARAPU            1
+
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);
 void BodyCopyStellar(BODY*,BODY*,int,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
@@ -38,6 +39,8 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HALTENDBARAFFEFGRID 1516 // Halt when we reach the end of the Baraffe grid?
 #define OPT_SATXUVTIME          1517 // XUV saturation time
 #define OPT_XUVBETA             1518 // XUV power law decay exponent
+
+#define OPT_HZMODEL             1520 // Habitable zone model
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);
@@ -82,6 +85,12 @@ void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_TEMPERATURE	        1512
 #define OUT_LXUVFRAC            1513
 
+#define OUT_HZLIMRECVENUS       1520 // Recent Venus HZ Limit
+#define OUT_HZLIMRUNAWAY         1522 // Recent Venus HZ Limit
+#define OUT_HZLIMMOIST          1524 // Recent Venus HZ Limit
+#define OUT_HZLIMMAX            1526 // Recent Venus HZ Limit
+#define OUT_HZLIMEARLYMARS      1528 // Recent Venus HZ Limit
+
 void HelpOutputStellar(OUTPUT*);
 void InitializeOutputStellar(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionStellar(OUTPUT*,int,int);
@@ -109,6 +118,7 @@ double fdDRotRateDt(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 double fdTemperatureFunctionProximaCen(double);
+void fdHabitableZoneKopparapu2013(double,double,double*);
 
 
 /* Dummy functions */

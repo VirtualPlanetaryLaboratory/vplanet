@@ -180,6 +180,7 @@
 #define VSURFACEWATERMASS  1202
 #define VENVELOPEMASS      1203
 #define VOXYGENMASS        1204
+#define VOXYGENMANTLEMASS  1205
 
 // STELLAR
 #define VLUMINOSITY     1502
@@ -314,8 +315,7 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
-  
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */  
   
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -505,10 +505,12 @@ typedef struct {
   double dSurfaceWaterMass;
   double dMinSurfaceWaterMass;
   double dOxygenMass;
+  double dOxygenMantleMass;
   double dEnvelopeMass;
   double dMinEnvelopeMass;
   double dXFrac;
-  double dAtmXAbsEff;
+  double dAtmXAbsEffH;
+  double dAtmXAbsEffH2O;
   int iWaterLossModel;
   int iPlanetRadiusModel;
   int bInstantO2Sink;
@@ -532,7 +534,8 @@ typedef struct {
   int iWindModel;
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
-
+  double iHZModel;
+  
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -1136,6 +1139,8 @@ typedef struct {
   int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
   int iOxygenMass;     /**< Variable # Corresponding to the oxygen mass */
   int iNumOxygenMass;  /**< Number of Equations Affecting oxygen [1] */
+  int iOxygenMantleMass;     /**< Variable # Corresponding to the oxygen mass in the mantle */
+  int iNumOxygenMantleMass;  /**< Number of Equations Affecting oxygen mantle mass [1] */
   
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
       derivative of these variables due to ATMESC. */
@@ -1143,6 +1148,7 @@ typedef struct {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;
+  double *pdDOxygenMantleMassDtAtmesc;
   double *pdRadiusAtmesc;
 
   /* BINARY */
@@ -1361,6 +1367,7 @@ typedef struct {
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
+
 } CONTROL;
 
 /* The INFILE struct contains all the information 
@@ -1514,6 +1521,7 @@ typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateOxygenMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMantleMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTemperatureModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1618,6 +1626,8 @@ typedef struct {
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
   /*! Function pointers to finalize oxygen */ 
   fnFinalizeUpdateOxygenMassModule **fnFinalizeUpdateOxygenMass;
+  /*! Function pointers to finalize mantle oxygen */ 
+  fnFinalizeUpdateOxygenMantleMassModule **fnFinalizeUpdateOxygenMantleMass;
   /*! Function pointers to finalize Envelope Mass */ 
   fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */ 

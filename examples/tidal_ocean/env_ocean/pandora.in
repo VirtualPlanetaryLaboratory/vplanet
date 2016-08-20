@@ -4,7 +4,7 @@ saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
-dRadius		-1.0  			# Radius, negative -> Earth radii
+#dRadius		-1.0  			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
@@ -15,7 +15,6 @@ dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
 dSurfWaterMass            -7.0           # Initial surface water (Earth oceans) 
 dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?
@@ -74,8 +73,8 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -TidalRadius -SurfEnFluxTot -SurfWaterMass $ 
--RotRate Obli -EnvelopeMass
+saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass $ 
+-TMan -TCore -RIC -EnvelopeMass
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

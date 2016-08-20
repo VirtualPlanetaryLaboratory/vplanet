@@ -2401,7 +2401,7 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
-  //  return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
+//    return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
   return -body[iBody].dHflowSecMan/((EMASSMAN)*(SPECHEATMAN));
 }
 

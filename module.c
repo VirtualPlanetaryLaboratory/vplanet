@@ -850,7 +850,7 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
 
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); //fdCPLTidePower(body,iBody);
 }
 
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -861,7 +861,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
   // Case: No oceans, no envelope
   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
   {
-    // Mantle controls evoltion via thermint
+    // Mantle controls evolution via thermint
     body[iBody].dImK2 = body[iBody].dImk2Man;
     body[iBody].dK2 = body[iBody].dK2Man;
   }
@@ -905,7 +905,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
 
   // Finally, call EQTIDE props aux then set mantle tidal power
   PropsAuxCPL(body,evolve,update,iBody);
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); // fdCPLTidePower(body,iBody);
 
 }
 /* This does not seem to be necessary

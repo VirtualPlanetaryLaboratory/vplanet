@@ -26,7 +26,7 @@ sUnitTemp       K
 
 # Input/Output
 bDoLog		1		# Write a log file?
-iDigits		6		# Maximum number of digits to right of decimal
+iDigits		10		# Maximum number of digits to right of decimal
 dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 
 # Option names must be exact in spelling and case.
@@ -34,10 +34,10 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		0		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
+dEta		0.01		# Coefficient for variable timestepping
 
-dTimeStep	1000
-dStopTime	1.0e9		# Stop time for evolution
+dTimeStep	100
+dStopTime	7.0e9		# Stop time for evolution
 dOutputTime	1e6		# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)

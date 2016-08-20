@@ -52,6 +52,8 @@ void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpd
 void InitializeUpdateGalHabit(BODY*,UPDATE*,int);
 void FinalizeUpdatePeriQGalHabit(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIncGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -94,6 +96,10 @@ double NearbyStarFrEnc(SYSTEM*,double);
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
+double fdGalHabitDIncDt(BODY*, SYSTEM*, int*);
+double fdGalHabitDLongADt(BODY*, SYSTEM*, int*);
+
+
 double random_double();
 double mag2mass(double);
 void GetStarMass(SYSTEM*);

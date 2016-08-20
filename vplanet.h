@@ -203,6 +203,8 @@
 //GALHABIT
 #define VPERIQ          2201
 #define VARGP           2202
+#define VINC            2203
+#define VLONGA          2204
 
 /* Now define the structs */
 
@@ -773,6 +775,8 @@ typedef struct {
   double dHostBinArgP;
   double dHostBinLongA;
   int bHostBinary;
+  double *dRelativeImpact;
+  double *dRelativeVel;
   
 } BODY;
 
@@ -1109,6 +1113,20 @@ typedef struct {
   
   double **padDPeriQDtGalHabit;
   double **padDArgPDtGalHabit;
+  
+  int iNumInc;
+  int iNumLongA;
+  
+  int iInc;
+  int iLongA;
+  double dDIncDt;
+  double dDLongADt;
+  
+  int *iaIncGalHabit;
+  int *iaLongAGalHabit;
+  
+  double **padDIncDtGalHabit;
+  double **padDLongADtGalHabit;
   
   
   /* ATMESC */         
@@ -1504,6 +1522,8 @@ typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePeriQModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateArgPModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIncModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLongAModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1629,6 +1649,8 @@ typedef struct {
   
   fnFinalizeUpdatePeriQModule **fnFinalizeUpdatePeriQ;
   fnFinalizeUpdateArgPModule **fnFinalizeUpdateArgP;
+  fnFinalizeUpdateIncModule **fnFinalizeUpdateInc;
+  fnFinalizeUpdateLongAModule **fnFinalizeUpdateLongA;
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;

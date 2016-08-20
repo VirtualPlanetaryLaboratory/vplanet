@@ -111,6 +111,8 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   
   module->fnFinalizeUpdatePeriQ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePeriQModule));
   module->fnFinalizeUpdateArgP = malloc(iNumBodies*sizeof(fnFinalizeUpdateArgPModule));
+  module->fnFinalizeUpdateInc = malloc(iNumBodies*sizeof(fnFinalizeUpdateIncModule));
+  module->fnFinalizeUpdateLongA = malloc(iNumBodies*sizeof(fnFinalizeUpdateLongAModule));
   
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -223,6 +225,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   
   module->fnFinalizeUpdatePeriQ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePeriQModule));
   module->fnFinalizeUpdateArgP[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateArgPModule));
+  module->fnFinalizeUpdateInc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIncModule));
+  module->fnFinalizeUpdateLongA[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLongAModule));
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -280,6 +284,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     
     module->fnFinalizeUpdatePeriQ[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateArgP[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateInc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLongA[iBody][iModule] = &FinalizeUpdateNULL;
 
   }
 

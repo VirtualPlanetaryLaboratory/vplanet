@@ -22,6 +22,7 @@ void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBo
     dest[iBody].dArgP = src[iBody].dArgP;
     dest[iBody].dLongP = src[iBody].dLongP;
     dest[iBody].dInc = src[iBody].dInc;
+    dest[iBody].dLongA = src[iBody].dLongA;
 }
 
 /**************** GALHABIT options ********************/
@@ -462,9 +463,6 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   
 }
 
-
-
-
 void ReadOptionsGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
@@ -494,6 +492,25 @@ void InitializeArgPGalHabit(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iaBody[update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]][0] = iBody;
   update[iBody].iaBody[update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]][1] = 0;
+}
+
+
+void InitializeIncGalHabit(BODY *body,UPDATE *update,int iBody) {
+  update[iBody].iaType[update[iBody].iInc][0] = 2;
+  update[iBody].padDIncDtGalHabit[0] = &update[iBody].daDerivProc[update[iBody].iInc][update[iBody].iaIncGalHabit[0]];
+  update[iBody].iNumBodies[update[iBody].iInc][update[iBody].iaIncGalHabit[0]]=2;
+  update[iBody].iaBody[update[iBody].iInc][update[iBody].iaIncGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iInc][update[iBody].iaIncGalHabit[0]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iInc][update[iBody].iaIncGalHabit[0]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iInc][update[iBody].iaIncGalHabit[0]][1] = 0;
+}
+
+void InitializeLongAGalHabit(BODY *body,UPDATE *update,int iBody) {
+  update[iBody].iaType[update[iBody].iLongA][0] = 2;
+  update[iBody].padDLongADtGalHabit[0] = &update[iBody].daDerivProc[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]];
+  update[iBody].iNumBodies[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]]=2;
+  update[iBody].iaBody[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]][0] = iBody;
+  update[iBody].iaBody[update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]][1] = 0;
 }
 
 
@@ -587,17 +604,26 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   if (iBody >= 1) {
     sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
     fOut = fopen(cOut,"w");
-    fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz\n");
+    fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz\n");
     fclose(fOut);
     
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
+    body[iBody].dRelativeImpact = malloc(3*sizeof(double));
+    body[iBody].dRelativeVel = malloc(3*sizeof(double));
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
+    
     InitializePeriQGalHabit(body,update,iBody);
     fnUpdate[iBody][update[iBody].iPeriQ][update[iBody].iaPeriQGalHabit[0]] = &fdGalHabitDPeriQDt;
     
     InitializeArgPGalHabit(body,update,iBody);
     fnUpdate[iBody][update[iBody].iArgP][update[iBody].iaArgPGalHabit[0]] = &fdGalHabitDArgPDt;
+    
+    InitializeIncGalHabit(body,update,iBody);
+    fnUpdate[iBody][update[iBody].iInc][update[iBody].iaIncGalHabit[0]] = &fdGalHabitDIncDt;
+    
+    InitializeLongAGalHabit(body,update,iBody);
+    fnUpdate[iBody][update[iBody].iLongA][update[iBody].iaLongAGalHabit[0]] = &fdGalHabitDLongADt;
 
     control->fnForceBehavior[iBody][iModule]=&ForceBehaviorGalHabit;
     control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyGalHabit;
@@ -615,6 +641,14 @@ void InitializeUpdateGalHabit(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumArgP == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumArgP += 1;
+    
+    if (update[iBody].iNumInc == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumInc += 1;
+
+    if (update[iBody].iNumLongA == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumLongA += 1;
   }
 }
 
@@ -630,6 +664,20 @@ void FinalizeUpdateArgPGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
     update[iBody].iaArgPGalHabit = malloc(1*sizeof(int));
     update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
     update[iBody].iaArgPGalHabit[0] = (*iEqn)++;
+}
+
+void FinalizeUpdateIncGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+    update[iBody].padDIncDtGalHabit = malloc(1*sizeof(double*));
+    update[iBody].iaIncGalHabit = malloc(1*sizeof(int));
+    update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
+    update[iBody].iaIncGalHabit[0] = (*iEqn)++;
+}
+
+void FinalizeUpdateLongAGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+    update[iBody].padDLongADtGalHabit = malloc(1*sizeof(double*));
+    update[iBody].iaLongAGalHabit = malloc(1*sizeof(int));
+    update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
+    update[iBody].iaLongAGalHabit[0] = (*iEqn)++;
 }
 
 
@@ -761,6 +809,8 @@ void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputGalHabit;
   module->fnFinalizeUpdatePeriQ[iBody][iModule] = &FinalizeUpdatePeriQGalHabit;
   module->fnFinalizeUpdateArgP[iBody][iModule] = &FinalizeUpdateArgPGalHabit;
+  module->fnFinalizeUpdateInc[iBody][iModule] = &FinalizeUpdateIncGalHabit;
+  module->fnFinalizeUpdateLongA[iBody][iModule] = &FinalizeUpdateLongAGalHabit;
 
   //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionGalHabit;
@@ -782,8 +832,15 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   while (body[iBody].dLongP < 0) {
     body[iBody].dLongP += 2*PI;
   }
+  while (body[iBody].dLongA > 2*PI) {
+    body[iBody].dLongA -= 2*PI;
+  }
+  while (body[iBody].dLongA < 0) {
+    body[iBody].dLongA += 2*PI;
+  }
   
   body[iBody].dEcc = 1.0 - body[iBody].dPeriQ/body[iBody].dSemi;
+  
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -812,6 +869,15 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
+  while (body[iBody].dLongA > 2*PI) {
+    body[iBody].dLongA -= 2*PI;
+  }
+  while (body[iBody].dLongA < 0) {
+    body[iBody].dLongA += 2*PI;
+  }
+  
+  body[iBody].iDisrupt = check_disrupt(body,system,iBody);
+
   if (evolve->dTime + evolve->dCurrentDt >= system->dNextEncT) {
     system->dCloseEncTime = evolve->dTime + evolve->dCurrentDt;
     GetStarPosition(system);
@@ -832,8 +898,8 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
+    body[iBody].dSinc = sin(0.5*body[iBody].dInc);
     osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
-    body[iBody].iDisrupt = check_disrupt(body,system,iBody);
   
     /* apply the impulse */
     ApplyDeltaV(body,system,iBody);
@@ -888,6 +954,26 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     fprintd(fOut,system->dPassingStarR[1],4,6);
     fprintf(fOut," ");
     fprintd(fOut,system->dPassingStarR[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeImpact[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeImpact[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
+    fprintf(fOut," ");
+
+    fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+    fprintf(fOut," ");
+    fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+    
     fprintf(fOut,"\n");
     
     fclose(fOut);
@@ -1315,10 +1401,18 @@ void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
   dRelativeImpactz = system->dPassingStarImpact[2]-body[iBody].dCartPos[2]*AUCM;
   dRelativeImpactrsq = pow(dRelativeImpactx,2) + pow(dRelativeImpacty,2) + \
                           pow(dRelativeImpactz,2);           
-                          
+                       
+  body[iBody].dRelativeImpact[0] = dRelativeImpactx;
+  body[iBody].dRelativeImpact[1] = dRelativeImpacty;
+  body[iBody].dRelativeImpact[2] = dRelativeImpactz;
+
   dRelativeVx = system->dRelativeVel[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
   dRelativeVy = system->dRelativeVel[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
   dRelativeVz = system->dRelativeVel[2]-body[iBody].dCartVel[2]*AUCM/DAYSEC;
+
+  body[iBody].dRelativeVel[0] = dRelativeVx;
+  body[iBody].dRelativeVel[1] = dRelativeVy;
+  body[iBody].dRelativeVel[2] = dRelativeVz;
 
   dRelativeV = sqrt(pow(dRelativeVx,2)+pow(dRelativeVy,2)+pow(dRelativeVz,2));
   
@@ -1353,9 +1447,9 @@ void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {
 void NextEncounterTime(SYSTEM *system, double dTime) {
   double dp;
   
-  // dp = random_double();
-//   system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
-  system->dNextEncT = 1e10*YEARSEC;
+  dp = random_double();
+  system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
+  //system->dNextEncT = 1e10*YEARSEC;
 }
 
 void testrand(SYSTEM *system) { 
@@ -1682,3 +1776,26 @@ double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
       pow(sin(body[iaBody[0]].dArgP),2.0))/DAYSEC;
 }
 
+double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc, dL, dJ, dJz;
+  dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
+  dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
+  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  dJ = dL*sqrt(1.0-pow(dEcc,2));
+  dJz = dJ*cos(body[iaBody[0]].dInc);
+  
+  return (-5.*PI*KGAUSS*KGAUSS*dRho/pow(dMu,2)*pow(dL,2)/pow(dJ,3)*dJz*sqrt(pow(dJ,2)-pow(dJz,2))*\
+      (pow(dL,2)-pow(dJ,2))*sin(2*body[iaBody[0]].dArgP))/DAYSEC;
+}
+
+double fdGalHabitDLongADt(BODY *body, SYSTEM *system, int *iaBody) {
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc, dL, dJ, dJz;
+  dMu = KGAUSS*KGAUSS*body[0].dMass/MSUN; //calculate mass coefficient for primary/primary+secondary
+  dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
+  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  dJ = dL*sqrt(1.0-pow(dEcc,2));
+  dJz = dJ*cos(body[iaBody[0]].dInc);
+  
+  return -2.*PI*KGAUSS*KGAUSS*dRho/pow(dMu,2)*pow(dL/dJ,2)*dJz*\
+      (pow(dJ,2)+5.*(pow(dL,2)-pow(dJ,2))*pow(sin(body[iaBody[0]].dArgP),2))/DAYSEC;
+}

@@ -14,13 +14,15 @@ cColor ff0000
 dEcc            0.5			# Eccentricity
 dSemi           -15000.0			# Semi-major axis, negative -> AU
 dInc   40.0
+dArgP  45.0
+dLongA 21.0
 
 dGalacDensity    0.102
 iRandSeed     42
 dRForm 4.5
 dTMigration 1e9
-bRadialMigr 1
+bRadialMigr 0
 
 # Output
-saOutputOrder Time Ecce PeriQ ArgP Inc LongA NEncounters FVelDisp DeltaT 
+saOutputOrder Time SemiM Ecce PeriQ ArgP Inc LongA NEncounters FVelDisp DeltaT 
 

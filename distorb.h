@@ -27,7 +27,6 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTDISTORB        1300 /* Start of DISTORB options */
 #define OPTENDDISTORB          1400 /* End of DISTORB options */
 
-#define OPT_LONGA              1302
 #define OPT_DFCRIT             1350
 #define OPT_GRCORR             1351
 #define OPT_INVPLANE           1352

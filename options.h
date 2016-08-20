@@ -72,6 +72,8 @@
 #define OPT_ORBSEMI		560
 #define OPT_INC       561
 #define OPT_ARGP      562
+#define OPT_LONGA              563
+
 
 #define OPT_OBL	                640
 #define OPT_OUTDIGITS           570

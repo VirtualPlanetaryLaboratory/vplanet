@@ -601,15 +601,15 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2OCEAN].cName,"dK2Ocean");
   sprintf(options[OPT_K2OCEAN].cDescr,"Ocean's Love Number of Degree 2");
   sprintf(options[OPT_K2OCEAN].cDefault,"0.05");
-  options[OPT_K2OCEAN].dDefault = 0.05;
+  options[OPT_K2OCEAN].dDefault = 0.01;
   options[OPT_K2OCEAN].iType = 2;
   options[OPT_K2OCEAN].iMultiFile = 1;
   fnRead[OPT_K2OCEAN] = &ReadK2Ocean;
 
   sprintf(options[OPT_K2ENV].cName,"dK2Env");
   sprintf(options[OPT_K2ENV].cDescr,"Envelope's Love Number of Degree 2");
-  sprintf(options[OPT_K2ENV].cDefault,"1.0");
-  options[OPT_K2ENV].dDefault = 1.0;
+  sprintf(options[OPT_K2ENV].cDefault,"0.01");
+  options[OPT_K2ENV].dDefault = 0.01;
   options[OPT_K2ENV].iType = 2;
   options[OPT_K2ENV].iMultiFile = 1;
   fnRead[OPT_K2ENV] = &ReadK2Env;
@@ -661,8 +661,8 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   
   sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
   sprintf(options[OPT_TIDALQOCEAN].cDescr,"Ocean Tidal Quality Factor");
-  sprintf(options[OPT_TIDALQOCEAN].cDefault,"12.5");
-  options[OPT_TIDALQOCEAN].dDefault = 12.5;
+  sprintf(options[OPT_TIDALQOCEAN].cDefault,"12");
+  options[OPT_TIDALQOCEAN].dDefault = 12;
   options[OPT_TIDALQOCEAN].iType = 2;
   options[OPT_TIDALQOCEAN].iMultiFile = 1;
   fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;

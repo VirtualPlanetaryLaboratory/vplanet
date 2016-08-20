@@ -2304,10 +2304,11 @@ double fdMagPauseRad(BODY *body, int iBody) {
 
 /* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
 */
+// dflemin3: dRadius -> dTidalRadius
 double fdTidalPowMan(BODY *body,int iBody) {
 //   Peter's version. I think dRotRate should be dMeanMotion.
  // return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
 }
 
 /* Heat Fluxes/flows */

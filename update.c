@@ -104,6 +104,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumSemi=0;
     update[iBody].iNumSurfaceWaterMass=0;
     update[iBody].iNumOxygenMass=0;
+    update[iBody].iNumOxygenMantleMass=0;
     update[iBody].iNumTemperature=0;
     update[iBody].iNumTMan=0;
     update[iBody].iNumTCore=0;
@@ -993,6 +994,36 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
         module->fnFinalizeUpdateOxygenMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+      
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    // Oxygen Mantle Mass
+    update[iBody].iOxygenMantleMass = -1;
+    if (update[iBody].iNumOxygenMantleMass) {
+      update[iBody].iOxygenMantleMass = iVar;
+      update[iBody].iaVar[iVar] = VOXYGENMANTLEMASS;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumOxygenMantleMass;
+      update[iBody].pdVar[iVar] = &body[iBody].dOxygenMantleMass;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dOxygenMantleMass;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumOxygenMantleMass*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+        module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
       
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

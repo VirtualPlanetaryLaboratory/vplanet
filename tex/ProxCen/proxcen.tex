@@ -1223,7 +1223,7 @@ was necessary to avoid discontinuities associated with the high
 radiogenic power.
 
 In Fig.~\ref{fig:radiog} we show the evolution of the radiogenic
-power, mantle temperature, inner core radius, magnetic momet,
+power, mantle temperature, inner core radius, magnetic moment,
 magnetopause radius and surface energy flux for the four cases. The
 dashed black lines represent the modern Earth's value and all
 intersect the Earth's curve (blue) at about 4.5~Gyr.
@@ -1253,6 +1253,56 @@ intersect the Earth's curve (blue) at about 4.5~Gyr.
   Gyr.}
 \label{fig:radiog}
 \end{figure}
+
+% David:
+Since a possible path towards habitability for Proxima b is the ``habitable evaporated core'' scenario of \citet{Luger15},
+we seek to model how the presence of an evaporating hydrogen envelope and surface oceans impact the tidal and
+orbital evolution of Proxima b.  To do so, we couple the atmospheric escape physics of \atmesc, tidal evolution using \eqtide, the Earth-calibrated geophysical interior models of \radheat \ and \thermint and the stellar evolution of \stellar.
+
+We model the combined tidal contributions of the envelope, oceans, and solid interior via the following relation for the body's total tidal $Q$:
+\begin{equation}
+\label{eqn:Q_hec}
+\frac{1}{Q} = \frac{1}{Q_{interior}} + \frac{1}{Q_{ocean}} + \frac{1}{Q_{envelope}}
+\end{equation}
+where we remove $1/Q_i$ from the summation if we neglect the $i$th's component contribution to Proxima b's net tidal interaction.  We compute Proxima b's 
+net 2nd Love number via
+\begin{equation}
+\label{eqn:k2_hec}
+k_2 = k_{2_{interior}} + k_{2_{ocean}}+ k_{2_{envelope}}
+\end{equation}
+where again we remove $k_{2_{i}}$ from the summation if we neglect the $i$th's component contribution to Proxima b's net tidal interaction.  In the general 
+case when a hydrogen envelope is present, we only consider the tidal effects of the interior and the envelope as any water is likely to be super critical due to 
+the high pressure exerted by the envelope \xxx{(citation?)}.  When an envelope is not present, we consider the tidal contribution of surface oceans if the planet 
+is not in the runaway greenhouse limit since all water would be present in the atmosphere.
+
+We simulate four reasonable boundary cases that bracket the potential past tidal evolution of Proxima b.  The first case ``CPL'' assumes a constant tidal 
+$Q = 12$ analogous to the simulations seen in Figure \ref{fig:eqtide}.  The ``No Ocean'' case assumes the tidal
+interaction is dominated by the planet's interior as determined by \radheat \ and \thermint while the ``Ocean" case  which generalizes the No Ocean case by 
+assuming Proxima b had initially 10 Earth oceans of water with $Q_{ocean} = 12$.  The full habitable evaporated core ``Envelope'' case generalizes
+Ocean by adding on a hydrogen envelope that has an initial mass fraction of $0.001$ of the planet's total mass and $Q_{envelope} = 10^4$ which is 
+consistent with measurements of Neptune's tidal Q \citep{ZhangHamilton08}.  The results of the simulations are shown in Figure \ref{tidal_hec}.
+
+The No Ocean case, dominated by the mantle, reaches large tidal Qs consistent with values reported by \cite{Zahnle15} for the early Earth and undergoes 
+minimal tidal evolution.  Radiogenic heating provides most of the surface flux.  Early on, the Ocean case is in a runaway greenhouse phase in which all the water 
+is locked up in the atmosphere and subject to escape of hydrogen and oxygen from photolysis, decreasing the water mass.  Its tidal evolution mirrors the No 
+Ocean case as the mantle dominates.  Once the star's luminosity decreases enough, the planet enters the HZ at around $10^8$ years and the remaining water 
+condenses to the surface. The presence of surface oceans dramatically decreases the tidal Q leading to fast orbital circularization and a massive surface flux 
+increase via tidal energy dissipation.
+
+The Envelope case has an early bump in surface flux from rotational tidal energy dissipation until the envelope has been completed removed by stellar UV flux 
+after about $10^7$ years.  The hydrogen envelope initially shielded the planet's water allowing for enough to survive subsequent photolysis such that 1 Earth 
+ocean of the initial 7 remained once the planet entered the HZ.  With the envelope gone, surface water dominates the tides and its evolution mirrors that of the 
+Ocean case.
+
+\xxx{A bit more to add once thermint+eqtide fully understood.}
+
+% Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
+\begin{figure} 
+\begin{center}
+\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.pdf}
+\end{center}
+\caption{Evolution of the orbital, tidal and atmospheric properties of Proxima b for the ``CPL" case in light blue, ``No Ocean" case in red, ``Ocean" case in dark blue, and the ``Envelope" case in orange with the dashed line for clarity.  The green shaded region indicates when the planet is in the HZ. {\it Top left:} Surface Flux. {\it Top right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it Middle right:} Semi-major Axis. {\it Bottom left:} Envelope Mass. {\it Bottom right:} Surface Water Mass.}
+\label{fig:tidal_hec}
 
 In the top left panel we show the evolution of the total radiogenic
 power produced in the core, mantle and surface. Initially, the initial

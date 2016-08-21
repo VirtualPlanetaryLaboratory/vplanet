@@ -3,9 +3,9 @@
 \usepackage{multicol}
 \usepackage{color}
 \usepackage{rotating}
-%\usepackage[FIGTOPCAP]{subfigure} XXX -FIGTOCAP was unknown for RB
 \usepackage{subfigure}
 \newcommand{\xxx}[1]{{\color{red} #1}} % \xxx makes things RED
+\def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}} % http://tex.stackexchange.com/questions/152818/top-aligned-subfigure-with-bottom-aligned-caption
 
 \def\mearth{{\rm\,M_\oplus}}
 \def\rearth{{\rm\,R_\oplus}}
@@ -54,11 +54,6 @@
 \end{abstract}
 
 \section{Introduction\label{sec:intro}}
-
-\xxx{dflemin3: changes to a given line follow the line in red while additions are inserted into the text, also in red.}
-
-\xxx{dflemin3: solid introduction.  I made minor spelling/grammar changes throughout and added a few comments
-and suggestions throughout.  Also, I tried to find and insert some missing references}
 
 The discovery of Proxima Centauri b, hereafter Proxima b, heralds a
 new era in the exploration of exoplanets. Although very little is
@@ -187,7 +182,7 @@ low mass stars.
 Like our Sun, Proxima Centauri's luminosity varies slowly with time
 due to starspots \citep{Benedict93}. HST observations of Proxima
 Centauri found variations up to 70 mmag in $V$ \citep{Benedict98},
-which, corresponds to about a 17.5\% change in luminosity \xxx{double check!}, with a period of 83.5 days
+which corresponds to about a 17.5\% change in luminosity \xxx{[double check!]}, with a period of 83.5 days
 (\ie the rotation period). Moreover, \citep{Benedict98} found evidence
 for two discrete modes of variability, one lower amplitude mode
 ($\Delta~V~\sim~30$~mmag) with a period of $\sim 42$ days, and a
@@ -616,7 +611,7 @@ $\alpha_\mathrm{MLT} = 1.0$ and linearly interpolated between the $0.1
 \msun$ and $0.15 \msun$ tracks to obtain a track at $M_{Prox} = 0.12
 \msun$.  While these choices yield a present-day radius within
 $1\sigma$ of $0.1410 \pm 0.0070 \rsun$ \citep{Boyajian12}, the model
-predicts a luminosity at $t = 4.78 \mathrm{Gyr}$ that is $\sim 15\%$
+predicts a luminosity at $t = 4.78\ \mathrm{Gyr}$ that is $\sim 15\%$
 higher than the value reported in \cite{Boyajian12} (a $\sim 10\sigma$
 discrepancy). Such a discrepancy is not unexpected, given both the
 inaccuracies in the evolutionary models for low mass stars and the
@@ -649,13 +644,13 @@ $L_\mathrm{XUV}/L_\mathrm{bol} = 2.83\times 10^{-4}$
 
 \begin{figure}[ht]
 \centering
-\label{fig:stellar:evol}
 \includegraphics[width=6in]{star}
 \caption{Luminosity, temperature, radius, and XUV evolution of Proxima
   Centauri from $t_0$ = 1 Myr to the present day. The dashed red lines
   indicate the measured values of each parameter (see text). 1$\sigma$
   uncertainties are shaded in light red. By construction, all tracks
   match the observed values at the present day within 1$\sigma$.}
+\label{fig:stellar:evol}
 \end{figure}
 
 In Fig.~\ref{fig:stellar:evol} we plot the stellar model used in this
@@ -668,8 +663,8 @@ Myr to the mean system age of 4.78 Gyr. The long pre-main sequence
 \subsection{Atmospheric Escape: \atmesc}
 \label{sec:models:atmesc}
 
-We model atmospheric escape under the energy-limited and
-diffusion-limited parameterizations, closely following \cite{Luger15}
+We model atmospheric escape under the energy-limited \citep{Watson81,Erkaev07} and
+diffusion-limited \citep{Hunten73} parameterizations, closely following \cite{Luger15}
 and \cite{LugerBarnes15}; refer to those papers for a detailed
 description of the equations and methodology. In this section we
 outline the main adaptations and improvements to the models therein.
@@ -706,8 +701,8 @@ rapidly lead to the loss of all O$_2$ from planets around M
 dwarfs. However, because of the larger mass of the oxygen atom,
 hydrodynamic oxygen-dominated escape requires exospheric temperatures
 $\sim m_\mathrm{H}/m_\mathrm{O} = 16$ times higher than that for a
-hydrogen-dominated flow, which is likely unrealistic for these
-planets. Following the prescription of \cite{Schaefer16}, we therefore
+hydrogen-dominated flow, which is probably unrealistic for Proxima
+b. Following the prescription of \cite{Schaefer16}, we therefore
 shut off oxygen escape once its mixing ratio exceeds $X_\mathrm{O} =
 0.6$, switching to the diffusion-limited escape rate of
 hydrogen. Finally, as in \cite{LugerBarnes15}, we also consider the
@@ -745,7 +740,7 @@ very long. The values of $k_2$ can only span 0 to 1.5, so it is not as
 important as $Q$ which may take any non-negative value. Values for
 stars are typically estimated to be of order $10^6$
 \citep[\eg][]{Jackson09}, dry terrestrial planets have $Q~\sim~100$
-\citep{Yoder95,Henning09}, and gas giants have $Q=10^4--10^6$
+\citep{Yoder95,Henning09}, and gas giants have $Q=10^4-10^6$
 \citep{AksnesFranklin01,Jackson08a}. In $\S$~\ref{sec:results} we
 will consider the possibility that Proxima b began with a hydrogen
 envelope and was perhaps more like Neptune than Earth. There is some
@@ -1097,24 +1092,23 @@ and the dynamical ellipticity of planet b. A comprehensive exploration
 of parameter space is beyond the scope of this study, so we consider
 two end-member cases: a nearly coplanar, nearly circular system, and a
 system with high eccentricities and inclinations. The initial orbital
-elements and rotational properties of the bodies are listed in Table \ref{tab:orbitic}
+elements and rotational properties of the bodies are listed in Table \ref{tab:orbitic}.
 
 \begin{table}[h]
 \centering
-\caption{Initial conditions for Proxima 2-planet systems. The coplanar, circular case is on top, the eccentric, inclined case below.}
-
 \begin{tabular}{lccccccccc}
 \hline\hline \\[-1.5ex]
- & $m$ ($M_{\oplus}$)  & $a_s$ (au) & $a_l$ (au) & $e$ & $i$ ($^{\circ}$) & $\omega$ ($^{\circ}$) & $\Omega$ ($^{\circ}$) & $\psi$ ($^{\circ}$) & $P_{rot}$ (days)\\[0.5ex]
- \hline \\ [-1.5ex]
- b & 1.27 & 0.0482817 & 0.05 & 0.001 & 0.001 & 248.87 & 20.68 & 23.5 & 1  \\
- c & 3.13 & 0.346 & 0.346 & 0.001 & 0.001 & 336.71 & 20 & &  \\
- \hline \\
- b & 1.27 & 0.0482817 & 0.05 & 0.02 & 20 & 248.87 & 20.68 & 23.5 & 1  \\
- c & 3.13 & 0.346 & 0.346 & 0.02 & 0.001 & 336.71 & 20 & &  \\
- \end{tabular}
- \label{tab:orbitic}
- \end{table}
+& $m$ ($M_{\oplus}$)  & $a_s$ (au) & $a_l$ (au) & $e$ & $i$ ($^{\circ}$) & $\omega$ ($^{\circ}$) & $\Omega$ ($^{\circ}$) & $\psi$ ($^{\circ}$) & $P_{rot}$ (days)\\[0.5ex]
+\hline \\ [-1.5ex]
+b & 1.27 & 0.0482817 & 0.05 & 0.001 & 0.001 & 248.87 & 20.68 & 23.5 & 1  \\
+c & 3.13 & 0.346 & 0.346 & 0.001 & 0.001 & 336.71 & 20 & &  \\
+\hline \\
+b & 1.27 & 0.0482817 & 0.05 & 0.02 & 20 & 248.87 & 20.68 & 23.5 & 1  \\
+c & 3.13 & 0.346 & 0.346 & 0.02 & 0.001 & 336.71 & 20 & &  \\
+\end{tabular}
+\caption{Initial conditions for Proxima 2-planet systems. The coplanar, circular case is on top, the eccentric, inclined case below.}
+\label{tab:orbitic}
+\end{table}
 
 In Fig.~\ref{fig:MultiLow} we show the orbital evolution for the low
 $e$ and $i$ case over short (left) and long (right) timescales. As
@@ -1165,8 +1159,8 @@ $10^{-8~\circ}$. The bottom left panel shows the evolution of the
 dynamical ellipticity as predicted by (\xxx{REF}). The lower right panel
 shows the value of the Cassini Parameter for the two cases, both of
 which becomes locked near zero, indicating the rotational and angular
-momentum have evolved into a Cassini State, in this case it is Cassini
-State X. \xxx{Which Cassini state?, REF}
+momentum have evolved into a Cassini State (\xxx{in this case, Cassini
+State X (REF)}).
 
 \begin{figure} 
 \begin{center}
@@ -1195,9 +1189,9 @@ escape.
 
 \begin{figure}[ht]
 \centering
-\label{fig:HZEvol}
 \includegraphics[width=5in]{HZEvol}
-\caption{\xxx{Rory, can you re-plot this without the kink? Or send me your source files and I can look at it.} Evolution of the conservative HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) and Mercury (dashed line).}
+\caption{Evolution of the conservative HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) and Mercury (dashed line).}
+\label{fig:HZEvol}
 \end{figure}
 
 \subsection{Internal Evolution}
@@ -1299,13 +1293,9 @@ of the Ocean case.
 
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 \begin{figure} 
-\begin{center}
+\centering
 \includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.eps}
-\end{center}
-\caption{Evolution of the orbital, tidal and atmospheric properties of Proxima b for the ``CPL" case in light blue, ``No Ocean" case in red, ``Ocean" case in dark 
-blue, and the ``Envelope" case in orange with the dashed line for clarity.  The green shaded region indicates when the planet is in the HZ. {\it Top left:} Surface 
-Flux. {\it Top right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it Middle right:} Semi-major Axis. {\it Bottom left:} Envelope Mass. {\it Bottom right:} Surface 
-Water Mass.}
+\caption{Evolution of the orbital, tidal and atmospheric properties of Proxima b for the ``CPL" case in light blue, ``No Ocean" case in red, ``Ocean" case in dark blue, and the ``Envelope" case in orange with the dashed line for clarity.  The green shaded region indicates when the planet is in the HZ. {\it Top left:} Surface Flux. {\it Top right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it Middle right:} Semi-major Axis. {\it Bottom left:} Envelope Mass. {\it Bottom right:} Surface Water Mass.}
 \label{fig:tidal_hec}
 \end{figure}
 
@@ -1401,7 +1391,6 @@ hydrogen. In both cases, we assume a fiducial planet mass of $1.27
 
 \begin{figure}[ht]
 \centering
-\label{fig:atmesc:mirage}
 \includegraphics[width=6in]{mirage}
 \caption{Evolution of the water content and atmospheric O$_2$ pressure
   on Proxima b for different initial conditions. The initial water
@@ -1419,13 +1408,14 @@ hydrogen. In both cases, we assume a fiducial planet mass of $1.27
   H, and desiccation occurs in all cases. Note that in this scenario,
   the curves in the ``O$_2$ pressure'' panel correspond to the
   equivalent O$_2$ pressure absorbed at the surface.}
+\label{fig:atmesc:mirage}
 \end{figure}
 
 In Fig.~\ref{fig:atmesc:mirage} we show the evolution of the latter
 type of planet, which formed with no significant primordial
 envelope. We consider four different initial inventories of water: 1,
 3, 5, and 10 terrestrial oceans (1 TO $\equiv 1.39\times 10^{24}$ g,
-the total mass of surface water on Earth; see \cite{Kasting88}. As
+the total mass of surface water on Earth; see \cite{Kasting88}). As
 discussed in \ref{sec:models:atmesc}, we also consider two end-member
 scenarios regarding the photolytically-produced O$_2$: no surface
 sinks (solid lines) and efficient surface sinks (dashed lines). In all
@@ -1441,7 +1431,6 @@ convecting, reducing magma ocean, it is likely desiccated today.
 
 \begin{figure}[ht]
 \centering
-\label{fig:atmesc:hec}
 \includegraphics[width=6in]{hec}
 \caption{Evolution of the water and O$_2$ contents assuming Proxima b
   formed with a hydrogen envelope and 3 TO. Line colors correspond to
@@ -1454,6 +1443,7 @@ convecting, reducing magma ocean, it is likely desiccated today.
   the HZ, preventing any water from being lost and O$_2$ from
   accumulating in the atmosphere.  This is the most favorable scenario
   for a potentially habitable Proxima b.}
+\label{fig:atmesc:hec}
 \end{figure}
 
 Next, in Fig.~\ref{fig:atmesc:hec}, we show the results assuming
@@ -1486,12 +1476,11 @@ than our fiducial value of $1.27 \mearth$, the envelope does not
 completely evaporate, in which case Proxima b would likely be
 uninhabitable.
 
-\begin{sidewaysfigure}[ht]
+\begin{sidewaysfigure}[h]
 \centering
-\label{fig:atmesc:synth}
-\subfigure{\label{fig:atmesc:synth:a}\includegraphics[width=3.3in]{synth_a}}
-\subfigure{\label{fig:atmesc:synth:b}\includegraphics[width=3.3in]{synth_b}}
-\subfigure{\label{fig:atmesc:synth:c}\includegraphics[width=1.285in]{synth_c}}
+\subfigure{\label{fig:atmesc:synth:a}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_a}}}
+\subfigure{\label{fig:atmesc:synth:b}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_b}}}
+\subfigure{\label{fig:atmesc:synth:c}\imagebox{2.5in}{\includegraphics[width=1.285in]{synth_c}}}
 \caption{Multiple evolutionary pathways for the water on Proxima
   b. These plots show the final water and final O$_2$ content of the
   planet for a suite of different initial conditions. Different marker
@@ -1517,6 +1506,7 @@ uninhabitable.
   particularly problematic in the context of atmospheric
   characterization, as the presence of water and O$_2$ could fool
   observers into believing they are inhabited.}
+\label{fig:atmesc:synth}
 \end{sidewaysfigure}
 
 Finally, in Fig.~\ref{fig:atmesc:synth} we present a summary of our
@@ -1534,8 +1524,8 @@ corresponding respectively to final oxygen and water contents of
 zero. In general, habitable outcomes are those that lie in the top
 left of the plot (abundant water, low O$_2$). Planets in the top right
 have abundant water but also build up large amounts of O$_2$, which
-could render them uninhabitable \citep{LugerBarnes15} and/or fool
-observers searching for biosignatures. Planets at the bottom of the
+could render them uninhabitable and/or fool
+observers searching for biosignatures \citep{LugerBarnes15}. Planets at the bottom of the
 plot are desiccated and therefore uninhabitable, though some may also
 be biosignature false positives.
 
@@ -1553,7 +1543,7 @@ retained. Finally, the primary effect of a larger planet mass is to
 increase the amount of oxygen in the atmosphere and/or absorbed at the
 surface; while in some cases a larger planet mass can result in less
 water loss, habitable scenarios are more likely for a lower planet
-mass.
+mass, consistent with the results of \cite{LugerBarnes15}.
 
 Further data on Proxima b will greatly aid in distinguishing between
 these multiple evolutionary pathways. In particular, constraints on
@@ -1570,7 +1560,7 @@ history of Proxima b. We considered processes spanning the planet's
 core to the Milky Way galaxy and find that effects at all these scales
 could be important in the history of our closest exoplanet. In this
 section, we summarize the results in terms of the potential
-atmospheres that Proxima b might have, and which are considered in
+atmospheres that Proxima b might have, which are considered in
 detail in \citep{Meadows16}. Then we examine the likelihood that it is
 currently habitable.
 
@@ -1642,13 +1632,12 @@ reasonable to assume that a Venus-like atmosphere is possible. CO$_2$
 is a very abundant molecule in planetary atmospheres, and given its
 strong ability to heat the surface, high molecular weight, and strong
 chemical bonds, it may be able to accumulate in the HZ to large enough
-levels to trigger the runaway greenhouse. \xxx{(CITE: perhaps Colin
-Goldblatt's paper on CO2 runaway on Earth?)}
-
-\xxx{I don't like the last two paragraphs because they de-emphasize the likely
-scenario in which it \textbf{did} experience a long PMS runaway. Reword?}
-
-\xxx{RB response: The first paragraph does emphasize PMS.}
+levels to trigger the runaway greenhouse. \xxx{[Colin Goldblatt's
+paper actually shows that adding CO2 alone cannot cause a runaway
+greenhouse on an Earth-like planet: http://arxiv.org/abs/1201.1593.
+I don't disagree with the possibility that it's in a runaway even in 
+the HZ, but perhaps a better argument is if its albedo is < 0.3 or if
+clouds behave differently, etc.?]}
 
 A final possibility, mentioned above, is that past tidal heating drove
 the planet into a runaway greenhouse \citep{Barnes13}. If the planet
@@ -1664,44 +1653,35 @@ the ocean \citep{DriscollBarnes15}.
 Proxima b may have formed with sufficient hydrogen that it has
 retained despite all the high energy processes that have likely
 affected it. This possibility is especially likely if it formed beyond
-the snow line, perhaps with 10 times more mass than it has now, and
-migrated in. Even if just 1 Earth-mass, some of that may be in
-hydrogen that was accreted in a much colder environment.  We find that
-the initial envelope fraction has to be larger than about 2\% in order
-for it to retain any hydrogen, assuming it arrived at its current
-orbit by the end of the gaseous disk dispersal.
+the snow line and migrated in. Similarly to \cite{OwenMohanty16}, we find
+that if Proxima b formed with $\gtrsim$ 1\% of its mass in the form of a 
+hydrogen envelope, it likely still possesses some hydrogen, in which case
+the surface may be too hot and/or at too high a pressure to be habitable.
+Future measurements of Proxima b's radius can inform its present-day
+composition and thus settle this issue.
+% rodluger: Removed ``perhaps with 10 times more mass than it has now'',
+% as that's not really physical. At most it's lost about 1\% H/He.
 
 \subsubsection{Abiotic Oxygen Atmosphere}
 \label{sec:results:atmstates:o2atmos}
 
-If Proxima b formed with a large water inventory, the pre-MS phase may
-have photolyzed water vapor and the hydrogen escaped. Although oxygen
+If Proxima b formed with one or more TO of water, photolysis followed
+by hydrogen escape during the stellar PMS phase could have led to the 
+buildup of substantial O$_2$ in the atmosphere. Although oxygen
 is highly reactive, thousands of bars of oxygen can be liberated
 through this mechanism \citep{LugerBarnes15} and hence all sinks for
 it may become saturated \citep{Schaefer16}. In principle, thousands of
-bars of oxygen could remain, but most likely it would be far
-lower. This planet is unlikely to be habitable, as the oxygen builds
-up early on, and large amounts of free oxygen are likely to stifle the
-pre-biotic chemistry necessary for life to originate. \xxx{REF?}
+bars of oxygen could remain in the atmosphere, but this figure is most likely lower,
+as much of the oxygen will be consumed in the process of oxidizing the surface. 
+In this case Proxima b may be uninhabitable, given that little free energy
+may be available at the surface for early organisms to take a hold. Life on
+Earth is thought to have emerged in an extremely reducing environment
+\citep{Oparin24, Haldane29}, with access to high energy gradients to fuel
+early metabolisms; this may not be the case on Proxima b.
 
-If the greenhouse gases are at low enough levels in the atmosphere,
-then it may be possible for liquid water to accumulate on the
-planetary surface and this planet would meet the traditional
-definition of ``habitable.'' However, we think it would be unlikely
-that life could arise on such a planet because the oxygen would
-prevent the growth of the pre-biotic molecules that were necessary for
-life on Earth to emerge (REF), which occurred in very low oxygen
-levels. Thus, the detection of atmospheric oxygen as well as the
-presence of surface liquid by other means, \eg glint
-\citep{Robinson10}, would not be sufficient evidence that the planet
-is habitable.
-
-\subsubsection{Abiotic Oxygen + Water Atmosphere}
-\label{sec:results:atmstates:o2h2oatmos}
-
-If Proxima b experienced a PMS greenhouse that destroyed most, but not
-all, of the water, then it is possible that the atmosphere has large
-concentrations of oxygen and water. \xxx{Rodrigo REF?} The O$_2$, H$_2$O and CO$_2$
+In many of the scenarios in which Proxima b develops an O$_2$-rich atmosphere,
+it also maintains at least some of its initial water.
+After the end of the PMS phase, the O$_2$, H$_2$O and CO$_2$
 greenhouse warming could be sufficient to prevent water from
 accumulating on the surface, and hence it could have significant
 abundance in the stratosphere. While the simultaneous detection of
@@ -1709,6 +1689,16 @@ water and oxygen has traditionally been envisaged as an ideal
 combination for life detection (\xxx{REF}), in the case of Proxima b, it is
 insufficient to prove habitable conditions exist, let alone that life
 is present.
+
+Alternatively, if the greenhouse gases are at low enough levels in the atmosphere,
+then it may be possible for liquid water to accumulate on the
+planetary surface and this planet would meet the traditional
+definition of ``habitable.'' However, as argued above, such a planet
+would likely be incapable of supporting life.
+Thus, the detection of atmospheric oxygen as well as the
+presence of surface liquid by other means, \eg glint
+\citep{Robinson10}, would not be sufficient evidence that the planet
+is habitable.
 
 \subsubsection{No Atmosphere}
 \label{sec:results:atmstates:noatmos}
@@ -1732,7 +1722,7 @@ will reform by outgassing.
 Planetary habitability is a complicated feature to model
 quantitatively and Proxima b is no exception. We do know that the
 planet has sufficient energy to support life, assuredly has enough
-bioessential elements \xxx{[justify this?] [well, they're everywhere!]}, and is old enough for life to have gained a
+bioessential elements, and is old enough for life to have gained a
 foothold, assuming Earth isn't an extreme outlier. The biggest
 questions are if it is terrestrial, and if it possesses vast reservoirs
 of liquid water. At this time, it is impossible to determine the
@@ -1761,7 +1751,7 @@ orbit of Proxima Centauri was much smaller in the past
 \citep{DesideraBarbieri07}. If the additional planet in the system is
 massive, on an eccentric orbit, and/or on a highly inclined orbit,
 then it, too, may induce eccentricity perturbations that maintain
-eccentricities \cite{TakedaRasio05}, possibly in the range of a tidal
+eccentricities \citep{TakedaRasio05}, possibly in the range of a tidal
 greenhouse. As shown in $\S$~\ref{sec:results:internal}, the eccentricity of
 b will damp, but the timescale can be very long. Large eccentricities
 are not well-modeled by equilibrium tide theory, even with a proper
@@ -1863,6 +1853,7 @@ discovery of extraterrestrial life.
 \vspace{1cm}
 This work was supported by the NASA Astrobiology Institute's Virtual
 Planetary Laboratory under Cooperative Agreement number NNA13AA93A.
+David Fleming is supported by an NSF IGERT DGE-1258485 fellowship.
 
 
 \bibliography{bib}

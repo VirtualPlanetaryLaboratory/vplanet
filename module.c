@@ -110,6 +110,11 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
+  module->fnFinalizeUpdatePeriQ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePeriQModule));
+  module->fnFinalizeUpdateArgP = malloc(iNumBodies*sizeof(fnFinalizeUpdateArgPModule));
+  module->fnFinalizeUpdateInc = malloc(iNumBodies*sizeof(fnFinalizeUpdateIncModule));
+  module->fnFinalizeUpdateLongA = malloc(iNumBodies*sizeof(fnFinalizeUpdateLongAModule));
+  
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -151,6 +156,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bBinary)
     iNumModules++;
   if (body[iBody].bFlare)
+    iNumModules++;
+  if (body[iBody].bGalHabit)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -217,6 +224,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+  
+  module->fnFinalizeUpdatePeriQ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePeriQModule));
+  module->fnFinalizeUpdateArgP[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateArgPModule));
+  module->fnFinalizeUpdateInc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIncModule));
+  module->fnFinalizeUpdateLongA[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLongAModule));
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -272,6 +284,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
+    
+    module->fnFinalizeUpdatePeriQ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateArgP[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateInc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLongA[iBody][iModule] = &FinalizeUpdateNULL;
 
   }
 
@@ -319,6 +336,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = FLARE;
+  }
+  if (body[iBody].bGalHabit) {
+    AddModuleGalHabit(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = GALHABIT;
   }
 }
 
@@ -384,6 +405,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
+	    } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
+	body[iFile-1].bGalHabit = 1;
+	module->iBitSum[iFile-1] += GALHABIT;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -413,6 +437,8 @@ void PrintModuleList(FILE *file,int iBitSum) {
     fprintf(file,"EQTIDE ");
   if (iBitSum & FLARE)
     fprintf(file,"FLARE ");
+  if (iBitSum & GALHABIT)
+    fprintf(file,"GALHABIT ");
   if (iBitSum & POISE)
     fprintf(file,"POISE ");
   if (iBitSum & RADHEAT)
@@ -421,6 +447,7 @@ void PrintModuleList(FILE *file,int iBitSum) {
     fprintf(file,"STELLAR ");
   if (iBitSum & THERMINT)
     fprintf(file,"THERMINT ");
+    
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
@@ -433,6 +460,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bDistRot = 0;
       (*body)[iBody].bEqtide = 0;
       (*body)[iBody].bFlare = 0;
+      (*body)[iBody].bGalHabit = 0;
       (*body)[iBody].bPoise = 0;
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bStellar = 0;

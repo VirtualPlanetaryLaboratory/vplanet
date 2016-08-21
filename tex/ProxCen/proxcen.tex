@@ -2,7 +2,9 @@
 \usepackage{xspace}
 \usepackage{multicol}
 \usepackage{color}
-
+\usepackage{rotating}
+%\usepackage[FIGTOPCAP]{subfigure} XXX -FIGTOCAP was unknown for RB
+\usepackage{subfigure}
 \newcommand{\xxx}[1]{{\color{red} #1}} % \xxx makes things RED
 
 \def\mearth{{\rm\,M_\oplus}}
@@ -37,6 +39,9 @@
 \def\galhabit{\texttt{\footnotesize{GALHABIT}}\xspace}
 
 \bibliographystyle{apj}
+
+\usepackage{multicol}
+\usepackage{amsmath}
 \begin{document}
 
 \title{The Habitability of Proxima Centauri b I: Environmental Context}
@@ -89,7 +94,7 @@ life.
 
 This requirement is a tall order in light of the expected diversity of
 terrestrial exoplanets in the galaxy and the plethora of mechanisms
-capable of mimicking biosignatures \citep{Schweiterman16,Meadows16}.
+capable of mimicking biosignatures \citep{Schwieterman16,Meadows16}.
 With these challenges in mind, Proxima b may offer the best
 opportunity to begin the scientific process of searching for
 unambiguous signs of life.
@@ -134,8 +139,8 @@ conclusions.
 
 \section{Observational Constraints \label{sec:obs}}
 
-In this section we review what is known about the triple star system
-Alpha Centauri (hereafter \acen) of which Proxima Centauri may be a
+In this section we review what is known about the star system
+Alpha Centauri (hereafter \acen) of which Proxima Centauri may be a third
 member. This star system has been studied carefully for centuries as
 it is the closest to Earth. We will first review the direct
 observational data, then we will make whatever inferences are possible
@@ -153,8 +158,7 @@ data are the extent of the direct observational data on the planet,
 but even the minimum mass relies on uncertain estimates of the mass of
 the host star, described below.
 
-Proxima b may not be the only planet orbiting Proxima
-Centauri. The Doppler data suggest the presence of another planetary
+The Doppler data suggest the presence of another planetary
 mass companion with an orbital period near 215 days, but it is not
 definitive yet \citep{AngladaEscude16}. If present, the planet has a
 projected mass of $\lesssim~10~\mearth$, consistent with previous
@@ -165,8 +169,10 @@ dynamical stability. Additionally, lower mass and/or more distant
 planetary companions could also be present in the system.
 
 \subsection{Properties of the Host Star}
+
+% TRQ -- closest besides the Sun?
 \label{sec:obs:star}
-As Proxima Centauri is the closest star to Earth, it has been studied
+As Proxima Centauri is the closest star to the Sun, it has been studied
 extensively since its discovery 100 years ago \citep{Innes1915}.  It
 has a radius $R_*$ of $0.14~\rsun$, a temperature $T_{eff}$ of 3050 K, a
 luminosity $L_*$ of $0.00155~\lsun$~\citep{Boyajian12}, and a rotation
@@ -181,7 +187,7 @@ low mass stars.
 Like our Sun, Proxima Centauri's luminosity varies slowly with time
 due to starspots \citep{Benedict93}. HST observations of Proxima
 Centauri found variations up to 70 mmag in $V$ \citep{Benedict98},
-which, corresponds to about a 17.5\% change with a period of 83.5 days
+which, corresponds to about a 17.5\% change in luminosity \xxx{double check!}, with a period of 83.5 days
 (\ie the rotation period). Moreover, \citep{Benedict98} found evidence
 for two discrete modes of variability, one lower amplitude mode
 ($\Delta~V~\sim~30$~mmag) with a period of $\sim 42$ days, and a
@@ -207,7 +213,7 @@ potentially affect any putative life on b.
 
 Proxima Centauri is a known flare star
 \citep{Shapley51}\footnote{Although Shapley is the sole author of his
-  1951 manuscript, the bulk of the work was performed by two female
+  1951 manuscript, the bulk of the work was performed by two
   assistants, C.D. Boyd, and V.M. Nail.}  and indeed several flares
 were reported during the Pale Red Dot campaign
 \citep{AngladaEscude16}. \cite{Walker81} performed the first study of
@@ -272,11 +278,12 @@ significantly enriched in Zn.
 
 \acen~A and B are large enough and bright enough for asteroseismic
 studies that can reveal physical properties and ages of stars to a few
-percent, for high enough quality data \citep{Kjeldsen95}. Indeed, these two stars
-are central to the field of asteroseismology, and have been studied in
-exquisite detail \citep[e.g.][]{Bouchy01,Bouchy02}. However, significant uncertainties persist in our
-understanding of these stars, despite all the observational
-advantages.
+percent, for high enough quality data \citep{Kjeldsen95}. Indeed,
+these two stars are central to the field of asteroseismology, and have
+been studied in exquisite detail
+\citep[e.g.][]{Bouchy01,Bouchy02}. However, significant uncertainties
+persist in our understanding of these stars, despite all the
+observational advantages.
 
 A recent study undertook a comprehensive Bayesian analysis of \acen~A
 with priors on radius, composition, and mass derived from
@@ -374,10 +381,10 @@ disk is unknown, and could have been altered by the presence of
 permitted within this constraint is plausible.
 
 The radial velocity data combined with $M_{Prox}$ only provide a
-minimum mass, but significantly larger planet masses are unlikely
-geometrically, and very large masses can be excluded because they
-would incite detectable astrometric signals (note that the minimum
-mass solution predicts an astrometric orbit of the star of $\sim$1
+minimum mass, but significantly larger planet masses are geometrically
+unlikely, and very large masses can be excluded because they would
+incite detectable astrometric signals (note that the minimum mass
+solution predicts an astrometric orbit of the star of $\sim$1
 microsecond of arc). It is very likely the planet has a mass less than
 10~$\mearth$, and probably $<~3~\mearth$. We will assume the latter
 possibility is true, and hence the planet is likely rocky, based on
@@ -425,16 +432,18 @@ Proxima's luminosity and effective temperature combined with b's
 orbital semi-major axis place the planet in the habitable zone (HZ) of
 Proxima and nearly in the same relative position of Earth in the Sun's
 HZ. Specifically, the planet receives about 65\% of Earth's
-instellation, which places b in the ``conservative'' HZ of \cite{Kopparapu13}. Even allowing for observational
-uncertainties, \cite{AngladaEscude16} find that the planet is in this
-conservative HZ. 
+instellation, which places b in the ``conservative'' HZ of
+\cite{Kopparapu13}. Even allowing for observational uncertainties,
+\cite{AngladaEscude16} find that the planet is in this conservative
+HZ.
 
 However, its habitability depends on many more factors than just the
 instellation. The planet must form with water and physical processes
 cannot subsequently remove it. Additionally, even if water is present,
-the evolution and potential habitability of Proxima depends on many other factors involving
-stellar effects, the planet's internal properties, and the
-gravitational influence of the other members of the stellar system.
+the evolution and potential habitability of Proxima depends on many
+other factors involving stellar effects, the planet's internal
+properties, and the gravitational influence of the other members of
+the stellar system.
 
 The host star is about 10 times smaller and less massive than the Sun,
 the temperature is about half that of the Sun, and the luminosity is
@@ -466,7 +475,7 @@ particles into the magnetic poles and providing enough energy to
 atmospheric particles to achieve escape velocity. Either way, knowledge of the
 frequency of flaring and other high energy events, as well as of the
 likelihood that Proxima b possesses a magnetic field, would be
-invaluable in assessing the longevity of Proxima b's atmosphere.
+invaluable information in assessing the longevity of Proxima b's atmosphere.
 
 The close-in orbit also introduces the possibility that tidal effects
 are significant on the planet. Tides can affect the planet in five
@@ -513,6 +522,8 @@ have formed beyond the snow line and migrated in either while the gas
 disk was still present, or later during a large scale dynamical
 instability (see below). In those cases, the planet could be
 volatile-rich.
+
+% Paragraph on whole planet coupling \citep{FoleyDriscoll16}
 
 The depletion of Eu in \acen~A is also of note as it is often a tracer
 of radioactive material like $^{232}$Th and $^{238}$U
@@ -572,8 +583,6 @@ Centauri. In the next sections we apply quantitative models of the
 processes described in this section to the full stellar system in order to
 explore the possible histories of Proxima b in detail.
 
-% Still to explore: Eu->Radiogenic, lifetimes of M dwarf disks, GCMs of tidally-locked planets 
-
 \section{Models\label{sec:models}}
 
 In this section we describe the models we use to consider the
@@ -591,25 +600,126 @@ describe qualitatively the modules and direct the reader to the
 references for a quantitative description. We then briefly describe
 how \vplanet~unifies these modules and integrates the system forward.
 
-\xxx{dflemin3: I'm sure everyone will include such things when they write their module sections, but we must take
-care to show that the models we use are proven, calibrated and to be believed.}
+\xxx{dflemin3: I'm sure everyone will include such things when they
+  write their module sections, but we must take care to show that the
+  models we use are proven, calibrated and to be believed.}
 
 \subsection{Stellar Evolution: \stellar}
 \label{sec:models:stellar}
-\xxx{Coming soon, I promise!}
+
+Of the many stellar evolutionary tracks available in the literature
+\citep[\eg][]{Baraffe98,Dartmouth08,Baraffe15}, we find that the
+Yonsei-Yale tracks for low-mass stars \citep{YonseiYale13} provide the
+best match to the stellar parameters of Proxima Centauri. We selected
+the [Fe/H] = +0.3 track with mixing length parameter
+$\alpha_\mathrm{MLT} = 1.0$ and linearly interpolated between the $0.1
+\msun$ and $0.15 \msun$ tracks to obtain a track at $M_{Prox} = 0.12
+\msun$.  While these choices yield a present-day radius within
+$1\sigma$ of $0.1410 \pm 0.0070 \rsun$ \citep{Boyajian12}, the model
+predicts a luminosity at $t = 4.78 \mathrm{Gyr}$ that is $\sim 15\%$
+higher than the value reported in \cite{Boyajian12} (a $\sim 10\sigma$
+discrepancy). Such a discrepancy is not unexpected, given both the
+inaccuracies in the evolutionary models for low mass stars and the
+large intrinsic scatter of the luminosity and radius of M dwarfs at
+fixed mass and metallicity, likely due to unmodeled magnetic effects
+\citep{YonseiYale13}. Moreover, the large uncertainties in the age,
+mass, and metallicity of Proxima Centauri (\S\ref{sec:obs}) further
+contribute to the inconsistency.
+
+Nevertheless, since we are concerned with the present-day habitability
+of Proxima b, it is imperative that our model match the present-day
+luminosity of its star. We therefore scale the Yonsei-Yale luminosity
+track down to match the observed value, adjusting the evolution of the
+effective temperature to be consistent with the radius evolution
+(which we do not change). We note that this choice results in a
+\emph{lower} luminosity for Proxima Centauri at all ages, which yields
+conservative (``optimistic'') results for the total amount of water
+lost from the planet (\S\ref{sec:results:atmesc}). Moreover, this
+adjustment likely has a smaller effect on the qualitative nature of
+our results than the large uncertainties on the properties of the star
+and the planet.
+
+We also model the evolution of the XUV luminosity of the star as in
+\cite{LugerBarnes15}. We use the power-law of \cite{Ribas05} with
+power law exponent $\beta = -1.23$, a saturation fraction
+$L_\mathrm{XUV}/L_\mathrm{bol} = 10^{-3}$ and a saturation time of 1
+Gyr. These choices yield a good match to the present-day value,
+$L_\mathrm{XUV}/L_\mathrm{bol} = 2.83\times 10^{-4}$
+\citep{Boyajian12}.
+
+\begin{figure}[ht]
+\centering
+\label{fig:stellar:evol}
+\includegraphics[width=6in]{star}
+\caption{Luminosity, temperature, radius, and XUV evolution of Proxima
+  Centauri from $t_0$ = 1 Myr to the present day. The dashed red lines
+  indicate the measured values of each parameter (see text). 1$\sigma$
+  uncertainties are shaded in light red. By construction, all tracks
+  match the observed values at the present day within 1$\sigma$.}
+\end{figure}
+
+In Fig.~\ref{fig:stellar:evol} we plot the stellar model used in this
+paper, showing the evolution of the luminosity, radius, effective
+temperature, and XUV luminosity as a function of time from $t_0$ = 1
+Myr to the mean system age of 4.78 Gyr. The long pre-main sequence
+(PMS) phase studied by \cite{LugerBarnes15} is evident, lasting $\sim$
+1 Gyr.
 
 \subsection{Atmospheric Escape: \atmesc}
 \label{sec:models:atmesc}
-\xxx{Coming soon, I promise!}
 
-\subsection{Orbital Evolution: \distorb}
-\label{sec:models:distorb}
-% Russell
+We model atmospheric escape under the energy-limited and
+diffusion-limited parameterizations, closely following \cite{Luger15}
+and \cite{LugerBarnes15}; refer to those papers for a detailed
+description of the equations and methodology. In this section we
+outline the main adaptations and improvements to the models therein.
 
-\subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
-\label{sec:models:distrot}
-% Russell
+We model both the escape of hydrogen from a putative thin primordial
+envelope and the escape of hydrogen and oxygen from photolysis of
+water during an early runaway greenhouse. As in \cite{LugerBarnes15},
+we set water escape rates to zero once the planet enters the HZ, since
+the establishment of a cold trap should limit the availability of
+water in the upper atmosphere. We further assume that planets with
+hydrogen envelopes must entirely lose those before water can be lost,
+given the expected large diffusive separation between light H atoms
+and heavy H$_2$O molecules.  We shut off hydrodynamic escape at 1 Gyr,
+the approximate time at which the star reaches the main sequence, to
+account for the transition to ballistic escape predicted by
+\cite{OwenMohanty16}. We assume XUV escape efficiencies
+$\epsilon_\mathrm{XUV}$ of 0.15 for hydrogen envelope escape and 0.30
+for the escape of a steam atmosphere, whose opacity is larger in the
+FUV, leading to additional heating \citep{Sekiya81}. Finally, for
+hydrogen-rich planets, we use the radius evolution tracks for
+super-Earths of \cite{Lopez12} and \cite{LopezFortney14}, enforcing a
+radius of $1.07 \rearth$ when no hydrogen is present.
 
+The rate of escape of a steam atmosphere closely depends on the fate
+of photolytically-produced oxygen. We compute the hydrodynamic drag on
+oxygen atoms using the formalism of \cite{Hunten87} to obtain oxygen
+escape rates, tracking the buildup of O$_2$ in the atmosphere. As in
+\cite{Tian15} and \cite{Schaefer16}, we account for the increasing
+mixing ratio of O$_2$ at the base of the hydrodynamic flow, which
+slows the escape of hydrogen. \cite{Tian15} find that as oxygen
+becomes the dominant species in the upper atmosphere, the
+\cite{Hunten87} formalism predicts that an oxygen-dominated flow can
+rapidly lead to the loss of all O$_2$ from planets around M
+dwarfs. However, because of the larger mass of the oxygen atom,
+hydrodynamic oxygen-dominated escape requires exospheric temperatures
+$\sim m_\mathrm{H}/m_\mathrm{O} = 16$ times higher than that for a
+hydrogen-dominated flow, which is likely unrealistic for these
+planets. Following the prescription of \cite{Schaefer16}, we therefore
+shut off oxygen escape once its mixing ratio exceeds $X_\mathrm{O} =
+0.6$, switching to the diffusion-limited escape rate of
+hydrogen. Finally, as in \cite{LugerBarnes15}, we also consider the
+scenario in which sinks at the surface are efficient enough to remove
+O$_2$ from the atmosphere at the rate at which it is produced,
+resulting in an atmosphere that never builds up substantial amounts of
+oxygen. Recently, \cite{Schaefer16} used a magma ocean model to
+calculate the rate of O$_2$ absorption by the surface, showing that
+final atmospheric O$_2$ pressures may range from zero to hundreds or
+even thousands of bars for the hot Earth GJ 1132b. Our two scenarios
+(no O$_2$ sinks and efficient O$_2$ sinks) should therefore bracket
+the atmospheric evolution of Proxima b.
 
 
 \subsection{Tidal Evolution: \eqtide}
@@ -636,15 +746,95 @@ important as $Q$ which may take any non-negative value. Values for
 stars are typically estimated to be of order $10^6$
 \citep[\eg][]{Jackson09}, dry terrestrial planets have $Q~\sim~100$
 \citep{Yoder95,Henning09}, and gas giants have $Q=10^4--10^6$
-\citep{AksnesFranklin01,Jackson08_evol}. In $\S$~\ref{sec:results} we
+\citep{AksnesFranklin01,Jackson08a}. In $\S$~\ref{sec:results} we
 will consider the possibility that Proxima b began with a hydrogen
 envelope and was perhaps more like Neptune than Earth. There is some
 debate regarding the location of tidal dissipation in gaseous
 exoplanets, whether it is in the envelope (high $Q$) or in the core
-(low $Q$) \citep[\eg][]{Storch13}, so we will consider both
-cases. \cite{ZhangHamilton06} found Neptune's $Q$ is about $10^4$ and
+(low $Q$) \citep[\eg][]{StorchLai14}, so we will consider both
+cases. \cite{ZhangHamilton08} found Neptune's $Q$ is about $10^4$ and
 we will use that value for envelope-dominated evolution, and we will
 use the $Q$ value computed by \thermint for core-dominated cases.
+
+\subsection{Orbital Evolution: \distorb}
+\label{sec:models:distorb}
+% Russell
+The model for orbital evolution, \distorb (for ``disturbing function
+orbit evolution''), uses the 4th order secular disturbing function
+from \cite{MurrayDermott99} (see their Appendix B), with equations of
+motion given by Lagrange's planetary equations. To avoid potential
+singularities in the equations of motion, we utilize the variables:
+\begin{align}
+h & = e \sin{\varpi} \\
+k & = e \cos{\varpi} \\
+p & = \sin{\frac{i}{2}} \sin{\Omega} \label{eqnp}\\
+q & = \sin{\frac{i}{2}} \cos{\Omega} \label{eqnq},
+\end{align}
+rather than the standard osculating elements $(e,i,\varpi,\Omega)$. This 
+variable transformation is straight-forward, if tedious, so we do not 
+reproduce it here. The resulting form of the disturbing function and 
+Lagrange's equations will be explicitly stated in forthcoming works 
+\citep{Barnes16, Deitrick16}. Lagrange's equations in this form 
+can also be found in \cite{Berger1991}. 
+
+We apply this model to the Proxima b and a possible longer period
+companion, hinted at in the RV data. This secular (i.e. long-term
+averaged) model does not account for the effects of mean-motion
+resonances, however, since we apply this to well-separated planets
+here, it is adequate for much of our parameter space. Since the model
+is 4th order in $e$ and $i$, it can account for coupling of
+eccentricity and inclination, although it does begin to break down at
+higher eccentricity or mutual inclination. Thus a comparison with
+N-Body modeling is provided where necessary.
+ 
+\begin{figure}
+\includegraphics[width=\textwidth]{orbcomp_mid_e_i.eps}
+\caption{Comparison between \distorb and HNBody for one of our 2
+   planet test cases. Planet b is represented on the left, putative
+   planet c on the right. HNBody evolution is in black, \distorb in
+   blue for planet b, orange for planet c.}
+\label{fig:orbitvalid}
+\end{figure}
+ 
+
+\subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
+\label{sec:models:distrot}
+% Russell
+Our obliquity model, \distrot (for ``disturbing function rotation
+evolution''), uses the equations of motion developed in
+\cite{Kinoshita1975, Kinoshita1977} and utilized extensively by
+\cite{Laskar1986,Laskar1993a,Laskar1993b,Armstrong14}.  It treats the
+planet as an oblate spheroid (having an axisymmetric equatorial
+bulge), with a shape induced by the rotation. The planet then is
+subject to a torque from the host star, which causes axial precession,
+and changes in its orbital plane due to perturbations from a companion
+planet, which directly change the obliquity angle.  This model is thus
+dependent on \distorb, as it depends on the eccentricity, the
+longitude of ascending node $(\Omega)$, and the derivatives $dp/dt,
+dq/dt$ (Equation \ref{eqnp} and \ref{eqnq}).
+
+The equations for obliquity and precession angle $(d\psi/dt,
+dp_A/dt)$, also contain a singularity at $\psi = 0$, so we transform
+to the variables:
+\begin{align}
+\xi & = \sin{\psi} \sin{p_A} \\
+\zeta & = \sin{\psi} \cos{p_A} \\
+\chi & = \cos{\psi}.
+\end{align}
+The third variable, $\chi$ is necessary to preserve domain
+information. Hence, we ultimately have three variables to integrate
+rather than two, however, the addition of a third variable/equation
+does not produce appreciable slow down.
+
+In the presence of strong tidal effects, as we would expect at Proxima
+b's orbital distance, the obliquity damps extremely quickly (in a few
+hundred kyr). Because of this, we do not expect this planet to have
+significant obliquity variations. Our purpose for including this model
+in our study is to look for Cassini states \citep{Colombo1966}---in
+the presence of strong tidal effects and perturbations from companion
+planets, the planet's obliquity damps to some non-zero value, as we
+observe for Mercury and a number of solar system satellites, including
+Earth's moon.
 
 \subsection{Radiogenic Heating: \radheat}
 \label{sec:models:radheat}
@@ -661,14 +851,14 @@ $6.555~\times~10^{-12}$ and $8.283~\times~10^{-12}$ J, respectively.
 
 We will consider 4 different abundance ratios. First, we consider an
 Earth-like case with standard abundance concentrations
-\citep[\eg][]{Korenaga06,Arevalo06,Huang13}. Note that geoneutrino
+\citep[\eg][]{Korenaga03,Arevalo09,Huang13}. Note that geoneutrino
 experiments are able to measure the decay products of $^{232}$Th and
-$^{238}$U \citep{Araki05,Dye13}.
+$^{238}$U \citep{Raghavan98,Araki05,Dye10}.
 
 The second case is a ``chondritic'' case, in which we augment the
 mantel $^{40}$K budget by a factor of 30 in number to match the
 potassium abundance seen in chondritic meteorites
-\citep{Gervasse98,Arevalo06}. Such high potassium abundances could be
+\citep{AndersGrevesse89,Arevalo09}. Such high potassium abundances could be
 present if the planet formed beyond the snowline where potassium, a
 volatile, is more likely to become embedded in solids.
 
@@ -690,7 +880,7 @@ case to bound the evolution of Proxima b.
 
 We model the coupled core/mantle evolution of Proxima b with a
 1-dimensional model that has been tuned to reproduce Earth
-\citep{DriscollOlson11,DriscollBercovici13,DriscollBarnes15}, and the
+\citep{DriscollOlson11,DriscollBercovici13,DriscollBercovici14,DriscollBarnes15}, and the
 reader is referred to those studies for a comprehensive description of
 the model. Briefly, the model is based on the core and mantle
 temperatures, and the rest of the geophysics depends on them. The code
@@ -732,6 +922,81 @@ temperature.
 \subsection{Galactic Effects: \galhabit}
 \label{sec:models:galhabit}
 % Russell/Tom
+Prox Cen is tenuously bound, if it is gravitationally bound at all, to
+the binary $\alpha$ Cen A and B. Because of this, it is worthwhile to
+investigate the effects of the galactic environment on Prox Cen's
+orbit. We model the changes produced by galactic tides and stellar
+encounters using the equations and prescriptions developed by
+\cite{Heisler1986, Heisler1987, Rickman2008} for the Oort cloud (Prox
+Cen is arguably a high mass Oort cloud object, for $\alpha$ Cen A and
+B).  We utilize an updated galactic density of $\rho_0 = 0.102$
+\citep{Holmberg2000} and treat $\alpha$ Cen A and B as a single point
+mass with $M = 2.1$ M$_{\odot}$ (with the recently updated masses
+given by \cite{PourbaixBoffin16}). This is somewhat crude approach, as
+the two stars produce a significant quadrupole moment associated with
+their orbits---a back-of-the-envelope calculation indicates that the
+torque associated with this quadrupole potential would be equal to the
+galactic tidal torque at $\sim 2000$ au. Hence, the effect of the
+binary host should be minor though still important at Prox Cen's
+estimated distance of $~15,000$ au, especially if the star has
+significant eccentricity. However, the modeling of the triple system
+in a comprehensive way is sufficiently complicated \citep[see,
+  i.e.][]{Harrington1968, Ford2000} to place it beyond the scope of
+this work.  Instead, we restrict ourselves to the secular effects of
+galactic tides and passing stars and will revisit the triple star
+dynamics in a future work.
+
+If Prox Cen is gravitationally bound, galactic tides and stellar
+encounters can pump its eccentricity to values large enough to cause
+disruption from the system, and/or a periastron distance so close to
+the binary $\alpha$ Cen that we would expect consequences for any
+planetary system, such as eccentricity excitation.  In such
+situations, Proxima b may have significant tidal heating despite the
+circularization time scale.
+
+Following \cite{Heisler1987,Rickman2008}, we model stellar encounter
+in a stochastic Monte Carlo approach, estimating times of encounters
+from the stellar density and velocity dispersion, and then randomly
+drawing stellar magnitudes, and velocities from the distributions
+published in \cite{Garciasanchez2001}. The impact parameter is
+calculated from the relative velocities (stellar velocity relative to
+the solar apex velocity, \cite[see][]{Rickman2008}), and then a
+$\Delta v$ is applied to Proxima's orbit according to the impulse
+approximation \citep{Remy1985}. The masses of passing stars are
+calculated using the empirical relations from \cite{Reid2002}.
+
+As previously noted, the metallicities of $\alpha$ Cen A and B suggest
+that the system formed at a galactocentric distance of $\lesssim 4.5$
+kpc \citep{Loebman16}.  To model the potential effects of radial
+migration on the triple star system (again, assuming Proxima is
+gravitationally bound to A and B), we scale the total mass density and
+stellar density of the galaxy according to the radial scale lengths
+($R_{\star}, R_{gas}$) found by \cite{Kordopatis15}. The dark matter
+density at each distance is estimated from their spheroidal
+model---unlike the disk models used for stars and gas, this model is
+not axisymmetric, however, as the dark matter near the mid plane of
+the disk makes up $\lesssim 1\%$ of the total density, it is a decent
+approximation to assume axisymmetry of the total mass density, as the
+\cite{Heisler1986} tidal model assumes.  We scale the velocity
+dispersions of the nearby stars as a decaying exponential with twice
+the stellar scale length, $2R_{\star}$, multiplied by $\sqrt(t)$,
+where $t$ is the time since galactic formation, as found to be broadly
+true in galactic simulations \cite{Minchev2012, Roskar2012}. In this
+fashion, the velocity dispersion grows slowly in time at all galactic
+radii and is grows larger closer to the galactic center. The apex
+velocities will vary in a much more complicated fashion due to effects
+such as asymmetric drift, so for the purposes of this study, we simply
+leave the apex velocities at their values for the solar neighborhood
+and will need to revisit this problem in a later study.
+
+With such scaling laws in place, we model radial migration as a
+single, abrupt jump in the galactocentric distance of the system. The
+reasoning behind this approximation is that N-Body simulations show
+migration to occur generally over the course of a single galactic
+orbit \cite{Roskar2010}, hence the migration time is short compared to
+the age of the stellar system.  We then randomly choose formation
+distances over the range $(1.5,4.5)$ kpc and migration times over the
+range $(1,5)$ Gyr since formation.
 
 \subsection{The Coupled Model: \vplanet}
 \label{sec:models:vplanet}
@@ -766,6 +1031,12 @@ and rigorous will go a long way since the actual VPLANET presentation paper is m
 % Fig. 1: Sample R_gal vs. time
 % Fig. 2: Encounter frequency vs. R_gal
 % Fig. 3: Sample evolution of Prox's orbit: a) semi, peri, apo, b) incl
+
+\begin{figure}
+\includegraphics[width=\textwidth]{evol_Vpl_0257.eps}
+\caption{}
+\label{fig:galevolution}
+\end{figure}
 
 \subsection{Orbital/Rotational/Tidal Evolution}
 \label{sec:results:orbital}
@@ -820,14 +1091,30 @@ heating is $\sim~1,000$~W/m$^{2}$.
 
 Next, we consider the role of additional planets, specifically the
 putative planet with a 215 day orbit \citep{AngladaEscude16}. For
-these runs we now add the \distorb and \distrot modules and track the
+these runs we now add the \distorb~and \distrot~modules and track the
 orbital elements of both planets, the spins of the star and planet b,
 and the dynamical ellipticity of planet b. A comprehensive exploration
 of parameter space is beyond the scope of this study, so we consider
 two end-member cases: a nearly coplanar, nearly circular system, and a
 system with high eccentricities and inclinations. The initial orbital
-elements and rotational properties of the bodies are listed in Table
-1. \xxx{Russell - can you input Table 1?}
+elements and rotational properties of the bodies are listed in Table \ref{tab:orbitic}
+
+\begin{table}[h]
+\centering
+\caption{Initial conditions for Proxima 2-planet systems. The coplanar, circular case is on top, the eccentric, inclined case below.}
+
+\begin{tabular}{lccccccccc}
+\hline\hline \\[-1.5ex]
+ & $m$ ($M_{\oplus}$)  & $a_s$ (au) & $a_l$ (au) & $e$ & $i$ ($^{\circ}$) & $\omega$ ($^{\circ}$) & $\Omega$ ($^{\circ}$) & $\psi$ ($^{\circ}$) & $P_{rot}$ (days)\\[0.5ex]
+ \hline \\ [-1.5ex]
+ b & 1.27 & 0.0482817 & 0.05 & 0.001 & 0.001 & 248.87 & 20.68 & 23.5 & 1  \\
+ c & 3.13 & 0.346 & 0.346 & 0.001 & 0.001 & 336.71 & 20 & &  \\
+ \hline \\
+ b & 1.27 & 0.0482817 & 0.05 & 0.02 & 20 & 248.87 & 20.68 & 23.5 & 1  \\
+ c & 3.13 & 0.346 & 0.346 & 0.02 & 0.001 & 336.71 & 20 & &  \\
+ \end{tabular}
+ \label{tab:orbitic}
+ \end{table}
 
 In Fig.~\ref{fig:MultiLow} we show the orbital evolution for the low
 $e$ and $i$ case over short (left) and long (right) timescales. As
@@ -877,7 +1164,7 @@ value near $0.1^\circ$, while the low $e,i$ case drops all the way to
 $10^{-8~\circ}$. The bottom left panel shows the evolution of the
 dynamical ellipticity as predicted by (\xxx{REF}). The lower right panel
 shows the value of the Cassini Parameter for the two cases, both of
-which becomes locked near 0, indicating the rotational and angular
+which becomes locked near zero, indicating the rotational and angular
 momentum have evolved into a Cassini State, in this case it is Cassini
 State X. \xxx{Which Cassini state?, REF}
 
@@ -895,25 +1182,23 @@ State X. \xxx{Which Cassini state?, REF}
 
 \subsection{Stellar Evolution}
 \label{sec:results:stellar}
-% Rodrigo
 
 In Fig.~\ref{fig:HZEvol} we plot the evolution of the conservative HZ
 limits of \cite{Kopparapu13} as a function of time for a model of
-Proxima Centauri. The blue region is the HZ, which slowly moves
-inwards for 500 Myr, reaching the current orbit of Proxima b after
-about 200 Myr.
+Proxima Centauri; these are bounded by the runaway greenhouse limit
+and the maximum greenhouse limit. The blue region is the HZ, which
+slowly moves inwards for $\sim$ 1 Gyr, reaching the current orbit of
+Proxima b after $\sim$ 160 Myr. In the atmospheric escape section
+below, this is the value we assume for the duration of the runaway
+greenhouse phase on Proxima b, during which water is allowed to
+escape.
 
-\begin{figure} 
-\begin{center}
-\includegraphics[width=0.75\textwidth]{HZEvol.ps}
-\end{center}
-\caption{Evolution of the conservative HZ of Proxima Centauri, along
-  with the orbits of Proxima Centauri b (solid line) and Mercury
-  (dashed line).}
+\begin{figure}[ht]
+\centering
 \label{fig:HZEvol}
+\includegraphics[width=5in]{HZEvol}
+\caption{\xxx{Rory, can you re-plot this without the kink? Or send me your source files and I can look at it.} Evolution of the conservative HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) and Mercury (dashed line).}
 \end{figure}
-
-
 
 \subsection{Internal Evolution}
 \label{sec:results:internal}
@@ -929,7 +1214,7 @@ evolution, then we consider tidal heating.
 \subsubsection{Radiogenic Effects}
 \label{sec:results:internal:radiog}
 
-As described in $\S$~\ref{sec:methods:radheat} we consider four
+As described in $\S$~\ref{sec:models:radheat} we consider four
 possible abundance patters for Proxima b: Earth-like, chondritic, 1
 ppt $^{26}$Al, and inert. In all cases we begin with a core
 temperature of 6000~K and a mantle temperature of 3000~K, except for
@@ -1035,7 +1320,7 @@ is an upper limit \citep{Wood01}, so our values here are conservative
 Finally, the bottom right panel shows the surface energy flux for each
 case. Not surprisingly the chondritic case maintains the highest heat
 fluxes, near 1 W/m$^2$, which is similar to Io's value of 2
-W/m$^2$~\citep{Strom79}. The humps and kinks are due to the changing
+W/m$^2$~\citep{Veeder94}. The humps and kinks are due to the changing
 heat sources described above. The $^{26}$Al case begins with a very
 large heat flux, in the range of 100~W/m$^2$, which is nearing the
 value to trigger a runaway greenhouse! The inert case emits less
@@ -1050,25 +1335,189 @@ produces and loses more energy than the inert case.
 
 \subsection{Atmospheric Evolution}
 \label{sec:results:atmesc}
-% Rodrigo
 
+We consider two broad formation scenarios for Proxima b: one in which
+it formed with abundant water and a thin hydrogen envelope of up to
+1\% by mass (due to either \emph{in situ} accretion or from planetary
+formation farther out followed by rapid disk-driven migration; see
+\cite{Luger15}), and one in which it formed with abundant water but no
+hydrogen. In both cases, we assume a fiducial planet mass of $1.27
+\mearth$.
 
+\begin{figure}[ht]
+\centering
+\label{fig:atmesc:mirage}
+\includegraphics[width=6in]{mirage}
+\caption{Evolution of the water content and atmospheric O$_2$ pressure
+  on Proxima b for different initial conditions. The initial water
+  content is varied between 1 and 10 TO (various colors) for two
+  different end-member scenarios: no O$_2$ surface sinks (solid lines)
+  and instantaneous oxygen absorption at the surface (dashed
+  lines). The planet mass is held constant at 1.27 M$_\oplus$ and the
+  initial hydrogen envelope fraction is set to zero for all runs. In
+  all but one of the runs, Proxima b is completely desiccated. For an
+  initial water content of 10 TO and no surface sinks, the buildup of
+  $\sim$ 500 bars of atmospheric O$_2$ slows the loss rate of H,
+  preventing the last $\sim$ 1 TO of water from being lost. In the
+  scenario that efficient oxygen sinks are present, the atmospheric
+  O$_2$ mixing ratio never grows sufficiently to limit the escape of
+  H, and desiccation occurs in all cases. Note that in this scenario,
+  the curves in the ``O$_2$ pressure'' panel correspond to the
+  equivalent O$_2$ pressure absorbed at the surface.}
+\end{figure}
 
+In Fig.~\ref{fig:atmesc:mirage} we show the evolution of the latter
+type of planet, which formed with no significant primordial
+envelope. We consider four different initial inventories of water: 1,
+3, 5, and 10 terrestrial oceans (1 TO $\equiv 1.39\times 10^{24}$ g,
+the total mass of surface water on Earth; see \cite{Kasting88}. As
+discussed in \ref{sec:models:atmesc}, we also consider two end-member
+scenarios regarding the photolytically-produced O$_2$: no surface
+sinks (solid lines) and efficient surface sinks (dashed lines). In all
+cases but one, the planet is completely desiccated within the first
+160 Myr, building up between tens and hundreds of bars of O$_2$ in
+either its atmosphere or in the solid body. For an initial water
+content of 10 TO and no surface sinks, O$_2$ builds up to high enough
+levels as to throttle the supply of H to the upper atmosphere and slow
+the total escape rate. In this scenario, $\sim 1$ TO of water remains,
+alongside a thick 500 bar O$_2$ atmosphere. If Proxima b formed with
+less than ten times Earth's water content, and/or had a persistent
+convecting, reducing magma ocean, it is likely desiccated today.
 
-% Fig. 14: a) water content, b) oxygen content
-% Fig. 15: HEC plots: a) habitable example, b) envelope decreases, but remains, c) envelope lost, then water lost
-% Fig 16: Reservoirs of water with time
+\begin{figure}[ht]
+\centering
+\label{fig:atmesc:hec}
+\includegraphics[width=6in]{hec}
+\caption{Evolution of the water and O$_2$ contents assuming Proxima b
+  formed with a hydrogen envelope and 3 TO. Line colors correspond to
+  different initial envelope mass fractions $f_H$, ranging from 0.0001
+  to 0.01. In all cases, the envelope evaporates completely prior to 1
+  Gyr. For $f_H \lesssim 0.001$, the H envelope evaporates quickly
+  enough to allow complete desiccation of the planet prior to its
+  arrival in the HZ at $\sim$ 160 Myr. For $f_H \approx 0.01$, the
+  envelope evaporates a few hundred Myr \emph{after} the planet enters
+  the HZ, preventing any water from being lost and O$_2$ from
+  accumulating in the atmosphere.  This is the most favorable scenario
+  for a potentially habitable Proxima b.}
+\end{figure}
+
+Next, in Fig.~\ref{fig:atmesc:hec}, we show the results assuming
+Proxima b formed with a hydrogen envelope. We fix the initial water
+content at 3 TO and consider initial envelope mass fractions $f_H$
+ranging from $10^{-4}$ to $10^{-2}$. In all cases, the envelope
+evaporates completely within the first several hundred Myr. For $f_H
+\lesssim 10^{-3}$, the envelope evaporates early enough such that all
+the water is still lost from the planet. For $f_H = 10^{-3}$, only
+about 0.1 TO remain once the planet enters the HZ; only for $f_H \sim
+10^{-2}$ does the presence of the envelope guard against all water
+loss. In these calculations, we assumed inefficient surface sinks, so
+the escape of water at late times was bottlenecked by the presence of
+abundant O$_2$. Planets that form with hydrogen envelopes may have
+quite reducing surfaces, which could absorb most of the O$_2$ and lead
+to even higher total water loss. As before, a few tens to a few
+hundreds of bars of O$_2$ remain in the atmosphere or in the solid
+body at the end of the escape phase.
+
+We note that we obtain slightly more hydrogen loss than
+\cite{OwenMohanty16}, who find that planets more massive than $\sim
+0.9 \mearth$ with $\sim 1\%$ hydrogen envelopes cannot fully lose
+their envelopes around M dwarfs, due primarily to the transition from
+hydrodynamic to ballistic escape at late times. However, their
+calculations were performed for a $0.4 \msun$ M dwarf, whose pre-main
+sequence phase lasts $\sim 200 \mathrm{Myr}$, five times shorter than
+that for Proxima Centauri. Nevertheless, the discrepancy is small: we
+find that for envelope fractions greater than 1\% or masses greater
+than our fiducial value of $1.27 \mearth$, the envelope does not
+completely evaporate, in which case Proxima b would likely be
+uninhabitable.
+
+\begin{sidewaysfigure}[ht]
+\centering
+\label{fig:atmesc:synth}
+\subfigure{\label{fig:atmesc:synth:a}\includegraphics[width=3.3in]{synth_a}}
+\subfigure{\label{fig:atmesc:synth:b}\includegraphics[width=3.3in]{synth_b}}
+\subfigure{\label{fig:atmesc:synth:c}\includegraphics[width=1.285in]{synth_c}}
+\caption{Multiple evolutionary pathways for the water on Proxima
+  b. These plots show the final water and final O$_2$ content of the
+  planet for a suite of different initial conditions. Different marker
+  styles indicate different values of the planet mass, the initial
+  water content, and the initial hydrogen envelope mass fraction $f_H$
+  (the final value of $f_H$ is zero for all planets shown here).  The
+  left panel corresponds to planets with inefficient O$_2$ sinks,
+  which build up O$_2$ in their atmospheres during the hydrodynamic
+  escape phase. The right panel corresponds to planets with efficient
+  sinks, which do not build up significant atmospheric O$_2$; instead,
+  O$_2$ is quickly absorbed at the surface. Each panel is divided into
+  quadrants, corresponding to planets that at the end of the
+  simulation have water but no O$_2$ (top left), water and O$_2$ (top
+  right), neither water nor O$_2$ (bottom left), and O$_2$ but no
+  water (bottom right). Habitable planets are those in regions shaded
+  blue. Planets in the grey region are desiccated and therefore
+  uninhabitable. Planets in the red regions are likewise
+  uninhabitable, but may have atmospheric O$_2$ (left panel only)
+  which could be incorrectly attributed to biology. Finally, planets
+  in the yellow region are habitable, since they have abundant surface
+  water, but may also have substantial atmospheric O$_2$, which could
+  be an impediment to the origin of life. These planets are also
+  particularly problematic in the context of atmospheric
+  characterization, as the presence of water and O$_2$ could fool
+  observers into believing they are inhabited.}
+\end{sidewaysfigure}
+
+Finally, in Fig.~\ref{fig:atmesc:synth} we present a summary of our
+atmospheric escape calculations, showing the many possible
+evolutionary pathways for Proxima b and how they affect its present
+habitability. The two panels show the final water content (in TO)
+versus the final oxygen abundance (in bars) for different initial
+conditions, assuming inefficient oxygen sinks (left panel) and
+efficient oxygen sinks (right panel). In all cases shown, the final
+hydrogen envelope mass is zero.  Different values of the planet mass,
+initial water content, and hydrogen fraction are indicated with
+different marker styles (see legend at right). Since the axes are
+logarithmic, we appended panels to the left and below the main plot,
+corresponding respectively to final oxygen and water contents of
+zero. In general, habitable outcomes are those that lie in the top
+left of the plot (abundant water, low O$_2$). Planets in the top right
+have abundant water but also build up large amounts of O$_2$, which
+could render them uninhabitable \citep{LugerBarnes15} and/or fool
+observers searching for biosignatures. Planets at the bottom of the
+plot are desiccated and therefore uninhabitable, though some may also
+be biosignature false positives.
+
+While much may be gleaned from the figure, a few results stand
+out. First, a scenario in which Proxima b formed with a hydrogen
+envelope of mass $\sim 0.01 \mearth$ is the most favorable for
+habitability, as such a planet would be a ``habitable evaporated
+core'' \citep{Luger15} and experience no water loss. However, if
+Proxima b is more massive than $1.27 \mearth$, the envelope may not
+completely evaporate and the planet may not be habitable
+today. Second, scenarios in which Proxima b formed with less hydrogen
+can still result in present-day surface water, but in all cases in
+which water remains, $\gtrsim 200$ bars of oxygen are
+retained. Finally, the primary effect of a larger planet mass is to
+increase the amount of oxygen in the atmosphere and/or absorbed at the
+surface; while in some cases a larger planet mass can result in less
+water loss, habitable scenarios are more likely for a lower planet
+mass.
+
+Further data on Proxima b will greatly aid in distinguishing between
+these multiple evolutionary pathways. In particular, constraints on
+the exact mass (via measurements of the orbital inclination) could
+inform the atmospheric escape history, while a value for the radius
+could provide a handle on whether or not a hydrogen envelope is
+present.
 
 \section{Discussion\label{sec:disc}}
 % All
 
-In the previous section we outlined numerous possibilities for the history of 
-Proxima b. We considered processes spanning the planet's core to the Milky Way 
-galaxy and find that effects at all these scales could be important in the history 
-of our closest exoplanet. In this section, we summarize the results in terms of 
-the potential atmospheres that Proxima b might have, and which are considered 
-in detail in \citep{Meadows16}. Then we examine the likelihood that it is currently 
-habitable.
+In the previous section we outlined numerous possibilities for the
+history of Proxima b. We considered processes spanning the planet's
+core to the Milky Way galaxy and find that effects at all these scales
+could be important in the history of our closest exoplanet. In this
+section, we summarize the results in terms of the potential
+atmospheres that Proxima b might have, and which are considered in
+detail in \citep{Meadows16}. Then we examine the likelihood that it is
+currently habitable.
 
 \subsection{Atmospheric States}
 \label{sec:results:atmstates}
@@ -1105,7 +1554,7 @@ short-lived enough to permit habitability.
 Another low-probability possibility is that even if the planet became
 desiccated during the pre-MS phase, impact from water-rich bodies
 could simultaneously blow off the CO$_2$ and/or O$_2$ atmosphere while
-delivering water. This scenario would require fine-tuning, but we note
+delivering water. This scenario would require a specific set of events to occur, but we note
 that close passage between Proxima and \acen~A and B could destabilize
 any putative ``exo-Oort Clouds'' that could have existed around the
 stars. Current numerical models do not permit a robust calculation of
@@ -1218,7 +1667,7 @@ heated for a long time, mantle convection may have been vigorous and
 perhaps total volatile depletion is possible, especially if the
 planet's core stopped convecting (see $\S$~\ref{sec:results:internal})
 or the core has solidified, quenching the magnetic dynamo
-\xxx{\citep{DiscollBarnes15}}. Another possibility is that a recent
+{\citep{DriscollBarnes15}. Another possibility is that a recent
 stellar eruption has temporarily stripped away the atmosphere, which
 will reform by outgassing.
 
@@ -1248,7 +1697,7 @@ Myr in a runaway greenhouse state; see $\S$~\ref{sec:results:stellar} and
 Even if the planet arrived in its orbit late, perhaps following an
 orbital instability, the water may have to survive a ``tidal
 greenhouse'' in which tidal heating drives water loss, see
-$\S$~\ref{sec:results:internal}. and \citep{Barnes13}. Such high tidal heating
+$\S$~\ref{sec:results:internal} and \cite{Barnes13}. Such high tidal heating
 rates may require very large eccentricity and/or abnormally low $Q$
 values, but the latter is certainly possible during planet-planet
 scattering events \citep{Chatterjee08}, or perhaps by Kozai-like
@@ -1261,7 +1710,7 @@ eccentricities \cite{TakedaRasio05}, possibly in the range of a tidal
 greenhouse. As shown in $\S$~\ref{sec:results:internal}, the eccentricity of
 b will damp, but the timescale can be very long. Large eccentricities
 are not well-modeled by equilibrium tide theory, even with a proper
-accounting of geophysical features as in the \thermint module, so it
+accounting of geophysical features as in the \thermint~module, so it
 is difficult at present to assess the role of tidal heating in water
 retention.
 
@@ -1273,7 +1722,7 @@ atmosphere reform, the water may return to the liquid state, but it is
 certainly plausible that some events are powerful enough to remove the
 water in one event, or, more likely, repeated bombardments would
 slowly remove the atmosphere. \xxx{REF: Matt Tilley paper or Segura?} Our analysis doesn't provide a direct
-measurement of this phenomenon, but we note that some geophysical
+prediction of this phenomenon, but we note that some geophysical
 models for the planet predict core solidification times less than the
 age of the system \xxx{which models? -- still looking!}. In those cases, the magnetic field is quenched and
 is not capable of deflecting charged particles. However, it is not
@@ -1299,7 +1748,7 @@ mantle, similar to Europa. For such a planet, the water is heated by
 the energy from accretion, radiogenic sources and/or tidal
 heating. Ice is much more absorptive at the longer wavelengths of
 light that Proxima emits and so it may be difficult to ice over the
-planet \citep{Joshi12,Shields13}, especially since it probably spent
+planet \citep{JoshiHaberle12,Shields13}, especially since it probably spent
 hundreds of Myr in a runaway greenhouse. But if a reflective haze
 and/or cloud layer could form, it could reflect away the light before
 it reaches the surface \citep[\eg][]{Arney16}. This possibility seems unlikely, but we cannot
@@ -1330,7 +1779,7 @@ the planets ($\S$~\ref{sec:results:orbital}), the stellar evolution
 ($\S$~\ref{sec:results:stellar}), the geophysical evolution
 ($\S$~\ref{sec:results:internal}), and the atmospheric evolution
 ($\S$~\ref{sec:results:atmesc}). We find that many evolutionary pathways
-are admitted by the data and hence the planet may currently exist in
+are permitted by the data and hence the planet may currently exist in
 one of many possible states.
 
 We conclude that Proxima b may be habitable, but identify the

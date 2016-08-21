@@ -105,6 +105,29 @@ void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   }
 }  
 
+void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double varpi, Omega;
+  
+  if (body[iBody].bDistOrb) {
+    varpi = atan2(body[iBody].dHecc, body[iBody].dKecc);
+    Omega = atan2(body[iBody].dPinc, body[iBody].dQinc);
+    *dTmp = varpi - Omega;
+  } else if (body[iBody].bGalHabit) {
+    *dTmp = body[iBody].dArgP;
+  }
+  
+  while (*dTmp < 0.0) {
+    *dTmp += 2*PI;
+  }
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}    
+
 void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Multiple modules can contribute to this output */
   int iModule;
@@ -202,10 +225,15 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].bBinary != 1) { // Not doing binary
-    if (iBody > 0)
-      *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-    else
+    if (iBody > 0) {
+      if (body[iBody].bDistOrb || body[iBody].bEqtide) {
+        *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
+      } else if (body[iBody].bGalHabit) {
+        *dTmp = body[iBody].dEcc;
+      }
+    } else {
       *dTmp = -1;
+    }
   }
   else // Doing binary
   {
@@ -612,13 +640,22 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   sprintf(output[OUT_LONGP].cName,"LongP");
-  sprintf(output[OUT_LONGP].cDescr,"Body's Longitude of pericenter in Lagrange");
+  sprintf(output[OUT_LONGP].cDescr,"Body's Longitude of pericenter");
   sprintf(output[OUT_LONGP].cNeg,"Deg");
   output[OUT_LONGP].bNeg = 1;
   output[OUT_LONGP].dNeg = 1./DEGRAD;
   output[OUT_LONGP].iNum = 1;
   output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_LONGP] = &WriteLongP; 
+  
+  sprintf(output[OUT_ARGP].cName,"ArgP");
+  sprintf(output[OUT_ARGP].cDescr,"Body's argument of pericenter");
+  sprintf(output[OUT_ARGP].cNeg,"Deg");
+  output[OUT_ARGP].bNeg = 1;
+  output[OUT_ARGP].dNeg = 1./DEGRAD;
+  output[OUT_ARGP].iNum = 1;
+  output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT;
+  fnWrite[OUT_ARGP] = &WriteBodyArgP;
   
   sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");
   sprintf(output[OUT_LXUVTOT].cDescr,"Total XUV Luminosity");
@@ -653,11 +690,11 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBL].bNeg = 1;
   output[OUT_OBL].dNeg = DEGRAD;
   output[OUT_OBL].iNum = 1;
-  output[OUT_OBL].iModuleBit = EQTIDE + DISTROT;
+  output[OUT_OBL].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_OBL] = &WriteObliquity;
   
   sprintf(output[OUT_PRECA].cName,"PrecA");
-  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
+  sprintf(output[OUT_PRECA].cDescr,"Body's precession angle");
   sprintf(output[OUT_PRECA].cNeg,"Deg");
   output[OUT_PRECA].bNeg = 1;
   output[OUT_PRECA].dNeg = 1./DEGRAD;
@@ -675,7 +712,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ORBECC].cDescr,"Orbital Eccentricity");
   output[OUT_ORBECC].iNum = 1;
   output[OUT_ORBECC].bNeg = 0;
-  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
   
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
@@ -710,7 +747,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY+GALHABIT;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
   
   /*
@@ -1455,5 +1492,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputPoise(output,fnWrite);
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
+  InitializeOutputGalHabit(output,fnWrite);
 
 }

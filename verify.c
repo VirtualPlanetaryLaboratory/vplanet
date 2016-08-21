@@ -475,6 +475,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
 
+    // XXX Temporary hack -- need to implement an InitializeBodyGeneral
+    body[iBody].dEcc = 0;
+    
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       // Must initialize entire body struct before verifying modules
       module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);

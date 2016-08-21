@@ -9,7 +9,7 @@ plot.py
 from __future__ import division, print_function, absolute_import, unicode_literals
 import matplotlib.pyplot as pl
 
-__all__ = ['plot', 'colors']
+__all__ = ['plot', 'colors', 'make_pretty']
 
 class colors(object):
   red = '#c91111'

@@ -780,14 +780,14 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
   
-  sprintf(output[OUT_PRECA].cName,"PrecA");
-  sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
-  sprintf(output[OUT_PRECA].cNeg,"Deg");
-  output[OUT_PRECA].bNeg = 1;
-  output[OUT_PRECA].dNeg = 1./DEGRAD;
-  output[OUT_PRECA].iNum = 1;
-  output[OUT_PRECA].iModuleBit = DISTROT;
-  fnWrite[OUT_PRECA] = &WriteBodyPrecA;
+//   sprintf(output[OUT_PRECA].cName,"PrecA");
+//   sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
+//   sprintf(output[OUT_PRECA].cNeg,"Deg");
+//   output[OUT_PRECA].bNeg = 1;
+//   output[OUT_PRECA].dNeg = 1./DEGRAD;
+//   output[OUT_PRECA].iNum = 1;
+//   output[OUT_PRECA].iModuleBit = DISTROT;
+//   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
   
   sprintf(output[OUT_CASS1].cName,"CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");

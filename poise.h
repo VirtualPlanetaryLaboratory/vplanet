@@ -24,7 +24,6 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define MODERN      1
 
 /* Options Info */
-
 #define OPTSTARTPOISE       1900 /* Start of POISE options */
 #define OPTENDPOISE         2000 /* End of POISE options */
 
@@ -68,6 +67,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ALBEDOTYPE      1956
 #define OPT_GEOGRAPHY       1957
 #define OPT_SEASOUTPUTTIME  1958
+#define OPT_FORCEOBLIQ      1959
+#define OPT_OBLIQAMP        1960
+#define OPT_OBLIQPER		    1961
 
 #define OPT_CLIMATEMODEL    1999
 

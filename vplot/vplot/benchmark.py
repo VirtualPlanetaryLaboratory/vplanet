@@ -152,3 +152,4 @@ def TestAll():
     print(certificate_bad % (git_hash, git_branch))
   else:
     print(certificate % (git_hash, git_branch))
+

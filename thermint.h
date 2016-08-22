@@ -362,6 +362,7 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TREFLIND        1798   //Reference Lindeman Temperature
 #define OUT_DTCHIREF        1799   //Reference Liquidus Depression
 
+#define OUT_DYNVISC         1800   // Dynamic viscosity of upper mantle
 
 void HelpOutputThermint(OUTPUT*);
 void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
@@ -468,6 +469,7 @@ double fdSolTempDiffMan(double,BODY*,int);  //difference between solidus and geo
 double fdSolidusMan(double);   //solidus at a given depth.
 double fdTJumpMeltMan(BODY*,int);  //temp jump across UM melt region.
 double fdMeltMassFluxMan(BODY*,int);  //upwelling mantle melt mass flux.
+double fdDynamicViscosity(BODY*,int);
 double fdImk2Man(BODY*,int);
 double fdK2Man(BODY*,int);
 double fdRayleighMan(BODY*,int);

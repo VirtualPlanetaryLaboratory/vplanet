@@ -27,7 +27,8 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp /= fdUnitsTime(units->iTime)
+      ;
     fsUnitsTime(units->iTime,cUnit);
   }
 }
@@ -560,10 +561,11 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX This doesn't work with just eqtide!
+  if (body[iBody].bThermint)
+    *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  else
+    *dTmp = body[iBody].dTidalQ;
 
-  *dTmp = body[iBody].dK2Man/body[iBody].dImk2Man;
-  //*dTmp = body[iBody].dViscUMan*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   strcpy(cUnit,"");
 }
 

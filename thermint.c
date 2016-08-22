@@ -973,32 +973,60 @@ void WriteViscUManArr(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    fsUnitsViscosity(units,cUnit);
+    *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
+  }
 }
+
 void WriteViscUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get ViscUMan */
-    *dTmp = body[iBody].dViscUMan;
+  *dTmp = body[iBody].dViscUMan;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    fsUnitsViscosity(units,cUnit);
+    *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
+  }
 }
+
+void WriteDynamicViscosity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdDynamicViscosity(body,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
+  }
+}
+
 void WriteViscLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get TLMan */
-    *dTmp = body[iBody].dViscLMan;
+  *dTmp = body[iBody].dViscLMan;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    fsUnitsViscosity(units,cUnit);
+    *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
+  }
 }
+
 void WriteViscMMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Get TMMan */
-    *dTmp = body[iBody].dViscMMan;
+  *dTmp = body[iBody].dViscMMan;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    fsUnitsViscosity(units,cUnit);
+    *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
+  }
 }
+
 void WriteViscJumpMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dViscJumpMan;
@@ -1678,6 +1706,17 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DRICDTCMB].iNum = 1;
   output[OUT_DRICDTCMB].iModuleBit = THERMINT;
   fnWrite[OUT_DRICDTCMB] = &WriteDRICDTCMB;
+
+  // Dynamic Viscosity
+  sprintf(output[OUT_DYNVISC].cName,"DynViscUMan");
+  sprintf(output[OUT_DYNVISC].cDescr,"Upper Mantle's Dynamic Viscosity");
+  sprintf(output[OUT_DYNVISC].cNeg,"Pa");
+  output[OUT_DYNVISC].bNeg = 1;
+  output[OUT_DYNVISC].dNeg = 1; 
+  output[OUT_DYNVISC].iNum = 1;
+  output[OUT_DYNVISC].iModuleBit = THERMINT;
+  fnWrite[OUT_DYNVISC] = &WriteDynamicViscosity;
+  
   /* ChiOC */
   sprintf(output[OUT_CHIOC].cName,"ChiOC");
   sprintf(output[OUT_CHIOC].cDescr,"Light Element Concentration in Outer Core");
@@ -2197,8 +2236,13 @@ double fdRayleighMan(BODY *body,int iBody) {
 double fdK2Man(BODY *body,int iBody) {
     return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
 }
+
+double fdDynamicViscosity(BODY *body,int iBody) {
+  return body[iBody].dViscUMan*(EDENSMAN);
+}
+  
 double fdImk2Man(BODY *body,int iBody) {
-  double viscdyn=body[iBody].dViscUMan*(EDENSMAN); //dynamic viscosity.
+  double viscdyn=fdDynamicViscosity(body,iBody); //dynamic viscosity.
 
   /* Peter's version. I think dRotRate should be dMeanMotion
   double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);

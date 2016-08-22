@@ -555,7 +555,10 @@ migration, the metallicity distribution of stars in the Sloan Digital
 Sky Survey III's Apache Point Observatory Galactic Evolution
 Experiment \citep{Hayden15} is reproduced. Furthermore, Loebman et
 al.\ find that stars in the solar neighborhood with [Fe/H] $> +0.25$
-must have formed at $R_{gal} < 4.5$~kpc. We conclude that this system
+must have formed at $R_{gal} < 4.5$~kpc.
+\xxx{Similar conclusions were reached in an analysis of the RAVE
+  survey by \citep{Kordopatis15}.}
+We conclude that this system
 has migrated outward at least 3.5~kpc, but probably more. As the surface
 density scale length of the galaxy is $\sim$2.5 kpc, this implies that
 the density of stars at their formation radius was at least 5 times
@@ -718,7 +721,7 @@ Love number of degree 2 $k_2$. While this model has known shortcomings
 \citep{ToumaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
 accurate picture of tidal evolution, and is the model \cite{Kasting93}
 used to calculate the ``tidal lock radius.'' For this study, we use
-the model described in \cite{Heller11}, and validate it be repoducing
+the model described in \cite{Heller11}, and validate it be reproducing
 the tidal evolution of the Earth-Moon orbit \citep{MacDonald64} and
 the tidal heating of Io \citep{Peale79}.
 
@@ -729,7 +732,7 @@ are poorly constrained because the timescales for the evolution are
 very long. The values of $k_2$ can only span 0 to 1.5, so it is not as
 important as $Q$ which may take any non-negative value. Values for
 stars are typically estimated to be of order $10^6$
-\citep[\eg][]{Jackson09}, dry terrestrial planets have $Q~\sim~100$
+\citep[\eg][]{Jackson09}; dry terrestrial planets have $Q~\sim~100$
 \citep{Yoder95,Henning09}, and gas giants have $Q=10^4-10^6$
 \citep{AksnesFranklin01,Jackson08a}. In $\S$~\ref{sec:results} we
 will consider the possibility that Proxima b began with a hydrogen
@@ -739,7 +742,7 @@ exoplanets, whether it is in the envelope (high $Q$) or in the core
 (low $Q$) \citep[\eg][]{StorchLai14}, so we will consider both
 cases. \cite{ZhangHamilton08} found Neptune's $Q$ is about $10^4$ and
 we will use that value for envelope-dominated evolution, and we will
-use the $Q$ value computed by \thermint for core-dominated cases.
+use the $Q$ value computed by \thermint (see below) for core-dominated cases.
 
 \subsection{Orbital Evolution: \distorb}
 \label{sec:models:distorb}
@@ -765,7 +768,7 @@ can also be found in \cite{Berger1991}.
 We apply this model to the Proxima b and a possible longer period
 companion, hinted at in the RV data. This secular (i.e. long-term
 averaged) model does not account for the effects of mean-motion
-resonances, however, since we apply this to well-separated planets
+resonances; however, since we apply this to well-separated planets
 here, it is adequate for much of our parameter space. Since the model
 is 4th order in $e$ and $i$, it can account for coupling of
 eccentricity and inclination, although it does begin to break down at
@@ -811,8 +814,8 @@ to the variables:
 \end{align}
 The third variable, $\chi$ is necessary to preserve domain
 information. Hence, we ultimately have three variables to integrate
-rather than two, however, the addition of a third variable/equation
-does not produce appreciable slow down.
+rather than two; however, the addition of a third variable/equation
+does not significantly increase the computational cost.
 
 In the presence of strong tidal effects, as we would expect at Proxima
 b's orbital distance, the obliquity damps extremely quickly (in a few
@@ -831,11 +834,11 @@ The first of two geophysical modules tracks the adundances of
 radioactive elements in the planet's core, mantle and surface. We
 consider 5 radioactive species: $^{26}$Al, $^{40}$K, $^{232}$Th,
 $^{235}$U, and $^{238}$U. These elements have measured half-lifes of
-$7.17~\times~10^5$, $1.251~\times~10^9$, $1.405~\times~10^{10}$,
-$7.038~\times~10^8$, and $4.468~\times~10^9$ years, respectively. The
-energy associated with each decay is $6.415~\times~10^{-13}$,
-$2.134~\times~10^{-13}$, $6.834~\times~10^{-12}$,
-$6.555~\times~10^{-12}$ and $8.283~\times~10^{-12}$ J, respectively.
+$7.17 \times 10^5$, $1.251 \times 10^9$, $1.405 \times 10^{10}$,
+$7.038 \times 10^8$, and $4.468 \times 10^9$ years, respectively. The
+energy associated with each decay is $6.415 \times 10^{-13}$,
+$2.134 \times 10^{-13}$, $6.834 \times 10^{-12}$,
+$6.555 \times 10^{-12}$ and $8.283 \times 10^{-12}$ J, respectively.
 
 We will consider 4 different abundance ratios. First, we consider an
 Earth-like case with standard abundance concentrations
@@ -877,7 +880,7 @@ both convective and non-convective cores, melt production and eruption
 from the mantle, latent heat produced by mantle solidification and,
 when applicable, tidal heating, see $\S$~\ref{sec:models:eqtide}. Magnetic field
 generation is assumed to result from convective motion in the core,
-and the magnetic momemnt and magnetopause radius are trivially
+and the magnetic moment and magnetopause radius are trivially
 calculated from the temperature difference between the core and
 mantle, as well as from the pressure of the stellar wind at the orbit
 of Proxima b.
@@ -887,7 +890,7 @@ reproducing the modern Earth's surface energy flux, magnetic
 properties, eruption fluxes, plate speeds, and outgassing rates. It
 has also been used to successfully reproduce the divergent evolution
 of Venus and Earth under the assumption that they formed without
-atmospheres, and very similar compositions temperatures
+atmospheres, and very similar compositions and temperatures
 \citep{DriscollBercovici13}. This reproduction does require the tuning of
 numerous free parameters, but all choices are reasonable, especially
 in light of the poor information available on Venus' interior. While
@@ -946,7 +949,7 @@ from the stellar density and velocity dispersion, and then randomly
 drawing stellar magnitudes, and velocities from the distributions
 published in \cite{Garciasanchez2001}. The impact parameter is
 calculated from the relative velocities (stellar velocity relative to
-the solar apex velocity, \cite[see][]{Rickman2008}), and then a
+the solar \xxx{trq- not Proxima's?} apex velocity, \cite[see][]{Rickman2008}), and then a
 $\Delta v$ is applied to Proxima's orbit according to the impulse
 approximation \citep{Remy1985}. The masses of passing stars are
 calculated using the empirical relations from \cite{Reid2002}.
@@ -969,8 +972,18 @@ the stellar scale length, $2R_{\star}$, multiplied by $\sqrt(t)$,
 where $t$ is the time since galactic formation, as found to be broadly
 true in galactic simulations \citep{Minchev2012, Roskar2012}. In this
 fashion, the velocity dispersion grows slowly in time at all galactic
-radii and is larger closer to the galactic center. The apex
-velocities \xxx{define} will vary in a much more complicated fashion due to effects
+radii and is grows larger closer to the galactic center. \xxx{TRQ- the
+following needs a rewrite: the apex velocity is simply the Sun's
+velocity wrt the LSR.  The way I would s say this is the following:
+{\bf The apex velocity, \ie the velocity of the star with respect to
+the Local Standard of Rest, will vary according to the detailed
+orbital motion
+of Proxima through the galaxy, including the radial migration.  For the
+purposes of this study, we
+simply leave the apex velocity a constant, assuming the current Solar
+value is typical, and we will revisit this problem in a later study.}}
+The apex
+velocities will vary in a much more complicated fashion due to effects
 such as asymmetric drift, so for the purposes of this study, we simply
 leave the apex velocities at their values for the solar neighborhood.
 
@@ -1198,7 +1211,7 @@ The internal evolution of Proxima b is very difficult to model because
 of the huge number of unknowns about its composition, initial
 conditions, atmopshere, and the evolution of its environment, \eg
 flares stripping the atmosphere. In this section we first consider how
-different abundances of radoigenic isotopes could affect its
+different abundances of radiogenic isotopes could affect its
 evolution, then we consider tidal heating.
 
 
@@ -1206,7 +1219,7 @@ evolution, then we consider tidal heating.
 \label{sec:results:internal:radiog}
 
 As described in $\S$~\ref{sec:models:radheat} we consider four
-possible abundance patters for Proxima b: Earth-like, chondritic, 1
+possible abundance patterns for Proxima b: Earth-like, chondritic, 1
 ppt $^{26}$Al, and inert. In all cases we begin with a core
 temperature of 6000~K and a mantle temperature of 3000~K, except for
 the chondritic case in which the latter is 4000~K. This change
@@ -1231,7 +1244,7 @@ intersect the Earth's curve (blue) at about 4.5~Gyr.
   except for time = 0. {\it Top right:} Mantle Temperature. In the
   chondritic case (orange), the two kinks in the curve are due to the
   onset of core convection at 1.4~Gyr, and then due to the
-  solidification of the mantle at 6.2~Gyr. Similar the mantle
+  solidification of the mantle at 6.2~Gyr. Similarly the mantle
   solidifies in the $^{26}$Al (red) case at 2~Gyr. {\it Middle right:}
   Size of the solid inner core. {\it Middle left:} Magnetic
   moment. For the first 1.4 Gyr, the chondritic case has a
@@ -1247,7 +1260,7 @@ intersect the Earth's curve (blue) at about 4.5~Gyr.
 
 In the top left panel we show the evolution of the total radiogenic
 power produced in the core, mantle and surface. Initially, the initial
-power from $^{26}$Al is over $2~\times~10^{18}$~W, but with a
+power from $^{26}$Al is over $2 \times 10^{18}$~W, but with a
 half-life of 700,000 years, its contribution to the energy budget
 drops to 0 within $10^7$ years. The Earth-like case is hidden behind
 the $^{26}$Al curve.
@@ -1271,7 +1284,7 @@ transfers developed since the mantle was so far from equilibrium
 with the potassium power source.
 
 The case with $^{26}$Al is particularly interesting because it
-predicts initial mantle temperaturesin excess of $10^4$~K, which is
+predicts initial mantle temperatures in excess of $10^4$~K, which is
 hotter than the Sun. This result is clearly unphysical, and while some of the
 issue is that we began this case with a mantle temperature of 3000~K,
 the real problem is that the heating from just 1 ppt of $^{26}$Al is

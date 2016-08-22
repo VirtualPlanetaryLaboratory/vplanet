@@ -732,7 +732,7 @@ Love number of degree 2 $k_2$. While this model has known shortcomings
 \citep{ToumaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
 accurate picture of tidal evolution, and is the model \cite{Kasting93}
 used to calculate the ``tidal lock radius.'' For this study, we use
-the model described in \cite{Heller11}, and validate it be reproducing
+the model described in \cite{Heller11}, and validate it by reproducing
 the tidal evolution of the Earth-Moon orbit \citep{MacDonald64} and
 the tidal heating of Io \citep{Peale79}.
 
@@ -958,10 +958,10 @@ and stellar encounters using the equations and prescriptions
 developed by \cite{Heisler1986, Heisler1987, Rickman2008} 
 for the Oort cloud (Prox Cen is arguably a high mass Oort cloud 
 object, for $\alpha$ Cen A and B). We utilize an updated galactic 
-density of $\rho_0 = 0.102$ \citep{Holmberg2000} and treat 
+density of $\rho_0 = 0.102~\msun \rm{pc}^{-3}$ \citep{Holmberg2000} and treat 
 $\alpha$ Cen A and B as a single point mass with $M = 2.1$ 
 M$_{\odot}$ (with the recently updated masses given by 
-\cite{PourbaixBoffin16}). This is somewhat crude approach, as 
+\cite{PourbaixBoffin16}). This is a somewhat crude approach, as 
 the two stars produce a significant quadrupole moment associated 
 with their orbits---a back-of-the-envelope calculation indicates
 that the torque associated with this quadrupole potential would 
@@ -984,7 +984,7 @@ excitation. In such situations, Proxima b may have significant tidal
 heating despite the circularization time scale. 
 
 Following \cite{Heisler1987,Rickman2008}, we model stellar
-encounter in a stochastic Monte Carlo approach, estimating times 
+encounters in a stochastic Monte Carlo approach, estimating times 
 of encounters from the stellar density and velocity dispersion, 
 and then randomly drawing stellar magnitudes, and velocities 
 from the distributions published in \cite{Garciasanchez2001}. 
@@ -1011,17 +1011,19 @@ to assume axisymmetry of the total mass density, as the
 \cite{Heisler1986} tidal model assumes. We scale the velocity 
 dispersions of the nearby stars as a decaying exponential 
 with twice the stellar scale length, $2R_{\star}$, multiplied by 
-$\sqrt(t)$, where $t$ is the time since galactic formation, as found 
+$\sqrt{t}$, where $t$ is the time since galactic formation, as found 
 to be broadly true in galactic simulations 
-\cite{Minchev2012, Roskar2012}. In this fashion, the velocity 
-dispersion grows slowly in time at all galactic radii and is grows 
-larger closer to the galactic center. The apex velocities (that is,
-the velocity of the sun with respect to a given stellar type's 
-``local'' standard of rest) will vary 
-in a much more complicated fashion due to effects such as 
-asymmetric drift, so for the purposes of this study, we simply 
-leave the apex velocities at their values for the solar 
-neighborhood and will need to revisit this problem in a later study.
+\citep{Minchev2012, Roskar2012}. In this fashion, the velocity 
+dispersion grows slowly in time at all galactic radii and it grows 
+larger closer to the galactic center.
+\xxx{
+The apex velocity, \ie the velocity of the star with respect to
+the Local Standard of Rest, will vary according to the detailed
+orbital motion
+of Proxima through the galaxy, including the radial migration.  For the
+purposes of this study, we
+simply leave the apex velocity a constant, assuming the current Solar
+value is typical, and we will revisit this problem in a later study.}
 
 With such scaling laws in place, we model radial migration 
 as a single, abrupt jump in the galactocentric distance of the 

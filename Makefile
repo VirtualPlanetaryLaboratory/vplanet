@@ -12,5 +12,6 @@ profile:
 
 test:
 	@echo 'Compiling vplanet...'
+	-gcc -o vplanet *.c -lm
 	@echo 'Running vtest...'
 	@vtest

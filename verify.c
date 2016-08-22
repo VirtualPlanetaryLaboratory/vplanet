@@ -476,7 +476,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
 
     // XXX Temporary hack -- need to implement an InitializeBodyGeneral
-    body[iBody].dEcc = 0;
+    //body[iBody].dEcc = 0;
     
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       // Must initialize entire body struct before verifying modules

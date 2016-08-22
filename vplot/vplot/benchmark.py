@@ -62,7 +62,14 @@ def isclose(val1, val2, tol):
   
   '''
   
-  return np.abs(1. - val1 / val2) <= tol
+  if (val1 == 0) and (val2 == 0):
+    return True
+  else:
+    try:
+      res = np.abs(1. - val1 / val2) <= tol
+    except:
+      res = False
+    return res
 
 def TestRun(name, compare, tolerance, path, maxtime = 10.):
   '''

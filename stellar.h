@@ -20,6 +20,7 @@
 #define STELLAR_MODEL_PROXIMACEN      5
 
 #define HZ_MODEL_KOPPARAPU            1
+#define DRYRGFLUX                     415 // W/m^2 from Abe et al. (2011)
 
 void InitializeControlStellar(CONTROL*);
 void AddModuleStellar(MODULE*,int,int);

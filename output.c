@@ -72,6 +72,19 @@ void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+      
+
 /*
  * K
  */
@@ -623,6 +636,14 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HECC].iNum = 1;
   output[OUT_HECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_HECC] = &WriteHecc;
+  
+  sprintf(output[OUT_HZLIMITDRYRUNAWAY].cName,"HZLimitDryRunaway");
+  sprintf(output[OUT_HZLIMITDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
+  output[OUT_HZLIMITDRYRUNAWAY].bNeg = 1;
+  output[OUT_HZLIMITDRYRUNAWAY].dNeg = 1/AUCM;
+  output[OUT_HZLIMITDRYRUNAWAY].iNum = 1;
+  output[OUT_HZLIMITDRYRUNAWAY].iModuleBit = 1;
+  fnWrite[OUT_HZLIMITDRYRUNAWAY] = &WriteHZLimitDryRunaway;
   
   /*
    * K

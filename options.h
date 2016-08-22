@@ -27,6 +27,7 @@
 // Regular Options
 
 #define OPT_AGE			100
+#define OPT_ALBEDOGLOBAL	105
 
 #define OPT_BACK		110
 #define OPT_OUTFILE   	        120

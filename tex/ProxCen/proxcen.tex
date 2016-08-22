@@ -680,31 +680,45 @@ uses the equations of motion developed in \cite{Kinoshita1975, Kinoshita1977}
 and utilized extensively by \cite{Laskar1986,Laskar1993a,Laskar1993b,Armstrong14}. 
 It treats the planet as an oblate spheroid (having an axisymmetric equatorial bulge), 
 with a shape induced by the rotation. The planet then is subject to a torque from the
- host star, which causes axial precession, and changes in its orbital plane due to
-  perturbations from a companion planet, which directly change the obliquity angle. 
-  This model is thus dependent on \distorb, as it depends on the eccentricity, the 
-  longitude of ascending node $(\Omega)$, and the derivatives $dp/dt, dq/dt$ 
-  (Equation \ref{eqnp} and \ref{eqnq}).
+host star, which causes axial precession, and changes in its orbital plane due to
+perturbations from a companion planet, which directly change the obliquity angle. 
+This model is thus dependent on \distorb, as it depends on the eccentricity, the 
+longitude of ascending node $(\Omega)$, and the derivatives $dp/dt, dq/dt$ 
+(Equation \ref{eqnp} and \ref{eqnq}).
 
 The equations for obliquity and precession angle $(d\psi/dt, dp_A/dt)$, also contain
- a singularity at $\psi = 0$, so we transform to the variables:
+a singularity at $\psi = 0$, so we transform to the variables:
 \begin{align}
 \xi & = \sin{\psi} \sin{p_A} \\
 \zeta & = \sin{\psi} \cos{p_A} \\
 \chi & = \cos{\psi}.
 \end{align}
 The third variable, $\chi$ is necessary to preserve domain information. Hence,
- we ultimately have three variables to integrate rather than two, however, the
-  addition of a third variable/equation does not produce appreciable slow down.
+we ultimately have three variables to integrate rather than two, however, the
+addition of a third variable/equation does not produce appreciable slow down.
 
+Since we couple obliquity evolution in \distrot to tidal evolution in \eqtide, it is 
+necessary to account for changes in the planet's shape (its dynamical ellipticity)
+as its rotation rate changes due to tides. Following the examples of 
+\cite{Atobe2007, Brasser2014}, we scale the planet's oblateness coefficient, $J_2$ 
+(from which the dynamical ellipticity, $E_d$, can be derived), with the radius $R_p$, 
+rotation rate $\omega_{rot}$, and mass $M$, as:
+\begin{equation}
+J_2 \propto \frac{\omega_{rot}^2 R_p^3}{M}.
+\end{equation}
+We use the Earth's $J_2$ as a proportionality factor. As pointed out by 
+\cite{Brasser2014}, around a rotation period of 13 days, $J_2$ calculated in this 
+way reaches the $J_2$ of Venus, and so, following their example, we set the 
+minimum $J_2$ value to the  $J_2$ of Venus.
+ 
 In the presence of strong tidal effects, as we would expect at Proxima b's orbital 
 distance, the obliquity damps extremely quickly (in a few hundred kyr). Because 
 of this, we do not expect this planet to have significant obliquity variations. Our 
 purpose for including this model in our study is to look for Cassini states 
 \citep{Colombo1966}---in the presence of strong tidal effects and perturbations
- from companion planets, the planet's obliquity damps to some non-zero value, 
- as we observe for Mercury and a number of solar system satellites, including 
- Earth's moon.
+from companion planets, the planet's obliquity damps to some non-zero value, 
+as we observe for Mercury and a number of solar system satellites, including 
+Earth's moon.
 
 \subsection{Radiogenic Heating: \radheat}
 \label{sec:models:radheat}
@@ -838,7 +852,8 @@ neighborhood (8 kpc).
 
 Simulations were halted whenever Proxima's orbit passed within 40 au of 
 the center of mass of $\alpha$ Cen A and B, when it passed beyond 1 pc,
-or when it became gravitationally unbound ($e > 1$). In set \textbf{A}, 1506 
+or when it became gravitationally unbound ($e > 1$). In set \textbf{A} 
+(see Figure \ref{fig:galacdist}, left-hand panels), 1506 
 out of 10,000 simulations were halted because of one of the three above conditions.
 Closer inspection reveals that the majority of these (1289) were halted because 
 Proxima's periastron passed within 40 au of $\alpha$ Cen. Of those that didn't
@@ -846,7 +861,7 @@ halt, another 1363 passed within 200 au and 620 passed within 100 au. Including
 those trials that were halted for any reason, 2688 ($27\%$) passed within 200 au and
 1929 ($19\%$) passed within 100 au. 
 
-This is important because $\sim 100$ au is the distance a close encounter with a 
+The importance of this is that $\sim 100$ au is the distance a close encounter with a 
 $\sim 2 M_{\odot}$ star would disrupt a planetary system similar to the solar system
 \citep{Kaib2013}. The fact that $\alpha$ Cen is a binary itself, with a large eccentricity 
 ($e \sim 0.5$) probably increases the disruption distance still further.
@@ -856,18 +871,27 @@ orbital distances), however, it may still have had an extended planetary system
 at some point. If that is the case, the system may have been disrupted, or may be
 disrupted in the future, by a close periastron passage with $\alpha$ Cen.
 
+Radial migration makes close passages and disruption more likely. The right panels in 
+Figure \ref{fig:galacdist} compare the trials that survived 7 Gyr and those that were halted
+(disrupted) due to the previously mention conditions for set \textbf{B}. In this set, 2544 trials
+were halted and 1717 of those were due to periastron reaching below 40 au. Of the remaining
+cases, 1333 had periastron distances $< 200$ au and 634 below $<100$ au. Including
+cases that were halted, 3195 ($32\%$) passed within 200 au and 2452 ($25\%$) 
+passed within 100 au.
+
 \begin{figure}
 \includegraphics[width=3.5in]{nomigrdist.eps}
 \includegraphics[width=3.5in]{migrdist.eps}
-\caption{}
+\caption{Distributions of trials in which Proxima's orbit about $\alpha$ Cen is disrupted (red) and trials in which it survives to $>$ the age of the system (blue). Set {A} (no migration) is on the left and set {B} (with radial migration) is on the right. Each half of the figure shows the distributions as a function of initial eccentricity (upper left), initial semi-major axis (upper right), initial inclination relative to the galactic disk (lower left), and the minimum periastron distance over the entire simulation (lower right). Generally, eccentricity and inclination are the greatest determinants of stability, with high $e$ and $i \sim 90^{\circ}$ (i.e. low $\hat{Z}$-angular momentum) cases being the least stable. Systems which formed interior to 4.5 kpc from the galactic center (set \textbf{B}, right half of figure) are disrupted more frequently than those which were placed in the solar neighborhood from the beginning. Amongst the cases we considered ``stable'', a significant fraction still have Proxima pass within a few hundred au of $\alpha$ Cen A and B.}
 \label{fig:galacdist}
 \end{figure}
+
 
 % Fig. 1: Sample R_gal vs. time
 % Fig. 2: Encounter frequency vs. R_gal
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{encvsR.eps}
-\caption{}
+\caption{Stellar encounter rates as a function of galactocentric distance. Dark blue points correspond to pre-migration encounter rates, light blue to post-migration. The large outlier in the light blue, solar-neighborhood, is due to small number statistics---the system in that simulation was disrupted shortly after migration. There is some scatter in the solar-neighborhood points because of the time dependence of the stellar velocity dispersion. At the tail end of the simulations, we match the encounter frequency of 10.5 Myr$^{-1}$ from previous studies \citep{Garciasanchez2001,Rickman2008}.}
 \label{fig:encrates}
 \end{figure}
 
@@ -875,9 +899,17 @@ disrupted in the future, by a close periastron passage with $\alpha$ Cen.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{evol_Vpl_0257.eps}
-\caption{}
+\caption{An example of the orbital evolution of Proxima in the galactic simulations. The upper left panel shows the semi-major axis, periastron distance, and apastron distance, the upper right shows the eccentricity, the lower left shows the angular momentum in the $\hat{Z}-$direction, and the lower right shows the inclination with respect to planet of the galactic disk. The system was given a formation distance of $R = 3.78$ kpc and the vertical dashed line shows the time of migration (to 8 kpc). The angular momentum in $\hat{Z}$ (the action $J_z$) is unchanged by galactic tides---eccentricity and inclination exchange angular momentum in such a way that this quantity is conserved---thus its evolution is purely due to stellar encounters. In this particular case, the eccentricity of Proxima grows such that its periastron dips within 50 au of $\alpha$ Cen A and B.}
 \label{fig:galevolution}
 \end{figure}
+
+One potential issue with our orbit-averaged approach is that for Proxima in the semi-major axis range 
+($\sim5000$,$\sim20000$) au, the orbital periods span a range of 240 thousand to 2 million years. 
+Thus it may be possible in the simulations for Proxima's periastron to come very close to $\alpha$ Cen 
+for a short period of time and then evolve to a larger distance before Proxima ever reaches periastron.
+Hence, we are potentially halting simulations in which Proxima may not actually pass within 40 au 
+of $\alpha$ Cen. Our results should thus be seen as an upper limit on the number of configurations 
+that lead to close encounters between Proxima and $\alpha$ Cen.
 
 \subsection{Orbital/Rotational/Tidal Evolution}
 \label{sec:results:orbital}
@@ -995,11 +1027,13 @@ conservation of angular momentum \citep{Correia08}, but then damps
 down. For the high $e,i$ case, the obliquity reaches an equilibrium
 value near $0.1^\circ$, while the low $e,i$ case drops all the way to
 $10^{-8~\circ}$. The bottom left panel shows the evolution of the
-dynamical ellipticity as predicted by (\xxx{REF}). The lower right panel
-shows the value of the Cassini Parameter for the two cases, both of
+dynamical ellipticity as predicted by the formulae from \cite{Atobe2007}.
+The lower right panel shows the value of the Cassini Parameter 
+\citep[see Equation 1 of][]{Ward2004} for the two cases, both of
 which becomes locked near 0, indicating the rotational and angular
 momentum have evolved into a Cassini State, in this case it is Cassini
-State X. \xxx{Which Cassini state?, REF}
+State 2, in which the spin and orbit vectors of planet b are on opposite 
+sides of the total angular momentum vector of the planetary system. 
 
 \begin{figure} 
 \begin{center}

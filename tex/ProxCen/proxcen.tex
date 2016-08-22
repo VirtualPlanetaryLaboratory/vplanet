@@ -219,7 +219,9 @@ Proxima Centauri is $\sim 15,000$ AU from \acen~A and B, but all three have the
 same motion through the galaxy. The proper motion and radial
 velocity of the center of mass of \acen~A and B permit the calculation
 of the system's velocity relative to the local standard of
-rest. \cite{Poveda96} find the three velocities are ($U, V, W$) =
+rest \xxx{rd: Looking at the Poveda paper, the following velocities are relative to the sun,
+I believe, not the 
+local standard of rest}. \cite{Poveda96} find the three velocities are ($U, V, W$) =
 (-25, -2, 13) km/s for the center of mass. This velocity implies the
 system is currently approaching Earth, and is on a roughly circular
 orbit around the galaxy with an eccentricity of 0.07
@@ -651,7 +653,7 @@ $L_\mathrm{XUV}/L_\mathrm{bol} = 2.83\times 10^{-4}$
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=6in]{star}
+\includegraphics[width=6in]{star.pdf}
 \caption{Luminosity, temperature, radius, and XUV evolution of Proxima
   Centauri from $t_0$ = 1 Myr to the present day. The dashed red lines
   indicate the measured values of each parameter (see text). 1$\sigma$
@@ -733,7 +735,7 @@ Love number of degree 2 $k_2$. While this model has known shortcomings
 \citep{ToumaWisdom94,EfroimskyMakarov13}, it provides a qualitatively
 accurate picture of tidal evolution, and is the model \cite{Kasting93}
 used to calculate the ``tidal lock radius.'' For this study, we use
-the model described in \cite{Heller11}, and validate it be reproducing
+the model described in \cite{Heller11}, and validate it by reproducing
 the tidal evolution of the Earth-Moon orbit \citep{MacDonald64} and
 the tidal heating of Io \citep{Peale79}.
 
@@ -792,7 +794,7 @@ integrator \citep{RauchHamilton02} and find that for modest values of
 $e$ and $i$ the two methods are nearly indistinguishable.
  
 \begin{figure}
-\includegraphics[width=\textwidth]{orbcomp_mid_e_i.eps}
+\includegraphics[width=\textwidth]{orbcomp_mid_e_i.pdf}
 \caption{Comparison between the \distorb module and the N-body code and 
    {\footnotesize \texttt{HNBody}} for one of our 2
    planet test cases. Planet b is represented on the left, putative
@@ -898,7 +900,8 @@ Proxima's protoplanetary disk, then not all the $^{26}$Al would have
 decayed. A planet that formed quickly would likely have more than 1
 ppt of $^{26}$Al, but as we will see in $\S$~\ref{sec:results}, our
 geophysical module \thermint cannot handle heating rates much in
-excess of this abundance.
+excess of this abundance. \xxx{How does this compare to Earth's 
+initial budget of 26Al?}
 
 The final case is an inert planet with no radioactive particles. This
 case is very unlikely in reality, but serves as a useful end-member
@@ -959,10 +962,10 @@ and stellar encounters using the equations and prescriptions
 developed by \cite{Heisler1986, Heisler1987, Rickman2008} 
 for the Oort cloud (Prox Cen is arguably a high mass Oort cloud 
 object, for $\alpha$ Cen A and B). We utilize an updated galactic 
-density of $\rho_0 = 0.102$ \citep{Holmberg2000} and treat 
+density of $\rho_0 = 0.102~\msun \rm{pc}^{-3}$ \citep{Holmberg2000} and treat 
 $\alpha$ Cen A and B as a single point mass with $M = 2.1$ 
 M$_{\odot}$ (with the recently updated masses given by 
-\cite{PourbaixBoffin16}). This is somewhat crude approach, as 
+\cite{PourbaixBoffin16}). This is a somewhat crude approach, as 
 the two stars produce a significant quadrupole moment associated 
 with their orbits---a back-of-the-envelope calculation indicates
 that the torque associated with this quadrupole potential would 
@@ -985,7 +988,7 @@ excitation. In such situations, Proxima b may have significant tidal
 heating despite the circularization time scale. 
 
 Following \cite{Heisler1987,Rickman2008}, we model stellar
-encounter in a stochastic Monte Carlo approach, estimating times 
+encounters in a stochastic Monte Carlo approach, estimating times 
 of encounters from the stellar density and velocity dispersion, 
 and then randomly drawing stellar magnitudes, and velocities 
 from the distributions published in \cite{Garciasanchez2001}. 
@@ -1012,17 +1015,18 @@ to assume axisymmetry of the total mass density, as the
 \cite{Heisler1986} tidal model assumes. We scale the velocity 
 dispersions of the nearby stars as a decaying exponential 
 with twice the stellar scale length, $2R_{\star}$, multiplied by 
-$\sqrt(t)$, where $t$ is the time since galactic formation, as found 
+$\sqrt{t}$, where $t$ is the time since galactic formation, as found 
 to be broadly true in galactic simulations 
-\cite{Minchev2012, Roskar2012}. In this fashion, the velocity 
-dispersion grows slowly in time at all galactic radii and is grows 
-larger closer to the galactic center. The apex velocities (that is,
-the velocity of the sun with respect to a given stellar type's 
-``local'' standard of rest) will vary 
-in a much more complicated fashion due to effects such as 
-asymmetric drift, so for the purposes of this study, we simply 
-leave the apex velocities at their values for the solar 
-neighborhood and will need to revisit this problem in a later study.
+\citep{Minchev2012, Roskar2012}. In this fashion, the velocity 
+dispersion grows slowly in time at all galactic radii and it grows 
+larger closer to the galactic center.
+The apex velocity, \ie the velocity of the star with respect to
+the Local Standard of Rest, will vary according to the detailed
+orbital motion
+of Proxima through the galaxy, including the radial migration.  For the
+purposes of this study, we
+simply leave the apex velocity a constant, assuming the current Solar
+value is typical, and we will revisit this problem in a later study.
 
 With such scaling laws in place, we model radial migration 
 as a single, abrupt jump in the galactocentric distance of the 
@@ -1113,8 +1117,8 @@ cases that were halted, 3195 ($32\%$) passed within 200 au and 2452 ($25\%$)
 passed within 100 au.
 
 \begin{figure}
-\includegraphics[width=3.5in]{nomigrdist.eps}
-\includegraphics[width=3.5in]{migrdist.eps}
+\includegraphics[width=0.5\textwidth]{nomigrdist.pdf}
+\includegraphics[width=0.5\textwidth]{migrdist.pdf}
 \caption{Distributions of trials in which Prox Cen's orbit about $\alpha$ Cen
   is disrupted (red) and trials in which it survives to $>$ the age of the 
   system (blue). Set {A} (no migration) is on the left and set {B} (with 
@@ -1137,7 +1141,7 @@ passed within 100 au.
 % Fig. 1: Sample R_gal vs. time
 % Fig. 2: Encounter frequency vs. R_gal
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{encvsR.eps}
+\includegraphics[width=0.5\textwidth]{encvsR.pdf}
 \caption{Stellar encounter rates as a function of galactocentric distance.
   Dark blue points correspond to pre-migration encounter rates, light 
   blue to post-migration. The large outlier in the light blue, 
@@ -1153,7 +1157,7 @@ passed within 100 au.
 % Fig. 3: Sample evolution of Prox's orbit: a) semi, peri, apo, b) incl
 
 \begin{figure}
-\includegraphics[width=\textwidth]{evol_Vpl_0257.eps}
+\includegraphics[width=\textwidth]{evol_Vpl_0257.pdf}
 \caption{An example of the orbital evolution of Prox Cen in the galactic 
   simulations. The upper left panel shows the semi-major axis, periastron 
   distance, and apastron distance, the upper right shows the eccentricity, 
@@ -1354,7 +1358,7 @@ escape.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=5in]{HZEvol}
+\includegraphics[width=5in]{hzevol.pdf}
 \caption{Evolution of the conservative HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) and Mercury (dashed line).}
 \label{fig:HZEvol}
 \end{figure}
@@ -1445,7 +1449,7 @@ with the potassium power source.
 
 The case with $^{26}$Al is particularly interesting because it
 predicts initial mantle temperatures in excess of $10^4$~K, which is
-hotter than the Sun. This result is clearly unphysical, and while some of the
+hotter than the \xxx{surface of the} Sun. This result is clearly unphysical, and while some of the
 issue is that we began this case with a mantle temperature of 3000~K,
 the real problem is that the heating from just 1 ppt of $^{26}$Al is
 so large that our model cannot handle it. However, we do see that
@@ -1579,7 +1583,9 @@ the Ocean case.
   when the planet is in the HZ. {\it Top left:} Surface Flux. {\it Top
     right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it
     Middle right:} Semi-major Axis. {\it Bottom left:} Envelope
-  Mass. {\it Bottom right:} Surface Water Mass. \xxx{I don't like the red on green.}}
+  Mass. {\it Bottom right:} Surface Water Mass. \xxx{I don't like the red on green.} 
+  \xxx{rd: can I suggest replacing the green with a light gray? or a single vertical 
+  dashed line?} }
 \label{fig:tidal_hec}
 \end{figure}
 
@@ -1594,7 +1600,7 @@ In Fig.~\ref{fig:HZEvol} we plot the evolution of the conservative HZ limits of 
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=6in]{mirage}
+\includegraphics[width=6in]{mirage.pdf}
 \caption{Evolution of the water content and atmospheric O$_2$ pressure
   on Proxima b for different initial conditions. The initial water
   content is varied between 1 and 10 TO (various colors) for two
@@ -1634,7 +1640,7 @@ convecting, reducing magma ocean, it is likely desiccated today.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=6in]{hec}
+\includegraphics[width=6in]{hec.pdf}
 \caption{Evolution of the water and O$_2$ contents assuming Proxima b
   formed with a hydrogen envelope and 3 TO. Line colors correspond to
   different initial envelope mass fractions $f_H$, ranging from 0.0001
@@ -1681,9 +1687,9 @@ uninhabitable.
 
 \begin{sidewaysfigure}[h]
 \centering
-\subfigure{\label{fig:atmesc:synth:a}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_a}}}
-\subfigure{\label{fig:atmesc:synth:b}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_b}}}
-\subfigure{\label{fig:atmesc:synth:c}\imagebox{2.5in}{\includegraphics[width=1.285in]{synth_c}}}
+\subfigure{\label{fig:atmesc:synth:a}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_a.pdf}}}
+\subfigure{\label{fig:atmesc:synth:b}\imagebox{2.5in}{\includegraphics[width=3.3in]{synth_b.pdf}}}
+\subfigure{\label{fig:atmesc:synth:c}\imagebox{2.5in}{\includegraphics[width=1.285in]{synth_c.pdf}}}
 \caption{Multiple evolutionary pathways for the water on Proxima
   b. These plots show the final water and final O$_2$ content of the
   planet for a suite of different initial conditions. Different marker
@@ -1807,7 +1813,10 @@ that close passages between Proxima and \acen~A and B could destabilize
 any putative ``exo-Oort Clouds'' that could have existed around the
 stars. Current numerical models do not permit a robust calculation of
 this possibility, so it remains a viable path for Proxima b to be
-habitable. \xxx{REF for exo-Oort clouds?}
+habitable. \xxx{REF for exo-Oort clouds?} \xxx{rd: not sure a reference is 
+necessary here. We are just speculating that since the sun
+has an Oort cloud, it is possible for other stars to have them (Copernican
+principle). I'm not sure a good reference even exists.}
 
 Although these atmospheric states permit habitability, we must bear in
 mind that the rotation period is either synchronous or in a spin-orbit

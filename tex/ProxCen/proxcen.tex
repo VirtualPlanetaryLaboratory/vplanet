@@ -542,8 +542,6 @@ the system. Thus, should additional planets exist in the Proxima
 planetary system, these could be present on almost any orbit, with large
 eccentricities and large mutual inclinations relative to b's orbital plane \citep[\eg][]{Barnes11}.
 
-%%%%%%% BEGIN PROOFREADING AGAIN HERE %%%%%
-
 The metallicity of Proxima Centauri is quite high for the solar
 neighborhood, which has a mean of -0.11 and standard deviation of 0.18
 \citep{AllendePrieto04}. Indeed, recent simulations of stellar
@@ -729,7 +727,7 @@ the tidal heating of Io \citep{Peale79}.
 
 The values of $Q$ and $k_2$ for Earth are well-constrained by lunar
 laser ranging \citep{Dickey94} to be 12 and 0.299, respectively
-\citep{Williams78,Yoder95}. However their vaules for celestial bodies
+\citep{Williams78,Yoder95}. However their values for celestial bodies
 are poorly constrained because the timescales for the evolution are
 very long. The values of $k_2$ can only span 0 to 1.5, so it is not as
 important as $Q$ which may take any non-negative value. Values for
@@ -778,7 +776,7 @@ higher eccentricity or mutual inclination. In
 Fig.~\ref{fig:orbitvalid} we compare our model to the
 \footnotesize{\texttt{HNBody}}\footnote{\xxx{Publicly available at}}
 integrator \citep{RauchHamilton02} and find that for modest values of
-$e$ and $i$ the two methods are nearly indistiguishable.
+$e$ and $i$ the two methods are nearly indistinguishable.
  
 \begin{figure}
 \includegraphics[width=\textwidth]{orbcomp_mid_e_i.eps}
@@ -793,7 +791,7 @@ $e$ and $i$ the two methods are nearly indistiguishable.
 \subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
 \label{sec:models:distrot}
 % Russell
-Our obliquity model, \distrot (for ``disturbing function rotation
+Our obliquity \xxx{evolution} model, \distrot (for ``disturbing function rotation
 evolution''), uses the equations of motion developed in
 \cite{Kinoshita1975, Kinoshita1977} and utilized extensively by
 \cite{Laskar1986,Laskar1993a,Laskar1993b,Armstrong14}.  It treats the
@@ -832,7 +830,7 @@ Earth's moon.
 \subsection{Radiogenic Heating: \radheat}
 \label{sec:models:radheat}
 
-The first of two geophysical modules tracks the adundances of
+The first of two geophysical modules tracks the abundances of
 radioactive elements in the planet's core, mantle and surface. We
 consider 5 radioactive species: $^{26}$Al, $^{40}$K, $^{232}$Th,
 $^{235}$U, and $^{238}$U. These elements have measured half-lifes of
@@ -841,6 +839,8 @@ $7.038 \times 10^8$, and $4.468 \times 10^9$ years, respectively. The
 energy associated with each decay is $6.415 \times 10^{-13}$,
 $2.134 \times 10^{-13}$, $6.834 \times 10^{-12}$,
 $6.555 \times 10^{-12}$ and $8.283 \times 10^{-12}$ J, respectively.
+
+\xxx{dflemin3: Do these values require a citation, like some reference manual?}
 
 We will consider 4 different abundance ratios. First, we consider an
 Earth-like case with standard abundance concentrations
@@ -876,7 +876,7 @@ We model the coupled core/mantle evolution of Proxima b with a
 \citep{DriscollOlson11,DriscollBercovici13,DriscollBercovici14,DriscollBarnes15}, and the
 reader is referred to those studies for a comprehensive description of
 it. Briefly, the model is based on tracking the core and mantle
-temperatures, and the rest of the geophysics depends on them. The code
+temperatures \xxx{as} the rest of the geophysics depends on them. The code
 includes heat transport through the core/mantle boundary (CMB) for
 both convective and non-convective cores, melt production and eruption
 from the mantle, latent heat produced by mantle solidification and,
@@ -901,16 +901,20 @@ explicitly designed for an Earth-like composition, structure, mass and
 radius. However, the minimum mass for Proxima b is negligibly far from
 Earth as far as this model is concerned. Further, \thermint cannot
 handle initial mantle temperature below $\sim$1500~K, at which point
-diffentiation would not occur, or above 8000~K, where non-linear
+differentiation would not occur, or above 8000~K, where non-linear
 rheologies require different assumptions and equations.
 
 The \thermint modules can be directly coupled to \eqtide as shown in
 \citep{DriscollBarnes15}. In that case, we assume all the tidal power
-is deposited in the mantle and the heating changes the viscocisty, and
+is deposited in the mantle and the heating changes the viscosity, and
 in turn the tidal $Q$. \cite{DriscollBarnes15} used a visco-elastic
 model in which the tidal heating is a maximum for mantle temperature
 near 1800~K, and thus cooling planets pass through a maximum in
 temperature.
+
+\xxx{dflemin3: Cohen 2014 and Vidotto 2013 mention that for close-in planets around
+M-dwarfs with strong magnetic fields, the star's B field pressure would press the planet's
+magnetosphere to the surface}
 
 \subsection{Galactic Effects: \galhabit}
 \label{sec:models:galhabit}
@@ -1001,8 +1005,8 @@ range $(1,5)$ Gyr since formation.
 \subsection{The Coupled Model: \vplanet}
 \label{sec:models:vplanet}
 % Rory
-The previous modules are combined into a single software program
-called \vplanet. This code is written in C and is designed to be
+The \xxx{previously described} modules are combined into a single software program
+called \vplanet. This code\xxx{,written in C,} is designed to be
 modular so that for any given body, only specific modules are applied
 and specific parameters integrated in the forward time direction. 
 Parameters are integrated
@@ -1011,15 +1015,6 @@ times the shortest timescale for all active parameters, \ie
 $x/(dx/dt)$, where $x$ is a parameter. In general, we obtain convergence if
 $\eta~\le~0.01$. A more complete and quantitative description of
 \vplanet~will be presented soon (Barnes et al., in prep.). 
-
-\xxx{dflemin3: Here, a brief reference to how a model is given model is calibrated/validated
-could help to assuage a read/reviewer.  For example, you could say that THERMINT is calibrated
-to the earth an discussed in the already peer-reviewed/published Driscoll and Barnes 2015.  I'm a bit 
-worried people will call BS on model coupling (even though our results are rock-solid in my mind), so
-a simple reference here in addition to everything in the module sections would help.  I guess this is hard because
-no one has ever attempted a crazy thing like VPLANET, but taking an extra step to show that VPLANET is robust
-and rigorous will go a long way since the actual VPLANET presentation paper is months away.}
-
 
 \section{Results\label{sec:results}}
 % All
@@ -1044,9 +1039,7 @@ and rigorous will go a long way since the actual VPLANET presentation paper is m
 
 \xxx{dflemin3: For the orbital/rotatinonal end cases, I would find brief habitability comments to be useful.  For example,
 if some high eccentricity is maintained -> more tidal heating or something of that nature.  Also, how does being in a certain
-Cassinni state impact habitability, surface water content, does it at all?  Little allusions back to how these things impact
-habitability could be useful as it will help to continue to hammer the VPLANET mission of modeling how all these things
-impact ultimate goal of modelling habitability.}
+Cassinni state impact habitability, surface water content, does it at all?}
 
 We begin exploring the dynamical properties of the orbits and spins by
 considering the tidal evolution of planet b if it is in isolation. In
@@ -1079,7 +1072,7 @@ b begins with a rotation period of 1 day and an obliquity of
 $23.5^\circ$, then the initial surface energy flux due to tidal
 heating is $\sim~1$~kW/m$^{2}$.
 
-\xxx{dflemin3: does this high surface flux desiccate the planet?  Brief comment on habitability could be useful here.}
+\xxx{dflemin3: can this high surface flux desiccate the planet?}
 
 \begin{figure} 
 \begin{center}
@@ -1211,7 +1204,7 @@ escape.
 
 The internal evolution of Proxima b is very difficult to model because
 of the huge number of unknowns about its composition, initial
-conditions, atmopshere, and the evolution of its environment, \eg
+conditions, atmosphere, and the evolution of its environment, \eg
 flares stripping the atmosphere. In this section we first consider how
 different abundances of radiogenic isotopes could affect its
 evolution, then we consider tidal heating.
@@ -1242,7 +1235,7 @@ intersect the Earth's curve (blue) at about 4.5~Gyr.
   assumptions of radiogenic inventory: Earth-like in blue, chondritic
   in orange, 1 part per trillion $^{26}$Al, and inert. Values for the
   modern Earth are shown with the dashed black line. {\it Top left:}
-  Radiogenic power. The Earth curve is behind the $^{26}$Al curve for
+  Radiogenic power. The Earth curve is behind the $^{26}$Al curve
   except for time = 0. {\it Top right:} Mantle Temperature. In the
   chondritic case (orange), the two kinks in the curve are due to the
   onset of core convection at 1.4~Gyr, and then due to the
@@ -1255,7 +1248,7 @@ intersect the Earth's curve (blue) at about 4.5~Gyr.
   times that of Earth. {\it Bottom right:} Surface energy flux. The
   rapid variation in the chondritic case are associated with the onset
   of core convection, while the hump at 6 Gyr is due to the release of
-  latent heat as the mantle solidies, as is the $^{26}$Al hump at 2
+  latent heat as the mantle solidiifes, as is the $^{26}$Al hump at 2
   Gyr.}
 \label{fig:radiog}
 \end{figure}
@@ -1269,7 +1262,7 @@ the $^{26}$Al curve.
 
 The mantle temperature is shown in the top right panel. The Earth and
 inert cases are similar, but, as expected, the inert case temperature
-drops more quickly becuase there is no radiogenic power in the
+drops more quickly because there is no radiogenic power in the
 mantle. The enriched cases show interesting features as the energy
 transport mechanisms change. The chondritic case shows two kinks, the
 first is due to the onset of convection in the core, the second due to
@@ -1413,7 +1406,7 @@ the Ocean case.
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 \begin{figure} 
 \centering
-\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.eps}
+\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.ps}
 \caption{Evolution of the orbital, tidal and atmospheric properties of
   Proxima b for the ``CPL" case in light blue, ``No Ocean" case in
   red, ``Ocean" case in dark blue, and the ``Envelope" case in orange
@@ -1829,7 +1822,7 @@ mass loss.
 
 These processes are all clear dangers for the habitability of Proxima
 b. Yet, we are also able to identify pathways that produce decidedly
-Earth-like versions of planet b. \xxx{As shown in Fig.~\ref{fig:qchoice},
+Earth-like versions of planet b. \xxx{As shown in Fig.~\ref{fig:tidal_hec},
 if the planet formed with 0.1\% of its mass in a hydrogen envelope, 4.5
 Earth oceans of water, then the combined effects of the stellar
 evolution, envelope evolution and atmospheric escape, tidal evolution,
@@ -1840,8 +1833,6 @@ Earth, and therefore may have Earth-like conditions today.
 
 \xxx{dflemin3: Using the new default escape params in ATMESC and starting with 
 dEnvelopeMass = -0.001, dSurfaceWaterMass = -4.5, I get ~1.04 Earth Oceans left at the end of my Envelope simulation}
-
-\xxx{dflemin3: what is fig:qchoice? -- is that supposed to be fig:tidal_hec ?}
 
 A final possibility is that Proxima b, receiving only 65\% of Earth's
 insolation, may have an ice-covered surface, but with a liquid water

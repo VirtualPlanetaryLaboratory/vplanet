@@ -866,7 +866,8 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
 
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
-    body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
+    body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Ocean);
+    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
   }
   // No oceans, thermint dictates ImK2
   else 
@@ -906,7 +907,8 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
      
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
-    body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
+    body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Ocean);
+    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
   }
   // Case: No oceans, envelope (envelope evap while in runaway):
   else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
@@ -916,7 +918,8 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
    
     // Im(K_2) is weighted sum of mantle and enevelope component
     // weighted by the love number of each component
-    body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
+    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
+    body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Env);
   }
   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
   // Also, envelope and ocean are mutually exclusive so envelope dominates
@@ -927,7 +930,8 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
 
     // Im(K_2) is weighted sum of mantle, envelope and ocean component
     // weighted by the love number of each component
-    body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
+    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
+    body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Env);
   }
   else
     assert(0); // Unknown envelope + ocean behavior

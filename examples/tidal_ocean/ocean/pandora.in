@@ -25,7 +25,7 @@ dMinEnvelopeMass          -1.0e-5
 # Eqtide Properties
 bOceanTides     1                   # Whether or not to include the effects of ocean tides
 dTidalQOcean    12                 # Tidal phase lag of the ocean
-dK2Ocean        0.01
+dK2Ocean        0.3
 dMaxLockDiff    0.1
 saTidePerts     star 
 

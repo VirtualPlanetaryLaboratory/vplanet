@@ -5,7 +5,6 @@
 \usepackage{color}
 \usepackage{rotating}
 \usepackage{subfigure}
-\newcommand{\xxx}[1]{{\color{red} #1}} % \xxx makes things RED
 \def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}} % http://tex.stackexchange.com/questions/152818/top-aligned-subfigure-with-bottom-aligned-caption
 
 \def\mearth{{\rm\,M_\oplus}}
@@ -463,7 +462,8 @@ Low mass stars also show significant activity, \ie flares, coronal
 mass ejections, and bursts of high energy radiation
 \citep[\eg][]{West08}. This activity can change the composition of the
 atmosphere through photochemistry, or even completely strip the
-atmosphere away \citep{Raymond06}. The tight orbit of Proxima b places
+atmosphere away \citep{Raymond06} \xxx{bib entry for Raymond06
+is missing}. The tight orbit of Proxima b places
 it at risk of atmospheric stripping by these phenomena. A planetary
 magnetic field could increase the probability of atmospheric retention
 by deflecting charged particles, or it could decrease it by funneling
@@ -1083,11 +1083,11 @@ galactic tides and stellar encounters, assuming initial orbits that allow for
 Prox Cen to be at roughly its current distance from $\alpha$ Cen.
 
 We have run two experiments to explore the effects of radial migration: the first, 
-set \textbf{A} places the system in the solar neighborhood, randomly selecting 
+set A places the system in the solar neighborhood, randomly selecting 
 orbital parameters broadly consistent with the observed positions, for 10,000 
-trials. In set \textbf{B}, we have taken the same initial conditions and randomly 
-selected formation distances over the range (1.5,4.5) kpc and migration times
-over (1,5) Gyr after formation, after which the system is moved to the solar 
+trials. In set B, we have taken the same initial conditions and randomly 
+selected formation distances over the range 1.5 to 4.5 kpc and migration times
+over 1 to 5 Gyr after formation, after which the system is moved to the solar 
 neighborhood (8 kpc). 
 
 Simulations were halted whenever Prox Cen's orbit passed within 40 au of 
@@ -1126,7 +1126,7 @@ passed within 100 au.
 \includegraphics[width=0.5\textwidth]{migrdist.pdf}
 \caption{Distributions of trials in which Prox Cen's orbit about $\alpha$ Cen
   is disrupted (red) and trials in which it survives to $>$ the age of the 
-  system (blue). Set {A} (no migration) is on the left and set {B} (with 
+  system (blue). Set A (no migration) is on the left and set B (with 
   radial migration) is on the right. Each half of the figure shows the 
   distributions as a function of initial eccentricity (upper left), initial 
   semi-major axis (upper right), initial inclination relative to the galactic 
@@ -1135,7 +1135,7 @@ passed within 100 au.
   greatest determinants of stability, with high $e$ and $i \sim 90^{\circ}$ 
   (i.e. low $\hat{Z}$-angular momentum) cases being the least stable. 
   Systems which formed interior to 4.5 kpc from the galactic center 
-  (set \textbf{B}, right half of figure) are disrupted more frequently than 
+  (set B, right half of figure) are disrupted more frequently than 
   those which were placed in the solar neighborhood from the beginning. 
   Amongst the cases we considered ``stable'', a significant fraction still 
   have Prox Cen pass within a few hundred au of $\alpha$ Cen A and B.}
@@ -1146,6 +1146,7 @@ passed within 100 au.
 % Fig. 1: Sample R_gal vs. time
 % Fig. 2: Encounter frequency vs. R_gal
 \begin{figure}
+\centering
 \includegraphics[width=0.5\textwidth]{encvsR.pdf}
 \caption{Stellar encounter rates as a function of galactocentric distance.
   Dark blue points correspond to pre-migration encounter rates, light 
@@ -1926,7 +1927,8 @@ mantle to have been degassed and blown away. However, if the planet
 was tidally heated for a long time, mantle convection may have been
 vigorous and perhaps total volatile depletion is possible, especially
 if the planet is of order 7 Gyr old and if the core has \xxx{solidified},
-quenching the magnetic dynamo \xxx{\citep{DiscollBarnes15}}. Another possibility is that a recent
+quenching the magnetic dynamo \xxx{\citep{DriscollBarnes15}} 
+\xxx{rd: I fixed the spelling of Driscoll}. Another possibility is that a recent
 stellar eruption has temporarily stripped away the atmosphere, which
 will reform by outgassing.
 
@@ -2012,7 +2014,8 @@ mantle, similar to Europa. For such a planet, the water is heated by
 the energy from accretion, radiogenic sources and/or tidal
 heating. Ice is much more absorptive at the longer wavelengths of
 light that Proxima emits and so it may be difficult to ice over the
-planet \xxx{\citep{Joshi12,Shields13}}, especially since it probably spent
+planet \xxx{\citep{Joshi12,Shields13}} 
+\xxx{rd: should ref: Joshi12 be JoshiHaberle12?}, especially since it probably spent
 hundreds of Myr in a runaway greenhouse. But if a reflective haze
 and/or cloud layer could form, it could reflect away the light before
 it reaches the surface \xxx{REF: Giada citation?}. This possibility seems unlikely, but we cannot

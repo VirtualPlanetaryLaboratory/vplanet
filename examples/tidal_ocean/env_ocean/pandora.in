@@ -15,7 +15,7 @@ dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-dSurfWaterMass            -7.0           # Initial surface water (Earth oceans) 
+dSurfWaterMass            -4.5           # Initial surface water (Earth oceans) 
 dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?
 bHaltEnvelopeGone         0               # Halt when evaporated?
@@ -62,8 +62,8 @@ dTMan          3000.0
 dTCore         6000.0	#6000
 dEruptEff      0.1		#.2
 dTrefLind      5650.    #def is 5705.
-dDTChiRef      250.     ## def is 300.
-dFixMeltfactorUMan 1  
+dDTChiRef      0.0     ## def is 300.
+dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dViscJumpMan   2.85
 dViscRef       1.0e8	   #1e8

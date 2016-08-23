@@ -80,11 +80,14 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
+//  #define STIFFNESS        3.1217e11     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+
+#define STIFFNESS        1e13     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+#define SHMODREF         6e6        //[Pa] reference kinematic mantle shear modulus
 #define VISCREF          5e7           //[m2/s] reference kinematic mantle viscosity, def ViscRef.
 #define VISCJUMPMAN      2.7           //[nd] viscosity jump from upper to lower mantle, def ViscJumpMan.
 #define FIXVISCJUMPMAN   0             //[nd] (default) option to fix viscjumpulm. if =0 then viscLM is computed from TLMan.
 #define VISCJUMPMMAN     10.           //[nd] viscosity jump from upper to average (mid) mantle.
-#define SHMODREF         6.24e4        //[Pa] reference kinematic mantle shear modulus
 #define VISCMELTB        2.5           //[nd] viscosity-melt reduction coefficient "B" (DB15 eq 8)
 #define VISCMELTPHIS     0.8           //[nd] viscosity-melt reduction coefficient "phi*" (DB15 eq 8)
 #define VISCMELTDELTA    6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
@@ -93,7 +96,6 @@
 #define MELTFACTORUMAN   1.0           //[nd] (Default) viscosity-melt reduction factor "epsilon_phase"
 #define FIXMELTFACTORUMAN 0.0          //[nd] (Default) switch to fix MeltfactorUMan to a constant value.
 /* TIDAL PROPERTIES */
-#define STIFFNESS        3.1217e11     //1.71e4*1e9    //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
 /* MELTING CONSTANTS */
 #define ASOLIDUS         -1.160e-16    //[K/m3] mantle solidus coefficient Tsol(r)=A*r^3+B*r^2+C*r+D
 #define BSOLIDUS         +1.708e-9     //[K/m2] B coefficient
@@ -362,6 +364,7 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TREFLIND        1798   //Reference Lindeman Temperature
 #define OUT_DTCHIREF        1799   //Reference Liquidus Depression
 
+#define OUT_DYNVISC         1800   // Dynamic viscosity of upper mantle
 
 void HelpOutputThermint(OUTPUT*);
 void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
@@ -468,6 +471,7 @@ double fdSolTempDiffMan(double,BODY*,int);  //difference between solidus and geo
 double fdSolidusMan(double);   //solidus at a given depth.
 double fdTJumpMeltMan(BODY*,int);  //temp jump across UM melt region.
 double fdMeltMassFluxMan(BODY*,int);  //upwelling mantle melt mass flux.
+double fdDynamicViscosity(BODY*,int);
 double fdImk2Man(BODY*,int);
 double fdK2Man(BODY*,int);
 double fdRayleighMan(BODY*,int);

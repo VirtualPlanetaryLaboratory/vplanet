@@ -35,5 +35,6 @@ void fsUnitsAngRate(UNITS*,char[]);
 void fsUnitsPower(UNITS*,char[]);
 void fsUnitsEnergy(UNITS*,char[]);
 void fsUnitsEnergyFlux(UNITS*,char[]);
+void fsUnitsViscosity(UNITS*,char[]);
 
 void InfileCopy(INFILE*,INFILE*);

@@ -18,6 +18,7 @@
 #define POISE         256
 #define FLARE         512
 #define BINARY        1024
+#define GALHABIT      2048
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -39,9 +40,10 @@
  * POISE: 1900 - 2000
  * FLARE: 2000 - 2100
  * BINARY: 2100 - 2200
+ * GALHABIT: 2200 - 2300
  */
-#define MODULEOPTEND        2200
-#define MODULEOUTEND        2200
+#define MODULEOPTEND        2300
+#define MODULEOUTEND        2300
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -59,6 +61,7 @@
 #define MEARTH        5.972186e24 // Prsa et al. 2016   
 #define MSUN          1.988416e30 // Prsa et al. 2016
 #define AUCM          1.49598e11  // XXX Change to AUM
+#define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7
 #define DAYSEC        86400
@@ -197,6 +200,12 @@
 
 // FLARE
 #define VLXUV           1901
+
+//GALHABIT
+#define VPERIQ          2201
+#define VARGP           2202
+#define VINC            2203
+#define VLONGA          2204
 
 /* Now define the structs */
 
@@ -603,6 +612,7 @@ typedef struct {
   double dFluxInGlobalTmp;
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
   double dFluxOutGlobalTmp;
+  int bForceObliq;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
   int iGeography;
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
@@ -628,6 +638,9 @@ typedef struct {
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
+  double dObliqAmp;
+  double dObliqPer;
+  double dObliq0;
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
@@ -765,6 +778,19 @@ typedef struct {
   double dFlareExp;
   double dLXUVFlare;
   
+  // GALHABIT
+  int bGalHabit;
+  double dPeriQ;   /**< Pericenter distance */
+  int iDisrupt;
+  double dHostBinSemi;
+  double dHostBinEcc;
+  double dHostBinInc;
+  double dHostBinArgP;
+  double dHostBinLongA;
+  int bHostBinary;
+  double *dRelativeImpact;
+  double *dRelativeVel;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -812,6 +838,44 @@ typedef struct {
   double *dLOrb;
   
   double dTotEnInit;     /**< System's Initial Energy */
+  
+  double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
+  double *dPassingStarR;
+  double *dPassingStarV;
+  double dPassingStarVRad;
+  double dPassingStarRMag;
+  double *dPassingStarImpact; /**< 3D impact parameter for passing star */
+  double dPassingStarMass;
+  double dPassingStarSigma;
+  double dPassingStarMagV;
+  double dEncounterRad;
+  double dDeltaTEnc;  /**< time since last encounter */
+  double dEncounterRate; /**< characteristic encounter time */
+  double dMinAllowed;  /**< minimum allowed close approach of body to host */
+  double dCloseEncTime;  /**< time of new close encounter */
+  double dLastEncTime;  /**< time of last encounter */
+  double dNextEncT;
+  int iNEncounters;
+  double dRForm;  /**< galactic formation radius */
+  double dTMigration;  /**< time of radial migration */
+  int bRadialMigr;    /**< use radial migration */
+  double dScalingFTot;    /**< scaling factor for radial migration */
+  double dScalingFStars;    /**< scaling factor for radial migration */
+  double dScalingFVelDisp;
+  double dGasDensity;  /**< density of local ism */
+  double dDMDensity;   /**< density of local dark matter */
+  double dStarScaleL;  /**< scale length of stellar disk */
+  double dVelDispSolar;
+  double dHostApexVelMag;
+  double *dHostApexVel;
+  double *dRelativeVel;
+  double dRelativeVelRad;
+  double dRelativeVelMag;
+  double *dGSNumberDens;
+  double *dGSBinMag;
+  double *dEncounterRateMV; 
+  int iSeed;
+  double dGalaxyAge;  /**< present day age of galaxy */
 
 } SYSTEM;
 
@@ -1048,6 +1112,36 @@ typedef struct {
       chi = cos(obliq) derivative due to DISTROT. */
   double **padDZoblDtDistRot;
 
+  /* GALHABIT */
+  int iNumPeriQ;
+  int iNumArgP;
+  
+  int iPeriQ;
+  int iArgP;
+  double dDPeriQDt;
+  double dDArgPDt;
+  
+  int *iaPeriQGalHabit;
+  int *iaArgPGalHabit;
+  
+  double **padDPeriQDtGalHabit;
+  double **padDArgPDtGalHabit;
+  
+  int iNumInc;
+  int iNumLongA;
+  
+  int iInc;
+  int iLongA;
+  double dDIncDt;
+  double dDLongADt;
+  
+  int *iaIncGalHabit;
+  int *iaLongAGalHabit;
+  
+  double **padDIncDtGalHabit;
+  double **padDLongADtGalHabit;
+  
+  
   /* ATMESC */         
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
@@ -1444,6 +1538,10 @@ typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePeriQModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateArgPModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIncModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLongAModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1568,6 +1666,11 @@ typedef struct {
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
   /*! Function pointers to finalize dynamical ellipticity */ 
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
+  
+  fnFinalizeUpdatePeriQModule **fnFinalizeUpdatePeriQ;
+  fnFinalizeUpdateArgPModule **fnFinalizeUpdateArgP;
+  fnFinalizeUpdateIncModule **fnFinalizeUpdateInc;
+  fnFinalizeUpdateLongAModule **fnFinalizeUpdateLongA;
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
@@ -1629,6 +1732,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "poise.h"
 #include "binary.h"
 #include "flare.h"
+#include "galhabit.h"
 
 
 

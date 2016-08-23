@@ -14,7 +14,6 @@ dEcc            0.1		# Eccentricity
 dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
-dK2             0.3
 dMaxLockDiff    0.1
 saTidePerts     star 
 
@@ -41,12 +40,12 @@ d238UNumCore	-1
 d238UNumCrust	-1
 
 ### THERMINT inputs.
-dTMan          2400 #3000.0
+dTMan          3000.0
 dTCore         6000.0	#6000
 dEruptEff      0.1		#.2
 dTrefLind      5650.    #def is 5705.
-dDTChiRef      250.     ## def is 300.
-dFixMeltfactorUMan 1  
+dDTChiRef      0.0     ## def is 300.
+dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dViscJumpMan   2.85
 dViscRef       1.0e8	   #1e8

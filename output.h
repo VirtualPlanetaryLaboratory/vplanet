@@ -51,6 +51,8 @@
 #define OUT_K2                  583
 
 #define OUT_HECC                600
+#define OUT_HZLIMITDRYRUNAWAY   602
+
 #define OUT_KECC                605
 #define OUT_ORBECC		610
 #define OUT_ORBEN		620 
@@ -58,6 +60,8 @@
 #define OUT_ORBPER		640
 #define OUT_ORBSEMI		650
 #define OUT_ORBANGMOM		660
+#define OUT_ARGP                661
+
 
 #define OUT_ORBKINENERGY        670
 #define OUT_ORBPOTENERGY        680

@@ -407,6 +407,15 @@ void fsUnitsAngle(int iType,char cUnit[]) {
   }
 }
 
+void fsUnitsViscosity(UNITS *units,char cUnit[]) {
+  char cTmp[OUTLEN];
+
+  fsUnitsLength(units->iLength,cUnit);
+  strcat(cUnit,"^2/");
+  fsUnitsTime(units->iTime,cTmp);
+  strcat(cUnit,cTmp);
+}
+
 void fsUnitsAngMom(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
   

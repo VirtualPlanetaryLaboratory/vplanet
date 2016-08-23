@@ -1555,22 +1555,22 @@ using \eqtide, the Earth-calibrated geophysical interior models of
 We model the combined tidal contributions of the envelope, oceans, and solid interior via the following relation for the body's total tidal $Q$:
 \begin{equation}
 \label{eqn:Q_hec}
-\frac{1}{Q} = \frac{1}{Q_{interior}} + \frac{1}{Q_{ocean}} +
-\frac{1}{Q_{envelope}}
+\frac{k_2}{Q} = \frac{k_{2_{interior}}}{Q_{interior}} + \frac{ k_{2_{ocean}}}{Q_{ocean}} +
+\frac{ k_{2_{envelope}}}{Q_{envelope}}
 \end{equation}
-where we remove $1/Q_i$ from the summation if we neglect the $i$th's
+where we remove $k_{2_{i}}/Q_i$ from the summation if we neglect the $i$th's
 component contribution to Proxima b's net tidal interaction.  We
 compute Proxima b's net 2nd Love number via
 \begin{equation}
 \label{eqn:k2_hec}
-k_2 = k_{2_{interior}} + k_{2_{ocean}}+ k_{2_{envelope}}
+k_2 = k_{2_{interior}} + k_{2_{ocean}} + k_{2_{envelope}}
 \end{equation}
 where again we remove $k_{2_{i}}$ from the summation if we neglect the
 $i$th's component contribution to Proxima b's net tidal interaction.
 In the general case when a hydrogen envelope is present, we only
 consider the coupled tidal effects of the interior and the envelope as any
 water is likely to be super critical due to the high pressure exerted
-by the envelope \xxx{(citation?)}.  When an envelope is not present,
+by the envelope.  When an envelope is not present,
 we consider the tidal contribution of surface oceans if the planet is
 not in the runaway greenhouse limit since all water would be present
 in the atmosphere.
@@ -1591,24 +1591,26 @@ $Q_{envelope} = 10^4$ which is consistent with measurements of
 Neptune's tidal Q \citep{ZhangHamilton08}.  The Envelope case
 starts with just 4.5 Earth oceans to demonstrate the envelope's ability to 
 shield surface water from atmospheric escape.  The results of the simulations are
-shown in Figure \ref{fig:tidal_hec}.
+shown in Figure \ref{fig:tidal_hec}.  We set  $k_{2_{ocean}} = 0.01$ and $k_{2_{enevelope}} = 0.01$ to
+let the thermal interior set $k_2$ as the rocky portion of the planet dominates both the size and mass
+of the planet.
 
 The No Ocean case, dominated by the mantle, reaches tidal Qs
 of a few $100s$ and undergoes minimal tidally-driven orbital evolution until after about 1 Gyr.
 Initially, the bulk of the surface flux stems from rotational tidal energy dissipation which lessens as the planet
-approaches a tidally locked state at around 20 Myr. Early on in the Ocean case, the planet is in a runaway
+approaches a tidally locked state at around 15 Myr. Early on in the Ocean case, the planet is in a runaway
 greenhouse phase in which all the water is locked up in the atmosphere
 and subject to escape of hydrogen and oxygen from photolysis,
 decreasing the water mass.  Its tidal evolution mirrors the No Ocean
 case as the mantle dominates.  Once the star's luminosity decreases
 enough, the planet enters the HZ at around $10^8$ years and the
 remaining water condenses to the surface. The presence of surface
-oceans dramatically decreases the tidal Q leading to fast orbital
-circularization and a massive surface flux increase via tidal energy
+oceans decreases the tidal Q leading to faster orbital
+circularization and a substantial surface flux increase via tidal energy
 dissipation.
 
 The Envelope case has a slightly different surface flux and tidal $Q$ than the Ocean and No Ocean
-cases as the envelope contributes minimally to the tidal evolution and as the planet's radius evolves with envelope mass.
+cases as the envelope contributes minimally to the initial tidal evolution and as the planet's radius evolves with envelope mass.
 Stellar UV flux completely strips the hydrogen envelope after about $4 \times 10^7$ years causing the mantle to again
 dictate the tidal interaction.  The hydrogen envelope initially shielded the planet's water allowing for enough to
 survive subsequent photolysis such that about 1 Earth ocean of the initial

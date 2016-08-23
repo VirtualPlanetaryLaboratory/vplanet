@@ -630,7 +630,7 @@ track down to match the observed value, adjusting the evolution of the
 effective temperature to be consistent with the radius evolution
 (which we do not change). We note that this choice results in a
 \emph{lower} luminosity for Proxima Centauri at all ages, which yields
-conservative (``optimistic'' \xxx{in terms of habitability}) results for the total amount of water
+conservative results (``optimistic'' in terms of habitability) for the total amount of water
 lost from the planet (\S\ref{sec:results:atmesc}). Moreover, this
 adjustment likely has a smaller effect on the qualitative nature of
 our results than the large uncertainties on the properties of the star
@@ -776,7 +776,7 @@ Lagrange's equations will be explicitly stated in forthcoming works (Barnes
 can also be found in \cite{Berger1991}. 
 
 We apply this model to the Proxima b and a possible longer period
-companion, hinted at in the RV data. This secular (i.e. long-term
+companion, hinted at in the RV data. This secular (\ie long-term
 averaged) model does not account for the effects of mean-motion
 resonances; however, since we apply this to well-separated planets
 here, it is adequate for much of our parameter space. Since the model
@@ -976,7 +976,7 @@ the effect of the binary host should be minor though still important
 at Prox Cen's estimated distance of $~15,000$ au, especially if 
 the star has significant eccentricity. However, the modeling of the 
 triple system in a comprehensive way is sufficiently complicated
-\citep[see, i.e.][]{Harrington1968, Ford2000} to place it beyond 
+\citep[see, \ie][]{Harrington1968, Ford2000} to place it beyond 
 the scope of this work. Instead, we restrict ourselves to the 
 secular effects of galactic tides and passing stars 
 and will revisit the triple star dynamics in a future work. 
@@ -1120,7 +1120,7 @@ passed within 100 au.
   disk (lower left), and the minimum periastron distance over the entire 
   simulation (lower right). Generally, eccentricity and inclination are the 
   greatest determinants of stability, with high $e$ and $i \sim 90^{\circ}$ 
-  (i.e. low $\hat{Z}$-angular momentum) cases being the least stable. 
+  (\ie low $\hat{Z}$-angular momentum) cases being the least stable. 
   Systems which formed interior to 4.5 kpc from the galactic center 
   (set B, right half of figure) are disrupted more frequently than 
   those which were placed in the solar neighborhood from the beginning. 
@@ -1339,24 +1339,32 @@ sides of the total angular momentum vector of the planetary system.
 \label{sec:results:stellar}
 % Rodrigo
 
-\xxx{Should Fig. 1 go here instead?}
-
 In Fig.~\ref{fig:HZEvol} we plot the evolution of the conservative HZ
-limits of \cite{Kopparapu13} as a function of time for a model of
-Proxima Centauri; these are bounded by the runaway greenhouse limit
-and the maximum greenhouse limit. The blue region is the HZ, which
-slowly moves inwards for $\sim$ 1 Gyr, reaching the current orbit of
-Proxima b after $\sim$ 160 Myr. In the atmospheric escape section
-below, this is the value we assume for the duration of the runaway
-greenhouse phase on Proxima b, during which water is allowed to
-escape.
+limits of \cite{Kopparapu13} (blue region) as a function of time; the HZ is bounded by the runaway greenhouse limit on the side closest to the star
+and by the maximum greenhouse limit on the opposite side. Because of the pre-main sequence luminosity evolution
+of Proxima, the HZ
+slowly moves inward for $\sim$ 1 Gyr, reaching the current orbit of
+Proxima b after $\sim$ 160 Myr.
 
-In Fig.~\ref{fig:HZEvol} we plot the evolution of the conservative HZ limits of \cite{Kopparapu13} as a function of time for a model of Proxima Centauri. The blue region is the HZ, which slowly moves inwards for 500 Myr, reaching the current orbit of Proxima b after about 200 Myr.
+The figure also shows the ``dry'' HZ limits of \cite{Abe11}, which apply to planets with very limited
+surface water ($\lesssim 1\%$ of the Earth's water inventory); these planets are significantly
+more robust to an instellation-triggered runaway. Consequently, if Proxima b's initial water content
+was very low, it would have spent significantly less time in a runaway greenhouse. However, a dry
+formation scenario for Proxima b does not help its present-day habitability. As we show in \S\ref{sec:results:atmesc},
+Proxima b loses 1 TO of water in $\lesssim 4$ Myr; if it formed with less water than that, it would be
+completely desiccated long before entering the \cite{Abe11} HZ. One can envision cases in which the planet
+forms dry but with a protective hydrogen envelope, or forms after $\sim$ 10 Myr, but such scenarios are
+unlikely \emph{a priori} and we do not consider them here. 
+
+In the atmospheric escape section below, we thus use a value of 160 Myr for the duration of the runaway 
+greenhouse phase on Proxima b, during which time water is allowed to escape.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=5in]{hzevol.pdf}
-\caption{Evolution of the conservative HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) and Mercury (dashed line).}
+\caption{Evolution of the HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) 
+and Mercury (dashed line). The blue region is the conservative HZ of \cite{Kopparapu13}, while the red lines
+are the HZ limits for dry planets of different albedos from \cite{Abe11}.}
 \label{fig:HZEvol}
 \end{figure}
 
@@ -1555,65 +1563,67 @@ using \eqtide, the Earth-calibrated geophysical interior models of
 We model the combined tidal contributions of the envelope, oceans, and solid interior via the following relation for the body's total tidal $Q$:
 \begin{equation}
 \label{eqn:Q_hec}
-\frac{1}{Q} = \frac{1}{Q_{interior}} + \frac{1}{Q_{ocean}} +
-\frac{1}{Q_{envelope}}
+\frac{k_2}{Q} = \frac{k_{2_{interior}}}{Q_{interior}} + \frac{ k_{2_{ocean}}}{Q_{ocean}} +
+\frac{ k_{2_{envelope}}}{Q_{envelope}}
 \end{equation}
-where we remove $1/Q_i$ from the summation if we neglect the $i$th's
+where we remove $k_{2_{i}}/Q_i$ from the summation if we neglect the $i$th's
 component contribution to Proxima b's net tidal interaction.  We
 compute Proxima b's net 2nd Love number via
 \begin{equation}
 \label{eqn:k2_hec}
-k_2 = k_{2_{interior}} + k_{2_{ocean}}+ k_{2_{envelope}}
+k_2 = k_{2_{interior}} + k_{2_{ocean}} + k_{2_{envelope}}
 \end{equation}
 where again we remove $k_{2_{i}}$ from the summation if we neglect the
 $i$th's component contribution to Proxima b's net tidal interaction.
 In the general case when a hydrogen envelope is present, we only
-consider the tidal effects of the interior and the envelope as any
+consider the coupled tidal effects of the interior and the envelope as any
 water is likely to be super critical due to the high pressure exerted
-by the envelope \xxx{(citation?)}.  When an envelope is not present,
+by the envelope.  When an envelope is not present,
 we consider the tidal contribution of surface oceans if the planet is
 not in the runaway greenhouse limit since all water would be present
 in the atmosphere.
 
 We simulate four reasonable boundary cases that bracket the potential
 past tidal evolution of Proxima b.  The first case ``CPL'' assumes a
-constant tidal $Q = 12$ analogous to the simulations described in \ref{sec:results:orbital}.
-  The ``No Ocean'' case assumes the tidal interaction
+constant tidal $Q = 12$ analogous to the simulations described in \ref{sec:results:orbital}
+and consistent with observations of Earth today \citep{Dickey94,Williams78,Yoder95}.
+This low tidal $Q$ is caused by efficient energy dissipation by oceans.
+The ``No Ocean'' case assumes the tidal interaction
 is dominated by the planet's interior as determined by \radheat \ and
 \thermint while the ``Ocean" case generalizes the No Ocean case
 by assuming Proxima b had an initial inventory of 10 Earth oceans of water with
 $Q_{ocean} = 12$.  The full habitable evaporated core ``Envelope''
 case considers a planet with a hydrogen envelope that has an
-initial mass fraction of $0.001$ of the planet's total mass and
+initial mass fraction of $0.001$ of the planet's total mass with
 $Q_{envelope} = 10^4$ which is consistent with measurements of
 Neptune's tidal Q \citep{ZhangHamilton08}.  The Envelope case
-starts with just 4.5 Earth oceans.  The results of the simulations are
-shown in Figure \ref{fig:tidal_hec}.
+starts with just 4.5 Earth oceans to demonstrate the envelope's ability to 
+shield surface water from atmospheric escape.  The results of the simulations are
+shown in Figure \ref{fig:tidal_hec}.  We set  $k_{2_{ocean}} = 0.3$ and $k_{2_{enevelope}} = 0.01$ to
+let the thermal interior and oceans set $k_2$ as these components dominate both the size and mass
+of the planet.
 
-The No Ocean case, dominated by the mantle, reaches large tidal Qs
-consistent with values reported by \cite{Zahnle15} for the early Earth
-and undergoes minimal tidal evolution.  Radiogenic heating provides
-most of the surface flux.  Early on, the Ocean case is in a runaway
+The No Ocean case, dominated by the mantle, reaches tidal Qs
+of a few $100s$ and undergoes minimal tidally-driven orbital evolution until after about 1 Gyr.
+Initially, the bulk of the surface flux stems from rotational tidal energy dissipation which lessens as the planet
+approaches a tidally locked state at around 15 Myr. Early on in the Ocean case, the planet is in a runaway
 greenhouse phase in which all the water is locked up in the atmosphere
 and subject to escape of hydrogen and oxygen from photolysis,
 decreasing the water mass.  Its tidal evolution mirrors the No Ocean
 case as the mantle dominates.  Once the star's luminosity decreases
 enough, the planet enters the HZ at around $10^8$ years and the
 remaining water condenses to the surface. The presence of surface
-oceans dramatically decreases the tidal Q leading to fast orbital
-circularization and a massive surface flux increase via tidal energy
+oceans dramatically decreases the tidal Q leading to rapid orbital
+circularization and a substantial surface flux increase via tidal energy
 dissipation.
 
-The Envelope case has an early bump in surface flux from rotational
-tidal energy dissipation until the envelope has been completed removed
-by stellar UV flux after about $4 \times 10^7$ years.  The hydrogen
-envelope initially shielded the planet's water allowing for enough to
-survive subsequent photolysis such that 1 Earth ocean of the initial
-4.5 remained once the planet entered the HZ if we assume inefficient oxygen sinks.  With the envelope gone,
-surface water dominates the tides and its evolution mirrors that of
-the Ocean case.
-
-\xxx{Edit once thermint+eqtide fully coupled.}
+The Envelope case has a slightly different surface flux and tidal $Q$ than the Ocean and No Ocean
+cases as the envelope contributes minimally to the initial tidal evolution and as the planet's radius evolves with envelope mass.
+Stellar UV flux completely strips the hydrogen envelope after about $4 \times 10^7$ years causing the mantle to again
+dictate the tidal interaction.  The hydrogen envelope initially shielded the planet's water allowing for enough to
+survive subsequent photolysis such that about 1 Earth ocean of the initial
+4.5 remained once the planet entered the HZ if we assume the planet has inefficient oxygen sinks.  With the envelope gone,
+surface water dominates the tides and its evolution mirrors that of the Ocean case.
 
 % Fig 12: Same as 10, but with lines comparing oceanq, no ocean, CPL
 \begin{figure} 

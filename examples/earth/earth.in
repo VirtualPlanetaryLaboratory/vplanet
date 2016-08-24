@@ -9,8 +9,8 @@ dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
 # Orbital Properties
-dEcc            0.0167		# Eccentricity
-dSemi           -1		# Semi-major axis, negative -> AU
+dEcc            0.1 #0.0167		# Eccentricity
+dSemi           0.05 #-1		# Semi-major axis, negative -> AU
 
 # RADHEAT Parameters
 ### 26Al
@@ -19,7 +19,7 @@ d26AlMassCore	0	        # Earth masses
 
 ### 40K
 d40KNumMan    -1.0
-d40KNumCore   -3.0
+d40KNumCore   -1.0 #-3.0
 d40KNumCrust  -1.0
 ### 232Th
 d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth

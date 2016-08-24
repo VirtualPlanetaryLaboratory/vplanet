@@ -583,7 +583,7 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Just thermint, not eqtide
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if(body[iBody].bEnvTides || (body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
     *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   else
     *dTmp = body[iBody].dK2/body[iBody].dImK2;
@@ -594,7 +594,7 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   // Just thermint, no eqtide
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && body[iBody].bEnvTides)))
     *dTmp = fdImk2Man(body,iBody);
   else
     *dTmp = body[iBody].dImK2;

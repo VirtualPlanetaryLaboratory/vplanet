@@ -27,6 +27,10 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GASDENSITY         2207
 #define OPT_DMDENSITY          2208
 #define OPT_STARSCALEL         2209
+#define OPT_STELLARENC         2210
+#define OPT_TIMEEVOLVELDISP    2211
+#define OPT_OUTPUTENC          2212
+
 
 /* Options Functions */
 #define OPT_PERIQ              2221
@@ -109,5 +113,5 @@ void VelocityDisp(SYSTEM*);
 void CalcImpactParam(SYSTEM*);
 void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
-void NextEncounterTime(SYSTEM*,double);
+void NextEncounterTime(SYSTEM*,EVOLVE*,double);
 void CalcEncounterRate(SYSTEM*);

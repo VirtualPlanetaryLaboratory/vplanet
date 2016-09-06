@@ -273,13 +273,13 @@ typedef struct {
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
   int iDistOrbModel;     /**< Which orbital model to use (RD4 or LL2) */
   double dSemiPrev;      /**< Semi-major axis at which LL2 eigensolution was calc'd */
-  double dEigenvalue; 
-  double dEigenvector;
-  int bEigenSet;
-  double *dLOrb;
-  double *dLOrbTmp;
-  double dRPeri;
-  double dRApo;
+  double dEigenvalue;    /**< A single eigenvalue, set by user */
+  double dEigenvector;   /**< A single eigenvector, set by user */
+  int bEigenSet;         /**< Set to 1 to input fixed eigenvalue/vector */
+  double *dLOrb;         /**< Angular momentum associated with the orbit */
+  double *dLOrbTmp;      /**< Temporary storage for orbital angular momentum vector */
+  double dRPeri;         /**< Pericentre distance */
+  double dRApo;          /**< Apocentre distance */
 
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
@@ -303,18 +303,18 @@ typedef struct {
   double dCBPPsi;       /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
 
   /* DISTROT parameters */
-  int bDistRot;
+  int bDistRot;          /**< Apply Module DISTROT? */
   double dPrecA;         /**< Precession angle */
   double dTrueApA;       /**< True anomaly at equinox (used for invariable plane conversion) */        
   double dDynEllip;      /**< Dynamical ellipticity */
-  double dYobl;          /**< sin(obliq)*sin(preca) */
-  double dXobl;          /**< sin(obliq)*cos(preca) */
-  double dZobl;           /**< cos(obliq) */
-  double *dLRot;
-  double *dLRotTmp;
-  int bForcePrecRate;
-  double dPrecRate;
-  int bCalcDynEllip;
+  double dYobl;          /**< sin(obliquity)*sin(precession angle) */
+  double dXobl;          /**< sin(obliquity)*cos(precession angel) */
+  double dZobl;          /**< cos(obliquity) */
+  double *dLRot;         /**< Angular momentum vector for body's rotation */
+  double *dLRotTmp;      /**< Temporary storage for rotational angular momentum vector */
+  int bForcePrecRate;    /**< Set precession rate to a fixed value */
+  double dPrecRate;      /**< Precession rate to use with bForcePrecRate */
+  int bCalcDynEllip;     /**< Allow dynamical ellipticity from rotation rate */
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */  
   
   /* EQTIDE Parameters */
@@ -324,7 +324,7 @@ typedef struct {
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
   //char **saTidePerts;
   double dImK2;          /**< Imaginary part of Love's K_2 */
-  double dTidalQ;	 /**< Body's Tidal Q */
+  double dTidalQ;	       /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
@@ -585,77 +585,77 @@ typedef struct {
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
 
-  double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
-  double dAlbedoGlobalTmp;
-  double dAlbedoLand;
-  int iAlbedoType;            /**< type of water albedo used (fix or tay) */
-  double dAlbedoWater;  
+  double dAlbedoGlobal;      /**< Global average albedo (Bond albedo) */
+  double dAlbedoGlobalTmp;   /**< Temporary copy of global avg albedo */
+  double dAlbedoLand;        /**< Global average albedo of land */
+  int iAlbedoType;           /**< type of water albedo used (fix or tay) */
+  double dAlbedoWater;       /**< Global average albedo of ocean */
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
   double dAstroDist;         /**< Distance between primary and planet */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
-  int bClimateModel;
+  int bClimateModel;         /**< Use seasonal climate model (SEA) or annual (ANN) */
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
-  double dCw_dt;
+  double dCw_dt;             /**< Heat capacity over time-step (for matrix euler integration) */
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
-  double dFluxInGlobalTmp;
+  double dFluxInGlobalTmp;   /**< Temporary copy of global incoming flux */
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
-  double dFluxOutGlobalTmp;
-  int bForceObliq;
-  double dFrzTSeaIce;         /**< Freezing temperature of sea water */
-  int iGeography;
+  double dFluxOutGlobalTmp;  /**< Temporary copy of global outgoing flux */
+  int bForceObliq;           /**< Evolve the obliquity sinusoidally */
+  double dFrzTSeaIce;        /**< Freezing temperature of sea water */
+  int iGeography;            /**< Set land configuration (not all options are properly modeled) */
   int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
   double dHeatCapAnn;        /**< Surface heat capacity in annual model */
-  double dHeatCapLand;        /**< Heat capacity of land */
-  double dHeatCapWater;       /**< Heat capacity of water */
-  double dIceAlbedo;
-  double dIceBalanceTot;
-  double dIceDepRate;
-  double dIceFlowTot;
-  double dIceMassTot;
-  int bIceSheets;
-  int iIceTimeStep;
-  double dInitIceHeight;
-  double dInitIceLat;
+  double dHeatCapLand;       /**< Heat capacity of land */
+  double dHeatCapWater;      /**< Heat capacity of water */
+  double dIceAlbedo;         /**< Baseline albedo of frozen surfaces */
+  double dIceBalanceTot;     /**< Total ice balance (snowing - melting) */
+  double dIceDepRate;        /**< Baseline ice deposition rate (snowing) */
+  double dIceFlowTot;        /**< Total ice flow latitudinally */
+  double dIceMassTot;        /**< Total mass of ice sheets */
+  int bIceSheets;            /**< Model ice sheets ? */
+  int iIceTimeStep;          /**< Time step to use for ice dynamics matrix integration */
+  double dInitIceHeight;     /**< Initial height of ice sheets */
+  double dInitIceLat;        /**< Initial latitude of ice extent */
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
-  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
-  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
+  double dLatentHeatIce;     /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;        /**< Latent heat of ice/heat capacity */
   int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
-  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  double dMixingDepth;       /**< Depth of mixing layer of ocean (for thermal inertia)*/
   int iNDays;                /**< Number of days in planet's year */
-  int iNStepInYear;        /**< Number of time steps in a year */  
-  double dNuLandWater;        /**< Land-ocean interaction term */
+  int iNStepInYear;          /**< Number of time steps in a year */  
+  double dNuLandWater;       /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
-  int iNumYears;           /**< Number of years to run seasonal model */
-  double dObliqAmp;
-  double dObliqPer;
-  double dObliq0;
+  int iNumYears;             /**< Number of years to run seasonal model */
+  double dObliqAmp;          /**< Amplitude of obliquity oscillation (use with bForceObliq) */
+  double dObliqPer;          /**< Period of obliquity oscillation (use with bForceObliq) */
+  double dObliq0;            /**< Initial obliquity (use with bForceObliq) */
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
-  int iReRunSeas;
-  double dSeaIceConduct;
-  int bSeaIceModel;
-  double dSeasDeltat;
-  double dSeasDeltax;
-  double dSeasOutputTime;
-  double dSeasNextOutput;
-  int bSkipSeas;
-  int bSkipSeasEnabled;
-  int bSnowball;
-  double dSurfAlbedo;
+  int iReRunSeas;            /**< When to re-run the seasonal EBM (during ice sheet integration) */
+  double dSeaIceConduct;     /**< Conductivity of sea ice */
+  int bSeaIceModel;          /**< Use sea ice model? (very slow) */
+  double dSeasDeltat;        /**< Time step to use for seasonal climate model */
+  double dSeasDeltax;        /**< Grid size (in sin(latitude)) for seasonal model */
+  double dSeasOutputTime;    /**< Output time for seasonal model (not in use) */
+  double dSeasNextOutput;    /**< Time of next output for seasonal (not in use) */
+  int bSkipSeas;             /**< Skip seasonal model */
+  int bSkipSeasEnabled;      /**< Allow skipping of seasonal model if uninhabitable conditions are found in annual */
+  int bSnowball;             /**< Is the ocean completely frozen? */
+  double dSurfAlbedo;        /**< Baseline land albedo for annual */
   double dTGlobal;           /**< Global mean temperature at surface */
-  double dTGlobalInit;
-  double dTGlobalTmp;
+  double dTGlobalInit;       /**< Initial guess at global mean temperature */
+  double dTGlobalTmp;        /**< Temporary copy of global mean temperature */
   int iWriteLat;             /**< Stores index of latitude to be written in write function */
 
   /* Arrays used by seasonal and annual */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
   double *daDivFlux;         /**< Divergence of surface flux */
-  double *daDMidPt;
-  double **daInsol;           /**< Daily insolation at each latitude */
+  double *daDMidPt;          /**< Heat diffusion at cell boundaries */  
+  double **daInsol;          /**< Daily insolation at each latitude */
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
@@ -665,26 +665,26 @@ typedef struct {
   /* Arrays for annual model */
   double *daAlbedoAnn;          /**< Albedo of each cell */
   double *daDiffusionAnn;       /**< Diffusion coefficient of each latitude boundary */
-  double **dMEulerAnn;
-  double **dMEulerCopyAnn;
-  double **dInvMAnn;
-  double *daLambdaAnn;
-  double **dMClim;
-  double **dMDiffAnn;
-  double *daPlanckAAnn;
-  double *daPlanckBAnn;
-  int *rowswapAnn;
-  double *scaleAnn;
-  double *daSourceF;
+  double **dMEulerAnn;          /**< Matrix as used in Euler time-step for annual model */
+  double **dMEulerCopyAnn;      /**< Temporary copy of Euler matrix */
+  double **dInvMAnn;            /**< Inverted Euler matrix for annual model */
+  double *daLambdaAnn;          /**< Array of heat divergences */
+  double **dMClim;              /**< Climate matrix (operates on temperature */
+  double **dMDiffAnn;           /**< Matrix of heat flow in annual */
+  double *daPlanckAAnn;         /**< Array of OLR coefficient A at each latitude */ 
+  double *daPlanckBAnn;         /**< Array of OLR coefficient B at each latitude */ 
+  int *rowswapAnn;              /**< array to track rowswaps in matrix solver */
+  double *scaleAnn;             /**< array of scaling values used in matrix solver */
+  double *daSourceF;            /**< Source function (heating terms) in climate problem */
   double *daTempAnn;            /**< Surface temperature in each cell */
-  double *daTempTerms;
-  double *daTmpTempAnn;
-  double *daTmpTempTerms;
-  double *dUnitVAnn;
+  double *daTempTerms;          /**< Temperature-related terms in matrix solution */
+  double *daTmpTempAnn;         /**< Temporary copy of temperature in annual model */
+  double *daTmpTempTerms;       /**< Temporary copy of temperature-related terms */
+  double *dUnitVAnn;            /**< Unit vector used in matrix inversion */
 
   /* Arrays for seasonal model */
-  double *daAlbedoAvg;
-  double *daAlbedoAvgL;
+  double *daAlbedoAvg;        /**< Average (over a year) albedo in seasonal */  
+  double *daAlbedoAvgL;       /**< Average albedo on land only in seasonal */
   double *daAlbedoAvgW;
   double *daAlbedoLand;
   double *daAlbedoLW;

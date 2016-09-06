@@ -5,6 +5,7 @@
 \usepackage{color}
 \usepackage{rotating}
 \usepackage{subfigure}
+\usepackage{afterpage}
 \def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}} % http://tex.stackexchange.com/questions/152818/top-aligned-subfigure-with-bottom-aligned-caption
 \newcommand{\xxx}[1]{{\color{red} #1}} % \xxx makes things RED
 
@@ -56,9 +57,11 @@
 
 \begin{abstract}
 We analyze the evolution of the potentially habitable planet Proxima
-Centauri b on size scales ranging from the galaxy to its core in order
-to identify evolutionary scenarios that permit the planet to be
-habitable. We find that there is a significant probability that
+Centauri b to identify environmental factors that affect its long-term
+habitability. We consider physical processes acting on size scales 
+ranging between the galactic scale, the scale of the stellar system, 
+and the scale of the planet's core.
+We find that there is a significant probability that
 Proxima Centauri has had encounters with its companion stars, Alpha
 Centauri A and B, that are close enough to destabilize Proxima
 Centauri's planetary system. If the system has an additional
@@ -67,17 +70,17 @@ planet b's eccentricity and inclination, possibly driving those
 parameters to non-zero values, even in the presence of strong tidal
 damping. We also model the internal evolution of the planet, evaluating
 the roles of different radiogenic abundances and tidal heating and
-find that a planet with chondritic abundance cannot generate a magnetic field, but
-others do not. We develop a realistic model for the evolution of
-Proxima Centauri and find that if planet b formed {\it in situ}, then it
+find that a planet with chondritic abundance may not generate a magnetic field, but
+all other models do maintain a magnetic field. We
+find that if planet b formed {\it in situ}, then it
 experienced $\sim$160 million years in a runaway greenhouse as the star
-dimmed during its formation. This increased brightness may have permanently
+contracted during its formation. This early phase may have permanently
 desiccated the planet and/or produced a large abiotic
 oxygen atmosphere. On the other hand, if Proxima Centauri b formed
-with a thin hydrogen atmosphere ($\lesssim~1$\% by mass), then this envelope could have shielded
+with a thin hydrogen atmosphere ($\lesssim~1$\% of the planet's mass), then this envelope could have shielded
 the water long enough for it to be retained before being
-blown off itself. By modeling all of the evolutionary processes, we identify pathways for planet b to be
-habitable, and conclude that water retention is the biggest obstacle
+blown off itself. Through modeling a wide range of Proxima b's evolutionary processes we identify pathways for planet b to be
+habitable and conclude that water retention is the biggest obstacle
 for planet b's habitability. These results are all obtained with a new
 software package called \vplanet.
 
@@ -117,7 +120,7 @@ mechanisms capable of mimicking biosignatures
 Proxima b may offer the best opportunity to begin the scientific
 process of searching for unambiguous signs of life.
 
-In this study we leverage the known (but sparse) data on Proxima b and
+In this study, we leverage the known (but sparse) data on Proxima b and
 its host system to predict the range of evolutionary pathways that the
 planet may have experienced. As we show below, many evolutionary histories are
 possible and depend on factors ranging from the cooling rate of b's
@@ -126,7 +129,7 @@ Way galaxy, and everything in between. The evolution of Proxima b, and by
 extension its potential habitability, depends on physical processes
 that tend to be studied by scientists from different
 fields, such as geophysics and astrophysics. However, for the purpose
-of interpreting Proxima b, these divisions must be dismantled. A critical examination of the potential habitability of Proxima b necessitates
+of interpreting Proxima b, we must overcome these divisions. A critical examination of the potential habitability of Proxima b necessitates
 a cohesive model that can fold in the impact of the many factors that shape evolutionary
 history. Our examination of Proxima b will draw on simple, but realistic, models
 that have been developed in the fields of geophysics, planetary
@@ -145,7 +148,7 @@ orbits, stellar evolution, and galactic effects. In
 $\S$~\ref{sec:results} we present results of these models. An
 exhaustive analysis of all histories is too large to present here, so
 in this section we present highlights and end-member cases that
-bracket the plausible ranges. In $\S$~\ref{sec:disc} we discuss the
+bracket the plausible ranges, highlighting some of the issues Proxima b faces with respect to its habitability. In $\S$~\ref{sec:disc} we discuss the
 results and identify additional observations that could improve
 modeling efforts and connect our results to the companion paper
 \citep{Meadows16}. Finally, in $\S$~\ref{sec:concl} we draw our
@@ -164,7 +167,7 @@ then guide the models described in the next section.
 
 \subsection{Properties of the Proxima Planetary System}
 \label{sec:obs:planetsys}
-Precious little data exist for Proxima b. The radial velocity data
+Very little data exist for Proxima b. The radial velocity data
 reveal a planet with a minimum mass $m$ of 1.27~$\mearth$, an orbital period $P$
 of 11.186 days, and an orbital eccentricity $e$ less than 0.35;
 \cite{AngladaEscude16} report a mean longitude $\lambda$ of $110^\circ$. These
@@ -217,7 +220,7 @@ conditions of a planet (the sun's variation is of order 0.1\%
 \citep{Willson81}).
 
 Additionally, the magnetic field strength may vary with
-time. \cite{Cincunegui07} monitored the H and K Ca II lines, which are
+time. \cite{Cincunegui07} monitored the Ca II H and K lines, which are
 indicators of chromospheric activity, as well as H$\alpha$ for 7 years
 and found modest evidence for a 442 day cycle in stellar
 activity. Although the strength of Proxima's magnetic field at the
@@ -239,13 +242,16 @@ find flaring at about this frequency
 
 \subsection{Properties of the Stellar System}
 \label{sec:obs:stellarsys}
+Many of the properties of Proxima Centauri are inferred from its 
+relationship to \acen~A and B, thus a discussion of the current 
+knowledge of \acen is warranted here. 
 Proxima Centauri is $\sim 15,000$ AU from \acen~A and B, but all three
 have the same motion through the galaxy. The proper motion and radial
 velocity of the center of mass of \acen~A and B permit the calculation
 of the system's velocity relative to the sun. \cite{Poveda96} find the
 three velocities are ($U, V, W$) = (-25, -2, 13) km/s for the center
-of mass. This velocity implies the system is currently approaching
-Earth, and is on a roughly circular orbit around the galaxy with an
+of mass. This velocity implies the system is currently moving in the
+general direction of the Sun, and is on a roughly circular orbit around the galaxy with an
 eccentricity of 0.07 \citep{AllenHerrera98}.
 
 A recent, careful analysis of astrometric and HARPS RV data by
@@ -258,7 +264,7 @@ two stars (as well as Proxima) form a foundation in stellar astrophysics,
 and hence a great deal is known about A and B. However, as we describe
 below, many uncertainties still remain regarding these two stars.
 
-The spectra of \acen~A and B can provide information about the stellar
+The spectra of \acen~A and B provide information about the stellar
 temperature, gravitational acceleration in the photosphere, rotation
 rate, and chemical composition. That these features can be
 measured turns out to be critical for our analysis of the evolution of
@@ -270,7 +276,7 @@ and B \citep{Johnson2009}.  Recently, \cite{HinkelKane13} completed a
 reanalysis of published compositional studies, rejecting the studies
 of \cite{Laird85} and \cite{NeuforgeMagain97} because they were too
 different from the other 5 they considered.  \cite{HinkelKane13}
-  found the means of metallicities [Fe/H] of the two stars to be
+  found the mean metallicity [Fe/H] of each of the two stars to be
 +0.28 and +0.31 and with a large spread of 0.16 and 0.11,
 respectively. While it is frustrating that different groups have
 arrived at significantly different iron abundances, it is certain the
@@ -290,7 +296,7 @@ elements beside Eu, the elemental abundances relative to Fe are larger
 than in the Sun. In particular, it seems likely that the stars are
 significantly enriched in Zn.
 
-\acen~A and B are large eand bright enough for asteroseismic
+\acen~A and B are large and bright enough for asteroseismic
 studies that can reveal physical properties and ages of stars to a few
 percent, for high enough quality data \citep{Chaplin2014}. Indeed, these two stars
 are central to the field of asteroseismology, and have been studied in
@@ -383,12 +389,12 @@ for Proxima is also consistent with its slow rotation period and relatively
 modest activity levels and magnetic field \citep{ReinersBasri08}. 
 
 Planet formation around M dwarfs is still relatively understudied, but
-it must proceed in a qualitatively similar way as for Sun-like stars,
+it should proceed in a qualitatively similar way as for Sun-like stars,
 \ie the planet forms from a disk of dust and gas. Relatively few
 observations of disks of M dwarfs exist
 \citep[\eg][]{Hernandez07,WilliamsCieza11,Luhman12,Downes15}, but
 these data seem to point to a wide range of lifetimes for the gaseous
-disks of 1--15~Myr. This timescale may be longer than the time to form
+disks of 1--15~Myr. This timescale is likely longer than the time to form
 terrestrial planets in the HZs of late M dwarfs
 \citep{Raymond07,Lissauer07}, and hence Proxima b may have been fully
 formed before the disk dispersed. For Proxima, the lifetime of the
@@ -419,10 +425,10 @@ semi-major axis and migrated in while Proxima still possessed a
 protoplanetary disk; or 3) an instability in the system occurred that
 impulsively changed b's orbit. For case 1, the planet may be depleted
 in volatile material \citep{Raymond07,Lissauer07}, but could still
-possess a significant water reservoir \citep{Ciesla15,Mulders15}. For case 2,
+initially possess a significant water reservoir \citep{Ciesla15,Mulders15}. For case 2,
 the planet would have likely formed beyond the snow line and hence
-could be very water-rich \citep{CarterBond12}. For case 3, the planet
-could be either volatile-rich or poor depending on its initial
+could initially be very water-rich \citep{CarterBond12}. For case 3, the planet
+could be formed either volatile-rich or poor depending on its initial
 formation location as well as the details of the instability, such as
 the frequency of impacts that occurred in its aftermath. We conclude
 that all options are possible given the data and for simplicity will
@@ -447,14 +453,14 @@ Proxima's luminosity and effective temperature combined with b's
 orbital semi-major axis place the planet in the HZ of
 Proxima and nearly in the same relative position of Earth in the Sun's
 HZ in terms of instellation. Specifically, the planet receives about 65\% of Earth's
-instellation, which places b in the ``conservative'' HZ of 
+instellation, which, due to the redder spectrum of Proxima, places b comfortably in the ``conservative'' HZ of 
 \cite{Kopparapu13}. Even allowing for observational uncertainties, 
 \cite{AngladaEscude16} find that the planet is in this
 conservative HZ. 
 
 However, its habitability depends on many more factors than just the
-instellation. The planet must form with water and physical processes
-cannot subsequently remove it. Additionally, even if water is present,
+instellation. The planet must form with sufficient water and maintain
+it over the course of the system age. Additionally, even if water is present,
 the evolution and potential habitability of Proxima b depends on many
 other factors involving stellar effects, the planet's internal properties, and the
 gravitational influence of the other members of the stellar system.
@@ -468,13 +474,12 @@ their cores, and the star's luminosity can change dramatically during that
 time. Specifically, the star contracts at roughly constant temperature and so
 the star's luminosity drops with time. For the case of Proxima, this
 stage lasted $\sim~1$~Gyr \citep{Baraffe15} and hence Proxima b
-could have spent significant time interior to the HZ, \ie in a runaway
-greenhouse state like Venus. This ``pre-main sequence'' (pre-MS) phase could
+could have spent significant time interior to the HZ. This ``pre-main sequence'' (pre-MS) phase could
 either strip away a primordial hydrogen atmosphere to reveal a
 ``habitable evaporated core'' \citep{Luger15}, or, if b formed as a
-terrestrial planet, it could desiccate that planet and build up an
+terrestrial planet with abundant water, it could desiccate that planet during an early runaway greenhouse phase and build up an
 oxygen-dominated atmosphere \citep{LugerBarnes15}. Thus, the large
-early luminosity of the star could either be a help or hindrance for
+early luminosity of the star could either help or hinder
 b's habitability.
 
 Low mass stars also show significant activity, \ie flares, coronal
@@ -486,7 +491,7 @@ it at risk of atmospheric stripping by these phenomena. A planetary
 magnetic field could increase the probability of atmospheric retention
 by deflecting charged particles, or it could decrease it by funneling
 high energy particles into the magnetic poles and providing enough
-energy to atmospheric particles to achieve escape velocity. Either
+energy to drive atmospheric escape. Either
 way, knowledge of the frequency of flaring and other high energy
 events, as well as of the likelihood that Proxima b possesses a
 magnetic field, would be invaluable information in assessing the
@@ -510,8 +515,8 @@ frictional heat, possibly pulling a planet out of the HZ
 are unlikely to sterilize a planet, but they can profoundly affect the
 planet's evolution \citep{DriscollBarnes15}.
 
-Tidal locking has led many researchers to conclude that planets of M
-dwarfs are unlikely to support life because the atmospheres would
+Many researchers have concluded that tidally locked planets of M
+dwarfs are unlikely to support life because their atmospheres would
 freeze out on the dark side \citep{Kasting93}. However, numerous
 follow-up calculations have shown that tidal locking is not likely to
 result in uninhabitable planets
@@ -525,7 +530,7 @@ sub-stellar point and increases the planetary albedo
 to support life. However, we note that no study has so far considered a tidally locked planet orbiting a star as cool as Proxima.
 
 Although the abundances of elements relative to iron in \acen~A and B,
-and by extension Proxima, are similar to the Sun's, there is no
+and by (assumed) extension Proxima, are similar to the Sun's, there is no
 guarantee that the abundance pattern is matched in Proxima
 b. Planet formation is often a stochastic process and composition
 depends on the impact history of a given world. The planet could have
@@ -539,7 +544,8 @@ disk was still present, or later during a large scale dynamical
 instability. In those cases, the planet could be
 volatile-rich.
 
-The depletion of Eu in \acen~A is also of note as it is often a tracer
+If the abundances of Proxima are indeed similar to \acen~A and B, then
+the depletion of Eu in \acen~A is of note as it is often a tracer
 of radioactive material like $^{232}$Th and $^{238}$U
 \citep{Young14}. These isotopes are primary drivers of the internal
 energy of Earth, and hence if they are depleted in Proxima b, its
@@ -721,7 +727,7 @@ becomes the dominant species in the upper atmosphere, the
 rapidly lead to the loss of all O$_2$ from planets around M
 dwarfs. However, because of the larger mass of the oxygen atom,
 hydrodynamic oxygen-dominated escape requires exospheric temperatures
-$\sim m_\mathrm{H}/m_\mathrm{O} = 16$ times higher than that for a
+$\sim m_\mathrm{O}/m_\mathrm{H} = 16$ times higher than that for a
 hydrogen-dominated flow, which is probably unrealistic for Proxima
 b. Following the prescription of \cite{Schaefer16}, we therefore
 shut off oxygen escape once its mixing ratio exceeds $X_\mathrm{O} =
@@ -920,13 +926,14 @@ present if the planet formed beyond the snowline where potassium, a
 volatile, is more likely to become embedded in solids.
 
 The third case is a planet containing an initial abundance of 1 part
-per trillion (ppt) of $^{26}$Al. If the planet formed within 1 Myr,
+per trillion (ppt) of $^{26}$Al. If the planet formed within 1 Myr and 
+the planetary disk was enriched by a nearby supernova,
 either by planetesimal accumulation or a direct collapse in the outer
 regions of Proxima's protoplanetary disk, then not all the $^{26}$Al
 would have decayed. A planet that formed quickly would likely have
 more than 1 ppt of $^{26}$Al, but as we will see in
 $\S$~\ref{sec:results}, but this case provides an end-member case for
-copmarison. The decay of 26Al at t=0 produces enough heat to melt 1 g
+copmarison. The decay of $^{26}$Al at $t=0$ produces enough heat to melt 1 g
 of a CI meteorite, preventing their solidification for several
 half-lives \citep{HeveySanders06}. Note that Earth required tens to
 hundreds of millions of years to form, so all the primordial $^{26}$Al
@@ -939,48 +946,45 @@ case to bound the evolution of Proxima b.
 \subsection{Geophysical Evolution: \thermint}
 \label{sec:models:thermint}
 
-We model the coupled core/mantle evolution of Proxima b with a
-1-dimensional model that has been tuned to reproduce Earth
-\citep{DriscollBercovici14,DriscollBarnes15}, and the
-reader is referred to those studies for a comprehensive description of
-it. Briefly, the model tracks the core and mantle
-temperatures, which determine most of the geophysical evolution. The code
-includes heat transport through the core/mantle boundary (CMB) for
-both convective and non-convective cores, melt production and eruption
-from the mantle, latent heat produced by mantle solidification and,
-when applicable, tidal heating; see $\S$~\ref{sec:models:eqtide}. Magnetic field
-generation is assumed to result from convective motion in the core,
-and the magnetic moment and magnetopause radius are trivially
-calculated from the temperature difference between the core and
-mantle, as well as from the pressure of the stellar wind at the orbit
-of Proxima b. However, we note that the host star's strong magnetic field may collapse the planet's magnetic field to its surface \citep{Vidotto13,Cohen14}.
+We model the coupled core-mantle evolution of Proxima b with a
+1-dimensional model that has been calibrated by modern-day Earth
+\citep{DriscollBercovici14,DriscollBarnes15}; the
+reader is referred to those studies for a comprehensive description. 
+Briefly, the model solves for the average core and mantle
+temperatures as determined by energy balance in the two layers and 
+temperature-dependent parameterizations for heat loss. The code
+includes heat transport across the mantle-surface and core-mantle boundaries (CMB),
+mantle melt production and eruption
+rates, latent heat production by mantle and core solidification, and radiogenic and tidal heating;
+see $\S$~\ref{sec:models:eqtide}. Given the thermodynamic state of the core and the pressure of 
+the stellar wind at the orbit of Proxima b, a magnetic moment scaling law is used to predict the core 
+generated magnetic field and the resulting magnetopause radius.
+However, we note that the host star's strong magnetic field may compress the planet's magnetosphere close to 
+its surface \citep{Vidotto13,Cohen14}.
 
-Our model has been validated by simultaneously and self-consistently
-reproducing the modern Earth's surface energy flux, magnetic
-properties, eruption fluxes, plate speeds, and outgassing rates. It
-has also been used to successfully reproduce the divergent evolution
-of Venus and Earth under the assumption that they formed without
-atmospheres, and very similar compositions and temperatures
-\citep{DriscollBercovici13}. This reproduction does require the tuning of
-numerous free parameters, but all choices are reasonable, especially
-in light of the poor information available on Venus' interior. While
-this model is generic in many ways, it does have limitations in that it is
-explicitly designed for an Earth-like composition, structure, mass and
-radius. However, the minimum mass for Proxima b is sufficiently close to
-Earth that this model should perform well. Further, \thermint cannot
-handle initial mantle temperature below $\sim$1500~K, at which point
-differentiation would not occur, or above 8000~K, where non-linear
-rheologies require different assumptions and equations.
+Our model has been validated by reproducing the modern Earth's heat budget, 
+mantle temperature and eruption flux, inner core radius, and magnetic moment. It
+has also been used to produce the divergent evolution
+of Venus and Earth under the assumption that they formed with similar compositions 
+and temperatures, and that Venus has had a stagnant lid and Earth a mobile 
+lid \citep{DriscollBercovici14}. This model does require the calibration of
+some uncertain parameters (such as the lower mantle viscosity and core composition), 
+and the assumption that Earth and Venus began with the same compositions. While
+this model is generic in many ways, it does assume an Earth-like composition, structure, mass and
+radius. The minimum mass for Proxima b is close enough to
+Earth's for this model to produce first order predictions for its thermal evolution.  We note that
+ \thermint is limited to initial mantle temperatures above $\sim$1500~K, below which point
+differentiation may not occur, and below 8000~K, where additional phase changes
+ would require additional physics.
 
 The \thermint modules can be directly coupled to \eqtide as shown in
 \cite{DriscollBarnes15}. In that case, we assume all the tidal power
-is deposited in the mantle and the heating changes the viscosity, and
+is deposited in the mantle and the heating changes the temperature, viscosity, and
 in turn the tidal $Q$. \cite{DriscollBarnes15} used a visco-elastic
 model in which the tidal heating reaches a maximum for mantle
-temperature near 1800~K, and thus cooling planets pass that pass
+temperature near 1800~K, and thus cooling planets that pass
 through this temperature can experience a spike in tidal power
-generation. In some cases we will compute the tidal evolution using
-the temperature dependent value of $Q$ computed by \thermint.
+generation.
 
 \subsection{Galactic Effects: \galhabit}
 \label{sec:models:galhabit}
@@ -1135,7 +1139,11 @@ distances); however, it may still have had an extended planetary
 system at some point. If that is the case, the system may have been
 disrupted, or may be disrupted in the future, by a close periastron
 passage with $\alpha$ Cen. Proxima b may be the remnant of a more
-extended planetary system that experienced such a disruption.
+extended planetary system that experienced such a disruption. Or, if 
+additional planets remain in the system, \emph{future} close encounters
+with \acen~A and B could cause instabilities and chaos within the 
+planetary system, so the future evolution should also be considered
+for its long-term habitability.
 
 Radial migration, set \textbf{B}, makes close passages and disruption
 more likely, as shown in Fig.~ \ref{fig:galacdist}. In this set, 2544
@@ -1437,8 +1445,25 @@ hydrogen. In both cases, we assume a fiducial planet mass of $1.27
   O$_2$ mixing ratio never grows sufficiently to limit the escape of
   H, and desiccation occurs in all cases. Note that in this scenario,
   the curves in the ``O$_2$ pressure'' panel correspond to the
-  equivalent O$_2$ pressure absorbed at the surface.}
+  equivalent O$_2$ pressure absorbed at the surface.\vspace{0.2in}}
 \label{fig:atmesc:mirage}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=6in]{hec.pdf}
+\caption{Evolution of the water and O$_2$ contents assuming Proxima b
+  formed with a hydrogen envelope and 3 TO. Line colors correspond to
+  different initial envelope mass fractions $f_H$, ranging from 0.0001
+  to 0.01. In all cases, the envelope evaporates completely prior to 1
+  Gyr. For $f_H \lesssim 0.001$, the H envelope evaporates quickly
+  enough to allow complete desiccation of the planet prior to its
+  arrival in the HZ at $\sim$ 160 Myr (note the purpleline on the $y$-axis in the top left panel). For $f_H \approx 0.01$, the
+  envelope evaporates a few hundred Myr \emph{after} the planet enters
+  the HZ, preventing any water from being lost and O$_2$ from
+  accumulating in the atmosphere.  This is the most favorable scenario
+  for a potentially habitable Proxima b.\vspace{0.2in}}
+\label{fig:atmesc:hec}
 \end{figure}
 
 In Fig.~\ref{fig:atmesc:mirage} we show the evolution of the latter
@@ -1458,23 +1483,6 @@ the total escape rate. In this scenario, $\sim 1$ TO of water remains,
 alongside a thick 500 bar O$_2$ atmosphere. If Proxima b formed with
 less than ten times Earth's water content, and/or had a persistent
 convecting, reducing magma ocean, it is likely desiccated today.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=6in]{hec.pdf}
-\caption{Evolution of the water and O$_2$ contents assuming Proxima b
-  formed with a hydrogen envelope and 3 TO. Line colors correspond to
-  different initial envelope mass fractions $f_H$, ranging from 0.0001
-  to 0.01. In all cases, the envelope evaporates completely prior to 1
-  Gyr. For $f_H \lesssim 0.001$, the H envelope evaporates quickly
-  enough to allow complete desiccation of the planet prior to its
-  arrival in the HZ at $\sim$ 160 Myr (note the purpleline on the $y$-axis in the top left panel). For $f_H \approx 0.01$, the
-  envelope evaporates a few hundred Myr \emph{after} the planet enters
-  the HZ, preventing any water from being lost and O$_2$ from
-  accumulating in the atmosphere.  This is the most favorable scenario
-  for a potentially habitable Proxima b.}
-\label{fig:atmesc:hec}
-\end{figure}
 
 Next, in Fig.~\ref{fig:atmesc:hec}, we show the results assuming
 Proxima b formed with a hydrogen envelope. We fix the initial water
@@ -1506,7 +1514,8 @@ than our fiducial value of $1.27 \mearth$, the envelope does not
 completely evaporate, in which case Proxima b would likely be
 uninhabitable.
 
-\begin{sidewaysfigure}[ht!]
+\afterpage{\clearpage}
+\begin{sidewaysfigure}[p]
 \centering
 \subfigure{\label{fig:atmesc:synth:a}\imagebox{4in}{\includegraphics[width=5.5in]{synth_a.pdf}}}
 \subfigure{\label{fig:atmesc:synth:c}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
@@ -1535,7 +1544,7 @@ uninhabitable.
 \label{fig:atmesc:synthA}
 \end{sidewaysfigure}
 
-\begin{sidewaysfigure}[h]
+\begin{sidewaysfigure}[p]
 \centering
 \subfigure{\label{fig:atmesc:synth:b}\imagebox{4in}{\includegraphics[width=5.5in]{synth_b.pdf}}}
 \subfigure{\label{fig:atmesc:synth:d}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
@@ -1593,9 +1602,10 @@ present.
 
 \subsubsection{Role of Radiogenic Abundances}
 
-The internal evolution of Proxima b is very difficult to model because
-of the large number of unknowns about its composition, initial
-conditions, atmosphere, and the evolution of its environment, \eg
+Modeling the internal evolution of Proxima b is challenging due to
+ the large number of unknowns about its composition, 
+structure, thermal state,
+ atmosphere, and the evolution of its environment, \eg
 flares stripping the atmosphere. In this section we first consider how
 different abundances of radiogenic isotopes could affect its
 evolution, then we consider tidal heating.
@@ -1605,8 +1615,9 @@ possible abundance patterns for Proxima b: Earth-like, chondritic, 1
 ppt $^{26}$Al, and inert (no radioactivity). In all cases we begin with a core
 temperature of 6000~K and a mantle temperature of 3000~K, except for
 the chondritic case in which the latter is 4000~K. This change was
-necessary because the larger radiogenic heat production was
-inconsistent with a 3000~K mantle.
+necessary 
+to avoid numerical issues associated with the high
+radiogenic power.
 
 In Fig.~\ref{fig:notides} we show the evolution of the radiogenic
 power, mantle temperature, inner core radius, magnetic moment,
@@ -1620,40 +1631,38 @@ dashed black lines represent the modern Earth's value.
 \caption{Evolution of internal properties of planet b for different
   assumptions of radiogenic inventory: Earth-like in blue, chondritic
   in orange, 1 part per trillion $^{26}$Al in red, and inert in
-  blue. Values for the modern Earth are shown with the dashed black
+  purple. 
+  Values for the modern Earth are shown with the dashed black
   line. {\it Top left:} Radiogenic power. The Earth curve is behind
   the $^{26}$Al curve except for time = 0. {\it Top right:} Mantle
   Temperature. In the chondritic case (orange), the mantle heats to
   about 5500~K, where it remains for the next 6~Gyr. For the $^{26}$Al
   (red) case, the kink at 2~Gyr is due to latent heat released as the
-  mantle begins to solidify. {\it Middle right:} Size of the solid
-  inner core. {\it Middle left:} Magnetic moment. The chondritic case
-  has a non-convecting mantle and so it has no geodynamo. {\it Bottom
-    left:} Magnetopause radius assuming the solar wind from Proxima is
-  0.2 times that of Earth. {\it Bottom right:} Surface energy
+  mantle begins to solidify. {\it Middle left}: Size of the solid
+  inner core. {\it Middle right}: Magnetic moment. The chondritic case
+  has a non-convecting core and no dynamo. {\it Bottom
+    left:} Magnetopause radius assuming the solar wind pressure at Proxima b is
+  0.2 times that at Earth. {\it Bottom right:} Surface energy
   flux. The hump at 2 Gyr for the $^{26}$Al case is due to mantle
-  solidification..}
+  solidification.}
 \label{fig:notides}
 \end{figure}
 
 In the top left panel we show the evolution of the total radiogenic
-power produced in the core, mantle and surface. Initially, the initial
+power produced in the core, mantle and surface. Initially, the
 power from $^{26}$Al is over $2 \times 10^{18}$~W, but with a
 half-life of 700,000 years, its contribution to the energy budget
 drops to 0 within $10^7$ years. The Earth-like case is hidden behind
-the $^{26}$Al curve.
+the $^{26}$Al curve except at $t=0$.
 
 The mantle temperature is shown in the top right
 panel. The Earth and inert cases are similar, but, as expected, the
-inert case temperature drops more quickly because there is no
-radiogenic power in the mantle. The enriched cases show interesting
+inert case temperature drops more quickly with no
+radiogenic power in the interior. The enriched cases show interesting
 features as the energy transport mechanisms change. The chondritic
 case heats to about 5500~K due to the large radiogenic heat
-production. The $^{26}$Al mantle solidifies at about 2~Gyr produceing
-the kink as latent heat is released. Note that we had to start the
-chondritic mantle at 4000~K, because at 3000~K, discontinuous heat
-transfers developed since the mantle was so far from equilibrium due
-the potassium power source.
+production. The $^{26}$Al mantle solidifies at about 2~Gyr producing
+the kink as latent heat is released.
 
 The case with $^{26}$Al is particularly interesting because it
 predicts initial mantle temperatures in excess of $10^4$~K, which is
@@ -1669,10 +1678,9 @@ $^{26}$Al could be significant for planets with formation times of
 order 1~Myr, which is similar to $^{26}$Al's half-life.
 
 In the middle left panel, we show the size of the inner core. The
-inert case produces the earliest inner core, but it does not consume the
-entire core, which has a radius of 3400~km. The burst of $^{26}$Al
-heating causes a slight delay in core formation compared to Earth,
-while the chondritic case does not experience any core nucleation, even
+inert case produces the earliest inner core, though the entire core (which has a radius of 3400~km) does not solidify. The burst of $^{26}$Al
+heating causes a slight delay in inner core formation compared to Earth,
+while the chondritic case does not experience any core solidification, even
 after 7 Gyr.
 
 The middle right panel shows the evolution of the magnetic moment for
@@ -1680,14 +1688,17 @@ the four different cases. The inert and Earth cases are very similar,
 but the other two are very different. The $^{26}$Al case has a very
 strong magnetic field early on, but it decays rapidly after this power
 source is depleted. The chondritic case has no magnetic field because
-the core/mantle temperature difference is insufficient to generate
-convective motions in the core.
+the core cooling rate is insufficient to drive convection in the
+core.
 
 The bottom left panel shows the magnetopause radius for Proxima
-assuming a stellar wind that is 20\% weaker than the Sun's. This value
+assuming a stellar wind pressure that is 20\% weaker than the 
+the Earth experiences. 
+This value
 is an upper limit \citep{Wood01}, so our values here are conservative
---- the actual stand-off radius is larger --- except for the
-chondritic case, which never has a magnetic field.
+--- the actual stand-off radius could be larger --- except for the
+chondritic case,
+for which there is no magnetic field.
 
 Finally, the bottom right panel shows the surface energy flux for each
 case. Not surprisingly the chondritic case maintains the highest heat
@@ -1703,39 +1714,47 @@ produces and loses more energy than the inert case.
 \subsubsection{Evolution with Tidal Heating}
 \label{sec:results:internal:tides}
 
-Next, we examine tidal heating's role on the planet's interior
+Next, we examine the role of tidal heating on the evolution of the planet's interior
 and orbit. Rather than also include the different radiogenic
 abundances described above, we consider the ``Earth'' case but with
-three different eccentricities: 0.05, 0.1 and 0.2. In
+three initial eccentricities: 0.05, 0.1 and 0.2. In
 Fig.~\ref{fig:tides} we show the evolution of 9 quantities as a
 function of time for the three initial eccentricities.
 
 The thermal evolution of the planet changes significantly
 because the tidal power can be in excess of 100 TW, or twice the total
 power of the modern Earth. As discussed in \cite{DriscollBarnes15}, we find
-that the planet's tidal reponse changes due to heating in the
-interior, preventing the large tidal power production expected by
-equilibrium tide models; see above. Essentially, tidal heating lowers
-the mantle's viscosity, which raises the tidal $Q$. Proxima b could
-be in the ``steady-state'' regime identified in
-\cite{DriscollBarnes15} in which the planet cools very slowly as a
-feedback develops in which the planet's $Q$, $a$ and $e$ achieve an
-equilibrium in which the mantle temperature remains constant. Note
-that the higher power for higher eccentricity is balanced by higher
-surface energy fluxes.
+that the planet's tidal  
+response evolves with the thermal state of the
+interior, preventing the unrealistically large tidal power predicted by
+simpler equilibrium tide models;
+ see above. Essentially, tidal heating 
+increases mantle temperature,
+lowering mantle viscosity,
+which raises the tidal $Q$. In fact, Proxima b
+may be close to a
+ ``steady-state'' regime as defined in
+\cite{DriscollBarnes15},
+where the surface heat flow balances tidal dissipation in the mantle so that
+planet cools very slowly.  This steady-state relies on the negative feedback between mantle 
+temperature and tidal dissipation and the positive feedback between temperature and heat flow, 
+so that a decrease in temperature causes increased tidal heating, pushing the temperature back up.
 
-Although the mantle responds to the different tidal power rates, the
-magnetic properties are almost identical because the core remains
-convective for the duration of our simulations. Note, however, that
+The mantle cooling rate is more sensitive to tidal dissipation than the core because dissipation 
+in the model occurs only in the mantle.  The core cooling rate does change somewhat with tidal 
+dissipation, but its effect on the magnetic moment is muted because the magnetic moment depends 
+on core convective heat flux to the $1/3$ power.
+ Note, however, that
 the inner core grows earlier and more rapidly than in the
 Earth case of Fig.~\ref{fig:notides} because the core is cooling more
-rapidly. This result is consistent with \cite{DriscollBarnes15}, who
-found that high tidal heating rates often led to rapid cooling and
-early core nucleation. Although none of our cases achieve a fully
+rapidly. 
+This counterintuitive effect of high tidal heating rates causing rapid cooling and
+early core nucleation was also found by \cite{DriscollBarnes15}.
+Although none of our cases achieve a fully
 solid core, which would quench the dynamo, they are close, and given
-the uncertainty in both the composition and structure of Proxima b as
-well as the approximations made in our model. It is possible that the
-core has solidified completely by today, exposing the atmosphere to
+the uncertainty in both the composition and structure of Proxima b, 
+it is possible that the
+core has already solidified, preventing a core dynamo, and exposing the atmosphere to
 stellar flares.
 
 \begin{figure} 
@@ -1769,18 +1788,13 @@ solid interior via the following relation for the body's total tidal
 $Q$:
 \begin{equation}
 \label{eqn:Q_hec}
--Im(k_2) = -Im(k_2) + \frac{ k_{2_{ocean}}}{Q_{ocean}} +
+%-Im(k_2) = -Im(k_2) + \frac{ k_{2_{ocean}}}{Q_{ocean}} +
+-Im(k_2) = -Im(k_2)_{interior} + \frac{ k_{2_{ocean}}}{Q_{ocean}} +  % edit by PD
 \frac{ k_{2_{envelope}}}{Q_{envelope}},
 \end{equation}
 where Im($k_2$) is the imaginary part of the Love number \citep[see][]{DriscollBarnes15}. In Eq.~(\ref{eqn:Q_hec}) we remove terms if there is no 
-component to contribute to Proxima b's net tidal interaction, \ie no ocean or no envelope.  We
-compute Proxima b's net 2nd Love number via
-\begin{equation}
-\label{eqn:k2_hec}
-k_2 = k_{2_{interior}} + k_{2_{ocean}} + k_{2_{envelope}}
-\end{equation}
-where again we remove $k_{2_{i}}$ from the summation if we neglect the
-$i$th's component contribution to Proxima b's net tidal interaction.
+component to contribute to Proxima b's net tidal interaction, \ie no ocean or no envelope.  
+
 In the general case when a hydrogen envelope is present, we only
 consider the coupled tidal effects of the interior and the envelope as any
 water is likely to be supercritical due to the high pressure exerted
@@ -1789,7 +1803,21 @@ we consider the tidal contribution of surface oceans only if the planet is
 not in the runaway greenhouse limit since otherwise all water would be present
 in the atmosphere.
 
-We simulate four reasonable boundary cases that bracket the potential
+\begin{figure} 
+\centering
+\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.pdf}
+\caption{Evolution of the orbital, tidal and atmospheric properties of
+  Proxima b for the ``CPL" case in light blue, ``No Ocean" case in
+  red, ``Ocean" case in dark blue, and the ``Envelope" case in orange
+  with the dashed line for clarity.  The grey shaded region indicates
+  when the planet is in the HZ. {\it Top left:} Surface Flux. {\it Top
+    right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it
+    Middle right:} Semi-major Axis. {\it Bottom left:} Envelope
+  Mass. {\it Bottom right:} Surface Water Mass.}
+\label{fig:tidal_hec}
+\end{figure}
+
+We simulate four cases that bracket the potential
 past tidal evolution of Proxima b.  The first case, ``CPL,'' assumes a
 constant tidal $Q = 12$ analogous to the simulations described in
 $\S$~ \ref{sec:results:orbital} and consistent with observations of
@@ -1824,6 +1852,9 @@ at around $10^8$ years and the remaining water condenses to the
 surface. The presence of surface oceans dramatically decreases the
 tidal $Q$ leading to rapid orbital circularization and a substantial
 surface flux increase via tidal energy dissipation.
+We note that the tidal $Q$ of the surface oceans may depend on the 
+total ocean mass and the presence of shallow seas, which should be explored in 
+future studies.
 
 The ``Envelope'' case has a slightly different surface flux and tidal $Q$
 than the Ocean and No Ocean cases as the envelope contributes
@@ -1836,20 +1867,6 @@ subsequent photolysis. About 1 TO of the initial 4.5
 remain once the planet enters the HZ if we assume the planet has
 inefficient oxygen sinks.  With the envelope gone, surface water
 dominates the tides and its evolution mirrors that of the ``Ocean'' case.
-
-\begin{figure} 
-\centering
-\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.pdf}
-\caption{Evolution of the orbital, tidal and atmospheric properties of
-  Proxima b for the ``CPL" case in light blue, ``No Ocean" case in
-  red, ``Ocean" case in dark blue, and the ``Envelope" case in orange
-  with the dashed line for clarity.  The grey shaded region indicates
-  when the planet is in the HZ. {\it Top left:} Surface Flux. {\it Top
-    right:} Tidal Q. {\it Middle left:} Orbital Eccentricity. {\it
-    Middle right:} Semi-major Axis. {\it Bottom left:} Envelope
-  Mass. {\it Bottom right:} Surface Water Mass.}
-\label{fig:tidal_hec}
-\end{figure}
 
 \section{Discussion\label{sec:disc}}
 % All
@@ -1872,7 +1889,7 @@ currently habitable.
 We find that some scenarios allow for the planet to currently support liquid
 surface water. In particular, the ``habitable evaporated core'' scenario
 \citep{Luger15} is particularly promising as it can avoid both the
-high-luminosity pre-MS phase and any devastating tidal
+high-luminosity pre-main sequence (pre-MS) phase and any devastating tidal
 heating that may occur while the planet ``surfs'' the HZ migration, or
 during circularization after orbital destabilization. Such a world may
 be enriched in deuterium that remained during hydrogen escape, and it
@@ -1902,10 +1919,17 @@ for Proxima b to be habitable.
 
 Although these atmospheric states permit habitability, we must bear in
 mind that the rotation period is either synchronous or in a spin-orbit
-resonance due to tidal effects. The rotation rate is therefore longer
-than on Earth and so atmospheric dynamics would be different. If
-synchronous, it is likely that the planet's daylit side is
-covered in clouds \citep{Yang13}.
+resonance due to tidal effects \citep{Rodriguez12}. The rotation rate
+is therefore longer than on Earth and so atmospheric dynamics would be
+different. If synchronous, it is likely that the planet's daylit side
+is covered in clouds \citep{Yang13}.
+
+The obliquity of Proxima b is likely small, even in a Cassini state 
+from the influence of companion
+planets, due to tidal damping. Thus, we do not expect the 
+obliquity to significantly impact the climate in the form of seasons or heat 
+transport. So this is one way in which Proxima b's climate will be 
+different from Earth. 
 
 \subsubsection{Habitable, but Dry}
 
@@ -1968,7 +1992,7 @@ inform its present-day composition and thus settle this issue.
 \subsubsection{Abiotic Oxygen Atmosphere}
 \label{sec:results:atmstates:o2atmos}
 
-If Proxima b formed with one or more TO of water, photolysis followed
+If Proxima b formed with one or more terrestrial oceans (TO) of water, photolysis followed
 by hydrogen escape during the stellar pre-MS phase could have led to
 the buildup of substantial O$_2$ in the atmosphere. Although oxygen is
 highly reactive, thousands of bars of oxygen can be liberated through
@@ -2133,7 +2157,7 @@ water.
 
 \section{Conclusions\label{sec:concl}}
 % Rory
-We have performed a comprehensive analysis of the evolution of the
+We have performed a detailed analysis of the evolution of the
 Alpha Centauri triple star system with a specific focus on Proxima
 Centauri b's habitability. We find that many disparate factors are
 important, including the stellar system's orbit in the galaxy

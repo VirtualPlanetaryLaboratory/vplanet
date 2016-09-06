@@ -20,7 +20,7 @@ will fail.
 
 """
 
-def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
+def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1,),
                  reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                 interp="gaussian",cmap="viridis",colorbar=True,aspect="auto",
                  origin="lower",vmin=None,vmax=None,**kwargs):
@@ -107,7 +107,8 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     ax.set_ylim(y.min(),y.max())
 
     # Format plot
-    if labels != None and labels != []:
+    if labels is not None and labels != []:
+        assert len(labels) == 3
         ax.set_xlabel(labels[0])
         ax.set_ylabel(labels[1])
 
@@ -120,7 +121,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     return None
 # End function
 
-def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
+def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1,),
                          reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                          interp="gaussian",cmap="viridis",levels=20,clines=False,
                          colorbar=False,origin="lower",**kwargs):
@@ -216,7 +217,7 @@ def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 
 
     # Format plot
-    if labels != None and labels != []:
+    if labels is not None and labels != []:
         ax.set_xlabel(labels[0])
         ax.set_ylabel(labels[1])
 
@@ -317,9 +318,9 @@ def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.
     # Iterate over combos going left->right->down->repeat
     # along the axes
     # Loop over a rows
-    for i in range(0,size):
+    for i in range(size):
         # Loop over cols
-        for j in range(0,size):
+        for j in range(size):
 
             # Along the diagonal? skip
             if i == j:

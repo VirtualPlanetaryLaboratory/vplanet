@@ -187,6 +187,42 @@ void ReadEncounterRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       AssignDefaultDouble(options,&system->dEncounterRad,files->iNumInputs);
 }
 
+void ReadStellarEnc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    system->bStellarEnc = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&system->bStellarEnc,files->iNumInputs);
+}
+
+void ReadOutputEnc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    system->bOutputEnc = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&system->bOutputEnc,files->iNumInputs);
+}
+
+void ReadTimeEvolVelDisp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    system->bTimeEvolVelDisp = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&system->bTimeEvolVelDisp,files->iNumInputs);
+}
+
 void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -410,6 +446,31 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STARSCALEL].iMultiFile = 0;   
   fnRead[OPT_STARSCALEL] = &ReadStarScaleL;
   
+  
+  sprintf(options[OPT_STELLARENC].cName,"bStellarEnc");
+  sprintf(options[OPT_STELLARENC].cDescr,"Model stellar encounters?");
+  sprintf(options[OPT_STELLARENC].cDefault,"1");
+  options[OPT_STELLARENC].dDefault = 1;
+  options[OPT_STELLARENC].iType = 0;  
+  options[OPT_STELLARENC].iMultiFile = 0; 
+  fnRead[OPT_STELLARENC] = &ReadStellarEnc;
+  
+  sprintf(options[OPT_OUTPUTENC].cName,"bOutputEnc");
+  sprintf(options[OPT_OUTPUTENC].cDescr,"Output stellar encounter information?");
+  sprintf(options[OPT_OUTPUTENC].cDefault,"0");
+  options[OPT_OUTPUTENC].dDefault = 0;
+  options[OPT_OUTPUTENC].iType = 0;  
+  options[OPT_OUTPUTENC].iMultiFile = 0; 
+  fnRead[OPT_OUTPUTENC] = &ReadOutputEnc;
+  
+  sprintf(options[OPT_TIMEEVOLVELDISP].cName,"bTimeEvolVelDisp");
+  sprintf(options[OPT_TIMEEVOLVELDISP].cDescr,"Scale velocity dispersion of stars with sqrt(t)?");
+  sprintf(options[OPT_TIMEEVOLVELDISP].cDefault,"1");
+  options[OPT_TIMEEVOLVELDISP].dDefault = 1;
+  options[OPT_TIMEEVOLVELDISP].iType = 0;  
+  options[OPT_TIMEEVOLVELDISP].iMultiFile = 0; 
+  fnRead[OPT_TIMEEVOLVELDISP] = &ReadTimeEvolVelDisp;
+  
   sprintf(options[OPT_HOSTBINARY].cName,"bHostBinary");
   sprintf(options[OPT_HOSTBINARY].cDescr,"Model primary as binary with quadrupole moment?");
   sprintf(options[OPT_HOSTBINARY].cDefault,"0");
@@ -546,7 +607,9 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
       system->dScalingFStars = 1.0;
       system->dScalingFVelDisp = 1.0;
     }
-    system->dScalingFVelDisp *= sqrt(dCurrentAge/system->dGalaxyAge);
+    if (system->bTimeEvolVelDisp) {
+      system->dScalingFVelDisp *= sqrt(dCurrentAge/system->dGalaxyAge);
+    }
     
     system->dGSNumberDens = malloc(13*sizeof(double));
     system->dGSNumberDens[0] = 0.43e-3;
@@ -585,7 +648,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dLastEncTime = 0.0;
     system->dCloseEncTime = 0.0;
     system->iNEncounters = 0;
-    NextEncounterTime(system,0); 
+    NextEncounterTime(system,&control->Evolve,0); 
     
   }
   
@@ -602,10 +665,12 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 //   }
   
   if (iBody >= 1) {
-    sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
-    fOut = fopen(cOut,"w");
-    fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz\n");
-    fclose(fOut);
+    if (system->bOutputEnc) {
+      sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
+      fOut = fopen(cOut,"w");
+      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz\n");
+      fclose(fOut);
+    }
     
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     body[iBody].dRelativeImpact = malloc(3*sizeof(double));
@@ -849,14 +914,20 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   FILE *fOut;
   
   dCurrentAge = system->dGalaxyAge-evolve->dStopTime+evolve->dTime;
-  system->dScalingFVelDisp *= sqrt((dCurrentAge+evolve->dCurrentDt)/dCurrentAge);
+  if (system->bTimeEvolVelDisp) {
+    system->dScalingFVelDisp *= sqrt((dCurrentAge+evolve->dCurrentDt)/dCurrentAge);
+  }
 
   if (system->bRadialMigr) {
     if (evolve->dTime >= system->dTMigration) {
       // time of migration passed? move to solar neighborhood
       system->dScalingFTot = 1.0; 
-      system->dScalingFStars = 1.0;    
-      system->dScalingFVelDisp = sqrt(dCurrentAge/system->dGalaxyAge);
+      system->dScalingFStars = 1.0;  
+      if (system->bTimeEvolVelDisp) {  
+        system->dScalingFVelDisp = sqrt(dCurrentAge/system->dGalaxyAge);
+      } else {
+        system->dScalingFVelDisp = 1.0;
+      }
       CalcEncounterRate(system);
       system->bRadialMigr = 0;  //don't recalculate this stuff again
     }
@@ -910,74 +981,75 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     
     system->dLastEncTime = system->dCloseEncTime;
     system->iNEncounters += 1;
-    NextEncounterTime(system,system->dCloseEncTime);
+    NextEncounterTime(system,evolve,system->dCloseEncTime);
   
     /* write out encounter info */
-    // sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
-//     fOut = fopen(cOut,"a");
-//     //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
-//     
-//     fprintd(fOut,evolve->dTime/YEARSEC,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarMagV,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarMass,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarSigma,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarImpact[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarImpact[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarImpact[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarV[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarV[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarV[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dRelativeVel[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dRelativeVel[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dRelativeVel[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dHostApexVel[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dHostApexVel[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dHostApexVel[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarR[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarR[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,system->dPassingStarR[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeImpact[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeImpact[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
-//     fprintf(fOut," ");
-// 
-//     fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
-//     fprintf(fOut," ");
-//     fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
-//     
-//     fprintf(fOut,"\n");
-//     
-//     fclose(fOut);
+    if (system->bOutputEnc) {
+      sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
+      fOut = fopen(cOut,"a");
+      //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
     
+      fprintd(fOut,evolve->dTime/YEARSEC,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarMagV,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarMass,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarSigma,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarImpact[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarImpact[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarImpact[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarV[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarV[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarV[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativeVel[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativeVel[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativeVel[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dHostApexVel[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dHostApexVel[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dHostApexVel[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarR[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarR[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dPassingStarR[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeImpact[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeImpact[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
+      fprintf(fOut," ");
+
+      fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+    
+      fprintf(fOut,"\n");
+    
+      fclose(fOut);
+    }
   }
 }
 
@@ -1444,12 +1516,15 @@ void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {
   }
 }
 
-void NextEncounterTime(SYSTEM *system, double dTime) {
+void NextEncounterTime(SYSTEM *system, EVOLVE *evolve, double dTime) {
   double dp;
   
-  dp = random_double();
-  system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
-  //system->dNextEncT = 1e10*YEARSEC;
+  if (system->bStellarEnc) {
+    dp = random_double();
+    system->dNextEncT = dTime - log(dp)/system->dEncounterRate;
+  } else {
+    system->dNextEncT = evolve->dStopTime*1.10;
+  }
 }
 
 void testrand(SYSTEM *system) { 

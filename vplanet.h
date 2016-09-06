@@ -866,6 +866,10 @@ typedef struct {
   double *dEncounterRateMV; 
   int iSeed;
   double dGalaxyAge;  /**< present day age of galaxy */
+  int bStellarEnc;    /**< model stellar encounters? */
+  int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
+  int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
+
 
 } SYSTEM;
 

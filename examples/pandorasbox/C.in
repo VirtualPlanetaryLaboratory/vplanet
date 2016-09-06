@@ -22,6 +22,9 @@ iRandSeed     42
 dRForm 4.5
 dTMigration 1e9
 bRadialMigr 0
+bStellarEnc 1
+bTimeEvolVelDisp 0
+bOutputEnc 0
 
 # Output
 saOutputOrder Time SemiM Ecce PeriQ ArgP Inc LongA NEncounters FVelDisp DeltaT 

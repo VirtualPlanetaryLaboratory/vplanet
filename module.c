@@ -350,9 +350,6 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 
   lTmp=malloc(MAXLINES*sizeof(int));
 
-  // Allow parameters that require no module
-  module->iBitSum[iFile-1] = 1;
-
   AddOptionStringArray(files->Infile[iFile].cIn,options->cName,saTmp,&iNumIndices,&iNumLines,lTmp,control->Io.iVerbose);
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
@@ -369,6 +366,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
        output->iModuleBit is compared bitwise to module->iBitSum. 
        Parameters that can be specified for multiple modules are set to 1. 
     */
+
+    // Allow parameters that require no module
+    module->iBitSum[iFile-1] = 1;
 
     for (iModule=0;iModule<iNumIndices;iModule++) {
 

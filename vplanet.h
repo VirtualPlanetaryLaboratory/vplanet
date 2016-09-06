@@ -755,6 +755,8 @@ typedef struct {
   double **daTempDaily;
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
+  double *daTempMaxLW;         /**< maximum temperature over year */
+  double *daTempMinLW;         /**< minimum temperature over year */
   double *daTempWater;        /**< Temperature over ocean (by lat) */
   double *daTmpTempSea;
   double *dUnitVSea;

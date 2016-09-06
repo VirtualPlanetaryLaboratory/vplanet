@@ -1258,7 +1258,9 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].daXBoundary = malloc((body[iBody].iNumLats+1)*sizeof(double)); 
     body[iBody].daTempLand = malloc(body[iBody].iNumLats*sizeof(double)); 
     body[iBody].daTempWater = malloc(body[iBody].iNumLats*sizeof(double)); 
-    body[iBody].daTempLW = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daTempLW = malloc(body[iBody].iNumLats*sizeof(double));   
+    body[iBody].daTempMaxLW = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daTempMinLW = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daTempDaily = malloc(body[iBody].iNumLats*sizeof(double*));
     body[iBody].daFluxOutLand = malloc(body[iBody].iNumLats*sizeof(double)); 
     body[iBody].daFluxOutWater = malloc(body[iBody].iNumLats*sizeof(double)); 
@@ -1591,6 +1593,38 @@ void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
   } else if (body[iBody].bClimateModel == SEA) {
     *dTmp = body[iBody].daTempAvg[body[iBody].iWriteLat];
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    /* Units already in Celsius (POISE uses Celsius) */
+    strcpy(cUnit,output->cNeg);
+  } else { 
+    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    fsUnitsTime(0,cUnit);
+  }
+}
+
+void WriteTempMinLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daTempMinLW[body[iBody].iWriteLat];
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    /* Units already in Celsius (POISE uses Celsius) */
+    strcpy(cUnit,output->cNeg);
+  } else { 
+    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    fsUnitsTime(0,cUnit);
+  }
+}
+
+void WriteTempMaxLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+    *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
+  } else if (body[iBody].bClimateModel == SEA) {
+    *dTmp = body[iBody].daTempMaxLW[body[iBody].iWriteLat];
   }
   
   if (output->bDoNeg[iBody]) {
@@ -2143,6 +2177,26 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLAT].bGrid = 1;
   output[OUT_TEMPLAT].iModuleBit = POISE;
   fnWrite[OUT_TEMPLAT] = &WriteTempLat; 
+  
+  sprintf(output[OUT_TEMPMINLAT].cName,"TempMinLat");
+  sprintf(output[OUT_TEMPMINLAT].cDescr,"Minimum surface temperature over a year by latitude.");
+  sprintf(output[OUT_TEMPMINLAT].cNeg,"C");
+  output[OUT_TEMPMINLAT].bNeg = 1;
+  output[OUT_TEMPMINLAT].dNeg = 1; //conversion is hardcoded in write function
+  output[OUT_TEMPMINLAT].iNum = 1;
+  output[OUT_TEMPMINLAT].bGrid = 1;
+  output[OUT_TEMPMINLAT].iModuleBit = POISE;
+  fnWrite[OUT_TEMPMINLAT] = &WriteTempMinLat; 
+
+  sprintf(output[OUT_TEMPMAXLAT].cName,"TempMaxLat");
+  sprintf(output[OUT_TEMPMAXLAT].cDescr,"Maximum surface temperature over a year by latitude.");
+  sprintf(output[OUT_TEMPMAXLAT].cNeg,"C");
+  output[OUT_TEMPMAXLAT].bNeg = 1;
+  output[OUT_TEMPMAXLAT].dNeg = 1; //conversion is hardcoded in write function
+  output[OUT_TEMPMAXLAT].iNum = 1;
+  output[OUT_TEMPMAXLAT].bGrid = 1;
+  output[OUT_TEMPMAXLAT].iModuleBit = POISE;
+  fnWrite[OUT_TEMPMAXLAT] = &WriteTempMaxLat; 
   
   sprintf(output[OUT_TEMPLANDLAT].cName,"TempLandLat");
   sprintf(output[OUT_TEMPLANDLAT].cDescr,"Land surface temperature by latitude.");
@@ -3602,6 +3656,8 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].daIceBalanceAnnual[i] = 0.0;
         body[iBody].daEnerResLAnn[i] = 0.0;
         body[iBody].daEnerResWAnn[i] = 0.0;
+        body[iBody].daTempMinLW[i] = HUGE;
+        body[iBody].daTempMaxLW[i] = -1*HUGE;
         if (nyear == 0) {
           //reset ice sheet stuff only on first year       
           if (body[iBody].bIceSheets) {
@@ -3716,6 +3772,10 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLW[i];
           body[iBody].daFluxInDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daFluxIn[i];
           body[iBody].daFluxOutDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daFluxOut[i];
+          if (body[iBody].daTempLW[i] < body[iBody].daTempMinLW[i])
+            body[iBody].daTempMinLW[i] = body[iBody].daTempLW[i];
+          if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
+            body[iBody].daTempMaxLW[i] = body[iBody].daTempLW[i];
         }
         
         TempGradientSea(body, body[iBody].dSeasDeltax, iBody);
@@ -3834,6 +3894,11 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daTempDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daTempLW[i];
           body[iBody].daFluxInDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daFluxIn[i];
           body[iBody].daFluxOutDaily[i][nyear*body[iBody].iNStepInYear+nstep] = body[iBody].daFluxOut[i];
+          
+          if (body[iBody].daTempLW[i] < body[iBody].daTempMinLW[i])
+            body[iBody].daTempMinLW[i] = body[iBody].daTempLW[i];
+          if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
+            body[iBody].daTempMaxLW[i] = body[iBody].daTempLW[i];
         }
         
         TempGradientSea(body, body[iBody].dSeasDeltax, iBody);

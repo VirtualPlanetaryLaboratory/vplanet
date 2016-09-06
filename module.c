@@ -528,7 +528,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
       
       // No ocean contribution if not using thermint
-      body[iBody].dImK2Ocean = -1.0e-12;
+      body[iBody].dImK2Ocean = 0.0;
       body[iBody].dK2Ocean = 0.0;
       body[iBody].dTidalQOcean = -1.0;
 
@@ -583,7 +583,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
         }
 
         // No ocean contribution
-        body[iBody].dImK2Ocean = -1.0e-12;
+        body[iBody].dImK2Ocean = 0.0;
         body[iBody].dK2Ocean = 0.0;
         body[iBody].dTidalQOcean = -1.0;
       }
@@ -730,7 +730,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
 
           // Zero things out so envelope can't play a role
           body[iBody].dK2Env = 0.0;
-          body[iBody].dImK2Env = -1.0e-12;
+          body[iBody].dImK2Env = 0.0;
           body[iBody].dTidalQEnv = -1.0;
         }
         
@@ -757,7 +757,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
 
         // Zero things out so envelope can't play a role
         body[iBody].dK2Env = 0.0;
-        body[iBody].dImK2Env = -1.0e-12;
+        body[iBody].dImK2Env = 0.0;
         body[iBody].dTidalQEnv = -1.0;
       }
     }
@@ -857,8 +857,6 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
-  double Q_int = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-
   // Include tidal dissapation due to oceans:
   if(body[iBody].bOceanTides)
   {
@@ -867,8 +865,6 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
-    //body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Ocean);
-    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
   }
   // No oceans, thermint dictates ImK2
   else 
@@ -883,15 +879,13 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
 
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); //fdCPLTidePower(body,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // Set the mantle parameters first
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
-
-  double Q_int = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
 
   // Case: No oceans, no envelope
   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
@@ -909,8 +903,6 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean); 
-    //body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Ocean);
-    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Ocean/body[iBody].dK2Ocean);
   }
   // Case: No oceans, envelope (envelope evap while in runaway):
   else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
@@ -920,9 +912,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
    
     // Im(K_2) is weighted sum of mantle and enevelope component
     // weighted by the love number of each component
-    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-    //body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Env);
   }
   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
   // Also, envelope and ocean are mutually exclusive so envelope dominates
@@ -933,9 +923,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
 
     // Im(K_2) is weighted sum of mantle, envelope and ocean component
     // weighted by the love number of each component
-    //body[iBody].dImK2 = body[iBody].dK2*(1.0/Q_int + body[iBody].dImK2Env/body[iBody].dK2Env);
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-    //body[iBody].dImK2 = (body[iBody].dK2Man/Q_int + body[iBody].dImK2Env);
   }
   else
     assert(0); // Unknown envelope + ocean behavior
@@ -946,7 +934,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
 
   // Finally, call EQTIDE props aux then set mantle tidal power
   PropsAuxCPL(body,evolve,update,iBody);
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); // fdCPLTidePower(body,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); 
 
 }
 /* This does not seem to be necessary
@@ -983,17 +971,17 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
   // Loop over non-star bodies
   int iBody;
   
+  // Keeps track of whether or not bOceanTides or bEnvTides were initially set
+  // to ensure they don't get turned back on by force behavior
+  // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
+  int bOceans = 0;
+  int bEnv = 0;
+
   for(iBody = 1; iBody < evolve->iNumBodies; iBody++)
   {
     // If body 1 is a star (aka using binary), pass
     if(iBody == 1 && body[iBody].bBinary)
       continue;
-
-    // Keeps track of whether or not bOceanTides or bEnvTides were initially set
-    // to ensure they don't get turned back on by force behavior
-    // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
-    int bOceans = 0;
-    int bEnv = 0;
 
     // Ocean check
     if(body[iBody].dTidalQOcean < 0)
@@ -1016,7 +1004,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bOceanTides = 0;
     }
     // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
-    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > 0.0) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
     } 
@@ -1032,13 +1020,14 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bEnvTides = 0;
     }
     // Still have the envelope!
-    else if(bEnv && (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
+    else if(bEnv && (body[iBody].dEnvelopeMass > 0.0))
     {
       body[iBody].bEnvTides = 1;
     }
 
     // Enfore that they are mutually exclusive
-    if(body[iBody].bEnvTides)
+    // i.e. if using EnvTides or an envelope exists, ocean can't do anything
+    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > 0.0))
       body[iBody].bOceanTides = 0;
   }
 }

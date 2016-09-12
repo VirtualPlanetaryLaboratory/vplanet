@@ -20,6 +20,12 @@ will fail.
 
 """
 
+# Tell module what it's allowed to import
+__all__ = ["plot_red_dim",
+           "plot_red_dim_contour",
+           "red_dim_grid",
+           "multiscatter"]
+
 def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1,),
                  reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                 interp="gaussian",cmap="viridis",colorbar=True,aspect="auto",
@@ -665,13 +671,13 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
     assert(z_var != size_var and z_var != color_var), "Can't color/size points by the dependent variable!"
 
     # Set default color if none given
-    if color_var != None:
+    if color_var is not None:
         color = df[color_var]
     else:
         color = "black"
 
     # Set default size if none given
-    if size_var != None:
+    if size_var is not None:
         # Compute point sizes by normalizing data
         s = 10. + 240.*(df[size_var] - df[size_var].min())/np.ptp(df[size_var])
     else:
@@ -707,14 +713,14 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
             pass
 
     # Add colorbar?
-    if color_var != None:
+    if color_var is not None:
 
         cbar = fig.colorbar(im, ax=axes.ravel().tolist())
         cbar.ax.set_ylabel((color_var.split("_")[0] + " " + color_var.split("_")[1]), rotation=270,
                           labelpad = 25)
 
     # Add legend that displays typical point sizes?
-    if size_var != None:
+    if size_var is not None:
 
         # Dummy plots for range of points
         sizes = s.max()
@@ -742,9 +748,3 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
 Misc
 
 """
-
-# Tell module what it's allowed to import
-__all__ = [plot_red_dim,
-           plot_red_dim_contour,
-           red_dim_grid,
-           multiscatter]

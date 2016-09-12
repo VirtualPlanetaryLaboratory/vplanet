@@ -419,7 +419,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         are in
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
-        None (no quotes) turns off compression. Options: "gzip", "lzf"
+        None (no quotes) turns off compression. Options: "gzip", "lzf", None
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
     cadence : int (optional)

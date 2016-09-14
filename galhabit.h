@@ -95,7 +95,14 @@ void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
 double NearbyStarFrEnc(SYSTEM*,double);
 
-
+double dexdJ(BODY*, int);
+double dexdla(BODY*, int);
+double dexdap(BODY*, int);
+double deydJ(BODY*, int);
+double deydla(BODY*, int);
+double deydap(BODY*, int);
+double dezdJ(BODY*, int);
+double dezdap(BODY*, int);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);

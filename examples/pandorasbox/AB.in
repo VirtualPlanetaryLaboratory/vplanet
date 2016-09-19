@@ -1,4 +1,5 @@
 sName		AB		# Body's name
+#saModules       galhabit
  
 # Physical Parameters
 dMass		2.1		# Mass, negative -> Earth masses

@@ -40,6 +40,7 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HOSTBININC         2253
 #define OPT_HOSTBINARGP        2254
 #define OPT_HOSTBINLONGA       2255
+#define OPT_HOSTBINMASS1       2256
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 // 
@@ -96,19 +97,34 @@ void GetRelativeVelocity(SYSTEM*);
 double NearbyStarFrEnc(SYSTEM*,double);
 
 double dexdJ(BODY*, int);
-double dexdla(BODY*, int);
-double dexdap(BODY*, int);
+double dexdla(double);
+double dexdap(double,double,double,double);
 double deydJ(BODY*, int);
-double deydla(BODY*, int);
-double deydap(BODY*, int);
+double deydla(double);
+double deydap(double,double,double,double);
 double dezdJ(BODY*, int);
-double dezdap(BODY*, int);
+double dezdap(double,double,double);
+void CalcEccVec(BODY*,int);
+void CalcAngMVec(BODY*,int);
+void Rot2Bin(BODY*,int);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDIncDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDLongADt(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccXDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccXDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtQuad(BODY*, SYSTEM*, int*);
 
 
 double random_double();

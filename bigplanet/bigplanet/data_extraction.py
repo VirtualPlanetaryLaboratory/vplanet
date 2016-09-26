@@ -9,6 +9,7 @@ simulations
 from __future__ import division, print_function, absolute_import
 import numpy as np
 import os
+import sys
 import pandas as pd
 import h5py
 import pickle
@@ -117,6 +118,7 @@ def get_dirs(src,order="none"):
     # No order, return via listdir which does NOT preserve order
     print("Finding simulation subdirectories in %s ordered by %s." % \
          (src, order))
+    sys.stdout.flush()
 
     # No order
     if order.lower() == "none":
@@ -442,12 +444,14 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
 
         # Create hdf5 dataset
         print("Creating hdf5 dataset:",dataset)
+        sys.stdout.flush()
         f_set = h5py.File(dataset, "w")
 
         # Dataset exists
     else:
         print("Hdf5 dataset already exists.  Reading from: %s." % dataset)
         print("Using size, order stored in dataset.")
+        sys.stdout.flush()
 
         # Read existing dataset
         f_set = h5py.File(dataset, "r")
@@ -491,10 +495,12 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
                 print("Skipped %s." % sbody)
 
     print("Infiles:",infiles)
+    sys.stdout.flush()
 
     # Get the names of the output variables for each body
     data_cols = get_cols(os.path.join(src,dirs[0]),infiles)
     print("Data Columns:",data_cols)
+    sys.stdout.flush()
 
     # Loop over directories (and hence simulation) and get the data
     # User counter for name of group/means to identify simulation
@@ -516,8 +522,9 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
             number_to_sim.append(direct)
 
         # Output progress to user?
-        if cadence != None and counter % int(cadence) == 0:
+        if cadence is not None and counter % int(cadence) == 0:
             print("Simulations processed so far: %d" % counter)
+            sys.stdout.flush()
 
     # Try to store metadata
     # Add top level dataset with information about dataset
@@ -527,7 +534,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
 
     try:
         # Make variable-length string dtype so hdf5 could understand it
-        string_dt = h5py.special_dtype(vlen=str)
+        string_dt = h5py.special_dtype(vlen=unicode)
 
         f_set.create_dataset("meta", data=np.array([counter]), dtype=np.int64)
         # Note: for python 3, str replaced by bytes

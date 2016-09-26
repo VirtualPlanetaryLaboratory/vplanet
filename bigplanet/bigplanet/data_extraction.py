@@ -534,12 +534,13 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
 
     try:
         # Make variable-length string dtype so hdf5 could understand it
-        string_dt = h5py.special_dtype(vlen=unicode)
+        string_dt = h5py.special_dtype(vlen=str)
 
         f_set.create_dataset("meta", data=np.array([counter]), dtype=np.int64)
         # Note: for python 3, str replaced by bytes
 
-        f_set.create_dataset("order", data=np.array([order]), dtype=string_dt)
+        data = np.asarray([order], dtype=object)
+        f_set.create_dataset("order", data=data, dtype=string_dt)
 
         data = np.asarray(number_to_sim, dtype=object)
         f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)

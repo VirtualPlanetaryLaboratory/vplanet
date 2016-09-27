@@ -590,13 +590,13 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
     try:
         with h5py.File(dataset, "r") as hf:
 
-            # Only one variable
-            if type(variables) == str:
-                return np.array(hf.get(path)[variables])
-            # Multiple variables
-            else:
+            # Multiple variables (not just a string)
+            if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, unicode)):
                 for var in variables:
                     data.append(np.array(hf.get(path)[var]))
+            # Only one variables
+            else:
+                return np.array(hf.get(path)[variables])
 
         return np.asarray(data,dtype=dtype)
     except RuntimeError:

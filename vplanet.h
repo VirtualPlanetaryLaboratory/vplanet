@@ -798,8 +798,6 @@ typedef struct {
   double dAngMXTmp;
   double dAngMYTmp;
   double dAngMZTmp;
-  double dAngMTmp;
-  double dEccTmp;
   double dArgPTmp;
   double dLongATmp;
   double dIncTmp;

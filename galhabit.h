@@ -125,6 +125,10 @@ double fdGalHabitDEccZDtQuad(BODY*, SYSTEM*, int*);
 double fdGalHabitDAngMXDtQuad(BODY*, SYSTEM*, int*);
 double fdGalHabitDAngMYDtQuad(BODY*, SYSTEM*, int*);
 double fdGalHabitDAngMZDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDLongADtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDLongPDtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDArgPDtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDIncDtQuad0(BODY*, SYSTEM*, int*);
 
 
 double random_double();

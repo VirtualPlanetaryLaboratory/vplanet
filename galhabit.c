@@ -2443,3 +2443,274 @@ double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
   return fdGalHabitDAngMYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
 }
+
+//----Fuck it, let's try these equations (Breiter & somebody 2015)-----------------------------
+double QuadC2(BODY *body, int *iaBody) {
+
+}
+
+double DQuadDEccXInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ13;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*(2*pow(dEta2,2.0)*body[iaBody[0]].dEccX -\
+              5*dQ13*body[iaBody[1]].dAngMX);
+}
+
+double DQuadDEccYInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ13;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*(2*pow(dEta2,2.0)*body[iaBody[0]].dEccY -\
+              5*dQ13*body[iaBody[1]].dAngMY);
+}
+
+double DQuadDEccZInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ13;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*(2*pow(dEta2,2.0)*body[iaBody[0]].dEccZ -\
+              5*dQ13*body[iaBody[1]].dAngMZ);
+}
+
+double DQuadDAngMXInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
+  
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*dQ33*body[iaBody[1]].dAngMX;
+}  
+
+double DQuadDAngMYInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
+  
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*dQ33*body[iaBody[1]].dAngMY;
+}  
+
+double DQuadDAngMZInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
+  
+  return -2*QuadC2(body,iaBody)/pow(dEta2,5.0)*dQ33*body[iaBody[1]].dAngMZ;
+}  
+
+double DQuadDAngMXOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;
+   
+  return QuadC2(body,iaBody)/pow(dEta2,5.0)*( 10.0*dQ13*body[iaBody[1]].dEccX - \
+          2.*dQ33*body[iaBody[1]].dAngMX - (1.0-6.*pow(body[iaBody[1]].dEcc,2) + \
+          5./pow(dEta2,2)*(5*pow(dQ13,2)-pow(dQ33,2)))*body[iaBody[0]].dAngMX );
+}
+
+double DQuadDAngMYOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;
+   
+  return QuadC2(body,iaBody)/pow(dEta2,5.0)*( 10.0*dQ13*body[iaBody[1]].dEccY - \
+          2.*dQ33*body[iaBody[1]].dAngMY - (1.0-6.*pow(body[iaBody[1]].dEcc,2) + \
+          5./pow(dEta2,2)*(5*pow(dQ13,2)-pow(dQ33,2)))*body[iaBody[0]].dAngMY );
+}
+
+double DQuadDAngMZOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;
+   
+  return QuadC2(body,iaBody)/pow(dEta2,5.0)*( 10.0*dQ13*body[iaBody[1]].dEccZ - \
+          2.*dQ33*body[iaBody[1]].dAngMZ - (1.0-6.*pow(body[iaBody[1]].dEcc,2) + \
+          5./pow(dEta2,2)*(5*pow(dQ13,2)-pow(dQ33,2)))*body[iaBody[0]].dAngMZ );
+}
+
+double fdGalHabitDEccXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeY, dHdeZ, dHdKY, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeY = DQuadDEccYInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeY = 0;
+    dHdeZ = 0;
+    dHdKY = DQuadDAngMYOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dEccY*dHdeZ - body[iaBody[0]].dEccZ*dHdeY;
+  dSecondTerm = body[iaBody[0]].dAngMY*dHdKZ - body[iaBody[0]].dAngMZ*dHdKY;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeX = DQuadDEccXInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeX = 0;
+    dHdeZ = 0;
+    dHdKX = DQuadDAngMXOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dEccZ*dHdeX - body[iaBody[0]].dEccX*dHdeZ;
+  dSecondTerm = body[iaBody[0]].dAngMZ*dHdKX - body[iaBody[0]].dAngMX*dHdKZ;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeX = DQuadDEccXInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeX = 0;
+    dHdeY = 0;
+    dHdKX = DQuadDAngMXOuter(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dEccX*dHdeY - body[iaBody[0]].dEccY*dHdeX;
+  dSecondTerm = body[iaBody[0]].dAngMX*dHdKY - body[iaBody[0]].dAngMY*dHdKX;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+double fdGalHabitDAngMXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeY, dHdeZ, dHdKY, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeY = DQuadDEccYInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeY = 0;
+    dHdeZ = 0;
+    dHdKY = DQuadDAngMYOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dAngMY*dHdeZ - body[iaBody[0]].dAngMZ*dHdeY;
+  dSecondTerm = body[iaBody[0]].dEccY*dHdKZ - body[iaBody[0]].dEccZ*dHdKY;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeX = DQuadDEccXInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeX = 0;
+    dHdeZ = 0;
+    dHdKX = DQuadDAngMXOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dAngMZ*dHdeX - body[iaBody[0]].dAngMX*dHdeZ;
+  dSecondTerm = body[iaBody[0]].dEccZ*dHdKX - body[iaBody[0]].dEccX*dHdKZ;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
+  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  
+  dL = 
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] is the inner body
+    dHdeX = DQuadDEccXInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody);
+  } else {
+    //iaBody[0] is the outer body
+    dHdeX = 0;
+    dHdeY = 0;
+    dHdKX = DQuadDAngMXOuter(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody);
+  }
+  dFirstTerm = body[iaBody[0]].dAngMX*dHdeY - body[iaBody[0]].dAngMY*dHdeX;
+  dSecondTerm = body[iaBody[0]].dEccX*dHdKY - body[iaBody[0]].dEccY*dHdKX;
+  
+  return -1.0/dL*(dFirstTerm + dSecondTerm);
+}
+
+

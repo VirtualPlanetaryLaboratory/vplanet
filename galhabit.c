@@ -2446,7 +2446,27 @@ double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
 
 //----Fuck it, let's try these equations (Breiter & somebody 2015)-----------------------------
 double QuadC2(BODY *body, int *iaBody) {
-
+  double M1, X0, X1, a1, a2, m2;
+  
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] = inner body
+    M1 = body[0].dMass+body[iaBody[0]].dMass;
+    X0 = body[0].dMass/M1;
+    X1 = body[iaBody[0]].dMass/M1;
+    a1 = body[iaBody[0]].dSemi;
+    a2 = body[iaBody[1]].dSemi;
+    m2 = body[iaBody[1]].dMass;
+  } else {
+    //iaBody[0] = outer body
+    M1 = body[0].dMass+body[iaBody[1]].dMass; 
+    X0 = body[0].dMass/M1;
+    X1 = body[iaBody[1]].dMass/M1;
+    a1 = body[iaBody[1]].dSemi;
+    a2 = body[iaBody[0]].dSemi;
+    m2 = body[iaBody[0]].dMass;
+  }
+  
+  return 3./8*KGAUSS*KGAUSS*m2*M1/pow(MSUN,2)/(a2/AUCM)*X0*X1*pow(a1/a2)**2.0;
 }
 
 double DQuadDEccXInner(BODY *body, int *iaBody) {
@@ -2578,15 +2598,20 @@ double DQuadDAngMZOuter(BODY *body, int *iaBody) {
 double fdGalHabitDEccXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeY, dHdeZ, dHdKY, dHdKZ, dFirstTerm, dSecondTerm;
   
-  dL = 
+  
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     dHdeY = DQuadDEccYInner(body, iaBody);
     dHdeZ = DQuadDEccZInner(body, iaBody);
     dHdKY = DQuadDAngMYInner(body, iaBody);
     dHdKZ = DQuadDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeY = 0;
     dHdeZ = 0;
     dHdKY = DQuadDAngMYOuter(body, iaBody);
@@ -2601,8 +2626,9 @@ double fdGalHabitDEccXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
   
-  dL = 
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     //iaBody[0] is the inner body
     dHdeX = DQuadDEccXInner(body, iaBody);
     dHdeZ = DQuadDEccZInner(body, iaBody);
@@ -2610,6 +2636,9 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     dHdKZ = DQuadDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeX = 0;
     dHdeZ = 0;
     dHdKX = DQuadDAngMXOuter(body, iaBody);
@@ -2624,8 +2653,9 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
   
-  dL = 
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     //iaBody[0] is the inner body
     dHdeX = DQuadDEccXInner(body, iaBody);
     dHdeY = DQuadDEccYInner(body, iaBody);
@@ -2633,6 +2663,9 @@ double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     dHdKY = DQuadDAngMYInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeX = 0;
     dHdeY = 0;
     dHdKX = DQuadDAngMXOuter(body, iaBody);
@@ -2647,15 +2680,19 @@ double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 double fdGalHabitDAngMXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeY, dHdeZ, dHdKY, dHdKZ, dFirstTerm, dSecondTerm;
   
-  dL = 
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     dHdeY = DQuadDEccYInner(body, iaBody);
     dHdeZ = DQuadDEccZInner(body, iaBody);
     dHdKY = DQuadDAngMYInner(body, iaBody);
     dHdKZ = DQuadDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeY = 0;
     dHdeZ = 0;
     dHdKY = DQuadDAngMYOuter(body, iaBody);
@@ -2669,16 +2706,20 @@ double fdGalHabitDAngMXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
-  
-  dL = 
+
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     dHdeX = DQuadDEccXInner(body, iaBody);
     dHdeZ = DQuadDEccZInner(body, iaBody);
     dHdKX = DQuadDAngMXInner(body, iaBody);
     dHdKZ = DQuadDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeX = 0;
     dHdeZ = 0;
     dHdKX = DQuadDAngMXOuter(body, iaBody);
@@ -2693,15 +2734,19 @@ double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
   
-  dL = 
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body
+    dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     dHdeX = DQuadDEccXInner(body, iaBody);
     dHdeY = DQuadDEccYInner(body, iaBody);
     dHdKX = DQuadDAngMXInner(body, iaBody);
     dHdKY = DQuadDAngMYInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
+    dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
+         sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
+         ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeX = 0;
     dHdeY = 0;
     dHdKX = DQuadDAngMXOuter(body, iaBody);

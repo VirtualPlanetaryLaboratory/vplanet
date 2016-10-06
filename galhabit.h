@@ -41,6 +41,7 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HOSTBINARGP        2254
 #define OPT_HOSTBINLONGA       2255
 #define OPT_HOSTBINMASS1       2256
+#define OPT_MINALLOWED         2257
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 // 
@@ -129,6 +130,24 @@ double fdGalHabitDLongADtQuad0(BODY*, SYSTEM*, int*);
 double fdGalHabitDLongPDtQuad0(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDtQuad0(BODY*, SYSTEM*, int*);
 double fdGalHabitDIncDtQuad0(BODY*, SYSTEM*, int*);
+
+double QuadC2(BODY*, int*);
+double DQuadDEccXInner(BODY*, int*);
+double DQuadDEccYInner(BODY*, int*);
+double DQuadDEccZInner(BODY*, int*);
+double DQuadDAngMXInner(BODY*, int*);
+double DQuadDAngMYInner(BODY*, int*);
+double DQuadDAngMZInner(BODY*, int*);
+double DQuadDAngMXOuter(BODY*, int*);
+double DQuadDAngMYOuter(BODY*, int*);
+double DQuadDAngMZOuter(BODY*, int*);
+
+double fdGalHabitDEccXDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtBV(BODY*, SYSTEM*, int*);
 
 
 double random_double();

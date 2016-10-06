@@ -802,6 +802,8 @@ typedef struct {
   double dLongATmp;
   double dIncTmp;
   double dCosArgP;
+  double dMinAllowed;  /**< minimum allowed close approach of body to host */
+
   
 } BODY;
 
@@ -863,7 +865,6 @@ typedef struct {
   double dEncounterRad;
   double dDeltaTEnc;  /**< time since last encounter */
   double dEncounterRate; /**< characteristic encounter time */
-  double dMinAllowed;  /**< minimum allowed close approach of body to host */
   double dCloseEncTime;  /**< time of new close encounter */
   double dLastEncTime;  /**< time of last encounter */
   double dNextEncT;

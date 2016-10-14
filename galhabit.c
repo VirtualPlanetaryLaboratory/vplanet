@@ -1134,9 +1134,9 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   
   body[iBody].dArgP = atan2(sinw,cosw);
   
-  if (body[iBody].bHostBinary) {
-    Rot2Bin(body,iBody);
-  }
+  // if (body[iBody].bHostBinary) {
+//     Rot2Bin(body,iBody);
+//   }
   
   body[iBody].dLongP = body[iBody].dLongA + body[iBody].dArgP; 
   while (body[iBody].dArgP > 2*PI) {
@@ -1224,9 +1224,9 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
-  if (body[iBody].bHostBinary) {
-    Rot2Bin(body,iBody);
-  }
+  // if (body[iBody].bHostBinary) {
+//     Rot2Bin(body,iBody);
+//   }
 
   body[iBody].iDisrupt = check_disrupt(body,system,iBody);
 
@@ -2667,24 +2667,23 @@ double DQuadDAngMZOuter(BODY *body, int *iaBody) {
 double fdGalHabitDAngMXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   double dL, dHdeY, dHdeZ, dHdKY, dHdKZ, dFirstTerm, dSecondTerm;
   
-  
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
-    dHdeY = DQuadDEccYInner(body, iaBody);
-    dHdeZ = DQuadDEccZInner(body, iaBody);
-    dHdKY = DQuadDAngMYInner(body, iaBody);
-    dHdKZ = DQuadDAngMZInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody) + DOctDEccYInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody) + DOctDEccZInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody) + DOctDAngMYInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody) + DOctDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeY = 0;
-    dHdeZ = 0;
-    dHdKY = DQuadDAngMYOuter(body, iaBody);
-    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+    dHdeY = DOctDEccYOuter(body, iaBody);
+    dHdeZ = DOctDEccZOuter(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody) + DOctDAngMYOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody) + DOctDAngMZOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dEccY*dHdeZ - body[iaBody[0]].dEccZ*dHdeY;
   dSecondTerm = body[iaBody[0]].dAngMY*dHdKZ - body[iaBody[0]].dAngMZ*dHdKY;
@@ -2699,19 +2698,19 @@ double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     //iaBody[0] is the inner body
-    dHdeX = DQuadDEccXInner(body, iaBody);
-    dHdeZ = DQuadDEccZInner(body, iaBody);
-    dHdKX = DQuadDAngMXInner(body, iaBody);
-    dHdKZ = DQuadDAngMZInner(body, iaBody);
+    dHdeX = DQuadDEccXInner(body, iaBody) + DOctDEccXInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody) + DOctDEccZInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody) + DOctDAngMXInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody) + DOctDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeX = 0;
-    dHdeZ = 0;
-    dHdKX = DQuadDAngMXOuter(body, iaBody);
-    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+    dHdeX = DOctDEccXOuter(body, iaBody);
+    dHdeZ = DOctDEccZOuter(body, iaBody);
+    dHdKX = DQuadDAngMXOuter(body, iaBody) + DOctDAngMXOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody) + DOctDAngMZOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dEccZ*dHdeX - body[iaBody[0]].dEccX*dHdeZ;
   dSecondTerm = body[iaBody[0]].dAngMZ*dHdKX - body[iaBody[0]].dAngMX*dHdKZ;
@@ -2726,19 +2725,19 @@ double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
     //iaBody[0] is the inner body
-    dHdeX = DQuadDEccXInner(body, iaBody);
-    dHdeY = DQuadDEccYInner(body, iaBody);
-    dHdKX = DQuadDAngMXInner(body, iaBody);
-    dHdKY = DQuadDAngMYInner(body, iaBody);
+    dHdeX = DQuadDEccXInner(body, iaBody) + DOctDEccXInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody) + DOctDEccYInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody) + DOctDAngMXInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody) + DOctDAngMYInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeX = 0;
-    dHdeY = 0;
-    dHdKX = DQuadDAngMXOuter(body, iaBody);
-    dHdKY = DQuadDAngMYOuter(body, iaBody);
+    dHdeX = DOctDEccXOuter(body, iaBody);
+    dHdeY = DOctDEccYOuter(body, iaBody);
+    dHdKX = DQuadDAngMXOuter(body, iaBody) + DOctDAngMXOuter(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody) + DOctDAngMYOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dEccX*dHdeY - body[iaBody[0]].dEccY*dHdeX;
   dSecondTerm = body[iaBody[0]].dAngMX*dHdKY - body[iaBody[0]].dAngMY*dHdKX;
@@ -2753,19 +2752,19 @@ double fdGalHabitDEccXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     //iaBody[0] is the inner body
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
-    dHdeY = DQuadDEccYInner(body, iaBody);
-    dHdeZ = DQuadDEccZInner(body, iaBody);
-    dHdKY = DQuadDAngMYInner(body, iaBody);
-    dHdKZ = DQuadDAngMZInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody) + DOctDEccYInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody) + DOctDEccZInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody) + DOctDAngMYInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody) + DOctDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeY = 0;
-    dHdeZ = 0;
-    dHdKY = DQuadDAngMYOuter(body, iaBody);
-    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+    dHdeY = DOctDEccYOuter(body, iaBody);
+    dHdeZ = DOctDEccZInner(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody) + DOctDAngMYOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody) + DOctDAngMZOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dAngMY*dHdeZ - body[iaBody[0]].dAngMZ*dHdeY;
   dSecondTerm = body[iaBody[0]].dEccY*dHdKZ - body[iaBody[0]].dEccZ*dHdKY;
@@ -2780,19 +2779,19 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     //iaBody[0] is the inner body
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
-    dHdeX = DQuadDEccXInner(body, iaBody);
-    dHdeZ = DQuadDEccZInner(body, iaBody);
-    dHdKX = DQuadDAngMXInner(body, iaBody);
-    dHdKZ = DQuadDAngMZInner(body, iaBody);
+    dHdeX = DQuadDEccXInner(body, iaBody) + DOctDEccXInner(body, iaBody);
+    dHdeZ = DQuadDEccZInner(body, iaBody) + DOctDEccZInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody) + DOctDAngMXInner(body, iaBody);
+    dHdKZ = DQuadDAngMZInner(body, iaBody) + DOctDAngMZInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeX = 0;
-    dHdeZ = 0;
-    dHdKX = DQuadDAngMXOuter(body, iaBody);
-    dHdKZ = DQuadDAngMZOuter(body, iaBody);
+    dHdeX = DOctDEccXOuter(body, iaBody);
+    dHdeZ = DOctDEccZOuter(body, iaBody);
+    dHdKX = DOctDAngMXOuter(body, iaBody);
+    dHdKZ = DOctDAngMZOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dAngMZ*dHdeX - body[iaBody[0]].dAngMX*dHdeZ;
   dSecondTerm = body[iaBody[0]].dEccZ*dHdKX - body[iaBody[0]].dEccX*dHdKZ;
@@ -2807,19 +2806,19 @@ double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
     //iaBody[0] is the inner body
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/((body[0].dMass+body[iaBody[0]].dMass)/MSUN));
-    dHdeX = DQuadDEccXInner(body, iaBody);
-    dHdeY = DQuadDEccYInner(body, iaBody);
-    dHdKX = DQuadDAngMXInner(body, iaBody);
-    dHdKY = DQuadDAngMYInner(body, iaBody);
+    dHdeX = DQuadDEccXInner(body, iaBody) + DOctDEccXInner(body, iaBody);
+    dHdeY = DQuadDEccYInner(body, iaBody) + DOctDEccYInner(body, iaBody);
+    dHdKX = DQuadDAngMXInner(body, iaBody) + DOctDAngMXInner(body, iaBody);
+    dHdKY = DQuadDAngMYInner(body, iaBody) + DOctDAngMYInner(body, iaBody);
   } else {
     //iaBody[0] is the outer body
     dL = ((body[0].dMass+body[iaBody[1]].dMass)*body[iaBody[0]].dMass)/pow(MSUN,2)*\
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
-    dHdeX = 0;
-    dHdeY = 0;
-    dHdKX = DQuadDAngMXOuter(body, iaBody);
-    dHdKY = DQuadDAngMYOuter(body, iaBody);
+    dHdeX = DOctDEccXOuter(body, iaBody);
+    dHdeY = DOctDEccYOuter(body, iaBody);
+    dHdKX = DQuadDAngMXOuter(body, iaBody) + DOctDAngMXOuter(body, iaBody);
+    dHdKY = DQuadDAngMYOuter(body, iaBody) + DOctDAngMYOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dAngMX*dHdeY - body[iaBody[0]].dAngMY*dHdeX;
   dSecondTerm = body[iaBody[0]].dEccX*dHdKY - body[iaBody[0]].dEccY*dHdKX;
@@ -2827,4 +2826,318 @@ double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   return -1.0/dL*(dFirstTerm + dSecondTerm)/DAYSEC;
 }
 
+double OctC3(BODY *body, int *iaBody) {
+  double M1, X0, X1, a1, a2;
+  
+  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+    //iaBody[0] = inner body
+    M1 = body[0].dMass+body[iaBody[0]].dMass;
+    X0 = body[0].dMass/M1;
+    X1 = body[iaBody[0]].dMass/M1;
+    a1 = body[iaBody[0]].dSemi;
+    a2 = body[iaBody[1]].dSemi;
+  } else {
+    //iaBody[0] = outer body
+    M1 = body[0].dMass+body[iaBody[1]].dMass;
+    X0 = body[0].dMass/M1;
+    X1 = body[iaBody[1]].dMass/M1;
+    a1 = body[iaBody[1]].dSemi;
+    a2 = body[iaBody[0]].dSemi;
+  }
+  
+  return 5./8*QuadC2(body,iaBody)*(X0-X1)*a1/a2;
+}
 
+double DOctDEccXInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 16*pow(dEta2,2)*dQ11*body[iaBody[0]].dEccX \
+         + 10*(dQ31*dQ33 - 7*dQ11*dQ13)*body[iaBody[1]].dAngMX \
+         - ((1.-8*pow(body[iaBody[0]].dEcc,2))*pow(dEta2,2)+35*pow(dQ13,2) \
+         - 5*pow(dQ33,2))*body[iaBody[1]].dEccX );
+}
+
+double DOctDEccYInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 16*pow(dEta2,2)*dQ11*body[iaBody[0]].dEccY \
+         + 10*(dQ31*dQ33 - 7*dQ11*dQ13)*body[iaBody[1]].dAngMY \
+         - ((1.-8*pow(body[iaBody[0]].dEcc,2))*pow(dEta2,2)+35*pow(dQ13,2) \
+         - 5*pow(dQ33,2))*body[iaBody[1]].dEccY );
+}
+
+double DOctDEccZInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 16*pow(dEta2,2)*dQ11*body[iaBody[0]].dEccZ \
+         + 10*(dQ31*dQ33 - 7*dQ11*dQ13)*body[iaBody[1]].dAngMZ \
+         - ((1.-8*pow(body[iaBody[0]].dEcc,2))*pow(dEta2,2)+35*pow(dQ13,2) \
+         - 5*pow(dQ33,2))*body[iaBody[1]].dEccZ );
+}
+
+double DOctDAngMXInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return 10*OctC3(body,iaBody)/pow(dEta2,7)* ( (dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMX \
+          + dQ13*dQ33*body[iaBody[1]].dEccX );
+}
+
+double DOctDAngMYInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return 10*OctC3(body,iaBody)/pow(dEta2,7)* ( (dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMY \
+          + dQ13*dQ33*body[iaBody[1]].dEccY );
+}
+
+double DOctDAngMZInner(BODY *body, int *iaBody) {
+  //iaBody[0] is the inner body now, iaBody[1] is the outer
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[1]].dAngM;
+  dQ11 = body[iaBody[0]].dEccX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dEccZ;
+  
+  dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
+         
+  dQ31 = body[iaBody[0]].dAngMX*body[iaBody[1]].dEccX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dEccY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dEccZ;
+  
+  dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
+         body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
+         body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;       
+         
+  return 10*OctC3(body,iaBody)/pow(dEta2,7)* ( (dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMZ \
+          + dQ13*dQ33*body[iaBody[1]].dEccZ );
+}
+
+double DOctDEccXOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 10*dQ13*dQ33*body[iaBody[1]].dAngMX \
+          - ((1.-8*pow(body[iaBody[1]].dEcc,2))*pow(dEta2,2) + 35*pow(dQ13,2) \
+          - 5*pow(dQ33,2))*body[iaBody[1]].dEccX );
+}
+
+double DOctDEccYOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 10*dQ13*dQ33*body[iaBody[1]].dAngMY \
+          - ((1.-8*pow(body[iaBody[1]].dEcc,2))*pow(dEta2,2) + 35*pow(dQ13,2) \
+          - 5*pow(dQ33,2))*body[iaBody[1]].dEccY );
+}
+
+double DOctDEccZOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ13, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return OctC3(body,iaBody)/pow(dEta2,7)* ( 10*dQ13*dQ33*body[iaBody[1]].dAngMZ \
+          - ((1.-8*pow(body[iaBody[1]].dEcc,2))*pow(dEta2,2) + 35*pow(dQ13,2) \
+          - 5*pow(dQ33,2))*body[iaBody[1]].dEccZ );
+}
+
+double DOctDAngMXOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  dQ11 = body[iaBody[1]].dEccX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dEccZ;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+         
+  dQ31 = body[iaBody[1]].dAngMX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dEccZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return 5*OctC3(body,iaBody)/pow(dEta2,7)* ( 2*(dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMX \
+          + 2*(dQ31*dQ33-7*dQ11*dQ13)*body[iaBody[1]].dEccX \
+          + ((1.-8*pow(body[iaBody[1]].dEcc,2))*dQ11 + 7/pow(dEta2,2)*(dQ11*
+          (7*pow(dQ13,2)-pow(dQ33,2)) - 2*dQ13*dQ31*dQ33))*body[iaBody[0]].dAngMX );
+}
+
+double DOctDAngMYOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  dQ11 = body[iaBody[1]].dEccX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dEccZ;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+         
+  dQ31 = body[iaBody[1]].dAngMX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dEccZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return 5*OctC3(body,iaBody)/pow(dEta2,7)* ( 2*(dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMY \
+          + 2*(dQ31*dQ33-7*dQ11*dQ13)*body[iaBody[1]].dEccY \
+          + ((1.-8*pow(body[iaBody[1]].dEcc,2))*dQ11 + 7/pow(dEta2,2)*(dQ11*
+          (7*pow(dQ13,2)-pow(dQ33,2)) - 2*dQ13*dQ31*dQ33))*body[iaBody[0]].dAngMY );
+}
+
+double DOctDAngMZOuter(BODY *body, int *iaBody) {
+  //iaBody[0] is the outer body now, iaBody[1] is the inner
+  double dEta2, dQ11, dQ13, dQ31, dQ33;
+  
+  dEta2 = body[iaBody[0]].dAngM;
+  dQ11 = body[iaBody[1]].dEccX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dEccZ;
+  
+  dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
+         
+  dQ31 = body[iaBody[1]].dAngMX*body[iaBody[0]].dEccX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dEccY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dEccZ;
+  
+  dQ33 = body[iaBody[1]].dAngMX*body[iaBody[0]].dAngMX + \
+         body[iaBody[1]].dAngMY*body[iaBody[0]].dAngMY + \
+         body[iaBody[1]].dAngMZ*body[iaBody[0]].dAngMZ;       
+         
+  return 5*OctC3(body,iaBody)/pow(dEta2,7)* ( 2*(dQ13*dQ31+dQ11*dQ33)*body[iaBody[1]].dAngMZ \
+          + 2*(dQ31*dQ33-7*dQ11*dQ13)*body[iaBody[1]].dEccZ \
+          + ((1.-8*pow(body[iaBody[1]].dEcc,2))*dQ11 + 7/pow(dEta2,2)*(dQ11*
+          (7*pow(dQ13,2)-pow(dQ33,2)) - 2*dQ13*dQ31*dQ33))*body[iaBody[0]].dAngMZ );
+}

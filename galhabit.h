@@ -149,6 +149,19 @@ double fdGalHabitDAngMXDtBV(BODY*, SYSTEM*, int*);
 double fdGalHabitDAngMYDtBV(BODY*, SYSTEM*, int*);
 double fdGalHabitDAngMZDtBV(BODY*, SYSTEM*, int*);
 
+double OctC3(BODY*, int*);
+double DOctDEccXInner(BODY*, int*);
+double DOctDEccYInner(BODY*, int*);
+double DOctDEccZInner(BODY*, int*);
+double DOctDAngMXInner(BODY*, int*);
+double DOctDAngMYInner(BODY*, int*);
+double DOctDAngMZInner(BODY*, int*);
+double DOctDEccXOuter(BODY*, int*);
+double DOctDEccYOuter(BODY*, int*);
+double DOctDEccZOuter(BODY*, int*);
+double DOctDAngMXOuter(BODY*, int*);
+double DOctDAngMYOuter(BODY*, int*);
+double DOctDAngMZOuter(BODY*, int*);
 
 double random_double();
 double mag2mass(double);

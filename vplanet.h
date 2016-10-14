@@ -803,11 +803,6 @@ typedef struct {
   double dIncTmp;
   double dCosArgP;
   double dMinAllowed;  /**< minimum allowed close approach of body to host */
-<<<<<<< HEAD
-=======
-
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
-  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

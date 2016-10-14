@@ -240,11 +240,6 @@ void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-<<<<<<< HEAD
-    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-=======
-//     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
     /* Option was found */
     body[iFile-1].bHostBinary = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -252,23 +247,23 @@ void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&body[iFile-1].bHostBinary,files->iNumInputs);
 }
 
-void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dMinAllowed = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dMinAllowed = dTmp*fdUnitsLength(control->Units[iFile].iLength);
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMinAllowed = options->dDefault;
-}
+// void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+//   /* This parameter cannot exist in primary file */
+//   int lTmp=-1;
+//   double dTmp;
+// 
+//   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+//   if (lTmp >= 0) {
+//     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+//     if (dTmp < 0)
+//       body[iFile-1].dMinAllowed = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+//     else
+//       body[iFile-1].dMinAllowed = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+//     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+//   } else
+//     if (iFile > 0)
+//       body[iFile-1].dMinAllowed = options->dDefault;
+// }
 
 void ReadHostBinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -552,11 +547,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HOSTBINARY] = &ReadHostBinary;
   
   sprintf(options[OPT_MINALLOWED].cName,"dMinAllowed");
-<<<<<<< HEAD
-  sprintf(options[OPT_MINALLOWED].cDescr,"Minimum close approach distance");
-=======
-  sprintf(options[OPT_MINALLOWED].cDescr,"Halt if body comes within distance to primary");
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
+  sprintf(options[OPT_MINALLOWED].cDescr,"Minimum close approach distance to primary");
   sprintf(options[OPT_MINALLOWED].cDefault,"1 AU"); 
   options[OPT_MINALLOWED].dDefault = AUCM;
   options[OPT_MINALLOWED].iType = 2;  
@@ -635,17 +626,10 @@ void InitializeEccXGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 1;
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 2;
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   }
 }
 
@@ -655,17 +639,10 @@ void InitializeEccYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 1;
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 2;
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   }
 }
 
@@ -676,17 +653,10 @@ void InitializeEccZGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 1;
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 2;
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   }
 }
 
@@ -696,17 +666,10 @@ void InitializeAngMXGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 1;
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 2;
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   }
 }
 
@@ -716,17 +679,10 @@ void InitializeAngMYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 1;
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 2;
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   }
 }
 
@@ -736,19 +692,11 @@ void InitializeAngMZGalHabit(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iNumBodies[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]]=2;
   update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][0] = iBody;
-<<<<<<< HEAD
   if (iBody == 1) {
     update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 2;
   } else if (iBody == 2) {
     update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 1;
   }
-=======
-  if (iBody == 2) {
-    update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 1;
-  } else if (iBody == 1) {
-    update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 2;
-  } 
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
 }
 
 
@@ -2771,11 +2719,7 @@ double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   return -1.0/dL*(dFirstTerm + dSecondTerm)/DAYSEC;
 }
 
-<<<<<<< HEAD
-double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
-=======
 double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   double dL, dHdeX, dHdeY, dHdKX, dHdKY, dFirstTerm, dSecondTerm;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
@@ -2856,11 +2800,7 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
   return -1.0/dL*(dFirstTerm + dSecondTerm)/DAYSEC;
 }
 
-<<<<<<< HEAD
-double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
-=======
 double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
->>>>>>> bf7f6220d8d6300d4eddb1cc65ccdaa787c44d9d
   double dL, dHdeX, dHdeY, dHdKX, dHdKY, dFirstTerm, dSecondTerm;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {

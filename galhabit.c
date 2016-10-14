@@ -240,7 +240,7 @@ void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     /* Option was found */
     body[iFile-1].bHostBinary = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -264,6 +264,24 @@ void ReadHostBinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   } else
     if (iFile > 0)
       body[iFile-1].dHostBinSemi = options->dDefault;
+}
+
+void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dMinAllowed = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dMinAllowed = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dMinAllowed = options->dDefault;
 }
 
 void ReadHostBinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -511,6 +529,16 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HOSTBINARY].iMultiFile = 0; 
   fnRead[OPT_HOSTBINARY] = &ReadHostBinary;
   
+  sprintf(options[OPT_MINALLOWED].cName,"dMinAllowed");
+  sprintf(options[OPT_MINALLOWED].cDescr,"Minimum close approach distance");
+  sprintf(options[OPT_MINALLOWED].cDefault,"1 AU"); 
+  options[OPT_MINALLOWED].dDefault = AUCM;
+  options[OPT_MINALLOWED].iType = 2;  
+  options[OPT_MINALLOWED].iMultiFile = 0;
+  options[OPT_MINALLOWED].dNeg = AUCM;
+  sprintf(options[OPT_MINALLOWED].cNeg,"AU");   
+  fnRead[OPT_MINALLOWED] = &ReadMinAllowed;
+  
   sprintf(options[OPT_HOSTBINECC].cName,"dHostBinEcc");
   sprintf(options[OPT_HOSTBINECC].cDescr,"eccentricity of host binary");
   sprintf(options[OPT_HOSTBINECC].cDefault,"0.51"); 
@@ -581,7 +609,11 @@ void InitializeEccXGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]][1] = 1;
+  }
 }
 
 void InitializeEccYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
@@ -590,7 +622,11 @@ void InitializeEccYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]][1] = 1;
+  }
 }
 
 
@@ -600,7 +636,11 @@ void InitializeEccZGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]][1] = 1;
+  }
 }
 
 void InitializeAngMXGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
@@ -609,7 +649,11 @@ void InitializeAngMXGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]][1] = 1;
+  }
 }
 
 void InitializeAngMYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
@@ -618,7 +662,11 @@ void InitializeAngMYGalHabit(BODY *body,UPDATE *update,int iBody,int iEqn) {
   update[iBody].iNumBodies[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]]=2;
   update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]][1] = 1;
+  }
 }
 
 void InitializeAngMZGalHabit(BODY *body,UPDATE *update,int iBody) {
@@ -627,7 +675,11 @@ void InitializeAngMZGalHabit(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iNumBodies[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]]=2;
   update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]] = malloc(update[iBody].iNumBodies[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]]*sizeof(int));
   update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][0] = iBody;
-  update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 0;
+  if (iBody == 1) {
+    update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 2;
+  } else if (iBody == 2) {
+    update[iBody].iaBody[update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]][1] = 1;
+  }
 }
 
 
@@ -700,7 +752,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dEncounterRateMV = malloc(13*sizeof(double));
     CalcEncounterRate(system);  //need to update this, most likely XXX
     system->dDeltaTEnc = 0.0;
-    system->dMinAllowed = 40.0*AUCM; //set to 40 au for now...
+    //system->dMinAllowed = 40.0*AUCM; //set to 40 au for now...
     system->dLastEncTime = 0.0;
     system->dCloseEncTime = 0.0;
     system->iNEncounters = 0;
@@ -1353,7 +1405,7 @@ int check_disrupt(BODY* body, SYSTEM *system, int iBody) {
   apo = body[iBody].dSemi*(1.0+body[iBody].dEcc);
   peri = body[iBody].dSemi*(1.0-body[iBody].dEcc);
   
-  if (peri < system->dMinAllowed) {
+  if (peri < body[iBody].dMinAllowed) {
     return 1;
   } else if (apo > system->dEncounterRad) {
     return 1;
@@ -2466,14 +2518,14 @@ double QuadC2(BODY *body, int *iaBody) {
     m2 = body[iaBody[0]].dMass;
   }
   
-  return 3./8*KGAUSS*KGAUSS*m2*M1/pow(MSUN,2)/(a2/AUCM)*X0*X1*pow(a1/a2)**2.0;
+  return 3./8*KGAUSS*KGAUSS*m2*M1/pow(MSUN,2)/(a2/AUCM)*X0*X1*pow(a1/a2,2.0);
 }
 
 double DQuadDEccXInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ13;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
@@ -2486,7 +2538,7 @@ double DQuadDEccYInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ13;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
@@ -2499,7 +2551,7 @@ double DQuadDEccZInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ13;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ13 = body[iaBody[0]].dEccX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dEccY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dEccZ*body[iaBody[1]].dAngMZ;
@@ -2512,7 +2564,7 @@ double DQuadDAngMXInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ33;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
@@ -2524,7 +2576,7 @@ double DQuadDAngMYInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ33;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
@@ -2536,7 +2588,7 @@ double DQuadDAngMZInner(BODY *body, int *iaBody) {
   //iaBody[0] is the inner body now, iaBody[1] is the outer
   double dEta2, dQ33;
   
-  dEta2 = body[iaBody[1]].dAngM
+  dEta2 = body[iaBody[1]].dAngM;
   dQ33 = body[iaBody[0]].dAngMX*body[iaBody[1]].dAngMX + \
          body[iaBody[0]].dAngMY*body[iaBody[1]].dAngMY + \
          body[iaBody[0]].dAngMZ*body[iaBody[1]].dAngMZ;
@@ -2548,7 +2600,7 @@ double DQuadDAngMXOuter(BODY *body, int *iaBody) {
   //iaBody[0] is the outer body now, iaBody[1] is the inner
   double dEta2, dQ13, dQ33;
   
-  dEta2 = body[iaBody[0]].dAngM
+  dEta2 = body[iaBody[0]].dAngM;
   dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
          body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
          body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
@@ -2565,7 +2617,7 @@ double DQuadDAngMYOuter(BODY *body, int *iaBody) {
   //iaBody[0] is the outer body now, iaBody[1] is the inner
   double dEta2, dQ13, dQ33;
   
-  dEta2 = body[iaBody[0]].dAngM
+  dEta2 = body[iaBody[0]].dAngM;
   dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
          body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
          body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
@@ -2582,7 +2634,7 @@ double DQuadDAngMZOuter(BODY *body, int *iaBody) {
   //iaBody[0] is the outer body now, iaBody[1] is the inner
   double dEta2, dQ13, dQ33;
   
-  dEta2 = body[iaBody[0]].dAngM
+  dEta2 = body[iaBody[0]].dAngM;
   dQ13 = body[iaBody[1]].dEccX*body[iaBody[0]].dAngMX + \
          body[iaBody[1]].dEccY*body[iaBody[0]].dAngMY + \
          body[iaBody[1]].dEccZ*body[iaBody[0]].dAngMZ;
@@ -2651,7 +2703,7 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDEccZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
-  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  double dL, dHdeX, dHdeY, dHdKX, dHdKY, dFirstTerm, dSecondTerm;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     dL = (body[0].dMass*body[iaBody[0]].dMass)/pow(MSUN,2)*\
@@ -2732,7 +2784,7 @@ double fdGalHabitDAngMYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDAngMZDtBV(BODY *body, SYSTEM *system, int *iaBody) {
-  double dL, dHdeX, dHdeZ, dHdKX, dHdKZ, dFirstTerm, dSecondTerm;
+  double dL, dHdeX, dHdeY, dHdKX, dHdKY, dFirstTerm, dSecondTerm;
   
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     //iaBody[0] is the inner body

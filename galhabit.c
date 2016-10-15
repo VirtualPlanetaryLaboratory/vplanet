@@ -2762,7 +2762,7 @@ double fdGalHabitDEccXDtBV(BODY *body, SYSTEM *system, int *iaBody) {
          sqrt(KGAUSS*KGAUSS*body[iaBody[0]].dSemi/AUCM/\
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeY = DOctDEccYOuter(body, iaBody);
-    dHdeZ = DOctDEccZInner(body, iaBody);
+    dHdeZ = DOctDEccZOuter(body, iaBody);
     dHdKY = DQuadDAngMYOuter(body, iaBody) + DOctDAngMYOuter(body, iaBody);
     dHdKZ = DQuadDAngMZOuter(body, iaBody) + DOctDAngMZOuter(body, iaBody);
   }
@@ -2790,8 +2790,8 @@ double fdGalHabitDEccYDtBV(BODY *body, SYSTEM *system, int *iaBody) {
          ((body[0].dMass+body[iaBody[0]].dMass+body[iaBody[1]].dMass)/MSUN));
     dHdeX = DOctDEccXOuter(body, iaBody);
     dHdeZ = DOctDEccZOuter(body, iaBody);
-    dHdKX = DOctDAngMXOuter(body, iaBody);
-    dHdKZ = DOctDAngMZOuter(body, iaBody);
+    dHdKX = DQuadDAngMXOuter(body, iaBody) + DOctDAngMXOuter(body, iaBody);
+    dHdKZ = DQuadDAngMZOuter(body, iaBody) + DOctDAngMZOuter(body, iaBody);
   }
   dFirstTerm = body[iaBody[0]].dAngMZ*dHdeX - body[iaBody[0]].dAngMX*dHdeZ;
   dSecondTerm = body[iaBody[0]].dEccZ*dHdKX - body[iaBody[0]].dEccX*dHdKZ;

@@ -14,8 +14,8 @@ cColor ff0000
 dEcc            0.269			# Eccentricity
 dSemi           -1.0416474744782216			# Semi-major axis, negative -> AU
 dInc   2.54
-dArgP  270.
-dLongA 180.0
+dArgP  145
+dLongA 225
 
 dGalacDensity    0.0
 iRandSeed     42

@@ -33,7 +33,7 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
-bVarDt		0		# Use variable timestepping?
+bVarDt		1		# Use variable timestepping?
 dEta		0.01		# Coefficient for variable timestepping
 
 dTimeStep	0.001

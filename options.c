@@ -371,7 +371,8 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
 }
 
 int iGetNumLines(char cFile[]) {
-  int iNumLines = 0;
+  int iNumLines = 0,iChar,bFileOK = 1;
+  int bComment,bReturn;
   FILE *fp;
   char cLine[LINE];
 
@@ -380,9 +381,33 @@ int iGetNumLines(char cFile[]) {
     fprintf(stderr,"Unable to open %s.\n",cFile);
     exit(EXIT_INPUT);
   }
+  
   while(fgets(cLine,LINE,fp) != NULL) {
     iNumLines++;
+
+    /* Check to see if line is too long. The maximum length of a line is set
+       by LINE. If a carriage return is not found in the first LINE 
+       characters *and* is not preceded by a comment, the line is too long. */
+    bComment=0;
+    bReturn=0;
+    for (iChar=0;iChar<LINE;iChar++) {
+      if (cLine[iChar] == 35) {
+	bComment = 1;
+      }
+      if (cLine[iChar] == 10) {
+	bReturn = 1;
+      }
+    }
+    
+    if (!bReturn && !bComment) {
+      fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
+      bFileOK = 0;
+    }
   }
+  
+  if (!bFileOK) 
+    exit(EXIT_INPUT);
+  
   return iNumLines;
 }
 

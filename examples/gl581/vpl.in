@@ -7,6 +7,10 @@ bOverwrite	1			# Allow file overwrites?
 # The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
+sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+
+
 # List of "body files" that contain body-specific parameters
 saBodyFiles	gl581.in $	# The host star
 		d.in $		# Gl 581 d, weaker tides, 30x potassium-40
@@ -17,8 +21,6 @@ saBodyFiles	gl581.in $	# The host star
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
-sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K

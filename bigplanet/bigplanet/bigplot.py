@@ -20,7 +20,13 @@ will fail.
 
 """
 
-def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
+# Tell module what it's allowed to import
+__all__ = ["plot_red_dim",
+           "plot_red_dim_contour",
+           "red_dim_grid",
+           "multiscatter"]
+
+def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1,),
                  reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                 interp="gaussian",cmap="viridis",colorbar=True,aspect="auto",
                  origin="lower",vmin=None,vmax=None,**kwargs):
@@ -107,7 +113,8 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     ax.set_ylim(y.min(),y.max())
 
     # Format plot
-    if labels != None and labels != []:
+    if labels is not None and labels != []:
+        assert len(labels) == 3
         ax.set_xlabel(labels[0])
         ax.set_ylabel(labels[1])
 
@@ -120,7 +127,7 @@ def plot_red_dim(x, y, z, shape, fig, ax, labels=None, dims = (-1),
     return None
 # End function
 
-def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
+def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1,),
                          reduce_func = np.nanmean, nan_value = 0.0, bReduce=True,
                          interp="gaussian",cmap="viridis",levels=20,clines=False,
                          colorbar=False,origin="lower",**kwargs):
@@ -216,7 +223,7 @@ def plot_red_dim_contour(x, y, z, shape, fig, ax, labels=None, dims = (-1),
 
 
     # Format plot
-    if labels != None and labels != []:
+    if labels is not None and labels != []:
         ax.set_xlabel(labels[0])
         ax.set_ylabel(labels[1])
 
@@ -317,9 +324,9 @@ def red_dim_grid(df, shape, dims, color_by="cbp_DampTime", left_color_func = np.
     # Iterate over combos going left->right->down->repeat
     # along the axes
     # Loop over a rows
-    for i in range(0,size):
+    for i in range(size):
         # Loop over cols
-        for j in range(0,size):
+        for j in range(size):
 
             # Along the diagonal? skip
             if i == j:
@@ -664,13 +671,13 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
     assert(z_var != size_var and z_var != color_var), "Can't color/size points by the dependent variable!"
 
     # Set default color if none given
-    if color_var != None:
+    if color_var is not None:
         color = df[color_var]
     else:
         color = "black"
 
     # Set default size if none given
-    if size_var != None:
+    if size_var is not None:
         # Compute point sizes by normalizing data
         s = 10. + 240.*(df[size_var] - df[size_var].min())/np.ptp(df[size_var])
     else:
@@ -706,14 +713,14 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
             pass
 
     # Add colorbar?
-    if color_var != None:
+    if color_var is not None:
 
         cbar = fig.colorbar(im, ax=axes.ravel().tolist())
         cbar.ax.set_ylabel((color_var.split("_")[0] + " " + color_var.split("_")[1]), rotation=270,
                           labelpad = 25)
 
     # Add legend that displays typical point sizes?
-    if size_var != None:
+    if size_var is not None:
 
         # Dummy plots for range of points
         sizes = s.max()
@@ -741,9 +748,3 @@ def multiscatter(df,z_var="cbp_DampTime",size_var=None,color_var=None,cmap="magm
 Misc
 
 """
-
-# Tell module what it's allowed to import
-__all__ = [plot_red_dim,
-           plot_red_dim_contour,
-           red_dim_grid,
-           multiscatter]

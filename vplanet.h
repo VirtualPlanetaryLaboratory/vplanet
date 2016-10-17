@@ -776,6 +776,7 @@ typedef struct {
   int bGalHabit;
   double dPeriQ;   /**< Pericenter distance */
   int iDisrupt;
+  int bGalacTides;
   double dHostBinSemi;
   double dHostBinEcc;
   double dHostBinInc;

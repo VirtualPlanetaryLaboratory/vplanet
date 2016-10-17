@@ -247,6 +247,17 @@ void ReadHostBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&body[iFile-1].bHostBinary,files->iNumInputs);
 }
 
+void ReadGalacTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    body[iFile-1].bGalacTides = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bGalacTides,files->iNumInputs);
+}
+
 // void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
 //   /* This parameter cannot exist in primary file */
 //   int lTmp=-1;
@@ -539,12 +550,20 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_TIMEEVOLVELDISP] = &ReadTimeEvolVelDisp;
   
   sprintf(options[OPT_HOSTBINARY].cName,"bHostBinary");
-  sprintf(options[OPT_HOSTBINARY].cDescr,"Model primary as binary with quadrupole moment?");
+  sprintf(options[OPT_HOSTBINARY].cDescr,"Include 3 body interactions with binary star");
   sprintf(options[OPT_HOSTBINARY].cDefault,"0");
   options[OPT_HOSTBINARY].dDefault = 0;
   options[OPT_HOSTBINARY].iType = 0;  
   options[OPT_HOSTBINARY].iMultiFile = 0; 
   fnRead[OPT_HOSTBINARY] = &ReadHostBinary;
+  
+  sprintf(options[OPT_GALACTIDES].cName,"bGalacTides");
+  sprintf(options[OPT_GALACTIDES].cDescr,"Include galactic tides");
+  sprintf(options[OPT_GALACTIDES].cDefault,"1");
+  options[OPT_GALACTIDES].dDefault = 1;
+  options[OPT_GALACTIDES].iType = 0;  
+  options[OPT_GALACTIDES].iMultiFile = 0; 
+  fnRead[OPT_GALACTIDES] = &ReadGalacTides;
   
   sprintf(options[OPT_MINALLOWED].cName,"dMinAllowed");
   sprintf(options[OPT_MINALLOWED].cDescr,"Minimum close approach distance to primary");
@@ -699,6 +718,29 @@ void InitializeAngMZGalHabit(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
+void VerifyTidesBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
+  if (body[iBody].bGalacTides == 0 && body[iBody].bHostBinary == 0) {
+    if (iVerbose >= VERBERR) 
+      fprintf(stderr,"ERROR: If using GalHabit, must set %s = 1 and/or %s = 1 in File: %s.\n",options[OPT_GALACTIDES].cName,options[OPT_HOSTBINARY].cName, cFile);
+    exit(EXIT_INPUT);
+  }
+  if (body[iBody].bHostBinary) {
+    if (control->Evolve.iNumBodies != 3) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s can only be used with exactly 3 bodies in GalHabit\n",options[OPT_HOSTBINARY].cName);
+      exit(EXIT_INPUT);
+    }
+    if (body[1].bHostBinary == 1 && body[2].bHostBinary == 0) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s must be called for both body 1 and body 2 in GalHabit\n",options[OPT_HOSTBINARY].cName);
+      exit(EXIT_INPUT);
+    } else if (body[1].bHostBinary == 0 && body[2].bHostBinary == 1) {
+      if (iVerbose >= VERBERR) 
+        fprintf(stderr,"ERROR: %s must be called for both body 1 and body 2 in GalHabit\n",options[OPT_HOSTBINARY].cName);
+      exit(EXIT_INPUT);
+    }
+  }  
+}
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i;
@@ -710,6 +752,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   srand(system->iSeed);
   
   if (iBody == 1) {
+    VerifyTidesBinary(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     system->dGalaxyAge = 1e10*YEARSEC;
     dCurrentAge = system->dGalaxyAge-control->Evolve.dStopTime;
     system->dPassingStarR = malloc(3*sizeof(double));
@@ -806,20 +849,22 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
     
-    InitializeEccXGalHabit(body,update,iBody,0);
-    fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[0]] = &fdGalHabitDEccXDtTidal;
+    if (body[iBody].bGalacTides) {
+      InitializeEccXGalHabit(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[0]] = &fdGalHabitDEccXDtTidal;
     
-    InitializeEccYGalHabit(body,update,iBody,0);
-    fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[0]] = &fdGalHabitDEccYDtTidal;
+      InitializeEccYGalHabit(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[0]] = &fdGalHabitDEccYDtTidal;
     
-    InitializeEccZGalHabit(body,update,iBody,0);
-    fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[0]] = &fdGalHabitDEccZDtTidal;
+      InitializeEccZGalHabit(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[0]] = &fdGalHabitDEccZDtTidal;
     
-    InitializeAngMXGalHabit(body,update,iBody,0);
-    fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[0]] = &fdGalHabitDAngMXDtTidal;
+      InitializeAngMXGalHabit(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[0]] = &fdGalHabitDAngMXDtTidal;
 
-    InitializeAngMYGalHabit(body,update,iBody,0);
-    fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[0]] = &fdGalHabitDAngMYDtTidal;
+      InitializeAngMYGalHabit(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[0]] = &fdGalHabitDAngMYDtTidal;
+    }
     
     if (body[iBody].bHostBinary) {
       Rot2Bin(body,iBody);
@@ -851,25 +896,30 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 /***************** GALHABIT Update *****************/
 void InitializeUpdateGalHabit(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
-    if (update[iBody].iNumEccX == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumEccX += 1;
+    if (body[iBody].bGalacTides || body[iBody].bHostBinary) {
+      if (update[iBody].iNumEccX == 0)
+        update[iBody].iNumVars++;
 
-    if (update[iBody].iNumEccY == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumEccY += 1;
+      if (update[iBody].iNumEccY == 0)
+        update[iBody].iNumVars++;
     
-    if (update[iBody].iNumEccZ == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumEccZ += 1;
+      if (update[iBody].iNumEccZ == 0)
+        update[iBody].iNumVars++;
 
-    if (update[iBody].iNumAngMX == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumAngMX += 1;
+      if (update[iBody].iNumAngMX == 0)
+        update[iBody].iNumVars++;
     
-    if (update[iBody].iNumAngMY == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumAngMY += 1;
+      if (update[iBody].iNumAngMY == 0)
+        update[iBody].iNumVars++;
+    }
+    
+    if (body[iBody].bGalacTides) {
+      update[iBody].iNumEccX += 1;
+      update[iBody].iNumEccY += 1;
+      update[iBody].iNumEccZ += 1;
+      update[iBody].iNumAngMX += 1;
+      update[iBody].iNumAngMY += 1;
+    }
     
     if (body[iBody].bHostBinary) {
       update[iBody].iNumEccX += 1;
@@ -885,7 +935,7 @@ void InitializeUpdateGalHabit(BODY *body,UPDATE *update,int iBody) {
 }
 
 void FinalizeUpdateEccXGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-    if (body[iBody].bHostBinary) {
+    if (body[iBody].bHostBinary && body[iBody].bGalacTides) {
       update[iBody].padDEccXDtGalHabit = malloc(2*sizeof(double*));
       update[iBody].iaEccXGalHabit = malloc(2*sizeof(int));
       update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
@@ -901,7 +951,7 @@ void FinalizeUpdateEccXGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateEccYGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-    if (body[iBody].bHostBinary) {
+    if (body[iBody].bHostBinary && body[iBody].bGalacTides) {
       update[iBody].padDEccYDtGalHabit = malloc(2*sizeof(double*));
       update[iBody].iaEccYGalHabit = malloc(2*sizeof(int));
       update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
@@ -917,7 +967,7 @@ void FinalizeUpdateEccYGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateEccZGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-    if (body[iBody].bHostBinary) {
+    if (body[iBody].bHostBinary && body[iBody].bGalacTides) {
       update[iBody].padDEccZDtGalHabit = malloc(2*sizeof(double*));
       update[iBody].iaEccZGalHabit = malloc(2*sizeof(int));
       update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
@@ -933,7 +983,7 @@ void FinalizeUpdateEccZGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateAngMXGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-    if (body[iBody].bHostBinary) {
+    if (body[iBody].bHostBinary && body[iBody].bGalacTides) {
       update[iBody].padDAngMXDtGalHabit = malloc(2*sizeof(double*));
       update[iBody].iaAngMXGalHabit = malloc(2*sizeof(int));
       update[iBody].iaModule[iVar][*iEqn] = GALHABIT;
@@ -949,7 +999,7 @@ void FinalizeUpdateAngMXGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,in
 }
 
 void FinalizeUpdateAngMYGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-    if (body[iBody].bHostBinary) {
+    if (body[iBody].bHostBinary && body[iBody].bGalacTides) {
       update[iBody].padDAngMYDtGalHabit = malloc(2*sizeof(double*));
       update[iBody].iaAngMYGalHabit = malloc(2*sizeof(int));
       update[iBody].iaModule[iVar][*iEqn] = GALHABIT;

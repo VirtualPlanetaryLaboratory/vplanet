@@ -11,7 +11,7 @@
 #define TMAN             20                    //index of TMAN variable.
 #define TCORE            21                    //index of TCORE variable.
 
-// !!!HACK!!!  Assume a constant surf temp for now.
+// XXX HACK   Assume a constant surf temp for now.
 #define TSURF  300.0  
 // UNITS CONSTANTS
 #define KM               1e3       //[m] 1 km in m
@@ -93,6 +93,7 @@
 #define VISCMELTDELTA    6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
 #define VISCMELTGAMMA    6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
 #define VISCMELTXI       5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
+#define MELTFACTORLMAN 1.0    //[nd] (Default) viscosity-melt reduction factor "epsilon_phase" XXX Added by Rory -- Check!
 #define MELTFACTORUMAN   1.0           //[nd] (Default) viscosity-melt reduction factor "epsilon_phase"
 #define FIXMELTFACTORUMAN 0.0          //[nd] (Default) switch to fix MeltfactorUMan to a constant value.
 /* TIDAL PROPERTIES */

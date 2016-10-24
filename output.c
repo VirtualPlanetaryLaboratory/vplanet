@@ -1277,7 +1277,6 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
-
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");

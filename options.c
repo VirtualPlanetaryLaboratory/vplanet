@@ -395,14 +395,18 @@ int iGetNumLines(char cFile[]) {
       if (cLine[iChar] == 35) { // 35 is ASCII code for #
 	bComment = 1;
       }
+      // Maybe unnecessary with the second conditional in the loop initialization?
       if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
 	bReturn = 1;
       }
+      
     }
     
     if (!bReturn && !bComment) {
-      fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
-      bFileOK = 0;
+      if (iChar >= LINE) {
+	fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
+	bFileOK = 0;
+      }
     }
   }
   

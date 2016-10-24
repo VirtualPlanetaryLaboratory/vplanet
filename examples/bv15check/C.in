@@ -3,7 +3,7 @@ sName		C			# Body's name
 saModules galhabit
 
 # Physical Properties
-dMass		0.12		# Mass, negative -> Earth masses
+dMass		2.07		# Mass, negative -> Earth masses
 dRadius		0.00135			# Radius, negative -> Earth radii
 dRotPeriod	-80.0  #-10.0			# Rotation period, negative -> days
 dObliquity	0			
@@ -11,13 +11,13 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 cColor ff0000
 
 # Orbital Properties
-dEcc            0.41			# Eccentricity
-dSemi           -15000.0			# Semi-major axis, negative -> AU
-dInc   36
-dArgP  137.0
-dLongA 17.1
+dEcc            0.269			# Eccentricity
+dSemi           -1.0416474744782216			# Semi-major axis, negative -> AU
+dInc   2.54
+dArgP  270
+dLongA 180
 
-dGalacDensity    0.102
+dGalacDensity    0.0
 iRandSeed     42
 dRForm 4.5
 dTMigration 1e9
@@ -26,7 +26,9 @@ bStellarEnc 0
 bTimeEvolVelDisp 0
 bOutputEnc 0
 
+bGalacTides 0
 bHostBinary 1
+dMinAllowed 0.1
 dHostBinEcc 0.524
 dHostBinInc 55.0
 dHostBinLongA 122.0

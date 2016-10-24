@@ -1,7 +1,8 @@
 #
 #	To do:	Move user-editable parameters to an .ini file
-#		Fix problem where parameters in list not in .in file are unchanged and no error is thrown
-#		Save best-case scenario to another file
+#		Fix problem where parameters in list not in .in file are unchanged and no error is thrown (add instead of find and replace?)
+#		Write readme file
+#		
 #
 
 import numpy as np
@@ -12,7 +13,7 @@ import sys
 #
 #General Runtime parameters
 #
-nwalkers = 10 #must be even and more than 2x the number of parameters due to emcee implementation magic. With effort this can be changed.
+nwalkers = 4 #must be even and more than 2x the number of parameters due to emcee implementation magic. With effort this can be changed.
 walker_steps = 1
 
 #
@@ -32,7 +33,7 @@ ideal_MagMom = 1; scale_MagMom = 0.25
 #
 #input parameters and their bounds. Watch out for casing! If you misspell a parameter, you won't get an error till too late!
 #
-param_list = np.array(['dViscRef','dViscJumpMan','dTrefLind','dDTChiRef','dMagMomCoef'])
+param_list = np.array(['dViscRef'])#,'dViscJumpMan','dTrefLind','dDTChiRef','dMagMomCoef'])
 
 min_dViscRef = 5e6 ; max_dViscRef = 5e8
 min_dViscJumpMan = 1 ; max_dViscJumpMan = 10
@@ -62,7 +63,7 @@ min_dMagMomCoef = 1e-2 ; max_dMagMomCoef = 1
 #Time estimate, build matrix of initial positions for walkers, make paramater list into useful strings
 #
 mindev = 1e10 #Large number so if statement will work later
-print "It will take about "+str(1.2 * nwalkers * walker_steps)+" seconds to complete."
+print "It will take about "+str((nwalkers * walker_steps)//60)+" minutes and " + str((nwalkers * walker_steps)%60)+" seconds to complete.\n"
 
 ndim = len(param_list)
 init_pos = np.ndarray(shape=(nwalkers,ndim), dtype=float, order='F')
@@ -78,14 +79,14 @@ for string_iterator in range(0, len(target_list)):
 	sa_outputs += '-'+target_list[string_iterator]+' '
 	readfile_outputs += target_list[string_iterator]+','
 
-mainloop_iterator = 0
+mainloop_iterator = 1
 
 #
 # Short Progress bar implementation shamelessly taken from stackoverflow at: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
 #
 
 def progress(count, total):
-    bar_len = 60
+    bar_len = 50
     filled_len = int(round(bar_len * count / float(total)))
 
     percents = round(100.0 * count / float(total), 1)
@@ -159,4 +160,7 @@ sampler = emcee.EnsembleSampler(nwalkers, ndim, lnfit)
 pos, prob, state = sampler.run_mcmc(init_pos, walker_steps)
 sampler.reset()
 
-print "\n\nThe minimum deviation found was ", mindev, "at", param_list, "=", minpos
+with open("minima.txt", "a") as minima:
+    minima.write( str(mindev)+" at "+str(param_list)+"="+str(minpos)+"\n\n")
+
+print "\n\nThe minimum deviation found was ", mindev, "at", param_list, "=", minpos, "\n\n This has been added to the file minima.txt"

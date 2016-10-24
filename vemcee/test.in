@@ -38,12 +38,12 @@ d238UNumCrust	-1
 dTMan          3000.0
 dTCore         6000.0	#6000
 dEruptEff      0.1		#.2
-dTrefLind   5568.35600616#   5650.    #def is 5705.
-dDTChiRef   540.829049429#   250.     ## def is 300.
+dTrefLind      5650.    #def is 5705.
+dDTChiRef      250.     ## def is 300.
 dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
-dViscJumpMan   3.82747354735#2.85
-dViscRef   165648413.509#    1.0e8	   #1e8
+dViscJumpMan   2.85
+dViscRef       1.0e8	   #1e8
 dStagLid       1
 dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
 dMagMomCoef    0.15

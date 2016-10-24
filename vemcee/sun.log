@@ -52,7 +52,7 @@ Color: 000000
 (BodyType) Type of Body (0 == planet) []: -1.000000 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.419917 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.496895 
 (HEcc) Poincare's h (=e*sin(varpi) []: -1.000000 
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -1.000000 
@@ -137,44 +137,44 @@ Color: 000000
 (TLMan) Lower Mantle Temperature []: 3900.000000 
 (TCore) Core Temperature []: 6000.000000 
 (TCMB) CMB Temperature [K]: 4800.000000 
-(BLUMan) Boundary Layer Thickness Upper Mantle []: 2.032835e+04 
-(BLLMan) Boundary Layer Thickness Lower Mantle []: 3.179847e+04 
+(BLUMan) Boundary Layer Thickness Upper Mantle []: 1.718066e+04 
+(BLLMan) Boundary Layer Thickness Lower Mantle []: 2.435874e+04 
 (TJumpUMan) Upper Mantle Temperature Jump []: 1800.000000 
 (TJumpLMan) Lower Mantle Temperature Jump []: 900.000000 
 (SignTJumpUMan) Sign of Upper Mantle Temperature Jump []: 1.000000 
 (SignTJumpLMan) Sign of Lower Mantle Temperature Jump []: 1.000000 
-(ViscUMan) Upper Mantle Viscosity [m^2/s]: 4.798809e+15 
-(ViscLMan) Lower Mantle Viscosity [m^2/sec]: 1.836732e+16 
+(ViscUMan) Upper Mantle Viscosity [m^2/s]: 2.896985e+15 
+(ViscLMan) Lower Mantle Viscosity [m^2/sec]: 8.256406e+15 
 (ShmodUMan) Shear Modulus Upper Mantle []: 5.659552e+11 
 (FMeltUMan) Melt Fraction Upper Mantle []: 1.000000 
 (FMeltLMan) Melt Fraction Lower Mantle []: 0.000000 
 (MeltfactorUMan) Melt Factor Upper Mantle []: 1.925879e+07 
 (MeltfactorLMan) Melt Factor Lower Mantle []: 1.000000 
-(DepthMeltMan) Depth to base of UM Melt Region []: 1.450797e+06 
-(TDepthMeltMan) Temp at base of UM Melt Region []: 2815.234390 
-(TJumpMeltMan) Temp Jump across UM Melt Region []: 1789.835823 
-(MeltMassFluxMan) Mantle Melt Mass Flux [kg/s]: 9.663615e+07 
+(DepthMeltMan) Depth to base of UM Melt Region []: 1.459034e+06 
+(TDepthMeltMan) Temp at base of UM Melt Region []: 2820.926493 
+(TJumpMeltMan) Temp Jump across UM Melt Region []: 1791.409671 
+(MeltMassFluxMan) Mantle Melt Mass Flux [kg/s]: 1.143410e+08 
 (K2Man) Real Love Number k2 Mantle []: 0.000000 
 (Imk2Man) Imaginary Love Number k2 Mantle []: 0.000000 
-(ViscUManArr) Upper Mantle Arrhenius Viscosity [m^2/sec]: 4.798809e+15 
-(RayleighMan) Mantle Rayleigh Number []: 5.689211e+08 
-(ViscMMan) Average (mid) Mantle Viscosity [m^2/sec]: 4.798809e+16 
-(TDotMan) Change in Mantle Temperature []: -2.046134e-14 
-(TDotCore) Change in Core Temperature []: -5.103426e-15 
-(HfluxUMan) Heat Flux Upper Mantle []: 0.371894 
-(HflowUMan) Heat Flow Upper Mantle []: 1.896901e+14 
-(HfluxLMan) Heat Flux Lower Mantle []: 0.283032 
-(HflowLMan) Heat Flow Lower Mantle []: 4.309770e+13 
-(HfluxCMB) Heat Flux Core-Mantle Boundary []: 0.283032 
-(HflowCMB) Heat Flow Core-Mantle Boundary [TW]: 43.097704 
+(ViscUManArr) Upper Mantle Arrhenius Viscosity [m^2/sec]: 2.896985e+15 
+(RayleighMan) Mantle Rayleigh Number []: 9.424088e+08 
+(ViscMMan) Average (mid) Mantle Viscosity [m^2/sec]: 2.896985e+16 
+(TDotMan) Change in Mantle Temperature []: -2.563339e-14 
+(TDotCore) Change in Core Temperature []: -1.330030e-14 
+(HfluxUMan) Heat Flux Upper Mantle []: 0.440030 
+(HflowUMan) Heat Flow Upper Mantle []: 2.244435e+14 
+(HfluxLMan) Heat Flux Lower Mantle []: 0.369477 
+(HflowLMan) Heat Flow Lower Mantle []: 5.626077e+13 
+(HfluxCMB) Heat Flux Core-Mantle Boundary []: 0.369477 
+(HflowCMB) Heat Flow Core-Mantle Boundary [TW]: 56.260770 
 (HflowLatentMan) Latent Heat Flow Mantle []: 0.000000 
-(HflowMeltMan) Melt Heat Flow Mantle []: 2.497216e+13 
+(HflowMeltMan) Melt Heat Flow Mantle []: 2.957011e+13 
 (HflowLatentIC) Latent Heat Release at ICB []: 0.000000 
 (PowerGravIC) Gravitational Power Release at ICB []: 0.000000 
-(HflowSurf) Heat Flow Surface Total [TW]: 214.662248 
-(HflowSecMan) Mantle Secular Heat Flow []: 1.036046e+14 
+(HflowSurf) Heat Flow Surface Total [TW]: 254.013631 
+(HflowSecMan) Mantle Secular Heat Flow []: 1.297929e+14 
 (HfluxCMBAd) Adiabatic Heat Flux Core-Mantle Boundary []: 0.000000 
-(HfluxCMBConv) Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary []: 0.283032 
+(HfluxCMBConv) Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary []: 0.369477 
 (RIC) Inner Core Radius [km]: 0.000000 
 (DRICDTCMB) d(R_ic)/d(T_cmb) []: 0.000000 
 (RICDot) Inner Core growth rate []: -nan 
@@ -185,23 +185,23 @@ Color: 000000
 (MassIC) Mass of Inner Core []: 0.000000 
 (MassChiOC) Mass of Chi in Outer Core []: 2.512483e+23 
 (MassChiIC) Mass of Chi in Inner Core []: 0.000000 
-(DTChi) Core Liquidus Depression []: 394.876172 
-(CoreBuoyTherm) Core Thermal Buoyancy Flux []: 3.300910e-12 
+(DTChi) Core Liquidus Depression []: 182.532804 
+(CoreBuoyTherm) Core Thermal Buoyancy Flux []: 4.309087e-12 
 (CoreBuoyCompo) Core Compositional Buoyancy Flux []: -nan 
-(CoreBuoyTotal) Core Total Buoyancy Flux []: 3.300910e-12 
+(CoreBuoyTotal) Core Total Buoyancy Flux []: 4.309087e-12 
 (GravICB) ICB Gravity []: 0.000000 
-(MagMom) Core Magnetic Moment [EMAGMOM]: 1.471512 
+(MagMom) Core Magnetic Moment [EMAGMOM]: 1.608228 
 (PresSWind) Stellar wind pressure at body []: 2.676100e-09 
-(MagPauseRad) Magnetopause Radius []: 6.596864e+07 
-(ViscJumpMan) Mantle Viscosity Ratio []: 3.827474 
+(MagPauseRad) Magnetopause Radius []: 6.795146e+07 
+(ViscJumpMan) Mantle Viscosity Ratio []: 2.850000 
 (EruptEff) Mantle Melt Eruption Efficiency []: 0.100000 
-(TrefLind) Core Liquidus Lindeman Reference []: 5568.356006 
-(DynViscUMan) Upper Mantle's Dynamic Viscosity [kg*m^2/sec^2]: 2.118897e+19 
+(TrefLind) Core Liquidus Lindeman Reference []: 5650.000000 
+(DynViscUMan) Upper Mantle's Dynamic Viscosity [kg*m^2/sec^2]: 1.279153e+19 
 EMASS=5.974200e+24 EMASSMAN=4.002714e+24 ERMAN=6.371000e+06 ERCORE=3.481000e+06 EDMAN=2.890000e+06 EVOL=1.083207e+21 EVOLCORE=1.766854e+20 EVOLMAN=9.065215e+20
 EDENS=5.515290e+03 EDENSMAN=4.415465e+03 EDENSCORE=1.082004e+04 EDENSOC=1.072173e+04 EDENSIC=1.300000e+04 STIFFNESS=1.000000e+13
 THERMEXPANMAN=3.000000e-05 THERMCONDUMAN=4.200000e+00 THERMCONDLMAN=1.000000e+01 THERMDIFFUMAN=7.519385e-07 cube(EDMAN)=2.413757e+19
-TrefLind=5.568356e+03 ViscRef=1.656484e+08 VISCJUMPMAN=2.700000e+00 
-DTCHIREF=5.408290e+02 CHI_OC_E=1.800000e-01 PARTITION=3.507613e-01 CHI_IC_E=6.313703e-02 EMASSOC_CHI=2.449899e+23 EMASSIC_CHI=6.258395e+21 EMASSCORE_CHI=2.512483e+23
+TrefLind=5.650000e+03 ViscRef=1.000000e+08 VISCJUMPMAN=2.700000e+00 
+DTCHIREF=2.500000e+02 CHI_OC_E=1.800000e-01 PARTITION=3.507613e-01 CHI_IC_E=6.313703e-02 EMASSOC_CHI=2.449899e+23 EMASSIC_CHI=6.258395e+21 EMASSCORE_CHI=2.512483e+23
 body.ViscMeltB=2.500000e+00 Delta=6.000000e+00 Gamma=6.000000e+00 Xi=5.000000e-04 Phis=8.000000e-01 
 body.dFixMeltfactorUMan=0.000000 .dMeltfactorUMan=1.925879e+07 
 body.dStagLid=1.000000 dManHFlowPref=1.000000 
@@ -239,7 +239,7 @@ Color: 000000
 (BodyType) Type of Body (0 == planet) []: -1.000000 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.059189 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.060032 
 (HEcc) Poincare's h (=e*sin(varpi) []: -1.000000 
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -1.000000 
@@ -269,13 +269,13 @@ Color: 000000
 (40KEnFlux) Surface Energy Flux from 40K [kg*m^2/sec^2/(m^2*sec)]: 0.013445 
 (D40KPowerDt) Time Rate of Change of 40K Power Generation []: -1.000000 
 (D40KNumManDt) Time Rate of Change of 40K Heat Generation [/sec]: -1.300557e+25 
-(40KMassMan) Total Mass of 40K [kg]: 4.936213e+16 
-(40KMassCore) Total Core Mass of 40K [kg]: 5.211738e+16 
-(40KNumMan) Total Number of 40K Atoms []: 7.438338e+41 
-(40KNumCore) Total Core Number of 40K Atoms []: 7.853524e+41 
+(40KMassMan) Total Mass of 40K [kg]: 4.936214e+16 
+(40KMassCore) Total Core Mass of 40K [kg]: 5.211739e+16 
+(40KNumMan) Total Number of 40K Atoms []: 7.438340e+41 
+(40KNumCore) Total Core Number of 40K Atoms []: 7.853526e+41 
 (40KTimescale) Timescale for 40K Power Generation []: -1.000000 
 (40KPowerCrust) Crust Power Generated by 40K [kg*m^2/sec^3]: 1.168067e+12 
-(40KMassCrust) Total Crust Mass of 40K [kg]: 2.077764e+16 
+(40KMassCrust) Total Crust Mass of 40K [kg]: 2.077765e+16 
 (40KNumCrust) Total Crust Number of 40K Atoms []: 3.130966e+41 
 (232ThPowerMan) Total Power Generated by 232Th [kg*m^2/sec^3]: 4.740731e+12 
 (232ThPowerCore) Total Power Generated by 232Th [kg*m^2/sec^3]: 3.946847e+10 
@@ -305,95 +305,95 @@ Color: 000000
 (235UPowerCore) Total Core Power Generated by 235U [kg*m^2/sec^3]: 1.714526e+09 
 (235UEnFlux) Surface Energy Flux due to 235U [kg*m^2/sec^2/(m^2*sec)]: 0.000673 
 (D235UNumManDt) Time Rate of Change of the Number of 235U Nuclei [/sec]: -3.340784e+22 
-(235UMassMan) Total Mass of 235U [kg]: 4.006441e+14 
-(235UMassCore) Total Core Mass of 235U [kg]: 3.136687e+12 
-(235UNumMan) Total Number of 235U Atoms []: 1.026504e+39 
-(235UNumCore) Total Core Number of 235U Atoms []: 8.036613e+36 
+(235UMassMan) Total Mass of 235U [kg]: 4.006465e+14 
+(235UMassCore) Total Core Mass of 235U [kg]: 3.136706e+12 
+(235UNumMan) Total Number of 235U Atoms []: 1.026510e+39 
+(235UNumCore) Total Core Number of 235U Atoms []: 8.036661e+36 
 (235UTimescale) Timescale for 235U Power Generation []: -1.000000 
 (235UPowerCrust) Total Crust Power Generated by 235U [kg*m^2/sec^3]: 1.234776e+11 
-(235UMassCrust) Total Crust Mass of 235U [kg]: 2.258996e+14 
-(235UNumCrust) Total Crust Number of 235U Atoms []: 5.787850e+38 
+(235UMassCrust) Total Crust Mass of 235U [kg]: 2.259009e+14 
+(235UNumCrust) Total Crust Number of 235U Atoms []: 5.787885e+38 
 (RadPowerMan) Total Power Generated by Radiogenic Nuclides in the mantle [kg*m^2/sec^3]: 1.302199e+13 
 (RadPowerCore) Total Power Generated by Radiogenic Nuclides in Core [kg*m^2/sec^3]: 3.006775e+12 
 (RadPowerCrust) Total Power Generated by Radiogenic Nuclides in the crust [kg*m^2/sec^3]: 6.926651e+12 
 (RadPowerTotal) Total Power Generated by Radiogenic Nuclides in Total (M+C) [kg*m^2/sec^3]: 2.295541e+13 
 (SurfEnFluxRadTotal) Total Surface Heat Flux Generated by Radiogenic Nuclides [kg*m^2/sec^2/(m^2*sec)]: 0.044905 
 ----- THERMINT PARAMETERS (test)------
-(TMan) Mantle Temperature []: 2309.000682 
-(TUMan) Upper Mantle Temperature [K]: 1616.300477 
-(TLMan) Lower Mantle Temperature []: 3001.700887 
-(TCore) Core Temperature []: 5357.813093 
-(TCMB) CMB Temperature [K]: 4286.250475 
-(BLUMan) Boundary Layer Thickness Upper Mantle []: 9.410020e+04 
-(BLLMan) Boundary Layer Thickness Lower Mantle []: 1.567711e+05 
-(TJumpUMan) Upper Mantle Temperature Jump []: 1316.300477 
-(TJumpLMan) Lower Mantle Temperature Jump []: 1284.549588 
+(TMan) Mantle Temperature []: 2286.229389 
+(TUMan) Upper Mantle Temperature [K]: 1600.360572 
+(TLMan) Lower Mantle Temperature []: 2972.098206 
+(TCore) Core Temperature []: 5128.369192 
+(TCMB) CMB Temperature [K]: 4102.695353 
+(BLUMan) Boundary Layer Thickness Upper Mantle []: 9.135712e+04 
+(BLLMan) Boundary Layer Thickness Lower Mantle []: 1.349533e+05 
+(TJumpUMan) Upper Mantle Temperature Jump []: 1300.360572 
+(TJumpLMan) Lower Mantle Temperature Jump []: 1130.597148 
 (SignTJumpUMan) Sign of Upper Mantle Temperature Jump []: 1.000000 
 (SignTJumpLMan) Sign of Lower Mantle Temperature Jump []: 1.000000 
-(ViscUMan) Upper Mantle Viscosity [m^2/s]: 6.793707e+17 
-(ViscLMan) Lower Mantle Viscosity [m^2/sec]: 3.141469e+18 
-(ShmodUMan) Shear Modulus Upper Mantle []: 1.443421e+13 
-(FMeltUMan) Melt Fraction Upper Mantle []: 0.072301 
+(ViscUMan) Upper Mantle Viscosity [m^2/s]: 5.471663e+17 
+(ViscLMan) Lower Mantle Viscosity [m^2/sec]: 1.763773e+18 
+(ShmodUMan) Shear Modulus Upper Mantle []: 1.788153e+13 
+(FMeltUMan) Melt Fraction Upper Mantle []: 0.047797 
 (FMeltLMan) Melt Fraction Lower Mantle []: 0.000000 
-(MeltfactorUMan) Melt Factor Upper Mantle []: 1.208070 
+(MeltfactorUMan) Melt Factor Upper Mantle []: 1.130988 
 (MeltfactorLMan) Melt Factor Lower Mantle []: 1.000000 
-(DepthMeltMan) Depth to base of UM Melt Region []: 1.380568e+05 
-(TDepthMeltMan) Temp at base of UM Melt Region []: 1638.278757 
-(TJumpMeltMan) Temp Jump across UM Melt Region []: 1269.250377 
-(MeltMassFluxMan) Mantle Melt Mass Flux [kg/s]: 1.509364e+06 
+(DepthMeltMan) Depth to base of UM Melt Region []: 1.200766e+05 
+(TDepthMeltMan) Temp at base of UM Melt Region []: 1614.720326 
+(TJumpMeltMan) Temp Jump across UM Melt Region []: 1254.682013 
+(MeltMassFluxMan) Mantle Melt Mass Flux [kg/s]: 1.027774e+06 
 (K2Man) Real Love Number k2 Mantle []: 0.000000 
 (Imk2Man) Imaginary Love Number k2 Mantle []: 0.000000 
-(ViscUManArr) Upper Mantle Arrhenius Viscosity [m^2/sec]: 8.207684e+17 
-(RayleighMan) Mantle Rayleigh Number []: 3.871063e+06 
-(ViscMMan) Average (mid) Mantle Viscosity [m^2/sec]: 6.793707e+18 
-(TDotMan) Change in Mantle Temperature []: -7.681705e-16 
-(TDotCore) Change in Core Temperature []: -5.897143e-15 
-(HfluxUMan) Heat Flux Upper Mantle []: 0.058751 
-(HflowUMan) Heat Flow Upper Mantle []: 2.996670e+13 
-(HfluxLMan) Heat Flux Lower Mantle []: 0.081938 
-(HflowLMan) Heat Flow Lower Mantle []: 1.247679e+13 
-(HfluxCMB) Heat Flux Core-Mantle Boundary []: 0.081938 
-(HflowCMB) Heat Flow Core-Mantle Boundary [TW]: 12.476791 
-(HflowLatentMan) Latent Heat Flow Mantle []: 8.689796e+11 
-(HflowMeltMan) Melt Heat Flow Mantle []: 2.906434e+11 
+(ViscUManArr) Upper Mantle Arrhenius Viscosity [m^2/sec]: 6.188676e+17 
+(RayleighMan) Mantle Rayleigh Number []: 4.492414e+06 
+(ViscMMan) Average (mid) Mantle Viscosity [m^2/sec]: 5.471663e+18 
+(TDotMan) Change in Mantle Temperature []: -7.926036e-16 
+(TDotCore) Change in Core Temperature []: -6.071520e-15 
+(HfluxUMan) Heat Flux Upper Mantle []: 0.059782 
+(HflowUMan) Heat Flow Upper Mantle []: 3.049269e+13 
+(HfluxLMan) Heat Flux Lower Mantle []: 0.083777 
+(HflowLMan) Heat Flow Lower Mantle []: 1.275682e+13 
+(HfluxCMB) Heat Flux Core-Mantle Boundary []: 0.083777 
+(HflowCMB) Heat Flow Core-Mantle Boundary [TW]: 12.756817 
+(HflowLatentMan) Latent Heat Flow Mantle []: 8.966060e+11 
+(HflowMeltMan) Melt Heat Flow Mantle []: 1.960142e+11 
 (HflowLatentIC) Latent Heat Release at ICB []: 0.000000 
 (PowerGravIC) Gravitational Power Release at ICB []: 0.000000 
-(HflowSurf) Heat Flow Surface Total [TW]: 30.257338 
-(HflowSecMan) Mantle Secular Heat Flow []: 3.889580e+12 
-(HfluxCMBAd) Adiabatic Heat Flux Core-Mantle Boundary []: 0.039776 
-(HfluxCMBConv) Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary []: 0.042162 
+(HflowSurf) Heat Flow Surface Total [TW]: 30.688706 
+(HflowSecMan) Mantle Secular Heat Flow []: 4.013295e+12 
+(HfluxCMBAd) Adiabatic Heat Flux Core-Mantle Boundary []: 0.036442 
+(HfluxCMBConv) Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary []: 0.047335 
 (RIC) Inner Core Radius [km]: 0.000000 
 (DRICDTCMB) d(R_ic)/d(T_cmb) []: 0.000000 
 (RICDot) Inner Core growth rate []: inf 
 (ChiOC) Light Element Concentration in Outer Core []: 0.131424 
 (ChiIC) Light Element Concentration in Inner Core []: 0.000000 
-(ThermConductOC) Thermal Conductivity OC []: 107.156262 
+(ThermConductOC) Thermal Conductivity OC []: 102.567384 
 (MassOC) Mass of Outer Core []: 1.911744e+24 
 (MassIC) Mass of Inner Core []: 0.000000 
 (MassChiOC) Mass of Chi in Outer Core []: 2.512483e+23 
 (MassChiIC) Mass of Chi in Inner Core []: 0.000000 
-(DTChi) Core Liquidus Depression []: 394.876172 
-(CoreBuoyTherm) Core Thermal Buoyancy Flux []: 4.917207e-13 
+(DTChi) Core Liquidus Depression []: 182.532804 
+(CoreBuoyTherm) Core Thermal Buoyancy Flux []: 5.520492e-13 
 (CoreBuoyCompo) Core Compositional Buoyancy Flux []: -nan 
-(CoreBuoyTotal) Core Total Buoyancy Flux []: 4.917207e-13 
+(CoreBuoyTotal) Core Total Buoyancy Flux []: 5.520492e-13 
 (GravICB) ICB Gravity []: 0.000000 
-(MagMom) Core Magnetic Moment [EMAGMOM]: 0.780055 
+(MagMom) Core Magnetic Moment [EMAGMOM]: 0.810734 
 (PresSWind) Stellar wind pressure at body []: 2.676100e-09 
-(MagPauseRad) Magnetopause Radius []: 5.338977e+07 
-(ViscJumpMan) Mantle Viscosity Ratio []: 3.827474 
+(MagPauseRad) Magnetopause Radius []: 5.408072e+07 
+(ViscJumpMan) Mantle Viscosity Ratio []: 2.850000 
 (EruptEff) Mantle Melt Eruption Efficiency []: 0.100000 
-(TrefLind) Core Liquidus Lindeman Reference []: 5568.356006 
-(DynViscUMan) Upper Mantle's Dynamic Viscosity [kg*m^2/sec^2]: 2.999738e+21 
+(TrefLind) Core Liquidus Lindeman Reference []: 5650.000000 
+(DynViscUMan) Upper Mantle's Dynamic Viscosity [kg*m^2/sec^2]: 2.415994e+21 
 EMASS=5.974200e+24 EMASSMAN=4.002714e+24 ERMAN=6.371000e+06 ERCORE=3.481000e+06 EDMAN=2.890000e+06 EVOL=1.083207e+21 EVOLCORE=1.766854e+20 EVOLMAN=9.065215e+20
 EDENS=5.515290e+03 EDENSMAN=4.415465e+03 EDENSCORE=1.082004e+04 EDENSOC=1.072173e+04 EDENSIC=1.300000e+04 STIFFNESS=1.000000e+13
 THERMEXPANMAN=3.000000e-05 THERMCONDUMAN=4.200000e+00 THERMCONDLMAN=1.000000e+01 THERMDIFFUMAN=7.519385e-07 cube(EDMAN)=2.413757e+19
-TrefLind=5.568356e+03 ViscRef=1.656484e+08 VISCJUMPMAN=2.700000e+00 
-DTCHIREF=5.408290e+02 CHI_OC_E=1.800000e-01 PARTITION=3.507613e-01 CHI_IC_E=6.313703e-02 EMASSOC_CHI=2.449899e+23 EMASSIC_CHI=6.258395e+21 EMASSCORE_CHI=2.512483e+23
+TrefLind=5.650000e+03 ViscRef=1.000000e+08 VISCJUMPMAN=2.700000e+00 
+DTCHIREF=2.500000e+02 CHI_OC_E=1.800000e-01 PARTITION=3.507613e-01 CHI_IC_E=6.313703e-02 EMASSOC_CHI=2.449899e+23 EMASSIC_CHI=6.258395e+21 EMASSCORE_CHI=2.512483e+23
 body.ViscMeltB=2.500000e+00 Delta=6.000000e+00 Gamma=6.000000e+00 Xi=5.000000e-04 Phis=8.000000e-01 
-body.dFixMeltfactorUMan=0.000000 .dMeltfactorUMan=1.208070e+00 
+body.dFixMeltfactorUMan=0.000000 .dMeltfactorUMan=1.130988e+00 
 body.dStagLid=1.000000 dManHFlowPref=1.000000 
 body.dMagMomCoef=0.150000 body.dPresSWind=2.676100e-09 
 Output Order: Time[Gyr] TUMan[K] TCMB[K] HflowSurf[TW] HflowCMB[TW] MeltMassFluxMan[kg/s] ViscUMan[m^2/s] RIC[km] MagMom[EMAGMOM]
 Grid Output Order:
 
-Runtime = 2.000000 s
+Runtime = 3.000000 s

@@ -804,6 +804,7 @@ typedef struct {
   double dIncTmp;
   double dCosArgP;
   double dMinAllowed;  /**< minimum allowed close approach of body to host */
+  double dMassInterior;
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to

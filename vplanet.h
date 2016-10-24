@@ -119,7 +119,7 @@
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
 #define OUTLEN        48     /* Maximum number of characters in an output column header */
-#define LINE          128   /* Maximum number of characters in a line */
+#define LINE          256   /* Maximum number of characters in a line */
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -211,18 +211,16 @@
 
 /* Now define the structs */
 
-/*!
- * BODY contains all the physical parameters for every body 
- * Why won't these lines be added?
- */
-
 #define MAXSPECIES       100
+
 typedef struct {
   double dInitTimeStep;
   double dMaxSteps;
 } PHOTOCHEM;
 
-/* Body Structure */
+/*! \brief BODY contains all the physical parameters for every body. 
+ *         Members are broken into chunks by module.
+ */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   int iBodyType;        /**< Body's type: 0 for planet, 1 for star */

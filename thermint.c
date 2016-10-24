@@ -473,7 +473,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
   fnRead[OPT_VISCJUMPMAN] = &ReadViscJumpMan;
 
-   /* ViscRef */
+  /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
   sprintf(options[OPT_VISCREF].cDefault,"Default=1");
@@ -484,7 +484,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
 
-   /* TrefLind */
+  /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
   sprintf(options[OPT_TREFLIND].cDefault,"Default in thermint.h");
@@ -578,6 +578,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN; 
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
   fnRead[OPT_MELTFACTORUMAN] = &ReadMeltfactorUMan;
+
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,"Fix Viscosity Melt Factor");
@@ -599,6 +600,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STAGLID].dDefault = STAGLID; 
   sprintf(options[OPT_STAGLID].cNeg,"Default is STAGLID");
   fnRead[OPT_STAGLID] = &ReadStagLid;
+
   /* ManHFlowPref */
   sprintf(options[OPT_MANHFLOWPREF].cName,"dManHFlowPref");
   sprintf(options[OPT_MANHFLOWPREF].cDescr,"Mantle HFlow Prefix");

@@ -11,6 +11,8 @@
 #include <string.h>
 #include "vplanet.h"
 
+/*! \brief Main function. All the magic happens here!
+ */
 int main(int argc,char *argv[]) {
   time_t dStartTime;
   dStartTime = time(NULL);

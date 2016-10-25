@@ -2,23 +2,19 @@
 #	To do:	Move user-editable parameters to an .ini file
 #		Fix problem where parameters in list not in .in file are unchanged and no error is thrown (add instead of find and replace?)
 #		Write readme file
-#		Get output params from log file? Use vplot?
+#		
 #
 
 import numpy as np
 import emcee
 import os
 import sys
-import ConfigParser
 
-#Load config file and make the values into useful ones
-
-Config = ConfigParser.ConfigParser()
-Config.optionxform = str #Must be before read command
-Config.read("vemcee.ini")
-
-nwalkers = int(Config.get("Global","nwalkers"))
-walker_steps = int(Config.get("Global","walker_steps"))
+#
+#General Runtime parameters
+#
+nwalkers = 4 #must be even and more than 2x the number of parameters due to emcee implementation magic. With effort this can be changed.
+walker_steps = 1
 
 #
 #Output parameter target Values and error scale; used later to determine quality of fit
@@ -163,10 +159,6 @@ def lnfit(x):
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnfit)
 pos, prob, state = sampler.run_mcmc(init_pos, walker_steps)
 sampler.reset()
-
-#
-#Write & save output
-#
 
 with open("minima.txt", "a") as minima:
     minima.write( str(mindev)+" at "+str(param_list)+"="+str(minpos)+"\n\n")

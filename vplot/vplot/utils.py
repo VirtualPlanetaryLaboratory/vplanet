@@ -355,12 +355,12 @@ def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
       except AttributeError:
         body.color = colors[b]
       
-    # Grab the forward arrays
+    # Grab the forward arrays. Note that they may not exist for this body
     try:
       with open(os.path.join(path, body.fwfile), 'r') as f:
         fwfile = f.readlines()
     except IOError:
-      raise Exception('Unable to open %s.' % body.fwfile)
+      fwfile = ['']
                        
     # Now grab the output order
     outputorder = re.search(r'- BODY: %s -(.*?)\nOutput Order:(.*?)\n' % body.name, 

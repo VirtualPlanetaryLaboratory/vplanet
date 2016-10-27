@@ -1,5 +1,6 @@
 #
 #	To do:	Clean up the earth.in file and make it so parameters are appended rather than replaced
+#		Move non-userspace files to resources folder
 #		Write readme file
 #		Get output params from log file? Use vplot?
 #		Add keyboard interrupt so you can log the best file if you stop the program early

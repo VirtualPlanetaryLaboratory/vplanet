@@ -1,5 +1,5 @@
 # Earthlike parameters
-sName		earth			# Body's name
+sName		earth
 saModules 	radheat thermint
 
 # Physical Properties

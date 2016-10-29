@@ -1,5 +1,5 @@
 # Earthlike parameters
-sName test			# Body's name
+sName test#test		earth
 saModules 	radheat thermint
 
 # Physical Properties
@@ -43,7 +43,7 @@ dDTChiRef      250.     ## def is 300.
 dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dViscJumpMan   2.85
-dViscRef   450791096.876#    1.0e8	   #1e8
+dViscRef   328019860.854#    1.0e8	   #1e8
 dStagLid       1
 dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
 dMagMomCoef    0.15

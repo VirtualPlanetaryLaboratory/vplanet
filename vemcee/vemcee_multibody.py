@@ -26,28 +26,27 @@ def graceful_exit(status):
 # Progress bar
 def progress(count, total):
 
-	rows, columns = map(int, os.popen('stty size', 'r').read().split())
-	bar_len = columns/3
+	rows, columns = os.popen('stty size', 'r').read().split()
+	bar_len = int(columns)/3
 	filled_len = int(round(bar_len * count / float(total)))
-	unit = 's'
 
 	percents = round(100.0 * count / float(total), 1)
 	bar = '=' * filled_len + '-' * (bar_len - filled_len)
 	rate = count / (time.time() - start_time)
 	time_left = (total - count)/rate
 
-	#If the time estimate is long, report time left in minutes or hours
-	if (time_left > 60 and time_left < 3600):
-		time_left /= 60
-		unit = 'm'
-	if (time_left >3600):
-		time_left /= 3600
-		unit = 'h'
-	if (columns > 80):
-		sys.stdout.write('Running vemcee... {2:.3}{3} remaining [{0}] {1}%     \r'.format(bar,percents,time_left,unit))
+	unit = "s"	
+	if (time_left > 3600):
+		unit = "h" ; time_left /= 3600
+	elif (time_left > 60):
+		unit = "m" ; time_left /= 60
+
+	if (int(columns) > 65):
+		sys.stdout.write('\r Running vemcee; {2:.3}{3} remaining; [{0}] {1}%  '.format(bar,percents,time_left,unit))
 	else:
-		sys.stdout.write('Running vemcee... {0:.3}{1} remaining    \r'.format(time_left,unit))
+		sys.stdout.write('\r Running vemcee; {2:.3}{3} remaining'.format(bar,percents,time_left,unit))	
 	sys.stdout.flush()
+
 
 
 

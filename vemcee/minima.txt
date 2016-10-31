@@ -22,3 +22,5 @@
 15240.2038307 at ['dViscRef', 'dViscJumpMan']=[  2.37383303e+08   4.17392098e+00]
 15240.2038307 at ['dViscRef', 'dViscJumpMan']=[  1.58250878e+08   4.13483596e+00]
 15240.2038307 at ['dViscRef', 'dViscJumpMan']=[  1.99953729e+08   6.96737946e+00]
+14952.2417375 at ['dViscRef', 'dViscJumpMan']=[  8.41420144e+07   1.36479459e+00]
+2906.92388418 at ['dViscRef', 'dViscJumpMan']=[  6.50578392e+07   8.70370281e+00]

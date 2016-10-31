@@ -25,9 +25,10 @@ def graceful_exit(status):
 
 
 # Progress bar modified from code here: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
-# May fail to overwrite properly if the terminal window is too small.
+# Should be smart about terminal size
 def progress(count, total):
-	bar_len = 35
+	rows, columns = os.popen('stty size', 'r').read().split()
+	bar_len = int(columns)/3
 	filled_len = int(round(bar_len * count / float(total)))
 
 	percents = round(100.0 * count / float(total), 1)
@@ -35,7 +36,16 @@ def progress(count, total):
 	rate = count / (time.time() - start_time)
 	time_left = (total - count)/rate
 
-	sys.stdout.write('\r[{0}] {1}%;  {2:.2}s remaining     '.format(bar,percents,time_left))
+	unit = "s"	
+	if (time_left > 3600):
+		unit = "h" ; time_left /= 3600
+	elif (time_left > 60):
+		unit = "m" ; time_left /= 60
+
+	if (int(columns) > 65):
+		sys.stdout.write('\r Running vemcee; {2:.3}{3} remaining; [{0}] {1}%  '.format(bar,percents,time_left,unit))
+	else:
+		sys.stdout.write('\r Running vemcee; {2:.3}{3} remaining'.format(bar,percents,time_left,unit))	
 	sys.stdout.flush()
 
 
@@ -101,6 +111,8 @@ def lnfit(x):
 #Startup tasks, time and command-line parameters
 start_time = time.time()
 os.system("rm minima_log.txt > /dev/null")
+print "\n"
+
 try:
 	in_file = sys.argv[1]
 except Exception:

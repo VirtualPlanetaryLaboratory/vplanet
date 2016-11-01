@@ -1,4 +1,4 @@
-sName       altearth                    #name of planet
+sName       earth                    #name of planet
 saModules   poise                       #what vplanet modules you want to use
 #saModules    distorb distrot poise     #we might use distorb & distrot later
 dMass        3.00316726e-06             #mass of planet
@@ -8,8 +8,8 @@ dObliquity 90.0                         #obliquity
 dSemi  -1.0200                          #semi-major axis (minus = days)
 dEcc         0.0                        #eccentricity of orbit
 dLongP       0                          #pericenter, wrt Earth's position at spring equinox     
-                                        #note that this is the typical value +180, 
-                                        #since that one is solar position
+#                                        note that this is the typical value +180, 
+#                                        since that one is solar position
 dDynEllip    0.0                        #shape of planet (0 = a sphere)
 dPrecA 0.0                              #orientation of spin axis
 
@@ -63,5 +63,5 @@ dAlbedoWater      0.3                   #albedo of water
 saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
-  -IceFlow -BedrockH TempMaxLat TempMinLat -FluxMerid -DivFlux
+  -IceFlow -BedrockH -TempMaxLat -TempMinLat -FluxMerid -DivFlux
 

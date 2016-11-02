@@ -317,6 +317,24 @@ void ReadFixMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dFixMeltfactorUMan = options->dDefault;
 }
+
+void ReadMeltfactorLMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This input option only applies when FixMeltfactorLMan=1 */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   // XXX Rory doesn't think negatives options allowed
+      body[iFile-1].dMeltfactorLMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dMeltfactorLMan = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dMeltfactorLMan = options->dDefault;
+}
+
 void ReadMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This input option only applies when FixMeltfactorUMan=1 */
   int lTmp=-1;
@@ -333,6 +351,7 @@ void ReadMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dMeltfactorUMan = options->dDefault;
 }
+
 void ReadStagLid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
@@ -473,7 +492,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
   fnRead[OPT_VISCJUMPMAN] = &ReadViscJumpMan;
 
-   /* ViscRef */
+  /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
   sprintf(options[OPT_VISCREF].cDefault,"Default=1");
@@ -484,7 +503,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
 
-   /* TrefLind */
+  /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
   sprintf(options[OPT_TREFLIND].cDefault,"Default in thermint.h");
@@ -568,16 +587,29 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &ReadViscMeltB;
   
+  /* MeltfactorLMan XXX Added by Rory -- Check!*/
+  sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
+  sprintf(options[OPT_MELTFACTORLMAN].cDescr,"Lower Mantle Viscosity Melt Factor");
+  sprintf(options[OPT_MELTFACTORLMAN].cDefault,"%f",MELTFACTORLMAN);
+  options[OPT_MELTFACTORLMAN].iType = 2;
+  options[OPT_MELTFACTORLMAN].iMultiFile = 1;
+  // XXX Rory doesn't think negative options should be allowed here
+  //options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
+  options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN; 
+  //sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
+  fnRead[OPT_MELTFACTORLMAN] = &ReadMeltfactorLMan;
+
   /* MeltfactorUMan */
   sprintf(options[OPT_MELTFACTORUMAN].cName,"dMeltfactorUMan");
-  sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Viscosity Melt Factor");
-  sprintf(options[OPT_MELTFACTORUMAN].cDefault,"Default is MELTFACTORUMAN");
+  sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Upper Mantle Viscosity Melt Factor");
+  sprintf(options[OPT_MELTFACTORUMAN].cDefault,"%f",MELTFACTORUMAN);
   options[OPT_MELTFACTORUMAN].iType = 2;
   options[OPT_MELTFACTORUMAN].iMultiFile = 1;
   options[OPT_MELTFACTORUMAN].dNeg = MELTFACTORUMAN;
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN; 
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
   fnRead[OPT_MELTFACTORUMAN] = &ReadMeltfactorUMan;
+
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,"Fix Viscosity Melt Factor");
@@ -599,6 +631,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STAGLID].dDefault = STAGLID; 
   sprintf(options[OPT_STAGLID].cNeg,"Default is STAGLID");
   fnRead[OPT_STAGLID] = &ReadStagLid;
+
   /* ManHFlowPref */
   sprintf(options[OPT_MANHFLOWPREF].cName,"dManHFlowPref");
   sprintf(options[OPT_MANHFLOWPREF].cDescr,"Mantle HFlow Prefix");
@@ -700,10 +733,8 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
     fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
 }
 
+/******************  AUX PROPS  ***************************/
 
-
-/******************************  AUX PROPS  ***********************************************/
-/* Auxiliary Properties */
 void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
@@ -715,27 +746,27 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dSignTJumpLMan=fdSignTJumpLMan(body,iBody);
   //  body[iBody].dViscJumpMan=fdViscJumpMan(body,iBody);
   if (body[iBody].dMeltfactorUMan==0)
-      body[iBody].dMeltfactorUMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
+    body[iBody].dMeltfactorUMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
   if (body[iBody].dMeltfactorLMan==0)
-      body[iBody].dMeltfactorLMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
+    body[iBody].dMeltfactorLMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
   /* Loop through melt calculation once to get dependence of visc on melt. */
   int i=0, nloop=1;
   for (i=0;i<nloop;i++) {
-      body[iBody].dViscUManArr=fdViscUManArr(body,iBody);
-      body[iBody].dViscUMan=fdViscUMan(body,iBody);
-      body[iBody].dViscLMan=fdViscLMan(body,iBody);
-      body[iBody].dBLUMan=fdBLUMan(body,iBody);
-      body[iBody].dBLLMan=fdBLLMan(body,iBody);
-      body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
-      body[iBody].dTsolUMan=fdTsolUMan(body,iBody);
-      body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
-      body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
-      body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
-      //      body[iBody].dFixMeltfactorUMan=fdFixMeltfactorUMan(body,iBody);
-      body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
-      body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
-      body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
-      body[iBody].dMeltfactorLMan=fdMeltfactorLMan(body,iBody);
+    body[iBody].dViscUManArr=fdViscUManArr(body,iBody);
+    body[iBody].dViscUMan=fdViscUMan(body,iBody);
+    body[iBody].dViscLMan=fdViscLMan(body,iBody);
+    body[iBody].dBLUMan=fdBLUMan(body,iBody);
+    body[iBody].dBLLMan=fdBLLMan(body,iBody);
+    body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
+    body[iBody].dTsolUMan=fdTsolUMan(body,iBody);
+    body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
+    body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
+    body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
+    //      body[iBody].dFixMeltfactorUMan=fdFixMeltfactorUMan(body,iBody);
+    body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
+    body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
+    body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
+    body[iBody].dMeltfactorLMan=fdMeltfactorLMan(body,iBody);
   }
   body[iBody].dDepthMeltMan=fdDepthMeltMan(body,iBody);
   body[iBody].dTDepthMeltMan=fdTDepthMeltMan(body,iBody);
@@ -2387,7 +2418,11 @@ double fdHflowCMB(BODY *body,int iBody) {
   return fdHflowLMan(body,iBody);
 }
 double fdHflowLatentMan(BODY *body,UPDATE *update,int iBody) {
-    double HflowLatentMan=(-DVLIQDTEMP)*(*(update[iBody].pdTDotMan))*(EDENSMAN)*(SPECLATENTMAN);  //which structure has dTDotMan??
+  double HflowLatentMan;
+
+  // During the first WriteLog, pdTDotMan is not yet initialized! XXX
+
+  HflowLatentMan = (-DVLIQDTEMP)*(*(update[iBody].pdTDotMan))*(EDENSMAN)*(SPECLATENTMAN);  //which structure has dTDotMan??
     HflowLatentMan=max(HflowLatentMan,0);   //ensure positive.
     return HflowLatentMan;
 }

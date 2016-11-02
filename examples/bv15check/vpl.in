@@ -1,5 +1,5 @@
 # Example primary input file for VPLANET
-sSystemName	gl581			# System Name
+sSystemName	pandora			# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -7,20 +7,15 @@ bOverwrite	1			# Allow file overwrites?
 # The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
-sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
-
-
 # List of "body files" that contain body-specific parameters
-saBodyFiles	gl581.in $	# The host star
-		d.in $		# Gl 581 d, weaker tides, 30x potassium-40
-		c.in 		# Gl 581 c, Earth-like w/strong tides
-
+saBodyFiles	A.in B.in C.in
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
+sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K
@@ -31,7 +26,7 @@ sUnitTemp       K
 
 # Input/Output
 bDoLog		1		# Write a log file?
-iDigits		6		# Maximum number of digits to right of decimal
+iDigits		10		# Maximum number of digits to right of decimal
 dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 
 # Option names must be exact in spelling and case.
@@ -39,17 +34,11 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
+dEta		0.01		# Coefficient for variable timestepping
 
-#dTimeStep	100
-#dStopTime	1.0e9		# Stop time for evolution
-#dOutputTime	1.0e8		# Output timesteps (assuming in body files)
-#dStopTime	2e8		# Stop time for evolution
-#dOutputTime	1e6		# Output timesteps (assuming in body files)
-
-dTimeStep	1000
-dStopTime	1.0e6		# Stop time for evolution
-dOutputTime	1000		# Output timesteps (assuming in body files)
+dTimeStep	0.001
+dStopTime	500		# Stop time for evolution
+dOutputTime	1	# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)
 

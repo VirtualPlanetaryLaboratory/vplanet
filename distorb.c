@@ -81,7 +81,7 @@ void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     body[iFile-1].bGRCorr = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&body[iFile-1].bGRCorr,files->iNumInputs);
+    body[iFile-1].bGRCorr = atoi(options->cDefault);
 }
 
 void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -221,9 +221,6 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
-  
-
-  
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
@@ -517,6 +514,10 @@ void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
+      if (body[j].bDistOrb == 0) {
+        fprintf(stderr,"ERROR: DistOrb must be the called for all planets\n");
+        exit(EXIT_INPUT);
+      }
       body[iBody].iaGravPerts[iPert] = j;
       iPert++;
     }
@@ -572,6 +573,10 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
+    if (body[j].bDistOrb == 0) {
+        fprintf(stderr,"ERROR: DistOrb must be the called for all planets\n");
+        exit(EXIT_INPUT);
+    }
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
   }

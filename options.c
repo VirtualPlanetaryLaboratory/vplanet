@@ -42,7 +42,7 @@ int CheckComment(char cLine[],int iLen) {
 
   for (iPos=0;iPos<iLen;iPos++) {
     if (!isspace(cLine[iPos])) {
-      if (cLine[iPos] == 35)
+      if (cLine[iPos] == 35) // # is ASCII code 35
       return 1;
     } else
       return 0;
@@ -109,7 +109,8 @@ void GetNextValidLine(char cFile[],int iStart,char cLine[],int *iLine) {
     return;
   }
 
-  /* Now check for blank line, comment (#), or continue ($) */
+  /* Now check for blank line, comment (# = 35), continue ($ = 36) 
+     or blank line (line feed = 10). */
 
   for (iPos=0;iPos<LINE;iPos++) {
     if (cLine[iPos] == 36 || cLine[iPos] == 35 || cLine[iPos] == 10) { 
@@ -156,7 +157,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
-      if (cLine[iPos] != 35) {
+      if (cLine[iPos] != 35) { // 35 is ASCII code for # 
         /* Fill word in */
         cInput[iWord][iPosStart] = cLine[iPos];
         iPosStart++;
@@ -350,7 +351,7 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
         for (iPos=1;iPos<LINE;iPos++) { /* Ignore first character, as it makes conditional well-defined */
           /* printf("%d ",cLine[iPos]); */ 
           if (ok) {
-            if (cLine[iPos] == 35) {
+            if (cLine[iPos] == 35) { // 35 is ASCII code for #
               /* Pound sign! */
               ok=0;
               iNumOut++;
@@ -371,7 +372,8 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
 }
 
 int iGetNumLines(char cFile[]) {
-  int iNumLines = 0;
+  int iNumLines = 0,iChar,bFileOK = 1;
+  int bComment,bReturn;
   FILE *fp;
   char cLine[LINE];
 
@@ -380,9 +382,37 @@ int iGetNumLines(char cFile[]) {
     fprintf(stderr,"Unable to open %s.\n",cFile);
     exit(EXIT_INPUT);
   }
+  
   while(fgets(cLine,LINE,fp) != NULL) {
     iNumLines++;
+
+    /* Check to see if line is too long. The maximum length of a line is set
+       by LINE. If a carriage return is not found in the first LINE 
+       characters *and* is not preceded by a comment, the line is too long. */
+    bComment=0;
+    bReturn=0;
+    for (iChar=0;iChar<LINE && cLine[iChar] != '\0';iChar++) {
+      if (cLine[iChar] == 35) { // 35 is ASCII code for #
+	bComment = 1;
+      }
+      // Maybe unnecessary with the second conditional in the loop initialization?
+      if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
+	bReturn = 1;
+      }
+      
+    }
+    
+    if (!bReturn && !bComment) {
+      if (iChar >= LINE) {
+	fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
+	bFileOK = 0;
+      }
+    }
   }
+  
+  if (!bFileOK) 
+    exit(EXIT_INPUT);
+  
   return iNumLines;
 }
 

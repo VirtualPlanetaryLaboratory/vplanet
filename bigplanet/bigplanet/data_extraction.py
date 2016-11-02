@@ -596,9 +596,9 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
                     data.append(np.array(hf.get(path)[var]))
             # Only one variables
             else:
-                return np.array(hf.get(path)[variables])
+                return np.array(hf.get(path)[variables]).squeeze()
 
-        return np.asarray(data,dtype=dtype)
+        return np.asarray(data,dtype=dtype).squeeze()
     except RuntimeError:
         raise RuntimeError("Invalid get call.  Simulation, body, variable(s) : %s, %s, %s" %
               (simulation,body,variables))
@@ -666,6 +666,7 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
     # If cache exists, load that and return df
     if os.path.exists(cache):
         print("Reading data from cache:",cache)
+        sys.stdout.flush()
         with open(cache, 'rb') as handle:
             return pickle.load(handle)
 
@@ -729,6 +730,7 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
     # Cache the result?
     if cache is not None:
         print("Caching data at %s" % cache)
+        sys.stdout.flush()
         with open(cache, 'wb') as handle:
             pickle.dump(res, handle)
 

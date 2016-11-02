@@ -862,10 +862,3 @@ def reduce_dimensions(x, y, z, shape, dims=(-1,), reduce_func = np.nanmean):
 
     return x, y, z
 # End function
-
-
-"""
-
-Misc
-
-"""

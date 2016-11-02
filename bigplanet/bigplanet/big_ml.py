@@ -1,0 +1,146 @@
+"""
+@author David P. Fleming (dflemin3) Nov 2, 2016
+@email dflemin3 (at) uw (dot) edu
+University of Washington, Seattle
+
+Functions for machine learning vplanet simulation results.  Functions include feature
+generation, data manipulation and methods for supervised learning from the data using
+sklearn functionality.
+
+The idea behind these routines is to be able to learn a model to VPLANET initial
+conditions to predict some output so you do not have to run more simulations.  Many of
+these functions make standard data manipulation much more simple by wrapping sklearn
+functions.
+
+"""
+
+from __future__ import division, print_function, absolute_import
+import numpy as np
+import os
+import sys
+import pandas as pd
+import pickle
+from sklearn import preprocessing
+
+# Tell module what it's allowed to import
+__all__ = ["poly_features",
+           "fourier_features",
+           "scale_data",
+           "extract_features"]
+
+def extract_features(df, features, target):
+    """
+    Extract features, target vectors from dataframe and return them as numpy arrays.  Also
+    returns a mapping between matrix index and column.
+
+    Parameters
+    ----------
+    df : pandas Dataframe
+        input dataframe
+    features : list
+        list of string of column names of desired features (for X matrix)
+    target : str
+        name of target variable for supervised learning (for y vector)
+
+    Returns
+    -------
+    X : array
+    y : vector
+    names : dict
+    """
+
+    X = df[features].values
+    y = df[target].values
+    names = dict(zip(features, [x for x in range(0,len(features))]))
+
+    return X, y, names
+# end function
+
+
+def poly_features(X, degree=2, interaction_only=False, include_bias=True):
+    """
+    Wrapper for sklearn PolynomialFeatures which performs the following:
+
+    Generate a new feature matrix consisting of all polynomial combinations of the
+    features with degree less than or equal to the specified degree. For example, if an
+    input sample is two dimensional and of the form [a, b], the degree-2 polynomial
+    features are [1, a, b, a^2, ab, b^2].
+
+    See http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.
+    PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures for more details.
+
+    Parameters
+    ----------
+    X : array
+        input data.  Something like df[feature_columns].values
+    degree : int (optional)
+        Max degree of polynomial features.  Defaults to 2.  Fit is slow with degree > 2
+    interaction_only : bool (optional)
+        If true, only interaction features are produced: features that are products of
+        at most degree distinct input features (so not x[1] ** 2, x[0] * x[2] ** 3, etc.).
+        Defaults to False
+    include_bias : bool (optional)
+        If True (default), then include a bias column, the feature in which all
+        polynomial powers are zero (i.e. a column of ones - acts as an intercept term in
+        a linear model).
+
+    Returns
+    -------
+    X : array
+        transformed input data
+
+    """
+    # Make polynomial transformation, perform transformation
+    poly = preprocessing.PolynomialFeatures(degree=degree,
+                                            interaction_only=interaction_only,
+                                            include_bias=include_bias)
+    return poly.fit_transform(X)
+# end function
+
+
+def fourier_features(X, k=100):
+    """
+    Generate random Fourier bases cos(wX + b) where w in R^d and b in R are random
+    variables drawn from uniform distribution on [0, 2pi].  Maps current features into
+    this new fourier space.
+
+    Parameters
+    ----------
+    X : array (n x d)
+        input data.  Something like df[feature_cols].values for n samples, d features
+    k : int (optinonal)
+        number of new transformed features
+
+    Returns
+    -------
+    X : array (n x k)
+        transformed input data for n samples, k fourier features
+    """
+
+    # Generate synthetic data
+    w = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[-1],k))
+    b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
+
+    return np.cos(X.dot(w) + b)
+# end function
+
+
+def scale_data(X):
+    """
+    Transform the data to center it by removing the mean value of each feature, then
+    scale it by dividing non-constant features by their standard deviation using
+    sklearn's preprocessing.scale
+
+    Parameters
+    ----------
+    X : array
+        input data (something like df.values)
+
+    Returns
+    -------
+    X : array
+        scaled input data
+    """
+
+    return preprocessing.scale(X)
+# end function

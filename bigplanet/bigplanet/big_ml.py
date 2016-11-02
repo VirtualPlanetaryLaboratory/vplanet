@@ -16,10 +16,6 @@ functions.
 
 from __future__ import division, print_function, absolute_import
 import numpy as np
-import os
-import sys
-import pandas as pd
-import pickle
 from sklearn import preprocessing
 
 # Tell module what it's allowed to import

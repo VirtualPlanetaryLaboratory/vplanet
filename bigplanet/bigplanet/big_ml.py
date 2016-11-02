@@ -98,7 +98,7 @@ def poly_features(X, degree=2, interaction_only=False, include_bias=True):
 # end function
 
 
-def fourier_features(X, k=100):
+def fourier_features(X, k=100, w = None, b = None, verbose = False):
     """
     Generate random Fourier bases cos(wX + b) where w in R^d and b in R are random
     variables drawn from uniform distribution on [0, 2pi].  Maps current features into
@@ -108,20 +108,79 @@ def fourier_features(X, k=100):
     ----------
     X : array (n x d)
         input data.  Something like df[feature_cols].values for n samples, d features
-    k : int (optinonal)
+    k : int (optional)
         number of new transformed features
+    w : transformation matrix (optional)
+        (features x new_features) matrix. Defaults None
+    b : transformation vector (optional)
+        (samples x 1) vector.  Defaults to None
+    verbose : bool (optional)
+        whether or not to return w, b if you're generating them.  Defaults to False
 
     Returns
     -------
     X : array (n x k)
         transformed input data for n samples, k fourier features
+    Also w, b not supplied
     """
 
-    # Generate synthetic data
-    w = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[-1],k))
-    b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
+    # If not supplied, generate transformation!
+    if w is None and b is None:
 
-    return np.cos(X.dot(w) + b)
+        # Generate synthetic data
+        w = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[-1],k))
+        b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
+
+        if verbose:
+            return np.cos(X.dot(w) + b), w, b
+        else:
+            return np.cos(X.dot(w) + b)
+    # Have w and b!
+    elif w is not None and b is not None:
+        return np.cos(X.dot(w) + b)
+    else:
+        ValueError("Either supply both w and b or neither!")
+# end function
+
+
+def naive_nn_layer(X, k = 5000, v = None, verbose = False):
+	"""
+	Perform a naive approximation to the first layer of a neural network to transform
+	a d x 1 dimensional feature vector for a given sample to k x 1 via a linear
+	combination of the original d features.  The mapping is given by the following
+
+	h_i(x) = v_i dot x
+
+	where v is a d x k matrix where each column is a d x 1 vector whose entries are
+	sampled from the standard normal distribution.
+
+	Parameters
+	----------
+	X : array (n x d)
+		input data
+	k : int (optional)
+		number of features for of new sample.  Defaults to 5000
+	v : array (d x k) (optional)
+		weight mapping matrix.  generated from standard normal if not supplied
+	verbose : bool (optional)
+	    whether or not to return transformation matrix.  Defaults to False
+
+	Returns
+	-------
+	X : array (n x k)
+		transformed data
+	"""
+
+	# Generate feature mapping as random variates from standard normal distribution
+	if v is None:
+		v = np.random.normal(size=(X.shape[-1],k))
+
+		if verbose:
+		    return X.dot(v), v
+		else:
+		    return X.dot(v)
+	else:
+		return X.dot(v)
 # end function
 
 

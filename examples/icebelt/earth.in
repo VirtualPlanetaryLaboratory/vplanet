@@ -1,57 +1,67 @@
-sName        Earth   
-saModules   poise
-#saModules    distorb distrot poise
-dMass        3.00316726e-06
-dRadius      -1.00
-dRotPeriod   -1.00000
-dObliquity 90.0
-dSemi  -1.0200
-#dSemi        1.7
-dEcc         0.0 #0.036851
-#dInc         5e-5
-dLongP       0 #8.99    #pericenter, wrt Earth's position at spring equinox     
-#note that this is the typical value +180, since that one is solar position
-#dLongA       348.73936
-# bGRCorr      0
+sName       earth                    #name of planet
+saModules   poise                       #what vplanet modules you want to use
+#saModules    distorb distrot poise     #we might use distorb & distrot later
+dMass        3.00316726e-06             #mass of planet
+dRadius      -1.00                      #radius (not important right now)
+dRotPeriod   -1.00000                   #rotation period (minus = days)
+dObliquity 90.0                         #obliquity 
+dSemi  -1.0200                          #semi-major axis (minus = days)
+dEcc         0.0                        #eccentricity of orbit
+dLongP       0                          #pericenter, wrt Earth's position at spring equinox     
+#                                        note that this is the typical value +180, 
+#                                        since that one is solar position
+dDynEllip    0.0                        #shape of planet (0 = a sphere)
+dPrecA 0.0                              #orientation of spin axis
+
+#_______addition disorb/distrot parameters (leave these alone for now)__________________
+#dInc         5e-5                      #inclination of orbit
+#dLongA       348.73936                 #orientation of orbital plane
+#bGRCorr      0                         #use GR correction (not important)
+#bInvPlane    1                         #convert to invariable plane coords
+#bOverrideMaxEcc  1                     #override max ecc halt (not recommended)
+#dHaltMaxEcc     0.4                    #eccentricity at which to halt simulation
+
+#_______poise parameters (have fun with these!)_________________________________________
+iLatCellNum      151                    #number of latitude cells
+bClimateModel     sea                   #use seasonal or annual model
+dTGlobalInit      14.85                 #initial guess at average surface temp 
+iNumYears         4                     #number of years (orbits) to run clim model
+iNStepInYear 80                         #number of steps to take in a "year"
+#dSurfAlbedo       0.35                 #average surface albedo (annual model only)
+
+#__ice params_________
+bIceSheets       1                      #enable ice sheets
+dInitIceLat      90.                    #how low do initial ice sheet extend?
+dInitIceHeight   0.                     #height of initial ice sheets
+dIceDepRate       3e-5                  #rate of snow build up (when T < 0)
+dIceAlbedo        0.6                   #albedo of ice
+iIceDt             1                    #time step of ice-sheet model (orbits)
+iReRunSeas         500                  #how often to re-run seasonal model
+bSeaIceModel      0                     #use sea ice model (slow!)
+bSkipSeasEnabled   0                    #can skip seasonal if snowball state present
+
+#__heat diffusion______
+#bMEPDiff         1                     #calculate diffusion using max entropy production
+#bHadley          1                     #mimic hadley heat diffusion
+dDiffusion 0.5                          #diffusion coefficient (fixed)
+
+#__outgoing flux_______
+#dPlanckA         203.3                 #offset for OLR calculation (greenhouse)
+#dPlanckB         2.09                  #slope of OLR calc (water vapor feedback)
+bCalcAB           1                     #calculate A & B from Kasting model fits
+dpCO2 0.00028                           #partial pressure of co2
+
+#__surface properties__
+dAlbedoLand       0.4                   #albedo of land
+dAlbedoWater      0.3                   #albedo of water
+#dHeatCapLand      1.53                 #land heat capacity
+#dHeatCapWater      28.4                #water heat capacity
+#dMixingDepth      70                   #mixing depth of ocean
+
+
+#________output options!_____________________________________________
 saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
-#saOutputOrder     Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
-  -IceFlow -BedrockH EnergyResW EnergyResL -FluxMerid -DivFlux
-#saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut EnergyResW EnergyResL
-#saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
-#bInvPlane    1
-#dMeanA       27
-dDynEllip    0.0
-dPrecA 0.0
-#bOverrideMaxEcc  1
-#dHaltMaxEcc     0.4
-iLatCellNum      151
-#bMEPDiff         1
-bIceSheets       1
-dInitIceLat      90.
-dInitIceHeight   0.
-#bHadley          1
-dDiffusion 0.5
-#dPlanckA         203.3
-#dPlanckB         2.09
-bCalcAB           1
-dTGlobalInit      14.85
-dpCO2 0.00028
-#dSurfAlbedo       0.35
-bClimateModel     sea
-iNumYears         4
-iNStepInYear 80 
-bSeaIceModel      0
-dIceDepRate       3e-5
-dIceAlbedo        0.6
-dAlbedoLand       0.4
-dAlbedoWater      0.3
-#dHeatCapLand      1.53
-#dHeatCapWater      28.4
-#dMixingDepth      70
-iIceDt             1
-iReRunSeas         500
-iAlbedoType        fix
-bSkipSeasEnabled   0
+  -IceFlow -BedrockH -TempMaxLat -TempMinLat -FluxMerid -DivFlux
 

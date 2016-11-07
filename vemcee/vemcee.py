@@ -88,7 +88,7 @@ def lnfit(x):
 	os.system('../vplanet -q vpl.in')
 
 	#load output file, calculate deviance using ideal value and deviation scale from above
-	exec(readfile_outputs+"= np.loadtxt('sun.test.forward',dtype=float,delimiter=' ',unpack=True,usecols=(0,1,2,3,4,5,6,7,8) )")
+	exec(readfile_outputs+"= np.genfromtxt('sun.test.forward',dtype=float,delimiter=' ',unpack=True,usecols=(0,1,2,3,4,5,6,7,8) )")
 	Dev_Tot = 0
 	for target_iterator in range(0,len(target_list)):
 		target = str(target_list[target_iterator])

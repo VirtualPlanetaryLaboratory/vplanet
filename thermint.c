@@ -111,7 +111,7 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
 }
 
-/**************** RADHEAT options ********************/
+/**************** THERMINT options ********************/
 
 /* Initial Mantle & Core Temperature */
 
@@ -710,16 +710,19 @@ void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     */
 }
 
+void VerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-void VerifyTMan(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-    //  AssignTMan(body,options,dAge,iBody);
-    /* Mantle */
-    update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
-    update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
-    update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
-    update[iBody].iaBody[update[iBody].iTMan][0][0]=iBody;
-    update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
-    fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
+  //  AssignTMan(body,options,dAge,iBody);
+  /* Mantle */
+  update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+  update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
+  update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
+  update[iBody].iaBody[update[iBody].iTMan][0][0]=iBody;
+  update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
+  fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
+  
+  // Initialize some values that dDTManDt depends on
+  update[iBody].daDerivProc[update[iBody].iTMan][0] = 0;
 }
 
 void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -731,6 +734,15 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
     update[iBody].iaBody[update[iBody].iTCore][0][0]=iBody;
     update[iBody].pdTDotCore = &update[iBody].daDerivProc[update[iBody].iTCore][0];
     fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
+
+    // Initialize parameters that dDTCoreDt depends on
+    body[iBody].dRIC = 0;
+    body[iBody].dHfluxCMBConv = 0;
+    body[iBody].dRICDot = 0;
+    body[iBody].dGravICB = fdGravICB(body,iBody);
+    body[iBody].dCoreBuoyTherm = fdCoreBuoyTherm(body,iBody);
+    body[iBody].dCoreBuoyCompo = fdCoreBuoyCompo(body,iBody);
+    update[iBody].daDerivProc[update[iBody].iTCore][0] = 0;
 }
 
 /******************  AUX PROPS  ***************************/
@@ -789,6 +801,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
   /* Core */
   /* Iterate on Core chemistry before R_ICB */
+  // The order matters here!
   body[iBody].dMassIC=fdMassIC(body,iBody);
   body[iBody].dMassOC=fdMassOC(body,iBody);
   body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
@@ -801,9 +814,9 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMassICDot=fdMassICDot(body,update,iBody);
   body[iBody].dHflowLatentIC=fdHflowLatentIC(body,update,iBody);
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
+  body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
   body[iBody].dHfluxCMBAd=fdHfluxCMBAd(body,iBody);
   body[iBody].dHfluxCMBConv=fdHfluxCMBConv(body,iBody);
-  body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
   body[iBody].dRICDot=fdRICDot(body,update,iBody);
   body[iBody].dGravICB=fdGravICB(body,iBody);
   body[iBody].dCoreBuoyTherm=fdCoreBuoyTherm(body,iBody);
@@ -823,7 +836,7 @@ void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPD
 }
 
 void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  VerifyTMan(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
+  VerifyTMan(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
   VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
@@ -2338,32 +2351,42 @@ double fdRIC(BODY *body,int iBody) {
 
   return dRIC;
 }
+
 double fdThermConductOC(BODY *body, int iBody) {
   return (ELECCONDCORE)*(LORENTZNUM)*body[iBody].dTCMB;
 }
+
 double fdHfluxCMBAd(BODY *body, int iBody) {
   return body[iBody].dThermConductOC*body[iBody].dTCMB*(ERCORE)/pow(DADCORE,2.);
 }
+
 double fdHfluxCMBConv(BODY *body, int iBody) {
   return body[iBody].dHfluxCMB-body[iBody].dHfluxCMBAd;
 }
+
 double fdGravICB(BODY *body, int iBody) {
   return (GRAVCMB)*body[iBody].dRIC/(ERCORE);
 }
 double fdRICDot(BODY *body,UPDATE *update, int iBody) {
   double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((DADCORE)/(DLIND),2)-1.));
+
   return -1*pow((DADCORE),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
   //  return 1/denom;
 }
+
 double fdCoreBuoyTherm(BODY *body, int iBody) {
   return (THERMEXPANCORE)*(GRAVCMB)*body[iBody].dHfluxCMBConv/((EDENSCORE)*(SPECHEATCORE));
 }
+
 double fdCoreBuoyCompo(BODY *body, int iBody) {
   return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
 }
+
 double fdCoreBuoyTotal(BODY *body, int iBody) {
+  /*
   double dCoreBuoyTotal;
   //PD: Why do we need this if statement?
+  // RB: I dunno. It looks like all these lines amount to the same as the return statement below.
   if (body[iBody].dRIC > 0.) {
     dCoreBuoyTotal = (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
   } else {
@@ -2374,15 +2397,18 @@ double fdCoreBuoyTotal(BODY *body, int iBody) {
     return dCoreBuoyTotal;
   else
     return 0;
-  
-  //  return (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
+  */
+  return body[iBody].dCoreBuoyTherm + body[iBody].dCoreBuoyCompo;
 }
+
 double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
 }
+
 double fdPresSWind(BODY *body, int iBody) {
   return body[iBody].dPresSWind;   //Place holder for a proper equation later.       //(EPRESSWIND);
 }
+
 double fdMagPauseRad(BODY *body, int iBody) {
   return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);
 }

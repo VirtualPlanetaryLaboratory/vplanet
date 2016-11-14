@@ -1,7 +1,8 @@
 sName		AB		# Body's name
+saModules       galhabit
  
 # Physical Parameters
-dMass		2		# Mass, negative -> Earth masses
+dMass		2.1		# Mass, negative -> Earth masses
 dRadius		0.0026		# Radius, negative -> Earth radii
 dObliquity	0		
 dRotPeriod	0.2579		# Rotation period, negative -> days

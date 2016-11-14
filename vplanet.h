@@ -119,7 +119,7 @@
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128    /* Number of characters in option description */
 #define OUTLEN        48     /* Maximum number of characters in an output column header */
-#define LINE          128   /* Maximum number of characters in a line */
+#define LINE          256   /* Maximum number of characters in a line */
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -202,25 +202,25 @@
 #define VLXUV           1901
 
 //GALHABIT
-#define VPERIQ          2201
-#define VARGP           2202
-#define VINC            2203
-#define VLONGA          2204
+#define VECCX           2201
+#define VECCY           2202
+#define VECCZ           2203
+#define VANGMX          2204
+#define VANGMY          2205
+#define VANGMZ          2206
 
 /* Now define the structs */
 
-/*!
- * BODY contains all the physical parameters for every body 
- * Why won't these lines be added?
- */
-
 #define MAXSPECIES       100
+
 typedef struct {
   double dInitTimeStep;
   double dMaxSteps;
 } PHOTOCHEM;
 
-/* Body Structure */
+/*! \brief BODY contains all the physical parameters for every body. 
+ *         Members are broken into chunks by module.
+ */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
@@ -509,7 +509,19 @@ typedef struct {
   double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
   double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
   double dManHFlowPref;    /**< Mantle Hflow Prefix */
-  
+
+  /* vemcee parameters */
+  double dActViscMan;      /**< Mantle viscosity activation energy */
+  double dShModRef;        /**< reference kinematic mantle shear modulus */
+  double dStiffness;       /**< effective stiffness of mantle */
+  double dDLind;           /**< lindemann's law length scale for iron liquidus*/
+  double dDAdCore;         /**< liq iron core adiabatic length scale */
+  double dAdJumpM2UM;      /**< adiabatic temp jump from ave mantle to UM */
+  double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
+  double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
+  double dElecCondCore;    /**< electrical conductivity of core */
+  /* end vemcee parameters */  
+
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
@@ -765,6 +777,8 @@ typedef struct {
   double **daTempDaily;
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
+  double *daTempMaxLW;         /**< maximum temperature over year */
+  double *daTempMinLW;         /**< minimum temperature over year */
   double *daTempWater;        /**< Temperature over ocean (by lat) */
   double *daTmpTempSea;
   double *dUnitVSea;
@@ -782,15 +796,35 @@ typedef struct {
   int bGalHabit;
   double dPeriQ;   /**< Pericenter distance */
   int iDisrupt;
+  int bGalacTides;
   double dHostBinSemi;
   double dHostBinEcc;
   double dHostBinInc;
   double dHostBinArgP;
   double dHostBinLongA;
+  double dHostBinMass1;
   int bHostBinary;
   double *dRelativeImpact;
   double *dRelativeVel;
-  
+  double dEccX;
+  double dEccY;
+  double dEccZ;
+  double dAngMX;
+  double dAngMY;
+  double dAngMZ;
+  double dAngM;
+  double dEccXTmp;          /**< Ecc X in the binary reference plane */
+  double dEccYTmp;
+  double dEccZTmp;
+  double dAngMXTmp;
+  double dAngMYTmp;
+  double dAngMZTmp;
+  double dArgPTmp;
+  double dLongATmp;
+  double dIncTmp;
+  double dCosArgP;
+  double dMinAllowed;  /**< minimum allowed close approach of body to host */
+  double dMassInterior;
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -851,7 +885,6 @@ typedef struct {
   double dEncounterRad;
   double dDeltaTEnc;  /**< time since last encounter */
   double dEncounterRate; /**< characteristic encounter time */
-  double dMinAllowed;  /**< minimum allowed close approach of body to host */
   double dCloseEncTime;  /**< time of new close encounter */
   double dLastEncTime;  /**< time of last encounter */
   double dNextEncT;
@@ -876,6 +909,10 @@ typedef struct {
   double *dEncounterRateMV; 
   int iSeed;
   double dGalaxyAge;  /**< present day age of galaxy */
+  int bStellarEnc;    /**< model stellar encounters? */
+  int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
+  int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
+
 
 } SYSTEM;
 
@@ -1113,33 +1150,43 @@ typedef struct {
   double **padDZoblDtDistRot;
 
   /* GALHABIT */
-  int iNumPeriQ;
-  int iNumArgP;
+  int iNumEccX;
+  int iNumEccY;
+  int iNumEccZ;
   
-  int iPeriQ;
-  int iArgP;
-  double dDPeriQDt;
-  double dDArgPDt;
+  int iEccX;
+  int iEccY;
+  int iEccZ;
+  double dDEccXDt;
+  double dDEccYDt;
+  double dDEccZDt;
   
-  int *iaPeriQGalHabit;
-  int *iaArgPGalHabit;
+  int *iaEccXGalHabit;
+  int *iaEccYGalHabit;
+  int *iaEccZGalHabit;
   
-  double **padDPeriQDtGalHabit;
-  double **padDArgPDtGalHabit;
+  double **padDEccXDtGalHabit;
+  double **padDEccYDtGalHabit;
+  double **padDEccZDtGalHabit;
+
+  int iNumAngMX;
+  int iNumAngMY;
+  int iNumAngMZ;
   
-  int iNumInc;
-  int iNumLongA;
+  int iAngMX;
+  int iAngMY;
+  int iAngMZ;
+  double dDAngMXDt;
+  double dDAngMYDt;
+  double dDAngMZDt;
   
-  int iInc;
-  int iLongA;
-  double dDIncDt;
-  double dDLongADt;
+  int *iaAngMXGalHabit;
+  int *iaAngMYGalHabit;
+  int *iaAngMZGalHabit;
   
-  int *iaIncGalHabit;
-  int *iaLongAGalHabit;
-  
-  double **padDIncDtGalHabit;
-  double **padDLongADtGalHabit;
+  double **padDAngMXDtGalHabit;
+  double **padDAngMYDtGalHabit;
+  double **padDAngMZDtGalHabit;
   
   
   /* ATMESC */         
@@ -1538,10 +1585,13 @@ typedef void (*fnFinalizeUpdateTManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateXoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateYoblModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateZoblModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdatePeriQModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateArgPModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateIncModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateLongAModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEccXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEccYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateEccZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
+
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1667,10 +1717,12 @@ typedef struct {
   /*! Function pointers to finalize dynamical ellipticity */ 
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
   
-  fnFinalizeUpdatePeriQModule **fnFinalizeUpdatePeriQ;
-  fnFinalizeUpdateArgPModule **fnFinalizeUpdateArgP;
-  fnFinalizeUpdateIncModule **fnFinalizeUpdateInc;
-  fnFinalizeUpdateLongAModule **fnFinalizeUpdateLongA;
+  fnFinalizeUpdateEccXModule **fnFinalizeUpdateEccX;
+  fnFinalizeUpdateEccYModule **fnFinalizeUpdateEccY;
+  fnFinalizeUpdateEccZModule **fnFinalizeUpdateEccZ;
+  fnFinalizeUpdateAngMXModule **fnFinalizeUpdateAngMX;
+  fnFinalizeUpdateAngMYModule **fnFinalizeUpdateAngMY;
+  fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;

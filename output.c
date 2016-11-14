@@ -1335,7 +1335,6 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   PropertiesAuxiliary(body,control,update);
   dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
-
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
@@ -1401,15 +1400,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
 
     /* Now write the columns */
-    fp = fopen(files->Outfile[iBody].cOut,"a");
-    for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
-      fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
-      fprintf(fp," ");
+    if (files->Outfile[iBody].iNumCols > 0) {
+      fp = fopen(files->Outfile[iBody].cOut,"a");
+      for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
+	fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
+	fprintf(fp," ");
+      }
+      fprintf(fp,"\n");
+      fclose(fp);
     }
-    fprintf(fp,"\n");
-    fclose(fp);
-
-    // XXX Module-specific output should be present in this file
+    // XXX Module-specific output should NOT be present in this file
     
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {

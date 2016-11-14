@@ -110,10 +110,13 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
   
-  module->fnFinalizeUpdatePeriQ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePeriQModule));
-  module->fnFinalizeUpdateArgP = malloc(iNumBodies*sizeof(fnFinalizeUpdateArgPModule));
-  module->fnFinalizeUpdateInc = malloc(iNumBodies*sizeof(fnFinalizeUpdateIncModule));
-  module->fnFinalizeUpdateLongA = malloc(iNumBodies*sizeof(fnFinalizeUpdateLongAModule));
+  module->fnFinalizeUpdateEccX = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccXModule));
+  module->fnFinalizeUpdateEccY = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccYModule));
+  module->fnFinalizeUpdateEccZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccZModule));
+  module->fnFinalizeUpdateAngMX = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
+  module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
+  module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
+
   
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -225,10 +228,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
   
-  module->fnFinalizeUpdatePeriQ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePeriQModule));
-  module->fnFinalizeUpdateArgP[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateArgPModule));
-  module->fnFinalizeUpdateInc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateIncModule));
-  module->fnFinalizeUpdateLongA[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLongAModule));
+  module->fnFinalizeUpdateEccX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccXModule));
+  module->fnFinalizeUpdateEccY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccYModule));
+  module->fnFinalizeUpdateEccZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccZModule));
+  module->fnFinalizeUpdateAngMX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
+  module->fnFinalizeUpdateAngMY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
+  module->fnFinalizeUpdateAngMZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
+
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -285,10 +291,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
     
-    module->fnFinalizeUpdatePeriQ[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateArgP[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateInc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLongA[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccX[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccY[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
+
 
   }
 
@@ -350,9 +359,6 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 
   lTmp=malloc(MAXLINES*sizeof(int));
 
-  // Allow parameters that require no module
-  module->iBitSum[iFile-1] = 1;
-
   AddOptionStringArray(files->Infile[iFile].cIn,options->cName,saTmp,&iNumIndices,&iNumLines,lTmp,control->Io.iVerbose);
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp[0],control->Io.iVerbose);
@@ -369,6 +375,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
        output->iModuleBit is compared bitwise to module->iBitSum. 
        Parameters that can be specified for multiple modules are set to 1. 
     */
+
+    // Allow parameters that require no module
+    module->iBitSum[iFile-1] = 1;
 
     for (iModule=0;iModule<iNumIndices;iModule++) {
 

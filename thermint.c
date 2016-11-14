@@ -109,9 +109,20 @@ void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMagMom=src[iBody].dMagMom;
   dest[iBody].dPresSWind=src[iBody].dPresSWind;
   dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
+  /* Begin vemcee parameters */
+  dest[iBody].dActViscMan=src[iBody].dActViscMan;
+  dest[iBody].dShModRef=src[iBody].dShModRef;
+  dest[iBody].dStiffness=src[iBody].dStiffness;
+  dest[iBody].dDLind=src[iBody].dDLind;
+  dest[iBody].dDAdCore=src[iBody].dDAdCore;
+  dest[iBody].dAdJumpM2UM=src[iBody].dAdJumpM2UM;
+  dest[iBody].dAdJumpM2LM=src[iBody].dAdJumpM2LM;
+  dest[iBody].dAdJumpC2CMB=src[iBody].dAdJumpC2CMB;
+  dest[iBody].dElecCondCore=src[iBody].dElecCondCore;
+  /* End vemcee parameters */
 }
 
-/**************** RADHEAT options ********************/
+/**************** THERMINT options ********************/
 
 /* Initial Mantle & Core Temperature */
 
@@ -317,6 +328,24 @@ void ReadFixMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dFixMeltfactorUMan = options->dDefault;
 }
+
+void ReadMeltfactorLMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This input option only applies when FixMeltfactorLMan=1 */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   // XXX Rory doesn't think negatives options allowed
+      body[iFile-1].dMeltfactorLMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dMeltfactorLMan = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dMeltfactorLMan = options->dDefault;
+}
+
 void ReadMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This input option only applies when FixMeltfactorUMan=1 */
   int lTmp=-1;
@@ -333,6 +362,7 @@ void ReadMeltfactorUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dMeltfactorUMan = options->dDefault;
 }
+
 void ReadStagLid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
@@ -434,6 +464,162 @@ void ReadHaltMinTCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)
        control->Halt[iFile-1].dMinTCore = options->dDefault;
 }
+  /* Begin vemcee parameters */
+
+void ReadActViscMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dActViscMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dActViscMan = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dActViscMan = options->dDefault;
+
+}
+
+void ReadShModRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dShModRef = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dShModRef = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dShModRef = options->dDefault;
+
+}
+
+void ReadStiffness(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dStiffness = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dStiffness = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dStiffness = options->dDefault;
+
+}
+
+void ReadDLind(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dDLind = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dDLind = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dDLind = options->dDefault;
+
+}
+
+void ReadDAdCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dDAdCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dDAdCore = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dDAdCore = options->dDefault;
+
+}
+
+void ReadAdJumpM2UM(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dAdJumpM2UM = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dAdJumpM2UM = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dAdJumpM2UM = options->dDefault;
+
+}
+
+void ReadAdJumpM2LM(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dAdJumpM2LM = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dAdJumpM2LM = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dAdJumpM2LM = options->dDefault;
+
+}
+
+void ReadAdJumpC2CMB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dAdJumpC2CMB = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dAdJumpC2CMB = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dAdJumpC2CMB = options->dDefault;
+
+}
+
+void ReadElecCondCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)   //if input value lt 0
+      body[iFile-1].dElecCondCore = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+   else
+     body[iFile-1].dElecCondCore = dTmp;  //no units.
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dElecCondCore = options->dDefault;
+
+}
+  /* End vemcee parameters */
+
 
 /* Initiatlize Input Options */
 
@@ -473,7 +659,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
   fnRead[OPT_VISCJUMPMAN] = &ReadViscJumpMan;
 
-   /* ViscRef */
+  /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
   sprintf(options[OPT_VISCREF].cDefault,"Default=1");
@@ -484,7 +670,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &ReadViscRef;
 
-   /* TrefLind */
+  /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
   sprintf(options[OPT_TREFLIND].cDefault,"Default in thermint.h");
@@ -568,16 +754,29 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &ReadViscMeltB;
   
+  /* MeltfactorLMan XXX Added by Rory -- Check!*/
+  sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
+  sprintf(options[OPT_MELTFACTORLMAN].cDescr,"Lower Mantle Viscosity Melt Factor");
+  sprintf(options[OPT_MELTFACTORLMAN].cDefault,"%f",MELTFACTORLMAN);
+  options[OPT_MELTFACTORLMAN].iType = 2;
+  options[OPT_MELTFACTORLMAN].iMultiFile = 1;
+  // XXX Rory doesn't think negative options should be allowed here
+  //options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
+  options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN; 
+  //sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
+  fnRead[OPT_MELTFACTORLMAN] = &ReadMeltfactorLMan;
+
   /* MeltfactorUMan */
   sprintf(options[OPT_MELTFACTORUMAN].cName,"dMeltfactorUMan");
-  sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Viscosity Melt Factor");
-  sprintf(options[OPT_MELTFACTORUMAN].cDefault,"Default is MELTFACTORUMAN");
+  sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Upper Mantle Viscosity Melt Factor");
+  sprintf(options[OPT_MELTFACTORUMAN].cDefault,"%f",MELTFACTORUMAN);
   options[OPT_MELTFACTORUMAN].iType = 2;
   options[OPT_MELTFACTORUMAN].iMultiFile = 1;
   options[OPT_MELTFACTORUMAN].dNeg = MELTFACTORUMAN;
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN; 
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
   fnRead[OPT_MELTFACTORUMAN] = &ReadMeltfactorUMan;
+
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,"Fix Viscosity Melt Factor");
@@ -599,6 +798,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STAGLID].dDefault = STAGLID; 
   sprintf(options[OPT_STAGLID].cNeg,"Default is STAGLID");
   fnRead[OPT_STAGLID] = &ReadStagLid;
+
   /* ManHFlowPref */
   sprintf(options[OPT_MANHFLOWPREF].cName,"dManHFlowPref");
   sprintf(options[OPT_MANHFLOWPREF].cDescr,"Mantle HFlow Prefix");
@@ -653,6 +853,98 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINTCORE].cNeg,"0");
   fnRead[OPT_HALTMINTCORE] = &ReadHaltMinTCore;
 
+  /* Begin vemcee parameters */
+  /* ActViscMan */
+  sprintf(options[OPT_ACTVISCMAN].cName,"dActViscMan");
+  sprintf(options[OPT_ACTVISCMAN].cDescr,"Mantle viscosity activation energy");
+  sprintf(options[OPT_ACTVISCMAN].cDefault,"Default is ACTVISCMAN");
+  options[OPT_ACTVISCMAN].iType = 2;
+  options[OPT_ACTVISCMAN].iMultiFile = 1;
+  options[OPT_ACTVISCMAN].dNeg = ACTVISCMAN;
+  options[OPT_ACTVISCMAN].dDefault = ACTVISCMAN; 
+  sprintf(options[OPT_ACTVISCMAN].cNeg,"Default is ACTVISCMAN");
+  fnRead[OPT_ACTVISCMAN] = &ReadActViscMan;
+  /* ShModRef */
+  sprintf(options[OPT_SHMODREF].cName,"dShModRef");
+  sprintf(options[OPT_SHMODREF].cDescr,"Reference kinematic mantle shear modulus");
+  sprintf(options[OPT_SHMODREF].cDefault,"Default is SHMODREF");
+  options[OPT_SHMODREF].iType = 2;
+  options[OPT_SHMODREF].iMultiFile = 1;
+  options[OPT_SHMODREF].dNeg = SHMODREF;
+  options[OPT_SHMODREF].dDefault = SHMODREF; 
+  sprintf(options[OPT_SHMODREF].cNeg,"Default is SHMODREF");
+  fnRead[OPT_SHMODREF] = &ReadShModRef;
+  /* Stiffness */
+  sprintf(options[OPT_STIFFNESS].cName,"dStiffness");
+  sprintf(options[OPT_STIFFNESS].cDescr,"Effective stiffness of mantle");
+  sprintf(options[OPT_STIFFNESS].cDefault,"Default is STIFFNESS");
+  options[OPT_STIFFNESS].iType = 2;
+  options[OPT_STIFFNESS].iMultiFile = 1;
+  options[OPT_STIFFNESS].dNeg = STIFFNESS;
+  options[OPT_STIFFNESS].dDefault = STIFFNESS; 
+  sprintf(options[OPT_STIFFNESS].cNeg,"Default is STIFFNESS");
+  fnRead[OPT_STIFFNESS] = &ReadStiffness;
+  /* DLind */
+  sprintf(options[OPT_DLIND].cName,"dDLind");
+  sprintf(options[OPT_DLIND].cDescr,"Lindemann's law length scale for iron liquidus");
+  sprintf(options[OPT_DLIND].cDefault,"Default is DLIND");
+  options[OPT_DLIND].iType = 2;
+  options[OPT_DLIND].iMultiFile = 1;
+  options[OPT_DLIND].dNeg = DLIND;
+  options[OPT_DLIND].dDefault = DLIND; 
+  sprintf(options[OPT_DLIND].cNeg,"Default is DLIND");
+  fnRead[OPT_DLIND] = &ReadDLind;
+  /* DAdCore */
+  sprintf(options[OPT_DADCORE].cName,"dDAdCore");
+  sprintf(options[OPT_DADCORE].cDescr,"Liq iron core adiabatic length scale");
+  sprintf(options[OPT_DADCORE].cDefault,"Default is DADCORE");
+  options[OPT_DADCORE].iType = 2;
+  options[OPT_DADCORE].iMultiFile = 1;
+  options[OPT_DADCORE].dNeg = DADCORE;
+  options[OPT_DADCORE].dDefault = DADCORE; 
+  sprintf(options[OPT_DADCORE].cNeg,"Default is DADCORE");
+  fnRead[OPT_DADCORE] = &ReadDAdCore;
+  /* AdJumpM2UM */
+  sprintf(options[OPT_ADJUMPM2UM].cName,"dAdJumpM2UM");
+  sprintf(options[OPT_ADJUMPM2UM].cDescr,"Adiabatic temp jump from ave mantle to UM");
+  sprintf(options[OPT_ADJUMPM2UM].cDefault,"Default is ADJUMPM2UM");
+  options[OPT_ADJUMPM2UM].iType = 2;
+  options[OPT_ADJUMPM2UM].iMultiFile = 1;
+  options[OPT_ADJUMPM2UM].dNeg = ADJUMPM2UM;
+  options[OPT_ADJUMPM2UM].dDefault = ADJUMPM2UM; 
+  sprintf(options[OPT_ADJUMPM2UM].cNeg,"Default is ADJUMPM2UM");
+  fnRead[OPT_ADJUMPM2UM] = &ReadAdJumpM2UM;
+  /* AdJumpM2LM */
+  sprintf(options[OPT_ADJUMPM2LM].cName,"dAdJumpM2LM");
+  sprintf(options[OPT_ADJUMPM2LM].cDescr,"Adiabatic temp jump from ave mantle to LM");
+  sprintf(options[OPT_ADJUMPM2LM].cDefault,"Default is ADJUMPM2LM");
+  options[OPT_ADJUMPM2LM].iType = 2;
+  options[OPT_ADJUMPM2LM].iMultiFile = 1;
+  options[OPT_ADJUMPM2LM].dNeg = ADJUMPM2LM;
+  options[OPT_ADJUMPM2LM].dDefault = ADJUMPM2LM; 
+  sprintf(options[OPT_ADJUMPM2LM].cNeg,"Default is ADJUMPM2LM");
+  fnRead[OPT_ADJUMPM2LM] = &ReadAdJumpM2LM;
+  /* AdJumpC2CMB */
+  sprintf(options[OPT_ADJUMPC2CMB].cName,"dAdJumpC2CMB");
+  sprintf(options[OPT_ADJUMPC2CMB].cDescr,"Adiabatic temp jump from ave core to CMB");
+  sprintf(options[OPT_ADJUMPC2CMB].cDefault,"Default is ADJUMPC2CMB");
+  options[OPT_ADJUMPC2CMB].iType = 2;
+  options[OPT_ADJUMPC2CMB].iMultiFile = 1;
+  options[OPT_ADJUMPC2CMB].dNeg = ADJUMPC2CMB;
+  options[OPT_ADJUMPC2CMB].dDefault = ADJUMPC2CMB; 
+  sprintf(options[OPT_ADJUMPC2CMB].cNeg,"Default is ADJUMPC2CMB");
+  fnRead[OPT_ADJUMPC2CMB] = &ReadAdJumpC2CMB;
+  /* ElecCondCore */
+  sprintf(options[OPT_ELECCONDCORE].cName,"dElecCondCore");
+  sprintf(options[OPT_ELECCONDCORE].cDescr,"Electrical conductivity of core");
+  sprintf(options[OPT_ELECCONDCORE].cDefault,"Default is ELECCONDCORE");
+  options[OPT_ELECCONDCORE].iType = 2;
+  options[OPT_ELECCONDCORE].iMultiFile = 1;
+  options[OPT_ELECCONDCORE].dNeg = ELECCONDCORE;
+  options[OPT_ELECCONDCORE].dDefault = ELECCONDCORE; 
+  sprintf(options[OPT_ELECCONDCORE].cNeg,"Default is ELECCONDCORE");
+  fnRead[OPT_ELECCONDCORE] = &ReadElecCondCore;
+  /* End vemcee parameters */
 }
 
 void ReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -677,16 +969,19 @@ void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     */
 }
 
+void VerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
-void VerifyTMan(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-    //  AssignTMan(body,options,dAge,iBody);
-    /* Mantle */
-    update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
-    update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
-    update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
-    update[iBody].iaBody[update[iBody].iTMan][0][0]=iBody;
-    update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
-    fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
+  //  AssignTMan(body,options,dAge,iBody);
+  /* Mantle */
+  update[iBody].iaType[update[iBody].iTMan][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+  update[iBody].iNumBodies[update[iBody].iTMan][0]=1;
+  update[iBody].iaBody[update[iBody].iTMan][0] = malloc(update[iBody].iNumBodies[update[iBody].iTMan][0]*sizeof(int)); //iaBody is the number of bodies that are affected by this variable.
+  update[iBody].iaBody[update[iBody].iTMan][0][0]=iBody;
+  update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
+  fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
+  
+  // Initialize some values that dDTManDt depends on
+  update[iBody].daDerivProc[update[iBody].iTMan][0] = 0;
 }
 
 void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -698,12 +993,19 @@ void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdate
     update[iBody].iaBody[update[iBody].iTCore][0][0]=iBody;
     update[iBody].pdTDotCore = &update[iBody].daDerivProc[update[iBody].iTCore][0];
     fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
+
+    // Initialize parameters that dDTCoreDt depends on
+    body[iBody].dRIC = 0;
+    body[iBody].dHfluxCMBConv = 0;
+    body[iBody].dRICDot = 0;
+    body[iBody].dGravICB = fdGravICB(body,iBody);
+    body[iBody].dCoreBuoyTherm = fdCoreBuoyTherm(body,iBody);
+    body[iBody].dCoreBuoyCompo = fdCoreBuoyCompo(body,iBody);
+    update[iBody].daDerivProc[update[iBody].iTCore][0] = 0;
 }
 
+/******************  AUX PROPS  ***************************/
 
-
-/******************************  AUX PROPS  ***********************************************/
-/* Auxiliary Properties */
 void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
@@ -715,27 +1017,27 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dSignTJumpLMan=fdSignTJumpLMan(body,iBody);
   //  body[iBody].dViscJumpMan=fdViscJumpMan(body,iBody);
   if (body[iBody].dMeltfactorUMan==0)
-      body[iBody].dMeltfactorUMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
+    body[iBody].dMeltfactorUMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
   if (body[iBody].dMeltfactorLMan==0)
-      body[iBody].dMeltfactorLMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
+    body[iBody].dMeltfactorLMan=1.;  //initialize to avoid visc=visc/meltfactor crash.
   /* Loop through melt calculation once to get dependence of visc on melt. */
   int i=0, nloop=1;
   for (i=0;i<nloop;i++) {
-      body[iBody].dViscUManArr=fdViscUManArr(body,iBody);
-      body[iBody].dViscUMan=fdViscUMan(body,iBody);
-      body[iBody].dViscLMan=fdViscLMan(body,iBody);
-      body[iBody].dBLUMan=fdBLUMan(body,iBody);
-      body[iBody].dBLLMan=fdBLLMan(body,iBody);
-      body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
-      body[iBody].dTsolUMan=fdTsolUMan(body,iBody);
-      body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
-      body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
-      body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
-      //      body[iBody].dFixMeltfactorUMan=fdFixMeltfactorUMan(body,iBody);
-      body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
-      body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
-      body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
-      body[iBody].dMeltfactorLMan=fdMeltfactorLMan(body,iBody);
+    body[iBody].dViscUManArr=fdViscUManArr(body,iBody);
+    body[iBody].dViscUMan=fdViscUMan(body,iBody);
+    body[iBody].dViscLMan=fdViscLMan(body,iBody);
+    body[iBody].dBLUMan=fdBLUMan(body,iBody);
+    body[iBody].dBLLMan=fdBLLMan(body,iBody);
+    body[iBody].dShmodUMan=fdShmodUMan(body,iBody);
+    body[iBody].dTsolUMan=fdTsolUMan(body,iBody);
+    body[iBody].dTliqUMan=fdTliqUMan(body,iBody);
+    body[iBody].dFMeltUMan=fdFMeltUMan(body,iBody);
+    body[iBody].dMeltfactorUMan=fdMeltfactorUMan(body,iBody);
+    //      body[iBody].dFixMeltfactorUMan=fdFixMeltfactorUMan(body,iBody);
+    body[iBody].dTsolLMan=fdTsolLMan(body,iBody);
+    body[iBody].dTliqLMan=fdTliqLMan(body,iBody);
+    body[iBody].dFMeltLMan=fdFMeltLMan(body,iBody);
+    body[iBody].dMeltfactorLMan=fdMeltfactorLMan(body,iBody);
   }
   body[iBody].dDepthMeltMan=fdDepthMeltMan(body,iBody);
   body[iBody].dTDepthMeltMan=fdTDepthMeltMan(body,iBody);
@@ -758,6 +1060,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
   /* Core */
   /* Iterate on Core chemistry before R_ICB */
+  // The order matters here!
   body[iBody].dMassIC=fdMassIC(body,iBody);
   body[iBody].dMassOC=fdMassOC(body,iBody);
   body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
@@ -770,9 +1073,9 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMassICDot=fdMassICDot(body,update,iBody);
   body[iBody].dHflowLatentIC=fdHflowLatentIC(body,update,iBody);
   body[iBody].dPowerGravIC=fdPowerGravIC(body,update,iBody);
+  body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
   body[iBody].dHfluxCMBAd=fdHfluxCMBAd(body,iBody);
   body[iBody].dHfluxCMBConv=fdHfluxCMBConv(body,iBody);
-  body[iBody].dThermConductOC=fdThermConductOC(body,iBody);
   body[iBody].dRICDot=fdRICDot(body,update,iBody);
   body[iBody].dGravICB=fdGravICB(body,iBody);
   body[iBody].dCoreBuoyTherm=fdCoreBuoyTherm(body,iBody);
@@ -792,7 +1095,7 @@ void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPD
 }
 
 void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  VerifyTMan(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
+  VerifyTMan(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
   VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
@@ -2104,15 +2407,15 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
 /* Scalar Properties */
 /* Get TUMan */
 double fdTUMan(BODY *body,int iBody) {
-  return ADJUMPM2UM*body[iBody].dTMan;
+  return body[iBody].dAdJumpM2UM*body[iBody].dTMan;
 }
 /* Get TLMan */
 double fdTLMan(BODY *body,int iBody) {
-    return ADJUMPM2LM*body[iBody].dTMan;
+    return body[iBody].dAdJumpM2LM*body[iBody].dTMan;
 }
 /* Get TCMB */
 double fdTCMB(BODY *body,int iBody) {
-    return ADJUMPC2CMB*body[iBody].dTCore;
+    return body[iBody].dAdJumpC2CMB*body[iBody].dTCore;
 }
 /* Get TJumpUMan */ 
 double fdTJumpUMan(BODY *body,int iBody) {
@@ -2132,7 +2435,7 @@ double fdSignTJumpLMan(BODY *body,int iBody) {
 }
 /* Get ViscUManArr Arrhenius law only */
 double fdViscUManArr(BODY *body,int iBody) {  
-  return body[iBody].dViscRef*exp(ACTVISCMAN/(GASCONSTANT*body[iBody].dTUMan));
+  return body[iBody].dViscRef*exp(body[iBody].dActViscMan/(GASCONSTANT*body[iBody].dTUMan));
 }
 /* Get ViscUMan */
 double fdViscUMan(BODY *body,int iBody) {
@@ -2156,7 +2459,7 @@ double fdBLLMan(BODY *body,int iBody) {
   return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
 double fdShmodUMan(BODY *body,int iBody) {
-    return (SHMODREF)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
+    return (body[iBody].dShModRef)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
 double fdTsolUMan(BODY *body,int iBody) {
     return fdSolidusMan(body[iBody].dBLUMan);
@@ -2234,7 +2537,7 @@ double fdRayleighMan(BODY *body,int iBody) {
 }
 
 double fdK2Man(BODY *body,int iBody) {
-    return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
+    return 3./2/(1.+19./2*body[iBody].dShmodUMan/(body[iBody].dStiffness));
 }
 
 double fdDynamicViscosity(BODY *body,int iBody) {
@@ -2245,11 +2548,11 @@ double fdImk2Man(BODY *body,int iBody) {
   double viscdyn=fdDynamicViscosity(body,iBody); //dynamic viscosity.
 
   /* Peter's version. I think dRotRate should be dMeanMotion
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);
-  double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (STIFFNESS)*(1.0+ denom2) );
+  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);
+  double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (body[iBody].dStiffness)*(1.0+ denom2) );
   */
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(STIFFNESS)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
-  double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (STIFFNESS)*(1.0+ denom2) );
+  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
   return imk2;
 }
 
@@ -2286,16 +2589,16 @@ double fdRIC(BODY *body,int iBody) {
   double dRIC;
 
   /*  OLD VERSION without light element depression.
-    double numerator=pow((DADCORE)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
+    double numerator=pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
     if (numerator>0) {    //IC Found.
-        return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((DADCORE)/(DLIND),2.0)-1.0) );
+        return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((body[iBody].dDAdCore)/(body[iBody].dDLind),2.0)-1.0) );
   */
   /* NEW VERSION with light element liquidus depression  */
 
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
-  double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
-  double numerator=1.+pow((DADCORE)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
-  double denom=1.+pow((DADCORE)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
+  double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+  double numerator=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
+  double denom=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
     dRIC = (ERCORE)*sqrt(numerator/denom);
   } else {
@@ -2307,32 +2610,42 @@ double fdRIC(BODY *body,int iBody) {
 
   return dRIC;
 }
+
 double fdThermConductOC(BODY *body, int iBody) {
-  return (ELECCONDCORE)*(LORENTZNUM)*body[iBody].dTCMB;
+  return (body[iBody].dElecCondCore)*(LORENTZNUM)*body[iBody].dTCMB;
 }
+
 double fdHfluxCMBAd(BODY *body, int iBody) {
-  return body[iBody].dThermConductOC*body[iBody].dTCMB*(ERCORE)/pow(DADCORE,2.);
+  return body[iBody].dThermConductOC*body[iBody].dTCMB*(ERCORE)/pow(body[iBody].dDAdCore,2.);
 }
+
 double fdHfluxCMBConv(BODY *body, int iBody) {
   return body[iBody].dHfluxCMB-body[iBody].dHfluxCMBAd;
 }
+
 double fdGravICB(BODY *body, int iBody) {
   return (GRAVCMB)*body[iBody].dRIC/(ERCORE);
 }
 double fdRICDot(BODY *body,UPDATE *update, int iBody) {
-  double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((DADCORE)/(DLIND),2)-1.));
-  return -1*pow((DADCORE),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
+  double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((body[iBody].dDAdCore)/(body[iBody].dDLind),2)-1.));
+
+  return -1*pow((body[iBody].dDAdCore),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
   //  return 1/denom;
 }
+
 double fdCoreBuoyTherm(BODY *body, int iBody) {
   return (THERMEXPANCORE)*(GRAVCMB)*body[iBody].dHfluxCMBConv/((EDENSCORE)*(SPECHEATCORE));
 }
+
 double fdCoreBuoyCompo(BODY *body, int iBody) {
   return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
 }
+
 double fdCoreBuoyTotal(BODY *body, int iBody) {
+  /*
   double dCoreBuoyTotal;
   //PD: Why do we need this if statement?
+  // RB: I dunno. It looks like all these lines amount to the same as the return statement below.
   if (body[iBody].dRIC > 0.) {
     dCoreBuoyTotal = (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
   } else {
@@ -2343,15 +2656,18 @@ double fdCoreBuoyTotal(BODY *body, int iBody) {
     return dCoreBuoyTotal;
   else
     return 0;
-  
-  //  return (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
+  */
+  return body[iBody].dCoreBuoyTherm + body[iBody].dCoreBuoyCompo;
 }
+
 double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
 }
+
 double fdPresSWind(BODY *body, int iBody) {
   return body[iBody].dPresSWind;   //Place holder for a proper equation later.       //(EPRESSWIND);
 }
+
 double fdMagPauseRad(BODY *body, int iBody) {
   return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);
 }
@@ -2388,7 +2704,11 @@ double fdHflowCMB(BODY *body,int iBody) {
   return fdHflowLMan(body,iBody);
 }
 double fdHflowLatentMan(BODY *body,UPDATE *update,int iBody) {
-    double HflowLatentMan=(-DVLIQDTEMP)*(*(update[iBody].pdTDotMan))*(EDENSMAN)*(SPECLATENTMAN);  //which structure has dTDotMan??
+  double HflowLatentMan;
+
+  // During the first WriteLog, pdTDotMan is not yet initialized! XXX
+
+  HflowLatentMan = (-DVLIQDTEMP)*(*(update[iBody].pdTDotMan))*(EDENSMAN)*(SPECLATENTMAN);  //which structure has dTDotMan??
     HflowLatentMan=max(HflowLatentMan,0);   //ensure positive.
     return HflowLatentMan;
 }
@@ -2413,13 +2733,13 @@ double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
   if (body[iBody].dRIC>0) {   //If IC exists.
     /* Old Version: from DB14 equations */
     double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
-    double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(DLIND),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
-    double denom=pow((DADCORE)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
-    return (1./2)*pow((DADCORE),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
+    double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+    double denom=pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
+    return (1./2)*pow((body[iBody].dDAdCore),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
 
     /* Newer Version: From notes on 4/23/15 */
     /*    double gamma_core2=2.*(1-1./(3.*GRUNEISEN));
-    double a_drdt=-2.*gamma_core2*body[iBody].dRIC/pow(DLIND,2)*body[iBody].dTrefLind*exp(-gamma_core2*pow(body[iBody].dRIC/dl,2));
+    double a_drdt=-2.*gamma_core2*body[iBody].dRIC/pow(body[iBody].dDLind,2)*body[iBody].dTrefLind*exp(-gamma_core2*pow(body[iBody].dRIC/dl,2));
 b_drdt=3.*dt_fe/chi_oc_e*mass_ic*mass_chi_total*(core_partition-1.)/(mass_core+mass_ic*(core_partition-1.))^2*(1./r_ic) ;coef
 dri_dTcmb2=t_icb/t_cmb/(a_drdt+b_drdt+2.*r_ic*t_icb/dn^2)  ;notes 4/23/15.
     */
@@ -2430,7 +2750,7 @@ dri_dTcmb2=t_icb/t_cmb/(a_drdt+b_drdt+2.*r_ic*t_icb/dn^2)  ;notes 4/23/15.
 double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
       double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
-      return areaic*(EDENSIC)*(*(update[iBody].pdTDotCore))/(ADJUMPC2CMB)*body[iBody].dDRICDTCMB;  //DB14 (31)
+      return areaic*(EDENSIC)*(*(update[iBody].pdTDotCore))/(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB;  //DB14 (31)
     } else {                    //If no IC.
       return 0;
     }
@@ -2464,7 +2784,7 @@ double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
   int iBody=iaBody[0];   //Is this correct?
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
-  foo= (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
+  foo= (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
 
   /*
   if (foo > 0)
@@ -2472,7 +2792,7 @@ double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   */
   return foo;
 
-  //return (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(ADJUMPC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
+  //return (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
  
 }
 

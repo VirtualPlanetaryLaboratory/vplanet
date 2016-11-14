@@ -1,0 +1,15 @@
+# Earthlike parameters
+sName		earth			# Body's name
+saModules 	radheat thermint
+
+# Physical Properties
+dMass		-1.0  			# Mass, negative -> Earth masses
+dRadius		-1.0  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	23.5
+dRadGyra	0.5
+# Orbital Properties
+dEcc            0.0167		# Eccentricity
+dSemi           -1		# Semi-major axis, negative -> AU
+
+

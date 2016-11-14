@@ -2135,15 +2135,15 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-	// Is option part of selected modules?
-	if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
-	  // Parameter is part of selected modules
-	} else {
-	  fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
-	  PrintModuleList(stderr,output[iOut].iModuleBit);
-	  fprintf(stderr,"\n");
-	  ok=0;
-	}
+        // Is option part of selected modules?
+        if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
+          // Parameter is part of selected modules
+        } else {
+          fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
+          PrintModuleList(stderr,output[iOut].iModuleBit);
+          fprintf(stderr,"\n");
+          ok=0;
+        }
       }
     }
 
@@ -2153,7 +2153,11 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
+  } else {
+    files->Outfile[iFile-1].iNumCols = 0;
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
   }
+  
   free(lTmp);
 }
 
@@ -2274,6 +2278,8 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
  
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
+  } else {
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
   }
   free(lTmp);
 }

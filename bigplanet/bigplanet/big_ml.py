@@ -49,6 +49,11 @@ def extract_features(df, features, target):
     y = df[target].values
     names = dict(zip(features, [x for x in range(0,len(features))]))
 
+    # Filter out NaNs just in case (sometimes halts throw NaNs)
+    mask = np.isnan(y)
+    X = X[~mask]
+    y = y[~mask]
+
     return X, y, names
 # end function
 
@@ -197,5 +202,5 @@ def scale_data(X):
         scaled input data
     """
 
-    return preprocessing.scale(X)
+    return preprocessing.StandardScaler().fit_transform(X)
 # end function

@@ -41,7 +41,7 @@ def get_cols(datadir=".",infiles=None):
     """
 
     if infiles is None:
-        IOError("infiles is None!  Must be list of input files.")
+        raise IOError("infiles is None!  Must be list of input files.")
 
     # Dict to hold all columns for each body [like time, semi, ecc ...]
     data_cols = {}
@@ -128,7 +128,7 @@ def get_dirs(src,order="none"):
         dirs = sorted(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src)))
     # Not a valid option!
     else:
-        ValueError("Invalid order: %s." % order)
+        raise ValueError("Invalid order: %s." % order)
 
     return dirs
 #end function
@@ -279,7 +279,7 @@ class Dataset(object):
             return get_data_hdf5(self.data, simulation, body, variables,
                                      dtype=dtype)
         else:
-            ValueError("Invalid simulation number: %d. Dataset size: %d" %
+            raise ValueError("Invalid simulation number: %d. Dataset size: %d" %
                   (simulation,self.size))
 
 
@@ -302,7 +302,7 @@ class Dataset(object):
         if sim >= 0 and sim < self.size and self.__number_to_sim is not None:
             return self.__number_to_sim[sim]
         else:
-            ValueError("Invalid simulation number: %d. Dataset size: %d" %
+            raise ValueError("Invalid simulation number: %d. Dataset size: %d" %
                   (sim,self.size))
 
 
@@ -347,7 +347,7 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
     # data_cols and infiles must be given
     if data_cols is None or infiles is None:
-        ValueError("data_cols and infiles must both be specified.")
+        raise ValueError("data_cols and infiles must both be specified.")
 
     # If user wants to, look for halts/sims not finishing
     if remove_halts:
@@ -672,11 +672,11 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
 
     # User forgot to specify data and cache
     if data is None:
-        ValueError("No data or cache provided!")
+        raise ValueError("No data or cache provided!")
 
     # No cache given, user must supply bodies
     if bodies is None:
-        ValueError("No bodies dict provided!")
+        raise ValueError("No bodies dict provided!")
 
     # If funcs is None, make it empty dict
     if funcs is None:
@@ -722,7 +722,7 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
                         res[body + "_" + col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
 
     else:
-        ValueError("Invalid format: %s" % fmt)
+        raise ValueError("Invalid format: %s" % fmt)
 
     # Convert data dict -> pandas dataframe
     res = pd.DataFrame(res)
@@ -787,7 +787,7 @@ def add_column(data, df=None, new_cols=None, cache=None, fmt="hdf5", **kwargs):
         return None
 
     if new_cols is None:
-        ValueError("add_column called but no new_cols provided!")
+        raise ValueError("add_column called but no new_cols provided!")
 
     res = {}
 

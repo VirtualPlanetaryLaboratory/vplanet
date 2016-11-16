@@ -60,6 +60,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   fp=fopen(cFile,"r");
   memset(cLine,'\0',LINE);
   memset(cTmp,'\0',LINE);
+  memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
@@ -152,6 +153,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
 
+  //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
   for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
@@ -217,6 +219,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
   char cLine[LINE],cTmp[MAXARRAY][OPTLEN];
   int iPos,iWord,bContinue,iNumWords;
   FILE *fp;
+
+  memset(cLine,'\0',LINE);
 
   /* iLine=malloc(MAXLINES*sizeof(int)); */
 
@@ -3316,6 +3320,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
+    memset(options[iOpt].cName,'\0',OPTLEN);
     sprintf(options[iOpt].cName,"null");
     options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
     options[iOpt].iMultiFile=0;

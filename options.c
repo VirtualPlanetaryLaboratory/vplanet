@@ -1043,6 +1043,8 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 
   /* XXX Should check this file here */
 
+  free(input.bLineOK);
+  
 }
 
 void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
@@ -2068,6 +2070,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           count = 1;
           iOut = j;
           if (output[j].bGrid == 1)
+	    // Exit!
             iNumGrid += 1;
           j = MODULEOUTEND; /* Poor man's break! */
         } else {
@@ -2082,6 +2085,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
             count++;
             iOut = j;
             if (output[j].bGrid == 1)
+	      // Exit!
               iNumGrid += 1;
           }
         }
@@ -2127,7 +2131,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           }
         } else { // Negative option not set, initialize bDoNeg to false
             output[iOut].bDoNeg[iFile-1] = 0;
-        }   
+        }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
           files->Outfile[iFile-1].caCol[i][0]='\0';
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
@@ -2150,9 +2154,14 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
     if (!ok) 
       DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
 
+    files->Outfile[iFile-1].iNumCols = iNumIndices;
+    /*
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    */
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
+  } else {
+    files->Outfile[iFile-1].iNumCols=0;
   }
   free(lTmp);
 }
@@ -2272,9 +2281,10 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
  
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
   }
+  
+  files->Outfile[iFile-1].iNumGrid = iNumGrid;
   free(lTmp);
 }
 

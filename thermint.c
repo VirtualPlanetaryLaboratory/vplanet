@@ -799,6 +799,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
+
   /* Core */
   /* Iterate on Core chemistry before R_ICB */
   // The order matters here!
@@ -1170,21 +1171,7 @@ void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dK2Man;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dImk2Man;
-  strcpy(cUnit,"");
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
+
 void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRIC;
   if (output->bDoNeg[iBody]) {
@@ -2261,6 +2248,7 @@ double fdDepthMeltMan(BODY *body,int iBody) {
     }
     return depthmeltman;
 }
+
 /* Get TDepthMeltMan */
 double fdTDepthMeltMan(BODY *body,int iBody) {
     if (body[iBody].dDepthMeltMan==0) {    //if no melt layer found.
@@ -2269,16 +2257,18 @@ double fdTDepthMeltMan(BODY *body,int iBody) {
           return fdSolidusMan(body[iBody].dDepthMeltMan);
       }
 }
+
 /* Get TJumpMeltMan */ 
 double fdTJumpMeltMan(BODY *body,int iBody) {
   return body[iBody].dTDepthMeltMan-TSURF-(ADGRADMAN)*body[iBody].dDepthMeltMan;  //Temp jump across entire UM melt region.
 }
+
 double fdRayleighMan(BODY *body,int iBody) {
   return body[iBody].dSignTJumpUMan*(THERMEXPANMAN)*(GRAVUMAN)*(body[iBody].dTJumpUMan+body[iBody].dTJumpLMan)*pow(EDMAN,3.)/((THERMDIFFUMAN)*body[iBody].dViscMMan);  //Mantle Rayleigh number defined in terms of ViscMMan and SignTJumpUMan.
 }
 
 double fdK2Man(BODY *body,int iBody) {
-    return 3./2/(1.+19./2*body[iBody].dShmodUMan/(STIFFNESS));
+  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
 }
 
 double fdDynamicViscosity(BODY *body,int iBody) {

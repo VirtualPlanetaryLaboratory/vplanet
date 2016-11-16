@@ -665,8 +665,32 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_HZLIMITDRYRUNAWAY] = &WriteHZLimitDryRunaway;
   
   /*
+   * I
+   */
+  
+  /* Imk2Man */
+  sprintf(output[OUT_IMK2MAN].cName,"Imk2Man");
+  sprintf(output[OUT_IMK2MAN].cDescr,"Imaginary Love Number k2 Mantle");
+  sprintf(output[OUT_IMK2MAN].cNeg,"nd");
+  output[OUT_IMK2MAN].bNeg = 1;
+  output[OUT_IMK2MAN].dNeg = 1; 
+  output[OUT_IMK2MAN].iNum = 1;
+  output[OUT_IMK2MAN].iModuleBit = THERMINT;
+  fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+
+  /*
    * K
    */
+
+  /* K2Man */
+  sprintf(output[OUT_K2MAN].cName,"K2Man");
+  sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
+  sprintf(output[OUT_K2MAN].cNeg,"nd");
+  output[OUT_K2MAN].bNeg = 1;
+  output[OUT_K2MAN].dNeg = 1; 
+  output[OUT_K2MAN].iNum = 1;
+  output[OUT_K2MAN].iModuleBit = THERMINT;
+  fnWrite[OUT_K2MAN] = &WriteK2Man;
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");

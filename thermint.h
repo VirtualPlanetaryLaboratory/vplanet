@@ -230,6 +230,18 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_VISCMELTGAMMA   1798   //Viscosity Melt Factor Gamma
 #define OPT_VISCMELTDELTA   1799   //Viscosity Melt Factor Delta
 
+/* New Parameters for vemcee */
+#define OPT_ACTVISCMAN      1800  //[J/mol] viscosity activation energy mantle
+#define OPT_SHMODREF        1801  //[Pa] reference kinematic mantle shear modulus
+#define OPT_STIFFNESS       1802  //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+#define OPT_DLIND           1803  //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
+#define OPT_DADCORE         1804  //[m] liq iron core adiabatic length scale (DB15 eq A22)
+#define OPT_ADJUMPM2UM      1805  //[nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM"
+#define OPT_ADJUMPM2LM      1806  //[nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM"
+#define OPT_ADJUMPC2CMB     1807  //[nd] adiabatic temp jump from ave core to CMB. "epsilon_c"
+#define OPT_ELECCONDCORE    1808  //[S/m]  electrical conductivity of core.
+/* End vemcee parameters */
+
 /* Options Functions */
 void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
@@ -252,6 +264,17 @@ void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* vemcee parameters */
+void ReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* end vemcee parameters */
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);

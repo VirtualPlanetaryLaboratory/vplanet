@@ -811,7 +811,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY+GALHABIT;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
   
   /*
@@ -1296,8 +1296,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Module Bit Sum: %d\n",module->iBitSum[iBody]);
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
-      if (output[iOut].iNum > 0) 
-        WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+      if (output[iOut].iNum > 0) {
+	if (module->iBitSum[iBody] & output[iOut].iModuleBit) 
+	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+      }
     }
     LogBodyRelations(control,fp,iBody);
     /* Log modules */

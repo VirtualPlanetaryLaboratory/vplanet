@@ -101,9 +101,9 @@ def poly_features(X, degree=2, interaction_only=False, include_bias=True):
 
 def fourier_features(X, k=100, w = None, b = None, verbose = False):
     """
-    Generate random Fourier bases cos(wX + b) where w in R^d and b in R are random
-    variables drawn from uniform distribution on [0, 2pi].  Maps current features into
-    this new fourier space.
+    Generate random Fourier bases sin(vX + b) where v in R^d and b in R are random
+    variables drawn from N(0,1) and a uniform distribution on [0, 2pi],
+    respectively.  Maps current features into this new fourier space.
 
     Parameters
     ----------
@@ -111,9 +111,9 @@ def fourier_features(X, k=100, w = None, b = None, verbose = False):
         input data.  Something like df[feature_cols].values for n samples, d features
     k : int (optional)
         number of new transformed features
-    w : transformation matrix (optional)
+    v : Random vector transformation matrix (optional)
         (features x new_features) matrix. Defaults None
-    b : transformation vector (optional)
+    b : Random phase transformation vector (optional)
         (samples x 1) vector.  Defaults to None
     verbose : bool (optional)
         whether or not to return w, b if you're generating them.  Defaults to False
@@ -126,21 +126,21 @@ def fourier_features(X, k=100, w = None, b = None, verbose = False):
     """
 
     # If not supplied, generate transformation!
-    if w is None and b is None:
+    if v is None and b is None:
 
         # Generate synthetic data
-        w = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[-1],k))
+        w = np.random.normal(size=(X.shape[-1],k))
         b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
 
         if verbose:
-            return np.cos(X.dot(w) + b), w, b
+            return np.sin(X.dot(v) + b), v, b
         else:
-            return np.cos(X.dot(w) + b)
-    # Have w and b!
-    elif w is not None and b is not None:
-        return np.cos(X.dot(w) + b)
+            return np.sin(X.dot(v) + b)
+    # Have v and b!
+    elif v is not None and b is not None:
+        return np.sin(X.dot(v) + b)
     else:
-        ValueError("Either supply both w and b or neither!")
+        raise ValueError("Either supply both v and b or neither!")
 # end function
 
 

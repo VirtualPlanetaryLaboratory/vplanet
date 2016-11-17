@@ -99,9 +99,9 @@ def poly_features(X, degree=2, interaction_only=False, include_bias=True):
 # end function
 
 
-def fourier_features(X, k=100, w = None, b = None, verbose = False):
+def fourier_features(X, k=1000, v = None, b = None, verbose = False):
     """
-    Generate random Fourier bases sin(vX + b) where v in R^d and b in R are random
+    Generate random Fourier bases sin(Xv + b) where v in R^d and b in R are random
     variables drawn from N(0,1) and a uniform distribution on [0, 2pi],
     respectively.  Maps current features into this new fourier space.
 
@@ -129,7 +129,7 @@ def fourier_features(X, k=100, w = None, b = None, verbose = False):
     if v is None and b is None:
 
         # Generate synthetic data
-        w = np.random.normal(size=(X.shape[-1],k))
+        v = np.random.normal(size=(X.shape[-1],k))
         b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
 
         if verbose:

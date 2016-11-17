@@ -531,6 +531,16 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
+  
+  /*
+  else if (body[iBody].bThermint) { // eqtide not called, but thermint is
+    //exit(1);
+  
+    printf("%d\n",iBody);
+    fflush(stdout);
+    body[iBody].dImk2Man = fdImk2Man(body,iBody);
+  }
+  */
 }
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {

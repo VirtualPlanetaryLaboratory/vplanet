@@ -19,6 +19,13 @@ void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody
      then the value will be updated in PropsAuxMultiEqtideThermint. */
 
   body[iBody].dTidalPowMan = 0;
+  
+  /* XXX -- Is this OK to initalize these values to 0. Otherwise there can 
+     be a memory link. The connection between dK2, dK2Man, and dImk2Man
+     really needs to be improved. */
+  //body[iBody].dK2Man = fdK2Man(body,iBody);
+  body[iBody].dK2Man = 0;
+  body[iBody].dImk2Man = 0;
 }
 
 
@@ -1801,6 +1808,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCUMAN].iNum = 1;
   output[OUT_VISCUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_VISCUMAN] = &WriteViscUMan;
+
   /* ViscUManArr Arrhenius Only */
   sprintf(output[OUT_VISCUMANARR].cName,"ViscUManArr");
   sprintf(output[OUT_VISCUMANARR].cDescr,"Upper Mantle Arrhenius Viscosity");
@@ -1810,6 +1818,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCUMANARR].iNum = 1;
   output[OUT_VISCUMANARR].iModuleBit = THERMINT;
   fnWrite[OUT_VISCUMANARR] = &WriteViscUManArr;
+
   /* ViscLMan */
   sprintf(output[OUT_VISCLMAN].cName,"ViscLMan");
   sprintf(output[OUT_VISCLMAN].cDescr,"Lower Mantle Viscosity");
@@ -1819,6 +1828,7 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCLMAN].iNum = 1;
   output[OUT_VISCLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_VISCLMAN] = &WriteViscLMan;
+
   /* ViscMMan */
   sprintf(output[OUT_VISCMMAN].cName,"ViscMMan");
   sprintf(output[OUT_VISCMMAN].cDescr,"Average (mid) Mantle Viscosity");
@@ -2333,8 +2343,9 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
   fprintf(fp,"----- THERMINT PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=OUTSTARTTHERMINT;iOut<OUTENDTHERMINT;iOut++) {
-    if (output[iOut].iNum > 0) 
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
   }
   /* Write out some global constants. */
   fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e EVOLCORE=%e EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);

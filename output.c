@@ -99,6 +99,7 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
 }
 
 void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
   *dTmp = body[iBody].dImk2Man;
   strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
@@ -675,7 +676,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].bNeg = 1;
   output[OUT_IMK2MAN].dNeg = 1; 
   output[OUT_IMK2MAN].iNum = 1;
-  output[OUT_IMK2MAN].iModuleBit = THERMINT;
+  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
   fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
 
   /*
@@ -689,7 +690,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].bNeg = 1;
   output[OUT_K2MAN].dNeg = 1; 
   output[OUT_K2MAN].iNum = 1;
-  output[OUT_K2MAN].iModuleBit = THERMINT;
+  output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
 
   sprintf(output[OUT_KECC].cName,"KEcc");
@@ -1209,7 +1210,6 @@ void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTE
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   
-
   for (iCol=0;iCol<files->Outfile[iBody].iNumGrid;iCol++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
       if (memcmp(files->Outfile[iBody].caGrid[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
@@ -1297,8 +1297,9 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
-	if (module->iBitSum[iBody] & output[iOut].iModuleBit) 
+	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
 	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+	}
       }
     }
     LogBodyRelations(control,fp,iBody);

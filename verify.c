@@ -450,6 +450,15 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
+void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
+  // Is this OK? XXX
+  if (!body[iBody].bThermint) {
+    body[iBody].dK2Man = 0;
+    body[iBody].dImk2Man = 0;
+  }
+}
+
+
 /*
  *
  * Master Verify subroutine
@@ -505,6 +514,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
     }
+
+    VerifyInterior(body,options,iBody);
+
     VerifyModuleMulti(body,control,files,module,options,iBody);
 
     /* Must allocate memory in control struct for all perturbing bodies */

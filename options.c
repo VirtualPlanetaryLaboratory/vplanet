@@ -2294,10 +2294,11 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
  
+    files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
-  }
-  
-  files->Outfile[iFile-1].iNumGrid = iNumGrid;
+  }// else
+  //files->Outfile[iFile-1].iNumGrid = 0;
+    
   free(lTmp);
 }
 
@@ -2599,7 +2600,6 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   }
 }
 
-
 void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   /* Must verify modules: this is used when distrot+eqtide are called without thermint */
@@ -2614,6 +2614,9 @@ void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     else 
       body[iFile-1].dViscUMan = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dViscUMan,files->iNumInputs);
   }
 }
 
@@ -2723,7 +2726,9 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
     ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
     if ((*body)[iFile-1].bPoise) {
       ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
-    }
+    } else
+      // Initialize iNumGrid to 0 so no memory issues
+      files->Outfile[iFile-1].iNumGrid = 0;
   }
 
   /* Any unrecognized options? */

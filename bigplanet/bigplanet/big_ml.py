@@ -14,7 +14,8 @@ functions.
 
 """
 
-from __future__ import division, print_function, absolute_import
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import numpy as np
 from sklearn import preprocessing
 
@@ -22,7 +23,8 @@ from sklearn import preprocessing
 __all__ = ["poly_features",
            "fourier_features",
            "scale_data",
-           "extract_features"]
+           "extract_features",
+           "naive_nn_layer"]
 
 def extract_features(df, features, target):
     """

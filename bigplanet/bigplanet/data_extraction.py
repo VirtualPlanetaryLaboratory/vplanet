@@ -6,7 +6,8 @@ simulations
 
 """
 
-from __future__ import division, print_function, absolute_import
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import numpy as np
 import os
 import sys
@@ -18,7 +19,9 @@ import pickle
 __all__ = ["reduce_dimensions",
            "aggregate_data",
            "Dataset",
-           "extract_data_hdf5"]
+           "extract_data_hdf5",
+           "data_from_dir_hdf5",
+           "add_column"]
 
 def get_cols(datadir=".",infiles=None):
     """

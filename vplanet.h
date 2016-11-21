@@ -499,7 +499,19 @@ typedef struct {
   double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
   double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
   double dManHFlowPref;    /**< Mantle Hflow Prefix */
-  
+
+  /* vemcee parameters */
+  double dActViscMan;      /**< Mantle viscosity activation energy */
+  double dShModRef;        /**< reference kinematic mantle shear modulus */
+  double dStiffness;       /**< effective stiffness of mantle */
+  double dDLind;           /**< lindemann's law length scale for iron liquidus*/
+  double dDAdCore;         /**< liq iron core adiabatic length scale */
+  double dAdJumpM2UM;      /**< adiabatic temp jump from ave mantle to UM */
+  double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
+  double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
+  double dElecCondCore;    /**< electrical conductivity of core */
+  /* end vemcee parameters */  
+
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;

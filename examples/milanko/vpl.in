@@ -15,5 +15,5 @@ saBodyFiles   sun.in mercury.in venus.in earth.in mars.in jupiter.in $
 bDoForward    1
 bVarDt        1
 dEta          0.1
-dStopTime     200000
+dStopTime     2000
 dOutputTime   1000

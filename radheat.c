@@ -626,6 +626,7 @@ void Read238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d238UMassCrust = options->dDefault;
 }
+
 void Read238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
@@ -1636,6 +1637,7 @@ void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double 
     fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
   } else
     update[iBody].pdD40KNumCoreDt = &update[iBody].dZero;
+  
   /* Crust */
   if (update[iBody].i40KCrust >= 0) {
     update[iBody].iaType[update[iBody].i40KCrust][0] = 1;
@@ -1671,18 +1673,19 @@ void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doubl
     update[iBody].iNumBodies[update[iBody].i232ThCore][0]=1;
     update[iBody].iaBody[update[iBody].i232ThCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCore][0][0]=iBody;
-    update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(body,system,update[iBody].iaBody[update[iBody].i232ThMan][0]);
+    update[iBody].daDerivProc[update[iBody].i232ThCore][0] = fdD232ThNumCoreDt(body,system,update[iBody].iaBody[update[iBody].i232ThCore][0]);
     update[iBody].pdD232ThNumCoreDt = &update[iBody].daDerivProc[update[iBody].i232ThCore][0];
     fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
   } else
     update[iBody].pdD232ThNumCoreDt = &update[iBody].dZero;
+
   /* Crust */
   if (update[iBody].i232ThCrust >= 0) {
     update[iBody].iaType[update[iBody].i232ThCrust][0] = 1;
     update[iBody].iNumBodies[update[iBody].i232ThCrust][0]=1;
     update[iBody].iaBody[update[iBody].i232ThCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i232ThCrust][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCrust][0][0]=iBody;
-    update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(body,system,update[iBody].iaBody[update[iBody].i232ThMan][0]);
+    update[iBody].daDerivProc[update[iBody].i232ThCrust][0] = fdD232ThNumCrustDt(body,system,update[iBody].iaBody[update[iBody].i232ThCrust][0]);
     update[iBody].pdD232ThNumCrustDt = &update[iBody].daDerivProc[update[iBody].i232ThCrust][0];
     fnUpdate[iBody][update[iBody].i232ThCrust][0] = &fdD232ThNumCrustDt;
   } else
@@ -1715,6 +1718,7 @@ void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
   } else
     update[iBody].pdD238UNumCoreDt = &update[iBody].dZero;
+
   /* Crust */
   if (update[iBody].i238UCrust >= 0) {
     update[iBody].iaType[update[iBody].i238UCrust][0] = 1;
@@ -1750,10 +1754,11 @@ void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].iaBody[update[iBody].i235UCore][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCore][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCore][0][0]=iBody;
     update[iBody].pdD235UNumCoreDt = &update[iBody].daDerivProc[update[iBody].i235UCore][0];
-    update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(body,system,update[iBody].iaBody[update[iBody].i235UMan][0]);
+    update[iBody].daDerivProc[update[iBody].i235UCore][0] = fdD235UNumCoreDt(body,system,update[iBody].iaBody[update[iBody].i235UCore][0]);
     fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
   } else
     update[iBody].pdD235UNumCoreDt = &update[iBody].dZero;
+
   /* Crust */
   if (update[iBody].i235UCrust >= 0) {
     update[iBody].iaType[update[iBody].i235UCrust][0] = 1;
@@ -1761,7 +1766,7 @@ void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].iaBody[update[iBody].i235UCrust][0] = malloc(update[iBody].iNumBodies[update[iBody].i235UCrust][0]*sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCrust][0][0]=iBody;
     update[iBody].pdD235UNumCrustDt = &update[iBody].daDerivProc[update[iBody].i235UCrust][0];
-    update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(body,system,update[iBody].iaBody[update[iBody].i235UMan][0]);
+    update[iBody].daDerivProc[update[iBody].i235UCrust][0] = fdD235UNumCrustDt(body,system,update[iBody].iaBody[update[iBody].i235UCrust][0]);
     fnUpdate[iBody][update[iBody].i235UCrust][0] = &fdD235UNumCrustDt;
   } else
     update[iBody].pdD235UNumCrustDt = &update[iBody].dZero;

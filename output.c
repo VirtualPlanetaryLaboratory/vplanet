@@ -90,6 +90,24 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  * K
  */
 
+void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dK2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dImk2Man;
+  strcpy(cUnit,"");
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
 void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dKecc;
@@ -648,8 +666,32 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_HZLIMITDRYRUNAWAY] = &WriteHZLimitDryRunaway;
   
   /*
+   * I
+   */
+  
+  /* Imk2Man */
+  sprintf(output[OUT_IMK2MAN].cName,"Imk2Man");
+  sprintf(output[OUT_IMK2MAN].cDescr,"Imaginary Love Number k2 Mantle");
+  sprintf(output[OUT_IMK2MAN].cNeg,"nd");
+  output[OUT_IMK2MAN].bNeg = 1;
+  output[OUT_IMK2MAN].dNeg = 1; 
+  output[OUT_IMK2MAN].iNum = 1;
+  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
+  fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+
+  /*
    * K
    */
+
+  /* K2Man */
+  sprintf(output[OUT_K2MAN].cName,"K2Man");
+  sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
+  sprintf(output[OUT_K2MAN].cNeg,"nd");
+  output[OUT_K2MAN].bNeg = 1;
+  output[OUT_K2MAN].dNeg = 1; 
+  output[OUT_K2MAN].iNum = 1;
+  output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
+  fnWrite[OUT_K2MAN] = &WriteK2Man;
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
@@ -770,7 +812,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY+GALHABIT;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
   
   /*
@@ -1168,7 +1210,6 @@ void LogGridOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTE
   double *dTmp;
   char cUnit[OUTLEN],cTmp[OUTLEN];
   
-
   for (iCol=0;iCol<files->Outfile[iBody].iNumGrid;iCol++) {
     for (iOut=0;iOut<MODULEOUTEND;iOut++) {
       if (memcmp(files->Outfile[iBody].caGrid[iCol],output[iOut].cName,strlen(output[iOut].cName)) == 0) {
@@ -1255,8 +1296,11 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Module Bit Sum: %d\n",module->iBitSum[iBody]);
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
-      if (output[iOut].iNum > 0) 
-        WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+      if (output[iOut].iNum > 0) {
+	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+	}
+      }
     }
     LogBodyRelations(control,fp,iBody);
     /* Log modules */

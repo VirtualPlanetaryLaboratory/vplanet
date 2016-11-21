@@ -2609,8 +2609,11 @@ double fdGravICB(BODY *body, int iBody) {
 }
 double fdRICDot(BODY *body,UPDATE *update, int iBody) {
   double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((body[iBody].dDAdCore)/(body[iBody].dDLind),2)-1.));
-
-  return -1*pow((body[iBody].dDAdCore),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
+  if (body[iBody].dRIC > 0.) {
+    return -1*pow((body[iBody].dDAdCore),2)/denom*(*(update[iBody].pdTDotCore))/body[iBody].dTCore;
+  } else {
+    return 0.;
+  }
   //  return 1/denom;
 }
 

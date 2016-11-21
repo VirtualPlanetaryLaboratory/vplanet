@@ -1322,7 +1322,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].daIceSheetDiff = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daIceSheetMat = malloc(body[iBody].iNumLats*sizeof(double*));
     body[iBody].daIceBalanceTmp = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daYBoundary = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daYBoundary = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daIceBalanceAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daIceFlowAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daBedrockH = malloc(body[iBody].iNumLats*sizeof(double));

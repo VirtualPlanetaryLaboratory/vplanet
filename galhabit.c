@@ -2572,7 +2572,7 @@ double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
 }
 
-//----Fuck it, let's try these equations (Breiter & somebody 2015)-----------------------------
+//----Fuck it, let's try these equations (Breiter & Vokrouhlicky 2015)-----------------------------
 double QuadC2(BODY *body, int *iaBody) {
   double M1, X0, X1, a1, a2, m2;
   

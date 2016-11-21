@@ -105,7 +105,9 @@ def fourier_features(X, k=1000, v = None, b = None, verbose = False):
     """
     Generate random Fourier bases sin(Xv + b) where v in R^d and b in R are random
     variables drawn from N(0,1) and a uniform distribution on [0, 2pi],
-    respectively.  Maps current features into this new fourier space.
+    respectively.  Maps current features into this new fourier space (each
+    feature becomes a sin/cosine in random space).  This works because in
+    expectation space, h dot h' ~ K(h,h') for the RBF kernel K.
 
     Parameters
     ----------
@@ -148,14 +150,16 @@ def fourier_features(X, k=1000, v = None, b = None, verbose = False):
 
 def naive_nn_layer(X, k = 5000, v = None, verbose = False):
 	"""
-	Perform a naive approximation to the first layer of a neural network to transform
-	a d x 1 dimensional feature vector for a given sample to k x 1 via a linear
-	combination of the original d features.  The mapping is given by the following
+	Perform a naive approximation to the first layer of a neural network to
+    transform a d dimensional feature vector for a given sample to k via a
+    linear combination of the original d features.  The mapping is given by the
+    following
 
-	h_i(x) = v_i dot x
+	h_j(x) = max(X.dot(v),0)
 
-	where v is a d x k matrix where each column is a d x 1 vector whose entries are
-	sampled from the standard normal distribution.
+	where v is a d x k matrix where each column is a d x 1 vector whose entries
+	are sampled from the standard normal distribution.  Even though this is a
+    trivial transformation, it typically works pretty well for large k!
 
 	Parameters
 	----------
@@ -178,20 +182,29 @@ def naive_nn_layer(X, k = 5000, v = None, verbose = False):
 	if v is None:
 		v = np.random.normal(size=(X.shape[-1],k))
 
+        # Transform data
+        tmp = X.dot(v)
+        tmp[tmp < 0.0] = 0.0
+
 		if verbose:
-		    return X.dot(v), v
+		    return tmp, v
 		else:
-		    return X.dot(v)
-	else:
-		return X.dot(v)
+		    return tmp
+    # Already have transformation matrix
+    else:
+        # Transform data
+        tmp = X.dot(v)
+        tmp[tmp < 0.0] = 0.0
+
+		return tmp
 # end function
 
 
 def scale_data(X):
     """
-    Transform the data to center it by removing the mean value of each feature, then
-    scale it by dividing non-constant features by their standard deviation using
-    sklearn's preprocessing.scale
+    Transform the data to center it by removing the mean value of each feature,
+    then scale it by dividing non-constant features by their standard deviation
+    using sklearn's preprocessing.scale
 
     Parameters
     ----------

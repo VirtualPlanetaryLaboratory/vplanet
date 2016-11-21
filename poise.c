@@ -845,17 +845,17 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HEATCAPLAND] = &ReadHeatCapLand;
   
   sprintf(options[OPT_HEATCAPWATER].cName,"dHeatCapWater");
-  sprintf(options[OPT_HEATCAPWATER].cDescr,"Water heat capacity in seasonal model");
-  sprintf(options[OPT_HEATCAPWATER].cDefault,"3.093e8");
-  options[OPT_HEATCAPWATER].dDefault = 3.093e8;
+  sprintf(options[OPT_HEATCAPWATER].cDescr,"Water heat capacity per meter in seasonal model");
+  sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6");
+  options[OPT_HEATCAPWATER].dDefault = 4.2e6;
   options[OPT_HEATCAPWATER].iType = 2;  
   options[OPT_HEATCAPWATER].iMultiFile = 1;   
   fnRead[OPT_HEATCAPWATER] = &ReadHeatCapWater;
   
   sprintf(options[OPT_MIXINGDEPTH].cName,"dMixingDepth");
   sprintf(options[OPT_MIXINGDEPTH].cDescr,"Mixing depth of ocean in seasonal model");
-  sprintf(options[OPT_MIXINGDEPTH].cDefault,"50");
-  options[OPT_MIXINGDEPTH].dDefault = 50.;
+  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70");
+  options[OPT_MIXINGDEPTH].dDefault = 70.;
   options[OPT_MIXINGDEPTH].iType = 2;  
   options[OPT_MIXINGDEPTH].iMultiFile = 1;   
   fnRead[OPT_MIXINGDEPTH] = &ReadMixingDepth;
@@ -1252,6 +1252,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       }
     }
     VerifyNStepSeasonal(body,iBody);
+    body[iBody].dHeatCapWater *= body[iBody].dMixingDepth;
     body[iBody].dTGlobal = 0.0;
     body[iBody].dSeasDeltax = 2.0/body[iBody].iNumLats;
     body[iBody].dSeasDeltat = 1./body[iBody].iNStepInYear;

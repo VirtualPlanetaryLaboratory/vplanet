@@ -24,7 +24,7 @@ dPrecA 0.0                              #orientation of spin axis
 #_______poise parameters (have fun with these!)_________________________________________
 iLatCellNum      151                    #number of latitude cells
 bClimateModel     sea                   #use seasonal or annual model
-dTGlobalInit      14.85                 #initial guess at average surface temp 
+dTGlobalInit      9                 #initial guess at average surface temp 
 iNumYears         4                     #number of years (orbits) to run clim model
 iNStepInYear 80                         #number of steps to take in a "year"
 #dSurfAlbedo       0.35                 #average surface albedo (annual model only)
@@ -56,7 +56,7 @@ dAlbedoLand       0.4                   #albedo of land
 dAlbedoWater      0.3                   #albedo of water
 #dHeatCapLand      1.53                 #land heat capacity
 #dHeatCapWater      28.4                #water heat capacity
-#dMixingDepth      70                   #mixing depth of ocean
+dMixingDepth      100                   #mixing depth of ocean
 
 
 #________output options!_____________________________________________

@@ -101,7 +101,8 @@ def poly_features(X, degree=2, interaction_only=False, include_bias=True):
 # end function
 
 
-def fourier_features(X, k=1000, v = None, b = None, verbose = False):
+def fourier_features(X, k=1000, v = None, b = None, sigma = 1.0,
+                     verbose = False):
     """
     Generate random Fourier bases sin(Xv + b) where v in R^d and b in R are random
     variables drawn from N(0,1) and a uniform distribution on [0, 2pi],
@@ -119,6 +120,8 @@ def fourier_features(X, k=1000, v = None, b = None, verbose = False):
         (features x new_features) matrix. Defaults None
     b : Random phase transformation vector (optional)
         (samples x 1) vector.  Defaults to None
+    sigma : float
+        scaling factor (something ~ median of pairwise distances between points)
     verbose : bool (optional)
         whether or not to return w, b if you're generating them.  Defaults to False
 
@@ -137,66 +140,66 @@ def fourier_features(X, k=1000, v = None, b = None, verbose = False):
         b = np.random.uniform(low=0.0, high=(2.0*np.pi), size=(X.shape[0],1))
 
         if verbose:
-            return np.sin(X.dot(v) + b), v, b
+            return np.sin(X.dot(v)/sigma + b), v, b
         else:
-            return np.sin(X.dot(v) + b)
+            return np.sin(X.dot(v)/sigma + b)
     # Have v and b!
     elif v is not None and b is not None:
-        return np.sin(X.dot(v) + b)
+        return np.sin(X.dot(v)/sigma + b)
     else:
         raise ValueError("Either supply both v and b or neither!")
 # end function
 
 
 def naive_nn_layer(X, k = 5000, v = None, verbose = False):
-	"""
-	Perform a naive approximation to the first layer of a neural network to
+    """
+    Perform a naive approximation to the first layer of a neural network to
     transform a d dimensional feature vector for a given sample to k via a
     linear combination of the original d features.  The mapping is given by the
     following
 
-	h_j(x) = max(X.dot(v),0)
+    h_j(x) = max(X.dot(v),0)
 
-	where v is a d x k matrix where each column is a d x 1 vector whose entries
-	are sampled from the standard normal distribution.  Even though this is a
+    where v is a d x k matrix where each column is a d x 1 vector whose entries
+    are sampled from the standard normal distribution.  Even though this is a
     trivial transformation, it typically works pretty well for large k!
 
-	Parameters
-	----------
-	X : array (n x d)
-		input data
-	k : int (optional)
-		number of features for of new sample.  Defaults to 5000
-	v : array (d x k) (optional)
-		weight mapping matrix.  generated from standard normal if not supplied
-	verbose : bool (optional)
-	    whether or not to return transformation matrix.  Defaults to False
+    Parameters
+    ----------
+    X : array (n x d)
+        input data
+    k : int (optional)
+        number of features for of new sample.  Defaults to 5000
+    v : array (d x k) (optional)
+        weight mapping matrix.  generated from standard normal if not supplied
+        verbose : bool (optional)
+        whether or not to return transformation matrix.  Defaults to False
 
-	Returns
-	-------
-	X : array (n x k)
-		transformed data
-	"""
+    Returns
+    -------
+    X : array (n x k)
+        transformed data
+    """
 
-	# Generate feature mapping as random variates from standard normal distribution
-	if v is None:
-		v = np.random.normal(size=(X.shape[-1],k))
+    # Generate feature mapping as random variates from standard normal distribution
+    if v is None:
+        v = np.random.normal(size=(X.shape[-1],k))
 
         # Transform data
         tmp = X.dot(v)
         tmp[tmp < 0.0] = 0.0
 
-		if verbose:
-		    return tmp, v
-		else:
-		    return tmp
+        if verbose:
+            return tmp, v
+        else:
+            return tmp
     # Already have transformation matrix
     else:
         # Transform data
         tmp = X.dot(v)
         tmp[tmp < 0.0] = 0.0
 
-		return tmp
+    return tmp
 # end function
 
 

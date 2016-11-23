@@ -23,6 +23,93 @@ __all__ = ["reduce_dimensions",
            "data_from_dir_hdf5",
            "add_column"]
 
+
+def find_logfile(direct):
+    """
+    Find path to logfile in given directory.
+
+    Parameters
+    ----------
+    direct : str
+        path to directory where logfile lives
+
+    Returns
+    -------
+    logfile : str
+        complete path to direct's logfile, if it exists
+    """
+
+    logcount = 0
+    for f in os.listdir(direct):
+        if f.endswith(".log"):
+            logfile = os.path.join(direct,f)
+            logcount = logcount + 1
+
+    # Ensure there's just one logfile
+    assert logcount == 1, "ERROR: There can only be one (log)! Number of logs: %d" % logcount
+
+    return logfile
+# end function
+
+
+def parse_log(logfile, body, param):
+    """"
+    Parse log file for one of a body's initial conditions and return it.  This
+    is useful for when a parameter is not outputted but one needs it later on
+    for bigplanet analysis.
+
+    Parameters
+    ----------
+    logfile : str
+        path to the logfile
+    body : str
+        name of body whose variable you're looking for
+    param : str
+        body's parameter
+
+    Returns
+    -------
+    param : float
+        initial condition of interest
+    """
+
+    # Open log file and get lines
+    with open(logfile) as handle:
+        lines = handle.readlines()
+
+    # Loop over all lines in the input file looking for body string of the form
+    # ----- BODY: planet ----
+    to_find_body = "BODY: %s" % body
+    for ii in range(0,len(lines)):
+
+        line = lines[ii].strip(' \t\n\r') # Remove whitespace
+
+        # Found it? If so, now loop over lines below it looking for param
+        # of the form (param)
+        if line.find(to_find_body) != -1:
+            to_find_param = "(%s)" % param
+            found_it = False
+            while not found_it:
+
+                # At the end of the file?
+                if ii == len(lines) - 1:
+                    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+
+                line = lines[ii].strip(' \t\n\r') # Remove whitespace
+
+                # Found it? Done!
+                if line.startswith(to_find_param):
+                    words = line.split()
+                    return float(words[-1])
+
+                # On to the next line
+                ii = ii + 1
+
+    # Didn't find it
+    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+# end function
+
+
 def get_cols(datadir=".",infiles=None):
     """
     Given a directory where simulation data are stored and the name of the input files,
@@ -318,7 +405,7 @@ class Dataset(object):
 
 
 def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
-                       compression="gzip",remove_halts=True):
+                       compression="gzip",remove_halts=True, var_from_log=None):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
@@ -331,16 +418,20 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
         Name of the hdf5 dataset group that will contain directory's simulation data
         Named after sim #
     datadir : str
-        Name of directory where simulation results are kept
+        Name of directory where simulation results are kept.  Defaults to .
     data_cols : dict
-        dictionary contains each body's output variable names
+        dictionary contains each body's output variable names. Defaults to None.
     infiles : list
-        list containing input file names for each body
+        list containing input file names for each body.  Defaults to None
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
         None (no quotes) turns off compression
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
+        Defaults to True
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.  Defaults to None.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
 
     Returns
     -------
@@ -361,6 +452,10 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
     # Did it halt? ... assuming user cares
     if halt != 0:
         return 0
+
+    # Find logfile for parsing later?
+    if var_from_log:
+        logfile = find_logfile(datadir)
 
     # No halt, make the group!
     # Create group for each directory
@@ -394,8 +489,21 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
                     # Write columns to subgroup as datasets [allows for POSIX-like access]
                     for col in data_cols[infile + ".in"]:
+                        tmp_len = len(tmp[col]) # Store this for later
                         sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
                                           compression = compression)
+
+                    # Pull variables from logfile?
+                    if var_from_log is not None:
+                        # Loop over body's, infile's, params if any are given
+                        if infile in var_from_log.keys():
+                            for param in var_from_log[infile]:
+                                var = parse_log(logfile, infile, param)
+
+                                # Make var an array.  Wasteful, but whatever
+                                var = np.ones(tmp_len) * var
+                                sub.create_dataset(param, data = pd.np.array(var), dtype="f",
+                                                  compression = compression)
                 except RuntimeError:
                     raise RuntimeError("Unknown pd.read_table error.")
 
@@ -405,8 +513,8 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
 
 def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
-                      compression="gzip",remove_halts=False,cadence=None,
-                     skip_body=None):
+                      compression="gzip", remove_halts=False, cadence=None,
+                     skip_body=None, var_from_log=None):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -435,6 +543,9 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         the user doesn't care what its output is and hence does not want to save it.
         if skip_body = ["primary.in"], the body primary with input file primary.in will
         be ignored from all data processing
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.  Defaults to None.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
 
     Returns
     -------
@@ -516,7 +627,8 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         # Store data from each simulation, increment counter if succesful
         res = data_from_dir_hdf5(f_set,str(counter),os.path.join(src,direct),
                                  data_cols,infiles,compression=compression,
-                                 remove_halts=remove_halts)
+                                 remove_halts=remove_halts,
+                                 var_from_log=var_from_log)
 
         # Increment counter (keeps track of valid parsed simulation dirs)
         counter += res

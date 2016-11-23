@@ -1250,6 +1250,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       } else {
         body[iBody].bSkipSeas = 0;
       }
+    } else {
+      body[iBody].bSkipSeas = 0;
     }
     VerifyNStepSeasonal(body,iBody);
     body[iBody].dHeatCapWater *= body[iBody].dMixingDepth;

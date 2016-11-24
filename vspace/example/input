@@ -1,5 +1,5 @@
-srcfolder  ../../examples/binary_hyak
-destfolder /Users/dflemin3/Desktop/vplanet/vspace/example/hyak_test
+srcfolder  ../../examples/icebelt
+destfolder squee
 trialname  hyak_test
 
 file   primary.in

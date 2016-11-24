@@ -42,7 +42,7 @@ void ReadForcePrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     body[iFile-1].bForcePrecRate = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&body[iFile-1].bForcePrecRate,files->iNumInputs);
+    body[iFile-1].bForcePrecRate = options->dDefault;
 }
 
 void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {

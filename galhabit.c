@@ -762,6 +762,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   VerifyTidesBinary(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
   if (iBody == 1) {
+    body[iBody].dMeanA = 0.0;
     system->dGalaxyAge = 1e10*YEARSEC;
     dCurrentAge = system->dGalaxyAge-control->Evolve.dStopTime;
     system->dPassingStarR = malloc(3*sizeof(double));

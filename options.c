@@ -156,7 +156,11 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
-  for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  //for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+    printf("%s\n",cLine);
+    printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
+    fflush(stdout);
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) { // 35 is ASCII code for # 
@@ -2146,10 +2150,10 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
             output[iOut].bDoNeg[iFile-1] = 0;
         }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
 	// Is option part of selected modules?
@@ -2285,10 +2289,10 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
             output[iOut].bDoNeg[iFile-1] = 0;
         }   
         if (output[iOut].bGrid == 0) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
       }

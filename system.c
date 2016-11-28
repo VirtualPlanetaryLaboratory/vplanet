@@ -47,19 +47,24 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 
 double fdOrbAngMom(BODY *body) {
 
-  /* XXX Broken -- needs to include multiple bodies */
+  /* XXX Broken -- needs to include multiple bodies 
   return body[0].dMass*body[1].dMass*pow(BIGG*body[1].dSemi*(1-body[1].dEcc*body[1].dEcc)/(body[0].dMass+body[1].dMass),0.5);
+  */
+
+  return 0;
 }
 
 double fdTotAngMom(BODY *body) {
   double dTot = 0;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies */
+  /* XXX Broken -- needs to include multiple bodies
   dTot = fdOrbAngMom(body);
   for (iBody=0;iBody<2;iBody++)
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
   return dTot;
+  */
+  return 0;
 }
 
 double fdOrbPotEnergy(double dMass1, double dMass2,double dSemi) {
@@ -79,24 +84,28 @@ double fdKinEnergy(BODY *body) {
   double dKE;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies */
+  /* XXX Broken -- needs to include multiple bodies 
   dKE = fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
   for (iBody=0;iBody<2;iBody++) 
     dKE += fdRotKinEnergy(body[iBody].dMass,body[iBody].dRadius,body[iBody].dRadGyra,body[iBody].dRotRate);
 
   return dKE;
+  */
+  return 0;
 }
 
 double fdPotEnergy(BODY *body) {
   double dPE;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies */
+  /* XXX Broken -- needs to include multiple bodies
   dPE = fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
   for (iBody=0;iBody<2;iBody++) 
     dPE += fdBodyPotEnergy(body[iBody]);
 
   return dPE;
+  */
+  return 0;
 }
 
 double fdTotEnergy(BODY *body) {

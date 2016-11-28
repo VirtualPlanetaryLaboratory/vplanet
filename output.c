@@ -50,7 +50,7 @@ void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0) 
+  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0) 
     *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
   else
     *dTmp = 0;
@@ -84,7 +84,6 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     fsUnitsLength(units->iLength,cUnit);
   }
 }
-      
 
 /*
  * K
@@ -165,16 +164,11 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   int iModule;
 
   *dTmp=0;
-  /*
-  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-    // Only module reference in file, can this be changed? XXX
-    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
 
-  */
-
-  // Commented out until FLARE is actually built
-  //*dTmp += body[iBody].dLXUVFlare;
-  *dTmp += body[iBody].dLXUV;
+  if (body[iBody].bFlare)
+    *dTmp += body[iBody].dLXUVFlare;
+  if (body[iBody].bStellar)
+    *dTmp += body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1324,6 +1318,8 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
+    control->Evolve.dTime=0;
+    control->Evolve.nSteps=0;
   } else if (iEnd == 1) {
     sprintf(cTime,"Final");
     fp=fopen(files->cLog,"a");

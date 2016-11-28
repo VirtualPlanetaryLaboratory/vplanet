@@ -158,9 +158,11 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   /* Use GetPos to avoid white space */
   //for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
   for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+    /* DEBUG XXX
     printf("%s\n",cLine);
     printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
     fflush(stdout);
+    */
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) { // 35 is ASCII code for # 

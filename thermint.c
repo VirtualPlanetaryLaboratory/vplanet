@@ -1437,6 +1437,8 @@ void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
+/*
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
@@ -1452,6 +1454,7 @@ void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+*/
 
 void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRIC;

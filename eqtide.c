@@ -43,7 +43,6 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
 
   if (iBody > 0) {
-    dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dEccSq = src[iBody].dEccSq;
     dest[iBody].dLongP = src[iBody].dLongP;
     dest[iBody].dMeanMotion = src[iBody].dMeanMotion;

@@ -3,7 +3,8 @@
  * Rory Barnes, Thu Mar 24 15:39:45 PDT 2016
  *
  * Subroutines that control the XUV output of flares.
-*/
+ *
+ */
 
 #include <stdio.h>
 #include <math.h>
@@ -12,19 +13,9 @@
 #include <string.h>
 #include "vplanet.h"
 
-
-// Leave these in for now
-void  InitializeControlFlare(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
-
 void BodyCopyFlare(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
-}
-
-void InitializeBodyFlare(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-}
-
-void InitializeUpdateTmpBodyFlare(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  dest[iBody].dFlareConst = src[iBody].dFlareConst;
+  dest[iBody].dFlareExp = src[iBody].dFlareExp;
 }
 
 /**************** FLARE options ********************/
@@ -181,7 +172,7 @@ void VerifyHaltFlare(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int 
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
    block of initialization in InitializeOutputFlare below */
 
-void HelpOutputFlarer(OUTPUT *output) {
+void HelpOutputFlare(OUTPUT *output) {
   int iOut;
 
   printf("\n ------ STELLAR output ------\n");
@@ -231,7 +222,7 @@ void LogFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *
  /* Anything here? 
   int iOut;
 
-  fprintf(fp,"\n----- RADHEAT PARAMETERS ------\n");
+  fprintf(fp,"\n----- FLARE PARAMETERS ------\n");
   for (iOut=OUTSTARTRADHEAT;iOut<OUTBODYSTARTRADHEAT;iOut++) {
     if (output[iOut].iNum > 0)
       WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,0);
@@ -251,18 +242,12 @@ void LogBodyFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 
 void AddModuleFlare(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = FLARE;
-
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlFlare;
-  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyFlare;
-
   module->fnCountHalts[iBody][iModule] = &CountHaltsFlare;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsFlare;
   module->fnLogBody[iBody][iModule] = &LogBodyFlare;
   module->fnVerify[iBody][iModule] = &VerifyFlare;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltFlare;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyFlare;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateFlare;
 
   module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVFlare;

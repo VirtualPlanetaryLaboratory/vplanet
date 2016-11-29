@@ -17,7 +17,6 @@
 #include "output.h"
 
 void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
-    dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dPeriQ = src[iBody].dPeriQ;
     dest[iBody].dArgP = src[iBody].dArgP;
     dest[iBody].dLongP = src[iBody].dLongP;

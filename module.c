@@ -117,7 +117,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
 
-  
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -297,8 +296,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
-
-
   }
 
   /************************
@@ -602,6 +599,16 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
+  
+  /*
+  else if (body[iBody].bThermint) { // eqtide not called, but thermint is
+    //exit(1);
+  
+    printf("%d\n",iBody);
+    fflush(stdout);
+    body[iBody].dImk2Man = fdImk2Man(body,iBody);
+  }
+  */
 }
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {

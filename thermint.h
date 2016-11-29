@@ -161,7 +161,6 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_BLLMAN          1717   //LM TBL thickness
 #define OPT_TJUMPUMAN       1718   //Temperature Jump across UMTBL
 #define OPT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
-#define OPT_VISCUMAN        1720   //Viscosity UMTBL
 #define OPT_VISCLMAN        1721   //Viscosity LMTBL
 #define OPT_SHMODUMAN       1722   //Shear modulus UMTBL
 #define OPT_SHMODLMAN       1723   //Shear modulus LMTBL
@@ -321,7 +320,6 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
 #define OUT_SIGNTJUMPUMAN   1720   //Temperature Jump across UMTBL
 #define OUT_SIGNTJUMPLMAN   1721   //Temperature Jump across LMTBL
-#define OUT_VISCUMAN        1722   //Viscosity UMTBL
 #define OUT_VISCLMAN        1723   //Viscosity LMTBL
 #define OUT_SHMODUMAN       1725   //Shear modulus UMTBL
 #define OUT_SHMODLMAN       1726   //Shear modulus LMTBL
@@ -333,8 +331,6 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TDEPTHMELTMAN   1732   //Temp at base of UM melt region.
 #define OUT_TJUMPMELTMAN    1733   //Temp jump across UM melt region.
 #define OUT_MELTMASSFLUXMAN 1734   //Mantle melt mass flux.
-#define OUT_K2MAN           1735   //Mantle k2 love number
-#define OUT_IMK2MAN         1736   //Mantle Im(k2) love number
 #define OUT_VISCUMANARR     1737   //Viscosity UM Arrhenius
 #define OUT_RAYLEIGHMAN     1738   //Mantle Rayleigh Number
 #define OUT_VISCMMAN        1739   //Viscosity Mid (ave) mantle.

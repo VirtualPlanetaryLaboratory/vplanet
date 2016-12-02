@@ -166,7 +166,7 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   *dTmp=0;
 
   if (body[iBody].bFlare)
-    *dTmp += body[iBody].dLXUVFlare;
+    *dTmp += fdLXUVFlare(body,control->Evolve.dTimeStep,iBody);
   if (body[iBody].bStellar)
     *dTmp += body[iBody].dLXUV;
 
@@ -177,7 +177,6 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
   }
-
 }
 
 /*
@@ -442,13 +441,9 @@ void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 }
 
 void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Multiple modules can contribute to this output */
-  /* Multiple modules can contribute to this output */
-  //int iModule;
 
   /* Surface Energy Flux is complicated because it either all comes
      through thermint, or it can be from eqtide and/or radheat. */
-
   if (body[iBody].bThermint) 
     *dTmp = fdHfluxSurf(body,iBody);
   else {
@@ -459,13 +454,6 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
       *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
     
-  /* This is the old way
-  *dTmp=0;
-  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-    // Only module reference in file, can this be changed? XXX
-    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
-    */
-  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

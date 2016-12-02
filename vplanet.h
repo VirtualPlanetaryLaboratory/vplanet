@@ -778,8 +778,18 @@ typedef struct {
 
   // FLARE
   int bFlare;
+  /*
   double dFlareConst;
   double dFlareExp;
+  */
+  double dFlareYInt;
+  double dFlareSlope;
+  double dFlareC;
+  double dFlareK;
+  double dFlareMinEnergy;
+  double dFlareMaxEnergy;
+  double dFlareVisWidth;
+  double dFlareXUVWidth;
   double dLXUVFlare;
   
   // GALHABIT
@@ -1480,7 +1490,7 @@ typedef struct {
 /* OUTPUT contains the data regarding every output parameters */
 
 /* Some output variables must combine output from different modules.
- * These functions do that combining. */
+ * These functions do that combining. XXX I think this is defunct! */
  
 typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
 

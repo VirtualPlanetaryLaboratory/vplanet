@@ -957,44 +957,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
-  int iBody,iModule;
-
-  // Add new mult-module outputs here
-
-  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    // Malloc number of modules for each multi-module output
-    output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      /* Initialize them all to return nothing, then they get changed 
-      from AddModule subroutines */
-      output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
-    }
-  }
-
-  output[OUT_LXUVTOT].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    // Malloc number of modules for each multi-module output
-    output[OUT_LXUVTOT].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      /* Initialize them all to return nothing, then they get changed 
-      from AddModule subroutines */
-      output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdReturnOutputZero;
-    }
-  }
-
-}
-
-/*
-void FinalizeOutputFunctions(MODULE *module,OUTPUT *output,int iBody) {
-  First initialize functions for the number of bodies 
-  module->fnFinalizeOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-    module->fnFinalizeOutput[iBody][iModule];
-}
-*/
-
+// XXX MKS Units?
 void CGSUnits(UNITS *units) {
   units->iTime = 0;
   units->iLength = 0;

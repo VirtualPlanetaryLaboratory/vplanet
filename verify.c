@@ -475,7 +475,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
      input them, but instead a redundant variable. Yet these need to be
      defined before we can call InitializeUpdate. */
 
-
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
@@ -499,18 +498,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   InitializeUpdate(body,control,module,update,fnUpdate);
   InitializeHalts(control,module);
-  InitializeOutputFunctions(module,output,control->Evolve.iNumBodies);
 
   VerifyHalts(body,control,module,options);
 
-  /* Defunct! XXX
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnFinalizeOutputFunction[iBody][iModule](output,iBody,iModule);
-    }
-  }
-  */
-  
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {

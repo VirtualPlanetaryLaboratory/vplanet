@@ -2325,12 +2325,6 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
-  //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
-  //    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFlux; //This is need to print the global var to log.  Needs to be fixed.
-  //PD: I commented out the above line bc I don't know what it's for.  SURFENFLUX is called HFLOWSURF in thermint.
-}
-
 /************ THERMINT Logging Functions **************/
 
 void LogOptionsThermint(CONTROL *control, FILE *fp) {
@@ -2385,13 +2379,9 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;
 
-    // NEED TO ADD THERMINT VARIABLES HERE??
+  // NEED TO ADD THERMINT VARIABLES HERE??
   module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManThermint;
   module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreThermint;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionThermint;
-  module->fnFinalizeOutputFunction[iBody][iModule] = FinalizeOutputFunctionThermint;
-
 }
 
 /************* THERMINT Functions ************/

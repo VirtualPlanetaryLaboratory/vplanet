@@ -835,10 +835,6 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
 }
 
-void FinalizeOutputFunctionStellar(OUTPUT *output,int iBody,int iModule) {
-  //output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVStellar;
-}
-
 /************ STELLAR Logging Functions **************/
 
 void LogOptionsStellar(CONTROL *control, FILE *fp) {
@@ -887,10 +883,6 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
   module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionStellar;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionStellar;
-
 }
 
 /************* STELLAR Functions ************/

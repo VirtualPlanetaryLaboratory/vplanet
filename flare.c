@@ -517,7 +517,7 @@ double fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) {
   // Convert to luminosity without powers of 10 and convert to ergs/s
   dArea = pow(10,dArea)/DAYSEC;
 
-  /* The Misra-XXX et al. (2005) model is for energy. We therfore are now
+  /* The Mitra-Kaev et al. (2005) model is for energy. We therfore are now
      assuming that we are calculating the energy over 1 second */
 
   // Divide by width of visible in Angstroms

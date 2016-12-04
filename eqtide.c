@@ -35,6 +35,8 @@
 
 void InitializeControlEqtide(CONTROL *control) {
 
+  /* XXX valgrind complains that these are memory leaks, but they need to be
+     initialized! */
   control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
   control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
   control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));

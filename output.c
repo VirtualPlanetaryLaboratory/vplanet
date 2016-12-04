@@ -75,7 +75,14 @@ void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
+  /* This output is unusual in that it depends on the presence of other bodies
+     in the system, namely (a) star(s). As a hack, the will return -1 for 
+     stars. */
+  
+  if (body[iBody].iBodyType == 0) // Planet
+    *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
+  else // Star
+    *dTmp = -1;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1243,6 +1250,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+	  /* Useful for debuggin
+	  printf("%d %d\n",iBody,iOut);
+	  fflush(stdout);
+	  */
 	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	}
       }

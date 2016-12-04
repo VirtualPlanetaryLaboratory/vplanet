@@ -655,6 +655,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   {
     if(iBody == 0) // Primary!
     {
+      body[iBody].dR0=0; // Initialization -- doesn't matter
       // These values default to -1
       if(fabs(body[iBody].dInc) + 1 < TINY || fabs(body[iBody].dEcc) + 1 < TINY || fabs(body[iBody].dSemi + 1) < TINY || fabs(body[iBody].dMeanMotion) + 1 < TINY)
       {
@@ -664,7 +665,8 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
         }
         exit(EXIT_INPUT);
       }
-    }
+    } else // Secondary
+      body[iBody].dR0=body[iBody].dSemi;
     // Was dCBPM0, dCBPZeta, dCBPPsi set for one of the stars?
     if(body[iBody].dCBPM0 > TINY || body[iBody].dCBPZeta > TINY || body[iBody].dCBPPsi > TINY)
     {
@@ -1246,8 +1248,9 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   fprintf(fp,"----- BINARY PARAMETERS (%s)------\n",body[iBody].cName);
   
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
-    if (output[iOut].iNum > 0) 
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
   }
 }
 

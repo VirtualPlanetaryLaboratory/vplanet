@@ -17,7 +17,6 @@
 #include "output.h"
 
 void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
-    dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dPeriQ = src[iBody].dPeriQ;
     dest[iBody].dArgP = src[iBody].dArgP;
     dest[iBody].dLongP = src[iBody].dLongP;
@@ -1112,11 +1111,6 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FVELDISP] = &WriteFVelDisp;
 }
 
-void FinalizeOutputFunctionGalHabit(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ GALHABIT Logging Functions **************/
 
 void LogOptionsGalHabit(CONTROL *control, FILE *fp) {
@@ -1166,10 +1160,6 @@ void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateAngMXGalHabit;
   module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateAngMYGalHabit;
   module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateAngMZGalHabit;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionGalHabit;
-
 }
 
 /************* GALHABIT Functions ***********/

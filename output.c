@@ -50,7 +50,7 @@ void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0) 
+  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0) 
     *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
   else
     *dTmp = 0;
@@ -84,7 +84,6 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     fsUnitsLength(units->iLength,cUnit);
   }
 }
-      
 
 /*
  * K
@@ -165,16 +164,11 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   int iModule;
 
   *dTmp=0;
-  /*
-  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-    // Only module reference in file, can this be changed? XXX
-    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
 
-  */
-
-  // Commented out until FLARE is actually built
-  //*dTmp += body[iBody].dLXUVFlare;
-  *dTmp += body[iBody].dLXUV;
+  if (body[iBody].bFlare)
+    *dTmp += fdLXUVFlare(body,control->Evolve.dTimeStep,iBody);
+  if (body[iBody].bStellar)
+    *dTmp += body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -183,7 +177,6 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
   }
-
 }
 
 /*
@@ -448,13 +441,9 @@ void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 }
 
 void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* Multiple modules can contribute to this output */
-  /* Multiple modules can contribute to this output */
-  //int iModule;
 
   /* Surface Energy Flux is complicated because it either all comes
      through thermint, or it can be from eqtide and/or radheat. */
-
   if (body[iBody].bThermint) 
     *dTmp = fdHfluxSurf(body,iBody);
   else {
@@ -465,13 +454,6 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
       *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
     
-  /* This is the old way
-  *dTmp=0;
-  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-    // Only module reference in file, can this be changed? XXX
-    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
-    */
-  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -975,44 +957,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void InitializeOutputFunctions(MODULE *module,OUTPUT *output,int iNumBodies) {
-  int iBody,iModule;
-
-  // Add new mult-module outputs here
-
-  output[OUT_SURFENFLUX].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    // Malloc number of modules for each multi-module output
-    output[OUT_SURFENFLUX].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      /* Initialize them all to return nothing, then they get changed 
-      from AddModule subroutines */
-      output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdReturnOutputZero;
-    }
-  }
-
-  output[OUT_LXUVTOT].fnOutput = malloc(iNumBodies*sizeof(fnOutputModule*));
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    // Malloc number of modules for each multi-module output
-    output[OUT_LXUVTOT].fnOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      /* Initialize them all to return nothing, then they get changed 
-      from AddModule subroutines */
-      output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdReturnOutputZero;
-    }
-  }
-
-}
-
-/*
-void FinalizeOutputFunctions(MODULE *module,OUTPUT *output,int iBody) {
-  First initialize functions for the number of bodies 
-  module->fnFinalizeOutput[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnOutputModule));
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
-    module->fnFinalizeOutput[iBody][iModule];
-}
-*/
-
+// XXX MKS Units?
 void CGSUnits(UNITS *units) {
   units->iTime = 0;
   units->iLength = 0;
@@ -1324,6 +1269,8 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
+    control->Evolve.dTime=0;
+    control->Evolve.nSteps=0;
   } else if (iEnd == 1) {
     sprintf(cTime,"Final");
     fp=fopen(files->cLog,"a");

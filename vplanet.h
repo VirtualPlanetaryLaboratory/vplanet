@@ -778,8 +778,18 @@ typedef struct {
 
   // FLARE
   int bFlare;
+  /*
   double dFlareConst;
   double dFlareExp;
+  */
+  double dFlareYInt;
+  double dFlareSlope;
+  double dFlareC;
+  double dFlareK;
+  double dFlareMinEnergy;
+  double dFlareMaxEnergy;
+  double dFlareVisWidth;
+  double dFlareXUVWidth;
   double dLXUVFlare;
   
   // GALHABIT
@@ -1480,9 +1490,9 @@ typedef struct {
 /* OUTPUT contains the data regarding every output parameters */
 
 /* Some output variables must combine output from different modules.
- * These functions do that combining. */
+ * These functions do that combining. XXX I think this is defunct! 
  
-typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int);
+ typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int); */
 
 /* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
 // typedef struct {
@@ -1511,8 +1521,6 @@ typedef struct {
   int bGrid;             /**< Is output quantity gridded (e.g. a function of latitude)? */
 
 //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
-  /* Now add vector output functions */
-  fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
 
 } OUTPUT;
 
@@ -1590,8 +1598,6 @@ typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
 typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*);
-typedef void (*fnInitializeOutputFunctionModule)(OUTPUT*,int,int);
-typedef void (*fnFinalizeOutputFunctionModule)(OUTPUT*,int,int);
 
 typedef struct {
   int *iNumModules; /**< Number of Modules per Body */
@@ -1729,11 +1735,6 @@ typedef struct {
   /*! These functions verify module-specific halts. */ 
   fnVerifyHaltModule **fnVerifyHalt;
 
-  /*! These functions adds subroutines to the output functions that require
-      module-specific values. */ 
-  fnFinalizeOutputFunctionModule **fnFinalizeOutputFunction;
-  
-  
 } MODULE;
 
 /* fnIntegrate is a pointer to a function that performs 

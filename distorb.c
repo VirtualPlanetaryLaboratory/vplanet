@@ -1469,11 +1469,6 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DQINCDTDISTORB] = &WriteBodyDQincDtDistOrb;
 }
 
-void FinalizeOutputFunctionDistOrb(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ DISTORB Logging Functions **************/
 
 void LogOptionsDistOrb(CONTROL *control, FILE *fp) {
@@ -1523,10 +1518,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistOrb;
   module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistOrb;
   module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistOrb;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistOrb;
-
 }
 
 /************* DistOrb Functions ************/

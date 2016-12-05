@@ -22,8 +22,28 @@ void InitializeUpdateTmpBodyFlare(BODY*,CONTROL*,UPDATE*,int);
 #define OPTSTARTFLARE         2000 /* Start of FLARE options */
 #define OPTENDFLARE           2100 /* End of FLARE options */
 
+/*
 #define OPT_FLARECONST        2010
 #define OPT_FLAREEXP          2020
+*/
+/*
+const int OPT_FLAREYINT =     2010;
+const int OPT_FLARESLOPE =    2020;
+const int OPT_FLAREC =        2030;
+const int OPT_FLAREK =        2040;
+const int OPT_FLAREVISWIDTH = 2050;
+const int OPT_FLAREXUVWIDTH = 2060;
+const int OPT_FLAREMINENERGY= 2070;
+const int OPT_FLAREMAXENERGY= 2080;
+*/
+#define OPT_FLAREYINT         2010
+#define OPT_FLARESLOPE        2020
+#define OPT_FLAREC            2030
+#define OPT_FLAREK            2040
+#define OPT_FLAREVISWIDTH     2050
+#define OPT_FLAREXUVWIDTH     2060
+#define OPT_FLAREMINENERGY    2070
+#define OPT_FLAREMAXENERGY    2080
 
 void HelpOptionsFlare(OPTIONS*);
 void InitializeOptionsFlare(OPTIONS*,fnReadOption[]);
@@ -68,6 +88,6 @@ void LogFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* FLARE functions */
-double fdLXUVFlare(BODY*,SYSTEM*,UPDATE*,int,int);
+double fdLXUVFlare(BODY*,double,int);
 
 double fdDLXUVFlareDt(BODY*,SYSTEM*,int*); 

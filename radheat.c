@@ -3391,10 +3391,6 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void FinalizeOutputFunctionRadheat(OUTPUT *output,int iBody,int iModule) {
-  //  output[OUT_SURFENFLUXRADTOTAL].fnOutput[iBody][iModule] = &fdSurfEnFluxRadTotal;
-}
-
 /************ RADHEAT Logging Functions **************/
 
 void LogOptionsRadheat(CONTROL *control, FILE *fp) {
@@ -3466,10 +3462,6 @@ void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &FinalizeUpdate232ThNumCrustRadheat;
   module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &FinalizeUpdate238UNumCrustRadheat;
   module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &FinalizeUpdate235UNumCrustRadheat;
-  
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionRadheat;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionRadheat;
-
 }
 
 /************* RADHEAT Functions ************/

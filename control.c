@@ -41,7 +41,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnInitializeControl[iBody][iModule](control); 
+      module->fnInitializeControl[iBody][iModule](control,iBody); 
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }

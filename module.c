@@ -14,7 +14,7 @@
    initialized to point to these functions. Modules that require them reset
    the pointers in AddModuleX. */
 
-void  InitializeControlNULL(CONTROL *control) {
+void  InitializeControlNULL(CONTROL *control,int iBody) {
   // Nothing
 }
 

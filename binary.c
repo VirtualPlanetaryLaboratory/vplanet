@@ -15,9 +15,6 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlBinary(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   // Copy body properties from src to dest for cbp
 
@@ -1258,7 +1255,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = BINARY;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlBinary;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyBinary;
 
   module->fnCountHalts[iBody][iModule] = &CountHaltsBinary;

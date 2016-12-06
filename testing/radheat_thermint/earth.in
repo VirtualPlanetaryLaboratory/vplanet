@@ -44,4 +44,4 @@ dStagLid       1
 dManHFlowPref  1.
 dMagMomCoef    0.15
 
-saOutputOrder -Time -TMan -TCore -RIC -RadPowerTotal -MagMom
+saOutputOrder -Time -TMan -TCore -RIC -RadPowerTotal -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal

@@ -3898,7 +3898,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           if (body[iBody].daTempLW[i] < body[iBody].daTempMinLW[i])
             body[iBody].daTempMinLW[i] = body[iBody].daTempLW[i];
-          if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
+           if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
             body[iBody].daTempMaxLW[i] = body[iBody].daTempLW[i];
         }
         

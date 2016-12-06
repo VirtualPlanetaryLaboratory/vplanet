@@ -60,6 +60,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   fp=fopen(cFile,"r");
   memset(cLine,'\0',LINE);
   memset(cTmp,'\0',LINE);
+  memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
@@ -152,9 +153,16 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
 
+  //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
-  for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  //for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+    /* DEBUG XXX
+    printf("%s\n",cLine);
+    printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
+    fflush(stdout);
+    */
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) { // 35 is ASCII code for # 
@@ -217,6 +225,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
   char cLine[LINE],cTmp[MAXARRAY][OPTLEN];
   int iPos,iWord,bContinue,iNumWords;
   FILE *fp;
+
+  memset(cLine,'\0',LINE);
 
   /* iLine=malloc(MAXLINES*sizeof(int)); */
 
@@ -1043,6 +1053,8 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 
   /* XXX Should check this file here */
 
+  free(input.bLineOK);
+  
 }
 
 void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
@@ -1490,8 +1502,17 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else {
     if (iFile == 1)
       control->Halt[iFile-1].bMerge = 0;
-    if (iFile > 1)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bMerge,files->iNumInputs);
+    if (iFile > 1) {
+      /* HaltMerge is unusual in that its default value depends on the body's
+	 modules. These are set in ReadInitialOptions, so they are always 
+	 known by ReadOptionsGeneral. Therefore, we can assign it based on 
+	 the "bModule" members of the body struct. */
+      // XXX Russell -- Include galhabit?
+      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb)
+	control->Halt[iFile-1].bMerge = 1;
+      else
+	control->Halt[iFile-1].bMerge = 0;
+    }
   }
 }
 
@@ -2068,6 +2089,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           count = 1;
           iOut = j;
           if (output[j].bGrid == 1)
+	    // Exit!
             iNumGrid += 1;
           j = MODULEOUTEND; /* Poor man's break! */
         } else {
@@ -2082,6 +2104,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
             count++;
             iOut = j;
             if (output[j].bGrid == 1)
+	      // Exit!
               iNumGrid += 1;
           }
         }
@@ -2127,12 +2150,12 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           }
         } else { // Negative option not set, initialize bDoNeg to false
             output[iOut].bDoNeg[iFile-1] = 0;
-        }   
+        }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
         // Is option part of selected modules?
@@ -2150,12 +2173,14 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
     if (!ok) 
       DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
 
+    files->Outfile[iFile-1].iNumCols = iNumIndices;
+    /*
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    */
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
   } else {
-    files->Outfile[iFile-1].iNumCols = 0;
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    files->Outfile[iFile-1].iNumCols=0;
   }
   
   free(lTmp);
@@ -2267,20 +2292,20 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
             output[iOut].bDoNeg[iFile-1] = 0;
         }   
         if (output[iOut].bGrid == 0) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
       }
     }
  
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    //files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
-  } else {
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
-  }
+  } 
+  files->Outfile[iFile-1].iNumGrid = iNumGrid;
+
   free(lTmp);
 }
 
@@ -2582,7 +2607,6 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   }
 }
 
-
 void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   /* Must verify modules: this is used when distrot+eqtide are called without thermint */
@@ -2597,6 +2621,9 @@ void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     else 
       body[iFile-1].dViscUMan = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dViscUMan,files->iNumInputs);
   }
 }
 
@@ -2706,7 +2733,9 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
     ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
     if ((*body)[iFile-1].bPoise) {
       ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
-    }
+    } else
+      // Initialize iNumGrid to 0 so no memory issues
+      files->Outfile[iFile-1].iNumGrid = 0;
   }
 
   /* Any unrecognized options? */
@@ -2865,7 +2894,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");
   sprintf(options[OPT_HALTMERGE].cDescr,"Halt at Merge");
-  sprintf(options[OPT_HALTMERGE].cDefault,"1");
+  sprintf(options[OPT_HALTMERGE].cDefault,"If eqtide or distorb called 1, else 0");
   options[OPT_HALTMERGE].iType = 0;
   fnRead[OPT_HALTMERGE] = &ReadHaltMerge;
   
@@ -3322,6 +3351,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
+    memset(options[iOpt].cName,'\0',OPTLEN);
     sprintf(options[iOpt].cName,"null");
     options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
     options[iOpt].iMultiFile=0;

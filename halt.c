@@ -220,7 +220,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
     // Now assign the function vector
     iHaltNow=0;
-  
+
     if (control->Halt[iBody].bMerge)
       control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
     if (control->Halt[iBody].dMinObl >= 0)

@@ -14,14 +14,18 @@
 #include "vplanet.h"
 
 void BodyCopyFlare(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
+  /* Fake flare parameters -- leave in for now
   dest[iBody].dFlareConst = src[iBody].dFlareConst;
   dest[iBody].dFlareExp = src[iBody].dFlareExp;
+  */
 }
 
 /**************** FLARE options ********************/
 
+
+/* Fake flare constant stuff Leaving in for now
 void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
+  // This parameter cannot exist in primary file
   int lTmp=-1;
   double dTmp;
 
@@ -39,7 +43,7 @@ void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 }
 
 void ReadFlareExp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
+  // This parameter cannot exist in primary file
   int lTmp=-1;
   double dTmp;
 
@@ -55,10 +59,146 @@ void ReadFlareExp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     if (iFile > 0)
       body[iFile-1].dFlareConst = options->dDefault;
 }
+*/
+
+void ReadFlareYInt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dFlareYInt = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareYInt = options->dDefault;
+}
+
+void ReadFlareSlope(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dFlareSlope = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareSlope = options->dDefault;
+}
+
+void ReadFlareC(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dFlareC = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareC = options->dDefault;
+
+}
+
+void ReadFlareK(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dFlareK = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareK = options->dDefault;
+}
+
+void ReadFlareMinEnergy(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      body[iFile-1].dFlareMinEnergy = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFlareMinEnergy = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareMinEnergy = options->dDefault;
+}
+
+void ReadFlareMaxEnergy(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+    // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      body[iFile-1].dFlareMaxEnergy = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFlareMaxEnergy = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareMaxEnergy = options->dDefault;
+}
+
+void ReadFlareVisWidth(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      body[iFile-1].dFlareVisWidth = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFlareVisWidth = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareVisWidth = options->dDefault;
+}
+
+void ReadFlareXUVWidth(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  // This parameter cannot exist in primary file
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) 
+      body[iFile-1].dFlareXUVWidth = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFlareXUVWidth = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else 
+    if (iFile > 0)
+      body[iFile-1].dFlareXUVWidth = options->dDefault;  
+}
 
 /* Initiatlize Input Options */
 
 void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
+  /* Fake flare constant stuff
+
   sprintf(options[OPT_FLARECONST].cName,"dFlareConst");
   sprintf(options[OPT_FLARECONST].cDescr,"Coefficient for flare evolution");
   sprintf(options[OPT_FLARECONST].cDefault,"1e-3 L_Sun");
@@ -78,7 +218,80 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FLAREEXP].dNeg = 1./(YEARSEC*1e9);
   sprintf(options[OPT_FLAREEXP].cNeg,"/Gyr");
   fnRead[OPT_FLAREEXP] = &ReadFlareExp;
+  */
 
+  sprintf(options[OPT_FLAREYINT].cName,"dFlareYInt");
+  sprintf(options[OPT_FLAREYINT].cDescr,"Y-Intercept for Flare Frequency");
+  sprintf(options[OPT_FLAREYINT].cDefault,"20.9 (Proxima)");
+  options[OPT_FLAREYINT].dDefault = 20.9;
+  options[OPT_FLAREYINT].iType = 2;
+  options[OPT_FLAREYINT].iMultiFile = 1;
+  fnRead[OPT_FLAREYINT] = &ReadFlareYInt;
+
+  sprintf(options[OPT_FLARESLOPE].cName,"dFlareSlope");
+  sprintf(options[OPT_FLARESLOPE].cDescr,"Slope for Flare Frequency");
+  sprintf(options[OPT_FLARESLOPE].cDefault,"-0.68 (Proxima)");
+  options[OPT_FLARESLOPE].dDefault = 20.9;
+  options[OPT_FLARESLOPE].iType = 2;
+  options[OPT_FLARESLOPE].iMultiFile = 1;
+  fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
+  
+  sprintf(options[OPT_FLAREC].cName,"dFlareC");
+  sprintf(options[OPT_FLAREC].cDescr,"10^c for U-XUV Flare Relation");
+  sprintf(options[OPT_FLAREC].cDefault,"1.08");
+  options[OPT_FLAREC].dDefault = 1.08;
+  options[OPT_FLAREC].iType = 2;
+  options[OPT_FLAREC].iMultiFile = 1;
+  fnRead[OPT_FLAREC] = &ReadFlareC;
+
+  sprintf(options[OPT_FLAREK].cName,"dFlareK");
+  sprintf(options[OPT_FLAREK].cDescr,"E^k for U-XUV Flare Relation");
+  sprintf(options[OPT_FLAREK].cDefault,"-4.4");
+  options[OPT_FLAREK].dDefault = -4.4;
+  options[OPT_FLAREK].iType = 2;
+  options[OPT_FLAREK].iMultiFile = 1;
+  fnRead[OPT_FLAREK] = &ReadFlareK;
+  
+  sprintf(options[OPT_FLAREVISWIDTH].cName,"dFlareVisWidth");
+  sprintf(options[OPT_FLAREVISWIDTH].cDescr,"Width of Visible Band for Flare Relation");
+  sprintf(options[OPT_FLAREVISWIDTH].cDefault,"3000 Angstroms");
+  options[OPT_FLAREVISWIDTH].dDefault = 3e-7;
+  options[OPT_FLAREVISWIDTH].iType = 2;
+  options[OPT_FLAREVISWIDTH].iMultiFile = 1;
+  options[OPT_FLAREVISWIDTH].dNeg = 1e-10;
+  sprintf(options[OPT_FLAREVISWIDTH].cNeg,"Angstroms");
+  fnRead[OPT_FLAREVISWIDTH] = &ReadFlareVisWidth;
+  
+  sprintf(options[OPT_FLAREXUVWIDTH].cName,"dFlareXUVWidth");
+  sprintf(options[OPT_FLAREXUVWIDTH].cDescr,"Width of XUV for Flare Relation");
+  sprintf(options[OPT_FLAREXUVWIDTH].cDefault,"1000 Angstroms");
+  options[OPT_FLAREXUVWIDTH].dDefault = 1e-7;
+  options[OPT_FLAREXUVWIDTH].iType = 2;
+  options[OPT_FLAREXUVWIDTH].iMultiFile = 1;
+  options[OPT_FLAREXUVWIDTH].dNeg = 1e-10;
+  sprintf(options[OPT_FLAREXUVWIDTH].cNeg,"Angstroms");
+  fnRead[OPT_FLAREXUVWIDTH] = &ReadFlareXUVWidth;
+  
+  sprintf(options[OPT_FLAREMINENERGY].cName,"dFlareMinEnergy");
+  sprintf(options[OPT_FLAREMINENERGY].cDescr,"Minimum Flare Energy to Consider");
+  sprintf(options[OPT_FLAREMINENERGY].cDefault,"10^29 ergs");
+  options[OPT_FLAREMINENERGY].dDefault = 1e22;
+  options[OPT_FLAREMINENERGY].iType = 2;
+  options[OPT_FLAREMINENERGY].iMultiFile = 1;
+  options[OPT_FLAREMINENERGY].dNeg = 1e-7;
+  sprintf(options[OPT_FLAREMINENERGY].cNeg,"ergs");
+  fnRead[OPT_FLAREMINENERGY] = &ReadFlareMinEnergy;
+  
+  sprintf(options[OPT_FLAREMAXENERGY].cName,"dFlareMaxEnergy");
+  sprintf(options[OPT_FLAREMAXENERGY].cDescr,"Maximum Flare Energy to Consider");
+  sprintf(options[OPT_FLAREMAXENERGY].cDefault,"10^33 ergs");
+  options[OPT_FLAREMAXENERGY].dDefault = 1e26;
+  options[OPT_FLAREMAXENERGY].iType = 2;
+  options[OPT_FLAREMAXENERGY].iMultiFile = 1;
+  options[OPT_FLAREMAXENERGY].dNeg = 1e-7;
+  sprintf(options[OPT_FLAREMAXENERGY].cNeg,"ergs");
+  fnRead[OPT_FLAREMAXENERGY] = &ReadFlareMaxEnergy;
+  
 }
 
 void ReadOptionsFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -100,17 +313,21 @@ void fnForceBehaviorFlare(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE
 
   if (body[iBody].dLXUVFlare < 0)
     body[iBody].dLXUVFlare = 0;
-
+  else 
+    body[iBody].dLXUVFlare = fdLXUVFlare(body,evolve->dTimeStep,iBody);
+  
 }
 
 void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
+  /* This may become useful once flare evolution is included
   update[iBody].iaType[update[iBody].iLXUV][0] = 1;
   update[iBody].iNumBodies[update[iBody].iLXUV][0]=1;
   update[iBody].iaBody[update[iBody].iLXUV][0] = malloc(update[iBody].iNumBodies[update[iBody].iLXUV][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLXUV][0][0]=iBody;
   update[iBody].pdDLXUVFlareDt = &update[iBody].daDerivProc[update[iBody].iLXUV][0];
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fdDLXUVFlareDt;
+  */
 }
 
 void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -134,7 +351,7 @@ void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
      should also be able to input dLXUVFlare, which will require a call to
      NotTwoOfThree. So we must get initial LXUVFlare now. */
 
-  body[iBody].dLXUVFlare = fdLXUVFlare(body,system,update,iBody,iBody);
+  body[iBody].dLXUVFlare = fdLXUVFlare(body,control->Evolve.dTimeStep,iBody);
 
 }
 
@@ -148,13 +365,17 @@ void InitializeModuleFlare(CONTROL *control,MODULE *module) {
 void InitializeUpdateFlare(BODY *body,UPDATE *update,int iBody) {
   /* STELLAR calculates LXUV from the star's properties, but FLARE calculates LXUV as a primary variable. It is the only possible update. */
 
+  /* No primary variables for FLARE yet
   update[iBody].iNumVars++;
   update[iBody].iNumLXUV++;
+  */
 }
 
 void FinalizeUpdateLXUVFlare(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  /* No primary variables for FLARE yet 
   update[iBody].iaModule[iVar][*iEqn] = FLARE;
   update[iBody].iNumLXUV = (*iEqn)++;
+  */
 }
 
 /***************** FLARE Halts *****************/
@@ -202,10 +423,11 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARE].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLARE] = &WriteLXUVFlare;
 }
-
+/* XXX I think this approach is defunct
 void FinalizeOutputFunctionFlare(OUTPUT *output,int iBody,int iModule) {
   output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVFlare;
 }
+*/
 
 /************ FLARE Logging Functions **************/
 
@@ -252,17 +474,59 @@ void AddModuleFlare(MODULE *module,int iBody,int iModule) {
 
   module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVFlare;
 
+  /* XXX I think this approach to multi-module outputs is defunct
   module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionFlare;
+  */
 }
 
 /************* FLARE Functions ************/
+
+/* Fake Flare functions
 
 double fdLXUVFlare(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   return  body[iBody].dFlareConst*exp(-body[iBody].dFlareExp*body[iBody].dAge);
 }
 
 double fdDLXUVFlareDt(BODY *body,SYSTEM *system,int *iaBody) {
-  /* Placeholder for now. L_XUV = const*exp(-const*time) */
+  // Placeholder for now. L_XUV = const*exp(-const*time) 
 
   return -body[iaBody[0]].dFlareConst*body[iaBody[0]].dFlareExp*exp(-body[iaBody[0]].dFlareExp*body[iaBody[0]].dAge);
+}
+
+*/
+
+double fdFlareFrequency(double dYInt,double dSlope,double dLogEnergy) {
+  return pow(10,(dSlope*dLogEnergy + dYInt));
+}
+
+double fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) {
+  double dLogEMin,dLogEMax,dFreqMin,dFreqMax,dWidth,dArea;
+  double dEpsVis,dEpsXUV,dLXUVFlare;
+  
+  // XXX Need global variable ERGSJOULES
+  dLogEMin = log10(body[iBody].dFlareMinEnergy*1e7);
+  dLogEMax = log10(body[iBody].dFlareMaxEnergy*1e7);
+  dWidth = dLogEMax - dLogEMin;
+
+  dFreqMin = fdFlareFrequency(body[iBody].dFlareYInt,body[iBody].dFlareSlope,dLogEMin);
+  dFreqMax = fdFlareFrequency(body[iBody].dFlareYInt,body[iBody].dFlareSlope,dLogEMax);
+
+  // Total visible luminosity in log(ergs/day)
+  dArea = dWidth*(dFreqMax + 0.5*(dFreqMin - dFreqMax));
+
+  // Convert to luminosity without powers of 10 and convert to ergs/s
+  dArea = pow(10,dArea)/DAYSEC;
+
+  /* The Mitra-Kaev et al. (2005) model is for energy. We therfore are now
+     assuming that we are calculating the energy over 1 second */
+
+  // Divide by width of visible in Angstroms
+  dEpsVis = dArea/(1e10*body[iBody].dFlareVisWidth);
+  dEpsXUV = pow(10,body[iBody].dFlareC)*pow(dEpsVis,body[iBody].dFlareK);
+
+  // Multiply by width of XUV in Angstroms
+  dLXUVFlare = dEpsXUV*body[iBody].dFlareXUVWidth*1e10;
+
+  // Convert back to Watts and return
+  return dLXUVFlare*1e-7;
 }

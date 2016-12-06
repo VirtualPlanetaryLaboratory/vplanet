@@ -42,7 +42,7 @@ void ReadForcePrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     body[iFile-1].bForcePrecRate = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&body[iFile-1].bForcePrecRate,files->iNumInputs);
+    body[iFile-1].bForcePrecRate = options->dDefault;
 }
 
 void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -812,11 +812,6 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
 }
 
-void FinalizeOutputFunctionDistRot(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ DISTROT Logging Functions **************/
 
 void LogOptionsDistRot(CONTROL *control, FILE *fp) {
@@ -863,10 +858,6 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblDistRot;
   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblDistRot;
   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblDistRot;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistRot;
-
 }
 
 /************* DISTROT Functions ***********/

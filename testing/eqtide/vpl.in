@@ -1,6 +1,6 @@
 # Example primary input file for VPLANET
 sSystemName	gl581			# System Name
-iVerbose	5			# Verbosity level
+iVerbose	0			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters

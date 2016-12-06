@@ -761,6 +761,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   VerifyTidesBinary(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
   if (iBody == 1) {
+    body[iBody].dMeanA = 0.0;
     system->dGalaxyAge = 1e10*YEARSEC;
     dCurrentAge = system->dGalaxyAge-control->Evolve.dStopTime;
     system->dPassingStarR = malloc(3*sizeof(double));
@@ -1110,11 +1111,6 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FVELDISP] = &WriteFVelDisp;
 }
 
-void FinalizeOutputFunctionGalHabit(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ GALHABIT Logging Functions **************/
 
 void LogOptionsGalHabit(CONTROL *control, FILE *fp) {
@@ -1164,10 +1160,6 @@ void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateAngMXGalHabit;
   module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateAngMYGalHabit;
   module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateAngMZGalHabit;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionGalHabit;
-
 }
 
 /************* GALHABIT Functions ***********/

@@ -601,6 +601,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   body[iBody].dLOrb = malloc(3*sizeof(double));
   body[iBody].dLOrbTmp = malloc(3*sizeof(double));
   if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
+  body[iBody].dMeanA = 0.0;
   
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -1468,11 +1469,6 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DQINCDTDISTORB] = &WriteBodyDQincDtDistOrb;
 }
 
-void FinalizeOutputFunctionDistOrb(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ DISTORB Logging Functions **************/
 
 void LogOptionsDistOrb(CONTROL *control, FILE *fp) {
@@ -1522,10 +1518,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistOrb;
   module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistOrb;
   module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistOrb;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistOrb;
-
 }
 
 /************* DistOrb Functions ************/
@@ -2732,8 +2724,9 @@ void cart2osc(BODY *body, int iNumBodies) {
 
 void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
-  double *AngMom;
-  AngMom = malloc(3*sizeof(double));
+  // double *AngMom;
+//   AngMom = malloc(3*sizeof(double));
+  double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
   
   /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
      This angle is invariant under rotations. */

@@ -59,7 +59,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
   module->fnInitializeOutput = malloc(iNumBodies*sizeof(fnInitializeOutputModule*));
-  module->fnFinalizeOutputFunction = malloc(iNumBodies*sizeof(fnFinalizeOutputFunctionModule*));
 
   // Finalize Primary Variable Functions
   //module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
@@ -169,8 +168,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnInitializeControl[iBody] = malloc(iNumModules*sizeof(fnInitializeControlModule));
   module->fnInitializeOutput[iBody] = malloc(iNumModules*sizeof(fnInitializeOutputModule));
   module->fnInitializeUpdateTmpBody[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateTmpBodyModule));
-
-  module->fnFinalizeOutputFunction[iBody] = malloc(iNumModules*sizeof(fnInitializeOutputFunctionModule));
 
   module->fnCountHalts[iBody] = malloc(iNumModules*sizeof(fnCountHaltsModule));
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));

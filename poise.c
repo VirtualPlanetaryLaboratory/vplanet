@@ -1250,6 +1250,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       } else {
         body[iBody].bSkipSeas = 0;
       }
+    } else {
+      body[iBody].bSkipSeas = 0;
     }
     VerifyNStepSeasonal(body,iBody);
     body[iBody].dHeatCapWater *= body[iBody].dMixingDepth;
@@ -1322,7 +1324,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].daIceSheetDiff = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daIceSheetMat = malloc(body[iBody].iNumLats*sizeof(double*));
     body[iBody].daIceBalanceTmp = malloc(body[iBody].iNumLats*sizeof(double));
-    body[iBody].daYBoundary = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daYBoundary = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daIceBalanceAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daIceFlowAvg = malloc(body[iBody].iNumLats*sizeof(double));
     body[iBody].daBedrockH = malloc(body[iBody].iNumLats*sizeof(double));
@@ -2387,11 +2389,6 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
 }
 
-void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ POISE Logging Functions **************/
 
 void LogOptionsPoise(CONTROL *control, FILE *fp) {
@@ -2435,9 +2432,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
   module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
-  
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionPoise;
-
 }
 
 /************* POISE Functions ***********/

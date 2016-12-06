@@ -2145,12 +2145,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-/* Now assign output function pointers */
-
-void FinalizeOutputFunctionEqtide(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxEqtide;
-}
-
 /************ EQTIDE Logging Functions **************/
 
 void LogOptionsEqtide(CONTROL *control, FILE *fp) {
@@ -2229,9 +2223,6 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblEqtide;
   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblEqtide;
   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblEqtide;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionEqtide;
 
 }
 

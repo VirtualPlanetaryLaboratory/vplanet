@@ -972,10 +972,6 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void FinalizeOutputFunctionAtmEsc(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFluxAtmEsc;
-}
-
 /************ ATMESC Logging Functions **************/
 
 void LogOptionsAtmEsc(CONTROL *control, FILE *fp) {
@@ -1026,10 +1022,6 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
   module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionAtmEsc;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionAtmEsc;
-
 }
 
 /************* ATMESC Functions ************/

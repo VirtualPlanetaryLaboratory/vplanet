@@ -636,7 +636,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* TMan */
   sprintf(options[OPT_TMAN].cName,"dTMan");
   sprintf(options[OPT_TMAN].cDescr,"Initial Mantle Temperature");
-  sprintf(options[OPT_TMAN].cDefault,"Default=3000");
+  sprintf(options[OPT_TMAN].cDefault,"3000 K");
   options[OPT_TMAN].iType = 2;
   options[OPT_TMAN].iMultiFile = 1;
   options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
@@ -647,7 +647,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
    /* TCore */
   sprintf(options[OPT_TCORE].cName,"dTCore");
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
-  sprintf(options[OPT_TCORE].cDefault,"Default=6000");
+  sprintf(options[OPT_TCORE].cDefault,"6000 K");
   options[OPT_TCORE].iType = 2;
   options[OPT_TCORE].iMultiFile = 1;
   options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
@@ -658,7 +658,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
    /* ViscJumpMan */
   sprintf(options[OPT_VISCJUMPMAN].cName,"dViscJumpMan");
   sprintf(options[OPT_VISCJUMPMAN].cDescr,"ViscJumpMan");
-  sprintf(options[OPT_VISCJUMPMAN].cDefault,"Default is VISCJUMPMAN");
+  sprintf(options[OPT_VISCJUMPMAN].cDefault,"VISCJUMPMAN");
   options[OPT_VISCJUMPMAN].iType = 2;
   options[OPT_VISCJUMPMAN].iMultiFile = 1;
   options[OPT_VISCJUMPMAN].dNeg = VISCJUMPMAN;
@@ -669,7 +669,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
-  sprintf(options[OPT_VISCREF].cDefault,"Default=1");
+  sprintf(options[OPT_VISCREF].cDefault,"1");
   options[OPT_VISCREF].iType = 2;
   options[OPT_VISCREF].iMultiFile = 1;
   options[OPT_VISCREF].dNeg = VISCREF;
@@ -680,7 +680,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
-  sprintf(options[OPT_TREFLIND].cDefault,"Default in thermint.h");
+  sprintf(options[OPT_TREFLIND].cDefault,"Value in thermint.h");
   options[OPT_TREFLIND].iType = 2;
   options[OPT_TREFLIND].iMultiFile = 1;
   options[OPT_TREFLIND].dNeg = 1;
@@ -691,7 +691,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* DTChiRef */
   sprintf(options[OPT_DTCHIREF].cName,"dDTChiRef");
   sprintf(options[OPT_DTCHIREF].cDescr,"DTChiRef");
-  sprintf(options[OPT_DTCHIREF].cDefault,"Default in thermint.h");
+  sprintf(options[OPT_DTCHIREF].cDefault,"Value in thermint.h");
   options[OPT_DTCHIREF].iType = 2;
   options[OPT_DTCHIREF].iMultiFile = 1;
   options[OPT_DTCHIREF].dNeg = 1;
@@ -702,7 +702,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
-  sprintf(options[OPT_ERUPTEFF].cDefault,"Default is ERUPTEFF");
+  sprintf(options[OPT_ERUPTEFF].cDefault,"ERUPTEFF");
   options[OPT_ERUPTEFF].iType = 2;
   options[OPT_ERUPTEFF].iMultiFile = 1;
   options[OPT_ERUPTEFF].dNeg = ERUPTEFF;
@@ -720,6 +720,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTPHIS].dDefault = VISCMELTPHIS; 
   sprintf(options[OPT_VISCMELTPHIS].cNeg,"Default is VISCMELTPHIS");
   fnRead[OPT_VISCMELTPHIS] = &ReadViscMeltPhis;
+
   /* ViscMeltXi */
   sprintf(options[OPT_VISCMELTXI].cName,"dViscMeltXi");
   sprintf(options[OPT_VISCMELTXI].cDescr,"Viscosity Melt Factor Xi");
@@ -730,6 +731,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTXI].dDefault = VISCMELTXI; 
   sprintf(options[OPT_VISCMELTXI].cNeg,"Default is VISCMELTXI");
   fnRead[OPT_VISCMELTXI] = &ReadViscMeltXi;
+
   /* ViscMeltGamma */
   sprintf(options[OPT_VISCMELTGAMMA].cName,"dViscMeltGamma");
   sprintf(options[OPT_VISCMELTGAMMA].cDescr,"Viscosity Melt Factor Gamma");
@@ -740,6 +742,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTGAMMA].dDefault = VISCMELTGAMMA; 
   sprintf(options[OPT_VISCMELTGAMMA].cNeg,"Default is VISCMELTGAMMA");
   fnRead[OPT_VISCMELTGAMMA] = &ReadViscMeltGamma;
+
   /* ViscMeltDelta */
   sprintf(options[OPT_VISCMELTDELTA].cName,"dViscMeltDelta");
   sprintf(options[OPT_VISCMELTDELTA].cDescr,"Viscosity Melt Factor Delta");
@@ -750,6 +753,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTDELTA].dDefault = VISCMELTDELTA; 
   sprintf(options[OPT_VISCMELTDELTA].cNeg,"Default is VISCMELTDELTA");
   fnRead[OPT_VISCMELTDELTA] = &ReadViscMeltDelta;
+
   /* ViscMeltB */
   sprintf(options[OPT_VISCMELTB].cName,"dViscMeltB");
   sprintf(options[OPT_VISCMELTB].cDescr,"Viscosity Melt Factor B");
@@ -827,6 +831,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF; 
   sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
   fnRead[OPT_MAGMOMCOEF] = &ReadMagMomCoef;
+
   /* PresSWind */
   sprintf(options[OPT_PRESSWIND].cName,"dPresSWind");
   sprintf(options[OPT_PRESSWIND].cDescr,"Stellar Wind Pressure at body");
@@ -871,6 +876,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ACTVISCMAN].dDefault = ACTVISCMAN; 
   sprintf(options[OPT_ACTVISCMAN].cNeg,"Default is ACTVISCMAN");
   fnRead[OPT_ACTVISCMAN] = &ReadActViscMan;
+
   /* ShModRef */
   sprintf(options[OPT_SHMODREF].cName,"dShModRef");
   sprintf(options[OPT_SHMODREF].cDescr,"Reference kinematic mantle shear modulus");
@@ -881,6 +887,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SHMODREF].dDefault = SHMODREF; 
   sprintf(options[OPT_SHMODREF].cNeg,"Default is SHMODREF");
   fnRead[OPT_SHMODREF] = &ReadShModRef;
+
   /* Stiffness */
   sprintf(options[OPT_STIFFNESS].cName,"dStiffness");
   sprintf(options[OPT_STIFFNESS].cDescr,"Effective stiffness of mantle");
@@ -891,6 +898,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STIFFNESS].dDefault = STIFFNESS; 
   sprintf(options[OPT_STIFFNESS].cNeg,"Default is STIFFNESS");
   fnRead[OPT_STIFFNESS] = &ReadStiffness;
+
   /* DLind */
   sprintf(options[OPT_DLIND].cName,"dDLind");
   sprintf(options[OPT_DLIND].cDescr,"Lindemann's law length scale for iron liquidus");
@@ -901,6 +909,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DLIND].dDefault = DLIND; 
   sprintf(options[OPT_DLIND].cNeg,"Default is DLIND");
   fnRead[OPT_DLIND] = &ReadDLind;
+
   /* DAdCore */
   sprintf(options[OPT_DADCORE].cName,"dDAdCore");
   sprintf(options[OPT_DADCORE].cDescr,"Liq iron core adiabatic length scale");
@@ -911,6 +920,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DADCORE].dDefault = DADCORE; 
   sprintf(options[OPT_DADCORE].cNeg,"Default is DADCORE");
   fnRead[OPT_DADCORE] = &ReadDAdCore;
+
   /* AdJumpM2UM */
   sprintf(options[OPT_ADJUMPM2UM].cName,"dAdJumpM2UM");
   sprintf(options[OPT_ADJUMPM2UM].cDescr,"Adiabatic temp jump from ave mantle to UM");
@@ -921,6 +931,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ADJUMPM2UM].dDefault = ADJUMPM2UM; 
   sprintf(options[OPT_ADJUMPM2UM].cNeg,"Default is ADJUMPM2UM");
   fnRead[OPT_ADJUMPM2UM] = &ReadAdJumpM2UM;
+
   /* AdJumpM2LM */
   sprintf(options[OPT_ADJUMPM2LM].cName,"dAdJumpM2LM");
   sprintf(options[OPT_ADJUMPM2LM].cDescr,"Adiabatic temp jump from ave mantle to LM");
@@ -931,6 +942,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ADJUMPM2LM].dDefault = ADJUMPM2LM; 
   sprintf(options[OPT_ADJUMPM2LM].cNeg,"Default is ADJUMPM2LM");
   fnRead[OPT_ADJUMPM2LM] = &ReadAdJumpM2LM;
+
   /* AdJumpC2CMB */
   sprintf(options[OPT_ADJUMPC2CMB].cName,"dAdJumpC2CMB");
   sprintf(options[OPT_ADJUMPC2CMB].cDescr,"Adiabatic temp jump from ave core to CMB");
@@ -941,6 +953,7 @@ void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ADJUMPC2CMB].dDefault = ADJUMPC2CMB; 
   sprintf(options[OPT_ADJUMPC2CMB].cNeg,"Default is ADJUMPC2CMB");
   fnRead[OPT_ADJUMPC2CMB] = &ReadAdJumpC2CMB;
+
   /* ElecCondCore */
   sprintf(options[OPT_ELECCONDCORE].cName,"dElecCondCore");
   sprintf(options[OPT_ELECCONDCORE].cDescr,"Electrical conductivity of core");
@@ -2330,12 +2343,6 @@ void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-void FinalizeOutputFunctionThermint(OUTPUT *output,int iBody,int iModule) {
-  //  output[OUT_TDOTMAN].fnOutput[iBody][iModule] = &fdTDotMan;
-  //    output[OUT_SURFENFLUX].fnOutput[iBody][iModule] = &fdSurfEnFlux; //This is need to print the global var to log.  Needs to be fixed.
-  //PD: I commented out the above line bc I don't know what it's for.  SURFENFLUX is called HFLOWSURF in thermint.
-}
-
 /************ THERMINT Logging Functions **************/
 
 void LogOptionsThermint(CONTROL *control, FILE *fp) {
@@ -2390,13 +2397,9 @@ void AddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;
 
-    // NEED TO ADD THERMINT VARIABLES HERE??
+  // NEED TO ADD THERMINT VARIABLES HERE??
   module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManThermint;
   module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreThermint;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionThermint;
-  module->fnFinalizeOutputFunction[iBody][iModule] = FinalizeOutputFunctionThermint;
-
 }
 
 /************* THERMINT Functions ************/

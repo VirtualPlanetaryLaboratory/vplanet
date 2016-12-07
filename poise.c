@@ -2386,11 +2386,6 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
 }
 
-void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ POISE Logging Functions **************/
 
 void LogOptionsPoise(CONTROL *control, FILE *fp) {
@@ -2434,9 +2429,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
   module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
-  
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionPoise;
-
 }
 
 /************* POISE Functions ***********/

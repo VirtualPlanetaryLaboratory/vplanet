@@ -1,4 +1,4 @@
-void  InitializeControlNULL(CONTROL*);
+void InitializeControlNULL(CONTROL*,int);
 void InitializeBodyNULL(BODY*,CONTROL*,UPDATE*,int,int);
 void FinalizeUpdateNULL(BODY*,UPDATE*,int*,int,int,int);
 void InitializeUpdateTmpBodyNULL(BODY*,CONTROL*,UPDATE*,int);

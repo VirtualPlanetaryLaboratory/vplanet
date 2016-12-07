@@ -15,9 +15,6 @@
 #include <string.h>
 #include "vplanet.h"
 
-void  InitializeControlBinary(CONTROL *control) {
-  /* Nothing for now, but this subroutine is necessary for module loops. */
-}
 void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   // Copy body properties from src to dest for cbp
 
@@ -655,6 +652,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   {
     if(iBody == 0) // Primary!
     {
+      body[iBody].dR0=0; // Initialization -- doesn't matter
       // These values default to -1
       if(fabs(body[iBody].dInc) + 1 < TINY || fabs(body[iBody].dEcc) + 1 < TINY || fabs(body[iBody].dSemi + 1) < TINY || fabs(body[iBody].dMeanMotion) + 1 < TINY)
       {
@@ -664,7 +662,8 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
         }
         exit(EXIT_INPUT);
       }
-    }
+    } else // Secondary
+      body[iBody].dR0=body[iBody].dSemi;
     // Was dCBPM0, dCBPZeta, dCBPPsi set for one of the stars?
     if(body[iBody].dCBPM0 > TINY || body[iBody].dCBPZeta > TINY || body[iBody].dCBPPsi > TINY)
     {
@@ -1229,10 +1228,6 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 
 }
 
-void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
-// Nothing
-}
-
 /************ BINARY Logging Functions **************/
 
 void LogOptionsBinary(CONTROL *control, FILE *fp) {
@@ -1250,8 +1245,9 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   fprintf(fp,"----- BINARY PARAMETERS (%s)------\n",body[iBody].cName);
   
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
-    if (output[iOut].iNum > 0) 
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
   }
 }
 
@@ -1259,7 +1255,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = BINARY;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlBinary;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyBinary;
 
   module->fnCountHalts[iBody][iModule] = &CountHaltsBinary;
@@ -1278,9 +1273,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateCBPPhiDotBinary;
   module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateCBPRDotBinary;
   module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateCBPZDotBinary;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
 }
 
 /************* BINARY Functions ************/

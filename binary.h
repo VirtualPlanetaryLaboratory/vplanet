@@ -54,7 +54,6 @@
 #define OUT_CBPR0               2167
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
-void InitializeControlBinary(CONTROL*);
 void AddModuleBinary(MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);

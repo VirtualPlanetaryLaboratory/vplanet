@@ -12,7 +12,7 @@
 #define CPL           0
 #define CTL           1
 
-void InitializeControlEqtide(CONTROL*);
+void InitializeControlEqtide(CONTROL*,int);
 void AddModuleEqtide(MODULE*,int,int);
 void BodyCopyEqtide(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);

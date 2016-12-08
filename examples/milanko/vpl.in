@@ -16,4 +16,4 @@ bDoForward    1
 bVarDt        1
 dEta          0.1
 dStopTime     2000
-dOutputTime   1000
+dOutputTime   100

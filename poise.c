@@ -3638,6 +3638,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
     
   h = 2*PI/body[iBody].dMeanMotion/body[iBody].iNStepInYear;
 
+  MatrixSeasonal(body,iBody);
   /* main loop */
   for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
     body[iBody].dTGlobal = 0.0;

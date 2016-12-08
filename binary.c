@@ -1229,10 +1229,6 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 
 }
 
-void FinalizeOutputFunctionBinary(OUTPUT *output,int iBody,int iModule) {
-// Nothing
-}
-
 /************ BINARY Logging Functions **************/
 
 void LogOptionsBinary(CONTROL *control, FILE *fp) {
@@ -1278,9 +1274,6 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateCBPPhiDotBinary;
   module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateCBPRDotBinary;
   module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateCBPZDotBinary;
-
-  //module->fnIntializeOutputFunction[iBody][iModule] = &InitializeOutputBinary;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionBinary;
 }
 
 /************* BINARY Functions ************/

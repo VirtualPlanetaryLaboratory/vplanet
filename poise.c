@@ -2389,11 +2389,6 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
 }
 
-void FinalizeOutputFunctionPoise(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ POISE Logging Functions **************/
 
 void LogOptionsPoise(CONTROL *control, FILE *fp) {
@@ -2437,9 +2432,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
   module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
-  
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionPoise;
-
 }
 
 /************* POISE Functions ***********/
@@ -3901,7 +3893,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
           
           if (body[iBody].daTempLW[i] < body[iBody].daTempMinLW[i])
             body[iBody].daTempMinLW[i] = body[iBody].daTempLW[i];
-          if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
+           if (body[iBody].daTempLW[i] > body[iBody].daTempMaxLW[i])
             body[iBody].daTempMaxLW[i] = body[iBody].daTempLW[i];
         }
         

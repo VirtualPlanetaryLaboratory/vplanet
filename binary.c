@@ -652,7 +652,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   {
     if(iBody == 0) // Primary!
     {
-      body[iBody].dR0=0; // Initialization -- doesn't matter
       // These values default to -1
       if(fabs(body[iBody].dInc) + 1 < TINY || fabs(body[iBody].dEcc) + 1 < TINY || fabs(body[iBody].dSemi + 1) < TINY || fabs(body[iBody].dMeanMotion) + 1 < TINY)
       {
@@ -663,7 +662,6 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
         exit(EXIT_INPUT);
       }
     } else // Secondary
-      body[iBody].dR0=body[iBody].dSemi;
     // Was dCBPM0, dCBPZeta, dCBPPsi set for one of the stars?
     if(body[iBody].dCBPM0 > TINY || body[iBody].dCBPZeta > TINY || body[iBody].dCBPPsi > TINY)
     {
@@ -728,6 +726,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   // Inits for stars: General
   if(body[iBody].iBodyType == 1)
   {
+    body[iBody].dR0 = 0.0;
     body[iBody].dInc = 0.0; // Binary in the plane
     body[iBody].dArgP = 0.0;
     body[iBody].dLongA = 0.0;
@@ -1539,6 +1538,9 @@ double fdComputeArgPeri(BODY *body, int iBody)
  */
 double fdMeanToEccentric(double M, double e)
 {
+  // Make sure M in [0,2pi)
+  M = fmod(M,2.0*PI);
+  
   // If e is 0, or close enough, return 
   if(e < TINY)
   {
@@ -1561,12 +1563,13 @@ double fdMeanToEccentric(double M, double e)
     E = E0 - (E0 - e*sin(E0) - M)/(1. - e*cos(E0));
     dE = fabs(E-E0);
     E0 = E;
-  
+
     count += 1;
 
-    if(count <= 20) // Stop if too many iterations
+    if(count >= MAX_KEPLER_ITERS) // Stop if too many iterations
     {
       fprintf(stderr,"ERROR: in fdMeanToEccentric, too many iterations to solve Kepler Equation\n");
+      fprintf(stderr,"Iteration number: %d.  Eccentric anomaly: %lf.\n",count,E);
       exit(1);
     }
 
@@ -2077,8 +2080,8 @@ double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
     // z = z
 
     // Compute squared distances from each star to CBP
-    r1 = pow(x-x1,2.) + pow(y-y1,2.) + z*z;
-    r2 = pow(x-x2,2.) + pow(y-y2,2.) + z*z;
+    r1 = (x-x1)*(x-x1) + (y-y1)*(y-y1) + z*z;
+    r2 = (x-x2)*(x-x2) + (y-y2)*(y-y2) + z*z;
 
     // Compute fluxes due to each star
     flux += (L0/(4.0*PI*r1) + L1/(4.0*PI*r2));
@@ -2094,6 +2097,7 @@ double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
   return flux/FLUX_INT_MAX;
 }
 
+/* Dumps out a bunch of values to see if they agree with LL13 */
 void binaryDebug(BODY * body)
 {
   fprintf(stderr,"binary debug information:\n");

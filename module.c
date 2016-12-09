@@ -14,7 +14,7 @@
    initialized to point to these functions. Modules that require them reset
    the pointers in AddModuleX. */
 
-void  InitializeControlNULL(CONTROL *control) {
+void  InitializeControlNULL(CONTROL *control,int iBody) {
   // Nothing
 }
 
@@ -55,6 +55,10 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->iNumModules = malloc(iNumBodies*sizeof(int));
   module->iaModule = malloc(iNumBodies*sizeof(int*));  
   module->iBitSum = malloc(iNumBodies*sizeof(int*));
+
+  // Allow parameters that require no module
+  for (iBody=0;iBody<iNumBodies;iBody++)
+    module->iBitSum[iBody] = 1;
 
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
@@ -368,10 +372,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
        bit in InitializeOutput. In ReadOutputOrder the field 
        output->iModuleBit is compared bitwise to module->iBitSum. 
        Parameters that can be specified for multiple modules are set to 1. 
+       iBitSum for each body is set 1 in InitializeModule.
     */
-
-    // Allow parameters that require no module
-    module->iBitSum[iFile-1] = 1;
 
     for (iModule=0;iModule<iNumIndices;iModule++) {
 
@@ -409,7 +411,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
-	    } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
       } else {

@@ -26,12 +26,12 @@ bStellarEnc 0
 bTimeEvolVelDisp 0
 bOutputEnc 0
 
-bHostBinary 1
-dHostBinEcc 0.524
-dHostBinInc 55.0
-dHostBinLongA 122.0
-dHostBinSemi 23.77639
-dHostBinMass1 1.133
+#bHostBinary 1
+#dHostBinEcc 0.524
+#dHostBinInc 55.0
+#dHostBinLongA 122.0
+#dHostBinSemi 23.77639
+#dHostBinMass1 1.133
 
 # Output
 saOutputOrder Time SemiM Ecce PeriQ ArgP Inc LongA NEncounters FVelDisp DeltaT 

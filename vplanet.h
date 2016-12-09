@@ -1534,7 +1534,7 @@ typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
 
 typedef void (*fnInitializeOptions)(OPTIONS*,fnReadOption*);
 typedef void (*fnInitializeBodyModule)(BODY*,CONTROL*,UPDATE*,int,int);
-typedef void (*fnInitializeControlModule)(CONTROL*);
+typedef void (*fnInitializeControlModule)(CONTROL*,int);
 typedef void (*fnInitializeOptionsModule)(OPTIONS*,fnReadOption*);
 typedef void (*fnInitializeUpdateModule)(BODY*,UPDATE*,int);
 typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);

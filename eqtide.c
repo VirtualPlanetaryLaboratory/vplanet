@@ -33,12 +33,17 @@
 #include <string.h>
 #include "vplanet.h"
 
-void InitializeControlEqtide(CONTROL *control) {
+void InitializeControlEqtide(CONTROL *control,int iBody) {
 
-  control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
-  control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
-  control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));
-  control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
+  /* We only want to initialize these values once. The following will not
+     work if moons are included! */
+  if (iBody==0) {
+    control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
+    control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
+    control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));
+    control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
+
+  }
 }
 
 /* All the auxiliary properties for EQTIDE calculations need to be included
@@ -2224,6 +2229,7 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblEqtide;
   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblEqtide;
 
+  
 }
 
 /************* EQTIDE Functions ************/

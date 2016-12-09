@@ -2789,7 +2789,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     CalcHK(body, iBody);
     CalcPQ(body, iBody);
   }
-  free(AngMom);
+  //free(AngMom);
 }
 
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {

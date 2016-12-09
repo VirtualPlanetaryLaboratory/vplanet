@@ -750,7 +750,7 @@ void VerifyTidesBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[]
 }
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i;
+  int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
   char cOut[NAMELEN];
@@ -858,38 +858,41 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
     
+    iEqn = 0;
     if (body[iBody].bGalacTides) {
-      InitializeEccXGalHabit(body,update,iBody,0);
+      InitializeEccXGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[0]] = &fdGalHabitDEccXDtTidal;
     
-      InitializeEccYGalHabit(body,update,iBody,0);
+      InitializeEccYGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[0]] = &fdGalHabitDEccYDtTidal;
     
-      InitializeEccZGalHabit(body,update,iBody,0);
+      InitializeEccZGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[0]] = &fdGalHabitDEccZDtTidal;
     
-      InitializeAngMXGalHabit(body,update,iBody,0);
+      InitializeAngMXGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[0]] = &fdGalHabitDAngMXDtTidal;
 
-      InitializeAngMYGalHabit(body,update,iBody,0);
+      InitializeAngMYGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[0]] = &fdGalHabitDAngMYDtTidal;
+      
+      iEqn++;
     }
     
     if (body[iBody].bHostBinary) {
       Rot2Bin(body,iBody);
-      InitializeEccXGalHabit(body,update,iBody,1);
+      InitializeEccXGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[1]] = &fdGalHabitDEccXDtBV;
       
-      InitializeEccYGalHabit(body,update,iBody,1);
+      InitializeEccYGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[1]] = &fdGalHabitDEccYDtBV;
       
-      InitializeEccZGalHabit(body,update,iBody,1);
+      InitializeEccZGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[1]] = &fdGalHabitDEccZDtBV;
       
-      InitializeAngMXGalHabit(body,update,iBody,1);
+      InitializeAngMXGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[1]] = &fdGalHabitDAngMXDtBV;
       
-      InitializeAngMYGalHabit(body,update,iBody,1);
+      InitializeAngMYGalHabit(body,update,iBody,iEqn);
       fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[1]] = &fdGalHabitDAngMYDtBV;
       
       InitializeAngMZGalHabit(body,update,iBody);

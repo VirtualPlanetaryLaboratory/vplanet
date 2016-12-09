@@ -75,8 +75,20 @@ void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
-  if (output->bDoNeg[iBody]) {
+  /* This output is unusual in that it depends on the presence of other bodies
+     in the system, namely (a) star(s). This should also only return a 
+     sensible value if body 0 uses module STELLAR, or else dLuminosty is
+     not defined. As a hack, the will return -1 for invalid cases. */
+  
+  if (iBody == 0 || body[iBody].iBodyType == 1) // Star
+    *dTmp = -1;
+  else if (body[0].bStellar) { // Planet and body 0 uses module STELLAR
+    *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
+  } else { // Planet, but body 0 does not use STELLAR
+    *dTmp = -1;
+  }
+
+    if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
@@ -1243,6 +1255,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+	  /* Useful for debugging 
+	  printf("%d %d\n",iBody,iOut);
+	  fflush(stdout);
+	  */
 	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	}
       }

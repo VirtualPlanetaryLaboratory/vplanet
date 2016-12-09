@@ -1,4 +1,15 @@
 import vspace_hyak
+import sys
+
+if len(sys.argv) < 2:
+  raise IOError("Must enter an input file name")
+else:
+  inputf = sys.argv[1]
+
+try:
+  f = open(inputf,'r')
+except IOError:
+  print ("%s is not a valid file name. Please reenter." %inputf)
 
 para = "parallel_sql"
 

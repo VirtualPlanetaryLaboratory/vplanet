@@ -162,7 +162,8 @@ def naive_nn_layer(X, k = 5000, v = None, verbose = False):
 
     where v is a d x k matrix where each column is a d x 1 vector whose entries
     are sampled from the standard normal distribution.  Even though this is a
-    trivial transformation, it typically works pretty well for large k!
+    trivial transformation, it typically works pretty well for large k!  This is
+    also known as a random Rectified Linear (ReLu) layer and works crazy well.
 
     Parameters
     ----------
@@ -203,22 +204,36 @@ def naive_nn_layer(X, k = 5000, v = None, verbose = False):
 # end function
 
 
-def scale_data(X):
+def scale_data(X_train, X_test, verbose=False):
     """
     Transform the data to center it by removing the mean value of each feature,
     then scale it by dividing non-constant features by their standard deviation
-    using sklearn's preprocessing.scale
+    using sklearn's preprocessing.scale.  Here, X_test is scaled by the X_train
+    transformation for consistency.
 
     Parameters
     ----------
-    X : array
-        input data (something like df.values)
+    X_train : array
+        input training data (something like df.values)
+    X_test : array
+        input testing data
+    verbose : bool (optional)
+        whether or not to return sklearn standard scaler object for use with
+        future data.  Defaults to False.
 
     Returns
     -------
-    X : array
+    X_train : array
         scaled input data
+    X_test : array
+        scaled testing data
     """
 
-    return preprocessing.StandardScaler().fit_transform(X)
+    # Get scaling from training set, apply to both sets
+    scaler = preprocessing.StandardScaler().fit(X_train)
+
+    if verbose:
+        return scaler.transform(X_train), scaler.transform(X_test), scaler
+    else:
+        return scaler.transform(X_train), scaler.transform(X_test)
 # end function

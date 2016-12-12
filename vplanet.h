@@ -4,7 +4,7 @@
  *
  */
 
- 
+
 /*! Top-level declarations */
 
 /* How many modules are available? */
@@ -57,8 +57,8 @@
 #define EPS           1e-10       // Precision for difference of doubles to be effectively 0
 
 /* Units: Calculations are done in SI */
-#define cLIGHT        299792458.0 
-#define MEARTH        5.972186e24 // Prsa et al. 2016   
+#define cLIGHT        299792458.0
+#define MEARTH        5.972186e24 // Prsa et al. 2016
 #define MSUN          1.988416e30 // Prsa et al. 2016
 #define AUCM          1.49598e11  // XXX Change to AUM
 #define AUPC          206265.0   // AU in a parsec
@@ -93,7 +93,7 @@
 #define SEDD0         2.5e-14  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 #define RHOBROCK      3370
-#define BROCKTIME     5000  //relaxation timescale for bedrock 
+#define BROCKTIME     5000  //relaxation timescale for bedrock
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
 
 /* Exit Status */
@@ -108,7 +108,7 @@
 /* Verbosity Level */
 
 #define VERBERR       1
-#define VERBPROG      2    
+#define VERBPROG      2
 #define VERBINPUT     3
 #define VERBUNITS     4
 #define VERBALL       5
@@ -123,11 +123,11 @@
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
-#define MAXARRAY      64    /* Maximum number of options in 
+#define MAXARRAY      64    /* Maximum number of options in
 			     * an option array */
-#define NUMOPT	      1000  /* Number of options that could be 
+#define NUMOPT	      1000  /* Number of options that could be
 			     * in MODULE */
-#define MAXLINES      256   /* Maximum Number of Lines in an 
+#define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
 #define TINY          (1./HUGE)
@@ -136,7 +136,7 @@
 #define EULER         1
 #define RUNGEKUTTA    2
 
-/* Indices for variables in the update struct. These are the primary 
+/* Indices for variables in the update struct. These are the primary
    variables. */
 #define VSEMI        1001
 #define VECC         1002
@@ -218,14 +218,14 @@ typedef struct {
   double dMaxSteps;
 } PHOTOCHEM;
 
-/*! \brief BODY contains all the physical parameters for every body. 
+/*! \brief BODY contains all the physical parameters for every body.
  *         Members are broken into chunks by module.
  */
 typedef struct {
   char cName[NAMELEN];   /**< Body's Name */
   int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
   /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
-  char iType; 
+  char iType;
 
   /* Body Properties */
   double dAge;           /**< Body's Age */
@@ -252,7 +252,7 @@ typedef struct {
   double dEccSq;         /**< Eccentricity squared */
 
   /* DISTORB parameters */
-  int bDistOrb;         /**< Has module DISTORB been implemented */ 
+  int bDistOrb;         /**< Has module DISTORB been implemented */
   double dHecc;           /**< Poincare H */
   double dKecc;           /**< Poincare K */
   double dPinc;           /**< Poincare P */
@@ -273,7 +273,7 @@ typedef struct {
   int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
   int iDistOrbModel;     /**< Which orbital model to use (RD4 or LL2) */
   double dSemiPrev;      /**< Semi-major axis at which LL2 eigensolution was calc'd */
-  double dEigenvalue; 
+  double dEigenvalue;
   double dEigenvector;
   int bEigenSet;
   double *dLOrb;
@@ -305,7 +305,7 @@ typedef struct {
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
-  double dTrueApA;       /**< True anomaly at equinox (used for invariable plane conversion) */        
+  double dTrueApA;       /**< True anomaly at equinox (used for invariable plane conversion) */
   double dDynEllip;      /**< Dynamical ellipticity */
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
@@ -315,8 +315,8 @@ typedef struct {
   int bForcePrecRate;
   double dPrecRate;
   int bCalcDynEllip;
-  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */  
-  
+  int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
+
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -343,7 +343,7 @@ typedef struct {
   double d26AlNumMan;        /**< Body's Mantle Number of Aluminum-26 Atoms */
   double d26AlPowerMan;      /**< Body's Mantle Internal Power Due to Aluminum-26 Decay */
   double d26AlMassMan;       /**< Body's Mantle Total Mass of Aluminum-26 */
-  double d26AlConstCore;       
+  double d26AlConstCore;
   double d26AlNumCore;
   double d26AlPowerCore;
   double d26AlMassCore;
@@ -352,7 +352,7 @@ typedef struct {
   double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
   double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
   double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
-  double d40KConstCore;       
+  double d40KConstCore;
   double d40KNumCore;
   double d40KPowerCore;
   double d40KMassCore;
@@ -385,15 +385,15 @@ typedef struct {
   double d238UNumCrust;
   double d238UPowerCrust;
   double d238UMassCrust;
-  double d235UConstMan; 
+  double d235UConstMan;
   double d235UNumMan;
   double d235UPowerMan;
   double d235UMassMan;
-  double d235UConstCore; 
+  double d235UConstCore;
   double d235UNumCore;
   double d235UPowerCore;
   double d235UMassCore;
-  double d235UConstCrust; 
+  double d235UConstCrust;
   double d235UNumCrust;
   double d235UPowerCrust;
   double d235UMassCrust;
@@ -419,7 +419,7 @@ typedef struct {
   double dViscUManArr;     /**< Viscosity UMTBL Arrhenius Law */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
-  double dViscMMan;        /**< Viscosity Mid (ave) mantle */  
+  double dViscMMan;        /**< Viscosity Mid (ave) mantle */
   double dViscJumpMan;     /**< Viscosity Jump UM to LM */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
@@ -510,7 +510,7 @@ typedef struct {
   double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
-  /* end vemcee parameters */  
+  /* end vemcee parameters */
 
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
@@ -547,7 +547,7 @@ typedef struct {
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
-  
+
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
   double dNumAtmLayers;
@@ -593,7 +593,7 @@ typedef struct {
   /* CLIMA Parameters */
   double dArgonPressure;
   double dClimaZenithAngle;
-  
+
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
 
@@ -601,7 +601,7 @@ typedef struct {
   double dAlbedoGlobalTmp;
   double dAlbedoLand;
   int iAlbedoType;            /**< type of water albedo used (fix or tay) */
-  double dAlbedoWater;  
+  double dAlbedoWater;
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
   double dAstroDist;         /**< Distance between primary and planet */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
@@ -612,7 +612,7 @@ typedef struct {
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;
-  double dFluxOutGlobal;     /**< Global mean of outgoing flux */ 
+  double dFluxOutGlobal;     /**< Global mean of outgoing flux */
   double dFluxOutGlobalTmp;
   int bForceObliq;
   double dFrzTSeaIce;         /**< Freezing temperature of sea water */
@@ -636,7 +636,7 @@ typedef struct {
   int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
   double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
   int iNDays;                /**< Number of days in planet's year */
-  int iNStepInYear;        /**< Number of time steps in a year */  
+  int iNStepInYear;        /**< Number of time steps in a year */
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
   int iNumYears;           /**< Number of years to run seasonal model */
@@ -736,7 +736,7 @@ typedef struct {
   double *daIceFlowAvg;
   double *daIceFlowMid;
   double *daIceGamTmp;
-  double *daIceHeight; 
+  double *daIceHeight;
   double *daIceMass;
   double *daIceMassTmp;
   double *daIcePropsTmp;
@@ -791,7 +791,7 @@ typedef struct {
   double dFlareVisWidth;
   double dFlareXUVWidth;
   double dLXUVFlare;
-  
+
   // GALHABIT
   int bGalHabit;
   double dPeriQ;   /**< Pericenter distance */
@@ -838,7 +838,7 @@ typedef struct {
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
 
   double dTotAngMom;     /**< System's Current Angular Momentum */
-  
+
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
@@ -870,9 +870,9 @@ typedef struct {
   double **Acopy;
   double *scale;
   double *dLOrb;
-  
+
   double dTotEnInit;     /**< System's Initial Energy */
-  
+
   double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
   double *dPassingStarR;
   double *dPassingStarV;
@@ -906,7 +906,7 @@ typedef struct {
   double dRelativeVelMag;
   double *dGSNumberDens;
   double *dGSBinMag;
-  double *dEncounterRateMV; 
+  double *dEncounterRateMV;
   int iSeed;
   double dGalaxyAge;  /**< present day age of galaxy */
   int bStellarEnc;    /**< model stellar encounters? */
@@ -916,43 +916,43 @@ typedef struct {
 
 } SYSTEM;
 
-/* 
- * Updates: Struct that contains all the variables to be updated and the functions to be called to be updated, fnUpdate. 
+/*
+ * Updates: Struct that contains all the variables to be updated and the functions to be called to be updated, fnUpdate.
  */
 
-typedef struct {  
+typedef struct {
   /* N.B. that pdVar points to the same memory location as
    * body.x, where x=semi, ecc, etc. */
   double **pdVar;       /**< Pointers to Primary Variables */
   int iNumVars;         /**< Number of Update-able Variables */
 
-  /*! The "type" refers to how the variable is updated. If 0, then 
-      the variable is assumed to be an explicit function of age. The 
+  /*! The "type" refers to how the variable is updated. If 0, then
+      the variable is assumed to be an explicit function of age. The
       first timestep is then a bit dodgy as the rate is not initially
-      known. The suggested timestep will be dEta*dTimestep, so runs 
-      with a Type 0 variable must account for  the evolution with 
-      dTimeStep. 
+      known. The suggested timestep will be dEta*dTimestep, so runs
+      with a Type 0 variable must account for  the evolution with
+      dTimeStep.
   */
   int **iaType;         /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar/sinusoidal quantity with time derivative, 3 = sinusoidal quantity with explicit function of age) */
   double *daDeriv;      /**< Array of Total Derivative Values for each Primary Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
-  double *dVar;         
+  double *dVar;
   double dZero;         /**< Sometimes you need a pointer to zero */
 
-  /*! The body #s to calculate the derivative. First dimension is 
-      the Primary Variable #, second is the process #, third is the 
-      list body #s. 
+  /*! The body #s to calculate the derivative. First dimension is
+      the Primary Variable #, second is the process #, third is the
+      list body #s.
   */
-  int ***iaBody;        
+  int ***iaBody;
   int **iNumBodies;     /**< Number of Bodies Affecting a Process */
 
   /* These keep track of the variable and modules */
   int iNumModules;      /**< Number of Modules Affecting a Body */
   int *iNumEqns;        /**< Number of Equations That Modify a Primary Variable */
   int *iaVar;           /**< Primary Variable # */
-  /*! The Module # responsible for a given process. The first dimension 
+  /*! The Module # responsible for a given process. The first dimension
     is the Primary Variable #. Second is the Equation. */
-  int **iaModule;      
+  int **iaModule;
 
 
   /* Number of eqns to modify a parameter */
@@ -983,31 +983,31 @@ typedef struct {
   int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
   int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       semi-major axis' derivative due to EQTIDE. */
-  double *pdDsemiDtEqtide; 
+  double *pdDsemiDtEqtide;
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains
     Poincare's h derivative due to EQTIDE. */
   double *pdDHeccDtEqtide;
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains
     Poincare's k derivative due to EQTIDE. */
   double *pdDKeccDtEqtide;
 
-  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains
       Laskar's X derivatives due to EQTIDE. */
   double **padDXoblDtEqtide;
 
-  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains
       Laskar's Y derivatives due to EQTIDE. */
   double **padDYoblDtEqtide;
 
-  /*! Points to the elements in UPDATE's daDerivProc matrix that contains  
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains
       Laskar's Z derivatives due to EQTIDE. */
   double **padDZoblDtEqtide;
 
-  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the 
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
 
@@ -1026,7 +1026,7 @@ typedef struct {
   double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
   double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
   double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
-  double dD235UNumManDt; 
+  double dD235UNumManDt;
   double *pdD26AlNumManDt;
   double *pdD40KNumManDt;
   double *pdD232ThNumManDt;
@@ -1043,18 +1043,18 @@ typedef struct {
   int iNum40KCore;
   int iNum232ThCore;
   int iNum238UCore;
-  int iNum235UCore; 
+  int iNum235UCore;
   double dD26AlNumCoreDt;
   double dD40KNumCoreDt;
   double dD232ThNumCoreDt;
   double dD238UNumCoreDt;
-  double dD235UNumCoreDt; 
+  double dD235UNumCoreDt;
   double *pdD26AlNumCoreDt;
   double *pdD40KNumCoreDt;
   double *pdD232ThNumCoreDt;
   double *pdD238UNumCoreDt;
   double *pdD235UNumCoreDt;
-  
+
   /* RADHEAT CRUST */
   int i40KCrust;
   int i232ThCrust;
@@ -1063,16 +1063,16 @@ typedef struct {
   int iNum40KCrust;
   int iNum232ThCrust;
   int iNum238UCrust;
-  int iNum235UCrust; 
+  int iNum235UCrust;
   double dD40KNumCrustDt;
   double dD232ThNumCrustDt;
   double dD238UNumCrustDt;
-  double dD235UNumCrustDt; 
+  double dD235UNumCrustDt;
   double *pdD40KNumCrustDt;
   double *pdD232ThNumCrustDt;
   double *pdD238UNumCrustDt;
   double *pdD235UNumCrustDt;
-  
+
   /* THERMINT */
   int iTMan;          /**< Variable # Corresponding to Tman */
   int iNumTMan;       /**< Number of Equations Affecting TMan */
@@ -1082,14 +1082,14 @@ typedef struct {
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
-  
+
   /* DISTORB */
   /* Number of eqns to modify a parameter */
   int iNumHecc;          /**< Number of Equations Affecting h = e*sin(longp) */
   int iNumKecc;          /**< Number of Equations Affecting k = e*cos(longp) */
   int iNumPinc;          /**< Number of Equations Affecting p = s*sin(longa) */
   int iNumQinc;         /**< Number of Equations Affecting q = s*cos(longa) */
-  
+
   int iHecc;             /**< Variable # Corresponding to h = e*sin(longp) */
   double dDHeccDt;       /**< Total h Derivative */
   int iKecc;             /**< Variable # Corresponding to k = e*cos(longp) */
@@ -1102,29 +1102,29 @@ typedef struct {
   int *iaKeccDistOrb;     /**< Equation #s Corresponding to DistOrb's change to k = e*cos(longp) */
   int *iaPincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  p = s*sin(longa) */
   int *iaQincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  q = s*cos(longa) */
-     
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       h = e*sin(varpi) derivative due to DistOrb. */
   double **padDHeccDtDistOrb;
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       k = e*cos(varpi) derivative due to DistOrb. */
   double **padDKeccDtDistOrb;
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       p = s*sin(Omega) derivative due to DistOrb. */
   double **padDPincDtDistOrb;
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       q = s*cos(Omega) derivative due to DistOrb. */
   double **padDQincDtDistOrb;
-  
+
   /* DISTROT */
   int iNumXobl;          /**< Number of Equations Affecting x = sin(obl)*cos(pA) */
   int iNumYobl;          /**< Number of Equations Affecting y = sin(obl)*sin(pA) */
   int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
   int iNumDynEllip;      /**< Number of Equations Affecting Dynamical Ellipticity */
-  
+
   int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
   double dDXoblDt;       /**< Total x Derivative */
   int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
@@ -1137,15 +1137,15 @@ typedef struct {
   int *iaYoblDistRot;     /**< Equation #s Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
   int *iaZoblDistRot;     /**< Equation #s Corresponding to DistRot's change to z = cos(obl) */
 
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       xi = sin(obliq)*sin(pA) derivative due to DISTROT. */
   double **padDXoblDtDistRot;
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       zeta = sin(obliq)*cos(pA) derivative due to DISTROT. */
   double **padDYoblDtDistRot;
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       chi = cos(obliq) derivative due to DISTROT. */
   double **padDZoblDtDistRot;
 
@@ -1153,18 +1153,18 @@ typedef struct {
   int iNumEccX;
   int iNumEccY;
   int iNumEccZ;
-  
+
   int iEccX;
   int iEccY;
   int iEccZ;
   double dDEccXDt;
   double dDEccYDt;
   double dDEccZDt;
-  
+
   int *iaEccXGalHabit;
   int *iaEccYGalHabit;
   int *iaEccZGalHabit;
-  
+
   double **padDEccXDtGalHabit;
   double **padDEccYDtGalHabit;
   double **padDEccZDtGalHabit;
@@ -1172,24 +1172,24 @@ typedef struct {
   int iNumAngMX;
   int iNumAngMY;
   int iNumAngMZ;
-  
+
   int iAngMX;
   int iAngMY;
   int iAngMZ;
   double dDAngMXDt;
   double dDAngMYDt;
   double dDAngMZDt;
-  
+
   int *iaAngMXGalHabit;
   int *iaAngMYGalHabit;
   int *iaAngMZGalHabit;
-  
+
   double **padDAngMXDtGalHabit;
   double **padDAngMYDtGalHabit;
   double **padDAngMZDtGalHabit;
-  
-  
-  /* ATMESC */         
+
+
+  /* ATMESC */
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
   int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
@@ -1198,8 +1198,8 @@ typedef struct {
   int iNumOxygenMass;  /**< Number of Equations Affecting oxygen [1] */
   int iOxygenMantleMass;     /**< Variable # Corresponding to the oxygen mass in the mantle */
   int iNumOxygenMantleMass;  /**< Number of Equations Affecting oxygen mantle mass [1] */
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
   double *pdDEnvelopeMassDtAtmesc;
@@ -1210,7 +1210,7 @@ typedef struct {
 
   /* BINARY */
   int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
-  int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */  
+  int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */
   int iCBPZ; /**< Variable # corresponding to the CBP's cylindrical Z positions */
   int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
   int iCBPPhi; /**< Variable # Corresponding to the CBP's orbital azimuthal angle */
@@ -1222,7 +1222,7 @@ typedef struct {
   int iCBPPhiDot; /** < Variable # Corresponding to the CBP's Phi orbital angular velocity */
   int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
 
-  /* Points to the element in UPDATE's daDerivProc matrix that contains the 
+  /* Points to the element in UPDATE's daDerivProc matrix that contains the
    * derivative of these variables due to BINARY. */
   double *pdCBPRBinary; // Equation that governs CBP orbital radius
   double *pdCBPZBinary; // Equation that governs CBP cylindrical position Z
@@ -1231,20 +1231,20 @@ typedef struct {
   double *pdCBPZDotBinary; // Equation that governs CBP z orbital velocity
   double *pdCBPPhiDotBinary; // Equation that governs CBP phi orbital velocity
 
-  /* STELLAR */ 
+  /* STELLAR */
   int iLuminosity;           /**< Variable # Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
   int iTemperature;
   int iNumTemperature;
 
   int iRotStellar;           /**< iEqn number for the evolution of rotation in STELLAR */
-  
-  /*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       function that returns these variables due to STELLAR evolution. */
   double *pdLuminosityStellar;
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
-  
+
   double *pdRotRateStellar;
 
   /* POISE */
@@ -1285,16 +1285,16 @@ typedef struct {
   double dMinRadPower;
 
   /* ATMESC */
-  int bSurfaceDesiccated;         /**< Halt if dry?*/ 
+  int bSurfaceDesiccated;         /**< Halt if dry?*/
   int bEnvelopeGone;              /**< Halt if evaporated?*/
-  
+
   /* STELLAR */
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
   double dMinTMan;     /**< Halt at this TMan */
   double dMinTCore;     /**< Halt at this TCore */
-  
+
   /* DISTORB */
   int bOverrideMaxEcc;  /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
   int bHillStab;       /**< halt if 2 planets fail Hill stability crit (technically valid for only 2 planets)*/
@@ -1312,21 +1312,21 @@ typedef struct {
  * in the primary input file, the values are propogated to
  * all the bodies. Note that for most variables, an index of 0
  * corresponds to the first body read in. For units, that is not
- * the case, as the index refers to the file number, i.e. 0 to 
+ * the case, as the index refers to the file number, i.e. 0 to
  * the primary input file, 1 to the first body read in, etc. This
- * feature allows for the units to be propogated to other files, 
+ * feature allows for the units to be propogated to other files,
  * but is sure to result in some bugs. Be careful!
  */
 
 typedef struct {
   int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
-  int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */ 
-  int iAngle;         /**< 0=rad; 1=deg */ 
+  int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */
+  int iAngle;         /**< 0=rad; 1=deg */
   int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */
   int iTemp;
 } UNITS;
 
-/* Note this hack -- the second int is for iEqtideModel. This may 
+/* Note this hack -- the second int is for iEqtideModel. This may
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
@@ -1360,14 +1360,14 @@ typedef struct {
   int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
   int *bFixOrbit;        /**< Fix Orbit? */
   double *dMaxLockDiff;  /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
-  double *dSyncEcc;     
+  double *dSyncEcc;
 
   /* RADHEAT */
   /* Nothing? */
 
   /* DISTORB */
   int iDistOrbModel;
-  
+
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 } EVOLVE;
 
@@ -1386,7 +1386,7 @@ typedef struct {
 
   int bOverwrite;         /**< Allow files to be overwritten? */
 } IO;
-  
+
 /* The CONTROL struct contains all the parameters that
  * control program flow. */
 /* CONTROL contains all parameters that control program flow, including I/O,
@@ -1418,7 +1418,7 @@ typedef struct {
   fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
   fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
-  
+
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
@@ -1427,7 +1427,7 @@ typedef struct {
 
 } CONTROL;
 
-/* The INFILE struct contains all the information 
+/* The INFILE struct contains all the information
  * regarding the files that read in. */
 
 typedef struct {
@@ -1445,7 +1445,7 @@ typedef struct {
 
 } INFILE;
 
-/* The OUTFILE struct contains all the information 
+/* The OUTFILE struct contains all the information
  * regarding the output files. */
 
 typedef struct {
@@ -1458,14 +1458,14 @@ typedef struct {
 } OUTFILE;
 
 
-/* The FILES struct contains all the information 
+/* The FILES struct contains all the information
  * regarding every file. */
 
 typedef struct {
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
-  INFILE *Infile;              
+  INFILE *Infile;
   int iNumInputs;              /**< Number of Input Files */
 } FILES;
 
@@ -1480,7 +1480,7 @@ typedef struct {
   double dDefault;             /**< Default Value */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
-  int *iLine;                  /**< Option's Line # in Input File */ 
+  int *iLine;                  /**< Option's Line # in Input File */
   char *iFile;
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
@@ -1490,8 +1490,8 @@ typedef struct {
 /* OUTPUT contains the data regarding every output parameters */
 
 /* Some output variables must combine output from different modules.
- * These functions do that combining. XXX I think this is defunct! 
- 
+ * These functions do that combining. XXX I think this is defunct!
+
  typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int); */
 
 /* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
@@ -1503,12 +1503,12 @@ typedef struct {
 //   char cNeg[NAMELEN];    /**< Units of Negative Option */
 //   double dNeg;           /**< Conversion Factor for Negative Option */
 //   int iNum;              /**< Number of Columns for Output */
-// 
+//
 //   /* Now add vector output functions */
 //   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
-// 
-// } GRIDOUTPUT; 
- 
+//
+// } GRIDOUTPUT;
+
 typedef struct {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
@@ -1550,8 +1550,8 @@ typedef void (*fnFinalizeUpdate232ThNumCoreModule)(BODY*,UPDATE*,int*,int,int,in
 typedef void (*fnFinalizeUpdate232ThNumCrustModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate232ThNumManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate235UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdate235UNumCrustModule)(BODY*,UPDATE*,int*,int,int,int); 
-typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);  
+typedef void (*fnFinalizeUpdate235UNumCrustModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdate235UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate238UNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate238UNumCrustModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate238UNumManModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1607,58 +1607,58 @@ typedef struct {
   /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;
 
-  /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays
       inside the CONTROL struct */
   fnInitializeControlModule **fnInitializeControl;
 
-  /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays
        inside the UPDATE struct */
   fnInitializeUpdateModule **fnInitializeUpdate;
 
-  /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays
       inside the BODY struct */
   fnInitializeBodyModule **fnInitializeBody;
 
-  /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays
        inside the OUTPUT struct */
   fnInitializeOutputModule **fnInitializeOutput;
 
-  /*! These functions allocate memory to module-specific arrays 
+  /*! These functions allocate memory to module-specific arrays
        inside the BODY struct */
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
   // Finalize Primary Variable function pointers
-  /*! Function pointers to finalize Core's potassium-40 */ 
+  /*! Function pointers to finalize Core's potassium-40 */
   fnFinalizeUpdate26AlNumCoreModule **fnFinalizeUpdate26AlNumCore;
-  /*! Function pointers to finalize Mantle's potassium-40 */ 
+  /*! Function pointers to finalize Mantle's potassium-40 */
   fnFinalizeUpdate26AlNumManModule **fnFinalizeUpdate26AlNumMan;
-  /*! Function pointers to finalize Core's potassium-40 */ 
+  /*! Function pointers to finalize Core's potassium-40 */
   fnFinalizeUpdate40KNumCoreModule **fnFinalizeUpdate40KNumCore;
-  /*! Function pointers to finalize Crust's potassium-40 */ 
+  /*! Function pointers to finalize Crust's potassium-40 */
   fnFinalizeUpdate40KNumCrustModule **fnFinalizeUpdate40KNumCrust;
-  /*! Function pointers to finalize Mantle's potassium-40 */ 
+  /*! Function pointers to finalize Mantle's potassium-40 */
   fnFinalizeUpdate40KNumManModule **fnFinalizeUpdate40KNumMan;
-  /*! Function pointers to finalize Core's thorium-232 */ 
+  /*! Function pointers to finalize Core's thorium-232 */
   fnFinalizeUpdate232ThNumCoreModule **fnFinalizeUpdate232ThNumCore;
-  /*! Function pointers to finalize Crust's thorium-232 */ 
+  /*! Function pointers to finalize Crust's thorium-232 */
   fnFinalizeUpdate232ThNumCrustModule **fnFinalizeUpdate232ThNumCrust;
-  /*! Function pointers to finalize Mantle's thorium-232 */ 
+  /*! Function pointers to finalize Mantle's thorium-232 */
   fnFinalizeUpdate232ThNumManModule **fnFinalizeUpdate232ThNumMan;
-  /*! Function pointers to finalize Core's uranium-235 */ 
-  fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore; 
-  /*! Function pointers to finalize Crust's uranium-235 */ 
-  fnFinalizeUpdate235UNumCrustModule **fnFinalizeUpdate235UNumCrust; 
-  /*! Function pointers to finalize Mantle's uranium-235 */ 
-  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;  
-  /*! Function pointers to finalize Core's uranium-238 */ 
+  /*! Function pointers to finalize Core's uranium-235 */
+  fnFinalizeUpdate235UNumCoreModule **fnFinalizeUpdate235UNumCore;
+  /*! Function pointers to finalize Crust's uranium-235 */
+  fnFinalizeUpdate235UNumCrustModule **fnFinalizeUpdate235UNumCrust;
+  /*! Function pointers to finalize Mantle's uranium-235 */
+  fnFinalizeUpdate235UNumManModule **fnFinalizeUpdate235UNumMan;
+  /*! Function pointers to finalize Core's uranium-238 */
   fnFinalizeUpdate238UNumCoreModule **fnFinalizeUpdate238UNumCore;
-  /*! Function pointers to finalize Crust's uranium-238 */ 
+  /*! Function pointers to finalize Crust's uranium-238 */
   fnFinalizeUpdate238UNumCrustModule **fnFinalizeUpdate238UNumCrust;
-  /*! Function pointers to finalize Mantle's uranium-238 */ 
+  /*! Function pointers to finalize Mantle's uranium-238 */
   fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
-  
-  
-  /*! These functions assign Equation and Module information regarding 
+
+
+  /*! These functions assign Equation and Module information regarding
       DistOrb h,k,p,q variables in the UPDATE struct. */
   /*! Function pointers to finalize Poincare's h */
   fnFinalizeUpdateHeccModule **fnFinalizeUpdateHecc;
@@ -1670,29 +1670,29 @@ typedef struct {
   fnFinalizeUpdatePincModule **fnFinalizeUpdatePinc;
   /*! Function pointers to finalize Poincare's q */
   fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
-  /*! Function pointers to finalize Radius */ 
-  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;  
-  /*! Function pointers to finalize Mass */ 
-  fnFinalizeUpdateMassModule **fnFinalizeUpdateMass; 
-  /*! Function pointers to finalize Rotation Rate */ 
+  /*! Function pointers to finalize Radius */
+  fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;
+  /*! Function pointers to finalize Mass */
+  fnFinalizeUpdateMassModule **fnFinalizeUpdateMass;
+  /*! Function pointers to finalize Rotation Rate */
   fnFinalizeUpdateRotModule **fnFinalizeUpdateRot;
-  /*! Function pointers to finalize Semi-major Axis */ 
+  /*! Function pointers to finalize Semi-major Axis */
   fnFinalizeUpdateSemiModule **fnFinalizeUpdateSemi;
-  /*! Function pointers to finalize Surface Water */ 
+  /*! Function pointers to finalize Surface Water */
   fnFinalizeUpdateSurfaceWaterMassModule **fnFinalizeUpdateSurfaceWaterMass;
-  /*! Function pointers to finalize oxygen */ 
+  /*! Function pointers to finalize oxygen */
   fnFinalizeUpdateOxygenMassModule **fnFinalizeUpdateOxygenMass;
-  /*! Function pointers to finalize mantle oxygen */ 
+  /*! Function pointers to finalize mantle oxygen */
   fnFinalizeUpdateOxygenMantleMassModule **fnFinalizeUpdateOxygenMantleMass;
-  /*! Function pointers to finalize Envelope Mass */ 
+  /*! Function pointers to finalize Envelope Mass */
   fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
-  /*! Function pointers to finalize Core Temperature */ 
+  /*! Function pointers to finalize Core Temperature */
   fnFinalizeUpdateTCoreModule **fnFinalizeUpdateTCore;
   /*! Function pointers to finalize Temperature */
   fnFinalizeUpdateTemperatureModule **fnFinalizeUpdateTemperature;
-  /*! Function pointers to finalize Mantle Temperature */ 
+  /*! Function pointers to finalize Mantle Temperature */
   fnFinalizeUpdateTManModule **fnFinalizeUpdateTMan;
- 
+
   /* Function points to finalize binary update functions */
   /* CBP R, Z, Phi, and their time derivaties */
   fnFinalizeUpdateCBPRModule **fnFinalizeUpdateCBPR;
@@ -1702,17 +1702,17 @@ typedef struct {
   fnFinalizeUpdateCBPZDotModule **fnFinalizeUpdateCBPZDot;
   fnFinalizeUpdateCBPPhiDotModule **fnFinalizeUpdateCBPPhiDot;
 
-  /*! These functions assign Equation and Module information regarding 
+  /*! These functions assign Equation and Module information regarding
       DistRot x,y,z variables in the UPDATE struct. */
-  /*! Function pointers to finalize distrot's X */ 
+  /*! Function pointers to finalize distrot's X */
   fnFinalizeUpdateXoblModule **fnFinalizeUpdateXobl;
-  /*! Function pointers to finalize distrot's Y */ 
+  /*! Function pointers to finalize distrot's Y */
   fnFinalizeUpdateYoblModule **fnFinalizeUpdateYobl;
-  /*! Function pointers to finalize distrot's Z */ 
+  /*! Function pointers to finalize distrot's Z */
   fnFinalizeUpdateZoblModule **fnFinalizeUpdateZobl;
-  /*! Function pointers to finalize dynamical ellipticity */ 
+  /*! Function pointers to finalize dynamical ellipticity */
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
-  
+
   fnFinalizeUpdateEccXModule **fnFinalizeUpdateEccX;
   fnFinalizeUpdateEccYModule **fnFinalizeUpdateEccY;
   fnFinalizeUpdateEccZModule **fnFinalizeUpdateEccZ;
@@ -1722,27 +1722,27 @@ typedef struct {
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
- 
-  /*! These functions log module-specific data. */ 
+
+  /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;
 
-  /*! These functions read module-specific option. */ 
+  /*! These functions read module-specific option. */
   fnReadOptionsModule **fnReadOptions;
 
-  /*! These functions verify module-specific options. */ 
+  /*! These functions verify module-specific options. */
   fnVerifyModule **fnVerify;
 
-  /*! These functions verify module-specific halts. */ 
+  /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;
 
 } MODULE;
 
-/* fnIntegrate is a pointer to a function that performs 
+/* fnIntegrate is a pointer to a function that performs
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
 
-/* 
+/*
  * Other Header Files - These are primarily for function declarations
  */
 
@@ -1776,8 +1776,3 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 #include "galhabit.h"
-
-
-
-
-

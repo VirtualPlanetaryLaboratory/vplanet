@@ -898,9 +898,6 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistOrb;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyDistOrb;
-
-  if (iBody==7)
-    exit(1);
 }
 
 
@@ -2748,8 +2745,6 @@ void cart2osc(BODY *body, int iNumBodies) {
 
 void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
-  // double *AngMom;
-//   AngMom = malloc(3*sizeof(double));
   double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
   
   /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
@@ -2783,7 +2778,6 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     CalcHK(body, iBody);
     CalcPQ(body, iBody);
   }
-  free(AngMom);
 }
 
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {

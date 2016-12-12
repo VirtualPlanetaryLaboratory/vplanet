@@ -156,8 +156,8 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
-  //for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
-  for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+  for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  //for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
     /* DEBUG XXX
     printf("%s\n",cLine);
     printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
@@ -2158,15 +2158,15 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-	// Is option part of selected modules?
-	if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
-	  // Parameter is part of selected modules
-	} else {
-	  fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
-	  PrintModuleList(stderr,output[iOut].iModuleBit);
-	  fprintf(stderr,"\n");
-	  ok=0;
-	}
+        // Is option part of selected modules?
+        if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
+          // Parameter is part of selected modules
+        } else {
+          fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
+          PrintModuleList(stderr,output[iOut].iModuleBit);
+          fprintf(stderr,"\n");
+          ok=0;
+        }
       }
     }
 
@@ -2182,6 +2182,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
   } else {
     files->Outfile[iFile-1].iNumCols=0;
   }
+  
   free(lTmp);
 }
 
@@ -2300,11 +2301,12 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
  
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+//     files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
-  }// else
-  //files->Outfile[iFile-1].iNumGrid = 0;
+  } 
     
+  files->Outfile[iFile-1].iNumGrid = iNumGrid;
+  
   free(lTmp);
 }
 

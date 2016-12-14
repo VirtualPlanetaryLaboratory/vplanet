@@ -158,9 +158,13 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   /* Use GetPos to avoid white space */
   for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
   //for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
-    /* DEBUG XXX
+    /* MEM: Something is wrong here, but it is intermittent. Sometimes a call 
+       here produces a memory error with valgrind. On 12/14/16 a run without the
+       next print statements produced an error, but with them in, the error
+       disappeared. After commenting out again, the problem was still gone. */
+    /* DEBUG
     printf("%s\n",cLine);
-    printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
+    printf("%d %d %d\n",(int)strlen(cLine),GetPos(cLine),iPos);
     fflush(stdout);
     */
     iPosStart=0;

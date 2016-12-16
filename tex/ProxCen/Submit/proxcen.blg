@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2016/MacPorts 2016_1)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: proxcen.aux
+The style file: apj.bst
+Database file #1: bib.bib
+Warning--string name "accepted" is undefined
+--line 152 of file bib.bib
+Warning--string name "accepted" is undefined
+--line 254 of file bib.bib
+Warning--string name "submitted" is undefined
+--line 1733 of file bib.bib
+Warning--string name "accepted" is undefined
+--line 5720 of file bib.bib
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Warning--empty publisher in Dole64
+Warning--empty journal in Meadows16
+Warning--empty publisher in MurrayDermott99
+Warning--empty publisher in Oparin24
+You've used 170 entries,
+            3085 wiz_defined-function locations,
+            1906 strings with 41292 characters,
+and the built_in function-call counts, 79467 in all, are:
+= -- 6685
+> -- 5641
+< -- 77
++ -- 1895
+- -- 2018
+* -- 6631
+:= -- 15069
+add.period$ -- 170
+call.type$ -- 170
+change.case$ -- 1153
+chr.to.int$ -- 168
+cite$ -- 174
+duplicate$ -- 3176
+empty$ -- 4760
+format.name$ -- 2260
+if$ -- 15736
+int.to.chr$ -- 3
+int.to.str$ -- 0
+missing$ -- 167
+newline$ -- 514
+num.names$ -- 681
+pop$ -- 1257
+preamble$ -- 1
+purify$ -- 1152
+quote$ -- 0
+skip$ -- 2611
+stack$ -- 0
+substring$ -- 3408
+swap$ -- 16
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 1521
+warning$ -- 4
+while$ -- 654
+width$ -- 0
+write$ -- 1694
+(There were 8 warnings)

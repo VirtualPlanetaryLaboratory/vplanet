@@ -2829,7 +2829,7 @@ void MatrixInvertAnnual(BODY *body, int iBody) {
 }
 
 void MatrixInvertSeasonal(BODY *body, int iBody) {
-  double n = 2*body[iBody].iNumLats;
+  int n = 2*body[iBody].iNumLats;
   int i, j;
   float parity;
   
@@ -2838,6 +2838,7 @@ void MatrixInvertSeasonal(BODY *body, int iBody) {
 // 
   
  //ludcmp(body[iBody].dMEuler,n,body[iBody].rowswap,&parity);  
+  // MEM: body[iBody].scaleSea not initialized
   LUDecomp(body[iBody].dMEulerSea,body[iBody].dMEulerCopySea,body[iBody].scaleSea,body[iBody].rowswapSea,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
@@ -3141,8 +3142,10 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat, int bModel){
   
   phi = log(body[iBody].dpCO2/3.3e-4);
   if (bModel == ANN) {
+    //printf("%lf\n",body[iBody].daTempAnn[iLat]);
     T = body[iBody].daTempAnn[iLat]+273.15;
   } else {
+    // MEM: body[iBody].daTempLW[iLat] is not initialized!
     T = body[iBody].daTempLW[iLat]+273.15;
   }
   dI = - 2.794778 + 2*2.212108e-2*T - 3*3.361939e-5*pow(T,2) - 3.244753e-3*phi \
@@ -3319,7 +3322,8 @@ double AlbedoTaylor(double zenith) {
 
 void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
-  
+
+  // MEM: body[iBody].daIceMassTmp[iLat] not initialized!
   if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
     albtmp = body[iBody].dIceAlbedo;
   } else {
@@ -3952,11 +3956,13 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   double Tice = 273.15, dTmp;
   
   /* first, calculate melting/accumulation */
+  // MEM: body[iBody].daTempLand[iLat] not initialized!
   if (body[iBody].daTempLand[iLat]>0.0) {
     /* Ice melting */
     /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
     dTmp = 2.3*SIGMA*(pow(Tice,4.0) - pow((body[iBody].daTempLand[iLat]+273.15),4.0))/LFICE;
   } else {
+    // MEM: body[iBody].dAlbedoGlobal not initialized!
     if (body[iBody].dAlbedoGlobal >= body[iBody].dIceAlbedo) {
       /* no precip once planet is frozen */
       dTmp = 0.0;

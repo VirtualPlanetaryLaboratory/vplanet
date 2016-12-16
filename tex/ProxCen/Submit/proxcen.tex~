@@ -1,0 +1,457 @@
+\documentclass[preprint,12pt]{aastex}
+
+\def\mearth{{\rm\,M_\oplus}}
+\def\rearth{{\rm\,R_\oplus}}
+\def\msun{{\rm\,M_\odot}}
+\def\rsun{{\rm\,R_\odot}}
+\def\lsun{{\rm\,L_\odot}}
+\def\gsim{~\rlap{$>$}{\lower 1.0ex\hbox{$\sim$}}}
+\def\lsim{~\rlap{$<$}{\lower 1.0ex\hbox{$\sim$}}}
+\def\etal{{\it et al.\thinspace}}
+\def\wpmsq{W m$^{-2}$}
+\def\etal{{\it et al.\thinspace}}
+\def\eg{{\it e.g.\ }}
+\def\etc{{\it etc.\ }}
+\def\ie{{\it i.e.\ }}
+\def\cf{{\it c.f.\ }}
+
+\def\tess{{\it TESS}}
+\def\kepler{{\it Kepler}}
+\def\jwst{{\it JWST}}
+
+\def\vplanet{\texttt{VPLANET}}
+\def\atmesc{\texttt{ATMESC}}
+\def\distorb{\texttt{DISTORB}}
+\def\distrot{\texttt{DISTROT}}
+\def\eqtide{\texttt{EQTIDE}}
+\def\poise{\texttt{POISE}}
+\def\radheat{\texttt{RADHEAT}}
+\def\thermint{\texttt{THERMINT}}
+\def\stellar{\texttt{STELLAR}}
+
+\bibliographystyle{apj}
+\usepackage{multicol}
+
+\begin{document}
+
+\title{A Simple Model for Earth-like Exoplanets}
+\author{Rory Barnes\altaffilmark{1,2,3} et al.}
+\altaffiltext{1}{Astronomy Department, University of Washington, Box 951580, Seattle, WA 98195}
+\altaffiltext{2}{NASA Astrobiology Institute -- Virtual Planetary Laboratory Lead Team, USA}
+\altaffiltext{3}{E-mail: rory@astro.washington.edu}
+
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction\label{sec:intro}}
+
+In the last several years, astronomers have begun to discover
+Earth-sized planets orbiting their host stars such that they receive
+similar levels of incident radiation as Earth and hence may be abodes
+for life
+\citep[\eg][]{AngladaEscude12,Borucki13,Torres15,Barnes15_hite,Morton16}. While
+these exoplanets could be rocky and inside their host stars' habitable
+zones (HZs) \citep{Hart79,Kasting93,Selsis07,Kopparapu13}, planetary
+habitability is a complicated process that depends on numerous
+phenomena with timescales ranging from a fraction of a second to eons,
+and lengthscales from the atomic to the galactic. The relevant
+processes include stellar evolution, orbital oscillations, internal
+evolution, and atmospheric effects. The breadth and dynamic range of
+the problem of planetary habitability has heretofore prevented a
+comprehensive model to address all the relevant aspects, especially
+for exoplanets. Below, we describe a quantitative physical model to
+explore planetary systems in their entirety, and thus produce a
+comprehensive picture of an exoplanet's potential to support life.
+
+Since their initial discovery over 20 years ago
+\citep{MayorQueloz95}, the gold standard for assessing
+an exoplanet's habitability has been its position in the host star's
+HZ as defined in \cite{Kasting93}. Their model relies on a
+one-dimensional atmospheric model that calculates surface temperature
+as a function of a planet's semi-major axis $a$, the host star's
+luminosity $L$ and effective temperature $T_{eff}$, and with the
+assumption that atmospheric convection and photochemistry are very
+similar to Earth's. The reduction of planetary habitability to this
+model implies the energy budget in a planet's troposphere is the
+paramount factor in a planet's habitability. This decision may be
+reasonable, but it is also well-understood that other factors could
+supersede the irradiation requirements
+\citep[\eg][]{Joshi97,Segura03,Barnes08,Segura10,Spiegel10,LugerBarnes15,DriscollBarnes15}; a
+planet's position in the HZ is just the first of many requirements to
+be met.
+
+The goal of this study is to develop a quantitative model that
+considers a broader range of phenomena. We will draw on simple, but
+proven models from the fields of astrophysics, planetary science,
+atmospheric science and Earth science. Bringing these models together
+allows a treatment of stellar, orbital, rotational, atmospheric and
+internal evolution of planetary systems consisting of 1 star and
+multiple planets in a wide array of architectures. While this
+treatment is far more general than previous studies, it is still
+incomplete. Nonetheless, these models can be used to provide a first
+order picture of the evolution and current state of planetary systems
+that contain one or more potentially habitable planets.
+
+This paper is organized as follows. In $S$~\ref{sec:models} we
+describe the 8 fundamental models that form the basis of our
+interpretations of planetary habitability. We use the stellar
+evolution models of \citep{Baraffe15} ($\S$~\ref{sec:models}.1), a 4th
+order secular model of orbital evolution ($\S$~\ref{sec:models}.2), a
+semi-analytic model for the obliquity and precession angle due to
+orbital evolution and the stellar torque ($\S$~\ref{sec:models}.3),
+radiogenic heating ($\S$~\ref{sec:models}.4), thermal evolution of
+terrestrial planet interiors ($\S$~\ref{sec:models}.5), atmospheric
+escape due to XUV radiation ($\S$~\ref{sec:models}.6), tidal effects
+($\S$~\ref{sec:models}.7), and an energy balance model with a
+realistic treatment of ice sheet growth and retreat
+($\S$~\ref{sec:models}.8). $\S$~\ref{sec:models} concludes with a
+description of how we couple all these individual models into a
+software package called \vplanet. In $\S$~\ref{sec:trappist} we apply
+this coupled model to the TRAPPIST-1 system, which consists of
+0.08~$\msun$ host star and at 3 $\sim$Earth-sized planets near the
+classical HZ \citep{Gillon16}. In $\S$~\ref{sec:discussion} we discuss
+the value of the coupled model and how it may be used to prioritize
+target for life-detection observations. We conclude in
+$\S$~\ref{sec:conclusions}.
+
+\section{Models\label{sec:models}}
+
+\subsection{Stellar Evolution: \stellar}
+% Rodrigo
+
+% Fig 1: Luminosity, Radius, Temperature, RotPer evolution
+% Fig 2: XUV Evolution
+
+\subsection{Orbital Evolution: \distorb}
+% Russell
+
+% Fig 3: Jup+Sat, ecc, varpi, incl, Omega
+% Fig 4: Earth ecc from all 8 planets
+
+\subsection{Rotational Evolution from Orbits and the Stellar Torque: \distrot}
+% Russell
+
+% Fig 5: Martian obliquity
+
+\subsection{Radiogenic Heating: \radheat}
+% Peter
+
+% Fig 6: Earth's mantle and core
+
+\subsection{Geophyiscal Evolution: \thermint}
+% Peter
+
+% Fig 7: Earth temperatures, heat flows, plate speeds, outgassing
+% Fig 8: Inner core growth, magnetic fields, etc.
+
+\subsection{Atmospheric Escape: \atmesc}
+% Rodrigo
+
+% Fig 9: Venus, Kepler-36 b+c (Lopez & Fortney)
+% Fig 10: O2 build-up
+
+\subsection{Tidal Evolution: \eqtide}
+% Rory
+
+\subsubsection{Equilibrium Tides}
+
+The tidal model we use is commonly called the ``equilibrium tide''
+model and was first conceived by George Darwin, grandson of Charles
+\citep{Darwin1880}. This model assumes the gravitational potential of
+the tide raiser on an unperturbed spherical surface can be expressed
+as the sum of Legendre polynomials (\ie surface waves) and that the
+elongated equilibrium shape of the perturbed body is slightly
+misaligned with respect to the line that connects the two centers of
+mass. This misalignment is due to dissipative processes within the
+deformed body and leads to a secular evolution of the orbit as well as
+the spin angular momenta of the two bodies. Furthermore, the bodies
+are assumed to respond to the time-varying tidal potential as though
+they are damped, driven harmonic oscillators, a well-studied
+system. As described below, this approach leads to a set of 6 coupled,
+non-linear differential equations, but note that the model is linear
+in the sense that there is no coupling between the surface waves which
+sum to the equilibrium shape. A substantial body of research is
+devoted to tidal theory
+\cite[\eg][]{Darwin1880,GoldreichSoter66,Hut81,FerrazMello08,Wisdom08,EfroimskyWilliams09,Leconte10}, and the reader is
+referred to these studies for a more complete description of the
+derivations and nuances of equlibrium tide theory. For this investigation, I
+will use the models and nomenclature of \cite{Heller11}, which are
+presented below.
+
+Equilibrium tide models have the advantage of being semi-analytic, and hence can be
+used to explore parameter space quickly. They reduce the tidal effects
+to a single parameter, which is valuable in systems for which very
+little compositional and structural information is known, \eg
+exoplanets. However, they suffer from self-inconsistencies. A
+rotating, tidally deformed body does not in fact possess multiple
+rotating tidal waves that create the non-spherical equilibrium shape
+of a body. The properties of the tidal bulge are due to rigidity,
+viscosity, structure and frequencies. Equilibrium tide models are not much more than
+toy models for tidal evolution -- self-consistent models would require
+three dimensions and include the rheology of the interior and, for
+ocean-bearing worlds, a 3-dimensional model of currents, ocean floor
+topography and maps of continental margins. For exoplanets, such a
+complicated model is not available, nor is it necessarily warranted
+given the dearth of observational constraints.
+
+The equilibrium tide frameworks permits fundamentally different assumptions
+regarding the lag between the passage of the perturber and the passage
+of the tidal bulge. This ambiguity has produced two well-developed
+models that have reasonably reproduced observations in our Solar
+System, but which can diverge significantly when applied to
+configurations with different properties. One model assumes that the
+lag is a constant in phase and is independent of frequency. In other
+words, regardless of orbital and rotational frequencies, the angle
+between the perturber and the tidal bulge remains constant. Following
+\cite{Greenberg09} we will refer to this version as the
+``constant-phase-lag" or CPL model. At first glance, this may seem to
+be the best choice, given the body is expected to behave like a
+harmonic oscillator: In order for the tidal waves to be linearly
+summed, the damping must be independent of frequency. However, for
+eccentric orbits, it may not be possible for the phase lag to remain
+constant as the orbital frequency changes in accordance with Kepler's
+2nd Law \citep{ToumaWisdom94,EfroimskyMakarov13}. This has led
+numerous researchers to reject the CPL model, despite its relative
+success at reproducing features in the Solar System
+\citep[\eg][]{MacDonald64,Hut81,GoldreichSoter66,Peale79}, as well as
+the tidal circularization of close-in exoplanets \citep{Jackson08a}.
+
+The second possibility for the lag is that the time interval between
+the perturber's passage and the tidal bulge is constant. In this case,
+as frequencies change, the angle between the bulge and the perturber
+changes. While this model has also been used extensively \citep{Leconte10,Bolmont12,Barnes13,Barnes16}, we will not use it here.
+
+In terms of planetary rotation rate, many of the timescales are set by
+masses, radii, and semi-major axes. For typical main sequence stars,
+and Mars- to Neptune-sized planets in the classic HZ of
+\cite{Kasting93}, the timescales range from millions to trillions of
+years, with the shortest timescales occurring for the largest planets
+orbiting closest to the smallest stars.
+
+The equilibrium tide framework is limited to two bodies and consists
+of 6 independent parameters: the semi-major axis $a$, the eccentricity
+$e$, the two rotation rates $\Omega_j$, and two obliquities $\psi_j$,
+where $j=1,2$ corresponds to one of the bodies. If the gravitational
+gradient across a freely rotating body induces sufficient strain on
+that body's interior to force movement, then frictional heating is
+inevitable. The energy for this heating comes at the expense of the
+orbit and/or rotational frequency, and hence tidal friction decreases
+the semi-major axis and rotation period. The friction will also
+prevent the elongation of the body to align exactly with the
+perturber. With an asymmetry introduced, torques arise and open
+pathways for angular momentum exchange. There are three reservoirs of
+angular momentum: the orbit and the two rotations. Equilibrium tide
+models assume orbit-averaged shapes when calculating torques, which is
+a good approximation for the long-term evolution of the system. The
+redistribution of angular momentum depends on the tidal power, and the
+heights and positions of the tidal bulges relative to the line
+connecting the two centers of mass. The equilibrium tide model can
+therefore be seen as the angular momentum evolution of two bodies on
+an orbit that is losing energy.
+
+The tidal power and bulge properties depend on the composition and
+microphysics of planetary and stellar interiors, which are very
+difficult to measure in our Solar System, let alone in an external
+planetary system. In equilibrium tide theory, the coupling between energy
+dissipation and the tidal bulge is therefore a central feature, and
+are scaled by two parameters, the Love number of degree 2, $k_2$, and
+a parameter that represents the lag between the line connecting the
+two centers of mass and the direction of the tidal bulge. In the CPL
+model, this parameter is the ``tidal quality factor" $Q$.
+
+Although energy dissipation results in semi-major axis decay, angular
+momentum exchange can lead to semi-major axis growth. This can occur
+if enough rotational angular momentum can be transferred to the orbit
+to overcome the decay due to tidal heating. Earth and the Moon are in
+this configuration now.
+
+For planets on eccentric orbits, the rotation rates of the bodies
+compared to their instantaneous angular velocity at pericenter
+determines how $e$ changes. If the rotational bulge leads the
+perturber, there will be a net force in the direction of the orbit at
+pericenter, which acts to accelerate the perturber and increase its
+eccentricity. If the bulge lags the perturber, the force retards the
+orbital velocity and the orbit circularizes. This latter case is
+typical of most close-in planets, and so the orbits circularize
+\citep{Rasio96,Jackson08a}.
+
+\subsubsection{The Constant Phase Lag Model}
+
+In the CPL model of tidal evolution, the angle between the line connecting the
+centers of mass and the tidal bulge is constant. This approach is commonly
+utilized in planetary studies \citep[e.g.][]{GoldreichSoter66,Greenberg09} and the
+evolution is described by the following equations:
+
+\begin{equation}\label{eq:e_cpl}
+  \frac{\mathrm{d}e}{\mathrm{d}t} \ = \ - \frac{ae}{8 G M_* M_p}
+  \sum\limits_{i = 1}^2Z'_i \Bigg(2\varepsilon_{0,i} - \frac{49}{2}\varepsilon_{1,i} + \frac{1}{2}\varepsilon_{2,i} + 3\varepsilon_{5,i}\Bigg)
+\end{equation}
+
+\begin{equation}\label{eq:a_cpl}
+  \frac{\mathrm{d}a}{\mathrm{d}t} \ = \ \frac{a^2}{4 G M_* M_p}
+  \sum\limits_{i = 1}^2 Z'_i  \ {\Bigg(} 4\varepsilon_{0,i} + e^2{\Big [} -20\varepsilon_{0,i} + \frac{1
+47}{2}\varepsilon_{1,i} + \nonumber \frac{1}{2}\varepsilon_{2,i} - 3\varepsilon_{5,i} {\Big ]} -4\sin^2(\psi_i){\Big [}\varepsilon_{0,i}-\varepsilon_{8,i}{\Big ]}{\Bigg )} 
+\end{equation}
+
+\begin{equation}\label{eq:o_cpl}
+  \frac{\mathrm{d}\Omega_i}{\mathrm{d}t} \ = \ - \frac{Z'_i}{8 M_i r_{\mathrm{g},i}
+^2 R_i^2 n} {\Bigg (}4\varepsilon_{0,i} + e^2{\Big [} -20\varepsilon_{0,i} + 49\varepsilon_{1,i} + \varepsilon_{2,i} {\Big ]} + \nonumber \ 2\sin^2(\psi_i) {\Big [} -
+2\varepsilon_{0,i} + \varepsilon_{8,i} + \varepsilon_{9,i} {\Big ]} {\Bigg )} \\  
+\end{equation}
+
+\begin{equation}\label{eq:psi_cpl}
+  \frac{\mathrm{d}\psi_i}{\mathrm{d}t} \ = \ \frac{Z'_i \sin(\psi_i)}{4 M_i r_{\mathrm{g},i}^2 R_i^2 n \Omega_i} {\Bigg (} {\Big [} 1-\xi_i {\Big ]}\varepsilon_{0,i} 
++ {\Big [} 1+\xi_i {\Big ]}{\Big \{}\varepsilon_{8,i}-\varepsilon_{9,i}{\Big \}} {\Bigg)} \ ,
+\end{equation}
+
+\noindent where $e$ is eccentricity, $t$ is time, $a$ is semi-major axis, $G$ is
+Newton's gravitational constant, $M_i$ are the two masses,
+$R_i$ are the two radii, $\Omega_i$ are the rotational
+frequencies, $\psi_i$ are the obliquities, and $n$ is the mean motion. The
+quantity $Z'_i$ is
+
+\begin{equation}\label{eq:Zp}
+Z'_i \equiv 3 G^2 k_{2,i} M_j^2 (M_i+M_j) \frac{R_i^5}{a^9} \ \frac{1}{n Q_i} \ ,
+\end{equation}
+
+\noindent where $k_{2,i}$ are the Love numbers of order 2, and $Q_i$ are the ``tidal quality factors.'' The parameter $\xi_i$ is
+
+\begin{equation}\label{eq:chi}
+\xi_i \equiv \frac{r_{\mathrm{g},i}^2 R_i^2 \Omega_i a n }{ G M_j},
+\end{equation}
+
+\noindent where $i$ and $j$ refer to the two bodies, and $r_g$ is the ``radius of gyration,'' \ie the moment of inertia is $M(r_gR)^2$. The signs of the phase lags are
+
+\begin{equation}\label{eq:epsilon}
+\begin{array}{l}
+\varepsilon_{0,i} = \textrm{sgn}(2 \Omega_i - 2 n)\\
+\varepsilon_{1,i} = \textrm{sgn}(2 \Omega_i - 3 n)\\
+\varepsilon_{2,i} = \textrm{sgn}(2 \Omega_i - n)\\
+\varepsilon_{5,i} = \textrm{sgn}(n)\\
+\varepsilon_{8,i} = \textrm{sgn}(\Omega_i - 2 n)\\
+\varepsilon_{9,i} = \textrm{sgn}(\Omega_i) \ ,\\
+\end{array}
+\end{equation}
+
+\noindent with sgn($x$) the sign of any physical quantity $x$, \ie
+sgn($x)~=~+1, -1$ or 0.
+
+\cite{Goldreich66} suggested that the equilibrium rotation period, \ie the rotation period of a ``tidally locked" world, for both bodies is
+\begin{equation}\label{eq:p_eq_cpl}
+P_{eq} = \frac{P}{1 + 9.5e^2}.
+\end{equation}
+\cite{MurrayDermott99} present a derivation of this expression, which
+assumes the rotation rate may take a continuum of values. However, the
+CPL model described above only permits 4 ``tidal waves'', and hence does
+not allow this continuum, only the 3:2 and 1:1 spin orbit resonances. \cite{Barnes13} suggested
+the CPL model should be implemented differently depending on the problem. When
+modeling the evolution of a system, one should use the discrete spin
+values for self-consistency, \ie as an initial condition, or if forcing the spin to remain tide-locked. However, if calculating the equilibrium
+spin period separately, the continuous value of Eq.~(\ref{eq:p_eq_cpl})
+should be used. we refer to these rotational states as ``discrete'' and
+``continuous'' and will use the former throughout this study.
+
+% Fig 11: Earth-Moon orbital history
+% Fig 12: Tidal heating of Io
+
+\subsection{Climate: \poise}
+% Russell
+
+% Fig 13: Modern Earth
+
+\subsection{The Coupled Model: \vplanet}
+
+% Fig 14: Milankovitch (Russell)
+
+\subsubsection{Evolution of Tight Binaries}
+% Fig 15: Tight binaries (David)
+A classic study of the evolution of tight binary stars by \citet{ZahnBouchet89} finds that binaries with an orbital period of less than about 8 days tidally
+circularize with the majority of the orbital circularization occurring before the stars reach the Zero Age Main Sequence.  Here we reproduce that 
+result by coupling the stellar evolution models of \citet{Baraffe15} incorporated in the \stellar \ module and the equilibrium tide CPL model via \eqtide.  See Section \ref{sec:models} for a more in-depth discussion of the models.
+
+Adopting the initial conditions used in \citet{ZahnBouchet89}, we model an equal mass $1 \msun$ binary with initial orbital eccentricity $e = 0.3$ and an orbital 
+period of 5 days.  The initial stellar rotation rate to mean motion ratio is set at $\Omega/n = 3$ in line with the estimates \citet{ZahnBouchet89} who 
+assumed conservation of angular momentum during the star's accretion phase.  Both stellar radii of gyration are fixed at $r_g = 0.5$.  For our tidal model, 
+we set $Q = 10^5$ and $k_2 = 0.5$, both reasonable values for stars given the wide range of assumed values in the literature \citep{Barnes13}.
+
+The results of the simulation are depicted in Figure \ref{fig:zahn89}.  Qualitatively, our model is in good agreement with the results of \citet{ZahnBouchet89}
+shown in their Figure 1.  After an initial increase in orbital eccentricity, the binary circularizes within the first $10^6$ years before the ZAMS in line with previous 
+findings.  The transition between increasing to decreasing eccentricity occurs when $e = \sqrt{1/19}$ at the $\Omega/n = 1.5$ transition as expected from the 
+CPL model.  The orbital period peaks around $10^4$ years before declining to a minimum and rising again to a 
+larger period than the initial value.  One difference between the two results is that \citet{ZahnBouchet89} find an increase in $\Omega/n$ from unity to 
+over 2 starting near $10^6$ years before the stars tidally lock again after about $10^9$ years while in our model the stars remain tidally locked after $10^5$ 
+years.  This discrepancy can be explained by the different implementations of the two tidal models (see \citet{Zahn89}) and that \citet{ZahnBouchet89} allowed 
+$r_g$ to vary according to a simple interpolated formula while we held our value fixed.
+
+\begin{figure} 
+\figurenum{15} 
+\plotone{zahn89.pdf} 
+\caption{Coupled stellar and tidal evolution of a solar twin binary from the premain sequence onward calculated in \vplanet \ using the \eqtide \ and \stellar \ 
+modules.  Binary eccentricity evolution is given by the red solid line, the orbital period by the purple dashed line, and the ratio of stellar rotation rate to binary
+mean motion ($\Omega/n$) evolution is given by the blue dot dashed curve.
+The binary's evolution qualitatively agrees with that of an identical system presented in Figure 1 of \citet{ZahnBouchet89}.} 
+\label{fig:zahn89}
+\end{figure}
+
+
+% Fig 16: Tidal heating interiors (Peter)
+% Fig 17: Cassini States (Russell)
+
+\section{Application to the TRAPPIST-1 System\label{sec:trappist}}
+% Rory 
+
+\section{Discussion\label{sec:discussion}}
+
+\section{Conclusions\label{sec:conclusions}}
+
+\vspace{1cm}
+This work was supported by the NASA Astrobiology Institute's Virtual
+Planetary Laboratory under Cooperative Agreement number NNA13AA93A.
+
+\section{Appendix: List of Symbols} % List of symbols: Add yours here!
+\begin{multicols}{2}
+%
+\noindent $a$ = semi-major axis\\
+%
+$e$ = eccentricity\\
+$\varepsilon$ = sign of the phase lag (\eqtide)\\
+%
+$G$ = Newton's gravitational constant\\
+%
+$j$ = index\\
+%
+$k_2$ = Love number of degree 2 (\eqtide)\\
+%
+$L$ = luminosity\\
+%
+$M$ = mass\\
+$M_*$ = stellar mass\\
+$M_p$ = planetary mass\\
+$M_j$ = mass of body $j$\\
+%
+$n$ = mean motion (orbital frequency)\\
+%
+$\Omega$ = rotational frequency\\
+$\Omega_j$ = rotational frequency of body $j$\\
+%
+$P$ = period\\
+$P_{eq}$ = equilibrium spin period (\eqtide)\\
+$\psi$ = obliquity\\
+$\psi_j$ = obliquity of body $j$\\
+%
+$Q$ = tidal quality factor (\eqtide)\\
+%
+$R$ = body radius\\
+$r_g$ = radius of gyration\\
+%
+$T_{eff}$ = effective temperature\\
+$t$ = time\\
+%
+$\xi$ = constant in \eqtide~calculations\\ 
+%
+$Z$ = constant in \eqtide~calculations\\
+\end{multicols}
+
+\bibliography{bib}
+
+\end{document}  

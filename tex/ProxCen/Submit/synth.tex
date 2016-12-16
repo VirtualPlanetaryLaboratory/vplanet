@@ -1,0 +1,51 @@
+\documentclass[preprint,12pt]{aastex}
+\usepackage{xspace}
+\usepackage{multicol}
+\usepackage{color}
+\usepackage{rotating}
+\usepackage{subfigure}
+\def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}} % http://tex.stackexchange.com/questions/152818/top-aligned-subfigure-with-bottom-aligned-caption
+\usepackage{multicol}
+\usepackage{amsmath}
+\begin{document}
+
+\begin{sidewaysfigure}[h]
+\centering
+\subfigure{\label{fig:atmesc:synth:a}\imagebox{4in}{\includegraphics[width=5.5in]{synth_a.pdf}}}
+\subfigure{\label{fig:atmesc:synth:c}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
+\caption{Multiple evolutionary pathways for the water on Proxima
+  b. These plots show the final water and final atmospheric O$_2$ content of the
+  planet for a suite of different initial conditions, assuming inefficient
+  surface sinks for O$_2$. Different marker
+  styles indicate different values of the planet mass, the initial
+  water content, and the initial hydrogen envelope mass fraction $f_H$
+  (the final value of $f_H$ is zero for all planets shown here). 
+  Each panel is divided into
+  quadrants, corresponding to planets that at the end of the
+  simulation have water but no O$_2$ (top left, blue), water and O$_2$ (top
+  right, yellow), neither water nor O$_2$ (bottom left, gray), and O$_2$ but no
+  water (bottom right, red). Habitable planets are those in region shaded
+  blue. Planets in the grey region are desiccated and therefore
+  uninhabitable. Planets in the red region are likewise
+  uninhabitable, but may have atmospheric O$_2$,
+  which could be incorrectly attributed to biology. Finally, planets
+  in the yellow region are habitable, since they have abundant surface
+  water, but may also have substantial atmospheric O$_2$, which could
+  be an impediment to the origin of life. These planets are also
+  particularly problematic in the context of atmospheric
+  characterization, as the presence of water and O$_2$ could fool
+  observers into believing they are inhabited.}
+\label{fig:atmesc:synthA}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[h]
+\centering
+\subfigure{\label{fig:atmesc:synth:b}\imagebox{4in}{\includegraphics[width=5.5in]{synth_b.pdf}}}
+\subfigure{\label{fig:atmesc:synth:c}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
+\caption{Same as Fig.~\ref{fig:atmesc:synthB}, but assuming Proxima b
+  has efficient O$_2$ sinks, preventing the buildup of significant oxygen in the
+  atmosphere. The $x$ axis now shows the total amount of oxygen absorbed at the surface.}
+\label{fig:atmesc:synthB}
+\end{sidewaysfigure}
+
+\end{document}

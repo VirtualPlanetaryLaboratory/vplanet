@@ -552,6 +552,7 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
 
     // Compute binary's eccentricity from Kecc and Hecc (since they are primary variables)
     body[iBody].dEcc = sqrt(pow(body[iBody].dKecc,2) + pow(body[iBody].dHecc,2));
+    body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
   }
   else {
     return;

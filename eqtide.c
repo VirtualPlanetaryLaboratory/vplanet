@@ -925,19 +925,21 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     
-    if (body[iBody].iTidePerts > 0) {
-      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-        bFound[iPert] = 0;
-        for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
-          if (iBodyPert != iBody) {
-            if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
-              /* This parameter contains the body # of the "iPert-th" 
-                 tidal perturber */
-              body[iBody].iaTidePerts[iPert]=iBodyPert;
-              bFound[iPert]=1;
-            }
-          }
-        }
+    if (body[iBody].bEqtide) {
+      if (body[iBody].iTidePerts > 0) {
+	for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+	  bFound[iPert] = 0;
+	  for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
+	    if (iBodyPert != iBody) {
+	      if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+		/* This parameter contains the body # of the "iPert-th" 
+		   tidal perturber */
+		body[iBody].iaTidePerts[iPert]=iBodyPert;
+		bFound[iPert]=1;
+	      }
+	    }
+	  }
+	}
       }
       
       /* Were all tidal perturbers identified? */
@@ -978,17 +980,19 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
      Exomoon ready! */
   for (iBody=0;iBody<iNumBodies;iBody++) {
     ok=0;
-    for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-      for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
-        if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
-          /* Match */
-          ok=1;
-      }
-      if (!ok) {
-        fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
-        fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
-        fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
-        exit(EXIT_INPUT);
+    if (body[iBody].bEqtide) {
+      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+	for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
+	  if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
+	    /* Match */
+	    ok=1;
+	}
+	if (!ok) {
+	  fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
+	  fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
+	  fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
+	  exit(EXIT_INPUT);
+	}
       }
     }
   }

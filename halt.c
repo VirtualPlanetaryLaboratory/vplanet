@@ -11,11 +11,6 @@
 #include <math.h>
 #include "vplanet.h"
 
-#define max(a,b) \
-     ({ __typeof__ (a) _a = (a); \
-             __typeof__ (b) _b = (b); \
-           _a > _b ? _a : _b; })
-
 int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
   int iModule,iNumHalts=0;
 

@@ -178,7 +178,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
   else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
   {
       // Merge if sum of radii greater than binary perihelion distance
-      if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc*body[1].dEcc)*body[1].dSemi) && halt->bMerge)
+      if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge)
       {
           if(io->iVerbose > VERBPROG)
           {

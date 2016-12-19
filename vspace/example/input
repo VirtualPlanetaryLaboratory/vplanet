@@ -1,5 +1,5 @@
 srcfolder  ../../examples/icebelt
-destfolder squee
+destfolder test
 trialname  hyak_test
 
 file   sun.in

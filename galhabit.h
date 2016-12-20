@@ -74,9 +74,11 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_PERIQ               2220
 #define OUT_NENCOUNTERS         2221
 #define OUT_FVELDISP            2222
+#define OUT_DECCDTGALHTIDAL     2250
 
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDEccDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputGalHabit(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */

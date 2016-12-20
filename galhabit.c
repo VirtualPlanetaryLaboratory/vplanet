@@ -739,14 +739,13 @@ void VerifyTidesBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[]
         fprintf(stderr,"ERROR: %s must be called for both body 1 and body 2 in GalHabit\n",options[OPT_HOSTBINARY].cName);
       exit(EXIT_INPUT);
     }
-    
-    if (body[iBody].bGalacTides) {
-      body[iBody].dMassInterior = 0;
-      for (i=0;i<iBody;i++) {
-        body[iBody].dMassInterior += body[i].dMass;
-      }
+  }
+  if (body[iBody].bGalacTides) {
+    body[iBody].dMassInterior = 0;
+    for (i=0;i<iBody;i++) {
+      body[iBody].dMassInterior += body[i].dMass;
     }
-  }  
+  }
 }
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1085,6 +1084,28 @@ void WriteFVelDisp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
  
   *dTmp = system->dScalingFVelDisp;
 }
+
+void WriteDEccDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dex, dey, dez;
+  
+  if (body[iBody].bGalacTides) {
+    dex = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dey = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
+    dez = *(update[iBody].padDEccZDtGalHabit[0]); 
+  
+    *dTmp = (dex*body[iBody].dEccX+dey*body[iBody].dEccY+dez*body[iBody].dEccZ)/body[iBody].dEcc;
+  } else {
+    *dTmp = 0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  } 
+}
   
 void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1112,6 +1133,14 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FVELDISP].iNum = 1;
   output[OUT_FVELDISP].iModuleBit = GALHABIT;
   fnWrite[OUT_FVELDISP] = &WriteFVelDisp;
+  
+  sprintf(output[OUT_DECCDTGALHTIDAL].cName,"DEccDtGalHTidal");
+  sprintf(output[OUT_DECCDTGALHTIDAL].cDescr,"Body's tidal decc/dt in GalHabit");
+  sprintf(output[OUT_DECCDTGALHTIDAL].cNeg,"1/year");
+  output[OUT_DECCDTGALHTIDAL].bNeg = 1;
+  output[OUT_DECCDTGALHTIDAL].dNeg = YEARSEC;
+  output[OUT_DECCDTGALHTIDAL].iModuleBit = GALHABIT;
+  fnWrite[OUT_DECCDTGALHTIDAL] = &WriteDEccDtGalHTidal;
 }
 
 /************ GALHABIT Logging Functions **************/

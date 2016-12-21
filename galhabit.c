@@ -1106,6 +1106,39 @@ void WriteDEccDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     fsUnitsRate(units->iTime,cUnit);
   } 
 }
+
+void WriteDIncDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dhx, dhy, dhz, qx, qy, qz;
+  
+  if (body[iBody].bGalacTides) {
+    dhx = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dhy = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
+    dhz = *(update[iBody].padDEccZDtGalHabit[0]); 
+    
+    qx = (body[iBody].dAngMY*body[iBody].dEccZ - body[iBody].dAngMZ*body[iBody].dEccY) / \
+          body[iBody].dAngM;
+    qy = (body[iBody].dAngMZ*body[iBody].dEccX - body[iBody].dAngMX*body[iBody].dEccZ) / \
+          body[iBody].dAngM;
+    qz = (body[iBody].dAngMX*body[iBody].dEccY - body[iBody].dAngMY*body[iBody].dEccX) / \
+          body[iBody].dAngM;
+
+    *dTmp = -( (sin(body[iBody].dArgP)*body[iBody].dEccX+cos(body[iBody].dArgP)*qx)*dhx \
+              +(sin(body[iBody].dArgP)*body[iBody].dEccY+cos(body[iBody].dArgP)*qy)*dhy \
+              +(sin(body[iBody].dArgP)*body[iBody].dEccZ+cos(body[iBody].dArgP)*qz)*dhz ) \
+              / (body[iBody].dEcc*body[iBody].dAngM);
+  } else {
+    *dTmp = 0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngRate(units,cUnit);
+  } 
+}
   
 void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1141,6 +1174,14 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DECCDTGALHTIDAL].dNeg = YEARSEC;
   output[OUT_DECCDTGALHTIDAL].iModuleBit = GALHABIT;
   fnWrite[OUT_DECCDTGALHTIDAL] = &WriteDEccDtGalHTidal;
+  
+  sprintf(output[OUT_DINCDTGALHTIDAL].cName,"DIncDtGalHTidal");
+  sprintf(output[OUT_DINCDTGALHTIDAL].cDescr,"Body's tidal decc/dt in GalHabit");
+  sprintf(output[OUT_DINCDTGALHTIDAL].cNeg,"1/year");
+  output[OUT_DINCDTGALHTIDAL].bNeg = 1;
+  output[OUT_DINCDTGALHTIDAL].dNeg = YEARSEC/DEGRAD;
+  output[OUT_DINCDTGALHTIDAL].iModuleBit = GALHABIT;
+  fnWrite[OUT_DINCDTGALHTIDAL] = &WriteDIncDtGalHTidal;
 }
 
 /************ GALHABIT Logging Functions **************/
@@ -2323,9 +2364,8 @@ double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
   return -5.0*PI*KGAUSS*KGAUSS*dRho*\
-          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.) * \
+          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)*pow(sin(body[iaBody[0]].dInc),2)* \
           sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
-  return 0.;
 }
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {

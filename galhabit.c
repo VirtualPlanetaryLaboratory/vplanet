@@ -739,14 +739,13 @@ void VerifyTidesBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[]
         fprintf(stderr,"ERROR: %s must be called for both body 1 and body 2 in GalHabit\n",options[OPT_HOSTBINARY].cName);
       exit(EXIT_INPUT);
     }
-    
-    if (body[iBody].bGalacTides) {
-      body[iBody].dMassInterior = 0;
-      for (i=0;i<iBody;i++) {
-        body[iBody].dMassInterior += body[i].dMass;
-      }
+  }
+  if (body[iBody].bGalacTides) {
+    body[iBody].dMassInterior = 0;
+    for (i=0;i<iBody;i++) {
+      body[iBody].dMassInterior += body[i].dMass;
     }
-  }  
+  }
 }
 
 void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -861,19 +860,19 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     iEqn = 0;
     if (body[iBody].bGalacTides) {
       InitializeEccXGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[0]] = &fdGalHabitDEccXDtTidal;
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = &fdGalHabitDEccXDtTidal;
     
       InitializeEccYGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[0]] = &fdGalHabitDEccYDtTidal;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = &fdGalHabitDEccYDtTidal;
     
       InitializeEccZGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[0]] = &fdGalHabitDEccZDtTidal;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = &fdGalHabitDEccZDtTidal;
     
       InitializeAngMXGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[0]] = &fdGalHabitDAngMXDtTidal;
+      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fdGalHabitDAngMXDtTidal;
 
       InitializeAngMYGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[0]] = &fdGalHabitDAngMYDtTidal;
+      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fdGalHabitDAngMYDtTidal;
       
       iEqn++;
     }
@@ -881,22 +880,22 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     if (body[iBody].bHostBinary) {
       Rot2Bin(body,iBody);
       InitializeEccXGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[1]] = &fdGalHabitDEccXDtBV;
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = &fdGalHabitDEccXDtBV;
       
       InitializeEccYGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[1]] = &fdGalHabitDEccYDtBV;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = &fdGalHabitDEccYDtBV;
       
       InitializeEccZGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[1]] = &fdGalHabitDEccZDtBV;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = &fdGalHabitDEccZDtBV;
       
       InitializeAngMXGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[1]] = &fdGalHabitDAngMXDtBV;
+      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fdGalHabitDAngMXDtBV;
       
       InitializeAngMYGalHabit(body,update,iBody,iEqn);
-      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[1]] = &fdGalHabitDAngMYDtBV;
+      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fdGalHabitDAngMYDtBV;
       
       InitializeAngMZGalHabit(body,update,iBody);
-      fnUpdate[iBody][update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[0]] = &fdGalHabitDAngMZDtBV;
+      fnUpdate[iBody][update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[iEqn]] = &fdGalHabitDAngMZDtBV;
     }
     
     control->fnForceBehavior[iBody][iModule]=&ForceBehaviorGalHabit;
@@ -1085,6 +1084,61 @@ void WriteFVelDisp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
  
   *dTmp = system->dScalingFVelDisp;
 }
+
+void WriteDEccDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dex, dey, dez;
+  
+  if (body[iBody].bGalacTides) {
+    dex = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dey = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
+    dez = *(update[iBody].padDEccZDtGalHabit[0]); 
+  
+    *dTmp = (dex*body[iBody].dEccX+dey*body[iBody].dEccY+dez*body[iBody].dEccZ)/body[iBody].dEcc;
+  } else {
+    *dTmp = 0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  } 
+}
+
+void WriteDIncDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dhx, dhy, dhz, qx, qy, qz;
+  
+  if (body[iBody].bGalacTides) {
+    dhx = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dhy = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
+    dhz = *(update[iBody].padDEccZDtGalHabit[0]); 
+    
+    qx = (body[iBody].dAngMY*body[iBody].dEccZ - body[iBody].dAngMZ*body[iBody].dEccY) / \
+          body[iBody].dAngM;
+    qy = (body[iBody].dAngMZ*body[iBody].dEccX - body[iBody].dAngMX*body[iBody].dEccZ) / \
+          body[iBody].dAngM;
+    qz = (body[iBody].dAngMX*body[iBody].dEccY - body[iBody].dAngMY*body[iBody].dEccX) / \
+          body[iBody].dAngM;
+
+    *dTmp = -( (sin(body[iBody].dArgP)*body[iBody].dEccX+cos(body[iBody].dArgP)*qx)*dhx \
+              +(sin(body[iBody].dArgP)*body[iBody].dEccY+cos(body[iBody].dArgP)*qy)*dhy \
+              +(sin(body[iBody].dArgP)*body[iBody].dEccZ+cos(body[iBody].dArgP)*qz)*dhz ) \
+              / (body[iBody].dEcc*body[iBody].dAngM);
+  } else {
+    *dTmp = 0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngRate(units,cUnit);
+  } 
+}
   
 void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1112,6 +1166,22 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FVELDISP].iNum = 1;
   output[OUT_FVELDISP].iModuleBit = GALHABIT;
   fnWrite[OUT_FVELDISP] = &WriteFVelDisp;
+  
+  sprintf(output[OUT_DECCDTGALHTIDAL].cName,"DEccDtGalHTidal");
+  sprintf(output[OUT_DECCDTGALHTIDAL].cDescr,"Body's tidal decc/dt in GalHabit");
+  sprintf(output[OUT_DECCDTGALHTIDAL].cNeg,"1/year");
+  output[OUT_DECCDTGALHTIDAL].bNeg = 1;
+  output[OUT_DECCDTGALHTIDAL].dNeg = YEARSEC;
+  output[OUT_DECCDTGALHTIDAL].iModuleBit = GALHABIT;
+  fnWrite[OUT_DECCDTGALHTIDAL] = &WriteDEccDtGalHTidal;
+  
+  sprintf(output[OUT_DINCDTGALHTIDAL].cName,"DIncDtGalHTidal");
+  sprintf(output[OUT_DINCDTGALHTIDAL].cDescr,"Body's tidal decc/dt in GalHabit");
+  sprintf(output[OUT_DINCDTGALHTIDAL].cNeg,"1/year");
+  output[OUT_DINCDTGALHTIDAL].bNeg = 1;
+  output[OUT_DINCDTGALHTIDAL].dNeg = YEARSEC/DEGRAD;
+  output[OUT_DINCDTGALHTIDAL].iModuleBit = GALHABIT;
+  fnWrite[OUT_DINCDTGALHTIDAL] = &WriteDIncDtGalHTidal;
 }
 
 /************ GALHABIT Logging Functions **************/
@@ -2294,9 +2364,8 @@ double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
   return -5.0*PI*KGAUSS*KGAUSS*dRho*\
-          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.) * \
+          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)*pow(sin(body[iaBody[0]].dInc),2)* \
           sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
-  return 0.;
 }
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {

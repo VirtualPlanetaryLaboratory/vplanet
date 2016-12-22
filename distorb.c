@@ -1169,7 +1169,9 @@ void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 }  
 
@@ -1189,7 +1191,9 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 } 
 
@@ -1209,7 +1213,9 @@ void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 } 
 
@@ -2778,6 +2784,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     CalcHK(body, iBody);
     CalcPQ(body, iBody);
   }
+
 }
 
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {

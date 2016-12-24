@@ -34,7 +34,8 @@ void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBo
     dest[iBody].dEccZTmp = src[iBody].dEccZTmp;
     dest[iBody].dAngMXTmp = src[iBody].dAngMXTmp;
     dest[iBody].dAngMYTmp = src[iBody].dAngMYTmp;
-    dest[iBody].dAngMZTmp = src[iBody].dAngMZTmp;    
+    dest[iBody].dAngMZTmp = src[iBody].dAngMZTmp;   
+    dest[iBody].dMassInterior = src[iBody].dMassInterior; 
 }
 
 /**************** GALHABIT options ********************/
@@ -1111,9 +1112,9 @@ void WriteDIncDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
   double dhx, dhy, dhz, qx, qy, qz;
   
   if (body[iBody].bGalacTides) {
-    dhx = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
-    dhy = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
-    dhz = *(update[iBody].padDEccZDtGalHabit[0]); 
+    dhx = *(update[iBody].padDAngMXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dhy = *(update[iBody].padDAngMYDtGalHabit[0]); //come first if at all
+    dhz = 0.0; 
     
     qx = (body[iBody].dAngMY*body[iBody].dEccZ - body[iBody].dAngMZ*body[iBody].dEccY) / \
           body[iBody].dAngM;
@@ -1144,9 +1145,9 @@ void WriteDLongADtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   double dhx, dhy, dhz, qx, qy, qz;
   
   if (body[iBody].bGalacTides) {
-    dhx = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
-    dhy = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
-    dhz = *(update[iBody].padDEccZDtGalHabit[0]); 
+    dhx = *(update[iBody].padDAngMXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dhy = *(update[iBody].padDAngMYDtGalHabit[0]); //come first if at all
+    dhz = 0.0; 
     
     qx = (body[iBody].dAngMY*body[iBody].dEccZ - body[iBody].dAngMZ*body[iBody].dEccY) / \
           body[iBody].dAngM;
@@ -1177,9 +1178,9 @@ void WriteDArgPDtGalHTidal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   double dex, dey, dez, dhx, dhy, dhz, qx, qy, qz, dLAdt, dedt;
   
   if (body[iBody].bGalacTides) {
-    dhx = *(update[iBody].padDEccXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
-    dhy = *(update[iBody].padDEccYDtGalHabit[0]); //come first if at all
-    dhz = *(update[iBody].padDEccZDtGalHabit[0]); 
+    dhx = *(update[iBody].padDAngMXDtGalHabit[0]); //safe to assume iEqn = 0 here, since tides 
+    dhy = *(update[iBody].padDAngMYDtGalHabit[0]); //come first if at all
+    dhz = 0.0; 
     
     qx = (body[iBody].dAngMY*body[iBody].dEccZ - body[iBody].dAngMZ*body[iBody].dEccY) / \
           body[iBody].dAngM;

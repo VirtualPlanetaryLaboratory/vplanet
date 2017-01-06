@@ -1157,32 +1157,18 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // just remove this equation from the matrix if the
   // escape conditions are not met.
 
-  // Compute effective temperature for greenhouse limit
-  double dTeff;
-  if(body[iBody].bBinary)
-  {
-      double denom = body[0].dLuminosity + body[1].dLuminosity;
-      dTeff = body[0].dTemperature*body[0].dLuminosity/denom + body[1].dTemperature*body[1].dLuminosity/denom;
-  }
-  else
-  {
-      dTeff = body[0].dTemperature;
-  }
-
   // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0)
     return 0;
 
   /* 2. Check if planet is beyond RG limit; otherwise, assume the
-   * cold trap prevents water loss.  If using binary, the effective temperature
-   * becomes a simple luminosity-weighted average XXX Is this legit? dflemin3 XXX
-   * If not binary, use typical rodluger implementation
-   * similar spectral types, or if body zero dominates the flux.  Note that environment
-   * though dLum and dEcc are passed to fdHZRG14, they don't do anything so both
-   * single star and binary works.  See dTeff calculation above.
-  */
+   * cold trap prevents water loss.  This formalism assumes that you have
+   * similar spectral types, or body zero dominates the flux.  Note that
+   * dLum, dEcc, and dMass are passed to fdHZRG14, but they aren't used.  only
+   * care about the insolation, and spectral type aka temperature
+   */
 
-  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, dTeff, body[iBody].dEcc, body[iBody].dMass))
+  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
     return 0;
 
   // 3. Is there still water to be lost?

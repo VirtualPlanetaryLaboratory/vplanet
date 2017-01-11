@@ -281,7 +281,7 @@ def halt_check(direct,TOL=1.0e-6):
     for f in os.listdir(direct):
         if f.endswith(".log"):
             logfile = os.path.join(direct,f)
-            logcount = logcount +1
+            logcount = logcount + 1
 
     # Ensure there aren't two+ or 0 logfiles for whatever reason
     assert logcount == 1, "ERROR: There can only be one (log)! Number of logs: %d" % logcount
@@ -305,7 +305,7 @@ def halt_check(direct,TOL=1.0e-6):
             # Parse for actual sim ending time
             # Line looks like: (Age) System Age [sec] 3.155760e+09
             # Note: code finds this twice with 2nd being final system age
-            if line.startswith("(Age) System Age"):
+            if line.startswith("(Time) Simulation Time"):
                 lasttime = float(line.split()[-1])
                 continue
 
@@ -637,7 +637,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
             number_to_sim.append(direct)
 
         # Output progress to user?
-        if cadence is not None and counter % int(cadence) == 0:
+        if cadence is not None and counter % int(cadence) == 0 and cadence > 0:
             print("Simulations processed so far: %d" % counter)
             sys.stdout.flush()
 

@@ -204,12 +204,14 @@ def naive_nn_layer(X, k = 5000, v = None, verbose = False):
 # end function
 
 
-def scale_data(X_train, X_test, verbose=False):
+def scale_data(X_train, X_test, verbose=False, outliers=False):
     """
     Transform the data to center it by removing the mean value of each feature,
-    then scale it by dividing non-constant features by their standard deviation
-    using sklearn's preprocessing.scale.  Here, X_test is scaled by the X_train
-    transformation for consistency.
+    then scale it by dividing non-constant features by their standard deviation,
+    like a z-score transformation, using sklearn's preprocessing.scale.
+    Here, X_test is scaled by the X_train transformation for consistency.
+    If your data has outliers, instead this uses a robust scaling using the
+    distribution's median and quartiles to avoid any messy effects.
 
     Parameters
     ----------
@@ -220,6 +222,9 @@ def scale_data(X_train, X_test, verbose=False):
     verbose : bool (optional)
         whether or not to return sklearn standard scaler object for use with
         future data.  Defaults to False.
+    outliers : bool (optional)
+        whether or not to account for the presence of outliers in the data.
+        Defaults to False.  By default, uses the 25th-75th interquartile range.
 
     Returns
     -------
@@ -230,7 +235,12 @@ def scale_data(X_train, X_test, verbose=False):
     """
 
     # Get scaling from training set, apply to both sets
-    scaler = preprocessing.StandardScaler().fit(X_train)
+    # There be outliers! use median, quartiles
+    if outliers:
+        scaler = preprocessing.RobustScaler().fit(X_train)
+    # Cleanish data, use median, standard deviation
+    else:
+        scaler = preprocessing.StandardScaler().fit(X_train)
 
     if verbose:
         return scaler.transform(X_train), scaler.transform(X_test), scaler

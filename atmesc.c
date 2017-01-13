@@ -540,10 +540,19 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // Ktide (due to body zero only). WARNING: not suited for binary...
   double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
-  if (xi > 1)
-    body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+
+  // For circumbinary planets, assume no Ktide enhancement (ehhhhh sketchy)
+  if(body[iBody].bBinary && body[iBody].iBodyType == 0)
+  {
+      body[iBody].dKTide = 1.0;
+  }
   else
-    body[iBody].dKTide = 0;
+  {
+      if (xi > 1)
+        body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+      else
+        body[iBody].dKTide = 0;
+  }
 
   // The XUV flux
   double fxuv = fdInsolation(body, iBody, 1);

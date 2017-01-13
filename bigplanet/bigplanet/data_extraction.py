@@ -110,6 +110,47 @@ def parse_log(logfile, body, param):
 # end function
 
 
+def parse_infile(infile, param):
+    """"
+    Parse input file for one of a body's initial conditions and return it.  This
+    is useful for when a parameter is not outputted but one needs it later on
+    for analysis.
+
+    Parameters
+    ----------
+    infile : str
+        path to the input file.  Something like body.in
+    param : str
+        body's parameter
+
+    Returns
+    -------
+    param : float
+        initial condition of interest
+    """
+
+    # Open log file and get lines
+    with open(infile) as handle:
+        lines = handle.readlines()
+
+    # Loop over line, look for parameter
+    for ii in range(0,len(lines)):
+
+        # Remove whitespace
+        line = lines[ii].strip(' \t\n\r')
+
+        # Found it? Done!
+        # Correct line, if it exists, will look something like this:
+        # dParameter some_number # comments
+        if line.startswith(param):
+            words = line.split()
+            return float(words[1])
+
+    # Didn't find it, so why did you tell me to look for it?
+    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+# end function
+
+
 def get_cols(datadir=".",infiles=None):
     """
     Given a directory where simulation data are stored and the name of the input files,
@@ -303,7 +344,7 @@ def halt_check(direct,TOL=1.0e-6):
                 continue
 
             # Parse for actual sim ending time
-            # Line looks like: (Age) System Age [sec] 3.155760e+09
+            # Line looks like: (Time) Simulation Time [sec] 3.155760e+09
             # Note: code finds this twice with 2nd being final system age
             if line.startswith("(Time) Simulation Time"):
                 lasttime = float(line.split()[-1])
@@ -405,7 +446,8 @@ class Dataset(object):
 
 
 def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
-                       compression="gzip",remove_halts=True, var_from_log=None):
+                       compression="gzip",remove_halts=True, var_from_log=None,
+                       var_from_infile=None):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
@@ -432,6 +474,9 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
     var_from_log : dict
         Dict of bodies, parameters to extract from logfile.  Defaults to None.
         Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files.  Defaults
+        to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
 
     Returns
     -------
@@ -454,7 +499,7 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
         return 0
 
     # Find logfile for parsing later?
-    if var_from_log:
+    if var_from_log is not None:
         logfile = find_logfile(datadir)
 
     # No halt, make the group!
@@ -504,6 +549,22 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
                                 var = np.ones(tmp_len) * var
                                 sub.create_dataset(param, data = pd.np.array(var), dtype="f",
                                                   compression = compression)
+
+                    # Pull variables from input file?
+                    if var_from_infile is not None:
+                        # Loop over body's, infile's, params if any are given
+                        if infile in var_from_infile.keys():
+                            for param in var_from_infile[infile]:
+                                # Give path for input file
+                                infile_path = os.path.join(datadir,(infile+".in"))
+                                var = parse_infile(infile_path, param)
+
+                                # Make var an array.  Wasteful, but whatever
+                                var = np.ones(tmp_len) * var
+                                sub.create_dataset(param, data = pd.np.array(var), dtype="f",
+                                                  compression = compression)
+
+
                 except RuntimeError:
                     raise RuntimeError("Unknown pd.read_table error.")
 
@@ -514,7 +575,7 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
 def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
                       compression="gzip", remove_halts=False, cadence=None,
-                     skip_body=None, var_from_log=None):
+                     skip_body=None, var_from_log=None, var_from_infile=None):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -546,6 +607,9 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     var_from_log : dict
         Dict of bodies, parameters to extract from logfile.  Defaults to None.
         Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files.  Defaults
+        to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
 
     Returns
     -------
@@ -616,7 +680,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     print("Data Columns:",data_cols)
     sys.stdout.flush()
 
-    # Loop over directories (and hence simulation) and get the data
+    # Loop over directories (and hence simulations) and get the data
     # User counter for name of group/means to identify simulation
     counter = 0
 
@@ -628,7 +692,8 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         res = data_from_dir_hdf5(f_set,str(counter),os.path.join(src,direct),
                                  data_cols,infiles,compression=compression,
                                  remove_halts=remove_halts,
-                                 var_from_log=var_from_log)
+                                 var_from_log=var_from_log,
+                                 var_from_infile=var_from_infile)
 
         # Increment counter (keeps track of valid parsed simulation dirs)
         counter += res
@@ -971,7 +1036,8 @@ def reduce_dimensions(x, y, z, shape, dims=(-1,), reduce_func = np.nanmean):
     # 1) Reshape x, y, z e.g. 20 -> (5, 4)
     # 2) Apply some function over axes to reduce dimension to 2 for plotting
     # 3) Apply squeeze to remove extra dimension, e.g. (5, 4, 1) -> (5, 4)
-    x = np.squeeze(np.apply_over_axes(np.mean,x.reshape(shape),axes=dims)) # Call mean so dimensions compress properly
+    # Call mean so dimensions compress properly for x, y
+    x = np.squeeze(np.apply_over_axes(np.mean,x.reshape(shape),axes=dims))
     y = np.squeeze(np.apply_over_axes(np.mean,y.reshape(shape),axes=dims))
     z = np.squeeze(np.apply_over_axes(reduce_func,z.reshape(shape),axes=dims))
 

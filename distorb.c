@@ -601,6 +601,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   body[iBody].dLOrb = malloc(3*sizeof(double));
   body[iBody].dLOrbTmp = malloc(3*sizeof(double));
   if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
+  body[iBody].dMeanA = 0.0;
   
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -897,9 +898,6 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistOrb;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyDistOrb;
-
-  if (iBody==7)
-    exit(1);
 }
 
 
@@ -2747,8 +2745,7 @@ void cart2osc(BODY *body, int iNumBodies) {
 
 void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
-  double *AngMom;
-  AngMom = malloc(3*sizeof(double));
+  double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
   
   /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
      This angle is invariant under rotations. */
@@ -2781,7 +2778,6 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     CalcHK(body, iBody);
     CalcPQ(body, iBody);
   }
-  free(AngMom);
 }
 
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {

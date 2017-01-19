@@ -156,11 +156,15 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
-  //for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
-  for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
-    /* DEBUG XXX
+  for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  //for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+    /* MEM: Something is wrong here, but it is intermittent. Sometimes a call 
+       here produces a memory error with valgrind. On 12/14/16 a run without the
+       next print statements produced an error, but with them in, the error
+       disappeared. After commenting out again, the problem was still gone. */
+    /* DEBUG
     printf("%s\n",cLine);
-    printf("%d %d\n",(int)strlen(cLine),GetPos(cLine));
+    printf("%d %d %d\n",(int)strlen(cLine),GetPos(cLine),iPos);
     fflush(stdout);
     */
     iPosStart=0;
@@ -1508,7 +1512,7 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 	 known by ReadOptionsGeneral. Therefore, we can assign it based on 
 	 the "bModule" members of the body struct. */
       // XXX Russell -- Include galhabit?
-      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb)
+      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb || body[iFile-1].bBinary)
 	control->Halt[iFile-1].bMerge = 1;
       else
 	control->Halt[iFile-1].bMerge = 0;
@@ -2158,15 +2162,15 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-	// Is option part of selected modules?
-	if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
-	  // Parameter is part of selected modules
-	} else {
-	  fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
-	  PrintModuleList(stderr,output[iOut].iModuleBit);
-	  fprintf(stderr,"\n");
-	  ok=0;
-	}
+        // Is option part of selected modules?
+        if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
+          // Parameter is part of selected modules
+        } else {
+          fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
+          PrintModuleList(stderr,output[iOut].iModuleBit);
+          fprintf(stderr,"\n");
+          ok=0;
+        }
       }
     }
 
@@ -2182,6 +2186,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
   } else {
     files->Outfile[iFile-1].iNumCols=0;
   }
+  
   free(lTmp);
 }
 
@@ -2300,11 +2305,12 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
  
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+//     files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
-  }// else
-  //files->Outfile[iFile-1].iNumGrid = 0;
+  } 
     
+  files->Outfile[iFile-1].iNumGrid = iNumGrid;
+  
   free(lTmp);
 }
 
@@ -2383,9 +2389,10 @@ void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 
     body[iFile-1].dPrecA = dTmp; 
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else {
     if (iFile > 0)
       body[iFile-1].dPrecA = options->dDefault;
+  }
 }  
 
 void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -3127,7 +3134,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_PRECA].cName,"dPrecA");
-  sprintf(options[OPT_PRECA].cDescr,"Planet's precession parameter");
+  sprintf(options[OPT_PRECA].cDescr,"Planet's precession angle");
   sprintf(options[OPT_PRECA].cDefault,"0");
   options[OPT_PRECA].dDefault = 0.0;
   options[OPT_PRECA].iType = 2;  

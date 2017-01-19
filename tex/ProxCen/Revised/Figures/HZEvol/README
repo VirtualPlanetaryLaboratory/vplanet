@@ -1,0 +1,10 @@
+Produce the HZ evolution plot in Barnes et al. (2017). Run vplanet:
+
+> vplanet vpl.in
+
+and then run the python script
+
+> python hzevol.py
+
+to produce the figure hzevol.pdf.
+

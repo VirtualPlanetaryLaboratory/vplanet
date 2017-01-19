@@ -1470,7 +1470,8 @@ void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 */
 
 void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dRIC;
+  *dTmp = body[iBody].dRIC;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

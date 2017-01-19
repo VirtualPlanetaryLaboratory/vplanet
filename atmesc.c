@@ -102,7 +102,7 @@ void ReadInstantO2Sink(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else 
     if (iFile > 0)
-      body[iFile-1].bInstantO2Sink = options->dDefault;
+      AssignDefaultInt(options,&body[iFile-1].bInstantO2Sink,files->iNumInputs);
 }
 
 void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {

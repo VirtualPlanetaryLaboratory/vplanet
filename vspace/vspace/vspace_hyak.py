@@ -117,13 +117,13 @@ def makeCommandList(simdir=".", outfile="vplArgs.txt",infile="input",
         ...but it produces a file in the destination dir as described above
     """
     count = 0 # Keeps track of how many run sim commands have been written
-    d = simdir
+    destdir = simdir
 
-    destdir, trialname, infiles, src = parseInput(infile)
-
+    #destdir, trialname, infiles, src = parseInput(infile)
+    #import pdb; pdb.set_trace()
     # Get list of all directories in simdir via stack overflow black magic
     # This also ignores all non-directories and ., .. which is convienent
-    dirs = filter(os.path.isdir, [os.path.join(d,f) for f in os.listdir(d)])
+    dirs = filter(os.path.isdir, [os.path.join(destdir,f) for f in os.listdir(destdir)])
 
     if para == "parallel" or para == "parallel_sql":
         # Open file that contains all scripts to be ran by parallel

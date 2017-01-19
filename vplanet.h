@@ -52,7 +52,7 @@
 #define PI            3.1415926535
 
 #define KGAUSS        0.01720209895
-#define S0           0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
+#define S0            0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
 
 #define EPS           1e-10       // Precision for difference of doubles to be effectively 0
 
@@ -117,8 +117,8 @@
 
 #define MAXBODIES     10
 #define OPTLEN        24    /* Maximum length of an option */
-#define OPTDESCR      128    /* Number of characters in option description */
-#define OUTLEN        48     /* Maximum number of characters in an output column header */
+#define OPTDESCR      128   /* Number of characters in option description */
+#define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define LINE          256   /* Maximum number of characters in a line */
 #define NAMELEN       100
 
@@ -183,11 +183,11 @@
 #define VOXYGENMANTLEMASS  1205
 
 // STELLAR
-#define VLUMINOSITY     1502
-#define VTEMPERATURE    1503
+#define VLUMINOSITY        1502
+#define VTEMPERATURE       1503
 
 // POISE
-#define VICEMASS        1851
+#define VICEMASS           1851
 
 // BINARY: 2000-2999, inclusive
 // Primary variables that control CBP's cylindrical positions, velocities

@@ -56,6 +56,10 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->iaModule = malloc(iNumBodies*sizeof(int*));  
   module->iBitSum = malloc(iNumBodies*sizeof(int*));
 
+  // Allow parameters that require no module
+  for (iBody=0;iBody<iNumBodies;iBody++)
+    module->iBitSum[iBody] = 1;
+
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
   module->fnInitializeOutput = malloc(iNumBodies*sizeof(fnInitializeOutputModule*));
@@ -368,10 +372,8 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
        bit in InitializeOutput. In ReadOutputOrder the field 
        output->iModuleBit is compared bitwise to module->iBitSum. 
        Parameters that can be specified for multiple modules are set to 1. 
+       iBitSum for each body is set 1 in InitializeModule.
     */
-
-    // Allow parameters that require no module
-    module->iBitSum[iFile-1] = 1;
 
     for (iModule=0;iModule<iNumIndices;iModule++) {
 
@@ -409,7 +411,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
-	    } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
       } else {
@@ -789,7 +791,7 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
   }
 }
 
- void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
+void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
 {
   // If binary AND eqtide are called for a body, the body MUST be a star
   if(body[iBody].bBinary) {
@@ -811,13 +813,17 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
 
     }
   }
+}
 
+void VerifyModuleMultiEqtideDistorb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bEqtide || body[iBody].bDistOrb)
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
 void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
-  if (module->iNumModules[iBody] > 1) {
+  if (module->iNumModules[iBody] > 0) {
     /* XXX Note that the number of elements here is really a permutation, 
        but this should work for a while. */
     control->fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
@@ -843,6 +849,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  
+  VerifyModuleMultiEqtideDistorb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -960,6 +968,10 @@ void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody)
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
+}
+
+void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 
 void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {

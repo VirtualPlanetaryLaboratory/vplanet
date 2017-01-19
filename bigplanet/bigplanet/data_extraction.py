@@ -147,7 +147,7 @@ def parse_infile(infile, param):
             return float(words[1])
 
     # Didn't find it, so why did you tell me to look for it?
-    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+    raise RuntimeError("Couldn't find %s in %s." % (param, infile))
 # end function
 
 
@@ -566,6 +566,8 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
 
                 except RuntimeError:
+                    print("Did you format var_from_infile/log correctly?")
+                    print("var_from_infile = {'body'} : [list, of, params], ...")
                     raise RuntimeError("Unknown pd.read_table error.")
 
     # Return 1 since 1 new sim was successfully processed/stored

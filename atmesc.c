@@ -1138,7 +1138,7 @@ double fdInsolation(BODY *body, int iBody, int iXUV) {
 
   double flux;
 
-  if (body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) {
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
 
     // Body orbits two stars
     if (iXUV)

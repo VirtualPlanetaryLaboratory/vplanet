@@ -265,7 +265,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     if (iBody > 0) {
       if (body[iBody].bDistOrb || body[iBody].bEqtide) {
         *dTmp = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
-      } else if (body[iBody].bGalHabit) {
+      } else {
         *dTmp = body[iBody].dEcc;
       }
     } else {
@@ -771,7 +771,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ORBECC].cDescr,"Orbital Eccentricity");
   output[OUT_ORBECC].iNum = 1;
   output[OUT_ORBECC].bNeg = 0;
-  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
+  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE;
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
   
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
@@ -1385,6 +1385,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 	    WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+	                WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+
 
             if (body[iBody].dSeasOutputTime != 0) {
               body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;

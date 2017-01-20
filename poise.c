@@ -1376,6 +1376,18 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         body[iBody].dMEulerCopySea[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
         body[iBody].dInvMSea[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
         
+        body[iBody].daIceMassTmp[i] = 0.0;
+        body[iBody].scaleSea[2*i] = 0.;
+        body[iBody].scaleSea[2*i+1] = 0.;
+        for (j=0;j<2*body[iBody].iNumLats;j++) {
+          body[iBody].dMInit[2*i][j] = 0.;
+          body[iBody].dMEulerSea[2*i][j] = 0.;
+          body[iBody].dMEulerCopySea[2*i][j] = 0.;
+          body[iBody].dMInit[2*i+1][j] = 0.;
+          body[iBody].dMEulerSea[2*i+1][j] = 0.;
+          body[iBody].dMEulerCopySea[2*i+1][j] = 0.;     
+        }
+     
         if (body[iBody].bIceSheets) {
           if (fabs(body[iBody].daLats[i])>=(body[iBody].dInitIceLat*DEGRAD)) {
             body[iBody].daBedrockH[i] = 0.0;
@@ -1590,6 +1602,11 @@ void WriteTGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 void WriteAlbedoGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].dAlbedoGlobal;
+}
+
+void WriteSnowball(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  /* Get snowball status */
+  *dTmp = (double)body[iBody].bSnowball;
 }
 
 void WriteSkipSeas(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2158,6 +2175,13 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOGLOBAL].iNum = 1;
   output[OUT_ALBEDOGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOGLOBAL] = &WriteAlbedoGlobal;
+  
+  sprintf(output[OUT_SNOWBALL].cName,"Snowball");
+  sprintf(output[OUT_SNOWBALL].cDescr,"Is the planet in a snowball state?");
+  output[OUT_SNOWBALL].bNeg = 0;
+  output[OUT_SNOWBALL].iNum = 1;
+  output[OUT_SNOWBALL].iModuleBit = POISE;
+  fnWrite[OUT_SNOWBALL] = &WriteSnowball;
   
   sprintf(output[OUT_TOTICEMASS].cName,"TotIceMass");
   sprintf(output[OUT_TOTICEMASS].cDescr,"Global total ice mass in ice sheets");
@@ -3588,6 +3612,7 @@ void MatrixSeasonal(BODY *body, int iBody) {
   for (i=0;i<2*body[iBody].iNumLats;i++) {
     for (j=0;j<2*body[iBody].iNumLats;j++) {
       body[iBody].dMEulerSea[i][j] = body[iBody].dMInit[i][j];
+      body[iBody].dMEulerCopySea[i][j] = body[iBody].dMEulerCopySea[i][j];
     }
   }
   
@@ -3764,7 +3789,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
             body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
-            MatrixSeasonal(body,iBody);
+            
             if (body[iBody].bMEPDiff) {   
               if (i==0) {
                 body[iBody].daDiffusionSea[i] = body[iBody].daPlanckBSea[i]/4.0;
@@ -3894,7 +3919,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
             body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                   - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
-            MatrixSeasonal(body,iBody);
+            
             if (body[iBody].bMEPDiff) {   
               if (i==0) {
                 body[iBody].daDiffusionSea[i] = body[iBody].daPlanckBSea[i]/4.0;

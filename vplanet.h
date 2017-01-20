@@ -753,6 +753,8 @@ typedef struct {
   double **dMWater;
   double *daPlanckASea;
   double *daPlanckBSea;
+  double **daPlanckBDaily;
+  double *daPlanckBAvg;
   int *rowswapSea;
   double *scaleSea;
   double *daSeaIceHeight;     /**< Sea ice height by latitude */

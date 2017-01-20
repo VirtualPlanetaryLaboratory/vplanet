@@ -3764,7 +3764,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
             body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
-            
+            MatrixSeasonal(body,iBody);
             if (body[iBody].bMEPDiff) {   
               if (i==0) {
                 body[iBody].daDiffusionSea[i] = body[iBody].daPlanckBSea[i]/4.0;
@@ -3894,7 +3894,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
             body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
                   - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
-            
+            MatrixSeasonal(body,iBody);
             if (body[iBody].bMEPDiff) {   
               if (i==0) {
                 body[iBody].daDiffusionSea[i] = body[iBody].daPlanckBSea[i]/4.0;

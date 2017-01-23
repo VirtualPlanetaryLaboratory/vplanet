@@ -526,7 +526,8 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
                                              delim_whitespace=True,
                                              engine="c",
                                              names=data_cols[infile + ".in"],
-                                             dtype=np.float64)
+                                             dtype=np.float64,
+                                             memory_map=True)
 
                     # Create corresponding hdf5 subgroup for body, store data as
                     # numpy array. Subgroup's name is body name

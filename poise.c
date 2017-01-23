@@ -2230,7 +2230,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   */
   output[OUT_FLUXOUTGLOBAL].bNeg = 1;
   output[OUT_FLUXOUTGLOBAL].dNeg = 1;
-  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
+  sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum = 1;
   output[OUT_FLUXOUTGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;

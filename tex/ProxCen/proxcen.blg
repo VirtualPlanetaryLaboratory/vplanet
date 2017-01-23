@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: proxcen.aux
+The style file: apj.bst
+Database file #1: bib.bib
+Warning--string name "accepted" is undefined
+--line 152 of file bib.bib
+Warning--string name "accepted" is undefined
+--line 252 of file bib.bib
+Warning--string name "submitted" is undefined
+--line 1621 of file bib.bib
+Warning--string name "accepted" is undefined
+--line 5526 of file bib.bib
+Warning--I didn't find a database entry for "Raymond06"
+Warning--I didn't find a database entry for "Kaib14"
+Warning--empty publisher in Dole64
+Warning--empty journal in Meadows16
+Warning--empty publisher in MurrayDermott99
+Warning--empty publisher in Oparin24
+You've used 160 entries,
+            2947 wiz_defined-function locations,
+            1638 strings with 34712 characters,
+and the built_in function-call counts, 80614 in all, are:
+= -- 6532
+> -- 6285
+< -- 76
++ -- 2305
+- -- 2143
+* -- 7194
+:= -- 15471
+add.period$ -- 160
+call.type$ -- 160
+change.case$ -- 1355
+chr.to.int$ -- 158
+cite$ -- 164
+duplicate$ -- 2970
+empty$ -- 4286
+format.name$ -- 2633
+if$ -- 15286
+int.to.chr$ -- 3
+int.to.str$ -- 1
+missing$ -- 157
+newline$ -- 484
+num.names$ -- 641
+pop$ -- 1443
+preamble$ -- 1
+purify$ -- 1354
+quote$ -- 0
+skip$ -- 2499
+stack$ -- 0
+substring$ -- 3181
+swap$ -- 16
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 1431
+warning$ -- 4
+while$ -- 628
+width$ -- 0
+write$ -- 1592
+(There were 10 warnings)

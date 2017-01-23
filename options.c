@@ -69,7 +69,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
-            if (iVerbose > VERBINPUT) 
+            if (iVerbose > VERBINPUT)
             fprintf(stderr,"Multiple occurences of parameter %s found.\n",cOption);
           fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,(*iLine+1),iLineTmp+1);
           exit(1);
@@ -158,7 +158,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   /* Use GetPos to avoid white space */
   for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
   //for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
-    /* MEM: Something is wrong here, but it is intermittent. Sometimes a call 
+    /* MEM: Something is wrong here, but it is intermittent. Sometimes a call
        here produces a memory error with valgrind. On 12/14/16 a run without the
        next print statements produced an error, but with them in, the error
        disappeared. After commenting out again, the problem was still gone. */
@@ -2305,7 +2305,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
 
-//     files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    //files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
   }
 
@@ -2393,7 +2393,7 @@ void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     if (iFile > 0)
       body[iFile-1].dPrecA = options->dDefault;
   }
-}  
+}
 
 void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* Cannot exist in primary file */

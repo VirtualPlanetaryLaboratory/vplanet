@@ -1170,12 +1170,13 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   if (body[iBody].dEnvelopeMass > 0)
     return 0;
 
-  /* 2. Check if planet is beyond RG limit; otherwise, assume the
-   * cold trap prevents water loss.  This formalism assumes that you have
-   * similar spectral types, or body zero dominates the flux.  Note that
-   * dLum, dEcc, and dMass are passed to fdHZRG14, but they aren't used.  only
-   * care about the insolation, and spectral type aka temperature
-   */
+  // 2. Check if planet is beyond RG limit; otherwise, assume the
+  // cold trap prevents water loss.
+  // NOTE: The RG flux limit below is calculated based on body zero's
+  // spectrum! The Kopparapu+14 limit is for a single star only. This
+  // approximation for a binary is only valid if the two stars have
+  // similar spectral types, or if body zero dominates the flux.
+
 
   else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
     return 0;
@@ -1186,6 +1187,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
 
   else
     return 1;
+
 }
 
 double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {

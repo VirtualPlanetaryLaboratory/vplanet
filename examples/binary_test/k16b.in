@@ -8,13 +8,13 @@ dMass		0.0 			# Mass, negative -> Earth masses
 
 # Binary Properties
 dFreeEcc        0.1                   # Free Eccentricity
-dFreeInc        2.0 #0.3083                     # Free Inclination [deg]
+dFreeInc        #2.0 #0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
-dSemi           0.3 # 0.7016		# Semi-major axis, negative -> AU
-dLongP          304.05
+dSemi            0.7016		# Semi-major axis, negative -> AU
+dLongP          0.0 #304.05
 
 # EQTIDE Parameters 
 #dTidalTau	-630			# Tidal time lag, negative -> seconds
@@ -70,7 +70,7 @@ dLongP          304.05
 ##dViscRef  1e8
 
 # Output
-saOutputOrder Time Semim R0 Ecce # LongABinary IncBinary LongPBinary #TMan TCore SurfWater Envelop
+saOutputOrder Time Semim R0 Ecce BinaryLongP #TMan TCore SurfWater Envelop
 
 #saOutputOrder	Time Semim Ecce Obli -SurfEnFluxEqtide -SurfEnFluxRadheat $
 #		    -40KPowerMan -232ThPowerMan -238UPowerMan -235UPowerMan -RadPowerMan $       #-SurfEnFluxT $

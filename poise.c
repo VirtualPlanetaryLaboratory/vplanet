@@ -3738,6 +3738,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
     
     for (nstep=0;nstep<body[iBody].iNStepInYear;nstep++) {
       body[iBody].dTGlobalTmp = 0.0;
+      body[iBody].dFluxInGlobalTmp = 0.0;
       body[iBody].dFluxOutGlobalTmp = 0.0;
       day = floor(body[iBody].dSeasDeltat*nstep*body[iBody].iNDays);
       

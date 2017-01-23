@@ -3660,7 +3660,7 @@ void EnergyResiduals(BODY *body, int iBody, int day) {
         body[iBody].daLambdaSea[i+1]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i+1])-\
         nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
         body[iBody].daPlanckASea[i]-body[iBody].daPlanckBSea[i]*body[iBody].daTempWater[i];
-    } else if (i==body[iBody].iNumLats) {
+    } else if (i==(body[iBody].iNumLats-1)) {
       body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
         (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
         body[iBody].daLambdaSea[i]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i-1])-\

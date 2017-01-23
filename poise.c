@@ -1151,6 +1151,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   body[iBody].daEnerResLAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnerResWAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].bSnowball = 0;
+  body[iBody].dFluxInGlobal = 0;
+  
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
   } else {
@@ -3702,7 +3704,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
   /* main loop */
   for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
     body[iBody].dTGlobal = 0.0;
-    
+    body[iBody].dFluxInGlobal = 0.0;
     body[iBody].dFluxOutGlobal = 0.0;
     
     for (i=0;i<body[iBody].iNumLats;i++) {

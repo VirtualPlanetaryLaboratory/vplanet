@@ -1,16 +1,33 @@
 # Earthlike parameters
-sName		earth			# Body's name
-saModules 	radheat thermint
+sName		pandora			# Body's name
+saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
-dMass		-1.0  			# Mass, negative -> Earth masses
-dRadius		-1.0  			# Radius, negative -> Earth radii
+dMass		-1.27  			# Mass, negative -> Earth masses
+dRadius		-1.07  			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
+
 # Orbital Properties
-dEcc            0.1 #0.0167		# Eccentricity
-dSemi           0.05 #-1		# Semi-major axis, negative -> AU
+dEcc            0.1             	# Eccentricity
+dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
+
+# ATMESC Properties
+dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
+dEnvelopeMass             0.0 #-0.001          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.0e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+dMinEnvelopeMass          -1.0e-5
+
+# Eqtide Properties
+bOceanTides     1                   # Whether or not to include the effects of ocean tides
+dTidalQOcean    12                 # Tidal phase lag of the ocean
+dK2Ocean        0.3
+dMaxLockDiff    0.1
+saTidePerts     star 
 
 # RADHEAT Parameters
 ### 26Al
@@ -19,7 +36,7 @@ d26AlMassCore	0	        # Earth masses
 
 ### 40K
 d40KNumMan    -1.0
-d40KNumCore   -1.0 #-3.0
+d40KNumCore   -1.0
 d40KNumCrust  -1.0
 ### 232Th
 d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
@@ -39,8 +56,8 @@ dTMan          3000.0
 dTCore         6000.0	#6000
 dEruptEff      0.1		#.2
 dTrefLind      5650.    #def is 5705.
-dDTChiRef      0 #250.     ## def is 300.
-dFixMeltfactorUMan 0 #1  
+dDTChiRef      0.0     ## def is 300.
+dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dViscJumpMan   2.85
 dViscRef       1.0e8	   #1e8
@@ -50,11 +67,8 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2
-#saOutputOrder TidalQ K2 ImK2 -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad -SurfEnFluxTot
-
+saOutputOrder Time TidalQ K2 ImK2 SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass -EnvelopeMass $
+-TCore -TMan -RIC -TDotMan -SurfEnFluxEqtide 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $

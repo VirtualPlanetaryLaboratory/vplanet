@@ -507,21 +507,92 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
 void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iEqtide;
 
+  // Eqtide, not thermint
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
+      /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and 
+	 check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT 
+	 selected. */
+      if (body[iBody].bOceanTides) {
+	if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
+        exit(EXIT_INPUT);  
+      }
+      if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+	if (control->Io.iVerbose >= VERBINPUT)
+	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_TIDALQOCEAN].cName);
+	exit(EXIT_INPUT);
+        }
+      if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_K2OCEAN].cName);
+        exit(EXIT_INPUT);
+      }
+      
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
+      
+      // No ocean contribution if not using thermint
+      body[iBody].dImK2Ocean = 0.0;
+      body[iBody].dK2Ocean = 0.0;
+      body[iBody].dTidalQOcean = -1.0;
+
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
+    
+      // If dTidalQ or K2 set, ignore/warn user as thermint computes these
+      if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_TIDALQ].cName);
+      }
+      if (options[OPT_K2].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_K2].cName);
+      }
+
       /* When Thermint and Eqtide are called together, care must be taken as 
          Im(k_2) must be known in order to calculate TidalZ. As the individual 
          module PropsAux are called prior to PropsAuxMulti, we must call the 
          "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
          "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
          PropsAuxEqtideThermint. */
+
+      // If using ocean tides...
+      //Convert Q_ocean -> Im(k2)_ocean
+      if(body[iBody].bOceanTides)
+      {
+        // Make sure both dK2Ocean AND dTidalQOcean are set, otherwise exit
+        if(!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1))
+        {
+          fprintf(stderr,"ERROR: %s and/or %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
+          fprintf(stderr,"Must both be set when using EQTIDE and THERMINT with bOceanTides == True.\n");
+          exit(EXIT_INPUT);
+        }
+
+        // Otherwise, we're good! set ImK2 for the ocean component
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
+      }
+      // If you're not using bOceanTides and Ocean params are set, exit
+      else
+      {
+        if(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 || options[OPT_K2OCEAN].iLine[iBody+1] > -1)
+        {
+          if (control->Io.iVerbose >= VERBINPUT)
+          {
+            fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQOCEAN].cName,options[OPT_K2OCEAN].cName);
+            exit(EXIT_INPUT);
+          }
+        }
+
+        // No ocean contribution
+        body[iBody].dImK2Ocean = 0.0;
+        body[iBody].dK2Ocean = 0.0;
+        body[iBody].dTidalQOcean = -1.0;
+      }
+
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
@@ -547,11 +618,173 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
   }
 }
 
+void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  /* Ensure that if using Lopez et al radius models, ATMESC uses Lopez et al radius for atmespheric escape
+   * while EQTIDE uses a "tidal radius" as it is likely that the radius of the envelope does not really
+   * impact tides since the tidal evolution has such a strong (r^5) radius dependent.  Effectively, we assume
+   * that the core/ocean size of stuff controls that evolution while the atmosphere contributes to the Tidal
+   * Q, k_2 and Im(k_2) for the world
+   */
+
+  // If this is the star (body 0 or body 1 in binary), ignore
+  if(iBody == 0 || (body[iBody].bBinary && iBody == 1))
+    return;
+
+  if(body[iBody].bEqtide)
+  {
+    // CTL hack.  Pretty sure EQTIDE CTL is broken, but this will prevent additional hiccups
+    // Ignore everything after this 
+    if(control->Evolve.iEqtideModel == CTL)
+    {
+      body[iBody].dTidalRadius = body[iBody].dRadius;
+      return;
+    }
+
+    // Using ATMESC?
+    if(body[iBody].bAtmEsc)
+    {
+      
+      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius 
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
+
+      // Using tidal radus
+      if(body[iBody].bUseTidalRadius)
+      {
+        // If any tidal radius option is set, the other must be set as well!
+        if(!((options[OPT_TIDALRADIUS].iLine[iBody+1] > -1) && (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)))
+        {
+          fprintf(stderr,"ERROR: if bTidalRadius == 1, must set %s.\n",options[OPT_TIDALRADIUS].cName);
+          exit(EXIT_INPUT);
+        }
+      }
+      // Not using tidal radius
+      else
+      {
+        // Since no tidal radius specified, dRadius better be (or a radius evolution model)
+        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1))
+        {
+          fprintf(stderr,"ERROR: Using EQTIDE and bUseTidalRadius == 0 but %s or %s not set!\n",options[OPT_RADIUS].cName,options[OPT_PLANETRADIUSMODEL].cName);
+          exit(EXIT_INPUT);
+        }
+      
+        // If dTidalRadius set, warn user since it's not considered
+        if(options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)
+        {
+          if(control->Io.iVerbose >= VERBINPUT)
+          {
+            fprintf(stderr,"WARNING: %s set but disregarded since bUseTidalRadius == 0.\n",options[OPT_TIDALRADIUS].cName);
+          }
+        }
+
+        // No tidal radius given -> just use specified radius
+        body[iBody].dTidalRadius = body[iBody].dRadius;
+      }
+    }
+    // Not using ATMESC
+    else
+    {
+      // Using tidal radius without atmesc doesn't make sense, just need to set radius
+      if(!(options[OPT_RADIUS].iLine[iBody+1] > -1))
+      {
+        fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);
+        exit(EXIT_INPUT);
+      }
+     
+      // If dTidalRadius or bUseTidalRadius set, ignore and warn user as they do nothing
+      if((options[OPT_USETIDALRADIUS].iLine[iBody+1] > -1) || (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1))
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+        {
+          fprintf(stderr,"WARNING: %s and/or %s set for EQTIDE while ATMESC not used and hence will be ignored.\n",options[OPT_USETIDALRADIUS].cName,options[OPT_TIDALRADIUS].cName);
+        }
+      }
+
+      // TidalRadius == radius as without ATMESC, planet radius doesn't evolve
+      body[iBody].dTidalRadius = body[iBody].dRadius;
+    }
+  }
+}
+
+void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  // If you're using alllll of these, include the force behavior!
+  // Also, you MUST have surface water information set if you're using bOceanTides
+  // Note: VerifyEqtideThermint handles all things oceans
+  if(body[iBody].bEqtide) 
+  {
+    if(body[iBody].bThermint)
+    {
+      if(body[iBody].bAtmEsc)
+      {
+        // If modelling envelope tides
+        if(body[iBody].bEnvTides)
+        {
+          // Make sure both dK2Env AND dTidalQEnv are set, otherwise exit
+          if(!(options[OPT_TIDALQENV].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1))
+          {
+            fprintf(stderr,"ERROR: %s and/or %s not set.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+            fprintf(stderr,"Must both be set when using EQTIDE, THERMINT and ATMESC with bEnvTides == True.\n");
+            exit(EXIT_INPUT);
+          }
+           
+          // Otherwise, we're good! set ImK2 for the envelope component
+          body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+        }
+        // Not modelling envelope tides
+        else
+        {
+          // Envelope tidal parameters can't be set
+          if(options[OPT_TIDALQENV].iLine[iBody+1] > -1 || options[OPT_K2ENV].iLine[iBody+1] > -1)
+          {
+            if (control->Io.iVerbose >= VERBINPUT)
+            {
+              fprintf(stderr,"ERROR: %s or %s set, but bEnvTides == 0.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+              exit(EXIT_INPUT);
+            }
+          }
+
+          // Zero things out so envelope can't play a role
+          body[iBody].dK2Env = 0.0;
+          body[iBody].dImK2Env = 0.0;
+          body[iBody].dTidalQEnv = -1.0;
+        }
+        
+        // Set function pointers so models play nice
+
+        // Set force behavior
+        control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorAtmescEqtideThermint;
+     
+        // Switch PropAuxEqtideThermint -> PropsAuxAtmescEqtideThermint
+        control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtideThermint;
+      }
+      // No AtmEsc 
+      else
+      {
+        // Can't have any tidal envelope parameters set
+        if(options[OPT_TIDALQENV].iLine[iBody+1] > -1 || options[OPT_K2ENV].iLine[iBody+1] > -1)
+        {
+          if (control->Io.iVerbose >= VERBINPUT)
+          { 
+            fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
+            exit(EXIT_INPUT);
+          }
+        }
+
+        // Zero things out so envelope can't play a role
+        body[iBody].dK2Env = 0.0;
+        body[iBody].dImK2Env = 0.0;
+        body[iBody].dTidalQEnv = -1.0;
+      }
+    }
+  }
+
+}
+
 void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bFlare) {
     if (!body[iBody].bStellar) {
-      fprintf(stderr,"ERROR: Must include module STELLAR ro run module FLARE.\n");
+      fprintf(stderr,"ERROR: Must include module STELLAR to run module FLARE.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     } else
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxFlareStellar;
@@ -563,11 +796,21 @@ void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODU
   // If binary AND eqtide are called for a body, the body MUST be a star
   if(body[iBody].bBinary) {
     if(body[iBody].bEqtide) {
-      if(body[iBody].iBodyType != 1) { // Body isn't a star!
+      // Body isn't a star!
+      if(body[iBody].iBodyType != 1) {
         fprintf(stderr,"ERROR: If both binary AND eqtide are used for a body, the body MUST be a star.\n");
         fprintf(stderr,"Errant body iBody, bBinary, bEqtide: %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
+
+      // Body is a star, but has an ocean!
+      if(body[iBody].bOceanTides)
+      {
+        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides set!\n");
+        fprintf(stderr,"Body %d is a star and hence cannot have an ocean.\n",iBody);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+
     }
   }
 }
@@ -596,8 +839,13 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   
   VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
+  VerifyModuleMultiAtmescEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
   VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
+  // Always call after VerifyModuleMultiEqtideThermint !!
+  VerifyModuleMultiAtmescEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
@@ -614,22 +862,102 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
  * Auxiliary Properties for multi-module calculations
  */
 
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // This function controls how tidal radius is set.
+
+  // If bUseTidalRadius == 0, dTidalRadius <- dRadius
+  if(!body[iBody].bUseTidalRadius)
+    body[iBody].dTidalRadius = body[iBody].dRadius;
+
+  // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models)
+}
+
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but 
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
-  // Maybe don't call? XXX
-  //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+  // Include tidal dissapation due to oceans:
+  if(body[iBody].bOceanTides)
+  {
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
 
+    // Im(K_2) is weighted sum of mantle and oceam component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
+  }
+  // No oceans, thermint dictates ImK2
+  else 
+  {
+    body[iBody].dImK2 = body[iBody].dImk2Man;
+    body[iBody].dK2 = body[iBody].dK2Man;
+  }
 
-  body[iBody].dImK2 = fdImk2Man(body,iBody);
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5)
+    body[iBody].dK2 = 1.5;
+
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdCPLTidePower(body,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
+void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // Set the mantle parameters first
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+
+  // Case: No oceans, no envelope
+  if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
+  {
+    // Mantle controls evolution via thermint
+    body[iBody].dImK2 = body[iBody].dImk2Man;
+    body[iBody].dK2 = body[iBody].dK2Man;
+  }
+  // Case: Oceans, no envelope:
+  else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
+  {
+    // Oceans dominate
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+     
+    // Im(K_2) is weighted sum of mantle and oceam component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean); 
+  }
+  // Case: No oceans, envelope (envelope evap while in runaway):
+  else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
+  {
+    // Envelope dominates
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+   
+    // Im(K_2) is weighted sum of mantle and enevelope component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+  }
+  // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
+  // Also, envelope and ocean are mutually exclusive so envelope dominates
+  else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
+  {
+    // Envelope and ocean!
+    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+
+    // Im(K_2) is weighted sum of mantle, envelope and ocean component
+    // weighted by the love number of each component
+    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+  }
+  else
+    assert(0); // Unknown envelope + ocean behavior
+
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5)
+    body[iBody].dK2 = 1.5;
+
+  // Finally, call EQTIDE props aux then set mantle tidal power
+  PropsAuxCPL(body,evolve,update,iBody);
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); 
+
+}
 /* This does not seem to be necessary
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
@@ -661,4 +989,71 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   }
-} 
+}
+
+void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+
+  // Loop over non-star bodies
+  int iBody;
+  
+  // Keeps track of whether or not bOceanTides or bEnvTides were initially set
+  // to ensure they don't get turned back on by force behavior
+  // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
+  int bOceans = 0;
+  int bEnv = 0;
+
+  for(iBody = 1; iBody < evolve->iNumBodies; iBody++)
+  {
+    // If body 1 is a star (aka using binary), pass
+    if(iBody == 1 && body[iBody].bBinary)
+      continue;
+
+    // Ocean check
+    if(body[iBody].dTidalQOcean < 0)
+      bOceans = 0;
+    else
+      bOceans = 1;
+
+    // Env check
+    if(body[iBody].dTidalQEnv < 0)
+      bEnv = 0;
+    else
+      bEnv = 1;
+
+    // Note: With these checks, only do anything if user intended to model them 
+    // i.e. if bOceanTides == 1 from initial conditions
+
+    // Case: No water -> no ocean tides
+    if(bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass))
+    {
+      body[iBody].bOceanTides = 0;
+    }
+    // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > 0.0) && body[iBody].bRunaway)
+    {
+      body[iBody].bOceanTides = 0;
+    } 
+    // Case: Water and on the surface! (this is when body does NOT actively lose water!)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
+    {
+      body[iBody].bOceanTides = 1;
+    }
+
+    // Check to see if the envelope is gone: when dEnvelopeMass <= dMinEnvelopeMass
+    if(bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass))
+    {
+      body[iBody].bEnvTides = 0;
+    }
+    // Still have the envelope!
+    else if(bEnv && (body[iBody].dEnvelopeMass > 0.0))
+    {
+      body[iBody].bEnvTides = 1;
+    }
+
+    // Enfore that they are mutually exclusive
+    // i.e. if using EnvTides or an envelope exists, ocean can't do anything
+    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > 0.0))
+      body[iBody].bOceanTides = 0;
+  }
+}
+

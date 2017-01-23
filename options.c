@@ -2305,12 +2305,11 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
       }
     }
  
-//     files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    //files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
   } 
-    
   files->Outfile[iFile-1].iNumGrid = iNumGrid;
-  
+
   free(lTmp);
 }
 

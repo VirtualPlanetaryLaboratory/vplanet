@@ -46,6 +46,9 @@
 #define OUT_ROTPER              560
 
 #define OUT_SURFENFLUX          580
+#define OUT_TIDALQ              581
+#define OUT_IMK2                582
+#define OUT_K2                  583
 
 #define OUT_K2MAN               590   //Mantle k2 love number
 #define OUT_IMK2MAN             592   //Mantle Im(k2) love number

@@ -370,7 +370,6 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
             if f.endswith(".forward") and (f.find(infile) != -1):
-
                 # For unexpected reasons, this *could* fail, so just chalk it up to
                 # some crazy, unanticipated error.  Maybe vplanet output error?
                 # This should never happen and if it does, who knows

@@ -571,7 +571,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     body[iBody].dMDotWater = 0;
   
   } else {
-    
+
     body[iBody].bRunaway = 1;
     
     // Select an escape/oxygen buildup model
@@ -1156,7 +1156,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // TODO: The checks below need to be moved. Ideally we'd 
   // just remove this equation from the matrix if the
   // escape conditions are not met.
-  
+
   // 1. Check if there's hydrogen to be lost; this happens first 
   if (body[iBody].dEnvelopeMass > 0)
     return 0;
@@ -1167,7 +1167,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have 
   // similar spectral types, or if body zero dominates the flux.
-  
+ 
   else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
     return 0;
   
@@ -1177,6 +1177,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   
   else
     return 1;
+
 }
 
 double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {

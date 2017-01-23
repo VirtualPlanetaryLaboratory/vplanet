@@ -1451,6 +1451,24 @@ void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   } else { }
 }
 
+/*
+void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
+  strcpy(cUnit,"");
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+*/
+
 void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRIC;
 
@@ -2661,12 +2679,13 @@ double fdMagPauseRad(BODY *body, int iBody) {
 }
 
 /* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
-double fdTidalPowMan(BODY *body,int iBody) {
-   Peter's version. I think dRotRate should be dMeanMotion.
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
-}
 */
+// dflemin3: dRadius -> dTidalRadius
+double fdTidalPowMan(BODY *body,int iBody) {
+//   Peter's version. I think dRotRate should be dMeanMotion.
+ // return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+}
 
 /* Heat Fluxes/flows */
 double fdHfluxUMan(BODY *body,int iBody) {
@@ -2762,7 +2781,7 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
-  //  return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
+//    return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
   return -body[iBody].dHflowSecMan/((EMASSMAN)*(SPECHEATMAN));
 }
 

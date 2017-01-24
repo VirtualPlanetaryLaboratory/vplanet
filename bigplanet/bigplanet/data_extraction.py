@@ -579,9 +579,9 @@ def data_from_dir_hdf5(f_set, grpname, datadir=".",data_cols=None,infiles=None,
 # End function
 
 
-def batch_extraction(dirs, dset, counter=0, grpname, datadir=".",data_cols=None,
-                     infiles=None, compression="gzip",remove_halts=True,
-                     var_from_log=None, var_from_infile=None, cadence=None):
+def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
+                     compression="gzip",remove_halts=True, var_from_log=None,
+                     var_from_infile=None, cadence=None):
     """
     Extract the data from a batch of VPLANET simulation directories.
     Essentially, this calls data_from_dir_hdf5 len(dirs) times and stores the
@@ -591,16 +591,13 @@ def batch_extraction(dirs, dset, counter=0, grpname, datadir=".",data_cols=None,
     ----------
     dirs : list
         list of paths to directories where VPLANET simulation results reside
+    src : str
+        Path to simulation suite directory which contains all simulation sub directories
     dset : string
         Name of the hdf5 dataset to create for this batch of simulations
     counter : int
         keeps track of how many directories this function parases.  Useful for
         determining total number of simulations
-    grpname : string
-        Name of the hdf5 dataset group that will contain directory's simulation data
-        Named after sim #
-    datadir : str
-        Name of directory where simulation results are kept.  Defaults to .
     data_cols : dict
         dictionary contains each body's output variable names. Defaults to None.
     infiles : list
@@ -623,7 +620,7 @@ def batch_extraction(dirs, dset, counter=0, grpname, datadir=".",data_cols=None,
     counter : int
         keeps track of how many directories this function parases.  Useful for
         determining total number of simulations
-    number_to_sum : dict
+    number_to_sum : list
         dictionary to translate simulation number to simulation name
     """
     # Create hdf5 file
@@ -631,6 +628,8 @@ def batch_extraction(dirs, dset, counter=0, grpname, datadir=".",data_cols=None,
 
     # List to store what dir sim # corresponds to
     number_to_sim = []
+
+    # Loop over all directories and extract the simulation results
     for direct in dirs:
 
         # Store data from each simulation, increment counter if succesful
@@ -680,7 +679,8 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         are in
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
-        None (no quotes) turns off compression. Options: "gzip", "lzf", None
+        None (no quotes) turns off compression. Options: "gzip", "lzf", None.
+        If you're hurting for speed and have tons of storage space, set to None.
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
     cadence : int (optional)
@@ -707,18 +707,18 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         See Dataset object docs
     """
 
-    # Only run this function if the dataset doesn't exist in the src dir
+    # Only run this function if the hdf5 dataset doesn't exist in the src dir
     if os.path.exists(dataset):
 
         # Dataset exists
         print("Hdf5 dataset already exists.  Reading from: %s." % dataset)
-        print("Using size, order stored in dataset.")
+        print("Using metadata stored in dataset.")
         sys.stdout.flush()
 
         # Read existing dataset
         f_set = h5py.File(dataset, "r")
 
-        # Load metadata
+        # Try to load metadata
         try:
             # Load size
             length = f_set["size"][0]
@@ -750,10 +750,10 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     # Get list of all data directories in src to iterate over
     dirs = get_dirs(src,order=order)
 
-    # XXX If in parallel, partition dirs here
+    # TODO If in parallel, partition dirs here
 
-    # Find out what the infiles are based on the first directory
-    # Since they are assumed to be the same in all directories
+    # Find out what the input files (like body.in) are based on the first
+    # directory since they are assumed to be the same in all directories
     infiles = get_infiles(os.path.join(src,dirs[0]))
 
     # Skip any bodies (i.e. some bodies didn't have output you care about)?
@@ -762,6 +762,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
             if sbody in infiles:
                 infiles.remove(sbody)
                 print("Skipped %s." % sbody)
+                sys.stdout.flush()
 
     print("Infiles:",infiles)
     sys.stdout.flush()
@@ -774,20 +775,31 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     # How should I process the data? In parallel or serially?
     if parallel:
         raise NotImplementedError("Parallel extraction not implemented yet!")
-
+        # TODO
         # Map: Partition dirs out to corresponds
         # Reduce: Merge all separate hdf5 files into one
 
+    # Use just one processor
     else:
         # Create hdf5 file
-        f_set = h5py.File(dataset, "w")
+        #f_set = h5py.File(dataset, "w")
 
         # Loop over directories (and hence simulations) and get the data
         # User counter for name of group/means to identify simulation
         counter = 0
 
-        # List to store what dir sim # corresponds to
-        number_to_sim = []
+        # Load data into hdf5 file, get how many there were (counter) and make
+        # a dict to translate between sim number and name (number_to_sim)
+        counter, number_to_sim = batch_extraction(dirs, src, dataset,
+                                                  counter=counter,
+                                                  data_cols=data_cols,
+                                                  infiles=infiles,
+                                                  compression=compression,
+                                                  remove_halts=remove_halts,
+                                                  var_from_log=var_from_log,
+                                                  var_from_infile=var_from_infile,
+                                                  cadence=cadence)
+        """
         for direct in dirs:
 
             # Store data from each simulation, increment counter if succesful
@@ -807,6 +819,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
             if cadence is not None and counter % int(cadence) == 0 and cadence > 0:
                 print("Simulations processed so far: %d" % counter)
                 sys.stdout.flush()
+        """
 
         # Try to store metadata
         # Add top level dataset with information about dataset
@@ -815,6 +828,9 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         # number_to_sim is a python dict that maps #->sim name,
 
         try:
+            # Reopen hdf5 file to add metadata
+            f_set = h5py.File(dataset, "r+")
+
             # Make variable-length string dtype so hdf5 could understand it
             string_dt = h5py.special_dtype(vlen=str)
 
@@ -827,11 +843,11 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
             data = np.asarray(number_to_sim, dtype=object)
             f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
 
+            # Close dataset
+            f_set.close()
+
         except RuntimeError:
             raise RuntimeError("Unable to store number_to_sim.  Shouldn't happen!")
-
-        # Close dataset
-        f_set.close()
 
         # Create Dataset class to return
         return Dataset(dataset,counter,order,number_to_sim)

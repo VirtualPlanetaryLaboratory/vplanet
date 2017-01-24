@@ -1152,6 +1152,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   body[iBody].daEnerResWAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].bSnowball = 0;
   body[iBody].dFluxInGlobal = 0;
+  body[iBody].dIceFlowTot = 0;
   
   if (body[iBody].bColdStart) {
     Toffset = -40.0;

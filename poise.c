@@ -1150,6 +1150,16 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   body[iBody].daEnergyResW = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnerResLAnn = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].daEnerResWAnn = malloc(body[iBody].iNumLats*sizeof(double));
+  
+  /* initialize some output quantities to zero to avoid memory errors */
+  body[iBody].dFluxInGlobal = 0;
+  body[iBody].bSkipSeas = 0;
+  body[iBody].dFluxOutGlobal = 0;
+  body[iBody].dIceMassTot = 0;
+  body[iBody].dIceFlowTot = 0;
+  body[iBody].dIceBalanceTot = 0;
+  /*-------------------------------------------------------------------*/
+  
   body[iBody].bSnowball = 0;
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -3658,7 +3668,7 @@ void EnergyResiduals(BODY *body, int iBody, int day) {
         body[iBody].daLambdaSea[i+1]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i+1])-\
         nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
         body[iBody].daPlanckASea[i]-body[iBody].daPlanckBSea[i]*body[iBody].daTempWater[i];
-    } else if (i==body[iBody].iNumLats) {
+    } else if (i==body[iBody].iNumLats-1) {
       body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
         (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
         body[iBody].daLambdaSea[i]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i-1])-\

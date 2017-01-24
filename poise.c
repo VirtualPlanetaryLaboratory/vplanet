@@ -1161,6 +1161,9 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   /*-------------------------------------------------------------------*/
   
   body[iBody].bSnowball = 0;
+  body[iBody].dFluxInGlobal = 0;
+  body[iBody].dIceFlowTot = 0;
+  
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
   } else {
@@ -2238,7 +2241,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   */
   output[OUT_FLUXOUTGLOBAL].bNeg = 1;
   output[OUT_FLUXOUTGLOBAL].dNeg = 1;
-  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"W/m^2");
+  sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum = 1;
   output[OUT_FLUXOUTGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUTGLOBAL] = &WriteFluxOutGlobal;
@@ -3668,7 +3671,8 @@ void EnergyResiduals(BODY *body, int iBody, int day) {
         body[iBody].daLambdaSea[i+1]*(body[iBody].daTempWater[i]-body[iBody].daTempWater[i+1])-\
         nu_fw*(body[iBody].daTempWater[i]-body[iBody].daTempLand[i])-\
         body[iBody].daPlanckASea[i]-body[iBody].daPlanckBSea[i]*body[iBody].daTempWater[i];
-    } else if (i==body[iBody].iNumLats-1) {
+
+    } else if (i==(body[iBody].iNumLats-1)) {
       body[iBody].daEnergyResL[i] = body[iBody].daInsol[i][day]*\
         (1.0-body[iBody].daAlbedoLand[i])-Cl_dt*(body[iBody].daDeltaTempL[i])-\
         body[iBody].daLambdaSea[i]*(body[iBody].daTempLand[i]-body[iBody].daTempLand[i-1])-\
@@ -3712,7 +3716,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
   /* main loop */
   for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
     body[iBody].dTGlobal = 0.0;
-    
+    body[iBody].dFluxInGlobal = 0.0;
     body[iBody].dFluxOutGlobal = 0.0;
     
     for (i=0;i<body[iBody].iNumLats;i++) {
@@ -3746,6 +3750,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
     
     for (nstep=0;nstep<body[iBody].iNStepInYear;nstep++) {
       body[iBody].dTGlobalTmp = 0.0;
+      body[iBody].dFluxInGlobalTmp = 0.0;
       body[iBody].dFluxOutGlobalTmp = 0.0;
       day = floor(body[iBody].dSeasDeltat*nstep*body[iBody].iNDays);
       

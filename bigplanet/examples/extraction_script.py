@@ -41,7 +41,7 @@ compression = "gzip"
 
 data = de.extract_data_hdf5(src=src, dataset=dataset, order=order,
                             remove_halts=remove_halts, compression=compression,
-                            var_from_log=var_from_log)
+                            var_from_log=var_from_log, cadence=cadence)
 
 ### Make a dataframe of initial conditions! ###
 

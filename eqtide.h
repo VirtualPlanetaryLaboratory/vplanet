@@ -154,7 +154,7 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_OBLTIMEEQTIDE       1092
 #define OUT_POWEREQTIDE         1094
 #define OUT_ENFLUXEQTIDE        1096
-#define OUT_TIDALQ              1097
+//#define OUT_TIDALQ              1097
 
 void HelpOutputEqtide(OUTPUT*);
 void WriteBodyDsemiDtEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

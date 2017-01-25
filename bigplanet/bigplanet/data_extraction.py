@@ -581,7 +581,7 @@ def data_from_dir_hdf5(f_set, grpname, datadir=".",data_cols=None,infiles=None,
 
 def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
                      compression="gzip",remove_halts=True, var_from_log=None,
-                     var_from_infile=None, cadence=None):
+                     var_from_infile=None, cadence=None, order="none"):
     """
     Extract the data from a batch of VPLANET simulation directories.
     Essentially, this calls data_from_dir_hdf5 len(dirs) times and stores the
@@ -614,6 +614,10 @@ def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
     var_from_infile : dict
         Dict of input files, parameters to extract from input files.  Defaults
         to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in.  Currently, this does nothing for this function.
 
     Returns
     -------
@@ -623,7 +627,7 @@ def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
     number_to_sum : list
         dictionary to translate simulation number to simulation name
     """
-    # Create hdf5 file
+    # Create new hdf5 file
     f_set = h5py.File(dset, "w")
 
     # List to store what dir sim # corresponds to
@@ -654,7 +658,6 @@ def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
     f_set.close()
 
     return counter, number_to_sim
-
 # end function
 
 
@@ -674,7 +677,7 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     dataset : str
         Name (including path) of hdf5 database
     order : str
-        How user wants dataset ordered.  Defaults to "None" which means
+        How user wants dataset ordered.  Defaults to "none" which means
         the code loads in the data in whatever order the simulation dirs
         are in
     compression : str
@@ -750,7 +753,14 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     # Get list of all data directories in src to iterate over
     dirs = get_dirs(src,order=order)
 
-    # TODO If in parallel, partition dirs here
+    # If using parallel, need some additional setup
+    if parallel:
+
+        # Get number of cores
+        N_CORES = mlt.cpu_count()
+
+        # Partition dirs list into one list for each core
+        dirs_gen = np.array_split(np.array(dirs),N_CORES)
 
     # Find out what the input files (like body.in) are based on the first
     # directory since they are assumed to be the same in all directories
@@ -774,15 +784,38 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
 
     # How should I process the data? In parallel or serially?
     if parallel:
-        raise NotImplementedError("Parallel extraction not implemented yet!")
-        # TODO
-        # Map: Partition dirs out to corresponds
+
+        # Take the threads to the pool
+        pool = mlt.Pool(processes=N_CORES)
+
+        # Get base dataset name for naming smaller dataset chunks
+        base_name = os.path.splitext(dataset)[0]
+
+        # Map: Partition dirs out to corresponding cores, extract data
+        results = [pool.apply_async(batch_extraction,
+                                    (dirs_gen[ii], src, base_name+"_"+str(ii)+".hdf5"),
+                                    {"counter" : 0,
+                                    "data_cols" : data_cols,
+                                    "infiles" : infiles,
+                                    "compression" : compression,
+                                    "remove_halts" : remove_halts,
+                                    "var_from_log" : var_from_log,
+                                    "var_from_infile" : var_from_infile,
+                                    "cadence" : cadence,
+                                    "order" : order})
+                                    for ii in range(N_CORES)]
+
+        # Get the results once they're done, sort by processor order
+        #results.sort() # Not implemented yet...
+        results = [p.get() for p in results]
+
         # Reduce: Merge all separate hdf5 files into one
+        # TODO
+        print("It didn't break!")
+        return None
 
     # Use just one processor
     else:
-        # Create hdf5 file
-        #f_set = h5py.File(dataset, "w")
 
         # Loop over directories (and hence simulations) and get the data
         # User counter for name of group/means to identify simulation
@@ -799,27 +832,6 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
                                                   var_from_log=var_from_log,
                                                   var_from_infile=var_from_infile,
                                                   cadence=cadence)
-        """
-        for direct in dirs:
-
-            # Store data from each simulation, increment counter if succesful
-            res = data_from_dir_hdf5(f_set,str(counter),os.path.join(src,direct),
-                                     data_cols,infiles,compression=compression,
-                                     remove_halts=remove_halts,
-                                     var_from_log=var_from_log,
-                                     var_from_infile=var_from_infile)
-
-            # Increment counter (keeps track of valid parsed simulation dirs)
-            counter += res
-            if res != 0:
-                # store sim - counter mapping
-                number_to_sim.append(direct)
-
-            # Output progress to user?
-            if cadence is not None and counter % int(cadence) == 0 and cadence > 0:
-                print("Simulations processed so far: %d" % counter)
-                sys.stdout.flush()
-        """
 
         # Try to store metadata
         # Add top level dataset with information about dataset

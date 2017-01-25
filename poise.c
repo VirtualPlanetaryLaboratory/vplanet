@@ -1153,6 +1153,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   body[iBody].bSnowball = 0;
   body[iBody].dFluxInGlobal = 0;
   body[iBody].dIceFlowTot = 0;
+  body[iBody].dIceBalanceTot = 0;
+  body[iBody].iWriteLat = 0;
   
   if (body[iBody].bColdStart) {
     Toffset = -40.0;
@@ -1380,6 +1382,13 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         body[iBody].dInvMSea[2*i+1] = malloc(2*body[iBody].iNumLats*sizeof(double));
         
         body[iBody].daIceMassTmp[i] = 0.0;
+        body[iBody].daIceBalanceAvg[i] = 0.0;
+        body[iBody].daIceFlowAvg[i] = 0.0;
+        body[iBody].daBedrockH[i] = 0.0;
+        body[iBody].daBedrockHEq[i] = 0.0;
+        body[iBody].daIceHeight[i] = 0.0;
+        body[iBody].daDIceHeightDy[i] = 0.0;
+        
         body[iBody].scaleSea[2*i] = 0.;
         body[iBody].scaleSea[2*i+1] = 0.;
         for (j=0;j<2*body[iBody].iNumLats;j++) {
@@ -2687,6 +2696,8 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
       body[iBody].dIceFlowTot = 0.0;  //total ice flow (should equal zero)
       body[iBody].dIceMassTot = 0.0;
       if (body[iBody].bIceSheets) {
+        printf("call\n");
+        fflush(stdout);
         PoiseIceSheets(body,evolve,iBody);
       }
     }
@@ -4155,6 +4166,11 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
               body[iBody].daIceHeight[iLat-1]-body[iBody].daBedrockH[iLat-1]) / \
               (body[iBody].dRadius*deltax) )/2.0;
         }
+        printf("%d\n",iLat);
+        
+        printf("%f\n",fabs(body[iBody].daBedrockH[iLat]));
+        fflush(stdout);
+        
         body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
             pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
             pow(body[iBody].daIceHeight[iLat]+body[iBody].daBedrockH[iLat],nGLEN+2);

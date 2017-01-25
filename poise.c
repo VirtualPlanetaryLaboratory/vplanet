@@ -2706,8 +2706,6 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
       body[iBody].dIceFlowTot = 0.0;  //total ice flow (should equal zero)
       body[iBody].dIceMassTot = 0.0;
       if (body[iBody].bIceSheets) {
-        printf("call\n");
-        fflush(stdout);
         PoiseIceSheets(body,evolve,iBody);
       }
     }
@@ -4177,10 +4175,6 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
               body[iBody].daIceHeight[iLat-1]-body[iBody].daBedrockH[iLat-1]) / \
               (body[iBody].dRadius*deltax) )/2.0;
         }
-        printf("%d\n",iLat);
-        
-        printf("%f\n",fabs(body[iBody].daBedrockH[iLat]));
-        fflush(stdout);
         
         body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
             pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \

@@ -1,4 +1,4 @@
-/***************** EQTIDE.H *********************** 
+/***************** EQTIDE.H ***********************
  *
  * Rory Barnes, Wed May  7 13:57:29 PDT 2014
  *
@@ -28,7 +28,7 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_TIDALRADIUS         1002
 #define OPT_DISCRETEROT         1005
 #define OPT_FIXORBIT            1007
-#define OPT_FORCEEQSPIN         1010 
+#define OPT_FORCEEQSPIN         1010
 #define OPT_HALTDBLSYNC         1015
 #define OPT_HALTTIDELOCK        1020
 #define OPT_HALTSYNCROT         1025
@@ -53,7 +53,7 @@ void HelpOptionsEqtide(OPTIONS*);
 void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -71,7 +71,7 @@ void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
 void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
@@ -88,7 +88,7 @@ void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
 void VerifyRotationEqtide(BODY*,CONTROL*,OPTIONS*,char[],int);
-void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int); 
+void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
 
 /* Update Functions */
@@ -142,10 +142,9 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_GAMMAROT            1078
 #define OUT_GAMMAORB            1080
 
-//#define OUT_IMK2                1082
 #define OUT_K2OCEAN             1083
 
-//#define OUT_TIDALQ              1084
+#define OUT_TIDALQEQTIDE        1084
 #define OUT_TIDALQOCEAN         1085
 #define OUT_TIDALQENV           1084
 #define OUT_TIDALTAU            1086
@@ -155,6 +154,7 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_OBLTIMEEQTIDE       1092
 #define OUT_POWEREQTIDE         1094
 #define OUT_ENFLUXEQTIDE        1096
+#define OUT_TIDALQ              1097
 
 void HelpOutputEqtide(OUTPUT*);
 void WriteBodyDsemiDtEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -185,7 +185,7 @@ void WriteEqSurfEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*
 //void WriteTidalQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalTau(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTideLock(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-//void WriteImK2(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+//void WriteImK2(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteK2Ocean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteK2Env(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalQOcean(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

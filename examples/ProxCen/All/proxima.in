@@ -19,9 +19,9 @@ dMaxLockDiff    0.1                     # Difference from tidal rotation period 
 saTidePerts     b                    # Body name(s) of tidal perturbers
 
 # STELLAR parameters
-#sStellarModel	baraffe
+sStellarModel	proxima
 #sXUVModel	ribas
 #sWindModel	Reiners
 
-saOutputOrder 	Time -RotPer Obli #-Lumin -LXUVTot -Radius
+saOutputOrder 	Time -RotPer Obli -Lumin -LXUVTot -Radius
 

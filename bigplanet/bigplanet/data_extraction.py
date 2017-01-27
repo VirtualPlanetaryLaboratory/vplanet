@@ -760,7 +760,7 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
     dataset = os.path.splitext(dataset)[0]
 
     # Only run this function if the dataset doesn't exist in the src dir
-    if os.path.exists(dataset + ".pkl"):
+    if os.path.exists(dataset + ".hdf5"):
 
         # Check to see if any hdf5 files exist
         # TODO
@@ -770,11 +770,11 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
         print("Using metadata stored in dataset object.")
         sys.stdout.flush()
 
-        """
         # Read existing dataset
-        f_set = h5py.File(dataset, "r")
+        f_set = h5py.File(dataset+".hdf5", "r")
 
         # Try to load metadata
+        # TODO: make this a function
         try:
             # Load size
             length = f_set["size"][0]
@@ -793,14 +793,24 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
         except RuntimeError:
             raise RuntimeError("Failed to load number_to_sim.")
 
+        try:
+            # Get list to convert from # -> sim name
+            input_files = list(f_set["input_files"])
+        except RuntimeError:
+            raise RuntimeError("Failed to load input_files.")
+
+        try:
+            # Get list to convert from # -> sim name
+            data_cols = list(f_set["data_cols"])
+        except RuntimeError:
+            raise RuntimeError("Failed to load data_cols.")
+
         # Close dataset, return object handler
         f_set.close()
-        return Dataset(dataset,length,order,number_to_sim)
-        """
-
-        # Load dataset object from pickle file, return it
-        with open(dataset + ".pkl", 'rb') as f:
-            return pickle.load(f)
+        return Dataset(data=dataset+".hdf5",size=length,order=order,
+                       number_to_sim=number_to_sim,
+                       input_files=input_files,
+                       data_cols=data_cols)
 
     # No dataset exists: Make the dataset!
 
@@ -922,27 +932,42 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
                                                   cadence=cadence)
 
         # Store metadata into a handler object
+        # TODO: turn this into a function
         try:
 
-            """
             # Reopen hdf5 file to add metadata
-            f_set = h5py.File(dataset, "r+")
+            f_set = h5py.File(dataset+".hdf5", "r+")
 
             # Make variable-length string dtype so hdf5 could understand it
             string_dt = h5py.special_dtype(vlen=str)
 
+            # Store size of dataset, i.e. number of simulations
             f_set.create_dataset("size", data=np.array([counter]), dtype=np.int64)
-            # Note: for python 3, str replaced by bytes
 
+            # Store how the dataset is ordered
             data = np.asarray([order], dtype=object)
             f_set.create_dataset("order", data=data, dtype=string_dt)
 
+            # Store mapping between number, simulation name
             data = np.asarray(number_to_sim, dtype=object)
             f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
 
+            # Store the name of the input files for each simulation
+            data = np.asarray(infiles, dtype=object)
+            f_set.create_dataset("input_files", data=data, dtype=string_dt)
+
+            # Store the names of the variables you're saving
+            # TODO: include ones from logfile, input files
+            data = []
+            for key in data_cols.keys():
+                for var in data_cols[key]:
+                    # Make variable look like body_variable
+                    data.append(str(key).replace(".in","") + "_" + str(var))
+            data = np.asarray(data, dtype=object)
+            f_set.create_dataset("data_cols", data=data, dtype=string_dt)
+
             # Close dataset
             f_set.close()
-            """
 
             # Create dataset object to wrangle all the data
             dataset_obj = Dataset(data=dataset+".hdf5",size=counter,order=order,
@@ -950,10 +975,7 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
                                   input_files=infiles,
                                   data_cols=data_cols)
 
-            # Now dump this to a pickle file
-            with open(dataset + ".pkl", 'wb') as output:
-                pickle.dump(dataset_obj, output, pickle.HIGHEST_PROTOCOL)
-
+        # This can fail sometimes...
         except RuntimeError:
             raise RuntimeError("Unable to store metadata.  Shouldn't happen!")
 

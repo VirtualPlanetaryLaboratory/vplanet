@@ -760,57 +760,16 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
     dataset = os.path.splitext(dataset)[0]
 
     # Only run this function if the dataset doesn't exist in the src dir
+    # TODO: fix this
     if os.path.exists(dataset + ".hdf5"):
-
-        # Check to see if any hdf5 files exist
-        # TODO
 
         # Dataset exists
         print("Hdf5 dataset already exists.  Reading from: %s" % dataset)
         print("Using metadata stored in dataset object.")
         sys.stdout.flush()
 
-        # Read existing dataset
-        f_set = h5py.File(dataset+".hdf5", "r")
-
-        # Try to load metadata
-        # TODO: make this a function
-        try:
-            # Load size
-            length = f_set["size"][0]
-        except RuntimeError:
-            raise RuntimeError("Failed to load size.")
-
-        try:
-            # Load order
-            order = f_set["order"][0]
-        except RuntimeError:
-            raise RuntimeError("Failed to load order.")
-
-        try:
-            # Get list to convert from # -> sim name
-            number_to_sim = list(f_set["number_to_sim"])
-        except RuntimeError:
-            raise RuntimeError("Failed to load number_to_sim.")
-
-        try:
-            # Get list to convert from # -> sim name
-            input_files = list(f_set["input_files"])
-        except RuntimeError:
-            raise RuntimeError("Failed to load input_files.")
-
-        try:
-            # Get list to convert from # -> sim name
-            data_cols = list(f_set["data_cols"])
-        except RuntimeError:
-            raise RuntimeError("Failed to load data_cols.")
-
-        # Close dataset, return object handler
-        f_set.close()
-        return Dataset(data=dataset+".hdf5",size=length,order=order,
-                       number_to_sim=number_to_sim,
-                       input_files=input_files,
-                       data_cols=data_cols)
+        # Load the metadata, return a dataset obj for data-wrangling
+        return load_metadata(dataset)
 
     # No dataset exists: Make the dataset!
 
@@ -932,56 +891,226 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
                                                   cadence=cadence)
 
         # Store metadata into a handler object
-        # TODO: turn this into a function
         try:
 
-            # Reopen hdf5 file to add metadata
-            f_set = h5py.File(dataset+".hdf5", "r+")
+            # Save metadata into hdf5 file, return dataset object
+            dataset_obj = save_metadata(dataset, counter, order, number_to_sim,
+                                        infiles, data_cols, var_from_log,
+                                        var_from_infile)
 
-            # Make variable-length string dtype so hdf5 could understand it
-            string_dt = h5py.special_dtype(vlen=str)
-
-            # Store size of dataset, i.e. number of simulations
-            f_set.create_dataset("size", data=np.array([counter]), dtype=np.int64)
-
-            # Store how the dataset is ordered
-            data = np.asarray([order], dtype=object)
-            f_set.create_dataset("order", data=data, dtype=string_dt)
-
-            # Store mapping between number, simulation name
-            data = np.asarray(number_to_sim, dtype=object)
-            f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
-
-            # Store the name of the input files for each simulation
-            data = np.asarray(infiles, dtype=object)
-            f_set.create_dataset("input_files", data=data, dtype=string_dt)
-
-            # Store the names of the variables you're saving
-            # TODO: include ones from logfile, input files
-            data = []
-            for key in data_cols.keys():
-                for var in data_cols[key]:
-                    # Make variable look like body_variable
-                    data.append(str(key).replace(".in","") + "_" + str(var))
-            data = np.asarray(data, dtype=object)
-            f_set.create_dataset("data_cols", data=data, dtype=string_dt)
-
-            # Close dataset
-            f_set.close()
-
-            # Create dataset object to wrangle all the data
-            dataset_obj = Dataset(data=dataset+".hdf5",size=counter,order=order,
-                                  number_to_sim=number_to_sim,
-                                  input_files=infiles,
-                                  data_cols=data_cols)
-
-        # This can fail sometimes...
+        # This can fail sometimes... but it shouldn't
         except RuntimeError:
             raise RuntimeError("Unable to store metadata.  Shouldn't happen!")
 
         # Create Dataset class to return
         return dataset_obj
-    # End function
+# End function
+
+
+def save_metadata(dataset, counter, order, number_to_sim, infiles, data_cols,
+                  var_from_log, var_from_infile):
+    """
+    Save simulation suite metadata into a hdf5 file.
+
+    Parameters
+    ----------
+    dataset : str
+        Name (including path) of hdf5 dataset.  Don't include a file extension.
+    counter : int
+        number of processed simulations in the suite
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
+    number_to_sim : list
+        list of mapping between number (index) and simuatin name
+    infiles : list
+        list of the names of simulation input files
+    data_cols : dict
+        dict of bodies and their respective parameters which are simulation
+        outputs
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files. Looks like
+        dict = {"body1" : [var1], "body2" : [var2]}
+
+    Returns
+    -------
+    data : Dataset object
+        See Dataset object docs
+    """
+
+    # TODO
+    # Handle when the input isn't provided
+
+    # Figure out path to where the dataset(s) live
+    path = dataset.split("/")[:-1]
+    path = os.path.join('/', *path)
+
+    print(path)
+
+    # Find all .hdf5 files, sort them so 0th one shows up first
+    # Metadata always in 0th file
+    datasets = []
+    for d_file in os.listdir(path):
+        if d_file.endswith(".hdf5"):
+            datasets.append(os.path.join(path,d_file))
+    datasets.sort()
+
+    # Read existing dataset (always first one in sim dir)
+    # Note that this one already ends in .hdf5
+    f_set = h5py.File(datasets[0], "r+")
+
+    # Make variable-length string dtype so hdf5 could understand it
+    string_dt = h5py.special_dtype(vlen=str)
+
+    # Store size of dataset, i.e. number of simulations
+    f_set.create_dataset("size", data=np.array([counter]), dtype=np.int64)
+
+    # Store how the dataset is ordered
+    data = np.asarray([order], dtype=object)
+    f_set.create_dataset("order", data=data, dtype=string_dt)
+
+    # Store mapping between number, simulation name
+    data = np.asarray(number_to_sim, dtype=object)
+    f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
+
+    # Store the name of the input files for each simulation
+    data = np.asarray(infiles, dtype=object)
+    f_set.create_dataset("input_files", data=data, dtype=string_dt)
+
+    # Store the names of the variables you're saving
+    data = []
+    for key in data_cols.keys():
+        for var in data_cols[key]:
+            # Make variable look like body_variable
+            data.append(str(key).replace(".in","") + "_" + str(var))
+
+    # Any variables from the log file?
+    if var_from_log is not None:
+        for key in var_from_log.keys():
+            for var in var_from_log[key]:
+                # Make variable look like body_variable
+                data.append(str(key).replace(".in","") + "_" + str(var))
+
+    # Any variables from input files?
+    if var_from_infile is not None:
+        for key in var_from_infile.keys():
+            for var in var_from_infile[key]:
+                # Make variable look like body_variable
+                data.append(str(key).replace(".in","") + "_" + str(var))
+
+    data_cols = np.asarray(data, dtype=object)
+    f_set.create_dataset("data_cols", data=data_cols, dtype=string_dt)
+
+    # Close dataset
+    f_set.close()
+
+    # Create dataset object to wrangle all the data
+    dataset_obj = Dataset(data=dataset+".hdf5",size=counter,order=order,
+                          number_to_sim=number_to_sim,
+                          input_files=infiles,
+                          data_cols=data_cols)
+
+    return dataset_obj
+# end function
+
+
+def load_metadata(dataset):
+    """
+    Load simulation suite metadata from a hdf5 file.
+
+    Parameters
+    ----------
+    dataset : str
+        Name (including path) of hdf5 dataset.  Don't include a file extension.
+    counter : int
+        number of processed simulations in the suite
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
+    number_to_sim : list
+        list of mapping between number (index) and simuatin name
+    infiles : list
+        list of the names of simulation input files
+    data_cols : dict
+        dict of bodies and their respective parameters which are simulation
+        outputs
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files. Looks like
+        dict = {"body1" : [var1], "body2" : [var2]}
+
+    Returns
+    -------
+    data : Dataset object
+        See Dataset object docs
+    """
+
+    # Figure out path to where the dataset(s) live
+    path = dataset.split("/")[:-1]
+    path = os.path.join('/', *path)
+
+    print(path)
+
+    # Find all .hdf5 files, sort them so 0th one shows up first
+    datasets = []
+    for d_file in os.listdir(path):
+        if d_file.endswith(".hdf5"):
+            datasets.append(os.path.join(path,d_file))
+    datasets.sort()
+
+    # Read existing dataset (always first one in sim dir)
+    # Note that this one already ends in .hdf5
+    f_set = h5py.File(datasets[0], "r")
+
+    # Try to load metadata
+    # TODO: make this a function
+    try:
+        # Load size
+        length = f_set["size"][0]
+    except RuntimeError:
+        raise RuntimeError("Failed to load size.")
+
+    try:
+        # Load order
+        order = f_set["order"][0]
+    except RuntimeError:
+        raise RuntimeError("Failed to load order.")
+
+    try:
+        # Get list to convert from # -> sim name
+        number_to_sim = list(f_set["number_to_sim"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load number_to_sim.")
+
+    try:
+        # Get list to convert from # -> sim name
+        input_files = list(f_set["input_files"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load input_files.")
+
+    try:
+        # Get list to convert from # -> sim name
+        data_cols = list(f_set["data_cols"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load data_cols.")
+
+    # Close dataset, return object handler
+    f_set.close()
+
+    # TODO: handle parallel datatsets case
+
+    return Dataset(data=dataset+".hdf5",size=length,order=order,
+                   number_to_sim=number_to_sim,
+                   input_files=input_files,
+                   data_cols=data_cols)
+# end function
 
 
 def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64,

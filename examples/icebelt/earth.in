@@ -5,7 +5,7 @@ dMass        3.00316726e-06             #mass of planet
 dRadius      -1.00                      #radius (not important right now)
 dRotPeriod   -1.00000                   #rotation period (minus = days)
 dObliquity 90.0                         #obliquity 
-dSemi  -1.02300                          #semi-major axis (minus = days)
+dSemi  -1.0200                          #semi-major axis (minus = days)
 dEcc         0.0                        #eccentricity of orbit
 dLongP       0                          #pericenter, wrt Earth's position at spring equinox     
 #                                        note that this is the typical value +180, 
@@ -60,7 +60,7 @@ dMixingDepth      100                   #mixing depth of ocean
 
 
 #________output options!_____________________________________________
-saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
+saOutputOrder    Time Semim PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
   -IceFlow -BedrockH -TempMaxLat -TempMinLat -FluxMerid -DivFlux

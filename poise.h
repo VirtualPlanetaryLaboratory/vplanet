@@ -126,6 +126,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TEMPMINLAT       1950
 #define OUT_TEMPMAXLAT       1951
 #define OUT_SNOWBALL         1952
+#define OUT_PLANCKBAVG       1953
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -142,6 +143,7 @@ void WriteAlbedoLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteAnnualInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDailyInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePlanckB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePlanckBAvg(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalFluxes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalIceBalance(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

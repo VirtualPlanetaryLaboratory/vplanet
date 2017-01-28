@@ -806,7 +806,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
   
   /*

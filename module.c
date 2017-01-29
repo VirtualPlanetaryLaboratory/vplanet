@@ -626,8 +626,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
    * Q, k_2 and Im(k_2) for the world
    */
 
-  // If this is the star (body 0 or body 1 in binary), ignore
-  if(iBody == 0 || (body[iBody].bBinary && iBody == 1))
+  // If this is the star (body 0 or body 1 in binary, bStellar set), ignore
+  if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar && body[iBody].iStellarModel != STELLAR_MODEL_NONE))
     return;
 
   if(body[iBody].bEqtide)
@@ -684,6 +684,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
     else
     {
       // Using tidal radius without atmesc doesn't make sense, just need to set radius
+      // Ignore if using stellar with some radius relation
       if(!(options[OPT_RADIUS].iLine[iBody+1] > -1))
       {
         fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);

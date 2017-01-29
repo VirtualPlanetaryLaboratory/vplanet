@@ -949,8 +949,6 @@ def save_metadata(dataset, counter, order, number_to_sim, infiles, data_cols,
     path = dataset.split("/")[:-1]
     path = os.path.join('/', *path)
 
-    print(path)
-
     # Find all .hdf5 files, sort them so 0th one shows up first
     # Metadata always in 0th file
     datasets = []
@@ -1055,8 +1053,6 @@ def load_metadata(dataset):
     # Figure out path to where the dataset(s) live
     path = dataset.split("/")[:-1]
     path = os.path.join('/', *path)
-
-    print(path)
 
     # Find all .hdf5 files, sort them so 0th one shows up first
     datasets = []

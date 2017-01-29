@@ -628,7 +628,10 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
 
   // If this is the star (body 0 or body 1 in binary, bStellar set), ignore
   if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar && body[iBody].iStellarModel != STELLAR_MODEL_NONE))
+  {
+    body[iBody].dTidalRadius = body[iBody].dRadius;
     return;
+  }
 
   if(body[iBody].bEqtide)
   {

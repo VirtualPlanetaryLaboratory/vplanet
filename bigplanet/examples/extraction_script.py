@@ -37,11 +37,14 @@ var_from_log = {"secondary" : ["Mass"], "cbp" : ["Mass"]}
 cadence = 100
 
 # Compression algorithm to use
-compression = "gzip"
+compression = None#"gzip"
+
+# Use all processors? Best if used on a cluster
+parallel = False
 
 data = de.extract_data_hdf5(src=src, dataset=dataset, order=order,
                             remove_halts=remove_halts, compression=compression,
-                            var_from_log=var_from_log)
+                            var_from_log=var_from_log, cadence=cadence, parallel=parallel)
 
 ### Make a dataframe of initial conditions! ###
 

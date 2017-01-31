@@ -10,7 +10,7 @@
 #include <string.h>
 #include "vplanet.h"
 
-/* NULL functions for all module function pointer matrices. All pointers are 
+/* NULL functions for all module function pointer matrices. All pointers are
    initialized to point to these functions. Modules that require them reset
    the pointers in AddModuleX. */
 
@@ -53,7 +53,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
   module->iNumModules = malloc(iNumBodies*sizeof(int));
-  module->iaModule = malloc(iNumBodies*sizeof(int*));  
+  module->iaModule = malloc(iNumBodies*sizeof(int*));
   module->iBitSum = malloc(iNumBodies*sizeof(int*));
 
   // Allow parameters that require no module
@@ -76,7 +76,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
   module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
   module->fnFinalizeUpdate235UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCrustModule));
-  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule)); 
+  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule));
   module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate238UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCrustModule));
   module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
@@ -112,7 +112,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
   module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
-  
+
   module->fnFinalizeUpdateEccX = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccXModule));
   module->fnFinalizeUpdateEccY = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccYModule));
   module->fnFinalizeUpdateEccZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccZModule));
@@ -131,7 +131,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
 
   /* Assume no modules per body to start */
-  for (iBody=0;iBody<iNumBodies;iBody++) 
+  for (iBody=0;iBody<iNumBodies;iBody++)
     module->iNumModules[iBody]=0;
 }
 
@@ -192,7 +192,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
   module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
   module->fnFinalizeUpdate235UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCrustModule));
-  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));  
+  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));
   module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
   module->fnFinalizeUpdate238UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCrustModule));
   module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
@@ -227,7 +227,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
-  
+
   module->fnFinalizeUpdateEccX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccXModule));
   module->fnFinalizeUpdateEccY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccYModule));
   module->fnFinalizeUpdateEccZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccZModule));
@@ -238,7 +238,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
-       NULL function. The modules that need actual function will replace them 
+       NULL function. The modules that need actual function will replace them
        in AddModule. */
 
     module->fnInitializeControl[iBody][iModule] = &InitializeControlNULL;
@@ -290,7 +290,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
-    
+
     module->fnFinalizeUpdateEccX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateEccY[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateEccZ[iBody][iModule] = &FinalizeUpdateNULL;
@@ -369,9 +369,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
     /* The iBitSum field is to check that every output parameter is part
        of the input modules. The variables EQTIDE, RADHEAT, etc. are set
        in vpanet.h. Each module-specific parameter is given the appropriate
-       bit in InitializeOutput. In ReadOutputOrder the field 
-       output->iModuleBit is compared bitwise to module->iBitSum. 
-       Parameters that can be specified for multiple modules are set to 1. 
+       bit in InitializeOutput. In ReadOutputOrder the field
+       output->iModuleBit is compared bitwise to module->iBitSum.
+       Parameters that can be specified for multiple modules are set to 1.
        iBitSum for each body is set 1 in InitializeModule.
     */
 
@@ -421,9 +421,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       }
     }
     UpdateFoundOptionMulti(&files->Infile[iFile],options,lTmp,iNumLines,iFile);
-  
+
     } else {
-    if (control->Io.iVerbose >= VERBERR && iFile > 0) 
+    if (control->Io.iVerbose >= VERBERR && iFile > 0)
       fprintf(stderr,"WARNING: %s not present in file %s. No evolution will occur for this body.\n",options->cName,files->Infile[iFile].cIn);
   }
   free(lTmp);
@@ -439,7 +439,7 @@ void PrintModuleList(FILE *file,int iBitSum) {
     fprintf(file,"DISTORB ");
   if (iBitSum & DISTROT)
     fprintf(file,"DISTROT ");
-  if (iBitSum & EQTIDE) 
+  if (iBitSum & EQTIDE)
     fprintf(file,"EQTIDE ");
   if (iBitSum & FLARE)
     fprintf(file,"FLARE ");
@@ -453,7 +453,7 @@ void PrintModuleList(FILE *file,int iBitSum) {
     fprintf(file,"STELLAR ");
   if (iBitSum & THERMINT)
     fprintf(file,"THERMINT ");
-    
+
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
@@ -510,13 +510,13 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
   // Eqtide, not thermint
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
-      /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and 
-	 check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT 
+      /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and
+	 check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT
 	 selected. */
       if (body[iBody].bOceanTides) {
 	if (control->Io.iVerbose >= VERBINPUT)
 	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
-        exit(EXIT_INPUT);  
+        exit(EXIT_INPUT);
       }
       if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
 	if (control->Io.iVerbose >= VERBINPUT)
@@ -528,10 +528,10 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
           fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_K2OCEAN].cName);
         exit(EXIT_INPUT);
       }
-      
+
       // Set Im(k_2) here
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
-      
+
       // No ocean contribution if not using thermint
       body[iBody].dImK2Ocean = 0.0;
       body[iBody].dK2Ocean = 0.0;
@@ -542,7 +542,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
     } else { // Thermint and Eqtide called
-    
+
       // If dTidalQ or K2 set, ignore/warn user as thermint computes these
       if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT)
@@ -553,9 +553,9 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
           fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_K2].cName);
       }
 
-      /* When Thermint and Eqtide are called together, care must be taken as 
-         Im(k_2) must be known in order to calculate TidalZ. As the individual 
-         module PropsAux are called prior to PropsAuxMulti, we must call the 
+      /* When Thermint and Eqtide are called together, care must be taken as
+         Im(k_2) must be known in order to calculate TidalZ. As the individual
+         module PropsAux are called prior to PropsAuxMulti, we must call the
          "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
          "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
          PropsAuxEqtideThermint. */
@@ -598,11 +598,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
     }
   }
-  
+
   /*
   else if (body[iBody].bThermint) { // eqtide not called, but thermint is
     //exit(1);
-  
+
     printf("%d\n",iBody);
     fflush(stdout);
     body[iBody].dImk2Man = fdImk2Man(body,iBody);
@@ -626,14 +626,17 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
    * Q, k_2 and Im(k_2) for the world
    */
 
-  // If this is the star (body 0 or body 1 in binary), ignore
-  if(iBody == 0 || (body[iBody].bBinary && iBody == 1))
-    return;
+  // If this is the star (body 0 or body 1 in binary), tidal radius == radius
+  if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar))
+  {
+     body[iBody].dTidalRadius = body[iBody].dRadius;
+     return;
+  }
 
   if(body[iBody].bEqtide)
   {
     // CTL hack.  Pretty sure EQTIDE CTL is broken, but this will prevent additional hiccups
-    // Ignore everything after this 
+    // Ignore everything after this
     if(control->Evolve.iEqtideModel == CTL)
     {
       body[iBody].dTidalRadius = body[iBody].dRadius;
@@ -643,8 +646,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
     // Using ATMESC?
     if(body[iBody].bAtmEsc)
     {
-      
-      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius 
+
+      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
 
       // Using tidal radus
@@ -666,7 +669,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
           fprintf(stderr,"ERROR: Using EQTIDE and bUseTidalRadius == 0 but %s or %s not set!\n",options[OPT_RADIUS].cName,options[OPT_PLANETRADIUSMODEL].cName);
           exit(EXIT_INPUT);
         }
-      
+
         // If dTidalRadius set, warn user since it's not considered
         if(options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)
         {
@@ -689,7 +692,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
         fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);
         exit(EXIT_INPUT);
       }
-     
+
       // If dTidalRadius or bUseTidalRadius set, ignore and warn user as they do nothing
       if((options[OPT_USETIDALRADIUS].iLine[iBody+1] > -1) || (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1))
       {
@@ -710,7 +713,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
   // If you're using alllll of these, include the force behavior!
   // Also, you MUST have surface water information set if you're using bOceanTides
   // Note: VerifyEqtideThermint handles all things oceans
-  if(body[iBody].bEqtide) 
+  if(body[iBody].bEqtide)
   {
     if(body[iBody].bThermint)
     {
@@ -726,7 +729,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
             fprintf(stderr,"Must both be set when using EQTIDE, THERMINT and ATMESC with bEnvTides == True.\n");
             exit(EXIT_INPUT);
           }
-           
+
           // Otherwise, we're good! set ImK2 for the envelope component
           body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
         }
@@ -748,23 +751,23 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
           body[iBody].dImK2Env = 0.0;
           body[iBody].dTidalQEnv = -1.0;
         }
-        
+
         // Set function pointers so models play nice
 
         // Set force behavior
         control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorAtmescEqtideThermint;
-     
+
         // Switch PropAuxEqtideThermint -> PropsAuxAtmescEqtideThermint
         control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtideThermint;
       }
-      // No AtmEsc 
+      // No AtmEsc
       else
       {
         // Can't have any tidal envelope parameters set
         if(options[OPT_TIDALQENV].iLine[iBody+1] > -1 || options[OPT_K2ENV].iLine[iBody+1] > -1)
         {
           if (control->Io.iVerbose >= VERBINPUT)
-          { 
+          {
             fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQENV].cName,options[OPT_K2ENV].cName);
             exit(EXIT_INPUT);
           }
@@ -824,7 +827,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 0) {
-    /* XXX Note that the number of elements here is really a permutation, 
+    /* XXX Note that the number of elements here is really a permutation,
        but this should work for a while. */
     control->fnPropsAuxMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnPropsAuxModule*));
     control->fnForceBehaviorMulti[iBody] = malloc(2*module->iNumModules[iBody]*sizeof(fnForceBehaviorModule*));
@@ -834,9 +837,9 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
      these functions as some default behavior is set if other modules aren't
      called. */
   VerifyModuleMultiDistOrbDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
   VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
   VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiAtmescEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
@@ -849,7 +852,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
-  
+
   VerifyModuleMultiEqtideDistorb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
@@ -873,7 +876,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  /* RB- These first 3 lines were taken from PropsAuxThermint, but 
+  /* RB- These first 3 lines were taken from PropsAuxThermint, but
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
@@ -888,7 +891,7 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
   }
   // No oceans, thermint dictates ImK2
-  else 
+  else
   {
     body[iBody].dImK2 = body[iBody].dImk2Man;
     body[iBody].dK2 = body[iBody].dK2Man;
@@ -920,17 +923,17 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
   {
     // Oceans dominate
     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-     
+
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean); 
+    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
   }
   // Case: No oceans, envelope (envelope evap while in runaway):
   else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
   {
     // Envelope dominates
     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-   
+
     // Im(K_2) is weighted sum of mantle and enevelope component
     // weighted by the love number of each component
     body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
@@ -955,7 +958,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
 
   // Finally, call EQTIDE props aux then set mantle tidal power
   PropsAuxCPL(body,evolve,update,iBody);
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody); 
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 
 }
 /* This does not seem to be necessary
@@ -995,7 +998,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
 
   // Loop over non-star bodies
   int iBody;
-  
+
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
   // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
@@ -1020,7 +1023,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     else
       bEnv = 1;
 
-    // Note: With these checks, only do anything if user intended to model them 
+    // Note: With these checks, only do anything if user intended to model them
     // i.e. if bOceanTides == 1 from initial conditions
 
     // Case: No water -> no ocean tides
@@ -1032,7 +1035,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     else if(bOceans && (body[iBody].dSurfaceWaterMass > 0.0) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
-    } 
+    }
     // Case: Water and on the surface! (this is when body does NOT actively lose water!)
     else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
     {
@@ -1056,4 +1059,3 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bOceanTides = 0;
   }
 }
-

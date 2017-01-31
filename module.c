@@ -626,9 +626,12 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
    * Q, k_2 and Im(k_2) for the world
    */
 
-  // If this is the star (body 0 or body 1 in binary), ignore
-  if(iBody == 0 || (body[iBody].bBinary && iBody == 1))
-    return;
+  // If this is the star (body 0 or body 1 in binary), tidal radius == radius
+  if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar))
+  {
+     body[iBody].dTidalRadius = body[iBody].dRadius;
+     return;
+  }
 
   if(body[iBody].bEqtide)
   {

@@ -144,7 +144,7 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 
 #define OUT_K2OCEAN             1083
 
-#define OUT_TIDALQEQTIDE        1084
+//#define OUT_TIDALQEQTIDE        1084
 #define OUT_TIDALQOCEAN         1085
 #define OUT_TIDALQENV           1084
 #define OUT_TIDALTAU            1086

@@ -74,18 +74,31 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_PERIQ               2220
 #define OUT_NENCOUNTERS         2221
 #define OUT_FVELDISP            2222
+#define OUT_ECCX                2225
+#define OUT_ECCY                2226
+#define OUT_ECCZ                2227
+#define OUT_ANGMX               2228
+#define OUT_ANGMY               2229
+#define OUT_ANGMZ               2230
+
 #define OUT_DECCDTGALHTIDAL     2250
 #define OUT_DINCDTGALHTIDAL     2251
 #define OUT_DLONGADTGALHTIDAL   2252
 #define OUT_DARGPDTGALHTIDAL    2253
 
 void HelpOutputGalHabit(OUTPUT*);
-void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyPeriQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDEccDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDIncDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDArgPDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDLongADtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputGalHabit(OUTPUT*,fnWriteOutput[]);
+void WriteBodyEccX(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyEccY(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyEccZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMX(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMY(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsGalHabit(CONTROL*,FILE*);

@@ -60,7 +60,7 @@ dMixingDepth      100                   #mixing depth of ocean
 
 
 #________output options!_____________________________________________
-saOutputOrder    Time Semim PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
+saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
   -IceFlow -BedrockH -TempMaxLat -TempMinLat -FluxMerid -DivFlux

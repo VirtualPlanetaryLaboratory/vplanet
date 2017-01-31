@@ -1076,6 +1076,37 @@ void WriteBodyPeriQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
+void WriteBodyEccX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccX;
+}
+
+void WriteBodyEccY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccY;
+}
+
+void WriteBodyEccZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccZ;
+}
+
+void WriteBodyAngMX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMX;
+}
+
+void WriteBodyAngMY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMY;
+}
+
+void WriteBodyAngMZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMZ;
+}
+
+
 void WriteNEncounters(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
  
   *dTmp = (double)system->iNEncounters;
@@ -1224,6 +1255,54 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PERIQ].iNum = 1;
   output[OUT_PERIQ].iModuleBit = GALHABIT;
   fnWrite[OUT_PERIQ] = &WriteBodyPeriQ;
+  
+  sprintf(output[OUT_ECCX].cName,"EccX");
+  sprintf(output[OUT_ECCX].cDescr,"X component of ecc vector");
+  sprintf(output[OUT_ECCX].cNeg," ");
+  output[OUT_ECCX].bNeg = 0;
+  output[OUT_ECCX].iNum = 1;
+  output[OUT_ECCX].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCX] = &WriteBodyEccX;
+  
+  sprintf(output[OUT_ECCY].cName,"EccY");
+  sprintf(output[OUT_ECCY].cDescr,"Y component of ecc vector");
+  sprintf(output[OUT_ECCY].cNeg," ");
+  output[OUT_ECCY].bNeg = 0;
+  output[OUT_ECCY].iNum = 1;
+  output[OUT_ECCY].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCY] = &WriteBodyEccY;
+  
+  sprintf(output[OUT_ECCZ].cName,"EccZ");
+  sprintf(output[OUT_ECCZ].cDescr,"Z component of ecc vector");
+  sprintf(output[OUT_ECCZ].cNeg," ");
+  output[OUT_ECCZ].bNeg = 0;
+  output[OUT_ECCZ].iNum = 1;
+  output[OUT_ECCZ].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCZ] = &WriteBodyEccZ;
+  
+  sprintf(output[OUT_ANGMX].cName,"AngMX");
+  sprintf(output[OUT_ANGMX].cDescr,"X component of angular mom vector");
+  sprintf(output[OUT_ANGMX].cNeg," ");
+  output[OUT_ANGMX].bNeg = 0;
+  output[OUT_ANGMX].iNum = 1;
+  output[OUT_ANGMX].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMX] = &WriteBodyAngMX;
+  
+  sprintf(output[OUT_ANGMY].cName,"AngMY");
+  sprintf(output[OUT_ANGMY].cDescr,"Y component of angular mom vector");
+  sprintf(output[OUT_ANGMY].cNeg," ");
+  output[OUT_ANGMY].bNeg = 0;
+  output[OUT_ANGMY].iNum = 1;
+  output[OUT_ANGMY].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMY] = &WriteBodyAngMY;
+  
+  sprintf(output[OUT_ANGMZ].cName,"AngMZ");
+  sprintf(output[OUT_ANGMZ].cDescr,"Z component of angular mom vector");
+  sprintf(output[OUT_ANGMZ].cNeg," ");
+  output[OUT_ANGMZ].bNeg = 0;
+  output[OUT_ANGMZ].iNum = 1;
+  output[OUT_ANGMZ].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMZ] = &WriteBodyAngMZ;
   
   sprintf(output[OUT_NENCOUNTERS].cName,"NEncounters");
   sprintf(output[OUT_NENCOUNTERS].cDescr,"cumulative number of stellar encounters");

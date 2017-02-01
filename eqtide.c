@@ -2491,9 +2491,6 @@ void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   fprintf(fp,"----- EQTIDE PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=iStart;iOut<OUTENDEQTIDE;iOut++) {
     if (output[iOut].iNum > 0) {
-      // DEBUG: TIDAL_Q memory error
-      //printf("%d\n",iOut);
-      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }

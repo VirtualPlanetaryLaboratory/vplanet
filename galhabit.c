@@ -1700,6 +1700,9 @@ void CalcEccVec(BODY *body, int iBody) {
 } 
 
 void CalcAngMVec(BODY *body, int iBody) {
+  double dMu;
+  dMu = BIGG*(body[iBody].dMassInterior)
+
   body[iBody].dAngM = sqrt((1.0-pow(body[iBody].dEcc,2)));
   body[iBody].dAngMX = body[iBody].dAngM*(sin(body[iBody].dLongA)*sin(body[iBody].dInc));
   body[iBody].dAngMY = -body[iBody].dAngM*(cos(body[iBody].dLongA)*sin(body[iBody].dInc));
@@ -2496,8 +2499,11 @@ double dexdla(double dEccY) {
   return -dEccY;
 }
 
-double dexdap(double dEccY, double dEccZ, double dInc, double dLongA) {
-  return -dEccZ*cos(dLongA)*sin(dInc) - dEccY*cos(dInc);
+double dexdap(BODY *body, int iBody) {
+  //return -dEccZ*cos(dLongA)*sin(dInc) - dEccY*cos(dInc);
+  double h = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+ pow(body[iBody].dAngMZ,2));
+  
+  return body[iBody].dEccZ*body[iBody].dAngMY/h - body[iBody].dEccY*body[iBody].dAngMZ/h;
 }
 
 double deydJ(BODY *body, int iBody) {  
@@ -2511,8 +2517,11 @@ double deydla(double dEccX) {
   return dEccX;
 }
 
-double deydap(double dEccX, double dEccZ, double dInc, double dLongA) {
-  return dEccX*cos(dInc) - dEccZ*sin(dLongA)*sin(dInc);
+double deydap(BODY *body, int iBody) {
+//   return dEccX*cos(dInc) - dEccZ*sin(dLongA)*sin(dInc);
+  double h = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+ pow(body[iBody].dAngMZ,2));
+  
+  return body[iBody].dEccX*body[iBody].dAngMZ/h - body[iBody].dEccZ*body[iBody].dAngMX/h;
 }
 
 double dezdJ(BODY *body, int iBody) {
@@ -2528,13 +2537,13 @@ double dezdap(double dArgP, double dEcc, double dInc) {
 //--------------Galactic tides!--------------------------------------------------------------
 
 double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dL;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
-  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dL;
+  dMu = BIGG*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
+  dL = sqrt(dMu*body[iaBody[0]].dSemi);
 
-  return -5.0*PI*KGAUSS*KGAUSS*dRho*\
-          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
-          sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
+  return -5.0*PI*BIGG*dRho*\
+          pow(body[iaBody[0]].dSemi*body[iaBody[0]].dEcc,2.)* \
+          sin(2*body[iaBody[0]].dArgP)/dL;
 }
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2547,13 +2556,13 @@ double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
+  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dEcc;
+  dMu = BIGG*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
 
-  return 2*PI*KGAUSS*KGAUSS*dRho*sqrt(pow(body[iaBody[0]].dSemi/AUCM,3)/(dMu*(1.0-pow(dEcc,2))))*\
+  return 2*PI*BIGG*dRho*sqrt(pow(body[iaBody[0]].dSemi,3)/(dMu*(1.0-pow(dEcc,2))))*\
       (1.-pow(dEcc,2)-5.*(1.-pow(dEcc,2)-pow(cos(body[iaBody[0]].dInc),2))*\
-      pow(sin(body[iaBody[0]].dArgP),2.0))/DAYSEC;
+      pow(sin(body[iaBody[0]].dArgP),2.0));
 }
 
 double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2569,27 +2578,27 @@ double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDLongADt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc, dL, dJ, dJz;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
+  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dEcc, dL, dJ, dJz;
+  dMu = BIGG*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
   dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
-  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  dL = sqrt(dMu*body[iaBody[0]].dSemi);
   dJ = dL*sqrt(1.0-pow(dEcc,2));
   dJz = dJ*cos(body[iaBody[0]].dInc);
   
-  return -2.*PI*KGAUSS*KGAUSS*dRho/pow(dMu,2)*pow(dL/dJ,2)*dJz*\
-      (pow(dJ,2)+5.*(pow(dL,2)-pow(dJ,2))*pow(sin(body[iaBody[0]].dArgP),2))/DAYSEC;
+  return -2.*PI*BIGG*dRho/pow(dMu,2)*pow(dL/dJ,2)*dJz*\
+      (pow(dJ,2)+5.*(pow(dL,2)-pow(dJ,2))*pow(sin(body[iaBody[0]].dArgP),2));
 }
 
 double fdGalHabitDEccXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   return dexdJ(body,iaBody[0])*fdGalHabitDJDt(body,system,iaBody) + \
          dexdla(body[iaBody[0]].dEccY)*fdGalHabitDLongADt(body,system,iaBody) + \
-         dexdap(body[iaBody[0]].dEccY,body[iaBody[0]].dEccZ,body[iaBody[0]].dInc,body[iaBody[0]].dLongA)*fdGalHabitDArgPDt(body,system,iaBody);
+         dexdap(body,iaBody[0])*fdGalHabitDArgPDt(body,system,iaBody);
 }
 
 double fdGalHabitDEccYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   return deydJ(body,iaBody[0])*fdGalHabitDJDt(body,system,iaBody) + \
          deydla(body[iaBody[0]].dEccX)*fdGalHabitDLongADt(body,system,iaBody) + \
-         deydap(body[iaBody[0]].dEccX,body[iaBody[0]].dEccZ,body[iaBody[0]].dInc, body[iaBody[0]].dLongA)*fdGalHabitDArgPDt(body,system,iaBody);
+         deydap(body,iaBody[0])*fdGalHabitDArgPDt(body,system,iaBody);
 }
 
 double fdGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2599,7 +2608,7 @@ double fdGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   double dMu, dJ;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; 
+  dMu = BIGG*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass); 
   dJ = sqrt((1.0-pow(body[iaBody[0]].dEcc,2)));
     
   return sin(body[iaBody[0]].dLongA)*sin(body[iaBody[0]].dInc)*fdGalHabitDJDt(body,system,iaBody) + \
@@ -2668,141 +2677,141 @@ double BodyDC2Dla(BODY *body,int iBody) {
 }
 
 //------------Derivatives------------------------------------------------
-double fdGalHabitDLongADtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN;
-              
-  return 3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))/\
-          (body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)*\
-          sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDLongPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return dMu*(3*(HostBinA1(body,iaBody[0])*BodyDC1De(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2De(body,iaBody[0]))-\
-          HostBinA0(body,iaBody[0])*BodyDC0De(body,iaBody[0]))*sqrt(1.-pow(body[iaBody[0]].dEcc,2))
-          /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2))/DAYSEC\
-          +3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))*sin(body[iaBody[0]].dIncTmp)*\
-          tan(body[iaBody[0]].dIncTmp/2)/(body[iaBody[0]].dMeanMotion*DAYSEC*\
-          pow(body[iaBody[0]].dSemi/AUCM,2)*sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDArgPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return fdGalHabitDLongPDtQuad0(body,system,iaBody)-\
-          fdGalHabitDLongADtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDIncDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return -3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Dla(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Dla(body,iaBody[0]))\
-          /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)\
-          *sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDEccXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return dexdla(body[iaBody[0]].dEccYTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
-        dexdap(body[iaBody[0]].dEccYTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
-        body[iaBody[0]].dEcc*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
-        sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDEccYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return deydla(body[iaBody[0]].dEccXTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
-          deydap(body[iaBody[0]].dEccXTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) - \
-        body[iaBody[0]].dEcc*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
-        sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDEccZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return dezdap(body[iaBody[0]].dArgPTmp,body[iaBody[0]].dEcc, body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
-        body[iaBody[0]].dEcc*sin(body[iaBody[0]].dArgPTmp)*\
-        cos(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return dJ*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDLongADtQuad0(body,system,iaBody)+ \
-        dJ*sin(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
-        fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return dJ*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDLongADtQuad0(body,system,iaBody)- \
-        dJ*cos(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
-        fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return -dJ*sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody); 
-}
-
-double fdGalHabitDEccXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDEccYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDEccZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
-}
-
-double fdGalHabitDAngMXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA)+ \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDAngMYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA)- \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
-}
+// double fdGalHabitDLongADtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN;
+//               
+//   return 3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))/\
+//           (body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)*\
+//           sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDLongPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return dMu*(3*(HostBinA1(body,iaBody[0])*BodyDC1De(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2De(body,iaBody[0]))-\
+//           HostBinA0(body,iaBody[0])*BodyDC0De(body,iaBody[0]))*sqrt(1.-pow(body[iaBody[0]].dEcc,2))
+//           /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2))/DAYSEC\
+//           +3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))*sin(body[iaBody[0]].dIncTmp)*\
+//           tan(body[iaBody[0]].dIncTmp/2)/(body[iaBody[0]].dMeanMotion*DAYSEC*\
+//           pow(body[iaBody[0]].dSemi/AUCM,2)*sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDArgPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return fdGalHabitDLongPDtQuad0(body,system,iaBody)-\
+//           fdGalHabitDLongADtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDIncDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return -3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Dla(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Dla(body,iaBody[0]))\
+//           /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)\
+//           *sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDEccXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return dexdla(body[iaBody[0]].dEccYTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
+//         dexdap(body[iaBody[0]].dEccYTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
+//         body[iaBody[0]].dEcc*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
+//         sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDEccYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return deydla(body[iaBody[0]].dEccXTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
+//           deydap(body[iaBody[0]].dEccXTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) - \
+//         body[iaBody[0]].dEcc*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
+//         sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDEccZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return dezdap(body[iaBody[0]].dArgPTmp,body[iaBody[0]].dEcc, body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
+//         body[iaBody[0]].dEcc*sin(body[iaBody[0]].dArgPTmp)*\
+//         cos(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return dJ*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDLongADtQuad0(body,system,iaBody)+ \
+//         dJ*sin(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
+//         fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return dJ*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDLongADtQuad0(body,system,iaBody)- \
+//         dJ*cos(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
+//         fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return -dJ*sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody); 
+// }
+// 
+// double fdGalHabitDEccXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDEccYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDEccZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
+// }
+// 
+// double fdGalHabitDAngMXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA)+ \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDAngMYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA)- \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
+// }
 
 //----Fuck it, let's try these equations (Breiter & Vokrouhlicky 2015)-----------------------------
 double QuadC2(BODY *body, int *iaBody) {

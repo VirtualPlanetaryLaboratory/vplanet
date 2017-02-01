@@ -121,10 +121,10 @@ double NearbyStarFrEnc(SYSTEM*,double);
 
 double dexdJ(BODY*, int);
 double dexdla(double);
-double dexdap(double,double,double,double);
+double dexdap(BODY*, int);
 double deydJ(BODY*, int);
 double deydla(double);
-double deydap(double,double,double,double);
+double deydap(BODY*,int);
 double dezdJ(BODY*, int);
 double dezdap(double,double,double);
 void CalcEccVec(BODY*,int);

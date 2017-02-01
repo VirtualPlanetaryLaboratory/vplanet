@@ -9,8 +9,9 @@
 
 
 #define K_MAX                   4   /* Max term to sum to */
-#define FLUX_INT_MAX            100 /* How many CBP positions per orbit to integrate over */
-#define KEQNTOL                 1.0e-4 /* Tolerance for Kepler eqn computation */
+#define FLUX_INT_MAX            20 /* How many CBP positions per orbit to integrate over */
+#define KEQNTOL                 1.0e-3 /* Tolerance for Kepler eqn computation */
+#define MAX_KEPLER_ITERS        30 /* Maximum number of iterations for Kepler eqn. solver */
 
 /* Options Info */
 /* For options and output, binary has 2100-2200 */

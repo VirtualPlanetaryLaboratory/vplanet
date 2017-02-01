@@ -710,6 +710,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
   // If you're using alllll of these, include the force behavior!
   // Also, you MUST have surface water information set if you're using bOceanTides
   // Note: VerifyEqtideThermint handles all things oceans
+
   if(body[iBody].bEqtide) 
   {
     if(body[iBody].bThermint)

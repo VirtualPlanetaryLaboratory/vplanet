@@ -2533,7 +2533,7 @@ double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
   return -5.0*PI*KGAUSS*KGAUSS*dRho*\
-          pow(dMu*body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
+          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
           sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
 }
 

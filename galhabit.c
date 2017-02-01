@@ -1416,12 +1416,12 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dInc = acos(body[iBody].dAngMZ/body[iBody].dAngM);
   body[iBody].dLongA = atan2(body[iBody].dAngMX,-body[iBody].dAngMY);
   
-  sinw = -body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
+  sinw = (-body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
          -body[iBody].dEccY*body[iBody].dAngMY*body[iBody].dAngMZ \
-         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2));
-  cosw = body[iBody].dAngM*(-body[iBody].dEccX*body[iBody].dAngMY \
+         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)))/body[iBody].dAngM;
+  cosw = (-body[iBody].dEccX*body[iBody].dAngMY \
                             +body[iBody].dEccY*body[iBody].dAngMX);
-  body[iBody].dCosArgP = cosw*body[iBody].dAngM/(body[iBody].dEcc*\
+  body[iBody].dCosArgP = cosw/(body[iBody].dEcc*\
                           sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)));
   
   body[iBody].dArgP = atan2(sinw,cosw);
@@ -1495,12 +1495,12 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dLongA += 2*PI;
   }
   
-  sinw = -body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
+  sinw = (-body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
          -body[iBody].dEccY*body[iBody].dAngMY*body[iBody].dAngMZ \
-         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2));
-  cosw = body[iBody].dAngM*(-body[iBody].dEccX*body[iBody].dAngMY \
+         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)))/body[iBody].dAngM;
+  cosw = (-body[iBody].dEccX*body[iBody].dAngMY \
                             +body[iBody].dEccY*body[iBody].dAngMX);
-  body[iBody].dCosArgP = cosw*body[iBody].dAngM/(body[iBody].dEcc*\
+  body[iBody].dCosArgP = cosw/(body[iBody].dEcc*\
                           sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)));
                           
   body[iBody].dArgP = atan2(sinw,cosw);
@@ -2533,7 +2533,7 @@ double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
   return -5.0*PI*KGAUSS*KGAUSS*dRho*\
-          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
+          pow(dMu*body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
           sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
 }
 

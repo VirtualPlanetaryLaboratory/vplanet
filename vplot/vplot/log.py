@@ -139,7 +139,7 @@ def GetLog(sysname = '', path = '.', benchmark = False, logfile = None, **kwargs
   # Get the log file
   lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
-    lf = logfile
+    lf = os.path.join(path, logfile)
     if lf is None:
       raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:

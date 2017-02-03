@@ -687,6 +687,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
     else
     {
       // Using tidal radius without atmesc doesn't make sense, just need to set radius
+      // Ignore if using stellar with some radius relation
       if(!(options[OPT_RADIUS].iLine[iBody+1] > -1))
       {
         fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);
@@ -713,6 +714,10 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
   // If you're using alllll of these, include the force behavior!
   // Also, you MUST have surface water information set if you're using bOceanTides
   // Note: VerifyEqtideThermint handles all things oceans
+
+  // dImK2Env has no ReadOption, so we must initialize it here.
+  body[iBody].dImK2Env = 1;
+
   if(body[iBody].bEqtide)
   {
     if(body[iBody].bThermint)

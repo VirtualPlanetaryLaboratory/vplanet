@@ -1,0 +1,23 @@
+# Earthlike parameters for Proxima b
+sName		b	# Body's name
+saModules 	atmesc 
+
+# Physical Parameters
+dMass		-1.3	# Mass, negative -> Earth masses
+sMassRad	Sotin  	# Radius, negative -> Earth radii
+dRadGyra	0.5	# Radius of gyration; ang. mom. coeff.
+
+# Orbital Parameters
+dEcc            0.0	# Eccentricity
+dSemi           0.0485  # Semi-major axis [AU]
+
+# ATMESC Parameters
+dXFrac          1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH2O  0.3 # Water X-ray/XUV absorption efficiency (epsilon) 
+dSurfWaterMass   	-10  	  # Initial water mass, negative ->Earth oceans
+bHaltSurfaceDesiccated  0 	  # Halt when dry?
+bHaltEnvelopeGone       0	  # Halt when H enevlope evaporated?
+dMinSurfWaterMass      	-1.e-5    # Planet is desiccated when water content drops below this (Earth oceans)
+
+saOutputOrder 	Time -OxygenMass -SurfWaterMass          # Atmosphere
+		

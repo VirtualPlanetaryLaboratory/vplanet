@@ -20,4 +20,4 @@ sStellarModel baraffe
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time -Radius 
+saOutputOrder	Time -Radius -RotPer 

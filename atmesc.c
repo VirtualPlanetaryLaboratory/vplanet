@@ -506,8 +506,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
         printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
-    body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge);
-
+    body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid! 
       if (control->Io.iVerbose >= VERBINPUT)
@@ -659,7 +658,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
   
   // Initialize rg duration
-  body[iBody].dRGDuration = NAN;
+  body[iBody].dRGDuration = 0.;
   
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
@@ -1126,7 +1125,7 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
     else 
       return body[iaBody[0]].dRadius;
   } else if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_PROXCENB) {
-    return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge);
+    return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   } else
     return body[iaBody[0]].dRadius;
 }
@@ -1166,9 +1165,12 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // escape conditions are not met.
 
   // 1. Check if there's hydrogen to be lost; this happens first 
-  if (body[iBody].dEnvelopeMass > 0)
+  if (body[iBody].dEnvelopeMass > 0) {
+    // (But let's still check whether the RG phase has ended)
+    if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
+      body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
-  
+  }
   // 2. Check if planet is beyond RG limit; otherwise, assume the
   // cold trap prevents water loss.
   // NOTE: The RG flux limit below is calculated based on body zero's
@@ -1177,7 +1179,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // similar spectral types, or if body zero dominates the flux.
  
   else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
-    if (isnan(body[iBody].dRGDuration))
+    if (body[iBody].dRGDuration == 0.)
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
   }

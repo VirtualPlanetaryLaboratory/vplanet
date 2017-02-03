@@ -273,7 +273,7 @@ def GetConf():
 
   return conf
 
-def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
+def GetArrays(path = '.', bodies = [], benchmark = False, colors = None, logfile = None):
   '''
   
   '''
@@ -302,7 +302,10 @@ def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
   # Get the log file
   lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
-    raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
+    # Did the user specify a logfile name?
+    lf = logfile
+    if lf is None:
+      raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:
     raise Exception("There doesn't seem to be a log file in this directory.")
   else:

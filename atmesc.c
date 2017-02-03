@@ -36,6 +36,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
+  dest[iBody].dRGDuration = src[iBody].dRGDuration;
 }
 
 /**************** ATMESC options ********************/
@@ -657,6 +658,9 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     exit(EXIT_INPUT);
   }
   
+  // Initialize rg duration
+  body[iBody].dRGDuration = NAN;
+  
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
   
@@ -1003,6 +1007,10 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     if (output[iOut].iNum > 0) 
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
+  
+  // TODO: Log this the standard way
+  fprintf(fp,"(RGDuration) Runaway Greenhouse Duration [years]: %.5e\n", body[iBody].dRGDuration / YEARSEC);
+  
 }
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
@@ -1168,9 +1176,11 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // approximation for a binary is only valid if the two stars have 
   // similar spectral types, or if body zero dominates the flux.
  
-  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
+    if (isnan(body[iBody].dRGDuration))
+      body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
-  
+  }
   // 3. Is there still water to be lost?
   else if (body[iBody].dSurfaceWaterMass <= 0)
     return 0;

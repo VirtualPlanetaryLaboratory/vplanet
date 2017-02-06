@@ -184,7 +184,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	    }
  
 	    /* unique to POISE, used for ice sheets to prevent small amounts 
-	       of ice -> dDt -> 0 */
+	       of ice -> dDt -> 0 **DEPRECATED** */
 
 	    else if (update[iBody].iaType[iVar][iEqn] == 4) {
 	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);

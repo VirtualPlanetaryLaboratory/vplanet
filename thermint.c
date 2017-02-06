@@ -1451,6 +1451,24 @@ void WriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   } else { }
 }
 
+/*
+void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
+  strcpy(cUnit,"");
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+*/
+
 void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRIC;
 
@@ -1459,6 +1477,7 @@ void WriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dDRICDTCMB;
   if (output->bDoNeg[iBody]) {
@@ -1466,6 +1485,7 @@ void WriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dChiOC;
   //  *dTmp = body[iBody].dRIC;
@@ -1474,6 +1494,7 @@ void WriteChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dChiIC;
   if (output->bDoNeg[iBody]) {
@@ -1481,6 +1502,7 @@ void WriteChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMassOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassOC;
   if (output->bDoNeg[iBody]) {
@@ -1488,6 +1510,7 @@ void WriteMassOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMassIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassIC;
   if (output->bDoNeg[iBody]) {
@@ -1495,6 +1518,7 @@ void WriteMassIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMassChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassChiOC;
   if (output->bDoNeg[iBody]) {
@@ -1502,6 +1526,7 @@ void WriteMassChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMassChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassChiIC;
   if (output->bDoNeg[iBody]) {
@@ -1509,6 +1534,7 @@ void WriteMassChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dDTChi;
   if (output->bDoNeg[iBody]) {
@@ -1516,6 +1542,7 @@ void WriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteThermConductOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dThermConductOC;
   if (output->bDoNeg[iBody]) {
@@ -1523,6 +1550,7 @@ void WriteThermConductOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteCoreBuoyTherm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyTherm;
   if (output->bDoNeg[iBody]) {
@@ -1530,6 +1558,7 @@ void WriteCoreBuoyTherm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteCoreBuoyCompo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyCompo;
   if (output->bDoNeg[iBody]) {
@@ -1537,6 +1566,7 @@ void WriteCoreBuoyCompo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteCoreBuoyTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyTotal;
   if (output->bDoNeg[iBody]) {
@@ -1544,6 +1574,7 @@ void WriteCoreBuoyTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteGravICB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dGravICB;
   if (output->bDoNeg[iBody]) {
@@ -1551,6 +1582,7 @@ void WriteGravICB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMagMom;
   if (output->bDoNeg[iBody]) {
@@ -1558,6 +1590,7 @@ void WriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRICDot;
   if (output->bDoNeg[iBody]) {
@@ -1565,6 +1598,7 @@ void WriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WritePresSWind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dPresSWind;
   if (output->bDoNeg[iBody]) {
@@ -1572,6 +1606,7 @@ void WritePresSWind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+
 void WriteMagPauseRad(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMagPauseRad;
   if (output->bDoNeg[iBody]) {
@@ -2661,12 +2696,13 @@ double fdMagPauseRad(BODY *body, int iBody) {
 }
 
 /* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
-double fdTidalPowMan(BODY *body,int iBody) {
-   Peter's version. I think dRotRate should be dMeanMotion.
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
-}
 */
+// dflemin3: dRadius -> dTidalRadius
+double fdTidalPowMan(BODY *body,int iBody) {
+//   Peter's version. I think dRotRate should be dMeanMotion.
+ // return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+}
 
 /* Heat Fluxes/flows */
 double fdHfluxUMan(BODY *body,int iBody) {
@@ -2762,7 +2798,7 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 /* Get TDotMan */
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
-  //  return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
+//    return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
   return -body[iBody].dHflowSecMan/((EMASSMAN)*(SPECHEATMAN));
 }
 

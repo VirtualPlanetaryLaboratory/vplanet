@@ -23,7 +23,7 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
     iNumHalts++;
   if (halt->dMinSemi > 0)
     iNumHalts++;
-  if (halt->dMinEcc > 0) 
+  if (halt->dMinEcc > 0)
     iNumHalts++;
   if (halt->bPosDeDt)
     iNumHalts++;
@@ -34,12 +34,12 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
 
   for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnCountHalts[iBody][iModule](halt,&iNumHalts);
-  
+
   return iNumHalts;
 }
 
 void InitializeHalts(CONTROL *control,MODULE *module) {
-  
+
   control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
 
 }
@@ -63,7 +63,7 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 }
 
 /* Maximum Eccentricity? */
-int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
+int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   // XXX is EccSq defined here
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
@@ -112,7 +112,7 @@ int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
   return 0;
 }
 
-/* Minimum Internal Power? XXX Rewrite with radheat and thermint written 
+/* Minimum Internal Power? XXX Rewrite with radheat and thermint written
 int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].dIntEn <= halt->dMinIntEn) {
     if (io->iVerbose >= VERBPROG) {
@@ -151,7 +151,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
   // Is iBody not using binary?
   if(body[iBody].bBinary == 0) {
     if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
-      if (io->iVerbose > VERBPROG) 
+      if (io->iVerbose > VERBPROG)
         printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 
       return 1;
@@ -161,12 +161,26 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
   // This also checks if stars merged, for simplicity
   else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
     double max_radius = max(body[0].dRadius,body[1].dRadius);
-    if((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius) || body[0].dRadius+body[1].dRadius >= body[1].dSemi) && halt->bMerge) { /* Merge! */
+    if((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius)) && halt->bMerge) { /* Merge! */
         if(io->iVerbose > VERBPROG)
+        {
           printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
           printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUCM,body[1].dSemi/AUCM,max_radius/AUCM);
-
+        }
         return 1;
+      }
+  }
+  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
+  {
+      // Merge if sum of radii greater than binary perihelion distance
+      if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge)
+      {
+          if(io->iVerbose > VERBPROG)
+          {
+            fprintf(stderr,"Binary merged at %.2e years!  Semimajor axis [km]: %e.\n",evolve->dTime/YEARSEC,body[iBody].dSemi);
+            fprintf(stderr,"Stellar radii [km]: %e, %e. \n",body[0].dRadius,body[1].dRadius);
+          }
+          return 1;
       }
   }
   return 0;
@@ -187,7 +201,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
      Only necessary if DISTORB called */
 
     /* Some bodies may have additional halts because of a halt for a
-       different body. E.g., distorb requires MaxEcc set for all 
+       different body. E.g., distorb requires MaxEcc set for all
        bodies */
     if (control->Halt[iBody].dMaxEcc < 1) {
       iHaltMaxEcc=iBody; // Body # that has HaltMaxEcc
@@ -250,7 +264,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
 
 
-  /*    Now make sure all set halts apply to the selected modules 
+  /*    Now make sure all set halts apply to the selected modules
      XXX This sounds nice, but for now, it is left out
   if (control->Halt.bMerge) {
     if (!module->iEqtide) {
@@ -301,7 +315,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
           fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMINOBL].cName);
       }
     }
-    
+
     if (control->Halt.dMaxEcc[iBody] >= 0) {
       if (!module->iEqtide) {
         if (control->Io.iVerbose > 3)

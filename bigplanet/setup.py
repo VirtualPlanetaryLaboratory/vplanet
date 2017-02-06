@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import division, print_function, absolute_import
+from __future__ import (absolute_import, division, print_function,
+                            unicode_literals)
 import warnings
 import os
 import io
@@ -62,7 +63,8 @@ setup(name = 'bigplanet',
       install_requires = [
                           'numpy',
                           'matplotlib >= 1.4.0',
-                          'pandas'
-                         ],
+                          'pandas',
+                          'sklearn'
+                          ],
       include_package_data = True,
       zip_safe = False)

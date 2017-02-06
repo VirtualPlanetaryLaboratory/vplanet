@@ -1,10 +1,10 @@
-/********************** OUTPUT.C ********************/ 
+/********************** OUTPUT.C ********************/
 /*
- * Rory Barnes, Wed May  7 16:39:18 PDT 2014 
- * 
+ * Rory Barnes, Wed May  7 16:39:18 PDT 2014
+ *
  * Integers for output parameters. To add a new output:
  * 1) Add new definition here
- * 2) Add output properties to InitializeOutput 
+ * 2) Add output properties to InitializeOutput
  * 3) Write new subroutine that returns desired output
  * 4) Write new fnWriteOutput function
  *
@@ -46,6 +46,9 @@
 #define OUT_ROTPER              560
 
 #define OUT_SURFENFLUX          580
+#define OUT_TIDALQ              581
+#define OUT_IMK2                582
+#define OUT_K2                  583
 
 #define OUT_K2MAN               590   //Mantle k2 love number
 #define OUT_IMK2MAN             592   //Mantle Im(k2) love number
@@ -56,7 +59,7 @@
 
 #define OUT_KECC                605
 #define OUT_ORBECC		610
-#define OUT_ORBEN		620 
+#define OUT_ORBEN		620
 #define OUT_ORBMEANMOTION	630
 #define OUT_ORBPER		640
 #define OUT_ORBSEMI		650

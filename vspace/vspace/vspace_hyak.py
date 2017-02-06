@@ -127,11 +127,12 @@ def makeCommandList(simdir=".", outfile="vplArgs.txt",infile="input",
 
     if para == "parallel" or para == "parallel_sql":
         # Open file that contains all scripts to be ran by parallel
-        with open(destdir + "/" + outfile,"w") as f:
+        with open(os.path.join(destdir,outfile),"w") as f:
             # Loop over all simulation directories where line is dir address
             for line in dirs:
                 # Write a .sh file that tells parallel what to run
-                command = destdir + "/" + "sim" + str(count) + ".sh"
+                command = os.path.join(destdir,"sim")
+                command = command.rstrip('\\') + str(count) + ".sh"
                 # Open new.sh file with bash commands to run vplanet
                 with open(command,"w") as g:
                     g.write("#!/bin/bash\n")
@@ -151,13 +152,13 @@ def makeCommandList(simdir=".", outfile="vplArgs.txt",infile="input",
         # Parallel and parallel_sql do (at least should do) the same here
         pass
         # Open file that contains all scripts to be ran by parallel-sql
-        with open(destdir + "/" + outfile,"w") as f:
+        with open(os.path.join(destdir,outfile),"w") as f:
             # Loop over all simulation directories where line is dir address
             # Write command that looks like this:
             # app -input (input file(s)) -output (output files)
             for line in dirs:
                 # Write a sim's run command
-                command = "vplanet " + line + "/" + "vpl.in"
+                command = os.path.join("vplanet ",line,"vpl.in")
                 command += "\n"
 
                 f.write(command)
@@ -229,7 +230,7 @@ def makeHyakVPlanetPBS(script="run_vplanet.pbs",taskargs="vplArgs.txt",
         return -1
 
     # Write the pbs file.  It's a little tedious, but format matters
-    with open(simdir + "/" + script,"w") as f:
+    with open(os.path.join(simdir,script),"w") as f:
 
         # Write header block to file
         f.write("#!/bin/bash\n")

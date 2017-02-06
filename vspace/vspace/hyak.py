@@ -18,7 +18,7 @@ else:
   destfolder, trialname, infiles, src = vspace_hyak.parseInput(infile=inputf)
 
 para = "parallel_sql"
-    
+
 # Make command list and .sh files to run the scripts
 vspace_hyak.makeCommandList(simdir=destfolder,infile=inputf,para=para)
 

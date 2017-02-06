@@ -2541,13 +2541,13 @@ double dezdap(double dArgP, double dEcc, double dInc) {
 //--------------Galactic tides!--------------------------------------------------------------
 
 double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dL;
-  dMu = BIGG*(body[iaBody[0]].dMassInterior);//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
-  dL = sqrt(dMu*body[iaBody[0]].dSemi);
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dL;
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior)/MSUN;//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
+  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
-  return -5.0*PI*BIGG*dRho*\
-          pow(body[iaBody[0]].dSemi*body[iaBody[0]].dEcc,2.)* \
-          sin(2*body[iaBody[0]].dArgP)/dL;
+  return -5.0*PI*KGAUSS*KGAUSS*dRho*\
+          pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
+          sin(2*body[iaBody[0]].dArgP)/dL/DAYSEC;
 }
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2560,13 +2560,13 @@ double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dEcc;
-  dMu = BIGG*(body[iaBody[0]].dMassInterior);//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior/MSUN);//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
   dEcc = body[iaBody[0]].dEcc; //calculate orbiter's eccentricity
 
-  return 2*PI*BIGG*dRho*sqrt(pow(body[iaBody[0]].dSemi,3)/(dMu*(1.0-pow(dEcc,2))))*\
+  return 2*PI*KGAUSS*KGAUSS*dRho*sqrt(pow(body[iaBody[0]].dSemi/AUCM,3)/(dMu*(1.0-pow(dEcc,2))))*\
       (1.-pow(dEcc,2)-5.*(1.-pow(dEcc,2)-pow(cos(body[iaBody[0]].dInc),2))*\
-      pow(sin(body[iaBody[0]].dArgP),2.0));
+      pow(sin(body[iaBody[0]].dArgP),2.0))/DAYSEC;
 }
 
 double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2582,15 +2582,15 @@ double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDLongADt(BODY *body, SYSTEM *system, int *iaBody) {
-  double dRho = system->dScalingFTot*system->dGalacDensity*MSUN/pow(AUPC*AUCM,3), dMu, dEcc, dL, dJ, dJz;
-  dMu = BIGG*(body[iaBody[0]].dMassInterior);//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
+  double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc, dL, dJ, dJz;
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior/MSUN);//+body[iaBody[0]].dMass); //calculate mass coefficient for primary/primary+secondary
   dEcc = body[iaBody[0]].dEcc; //calculate orbiter's eccentricity
-  dL = sqrt(dMu*body[iaBody[0]].dSemi);
+  dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   dJ = dL*sqrt(1.0-pow(dEcc,2));
   dJz = dJ*cos(body[iaBody[0]].dInc);
   
-  return -2.*PI*BIGG*dRho/pow(dMu,2)*pow(dL/dJ,2)*dJz*\
-      (pow(dJ,2)+5.*(pow(dL,2)-pow(dJ,2))*pow(sin(body[iaBody[0]].dArgP),2));
+  return -2.*PI*KGAUSS*KGAUSS*dRho/pow(dMu,2)*pow(dL/dJ,2)*dJz*\
+      (pow(dJ,2)+5.*(pow(dL,2)-pow(dJ,2))*pow(sin(body[iaBody[0]].dArgP),2))/DAYSEC;
 }
 
 double fdGalHabitDEccXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {

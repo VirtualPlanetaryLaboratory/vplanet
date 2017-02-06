@@ -1519,6 +1519,14 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
+  body[iBody].dLongP = body[iBody].dLongA + body[iBody].dArgP; 
+
+  while (body[iBody].dLongP > 2*PI) {
+    body[iBody].dLongP -= 2*PI;
+  }
+  while (body[iBody].dLongP < 0) {
+    body[iBody].dLongP += 2*PI;
+  }
   // if (body[iBody].bHostBinary) {
 //     Rot2Bin(body,iBody);
 //   }

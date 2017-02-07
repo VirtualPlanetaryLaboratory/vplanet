@@ -310,6 +310,20 @@ void ReadSkipSeasEnabled(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
   }
 }
 
+void ReadAccuracyMode(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bAccuracyMode = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    AssignDefaultInt(options,&body[iFile-1].bAccuracyMode,files->iNumInputs);
+  }
+}
+
 void ReadForceObliq(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1, bTmp;
@@ -987,6 +1001,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OBLIQPER].iType = 2;  
   options[OPT_OBLIQPER].iMultiFile = 1;   
   fnRead[OPT_OBLIQPER] = &ReadObliqPer;
+  
+  sprintf(options[OPT_ACCUMODE].cName,"bAccuracyMode");
+  sprintf(options[OPT_ACCUMODE].cDescr,"Re-invert matrix every EBM time step");
+  sprintf(options[OPT_ACCUMODE].cDefault,"0");
+  options[OPT_ACCUMODE].dDefault = 0;
+  options[OPT_ACCUMODE].iType = 2;  
+  options[OPT_ACCUMODE].iMultiFile = 1;   
+  fnRead[OPT_ACCUMODE] = &ReadAccuracyMode;
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -3620,8 +3642,13 @@ void MatrixSeasonal(BODY *body, int iBody) {
     for (j=0;j<body[iBody].iNumLats;j++) {
       if (j==i) {
         body[iBody].dMDiffSea[i][j] = (-body[iBody].daLambdaSea[i+1]-body[iBody].daLambdaSea[i]);
-        body[iBody].dMLand[i][j] = Cl_dt+body[iBody].daPlanckBAvg[i]+nu_fl-body[iBody].dMDiffSea[i][j];
-        body[iBody].dMWater[i][j] = Cw_dt+body[iBody].daPlanckBAvg[i]+nu_fw-body[iBody].dMDiffSea[i][j];
+        if (body[iBody].bAccuracyMode) {
+          body[iBody].dMLand[i][j] = Cl_dt+body[iBody].daPlanckBSea[i]+nu_fl-body[iBody].dMDiffSea[i][j];
+          body[iBody].dMWater[i][j] = Cw_dt+body[iBody].daPlanckBSea[i]+nu_fw-body[iBody].dMDiffSea[i][j];
+        } else {
+          body[iBody].dMLand[i][j] = Cl_dt+body[iBody].daPlanckBAvg[i]+nu_fl-body[iBody].dMDiffSea[i][j];
+          body[iBody].dMWater[i][j] = Cw_dt+body[iBody].daPlanckBAvg[i]+nu_fw-body[iBody].dMDiffSea[i][j];
+        }
       } else if (j==(i+1)) {
         body[iBody].dMDiffSea[i][j] = body[iBody].daLambdaSea[j];
         body[iBody].dMLand[i][j] = -body[iBody].daLambdaSea[j];
@@ -4034,7 +4061,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
       
       EnergyResiduals(body,iBody,day);
       AlbedoSeasonal(body,iBody,day);
-//       MatrixSeasonal(body,iBody);
+      if (body[iBody].bAccuracyMode) {
+        MatrixSeasonal(body,iBody);
+      }
     }
     
 //     printf("%d\n",nyear);

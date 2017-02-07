@@ -316,6 +316,8 @@ typedef struct {
   double dPrecRate;
   int bCalcDynEllip;
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
+  int bReadOrbitData;
+//   char cReadOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -607,6 +609,7 @@ typedef struct {
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
 
+  int bAccuracyMode;        /**< This forces the model to re-invert matrix every time step */
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dAlbedoGlobalTmp;
   double dAlbedoLand;

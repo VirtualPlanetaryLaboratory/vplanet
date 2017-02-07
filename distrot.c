@@ -62,6 +62,33 @@ void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     
 }
 
+void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bReadOrbitData = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    body[iFile-1].bReadOrbitData = options->dDefault;
+}
+
+// void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+//   int lTmp=-1;
+//   char cTmp[OPTLEN];
+// 
+//   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+//   if (lTmp >= 0) {
+//     /* Cannot exist in primary input file -- Each body has an output file */
+//     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+//     strcpy(body[iFile-1].cReadOrbitData,cTmp);
+//     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+//   } else
+//     if (iFile > 0)
+//       sprintf(body[iFile-1].cName,"%d",iFile);
+// }
+
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
@@ -96,6 +123,13 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PRECRATE].iMultiFile = 1;   
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
   
+  sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
+  sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data and use with distrot");
+  sprintf(options[OPT_READORBITDATA].cDefault,"0");
+  options[OPT_READORBITDATA].dDefault = 0;
+  options[OPT_READORBITDATA].iType = 0;  
+  options[OPT_READORBITDATA].iMultiFile = 1; 
+  fnRead[OPT_READORBITDATA] = &ReadOrbitData; 
 }
 
 void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

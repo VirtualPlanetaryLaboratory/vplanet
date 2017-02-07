@@ -70,7 +70,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_FORCEOBLIQ      1959
 #define OPT_OBLIQAMP        1960
 #define OPT_OBLIQPER        1961
-
+#define OPT_ACCUMODE        1962
 #define OPT_CLIMATEMODEL    1999
 
 /* Options Functions */

@@ -74,20 +74,21 @@ void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     body[iFile-1].bReadOrbitData = options->dDefault;
 }
 
-// void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-//   int lTmp=-1;
-//   char cTmp[OPTLEN];
-// 
-//   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
-//   if (lTmp >= 0) {
-//     /* Cannot exist in primary input file -- Each body has an output file */
-//     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-//     strcpy(body[iFile-1].cReadOrbitData,cTmp);
-//     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-//   } else
-//     if (iFile > 0)
-//       sprintf(body[iFile-1].cName,"%d",iFile);
-// }
+void ReadFileOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Cannot exist in primary input file -- Each body has an output file */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    strcpy(body[iFile-1].cFileOrbitData,cTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+//       sprintf(body[iFile-1].cFileOrbitData,"%s",options[OPT_FILEORBITDATA].cDefault);
+      strcpy(body[iFile-1].cFileOrbitData,options->cDefault);
+}
 
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   
@@ -130,6 +131,12 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_READORBITDATA].iType = 0;  
   options[OPT_READORBITDATA].iMultiFile = 1; 
   fnRead[OPT_READORBITDATA] = &ReadOrbitData; 
+  
+  sprintf(options[OPT_FILEORBITDATA].cName,"sFileOrbitData");
+  sprintf(options[OPT_FILEORBITDATA].cDescr,"Name of file containing orbit time series");
+  sprintf(options[OPT_FILEORBITDATA].cDefault,"myass.ass");
+  options[OPT_FILEORBITDATA].iType = 3;
+  fnRead[OPT_FILEORBITDATA] = &ReadFileOrbitData;
 }
 
 void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -200,6 +207,14 @@ void InitializeYoblDistRotStar(BODY *body,UPDATE *update,int iBody,int iPert) {
  
 void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
+  
+  if (body[iBody].bReadOrbitData) {
+    if (options[OPT_FILEORBITDATA].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: Must set %s if using %s for file %s\n",options[OPT_FILEORBITDATA].cName,options[OPT_READORBITDATA].cName,body[iBody].cName);
+      exit(EXIT_INPUT);
+    }
+  }
+
      
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
   

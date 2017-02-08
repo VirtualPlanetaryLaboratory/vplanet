@@ -482,8 +482,27 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OP
 
   if (body[iBody].bDistRot) {
     if (!body[iBody].bDistOrb) {
-      fprintf(stderr,"ERROR: Module DISTROT selected for %s, but DISTORB not selected.\n",body[iBody].cName);
-      exit(EXIT_INPUT);
+      if (!body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Module DISTROT selected for %s, but DISTORB not selected and bReadOrbitData = 0.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
+    } else {
+      if (body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Cannot set both DISTORB and bReadOrbitData for body %s.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
+    }
+  }
+}
+
+void VerifyModuleMultiEqtideDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bDistRot) {
+    if (body[iBody].bEqtide) {
+      if (body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
     }
   }
 }
@@ -842,6 +861,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
      these functions as some default behavior is set if other modules aren't
      called. */
   VerifyModuleMultiDistOrbDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 

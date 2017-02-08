@@ -316,8 +316,8 @@ typedef struct {
   double dPrecRate;
   int bCalcDynEllip;
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
-  int bReadOrbitData;
-//   char cReadOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
+  int bReadOrbitData;    /**< Use orbit data from file rather than distorb */
+  char cFileOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */

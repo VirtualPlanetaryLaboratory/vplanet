@@ -240,7 +240,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &daptmp, &dlatmp, &dmatmp);
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &dlatmp, &daptmp, &dmatmp);
         body[iBody].daTimeSeries[iLine] = dttmp*fdUnitsTime(control->Units[iBody+1].iTime);
         body[iBody].daSemiSeries[iLine] = datmp*fdUnitsLength(control->Units[iBody+1].iLength);
         body[iBody].daEccSeries[iLine] = detmp;
@@ -370,7 +370,8 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
     if (body[iBody].bReadOrbitData) {
       body[iBody].iGravPerts = 0;
-      update[iBody].iNumZobl += 1;
+      body[iBody].iaGravPerts = malloc(1*sizeof(int));
+      body[iBody].iaGravPerts[0] = 0; 
     }
     
     if (update[iBody].iNumXobl == 0)
@@ -388,6 +389,9 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].bGRCorr) {
       update[iBody].iNumXobl += 1;
       update[iBody].iNumYobl += 1;
+    }
+    if (body[iBody].bReadOrbitData) {
+      update[iBody].iNumZobl += 1;
     }
   }
 }

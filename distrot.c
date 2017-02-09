@@ -1062,28 +1062,28 @@ double fdCentralTorqueR(BODY *body, int iBody) {
   double obliq, tmp;
  //  obliq = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 //   ztmp = cos(obliq);
-  tmp = 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
+//   tmp = 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
   
   return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
 double fdObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
-  double tmp;
-  tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
+//   double tmp;
+//   tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
 
   return body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
 }
 
 double fdObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
-  double tmp;
-  tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
+  // double tmp;
+//   tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
 
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
 }
 
 double fdObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
-  double tmp;
-  tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+//   double tmp;
+//   tmp = 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
 
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
 }
@@ -1098,6 +1098,18 @@ double fdObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( fdDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCLL2(body,system,iaBody) );
+}
+
+double fdObliquityCExt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dQinc*body[iaBody[0]].dPdot - body[iaBody[0]].dPinc*body[iaBody[0]].dQdot;
+}
+
+double fdObliquityAExt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( body[iaBody[0]].dQdot + body[iaBody[0]].dPinc*fdObliquityCExt(body,system,iaBody) );
+}
+
+double fdObliquityBExt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-pow(body[iaBody[0]].dPinc,2)-pow(body[iaBody[0]].dQinc,2)) * ( body[iaBody[0]].dPdot - body[iaBody[0]].dQinc*fdObliquityCExt(body,system,iaBody) );
 }
 
 //----------Relativistic correction-------------------------------------
@@ -1202,13 +1214,19 @@ double fdDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return 0;
+  double y;
+  y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+
+  return fdObliquityAExt(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCExt(body,system,iaBody);;
 }
 
 double fdDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return 0;
+  double y;
+  y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
+  
+  return -fdObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCExt(body,system,iaBody);
 }
 
 double fdDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return 0;
+  return body[iaBody[0]].dYobl*fdObliquityBExt(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityAExt(body,system,iaBody);
 }

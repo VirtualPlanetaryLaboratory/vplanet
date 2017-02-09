@@ -318,6 +318,21 @@ typedef struct {
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
   int bReadOrbitData;    /**< Use orbit data from file rather than distorb */
   char cFileOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
+  double *daTimeSeries;  /**< time series for orbital data */
+  double *daSemiSeries;  /**< time series for orbital data */
+  double *daEccSeries;  /**< time series for orbital data */
+  double *daIncSeries;  /**< time series for orbital data */
+  double *daArgPSeries;  /**< time series for orbital data */
+  double *daLongASeries;  /**< time series for orbital data */
+  double *daMeanASeries;  /**< time series for orbital data */
+  int iCurrentStep;       /**< index for time series arrays */
+  double *daHeccSeries;   /**< time series for orbital data */
+  double *daKeccSeries;   /**< time series for orbital data */
+  double *daPincSeries;   /**< time series for orbital data */
+  double *daQincSeries;   /**< time series for orbital data */
+  double dPdot;
+  double dQdot;
+
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */

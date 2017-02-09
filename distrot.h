@@ -101,3 +101,7 @@ double fdAxialGRDxDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DxDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DyDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DzDt(BODY*, SYSTEM*, int*);
+
+double fdDistRotExtDxDt(BODY*, SYSTEM*, int*);
+double fdDistRotExtDyDt(BODY*, SYSTEM*, int*);
+double fdDistRotExtDzDt(BODY*, SYSTEM*, int*);

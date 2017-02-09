@@ -205,17 +205,79 @@ void InitializeYoblDistRotStar(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]][1] = 0;
 }
  
-void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j=0, iPert=0, jBody=0;
-  
+void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
+  int iNLines, iLine, c;
+  double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp; 
+  FILE *fileorb;
+
   if (body[iBody].bReadOrbitData) {
     if (options[OPT_FILEORBITDATA].iLine[iBody+1] == -1) {
       fprintf(stderr,"ERROR: Must set %s if using %s for file %s\n",options[OPT_FILEORBITDATA].cName,options[OPT_READORBITDATA].cName,body[iBody].cName);
       exit(EXIT_INPUT);
-    }
-  }
+    } else {
+      fileorb = fopen(body[iBody].cFileOrbitData,"r");
+      if (fileorb == NULL) {
+        printf("ERROR: File %s not found.\n", body[iBody].cFileOrbitData);
+        exit(EXIT_INPUT);
+      }
+      iNLines = 0;
+      while ((c = getc(fileorb)) != EOF) {
+        if (c == '\n') iNLines++;              //add 1 for each new line
+      }
+      rewind(fileorb);
+      
+      body[iBody].daTimeSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daSemiSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daEccSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daIncSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daArgPSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daLongASeries = malloc(iNLines*sizeof(double));
+      body[iBody].daMeanASeries = malloc(iNLines*sizeof(double));
+      body[iBody].daHeccSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daKeccSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daPincSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daQincSeries = malloc(iNLines*sizeof(double));
+      
+      iLine = 0;
+      while (feof(fileorb) == 0) {
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &daptmp, &dlatmp, &dmatmp);
+        body[iBody].daTimeSeries[iLine] = dttmp*fdUnitsTime(control->Units[iBody+1].iTime);
+        body[iBody].daSemiSeries[iLine] = datmp*fdUnitsLength(control->Units[iBody+1].iLength);
+        body[iBody].daEccSeries[iLine] = detmp;
 
-     
+        if (control->Units[iBody+1].iAngle == 0) {
+          body[iBody].daIncSeries[iLine] = ditmp;
+          body[iBody].daArgPSeries[iLine] = daptmp;
+          body[iBody].daLongASeries[iLine] = dlatmp;
+          body[iBody].daMeanASeries[iLine] = dmatmp;
+        } else { 
+          body[iBody].daIncSeries[iLine] = ditmp*DEGRAD;
+          body[iBody].daArgPSeries[iLine] = daptmp*DEGRAD;
+          body[iBody].daLongASeries[iLine] = dlatmp*DEGRAD;
+          body[iBody].daMeanASeries[iLine] = dmatmp*DEGRAD;
+        }
+        
+        body[iBody].daHeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
+            sin(body[iBody].daArgPSeries[iLine]+body[iBody].daLongASeries[iLine]);
+        body[iBody].daKeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
+            cos(body[iBody].daArgPSeries[iLine]+body[iBody].daLongASeries[iLine]);
+        body[iBody].daPincSeries[iLine] = sin(0.5*body[iBody].daIncSeries[iLine])*\
+            sin(body[iBody].daLongASeries[iLine]);
+        body[iBody].daQincSeries[iLine] = sin(0.5*body[iBody].daIncSeries[iLine])*\
+            cos(body[iBody].daLongASeries[iLine]); 
+        iLine++;
+      }
+      fclose(fileorb);
+    }
+    body[iBody].iCurrentStep = 0;
+  }
+}
+ 
+void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  int i, j=0, iPert=0, jBody=0;
+  
+  VerifyOrbitData(body, control, options, iBody);
+
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
   
   if (iBody >= 1) {
@@ -227,62 +289,74 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     body[iBody].dLRot = malloc(3*sizeof(double));
     body[iBody].dLRotTmp = malloc(3*sizeof(double));
     
-    if (control->Evolve.iDistOrbModel==RD4) {
-      /* Body updates */
-      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
-        /* x = sin(obl)*cos(pA) */
-        InitializeXoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotRD4DxDt;
-        
-        /* y = sin(obl)*sin(pA) */
-        InitializeYoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotRD4DyDt;
-        
-        /* z = cos(obl) */
-        InitializeZoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotRD4DzDt;
-          
-      }
-      /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
-      /* x = sin(obl)*cos(pA) */
-      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DxDt;
-        
-      /* y = sin(obl)*sin(pA) */
-      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DyDt;
+    if (body[iBody].bReadOrbitData) {
+      InitializeXoblDistRot(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fdDistRotExtDxDt;
       
-    } else if (control->Evolve.iDistOrbModel==LL2) {
-      /* Body updates */
-      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+      InitializeYoblDistRot(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fdDistRotExtDyDt;
+      
+      InitializeZoblDistRot(body,update,iBody,0);
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fdDistRotExtDzDt;
+      
+    } else {
+      if (control->Evolve.iDistOrbModel==RD4) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          InitializeXoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotRD4DxDt;
+        
+          /* y = sin(obl)*sin(pA) */
+          InitializeYoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotRD4DyDt;
+        
+          /* z = cos(obl) */
+          InitializeZoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotRD4DzDt;
+          
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
-        InitializeXoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotLL2DxDt;
+        InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DxDt;
         
         /* y = sin(obl)*sin(pA) */
-        InitializeYoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotLL2DyDt;
+        InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DyDt;
+      
+      } else if (control->Evolve.iDistOrbModel==LL2) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          InitializeXoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotLL2DxDt;
         
-        /* z = cos(obl) */
-        InitializeZoblDistRot(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotLL2DzDt;
+          /* y = sin(obl)*sin(pA) */
+          InitializeYoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotLL2DyDt;
+        
+          /* z = cos(obl) */
+          InitializeZoblDistRot(body,update,iBody,iPert);
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotLL2DzDt;
           
-      }
-      /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
-      /* x = sin(obl)*cos(pA) */
-      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DxDt;
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* x = sin(obl)*cos(pA) */
+        InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DxDt;
         
-      /* y = sin(obl)*sin(pA) */
-      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DyDt;
+        /* y = sin(obl)*sin(pA) */
+        InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DyDt;
+      }
     }
     if (body[iBody].bGRCorr) {
-      InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
- 
-      InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
+    InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
+    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
+
+    InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
+    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
     }
   }
   
@@ -294,6 +368,11 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 /***************** DISTROT Update *****************/
 void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
   if (iBody > 0) {
+    if (body[iBody].bReadOrbitData) {
+      body[iBody].iGravPerts = 0;
+      update[iBody].iNumZobl += 1;
+    }
+    
     if (update[iBody].iNumXobl == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumXobl += body[iBody].iGravPerts+1;
@@ -911,6 +990,27 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
 /************* DISTROT Functions ***********/
 
+void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
+  body[iBody].dSemi = body[iBody].daSemiSeries[body[iBody].iCurrentStep];
+  body[iBody].dHecc = body[iBody].daHeccSeries[body[iBody].iCurrentStep];
+  body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
+  body[iBody].dPinc = body[iBody].daPincSeries[body[iBody].iCurrentStep];
+  body[iBody].dQinc = body[iBody].daQincSeries[body[iBody].iCurrentStep];
+
+  /* numerical derivatives of p and q */
+  if (body[iBody].iCurrentStep == 0) {
+    body[iBody].dPdot = (body[iBody].daPincSeries[body[iBody].iCurrentStep+1]-\
+        body[iBody].daPincSeries[body[iBody].iCurrentStep])/evolve->dTimeStep;
+    body[iBody].dQdot = (body[iBody].daQincSeries[body[iBody].iCurrentStep+1]-\
+        body[iBody].daQincSeries[body[iBody].iCurrentStep])/evolve->dTimeStep;
+  } else {
+    body[iBody].dPdot = (body[iBody].daPincSeries[body[iBody].iCurrentStep+1]-\
+        body[iBody].daPincSeries[body[iBody].iCurrentStep-1])/(2*evolve->dTimeStep);
+    body[iBody].dQdot = (body[iBody].daQincSeries[body[iBody].iCurrentStep+1]-\
+        body[iBody].daQincSeries[body[iBody].iCurrentStep-1])/(2*evolve->dTimeStep);
+  } 
+}
+
 void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // if (body[iBody].bForcePrecRate) {
 //     body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
@@ -924,10 +1024,17 @@ void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
   }
   
+  if (body[iBody].bReadOrbitData) {
+    UpdateOrbitData(body,evolve,iBody);
+  }
+  
   body[iBody].dObliquity = atan2(sqrt(pow(body[iBody].dXobl,2)+pow(body[iBody].dYobl,2)),body[iBody].dZobl);
 }
 
 void ForceBehaviorDistRot(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  if (body[iBody].bReadOrbitData) {
+    body[iBody].iCurrentStep++;
+  }
 }
 
 void RotateVector(double *v1, double *v2, double theta, int axis) {
@@ -1094,3 +1201,14 @@ double fdDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
           (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
 }
 
+double fdDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 0;
+}
+
+double fdDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 0;
+}
+
+double fdDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 0;
+}

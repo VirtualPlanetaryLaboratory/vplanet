@@ -612,8 +612,16 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   if (body[iBody].bEqtide) {
-    if (body[iBody].bDistOrb) {
+    if (body[iBody].bStellar) {
       control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideDistOrb;
+    }
+  }
+}
+
+void VerifyModuleMultiEqtideStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bStellar) {
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideStellar;
     }
   }
 }
@@ -629,7 +637,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
   // If this is the star (body 0 or body 1 in binary), tidal radius == radius
   if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar))
   {
-     body[iBody].dTidalRadius = body[iBody].dRadius;
+    body[iBody].dTidalRadius = body[iBody].dRadius;
      return;
   }
 
@@ -811,11 +819,10 @@ void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODU
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
 
-      // Body is a star, but has an ocean!
-      if(body[iBody].bOceanTides)
+      // Body is a star, but has an ocean or an envelope!
+      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
       {
-        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides set!\n");
-        fprintf(stderr,"Body %d is a star and hence cannot have an ocean.\n",iBody);
+        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides or bEnvTides set!\n");
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
 
@@ -859,6 +866,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideDistorb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -980,6 +989,12 @@ void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody)
 
 void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
+}
+
+void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // In stellar, radius can change depending on model so make sure tidal radius
+  // knows that
+  body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
 void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {

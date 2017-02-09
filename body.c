@@ -31,7 +31,7 @@ int fiSign(double dValue) {
     iSign = (int)(dValue/fabs(dValue));
   else 
     iSign = 0;
-
+  
   return iSign;
 }
 

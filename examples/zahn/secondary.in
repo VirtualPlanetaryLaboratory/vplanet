@@ -3,18 +3,19 @@ sName		secondary		# Body's name
 saModules       stellar eqtide 
 
 # Physical Parameters
-dMass         1.0                         # Mass, solar masses
-dRotPeriod    0.005 #0.007
-dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
+dMass         1.0      # Mass, solar masses
+dRotPeriod    -1.67 #0.007
+dRadGyra      0.5             # Radius of gyration (moment of inertia constant)
+dObliquity    0.0
 
 # Orbital properties
-#dSemi       0.072
 dOrbPeriod  -5.0
 dEcc        0.3
 
 # EQTIDE Parameters
 dTidalQ		1.0e5		# Tidal phase lag
 dK2		0.5		# Love number of degree 2
+dMaxLockDiff    1.0e-6
 saTidePerts	primary   	# Body name(s) of tidal perturbers
 
 # Stellar param

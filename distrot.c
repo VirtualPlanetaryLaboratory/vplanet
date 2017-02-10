@@ -29,6 +29,7 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
   dest[iBody].bForcePrecRate = src[iBody].bForcePrecRate;
   dest[iBody].dPrecRate = src[iBody].dPrecRate;
   dest[iBody].iCurrentStep = src[iBody].iCurrentStep;
+  dest[iBody].bReadOrbitData = src[iBody].bReadOrbitData;
 
 }
 

@@ -28,7 +28,26 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
   dest[iBody].dDynEllip = src[iBody].dDynEllip;
   dest[iBody].bForcePrecRate = src[iBody].bForcePrecRate;
   dest[iBody].dPrecRate = src[iBody].dPrecRate;
+  dest[iBody].iCurrentStep = src[iBody].iCurrentStep;
 
+}
+
+void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  int iLine;
+  
+  control->Evolve.tmpBody[iBody].daSemiSeries = malloc(body[iBody].iNLines*sizeof(double));
+  control->Evolve.tmpBody[iBody].daHeccSeries = malloc(body[iBody].iNLines*sizeof(double));
+  control->Evolve.tmpBody[iBody].daKeccSeries = malloc(body[iBody].iNLines*sizeof(double));
+  control->Evolve.tmpBody[iBody].daPincSeries = malloc(body[iBody].iNLines*sizeof(double));
+  control->Evolve.tmpBody[iBody].daQincSeries = malloc(body[iBody].iNLines*sizeof(double));      
+
+  for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
+    control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = body[iBody].daSemiSeries[iLine];
+    control->Evolve.tmpBody[iBody].daHeccSeries[iLine] = body[iBody].daHeccSeries[iLine];
+    control->Evolve.tmpBody[iBody].daKeccSeries[iLine] = body[iBody].daKeccSeries[iLine];
+    control->Evolve.tmpBody[iBody].daPincSeries[iLine] = body[iBody].daPincSeries[iLine];
+    control->Evolve.tmpBody[iBody].daQincSeries[iLine] = body[iBody].daQincSeries[iLine];
+  }
 }
 
 /**************** DISTROT options ********************/
@@ -226,6 +245,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       }
       rewind(fileorb);
       
+      body[iBody].iNLines = iNLines;
       body[iBody].daTimeSeries = malloc(iNLines*sizeof(double));
       body[iBody].daSemiSeries = malloc(iNLines*sizeof(double));
       body[iBody].daEccSeries = malloc(iNLines*sizeof(double));
@@ -237,7 +257,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       body[iBody].daKeccSeries = malloc(iNLines*sizeof(double));
       body[iBody].daPincSeries = malloc(iNLines*sizeof(double));
       body[iBody].daQincSeries = malloc(iNLines*sizeof(double));
-      
+          
       iLine = 0;
       while (feof(fileorb) == 0) {
         fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &dlatmp, &daptmp, &dmatmp);
@@ -265,6 +285,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
             sin(body[iBody].daLongASeries[iLine]);
         body[iBody].daQincSeries[iLine] = sin(0.5*body[iBody].daIncSeries[iLine])*\
             cos(body[iBody].daLongASeries[iLine]); 
+        
         iLine++;
       }
       fclose(fileorb);
@@ -978,6 +999,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = DISTROT;
 
+  module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistRot;
   module->fnCountHalts[iBody][iModule] = &CountHaltsDistRot;
   module->fnLogBody[iBody][iModule] = &LogBodyDistRot;
 

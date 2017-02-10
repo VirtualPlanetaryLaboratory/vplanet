@@ -18,4 +18,4 @@ saOutputOrder    Time Ecce Inc ArgP LongA
 #bOutputLapl     1
 bHaltHillStab   0
 bHaltCloseEnc   1
-bInvPlane   1
+bInvPlane   0

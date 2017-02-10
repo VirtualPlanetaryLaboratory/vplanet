@@ -509,7 +509,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyInterior(body,options,iBody);
 
-    VerifyModuleMulti(body,control,files,module,options,iBody);
+    VerifyModuleMulti(body,control,files,module,options,system,iBody);
 
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {

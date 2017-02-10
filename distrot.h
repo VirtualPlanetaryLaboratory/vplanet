@@ -29,6 +29,7 @@ void ReadFileOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadCalcDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsDistRot(OPTIONS*, fnReadOption[]);
 void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 
 /* Verify Functions */
 void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

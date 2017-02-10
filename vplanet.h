@@ -332,6 +332,7 @@ typedef struct {
   double *daQincSeries;   /**< time series for orbital data */
   double dPdot;
   double dQdot;
+  int iNLines;
 
 
   /* EQTIDE Parameters */

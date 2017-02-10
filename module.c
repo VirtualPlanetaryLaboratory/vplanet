@@ -478,7 +478,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
     if (!body[iBody].bDistOrb) {
@@ -493,6 +493,11 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OP
       }
     }
   }
+  if (body[iBody].bDistOrb || body[iBody].bDistRot) {
+    body[iBody].dLOrb = malloc(3*sizeof(double));
+    body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+    if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
+  } 
 }
 
 void VerifyModuleMultiEqtideDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -847,7 +852,7 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,CONTROL *control,FILES *files,MOD
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
-void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,SYSTEM *system,int iBody) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 0) {
@@ -860,7 +865,7 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   /* Now verify. Even if only module is called, we still need to call
      these functions as some default behavior is set if other modules aren't
      called. */
-  VerifyModuleMultiDistOrbDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiDistOrbDistRot(body,control,files,options,system,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 

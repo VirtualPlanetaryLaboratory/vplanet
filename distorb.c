@@ -598,9 +598,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   
   VerifyOrbitModel(control,files,options);
 //   VerifyStabilityHalts(control,files,options);
-  body[iBody].dLOrb = malloc(3*sizeof(double));
-  body[iBody].dLOrbTmp = malloc(3*sizeof(double));
-  if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
+
   body[iBody].dMeanA = 0.0;
   
   if (control->Evolve.iDistOrbModel == RD4) {

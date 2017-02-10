@@ -1244,14 +1244,16 @@ double fdDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
 
-  return fdObliquityAExt(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCExt(body,system,iaBody);;
+  return fdObliquityAExt(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCExt(body,system,iaBody)-\
+          body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
 }
 
 double fdDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - pow(body[iaBody[0]].dXobl,2) - pow(body[iaBody[0]].dYobl,2));
   
-  return -fdObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCExt(body,system,iaBody);
+  return -fdObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCExt(body,system,iaBody)+\
+          body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
 }
 
 double fdDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {

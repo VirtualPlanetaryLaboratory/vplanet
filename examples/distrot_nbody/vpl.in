@@ -16,4 +16,4 @@ bVarDt        0
 dEta          0.1
 dStopTime     100000
 dOutputTime   1000
-dTimeStep     1000
+dTimeStep     100

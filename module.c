@@ -621,6 +621,47 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
 void VerifyModuleMultiEqtideStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   if (body[iBody].bEqtide) {
     if (body[iBody].bStellar) {
+
+      // If you're using stellar and eqtide and this isn't the primary body, you
+      // MUST use binary (binary stars!)
+      if(iBody > 0 && !body[iBody].bBinary)
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: If both stellar AND eqtide are set and iBody > 0, MUST use binary!\n");
+        exit(EXIT_INPUT);
+      }
+
+      // Can't have any ocean, envelope tidal parameters set
+      // Body is a star, but has an ocean or an envelope!
+      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: If both stellar AND eqtide are set, body cannot have bOceanTides or bEnvTides set!\n");
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+
+      if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+	    if (control->Io.iVerbose >= VERBINPUT)
+	      fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_TIDALQOCEAN].cName);
+	    exit(EXIT_INPUT);
+      }
+      if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_K2OCEAN].cName);
+        exit(EXIT_INPUT);
+      }
+      if (options[OPT_TIDALQENV].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_TIDALQENV].cName);
+        exit(EXIT_INPUT);
+        }
+        if (options[OPT_K2ENV].iLine[iBody+1] > -1) {
+          if (control->Io.iVerbose >= VERBINPUT)
+            fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_K2ENV].cName);
+          exit(EXIT_INPUT);
+        }
+
+      // ALl the options are ok! Add in the necessary AuxProps
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideStellar;
     }
   }
@@ -671,8 +712,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
       // Not using tidal radius
       else
       {
-        // Since no tidal radius specified, dRadius better be (or a radius evolution model)
-        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1))
+        // Since no tidal radius specified, dRadius better be (or a radius evolution model or a mass radius relation)
+        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1) && !(options[OPT_MASSRAD].iLine[iBody+1] > -1))
         {
           fprintf(stderr,"ERROR: Using EQTIDE and bUseTidalRadius == 0 but %s or %s not set!\n",options[OPT_RADIUS].cName,options[OPT_PLANETRADIUSMODEL].cName);
           exit(EXIT_INPUT);
@@ -807,6 +848,18 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
   }
 }
 
+void VerifyModuleMultiBinaryStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bBinary) {
+    if (body[iBody].bStellar) {
+      if(iBody > 1) {
+        fprintf(stderr,"ERROR: Only bodies 0 and 1 can be stars when using binary!\n");
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+  }
+}
+
 void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
 {
   // If binary AND eqtide are called for a body, the body MUST be a star
@@ -815,17 +868,9 @@ void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODU
       // Body isn't a star!
       if(body[iBody].iBodyType != 1) {
         fprintf(stderr,"ERROR: If both binary AND eqtide are used for a body, the body MUST be a star.\n");
-        fprintf(stderr,"Errant body iBody, bBinary, bEqtide: %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide);
+        fprintf(stderr,"Errant body iBody, bBinary, bEqtide:, bStellar %d, %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide,body[iBody].bStellar);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
-
-      // Body is a star, but has an ocean or an envelope!
-      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
-      {
-        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides or bEnvTides set!\n");
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-      }
-
     }
   }
 }
@@ -868,6 +913,8 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   VerifyModuleMultiEqtideDistorb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiBinaryStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;

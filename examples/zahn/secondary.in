@@ -1,8 +1,9 @@
 # The host star, the sun -> Primary body!
 sName		secondary		# Body's name
-saModules       stellar eqtide 
+saModules       stellar eqtide binary 
 
 # Physical Parameters
+iBodyType     1 # Star!
 dMass         1.0      # Mass, solar masses
 dRotPeriod    -1.67 #0.007
 dRadGyra      0.5             # Radius of gyration (moment of inertia constant)
@@ -15,10 +16,10 @@ dEcc        0.3
 # EQTIDE Parameters
 dTidalQ		1.0e5		# Tidal phase lag
 dK2		0.5		# Love number of degree 2
-dMaxLockDiff    1.0e-6
+dMaxLockDiff    0.01
 saTidePerts	primary   	# Body name(s) of tidal perturbers
 
 # Stellar param
 sStellarModel baraffe
 
-saOutputOrder	Time -TidalRadius -Radius -OrbPer -RotPer Ecce -RotRate -MeanMotion 
+saOutputOrder	Time -Radius -OrbPer -RotPer Ecce -RotRate -MeanMotion 

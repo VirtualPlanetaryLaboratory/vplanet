@@ -567,7 +567,7 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   // If binary is being used, ALL bodies must have correct type
-  if(iBody < 2) // Primary or secondary
+  if(iBody < 2) // Primary or secondary star
   {
     if(body[iBody].iBodyType != 1)
     {

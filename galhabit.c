@@ -769,6 +769,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarImpact = malloc(3*sizeof(double));
     system->dHostApexVel = malloc(3*sizeof(double));
     system->dRelativeVel = malloc(3*sizeof(double));
+    system->dRelativePos = malloc(3*sizeof(double));
     if (system->bRadialMigr) {
       dDMR = DarkMatterDensity(system, system->dRForm);
       dStarR = (system->dGalacDensity-system->dGasDensity-system->dDMDensity)*\
@@ -845,7 +846,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
       fOut = fopen(cOut,"w");
-      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz vbodyx vbodyy vbodyz\n");
+      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel x_rel y_rel z_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz vbodyx vbodyy vbodyz\n");
       fclose(fOut);
     }
     
@@ -855,6 +856,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     body[iBody].dRelativeImpact = malloc(3*sizeof(double));
     body[iBody].dRelativeVel = malloc(3*sizeof(double));
+    
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
     
@@ -1548,14 +1550,14 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       dVMax = system->dHostApexVelMag + 3.0*system->dPassingStarSigma*1000.0;
     }
     
-    /* next calculate impact parameter */
-    CalcImpactParam(system); 
-    
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
     body[iBody].dSinc = sin(0.5*body[iBody].dInc);
     osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
-  
+    
+    /* next calculate impact parameter */
+    CalcImpactParam(body,system,iBody); 
+    
     /* apply the impulse */
     ApplyDeltaV(body,system,iBody);
     cart2osc(body,evolve->iNumBodies);
@@ -1600,6 +1602,12 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintd(fOut,system->dRelativeVel[1],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[2],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativePos[0],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativePos[1],4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dRelativePos[2],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dHostApexVel[0],4,6);
       fprintf(fOut," ");
@@ -2118,20 +2126,29 @@ void GetStarPosition(SYSTEM *system) {
   system->dPassingStarRMag = r;
 }
 
-void CalcImpactParam(SYSTEM *system) {
+void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
   double vsq = 0.0, dtime = 0.0;
   double x, y, z, r;
+  double xcom, ycom, zcom;
   int i;
   
+  xcom = body[iBody].dMass*body[iBody].dCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+  ycom = body[iBody].dMass*body[iBody].dCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+  zcom = body[iBody].dMass*body[iBody].dCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+
+  system->dRelativePos[0] = system->dPassingStarR[0] + xcom;
+  system->dRelativePos[1] = system->dPassingStarR[1] + ycom;
+  system->dRelativePos[2] = system->dPassingStarR[2] + zcom;
+
   for (i=0;i<=2;i++) {
     vsq += pow(system->dRelativeVel[i],2);
-    dtime += -system->dPassingStarR[i]*system->dRelativeVel[i];
+    dtime += -system->dRelativePos[i]*system->dRelativeVel[i];
   }
   dtime /= vsq;
   
-  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dPassingStarR[0];
-  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dPassingStarR[1];
-  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dPassingStarR[2];
+  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dRelativePos[0];
+  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dRelativePos[1];
+  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dRelativePos[2];
 //   r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
   
 //   system->dCloseEncTime += dtime;

@@ -933,6 +933,7 @@ typedef struct {
   double dHostApexVelMag;
   double *dHostApexVel;
   double *dRelativeVel;
+  double *dRelativePos;
   double dRelativeVelRad;
   double dRelativeVelMag;
   double *dGSNumberDens;

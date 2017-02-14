@@ -191,7 +191,7 @@ void GetStarMass(SYSTEM*);
 void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
 void VelocityDisp(SYSTEM*);
-void CalcImpactParam(SYSTEM*);
+void CalcImpactParam(BODY*, SYSTEM*,int);
 void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
 void NextEncounterTime(SYSTEM*,EVOLVE*,double);

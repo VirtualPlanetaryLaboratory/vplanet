@@ -250,7 +250,7 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
 
-  *dTmp = fdOrbAngMom(body);
+  *dTmp = fdOrbAngMom(body,control);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -517,7 +517,7 @@ void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteTotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdTotAngMom(body);
+  *dTmp = fdTotAngMom(body,control);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -814,7 +814,10 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
+  sprintf(output[OUT_ORBANGMOM].cNeg,"kgm^2/s");
+  output[OUT_ORBANGMOM].bNeg = 1;
   output[OUT_ORBANGMOM].iNum = 1;
+  output[OUT_ORBANGMOM].dNeg = 1.0;
   output[OUT_ORBANGMOM].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBANGMOM] = &WriteOrbAngMom;
 
@@ -875,8 +878,10 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
-  output[OUT_ROTANGMOM].bNeg = 0;
+  sprintf(output[OUT_ROTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_ROTANGMOM].bNeg = 1;
   output[OUT_ROTANGMOM].iNum = 1;
+  output[OUT_ROTANGMOM].dNeg = 1.0;
   output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR;
   fnWrite[OUT_ROTANGMOM] = &WriteRotAngMom;
 
@@ -935,7 +940,10 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
   sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
+  sprintf(output[OUT_TOTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
+  output[OUT_TOTANGMOM].dNeg = 1.0;
   output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 

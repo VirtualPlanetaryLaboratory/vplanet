@@ -2,9 +2,9 @@
 /*
  * Rory Barnes, Wed May  7 14:59:37 PDT 2014
  *
- * This file contains subroutines associated with 
- * orbital properties. Note that element 1 in the 
- * BODY array contains the up-to-date orbital 
+ * This file contains subroutines associated with
+ * orbital properties. Note that element 1 in the
+ * BODY array contains the up-to-date orbital
  * properties.
 */
 
@@ -19,8 +19,8 @@
 #include <math.h>
 #include "vplanet.h"
 
-/* 
- * Physical Relationships 
+/*
+ * Physical Relationships
 */
 
 double fdMeanMotionToSemi(double dMass1,double dMass2,double dMeanMotion) {
@@ -41,36 +41,74 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
   return pow(BIGG*dMass/pow(dSemi,3),0.5);
 }
 
-/* 
+/*
  * Angular Momentum
  */
 
-double fdOrbAngMom(BODY *body) {
+/* Compute the total orbital angular momentum in the SYSTEM
+ * as L = mu*sqrt(GMA(1-e^2)) for each orbiting body
+ */
+double fdOrbAngMom(BODY *body, CONTROL *control) {
 
-  /* XXX Broken -- needs to include multiple bodies 
-  return body[0].dMass*body[1].dMass*pow(BIGG*body[1].dSemi*(1-body[1].dEcc*body[1].dEcc)/(body[0].dMass+body[1].dMass),0.5);
-  */
+  double dTot = 0.0;
+  double dMass; // Mass of central body or bodies if using binary and not secondary star
 
-  return 0;
+  int iBody;
+  for(iBody = 1; iBody < control->Evolve.iNumBodies; iBody++)
+  {
+
+    // Figure out central body mass
+    // If using binary, you orbit 2 stars
+    if(body[iBody].bBinary)
+    {
+      if(iBody > 1) // Only planets orbit two stars, stars orbit barycenter
+      {
+        dMass = body[0].dMass + body[1].dMass;
+      }
+      else
+      {
+        dMass = body[0].dMass;
+      }
+    }
+    else
+    {
+      dMass = body[0].dMass;
+    }
+
+    dTot += dMass*body[iBody].dMass*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1-body[iBody].dEcc*body[iBody].dEcc))/(dMass+body[iBody].dMass);
+  }
+
+  return dTot;
 }
 
-double fdTotAngMom(BODY *body) {
-  double dTot = 0;
+double fdTotAngMom(BODY *body, CONTROL *control) {
+  double dTot = 0.0;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies
-  dTot = fdOrbAngMom(body);
-  for (iBody=0;iBody<2;iBody++)
+  // Total orbital angular momentum
+  dTot = fdOrbAngMom(body,control);
+
+  // Add all rotational angular momentum
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
+  {
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+  }
+
   return dTot;
-  */
-  return 0;
 }
 
+/*
+ *
+ * Energy equations
+ *
+ */
+
+// Broken XXX: Account for multiple bodies
 double fdOrbPotEnergy(double dMass1, double dMass2,double dSemi) {
   return -BIGG*dMass1*dMass2/dSemi;
 }
 
+// Broken XXX: Account for multiple bodies
 double fdOrbKinEnergy(double dMass1,double dMass2,double dSemi) {
   return 0.5*BIGG*dMass1*dMass2/dSemi;
 }
@@ -79,14 +117,14 @@ double fdOrbEnergy(BODY *body,int iBody) {
   /* XXX Broken -- needs to include multiple bodies */
   return fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi) + fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
 }
-    
+
 double fdKinEnergy(BODY *body) {
   double dKE;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies 
+  /* XXX Broken -- needs to include multiple bodies
   dKE = fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
-  for (iBody=0;iBody<2;iBody++) 
+  for (iBody=0;iBody<2;iBody++)
     dKE += fdRotKinEnergy(body[iBody].dMass,body[iBody].dRadius,body[iBody].dRadGyra,body[iBody].dRotRate);
 
   return dKE;
@@ -100,7 +138,7 @@ double fdPotEnergy(BODY *body) {
 
   /* XXX Broken -- needs to include multiple bodies
   dPE = fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
-  for (iBody=0;iBody<2;iBody++) 
+  for (iBody=0;iBody<2;iBody++)
     dPE += fdBodyPotEnergy(body[iBody]);
 
   return dPE;
@@ -109,6 +147,7 @@ double fdPotEnergy(BODY *body) {
 }
 
 double fdTotEnergy(BODY *body) {
+  /* XXX Broken -- needs to include multiple bodies */
   return fdKinEnergy(body) + fdPotEnergy(body);
 }
 
@@ -116,7 +155,7 @@ int bPrimary(BODY *body,int iBody) {
   int iBodyPert,bPrimary=1;  /* Assume primary body to start */
 
   for (iBodyPert=0;iBodyPert<body[iBody].iTidePerts;iBodyPert++) {
-    if (body[iBody].iaTidePerts[iBodyPert] < iBody) 
+    if (body[iBody].iaTidePerts[iBodyPert] < iBody)
       bPrimary=0;
   }
 

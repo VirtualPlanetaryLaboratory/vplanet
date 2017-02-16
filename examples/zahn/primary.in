@@ -5,7 +5,8 @@ saModules       stellar eqtide binary
 # Physical Parameters
 iBodyType     1 # Star!
 dMass         1.0                         # Mass, solar masses
-dRotPeriod      -1.67
+#dRadius       0.005
+dRotPeriod      -0.5 #-1.67
 dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
 dObliquity      0.0
 

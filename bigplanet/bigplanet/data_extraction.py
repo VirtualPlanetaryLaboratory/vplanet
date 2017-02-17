@@ -450,7 +450,7 @@ class Dataset(object):
     # end function
 
 
-    def get(self, simulation, body, variables, dtype=np.float64, parallel=False):
+    def get(self, simulation, body, variables, dtype=np.float64):
         """
         Wrapper for get_data_hdf5 function (see its docs).  This is a workhorse
         data accessing function.
@@ -477,12 +477,72 @@ class Dataset(object):
 
         # Enforce array bounds for less-cryptic error message
         if simulation >= 0 and simulation < self.size:
-            return get_data_hdf5(self.data, simulation, body, variables,
-                                     dtype=dtype, count_map=self.__count_map)
+            return self.__get_data_hdf5(simulation, body, variables,
+                                        dtype=dtype, count_map=self.__count_map)
         else:
             raise ValueError("Invalid simulation number: %d. Dataset size: %d" %
                   (simulation,self.size))
-        # end function
+    # end function
+
+
+    def __get_data_hdf5(self, simulation, body, variables, dtype=np.float64,
+                        count_map=None):
+        """
+        Given the simulation number, body and the variable, access and return the data.  For example,
+        get_data(1,"secondary","Eccentricity") will return a numpy array containing the secondary's
+        eccentricity vector.  A call like get_data(1,"secondary",["Time","Eccentricity"]) will return
+        a 2D numpy array whose columns are Time and Eccentricity.
+
+        Parameters
+        ----------
+        simulation : int
+            Number corresponding to a given simulation
+        body : str
+            Name of the body whose data you wish to access
+        variables : str or iterable
+            Name(s) of the dataset to return for given body
+        dtype : datatype (optional)
+            Type of data to return.  Defaults to np.float64
+        count_map : list (optional)
+            mapping between simulation number and hdf5 file when using many hdf5
+            files.  Defaults to None.
+
+        Returns
+        -------
+        data : numpy array
+            Requested dataset as a numpy array
+        """
+
+        # If many dataset files exist, figure out which one data lives in
+        if count_map is not None:
+            num, file_num = self.__id_to_sim(simulation)
+            data_file = self.data[file_num]
+        # Only 1 hdf5 data file
+        else:
+            num = simulation
+            data_file = self.data
+
+        # Create dataset path (where data is located in hdf5 file)
+        path = os.path.join(str(num),body)
+
+        data = []
+        # Open dataset, access data
+        try:
+            with h5py.File(data_file, "r") as hf:
+
+                # Multiple variables (not just a string)
+                if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, unicode)):
+                    for var in variables:
+                        data.append(np.array(hf.get(path)[var]))
+                # Only one variables
+                else:
+                    return np.array(hf.get(path)[variables]).squeeze()
+
+            return np.asarray(data,dtype=dtype).squeeze()
+        except RuntimeError:
+            raise RuntimeError("Invalid get call.  Simulation, body, variable(s) : %s, %s, %s" %
+                  (simulation,body,variables))
+    # end function
 
 
     def sim_name(self,sim):
@@ -525,9 +585,26 @@ class Dataset(object):
         count : int
             which sim in that hdf5 file to access
         """
-        ## self.__count_map
-        pass
 
+        # If only 1 hdf5 file, no need to map
+        if self.__count_map is None:
+            return num, 0
+
+        # Figure out which file sim is in, return it and the index for that
+        # file
+
+        # In 1st file
+        if num < self.__count_map[0]:
+            return num, 0
+
+        # Which file does it live in?
+        mapper = np.cumsum(self.__count_map)
+        for ii in range(1,len(self.__count_map)):
+            if num < self.__count_map[ii]:
+                return num - self.__count_map[ii-1], ii
+            else:
+                continue
+    # end function
 
 
     def __repr__(self):
@@ -929,13 +1006,12 @@ def extract_data_hdf5(src=".", dataset="simulation", order="none",
         counter = len(number_to_sim)
 
         # Make list to keep tracks of bounds of which sims live in which file
-        count_map = [0] + list(np.cumsum(counts[1:]))
+        count_map = np.cumsum(counts)
 
         dataset_obj = save_metadata(dataset, counter, order, number_to_sim,
                                     infiles, data_cols, var_from_log,
-                                    var_from_infile)
+                                    var_from_infile, count_map)
 
-        print("It didn't break!")
         return dataset_obj
 
     # Use just one processor like some sort of peasant
@@ -1021,18 +1097,6 @@ def save_metadata(dataset, counter, order, number_to_sim, infiles, data_cols,
 
     is_parallel, datasets = find_hdf5_files(dataset)
 
-    # Figure out path to where the hdf5 file(s) live
-    #path = dataset.split("/")[:-1]
-    #path = os.path.join('/', *path)
-
-    # Find all .hdf5 files, sort them so 0th one shows up first
-    # Metadata always in 0th file
-    #datasets = []
-    #for d_file in os.listdir(path):
-    #    if d_file.endswith(".hdf5"):
-    #        datasets.append(os.path.join(path,d_file))
-    #datasets.sort()
-
     # Figure out name of primary hdf5 file.  This is the 1st if many or the
     # only if there's one
     if is_parallel:
@@ -1088,8 +1152,8 @@ def save_metadata(dataset, counter, order, number_to_sim, infiles, data_cols,
 
     # Store count_map
     if count_map is not None:
-        data = np.asarray(count_map, dtype=np.float64)
-        f_set.create_dataset("count_map", data=data, dtype=np.float64)
+        data = np.asarray(count_map, dtype=np.int64)
+        f_set.create_dataset("count_map", data=data, dtype=np.int64)
     else:
         # Store number 0 to tell that no count_map was provided
         data = np.asarray([0])
@@ -1207,7 +1271,7 @@ def load_metadata(dataset):
         count_map = f_set["count_map"]
 
         # If no count_map provided (0 flag), set it to None
-        if count_map == 0:
+        if count_map[0] == 0:
             count_map = None
         else:
             count_map = list(count_map)
@@ -1223,64 +1287,6 @@ def load_metadata(dataset):
                    input_files=input_files,
                    data_cols=data_cols,
                    count_map=count_map)
-# end function
-
-
-def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64,
-                  count_map=None):
-    """
-    Given the simulation number, body and the variable, access and return the data.  For example,
-    get_data(1,"secondary","Eccentricity") will return a numpy array containing the secondary's
-    eccentricity vector.  A call like get_data(1,"secondary",["Time","Eccentricity"]) will return
-    a 2D numpy array whose columns are Time and Eccentricity.
-
-    Parameters
-    ----------
-    dataset : hdf5 dataset
-        hdf5 dataset to open
-    simulation : int
-        Number corresponding to a given simulation
-    body : str
-        Name of the body whose data you wish to access
-    variables : str or iterable
-        Name(s) of the dataset to return for given body
-    dtype : datatype (optional)
-        Type of data to return.  Defaults to np.float64
-    count_map : list (optional)
-        mapping between simulation number and hdf5 file when using many hdf5
-        files.  Defaults to None.
-
-    Returns
-    -------
-    data : numpy array
-        Requested dataset as a numpy array
-    """
-
-    # Create dataset path
-    path = os.path.join(str(simulation),body)
-
-    # If many dataset files exist, figure out which one data lives in
-    if count_map is None:
-        pass
-        # TODO
-
-    data = []
-    # Open dataset, access data
-    try:
-        with h5py.File(dataset, "r") as hf:
-
-            # Multiple variables (not just a string)
-            if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, unicode)):
-                for var in variables:
-                    data.append(np.array(hf.get(path)[var]))
-            # Only one variables
-            else:
-                return np.array(hf.get(path)[variables]).squeeze()
-
-        return np.asarray(data,dtype=dtype).squeeze()
-    except RuntimeError:
-        raise RuntimeError("Invalid get call.  Simulation, body, variable(s) : %s, %s, %s" %
-              (simulation,body,variables))
 # end function
 
 

@@ -40,7 +40,7 @@ cadence = 100
 compression = None#"gzip"
 
 # Use all processors? Best if used on a cluster
-parallel = False
+parallel = True
 
 data = de.extract_data_hdf5(src=src, dataset=dataset, order=order,
                             remove_halts=remove_halts, compression=compression,

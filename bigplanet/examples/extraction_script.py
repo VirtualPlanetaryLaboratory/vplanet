@@ -15,7 +15,7 @@ from bigplanet import data_extraction as de
 src = "/Users/dflemin3/Desktop/GM_run/"
 
 # Path to the hdf5 dataset
-dataset= os.path.join(src,"simulation.hdf5")
+dataset = os.path.join(src,"simulation")
 
 # How you wish the data to be ordered (grid for grid simulation suites)
 order = "none"

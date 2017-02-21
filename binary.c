@@ -4,7 +4,7 @@
  *
  * Subroutines that control the integration of the
  * circumbinary planet dynamics module.
- * Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet)
+ * Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet(s))
  * Leung and Lee 2013 Theory ONLY applies to the restricted 3 body approximation.
 */
 
@@ -457,6 +457,15 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 }
 
 /******************* Verify BINARY ******************/
+
+/*
+ * Note: update always has [0] as the terminal index since ONLY binary can
+ * update these variables.  Theory does NOT apply if another phenomena tries
+ * to change a circumbinary planet's orbital motion.  Also, only iaBody eqns
+ * care about are their own.  CBP only cares about itself since bodies 0 and 1
+ * are assured to be stars in binary, hence binary.  This was all done intentionally
+ * to make it more difficult to mess up the binary equations.
+ */
 
 void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
@@ -1875,7 +1884,9 @@ double fdDMk(int k, BODY * body, int iBody)
 
 /*
  * LL13 Functions to compute cylindrical positions, velocities
- * R, phi, z and RDot, phiDot, zDot
+ * R, phi, z and RDot, phiDot, zDot.  Note: iaBody ALWAYS has one element:
+ * the CBP whose equations are being integrated/evaluated since in binary, each
+ * CBP is assured to have bodies 0, 1 be the stars.
  */
 
 /* Computes the CBP orbital radius */

@@ -46,6 +46,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].bEnvTides = src[iBody].bEnvTides;
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
+  dest[iBody].bTideLock = src[iBody].bTideLock;
 
   if (iBody > 0) {
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -733,6 +734,8 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFil
   int iOrbiter;
 
   if (options[OPT_FORCEEQSPIN].iLine[iBody+1] >= 0) {
+    // If ForceEqSpin, tidally locked to begin the simulation
+    body[iBody].bTideLock = 1;
 
     if (body[iBody].iTidePerts > 1) {
       fprintf(stderr,"ERROR: %s cannot be true is %s has more than 1 argument.\n",options[OPT_FORCEEQSPIN].cName,options[OPT_TIDEPERTS].cName);
@@ -757,6 +760,10 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFil
     dMeanMotion=fdSemiToMeanMotion(body[iOrbiter].dSemi,body[iBody].dMass+body[body[iBody].iaTidePerts[0]].dMass);
     //XXX Is dEccSq set here??
     body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+  }
+  else // Not tidally locked to begin with
+  {
+    body[iBody].bTideLock = 0;
   }
   CalcXYZobl(body,iBody);
 }
@@ -1447,10 +1454,14 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
+    // Tidally locked!
+    body[iBody].bTideLock = 1;
+
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s tide-locked at ",body[iBody].cName);
       fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
       printf(" years.\n");
+
     }
     return 1;
   }
@@ -2558,6 +2569,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
   dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
 
   if (dDiff < evolve->dMaxLockDiff[iBody]) {
+    // Tidally locked!
+    body[iBody].bTideLock = 1;
+
     if (io->iVerbose >= VERBPROG) {
       printf("%s spin locked at ",body[iBody].cName);
       fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);

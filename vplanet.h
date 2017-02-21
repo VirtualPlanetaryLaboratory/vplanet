@@ -319,6 +319,7 @@ typedef struct {
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
+  int bTideLock;         /**< Is a body tidally locked? */
   int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
   int bEnvTides;         /**< Have Q contribution from the envelope as well? */
   int bUseTidalRadius;      /**< Set a fixed tidal radius? */
@@ -1271,6 +1272,13 @@ typedef struct {
   int iLXUV;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
+
+ /* BINARY + EQTIDE + STELLAR */
+ int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
+
+ /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+     semi-major axis' derivative due to BIN+EQ+ST. */
+ double *pdDsemiDtBinEqSt;
 
 } UPDATE;
 

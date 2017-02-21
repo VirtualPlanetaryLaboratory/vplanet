@@ -29,3 +29,10 @@ double fdTotEnergy(BODY *);
 
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
+
+/* Multi-body derivative equations, set-up functions */
+double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);
+
+void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
+void FinalizeUpdateEqBinStSemi(BODY*,UPDATE*,int*,int,int,int);
+void UpdateMultiEqBinStSemi(BODY*,UPDATE*,CONTROL*);

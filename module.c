@@ -871,17 +871,7 @@ void VerifyModuleMultiBinaryEqtideStellar(BODY *body, UPDATE *update, CONTROL *c
   if (body[iBody].bBinary) {
     if (body[iBody].bStellar) {
       if (body[iBody].bEqtide) {
-
-        // Add equations for changing dEcc (Hecc, Kecc) and/or dSemi as a consequence
-        // of angular momentum conservation for tidally locked binaries into the
-        // matrix! TODO XXX XXX XXX
-
-        // Initialize, then finalize
-        //InitializeUpdateEqBinStSemi(body,update,iBody);
-
-        // Add equation for dSemi-major axis dt to the matrix
-        //UpdateMultiEqBinStSemi(body,update,control);
-
+        // TODO ?
         }
       }
     }
@@ -910,7 +900,7 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,F
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
-void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody, fnUpdateVariable ****fnUpdate) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 0) {
@@ -1157,4 +1147,71 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > 0.0))
       body[iBody].bOceanTides = 0;
   }
+}
+
+/*
+ *
+ * Functions required to add multi-body equations to the matrix
+ *
+ */
+
+/*! Binary-Eqtide-Stellar semi-major axis derivative set-up*/
+void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if BINARY, EQTIDE, and STELLAR used
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide)
+  {
+    if (update[iBody].iNumSemi == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumSemi++;
+  }
+}
+
+void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+
+  update[iBody].iaModule[iVar][*iEqn] = BINARY + EQTIDE + STELLAR;
+  update[iBody].iNumSemi = (*iEqn)++;
+}
+
+/* GENERAL MULTI-MODULE EQUATION INITIALIZATION/FINALIZATION */
+
+/*!
+ * Initialize adding mutli-module equations to the matrix.
+ */
+void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody) {
+
+  // Initialize update struct to accomodate equation
+  InitializeUpdateEqBinStSemi(body,update,iBody);
+
+  /* More equations here! */
+}
+
+/*!
+ * Finalize adding mutli-module equations to the matrix.
+ */
+void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate,int *iVar, int iBody, int iFoo)
+{
+
+// Only valid if BINARY, EQTIDE, and STELLAR used
+if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide)
+{
+  // Finalize update step
+  int iEqn=0;
+  FinalizeUpdateMultiEqBinStSemi(body,update,&iEqn,(*iVar),iBody,iFoo);
+
+  // Malloc stuff, increment iVar
+  (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
+  update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
+  (*iVar)++;
+
+  // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
+  update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
+  update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
+  update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][0] = iBody;
+  update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
+  (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
+}
+
+/* Add more equations below! */
+
 }

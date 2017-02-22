@@ -20,7 +20,7 @@ void InitializeUpdateBodyPerts(CONTROL *control,UPDATE *update,int iBody) {
 void InitializeUpdateTmpBody(BODY *body,CONTROL *control,MODULE *module,UPDATE *update,int iBody) {
   int iModule;
 
-  for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+  for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnInitializeUpdateTmpBody[iBody][iModule](body,control,update,iBody);
 }
 
@@ -31,7 +31,7 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     // The iNumX and iX members don't need to be copied
 
     dest[iBody].iNumVars = src[iBody].iNumVars;
-    
+
     dest[iBody].iXobl = src[iBody].iXobl;
     dest[iBody].iYobl = src[iBody].iYobl;
     dest[iBody].iZobl = src[iBody].iZobl;
@@ -39,7 +39,7 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
     dest[iBody].iKecc = src[iBody].iKecc;
     dest[iBody].iPinc = src[iBody].iPinc;
     dest[iBody].iQinc = src[iBody].iQinc;
-    
+
     for (iVar=0;iVar<src[iBody].iNumVars;iVar++) {
       dest[iBody].iNumEqns[iVar] = src[iBody].iNumEqns[iVar];
       dest[iBody].iaVar[iVar] = src[iBody].iaVar[iVar];
@@ -117,13 +117,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumAngMX =0;
     update[iBody].iNumAngMY =0;
     update[iBody].iNumAngMZ =0;
-    
+
     update[iBody].iNumVars=0;
-    
-    /* First we must identify how many variables and models must be 
+
+    /* First we must identify how many variables and models must be
        assigned so we can malloc the update struct. */
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       module->fnInitializeUpdate[iBody][iModule](body,update,iBody);
+
+    // Initialize multi-module equations
+    InitializeUpdateMulti(body,control,module,update,fnUpdate,iBody);
 
     // The second dimension of the Update matrix is the variables
     (*fnUpdate)[iBody]=malloc(update[iBody].iNumVars*sizeof(fnUpdateVariable*));
@@ -149,11 +152,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       control->Evolve.tmpUpdate[iBody].iNumBodies = malloc(update[iBody].iNumVars*sizeof(int*));
       control->Evolve.tmpUpdate[iBody].iaBody = malloc(update[iBody].iNumVars*sizeof(int**));
     }
-    for (iSubStep=0;iSubStep<4;iSubStep++) 
+    for (iSubStep=0;iSubStep<4;iSubStep++)
       control->Evolve.daDeriv[iSubStep][iBody]=malloc(update[iBody].iNumVars*sizeof(double));
 
     /* Now we malloc some pointers, and perform some initializations for the
-       UPDATE struct based on the primary variables required for each's 
+       UPDATE struct based on the primary variables required for each's
        planet's assigned modules. */
 
     iVar=0;
@@ -180,9 +183,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate26AlNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -210,9 +213,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate26AlNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -240,9 +243,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate40KNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -270,9 +273,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate40KNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-     
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -300,15 +303,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate40KNumCrust[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 232Th Core */    
+    /* 232Th Core */
     update[iBody].i232ThCore = -1;
     if (update[iBody].iNum232ThCore) {
       update[iBody].i232ThCore = iVar;
@@ -330,15 +333,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate232ThNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 232Th Mantle */    
+    /* 232Th Mantle */
     update[iBody].i232ThMan = -1;
     if (update[iBody].iNum232ThMan) {
       update[iBody].i232ThMan = iVar;
@@ -360,15 +363,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate232ThNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 232Th Crust */    
+    /* 232Th Crust */
     update[iBody].i232ThCrust = -1;
     if (update[iBody].iNum232ThCrust) {
       update[iBody].i232ThCrust = iVar;
@@ -390,16 +393,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate232ThNumCrust[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 235U Core */            
-    update[iBody].i235UCore = -1;  
+    /* 235U Core */
+    update[iBody].i235UCore = -1;
     if (update[iBody].iNum235UCore) {
       update[iBody].i235UCore = iVar;
       update[iBody].iaVar[iVar] = VNUM235UCORE;
@@ -420,16 +423,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate235UNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 235U Mantle */            
-    update[iBody].i235UMan = -1;  
+    /* 235U Mantle */
+    update[iBody].i235UMan = -1;
     if (update[iBody].iNum235UMan) {
       update[iBody].i235UMan = iVar;
       update[iBody].iaVar[iVar] = VNUM235UMAN;
@@ -450,16 +453,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate235UNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
-    /* 235U Crust */            
-    update[iBody].i235UCrust = -1;  
+
+    /* 235U Crust */
+    update[iBody].i235UCrust = -1;
     if (update[iBody].iNum235UCrust) {
       update[iBody].i235UCrust = iVar;
       update[iBody].iaVar[iVar] = VNUM235UCORE;
@@ -480,15 +483,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate235UNumCrust[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 238U Core */    
+    /* 238U Core */
     update[iBody].i238UCore = -1;
     if (update[iBody].iNum238UCore) {
       update[iBody].i238UCore = iVar;
@@ -510,15 +513,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate238UNumCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 238U Mantle */    
+    /* 238U Mantle */
     update[iBody].i238UMan = -1;
     if (update[iBody].iNum238UMan) {
       update[iBody].i238UMan = iVar;
@@ -540,15 +543,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate238UNumMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
-    /* 238U Crust */    
+    /* 238U Crust */
     update[iBody].i238UCrust = -1;
     if (update[iBody].iNum238UCrust) {
       update[iBody].i238UCrust = iVar;
@@ -570,9 +573,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdate238UNumCrust[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -600,18 +603,18 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateEnvelopeMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
 
     /* Dynamical ellipticity. There are 3 possibilities for dynamical
-       ellipticity: 1) It is a constant; 2) It is calculated from dViscUMan, 
-       which is a constant and set by the option dViscUman (part of DISTROT); 
-       3) It is calculated from dViscUMan, which is set by the mantle 
+       ellipticity: 1) It is a constant; 2) It is calculated from dViscUMan,
+       which is a constant and set by the option dViscUman (part of DISTROT);
+       3) It is calculated from dViscUMan, which is set by the mantle
        temperature, i.e. THERMINT must be called. Only option #3 requires
        DynEllip to be a primary variable. */
 
@@ -636,7 +639,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateDynEllip[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -666,14 +669,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateHecc[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // Poincare's k (Kecc)
     update[iBody].iKecc = -1;
     if (update[iBody].iNumKecc) {
@@ -696,14 +699,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateKecc[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-      
+
     // Luminosity:
     update[iBody].iLuminosity = -1;
     if (update[iBody].iNumLuminosity) {
@@ -726,13 +729,13 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateLuminosity[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-    }  
+    }
 
     /* Obsolete!
     // Obliquity
@@ -757,15 +760,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateObl[iBody][iModule](body,update,&iEqn,iVar,iBody);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
     */
-    
+
     // Poincare's p (Pinc)
     update[iBody].iPinc = -1;
     if (update[iBody].iNumPinc) {
@@ -788,14 +791,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdatePinc[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // Poincare's q (Qinc)
     update[iBody].iQinc = -1;
     if (update[iBody].iNumQinc) {
@@ -818,7 +821,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateQinc[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -848,14 +851,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateRadius[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // Mass:
     update[iBody].iMass = -1;
     if (update[iBody].iNumMass) {
@@ -878,14 +881,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // Rotation Rate
     update[iBody].iRot = -1;
     if (update[iBody].iNumRot) {
@@ -908,14 +911,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateRot[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // Semi-major Axis
     update[iBody].iSemi = -1;
     if (update[iBody].iNumSemi) {
@@ -938,14 +941,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateSemi[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-    }  
-    
+    }
+
     // Surface Water Mass
     update[iBody].iSurfaceWaterMass = -1;
     if (update[iBody].iNumSurfaceWaterMass) {
@@ -968,9 +971,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -998,9 +1001,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateOxygenMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -1028,9 +1031,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -1058,13 +1061,13 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateTemperature[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-    }  
+    }
 
     /* Core Temperature (TCore) */
     update[iBody].iTCore = -1;
@@ -1077,8 +1080,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].iaBody[iVar] = malloc(update[iBody].iNumTCore*sizeof(int*));
       update[iBody].iaType[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
       update[iBody].iaModule[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
-      
-      if (control->Evolve.iOneStep == RUNGEKUTTA) {             
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
         control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dTCore;
         control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumTCore*sizeof(double));
@@ -1086,11 +1089,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumTCore*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumTCore*sizeof(int*));
       }
-      
+
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateTCore[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -1107,8 +1110,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].iaBody[iVar] = malloc(update[iBody].iNumTMan*sizeof(int*));
       update[iBody].iaType[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
       update[iBody].iaModule[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
-      
-      if (control->Evolve.iOneStep == RUNGEKUTTA) {             
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
         control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dTMan;
         control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumTMan*sizeof(double));
@@ -1116,16 +1119,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumTMan*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumTMan*sizeof(int*));
       }
-      
+
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateTMan[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-      
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // DistRot's X (Xobl)
     update[iBody].iXobl = -1;
     if (update[iBody].iNumXobl) {
@@ -1149,14 +1152,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateXobl[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // DistRot's Y (Yobl)
     update[iBody].iYobl = -1;
     if (update[iBody].iNumYobl) {
@@ -1180,14 +1183,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateYobl[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // DistRot's Z (Zobl)
     update[iBody].iZobl = -1;
     if (update[iBody].iNumZobl) {
@@ -1212,16 +1215,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateZobl[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-   
+
     // Add binary stuff here
-    
+
     // Binary's CBP's Orbital Radiys (dCBPR)
     update[iBody].iCBPR = -1;
     if (update[iBody].iNumCBPR) {
@@ -1244,7 +1247,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPR[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1252,7 +1255,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    
+
     // Binary's CBP's Orbital height above/below plane (dCBPZ)
     update[iBody].iCBPZ = -1;
     if (update[iBody].iNumCBPZ) {
@@ -1275,7 +1278,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPZ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1283,7 +1286,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-     
+
     // Binary's CBP's Orbital azimuthal angle (dCBPPhi)
     update[iBody].iCBPPhi = -1;
     if (update[iBody].iNumCBPPhi) {
@@ -1306,7 +1309,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPPhi[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1314,7 +1317,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-      
+
     // Binary's CBP's Orbital Radial velocity (dCBPRDot)
     update[iBody].iCBPRDot = -1;
     if (update[iBody].iNumCBPRDot) {
@@ -1337,7 +1340,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPRDot[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1345,7 +1348,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    
+
     // Binary's CBP's Orbital z orbital velocity (dCBPZDot)
     update[iBody].iCBPZDot = -1;
     if (update[iBody].iNumCBPZDot) {
@@ -1368,7 +1371,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPZDot[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1376,7 +1379,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    
+
     // Binary's CBP's Orbital Angular velocity (dCBPPhiDot)
     update[iBody].iCBPPhiDot = -1;
     if (update[iBody].iNumCBPPhiDot) {
@@ -1399,7 +1402,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateCBPPhiDot[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
@@ -1409,11 +1412,11 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
     // POISE's ice mass
  //    update[iBody].iIceMass = -1;
-//     if (update[iBody].iNumIceMass) { 
+//     if (update[iBody].iNumIceMass) {
 //       /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
 //       control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
-//       body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double)); 
-//       
+//       body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+//
 //       update[iBody].iIceMass = iVar;
 //       control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
 //       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
@@ -1425,9 +1428,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 //         update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
 //         update[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
 //         update[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-// 
+//
 //         if (control->Evolve.iOneStep == RUNGEKUTTA) {
-//           
+//
 //           control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].daIceMass[iLat];
 //           control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
 //           control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumIceMass*sizeof(double));
@@ -1435,16 +1438,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 //           control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
 //           control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
 //         }
-//     
+//
 //         iEqn=0;
-//         for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+//         for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
 //           module->fnFinalizeUpdateIceMass[iBody][iModule](body,update,&iEqn,iVar,iBody,iLat);
-//       
+//
 //         (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
 //         update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
 //         iVar++;
 //       }
-//       
+//
 //     }
 
     // Eccentricity vector x
@@ -1469,14 +1472,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateEccX[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-    }  
-  
+    }
+
     // Eccentricity vector y
     update[iBody].iEccY = -1;
     if (update[iBody].iNumEccY) {
@@ -1499,14 +1502,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateEccY[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-        
+
     // Eccentricity vector z
     update[iBody].iEccZ = -1;
     if (update[iBody].iNumEccZ) {
@@ -1529,15 +1532,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateEccZ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
-    }  
-  
-    // Angular momentum x component 
+    }
+
+    // Angular momentum x component
     update[iBody].iAngMX = -1;
     if (update[iBody].iNumAngMX) {
       update[iBody].iAngMX = iVar;
@@ -1559,15 +1562,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateAngMX[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
-    // Angular momentum y component 
+
+    // Angular momentum y component
     update[iBody].iAngMY = -1;
     if (update[iBody].iNumAngMY) {
       update[iBody].iAngMY = iVar;
@@ -1589,15 +1592,15 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateAngMY[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
-    // Angular momentum z component 
+
+    // Angular momentum z component
     update[iBody].iAngMZ = -1;
     if (update[iBody].iNumAngMZ) {
       update[iBody].iAngMZ = iVar;
@@ -1619,20 +1622,20 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateAngMZ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     // XUV Luminosity
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */
-       
-    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!   
-       
+
+    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!
+
     update[iBody].iLXUV = -1;
     if (update[iBody].iNumLXUV) {
       update[iBody].iLXUV = iVar;
@@ -1654,12 +1657,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateLXUV[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
+
+  // Finalize adding multi-module equations to the matrix
+  FinalizeUpdateMulti(body,control,module,update,fnUpdate,&iVar,iBody,iFoo);
+
   }
 }

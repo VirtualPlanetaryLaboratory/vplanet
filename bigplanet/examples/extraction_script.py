@@ -2,6 +2,9 @@
 dflemin3 Sept 2016
 
 This script extracts/processes data from a suite of VPLANET simulations.
+
+Use this as a template for all your future data processing needs.
+
 """
 
 from __future__ import (absolute_import, division, print_function,
@@ -14,14 +17,15 @@ from bigplanet import data_extraction as de
 # Define root dirctory where all sim sub directories are located
 src = "/Users/dflemin3/Desktop/GM_run/"
 
-# Path to the hdf5 dataset
+# Path to the hdf5 dataset.  In general, does NOT have to be in the same
+# location as src
 dataset = os.path.join(src,"simulation")
 
 # How you wish the data to be ordered (grid for grid simulation suites)
 order = "none"
 
 # Format of the data (default)
-fmt = "hdf5"
+fmt = "hdf5"  # For backwards compatitiblity
 
 # Ignore simulations that halted at some point?
 remove_halts = False
@@ -37,10 +41,10 @@ var_from_log = {"secondary" : ["Mass"], "cbp" : ["Mass"]}
 cadence = 100
 
 # Compression algorithm to use
-compression = None#"gzip"
+compression = None #"gzip"
 
 # Use all processors? Best if used on a cluster
-parallel = True
+parallel = False
 
 data = de.extract_data_hdf5(src=src, dataset=dataset, order=order,
                             remove_halts=remove_halts, compression=compression,

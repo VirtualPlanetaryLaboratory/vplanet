@@ -1176,8 +1176,8 @@ void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar
 /*!
  * Initialize adding mutli-module equations to the matrix.
  */
-void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody) {
-
+void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody)
+{
   // Initialize update struct to accomodate equation
   InitializeUpdateEqBinStSemi(body,update,iBody);
 

@@ -846,7 +846,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
       fOut = fopen(cOut,"w");
-      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel x_rel y_rel z_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz\n");
+      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel x_rel y_rel z_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz vbodyx vbodyy vbodyz\n");
       fclose(fOut);
     }
     
@@ -1639,6 +1639,12 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
       fprintf(fOut," ");
       fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dCartVel[0]*AUCM/DAYSEC,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dCartVel[1]*AUCM/DAYSEC,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dCartVel[2]*AUCM/DAYSEC,4,6);
     
       fprintf(fOut,"\n");
     

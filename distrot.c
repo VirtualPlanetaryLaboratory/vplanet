@@ -261,7 +261,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
           
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &dlatmp, &daptmp, &dmatmp);
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &daptmp, &dlatmp, &dmatmp);
         body[iBody].daTimeSeries[iLine] = dttmp*fdUnitsTime(control->Units[iBody+1].iTime);
         body[iBody].daSemiSeries[iLine] = datmp*fdUnitsLength(control->Units[iBody+1].iLength);
         body[iBody].daEccSeries[iLine] = detmp;
@@ -292,6 +292,14 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       fclose(fileorb);
     }
     body[iBody].iCurrentStep = 0;
+    if (control->Evolve.bVarDt) {
+      fprintf(stderr,"ERROR: Cannot use variable time step (%s = 1) if %s = 1\n",options[OPT_VARDT].cName,options[OPT_READORBITDATA].cName);
+      exit(EXIT_INPUT);
+    }
+    if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
+      fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+      exit(EXIT_INPUT);
+    }
   }
 }
  

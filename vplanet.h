@@ -19,6 +19,7 @@
 #define FLARE         512
 #define BINARY        1024
 #define GALHABIT      2048
+#define DISTRES       4096
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -42,8 +43,8 @@
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
  */
-#define MODULEOPTEND        2300
-#define MODULEOUTEND        2300
+#define MODULEOPTEND        2400
+#define MODULEOUTEND        2400
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -856,6 +857,11 @@ typedef struct {
   double dCosArgP;
   double dMinAllowed;  /**< minimum allowed close approach of body to host */
   double dMassInterior;
+  
+  
+  //DISTRES
+  double dMeanL;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1808,3 +1814,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 #include "galhabit.h"
+#include "distres.h"

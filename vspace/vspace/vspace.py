@@ -1,5 +1,5 @@
 from __future__ import print_function
-import os 
+import os
 import sys
 import subprocess as sb
 import numpy as np
@@ -18,7 +18,7 @@ try:
   f = open(inputf,'r')
 except IOError:
   print ("%s is not a valid file name. Please reenter." %inputf)
-  
+
 lines = f.readlines()
 f.close()
 
@@ -47,7 +47,7 @@ for i in range(len(lines)):
     flist.append(lines[i].split()[1])
     fline.append(i)
     fnum += 1
-    
+
   if re.search('\[',lines[i]) != None:
     spl = re.split('[\[\]]',lines[i])
     name = lines[i].split()[0]
@@ -58,7 +58,7 @@ for i in range(len(lines)):
       raise IOError("Please provide a short prefix identifying each parameter to be iterated (to be used in directory names): <option> [<range>] <prefix>. Prefix is missing for '%s' for '%s'"%(name,flist[fnum-1]))
     if len(values) != 3:
       raise IOError("Attempt to iterate over '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>, <high>, <spacing>], [<low>, <high>, n<number of points>], or [<low>, <high>, l<number of points>] (log spacing) "%(name,flist[fnum-1]))
-    
+
     for j in range(len(values)):
       values[j] = values[j].strip()  #remove any leading white spaces
 
@@ -80,8 +80,8 @@ for i in range(len(lines)):
           array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),np.float(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
-      
-        
+
+
     else:
       if np.float(values[0]) > np.float(values[1]) and np.float(values[2]) > 0:
         raise IOError("Attempt to iterate over '%s' for '%s', but start value > end value and spacing is positive"%(name,flist[fnum-1]))
@@ -92,34 +92,34 @@ for i in range(len(lines)):
     iter_name.append(name)
     numtry *= len(array)
     numvars += 1
-      
+
 fline.append(i+1)
 #error handling
-if src == None:
+if src is None:
   raise IOError("Name of source folder not provided in file '%s'. Use syntax 'srcfolder <foldername>'"%inputf)
-if dest == None:
+if dest is None:
   raise IOError("Name of destination folder not provided in file '%s'. Use syntax 'destfolder <foldername>'"%inputf)
 if flist == []:
   raise IOError("No files-to-be-copied provided in file '%s'. Use syntax 'file <filename>'")
-  
+
 if not os.path.exists(src):
   raise IOError("Source folder '%s' does not exist"%src)
-  
-if re.search('\/',dest) != None:
+
+if re.search('\/',dest) is not None:
   dest_parent = '/'.join(dest.split("/")[0:-1])
   if not os.path.exists(dest_parent):
     raise IOError("Destination's parent folder '%s' does not exist"%dest_parent)
 if not os.path.exists(dest):
   os.system('mkdir '+dest)
 
-if numvars == 0:  
+if numvars == 0:
   for i in range(fnum):
     #read in file to be copied
     try:
-      fIn = open(src+'/'+flist[i],'r')
+      fIn = open(os.path.join(src,flist[i]),'r')
     except IOError:
-      print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
-  
+      print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
+
     #find the lines in 'inputf' that correspond to this file
     slines = lines[fline[i]+1:fline[i+1]]
     slines = [slines[j] for j in range(len(slines)) if slines[j].split() != []]
@@ -129,8 +129,8 @@ if numvars == 0:
     fIn.close()
 
     #create file out
-    fOut = open(dest+'/'+flist[i],'w')
-  
+    fOut = open(os.path.join(dest,flist[i]),'w')
+
     for j in range(len(dlines)):
       for k in range(len(spref)):
         if dlines[j].split() != []:
@@ -144,14 +144,14 @@ if numvars == 0:
             if dlines[j].split()[1] == spref[k]:
               dlines[j] = '#'+dlines[j]
               sflag[k] = 1
-  
+
       fOut.write(dlines[j])  #write to the copied file
-    
+
     for k in range(len(spref)):
       #check if any options were not already present in the copied file, then write them
       if sflag[k] < 0:
         fOut.write('\n'+slines[k])
-  
+
     fOut.close()
 
 elif numvars >= 1:
@@ -162,7 +162,7 @@ elif numvars >= 1:
 
   #iterate over all possible combinations
   for tup in it.product(*iterables0):
-    destfull = dest+'/'+trial  #create directory for this combination
+    destfull = os.path.join(dest,trial)  #create directory for this combination
     for ii in range(len(tup)):
       n = len(str(len(iter_var[ii])))
       index0 = np.where(iter_var[ii]==tup[ii])[0]
@@ -172,14 +172,14 @@ elif numvars >= 1:
 
     if not os.path.exists(destfull):
        os.system('mkdir '+destfull)
-    
+
     for i in range(fnum):
       #read in file to be copied
       try:
-        fIn = open(src+'/'+flist[i],'r')
+        fIn = open(os.path.join(src,flist[i]),'r')
       except IOError:
-        print("%s is not a valid file name. Please reenter." % (src+'/'+flist[i]))
-      
+        print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
+
       #find the lines in 'inputf' that correspond to this file
       slines = lines[fline[i]+1:fline[i+1]]
       slines = [slines[j] for j in range(len(slines)) if slines[j].split() != []]
@@ -187,10 +187,10 @@ elif numvars >= 1:
       spref = [slines[j].split()[0] for j in range(len(slines))]   #option name
       dlines = fIn.readlines()
       fIn.close()
-      
+
       #create file out
-      fOut = open(destfull+'/'+flist[i],'w')
-          
+      fOut = open(os.path.join(destfull,flist[i]),'w')
+
       for j in range(len(dlines)):
         for k in range(len(spref)):
           if dlines[j].split() != []:
@@ -207,34 +207,34 @@ elif numvars >= 1:
               if dlines[j].split()[0] == slines[k].split()[1]:
                 dlines[j] = '#'+dlines[j]
                 sflag[k] = 1
-              
+
         fOut.write(dlines[j])  #write to the copied file
-      
+
       for k in range(len(spref)):
         #check if any were not already present in the copied file, then write them
         if sflag[k] < 0:
           fOut.write('\n'+slines[k])
-      
-    fOut.close()        
+
+    fOut.close()
     count += 1    #move to next combination
 
-# Just do this block if you want to 
+# Just do this block if you want to
 if(False):
     # Now that all the simulation directories have been populated,
     # Make the submission scripts for hyak
     # Parse input file
 
     # TODO: allow the input file to include flags to set default things for
-    # the .pbs script and for whether or not to run this section    
-    
-    # Parallel or parallel_sql?
+    # the .pbs script and for whether or not to run this section
+
+    # Parallel or parallel_sql? Always use parallel_sql!
     para = "parallel_sql"
-    
+
     destfolder, trialname, infiles, src = vspace_hyak.parseInput(infile=inputf)
-        
+
     # Make command list and .sh files to run the scripts
     vspace_hyak.makeCommandList(simdir=destfolder,infile=inputf,para=para)
-    
+
     # Make the submission script
     vspace_hyak.makeHyakVPlanetPBS(script="run_vplanet.pbs",taskargs="vplArgs.txt",
                            walltime="00:30:00",para=para,

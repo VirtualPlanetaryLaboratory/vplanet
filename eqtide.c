@@ -2490,8 +2490,9 @@ void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   fprintf(fp,"----- EQTIDE PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=iStart;iOut<OUTENDEQTIDE;iOut++) {
-    if (output[iOut].iNum > 0)
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
   }
   fprintf(fp,"Tidal Perturbers:");
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {

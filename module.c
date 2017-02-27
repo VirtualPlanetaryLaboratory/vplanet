@@ -1168,7 +1168,8 @@ void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
 
 void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iSemiBinEqSt = (*iEqn)++;
+  update[iBody].iSemiBinEqSt = (*iEqn);
+  (*iEqn)++;
 }
 
 /* GENERAL MULTI-MODULE EQUATION INITIALIZATION/FINALIZATION */
@@ -1193,8 +1194,9 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
   // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
   if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
-    // Finalize update step
-    int iEqn = 0;
+    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
+    int iEqn = 1; // When EQTIDE is set, already have an equation for how
+                  // the semi-major axis changes so start this at 1
     FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
     // Malloc stuff, increment iVar

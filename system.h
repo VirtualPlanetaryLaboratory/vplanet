@@ -30,5 +30,5 @@ double fdTotEnergy(BODY *);
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
-/* Multi-body derivative equations, set-up functions */
+/* Multi-body derivative equations */
 double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);

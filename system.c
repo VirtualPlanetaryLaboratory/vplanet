@@ -199,7 +199,6 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // code sets dEcc to 0 so it's fine
   if(body[iBody].bTideLock && body[iBody].dEcc < TINY)
   {
-    fprintf(stderr,"DOING STUFF!\n");
 
     // Compute orbital angular momentum
     double M = body[0].dMass + body[1].dMass;
@@ -212,7 +211,7 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
     // Compute, return change in semi-major axis
     return 2.0*body[1].dSemi*Jdot/J;
   }
-  // Not tidally locked, do nothing
+  // Not tidally locked or still eccentric, do nothing
   else
   {
     return 0.0;

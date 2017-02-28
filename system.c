@@ -190,30 +190,88 @@ void CalcPQ(BODY *body, int iBody) {
  * When eccentric, TODO
  */
 
+/*! Compute change in orbital angular momentum due to change in stellar
+ * angular momentum for a tidally locked star experiencing changes
+ * in its radius and angular momentum due to magnetic braking
+ */
+double fdJStarDt(BODY *body, int iBody)
+{
+  double Jdot = 0.0;
+  double dOmegaCrit;
+  double dRadMinus, dRadPlus, dDRdt;
+  double eps = 10 * YEARDAY * DAYSEC;
+
+  // Now, let's calculate dJ/dt due to magnetic braking
+  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
+  // This dJ/dt takes angular momentum from star, star can't lose it, so orbit does
+  if (body[iBody].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
+  else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
+  if (body[iBody].iWindModel == STELLAR_MODEL_REINERS) {
+    if (body[iBody].dRotRate >= dOmegaCrit) {
+      Jdot += -RM12CONST * body[iBody].dRotRate * pow(body[iBody].dRadius, 16. / 3.)
+                        * pow(body[iBody].dMass, -2. / 3);
+    } else {
+      Jdot += -RM12CONST * pow(body[iBody].dRotRate / dOmegaCrit, 4.) * body[iBody].dRotRate
+                        * pow(body[iBody].dRadius, 16. / 3.) * pow(body[iBody].dMass, -2. / 3);
+    }
+  }
+
+  // Angular momentum change due to stellar contraction/expansion
+  // J = Iw -> dJ/dt = w (dI/dt) where dw/dt = 0 since tidally locked
+  // where I = m * r_g^2 * r^2
+  // and dI/dt = 2 * m * r_g^2 * r * dr/dt
+  dRadMinus = fdRadiusFunctionBaraffe(body[iBody].dAge - eps, body[iBody].dMass);
+  dRadPlus = fdRadiusFunctionBaraffe(body[iBody].dAge + eps, body[iBody].dMass);
+  dDRdt = (dRadPlus - dRadMinus) /  (2. * eps);
+
+  // If radius increases, star wants to spin down, can't, so it dumps the
+  // angular momentum into the orbit
+  Jdot += 2.0*body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*dDRdt*body[iBody].dRotRate;
+
+  return Jdot;
+}
+
 double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // iaBody [0] is ALWAYS the current body: one of the stars
-  int iBody = iaBody[0];
-
-  // Only do stuff if tidally-locked and circular (FOR NOW)
-  // Note I used TINY as my small enough condition because if dEcc < dMinEcc,
-  // code sets dEcc to 0 so it's fine
-  if(body[iBody].bTideLock && body[iBody].dEcc < TINY)
+  int iBody = iaBody[0]; // Secondary body
+  int iTmp; // for loop index
+  
+  // If orbit isn't circular, pass
+  if(body[iBody].dEcc > TINY)
   {
+    return 0.0;
+  }
+    // Circular orbit! If tidally locked, do stuff!
+    else
+    {
+    // Only do stuff if tidally-locked and circular (FOR NOW)
+    // Note I used TINY as my small enough condition because if dEcc < dMinEcc,
+    // code sets dEcc to 0 so it's fine
 
-    // Compute orbital angular momentum
+    // Compute current orbital angular momentum
     double M = body[0].dMass + body[1].dMass;
     double mu = body[0].dMass*body[1].dMass/M;
-    double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
+    double J = mu*sqrt(BIGG*M*body[1].dSemi); // No ecc here since assumed circular
 
-    // Compute change in stellar angular momentum for current star (iBodyth star)
-    double Jdot = 0.0; // TODO
+    // Initial change in angular momentum is null
+    double Jdot = 0.0;
+
+    // Loop over stars, Only exchange angular momemntum with orbit if tidally locked
+    for(iTmp = 0; iTmp < 2; iTmp++)
+    {
+      // Compute dJ/dt sources shamelessly stolen from STELLAR
+      if(body[iBody].bTideLock)
+      {
+        Jdot += fdJStarDt(body,iTmp);
+      }
+      // Not tidally locked or still eccentric, do nothing
+      else
+      {
+        Jdot += 0.0;
+      }
+    }
 
     // Compute, return change in semi-major axis
     return 2.0*body[1].dSemi*Jdot/J;
-  }
-  // Not tidally locked or still eccentric, do nothing
-  else
-  {
-    return 0.0;
   }
 }

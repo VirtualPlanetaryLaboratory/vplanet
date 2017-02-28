@@ -1194,6 +1194,9 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
   // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
   if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
+    // Other star (primary) can also influence this equation
+    int iOtherBody = 0;
+
     // Finalize update step: semi-major axis eqn for BIN-EQ-ST
     int iEqn = 1; // When EQTIDE is set, already have an equation for how
                   // the semi-major axis changes so start this at 1
@@ -1206,9 +1209,10 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
 
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
-    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
     update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt]*sizeof(int));
     update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][1] = iOtherBody;
     update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
     (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
   }

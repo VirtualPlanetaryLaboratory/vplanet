@@ -111,14 +111,14 @@ void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
-double fdLuminosityFunctionProximaCen(double);
+double fdLuminosityFunctionProximaCen(double,double);
 double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
-double fdRadiusFunctionProximaCen(double);
+double fdRadiusFunctionProximaCen(double,double);
 double fdDRotRateDt(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
-double fdTemperatureFunctionProximaCen(double);
+double fdTemperatureFunctionProximaCen(double,double);
 void fdHabitableZoneKopparapu2013(double,double,double*);
 
 

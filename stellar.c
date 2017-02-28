@@ -932,7 +932,7 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
     // Compute a very simple derivative. NOTE: This won't work if variables like the
     // stellar mass are changing, too! Perhaps it's better to keep track of the previous
     // values of the radius and compute the derivative from those? TODO: Check this.
-    
+   
     // Delta t = 10 years. TODO: Check this.
     double eps = 10 * YEARDAY * DAYSEC;
     double dRadMinus, dRadPlus;
@@ -940,6 +940,7 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
     dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
     dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
     dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
+  
   }
   
   // Now, let's calculate dJ/dt due to magnetic braking

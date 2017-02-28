@@ -8,7 +8,8 @@ dRotPeriod    0.005 #0.007
 dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
-dSemi       0.072
+#dSemi       0.072
+dOrbPeriod  -5.0
 dEcc        0.3
 
 # EQTIDE Parameters
@@ -19,4 +20,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 # Stellar param
 sStellarModel baraffe
 
-saOutputOrder	Time -Radius Semim Ecce -RotRate -MeanMotion 
+saOutputOrder	Time -TidalRadius -Radius -OrbPer -RotPer Ecce -RotRate -MeanMotion 

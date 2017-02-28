@@ -1346,6 +1346,7 @@ typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 typedef struct {
   int bDoForward;	 /**< Perform Forward Integration? */
   int bDoBackward;	 /**< Perform Backward Integration? */
+  int iDir;              /**< 1=forward, -1=backward */
   double dTime;          /**< Integration Time */
   double dEta;           /**< Variable Timestep Coefficient */
   double dStopTime;	 /**< Integration Stop Time */

@@ -25,6 +25,7 @@ void PropsAuxRadheatThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtide(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideDistorb(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxEqtideStellar(BODY*,EVOLVE*,UPDATE*,int);
 
 void ForceBehaviorAtmescEqtideThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

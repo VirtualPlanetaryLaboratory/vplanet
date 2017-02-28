@@ -210,6 +210,9 @@
 #define VANGMY          2205
 #define VANGMZ          2206
 
+//DISTRES
+#define VMEANL          2301
+
 /* Now define the structs */
 
 #define MAXSPECIES       100
@@ -860,6 +863,7 @@ typedef struct {
   
   
   //DISTRES
+  int bDistRes;
   double dMeanL;
   
 } BODY;
@@ -1226,6 +1230,27 @@ typedef struct {
   double **padDAngMYDtGalHabit;
   double **padDAngMZDtGalHabit;
 
+  /* DISTRES */
+  int iNumMeanL;
+  int iMeanL;
+  double dDMeanLDt;
+  int *iaMeanLDistRes;
+  double **padDMeanLDtDistRes;
+  
+  int *iaSemiDistRes;
+  double **padDSemiDtDistRes;
+
+  int *iaHeccDistRes;
+  double **padDHeccDtDistRes;
+  
+  int *iaKeccDistRes;
+  double **padDKeccDtDistRes;
+  
+  int *iaPincDistRes;
+  double **padDPincDtDistRes;
+  
+  int *iaQincDistRes;
+  double **padDQincDtDistRes;
 
   /* ATMESC */
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
@@ -1627,6 +1652,7 @@ typedef void (*fnFinalizeUpdateEccZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
@@ -1757,6 +1783,9 @@ typedef struct {
   fnFinalizeUpdateAngMXModule **fnFinalizeUpdateAngMX;
   fnFinalizeUpdateAngMYModule **fnFinalizeUpdateAngMY;
   fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
+
+  fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
+
 
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;

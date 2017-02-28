@@ -15,7 +15,8 @@ void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 #define OPTSTARTDISTRES       2300 /* Start of DISTRES options */
 #define OPTENDDISTRES         2400 /* End of DISTRES options */
 
-
+#define OPT_MEANL             2301
+#define OPT_MEANA             2302
 
 /* Options Functions */
 
@@ -35,6 +36,8 @@ void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 #define OUTSTARTDISTRES        2300  /* Start of DISTRES options */
 #define OUTENDDISTRES          2400 /* End of DISTRES options */
 #define OUTBODYSTARTDISTRES    2320 /* Start of DISTRES BODY options */
+
+#define OUT_MEANL               2320
 
 void HelpOutputDistRes(OUTPUT*);
 

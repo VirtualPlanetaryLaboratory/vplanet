@@ -1590,5 +1590,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
+  InitializeOutputDistRes(output,fnWrite);
+  
 
 }

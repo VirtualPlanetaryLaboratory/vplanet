@@ -3388,5 +3388,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsDistRes(options,fnRead);
+
 
 }

@@ -2131,24 +2131,24 @@ void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
   double x, y, z, r;
   double xcom, ycom, zcom;
   int i;
-  
-  xcom = body[iBody].dMass*body[iBody].dCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
-  ycom = body[iBody].dMass*body[iBody].dCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
-  zcom = body[iBody].dMass*body[iBody].dCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
-
-  system->dRelativePos[0] = system->dPassingStarR[0] + xcom;
-  system->dRelativePos[1] = system->dPassingStarR[1] + ycom;
-  system->dRelativePos[2] = system->dPassingStarR[2] + zcom;
+  // 
+//   xcom = body[iBody].dMass*body[iBody].dCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   ycom = body[iBody].dMass*body[iBody].dCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   zcom = body[iBody].dMass*body[iBody].dCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+// 
+//   system->dRelativePos[0] = system->dPassingStarR[0] + xcom;
+//   system->dRelativePos[1] = system->dPassingStarR[1] + ycom;
+//   system->dRelativePos[2] = system->dPassingStarR[2] + zcom;
 
   for (i=0;i<=2;i++) {
     vsq += pow(system->dRelativeVel[i],2);
-    dtime += -system->dRelativePos[i]*system->dRelativeVel[i];
+    dtime += -system->dPassingStarR[i]*system->dRelativeVel[i];
   }
   dtime /= vsq;
   
-  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dRelativePos[0];
-  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dRelativePos[1];
-  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dRelativePos[2];
+  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dPassingStarR[0];
+  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dPassingStarR[1];
+  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dPassingStarR[2];
 //   r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
   
 //   system->dCloseEncTime += dtime;

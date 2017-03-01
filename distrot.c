@@ -1102,6 +1102,8 @@ double fdCentralTorqueR(BODY *body, int iBody) {
   return 3*pow(KGAUSS,2)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
+/* THE FOLLOWING FXNS WILL NEED TO CHANGE IF DISTRES IS USED XXX */
+
 double fdObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
 //   double tmp;
 //   tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);

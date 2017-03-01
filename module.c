@@ -119,6 +119,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateAngMX = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL = malloc(iNumBodies*sizeof(fnFinalizeUpdateMeanLModule));
 
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -163,6 +164,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bFlare)
     iNumModules++;
   if (body[iBody].bGalHabit)
+    iNumModules++;
+  if (body[iBody].bDistRes)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -234,6 +237,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateAngMX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMeanLModule));
 
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
@@ -297,6 +301,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMeanL[iBody][iModule] = &FinalizeUpdateNULL;
+
   }
 
   /************************
@@ -348,6 +354,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleGalHabit(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
+  if (body[iBody].bDistRes) {
+    AddModuleDistRes(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = DISTRES;
+  }
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iFile){
@@ -390,7 +400,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
         body[iFile-1].bDistOrb = 1;
 	module->iBitSum[iFile-1] += DISTORB;
-      } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"distrot",7) == 0) {
         body[iFile-1].bDistRot = 1;
 	module->iBitSum[iFile-1] += DISTROT;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
@@ -411,9 +421,12 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
-      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",8) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
+      } else if (memcmp(sLower(saTmp[iModule]),"distres",7) == 0) {
+        body[iFile-1].bDistRes = 1;
+	module->iBitSum[iFile-1] += DISTRES;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -471,6 +484,8 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bStellar = 0;
       (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bDistRes = 0;
+
   }
 }
 

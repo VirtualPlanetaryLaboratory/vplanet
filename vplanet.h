@@ -558,6 +558,7 @@ typedef struct {
   int iWaterLossModel;
   int iPlanetRadiusModel;
   int bInstantO2Sink;
+  double dRGDuration;
   double dKTide;
   double dMDotWater;
   double dFHRef;
@@ -1397,6 +1398,7 @@ typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 typedef struct {
   int bDoForward;	 /**< Perform Forward Integration? */
   int bDoBackward;	 /**< Perform Backward Integration? */
+  int iDir;              /**< 1=forward, -1=backward */
   double dTime;          /**< Integration Time */
   double dEta;           /**< Variable Timestep Coefficient */
   double dStopTime;	 /**< Integration Stop Time */

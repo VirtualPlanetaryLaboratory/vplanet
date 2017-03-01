@@ -252,6 +252,7 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
           fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
+    control->Evolve.iDir = -1;
   }
 
   /* Fix forward output file */
@@ -263,6 +264,7 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
           fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
+    control->Evolve.iDir = 1;
   }
 
   /* Check for file existence */

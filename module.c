@@ -1166,9 +1166,46 @@ void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
+/*! Binary-Eqtide-Stellar Hecc derivative set-up*/
+void InitializeUpdateEqBinStHecc(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if BINARY, EQTIDE, and STELLAR used
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    if (update[iBody].iNumHecc == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumHecc++;
+  }
+}
+
+/*! Binary-Eqtide-Stellar Kecc derivative set-up*/
+void InitializeUpdateEqBinStKecc(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if BINARY, EQTIDE, and STELLAR used
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    if (update[iBody].iNumKecc == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumKecc++;
+  }
+}
+
+/*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
 void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
   update[iBody].iSemiBinEqSt = (*iEqn);
+  (*iEqn)++;
+}
+
+/*! Finalize update (for malloc-ing) for Bin-eq-st Hecc derivative */
+void FinalizeUpdateMultiEqBinStHecc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+  update[iBody].iHeccBinEqSt = (*iEqn);
+  (*iEqn)++;
+}
+
+/*! Finalize update (for malloc-ing) for Bin-eq-st Kecc derivative */
+void FinalizeUpdateMultiEqBinStKecc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+  update[iBody].iKeccBinEqSt = (*iEqn);
   (*iEqn)++;
 }
 
@@ -1181,6 +1218,8 @@ void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *upd
 {
   // Initialize update struct to accomodate equation
   InitializeUpdateEqBinStSemi(body,update,iBody);
+  InitializeUpdateEqBinStHecc(body,update,iBody);
+  InitializeUpdateEqBinStKecc(body,update,iBody);
 
   /* More equations here! */
 }
@@ -1191,14 +1230,19 @@ void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *upd
 void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate,int *iVar, int iBody, int iFoo)
 {
 
+  int iOtherBody, iEqn;
+
   // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
   if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
+
+    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
+
     // Other star (primary) can also influence this equation
-    int iOtherBody = 0;
+    iOtherBody = 0;
 
     // Finalize update step: semi-major axis eqn for BIN-EQ-ST
-    int iEqn = 1; // When EQTIDE is set, already have an equation for how
+    iEqn = 1; // When EQTIDE is set, already have an equation for how
                   // the semi-major axis changes so start this at 1
     FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
@@ -1215,6 +1259,54 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][1] = iOtherBody;
     update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
     (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
+
+    /* Add change in Hecc due to BINARY-EQTIDE-STELLAR coupling */
+
+    // Other star (primary) can also influence this equation
+    iOtherBody = 0;
+
+    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
+    iEqn = 1; // When EQTIDE is set, already have an equation for how
+                  // the Hecc changes so start this at 1
+    FinalizeUpdateMultiEqBinStHecc(body,update,(&iEqn),(*iVar),iBody,iFoo);
+
+    // Malloc stuff, increment iVar
+    (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
+    update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
+    (*iVar)++;
+
+    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 2; // Both stars
+    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt][1] = iOtherBody;
+    update[iBody].pdDHeccDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iHeccBinEqSt];
+    (*fnUpdate)[iBody][update[iBody].iHecc][update[iBody].iHeccBinEqSt] = &fdHeccDtEqBinSt;
+
+    /* Add change in Kecc due to BINARY-EQTIDE-STELLAR coupling */
+
+    // Other star (primary) can also influence this equation
+    iOtherBody = 0;
+
+    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
+    iEqn = 1; // When EQTIDE is set, already have an equation for how
+                  // the Kecc changes so start this at 1
+    FinalizeUpdateMultiEqBinStKecc(body,update,(&iEqn),(*iVar),iBody,iFoo);
+
+    // Malloc stuff, increment iVar
+    (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
+    update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
+    (*iVar)++;
+
+    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 2; // Both stars
+    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt][1] = iOtherBody;
+    update[iBody].pdDKeccDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iKeccBinEqSt];
+    (*fnUpdate)[iBody][update[iBody].iKecc][update[iBody].iKeccBinEqSt] = &fdKeccDtEqBinSt;
   }
 
 /* Add more equations below! */

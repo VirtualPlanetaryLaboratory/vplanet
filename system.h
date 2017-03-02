@@ -32,4 +32,7 @@ void CalcPQ(BODY*,int);
 
 /* Multi-body derivative equations */
 double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);
+double fdEccDtEqBinSt(BODY*,SYSTEM*,int*);
+double fdHeccDtEqBinSt(BODY*,SYSTEM*,int*);
+double fdKeccDtEqBinSt(BODY*,SYSTEM*,int*);
 double fdJStarDt(BODY *body, int iBody);

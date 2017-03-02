@@ -34,4 +34,8 @@ void InitializeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,i
 void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int*,int,int);
 
 void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
+void InitializeUpdateEqBinStHecc(BODY*,UPDATE*,int);
+void InitializeUpdateEqBinStKecc(BODY*,UPDATE*,int);
 void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateMultiEqBinStHecc(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateMultiEqBinStKecc(BODY*,UPDATE*,int*,int,int,int);

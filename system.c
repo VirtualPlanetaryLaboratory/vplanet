@@ -180,14 +180,16 @@ void CalcPQ(BODY *body, int iBody) {
  *
  */
 
+/* BINARY - EQTIDE - STELLAR COUPLING */
+
 /*
  * Change in semi-major axis due to binary - eqtide - stellar coupling
  * Right now, applies to tidally-locked binary stars (since the angular
  * momentum from spinning-down stars must go somewhere)
  * Note: body 1 has orbital information for binary
  *
- * When circular, da/dt = 2 * a * (1/J_orb)dJ_star/dt for angular momentum J
- * When eccentric, TODO
+ * When circular, da/dt = 2 * a * (1/J_orb)*dJ_star/dt for angular momentum J
+ * When eccentric, de/dt = (1-e^2) * (dJ_star/dt)/(J * e)
  */
 
 /*! Compute change in orbital angular momentum due to change in stellar
@@ -231,11 +233,14 @@ double fdJStarDt(BODY *body, int iBody)
   return Jdot;
 }
 
+/*! Compute change in binary semi-major axis when circular, tidally locked
+ * and BINARY, EQTIDE, and STELLAR are active
+ */
 double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // iaBody [0] is ALWAYS the current body: one of the stars
   int iBody = iaBody[0]; // Secondary body
   int iTmp; // for loop index
-  
+
   // If orbit isn't circular, pass
   if(body[iBody].dEcc > TINY)
   {
@@ -244,10 +249,6 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
     // Circular orbit! If tidally locked, do stuff!
     else
     {
-    // Only do stuff if tidally-locked and circular (FOR NOW)
-    // Note I used TINY as my small enough condition because if dEcc < dMinEcc,
-    // code sets dEcc to 0 so it's fine
-
     // Compute current orbital angular momentum
     double M = body[0].dMass + body[1].dMass;
     double mu = body[0].dMass*body[1].dMass/M;
@@ -259,7 +260,6 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
     // Loop over stars, Only exchange angular momemntum with orbit if tidally locked
     for(iTmp = 0; iTmp < 2; iTmp++)
     {
-      // Compute dJ/dt sources shamelessly stolen from STELLAR
       if(body[iBody].bTideLock)
       {
         Jdot += fdJStarDt(body,iTmp);
@@ -267,11 +267,85 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
       // Not tidally locked or still eccentric, do nothing
       else
       {
-        Jdot += 0.0;
+        continue;
       }
     }
 
     // Compute, return change in semi-major axis
     return 2.0*body[1].dSemi*Jdot/J;
   }
+}
+
+/*! Compute change in binary Ecc when eccentric, tidally locked
+ * and BINARY, EQTIDE, and STELLAR are active.  Note: This isn't added to matrix
+ * but instead computes the de/dt needed for Hecc, Kecc derivatives
+ */
+double fdEccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+
+  /* XXX BROKEN XXX */
+
+  return 0.0;
+  // iaBody [0] is ALWAYS the current body: one of the stars
+  int iBody = iaBody[0]; // Secondary body
+  int iTmp; // for loop index
+
+  // If orbit is circular, pass
+  if(body[iBody].dEcc < TINY)
+  {
+    return 0.0;
+  }
+    // Eccentric orbit! If tidally locked, do stuff!
+    else
+    {
+    // Compute current orbital angular momentum
+    double M = body[0].dMass + body[1].dMass;
+    double mu = body[0].dMass*body[1].dMass/M;
+    double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
+
+    // Initial change in angular momentum is null
+    double Jdot = 0.0;
+
+    // Loop over stars, Only exchange angular momemntum with orbit if tidally locked
+    for(iTmp = 0; iTmp < 2; iTmp++)
+    {
+      if(body[iBody].bTideLock)
+      {
+        Jdot += fdJStarDt(body,iTmp);
+      }
+      // Not tidally locked or still eccentric, do nothing
+      else
+      {
+        continue;
+      }
+    }
+
+    // Compute, return change in eccentricity
+    // - since decrease in angular momentum makes orbit more eccentric
+    return -(1.0-body[iBody].dEcc*body[iBody].dEcc)*Jdot/(J*body[iBody].dEcc);
+  }
+}
+
+
+/*! Compute change in binary Hecc when eccentric, tidally locked
+ * and BINARY, EQTIDE, and STELLAR are active.
+ */
+double fdHeccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+
+  // Get change in eccentricity
+  double dedt = fdEccDtEqBinSt(body,system,iaBody);
+
+  // Return change in Hecc
+  return dedt * sin(body[iaBody[0]].dLongP);
+}
+
+/*! Compute change in binary Kecc when eccentric, tidally locked
+ * and BINARY, EQTIDE, and STELLAR are active.
+ */
+double fdKeccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+
+  // Get change in eccentricity
+  double dedt = fdEccDtEqBinSt(body,system,iaBody);
+
+  // Return change in Kecc
+  return dedt * cos(body[iaBody[0]].dLongP);
 }

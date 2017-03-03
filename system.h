@@ -35,4 +35,7 @@ double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);
 double fdEccDtEqBinSt(BODY*,SYSTEM*,int*);
 double fdHeccDtEqBinSt(BODY*,SYSTEM*,int*);
 double fdKeccDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdJStarDt(BODY *body, int iBody);
+double fdJStarDt(BODY*,int);
+double fdJBrakingStarDt(BODY*,int);
+double fdRadiusStarDt(BODY*,int);
+double fdSemiTidalLockBinEqSt(BODY*,int,int);

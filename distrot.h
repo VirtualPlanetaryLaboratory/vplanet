@@ -64,6 +64,7 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_YOBLTIMEDISTROT     1448
 #define OUT_ZOBLTIMEDISTROT     1449
 #define OUT_DYNELLIP            1450
+#define OUT_PRECFNAT            1451
 
 void HelpOutputDistRot(OUTPUT*);
 void WriteBodyDOblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -93,6 +94,8 @@ void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,
 void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */
+double fdCentralTorqueR(BODY*, int);
+
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);
 double fdDistRotRD4DyDt(BODY*, SYSTEM*, int*);
 double fdDistRotRD4DzDt(BODY*, SYSTEM*, int*);

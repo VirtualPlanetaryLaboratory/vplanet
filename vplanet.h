@@ -284,6 +284,7 @@ typedef struct {
   double *dLOrbTmp;
   double dRPeri;
   double dRApo;
+  
 
   /* BINARY parameters */
   int bBinary;          /** Apply BINARY module? */
@@ -1489,6 +1490,7 @@ typedef struct {
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
+  int bOutputEigen;      /**< Output eigen values? */
 
 } CONTROL;
 

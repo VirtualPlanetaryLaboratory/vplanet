@@ -849,6 +849,20 @@ void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     *dTmp = -1;
   sprintf(cUnit,"");
 }  
+
+void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdCentralTorqueR(body,iBody);
+  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
+  }
+}  
   
 void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -972,6 +986,12 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DYNELLIP].iModuleBit = DISTROT;
   fnWrite[OUT_DYNELLIP] = &WriteDynEllip;
   
+  sprintf(output[OUT_PRECFNAT].cName,"PrecFNat");
+  sprintf(output[OUT_PRECFNAT].cDescr,"natural precession freq of planet");
+  output[OUT_PRECFNAT].bNeg = 0;
+  output[OUT_PRECFNAT].iNum = 1;
+  output[OUT_PRECFNAT].iModuleBit = DISTROT;
+  fnWrite[OUT_PRECFNAT] = &WritePrecFNat;
 }
 
 /************ DISTROT Logging Functions **************/

@@ -108,6 +108,18 @@ void ReadOutputLapl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     AssignDefaultInt(options,&control->bOutputLapl,files->iNumInputs);
 }
 
+void ReadOutputEigen(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    control->bOutputEigen = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&control->bOutputEigen,files->iNumInputs);
+}
+
 void ReadOverrideMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
@@ -308,7 +320,13 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTLAPL].iMultiFile = 0; 
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
   
-  
+  sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
+  sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues");
+  sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");
+  options[OPT_OUTPUTEIGEN].dDefault = 0;
+  options[OPT_OUTPUTEIGEN].iType = 0;  
+  options[OPT_OUTPUTEIGEN].iMultiFile = 0; 
+  fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -679,7 +697,35 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       for (i=1;i<control->Evolve.iNumBodies;i++) {
         system->imLaplaceN[i] = malloc((control->Evolve.iNumBodies)*sizeof(int));
       }
+      if (control->bOutputEigen) {
+        system->dmEigenValEcc = malloc(2*sizeof(double*));
+        system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->dmEigenValInc = malloc(2*sizeof(double*));
+        system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->dmEigenPhase = malloc(2*sizeof(double*));
       
+        system->A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+        system->Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->Acopy = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
+       
+        for (jBody=0;jBody<(control->Evolve.iNumBodies-1);jBody++) {
+           system->A[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->B[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecEcc[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecInc[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->Acopy[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        }
+    
+        for (i=0;i<2;i++) {
+           system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenPhase[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        }
+        system->scale = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
+      }
     }
     if (iBody >= 1) {
       VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
@@ -824,12 +870,12 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         system->Bsoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->Acopy = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
        
-        for (iBody=0;iBody<(control->Evolve.iNumBodies-1);iBody++) {
-           system->A[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-           system->B[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-           system->dmEigenVecEcc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-           system->dmEigenVecInc[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-           system->Acopy[iBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+        for (jBody=0;jBody<(control->Evolve.iNumBodies-1);jBody++) {
+           system->A[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->B[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecEcc[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->dmEigenVecInc[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
+           system->Acopy[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         }
     
         for (i=0;i<2;i++) {
@@ -1110,6 +1156,39 @@ int HaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 }
 
 /************* DISTORB Outputs ******************/
+
+void WriteEigen(CONTROL *control, SYSTEM *system) {
+  char cEccEigFile[NAMELEN], cIncEigFile[NAMELEN];
+  int iBody;
+  FILE *fecc, *finc;
+  
+  sprintf(cEccEigFile,"%s.Ecc.Eigen",system->cName);
+  sprintf(cIncEigFile,"%s.Inc.Eigen",system->cName);
+  
+  if (control->Evolve.dTime==0) {
+    fecc = fopen(cEccEigFile,"w");
+    finc = fopen(cIncEigFile,"w");
+  } else {
+    fecc = fopen(cEccEigFile,"a");
+    finc = fopen(cIncEigFile,"a");
+  } 
+  
+  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintf(fecc," ");
+  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintf(finc," ");
+  
+  for (iBody=1;iBody<(control->Evolve.iNumBodies);iBody++) {
+    fprintd(fecc,system->dmEigenValEcc[0][iBody-1],control->Io.iSciNot,control->Io.iDigits);
+    fprintf(fecc," ");
+    fprintd(finc,system->dmEigenValInc[0][iBody-1],control->Io.iSciNot,control->Io.iDigits);
+    fprintf(finc," ");
+  }
+  fprintf(fecc,"\n");
+  fprintf(finc,"\n");
+  fclose(fecc);
+  fclose(finc);
+}
 
 void WriteBodyDEccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;

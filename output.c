@@ -1545,6 +1545,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
+  
+  if (control->bOutputEigen) {
+    if (body[1].bDistOrb) {
+      if (control->Evolve.iDistOrbModel == RD4) {
+         SolveEigenVal(body,&control->Evolve,system);
+      }
+      WriteEigen(control,system);
+    }
+  }
+      
 }
 
 void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {

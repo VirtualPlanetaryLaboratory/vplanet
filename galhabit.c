@@ -1545,9 +1545,6 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     dVMax = 1.0;
     while (dkzi > system->dRelativeVelMag/dVMax || system->dRelativeVelRad >= 0) {
       GetStarVelocity(system); 
-      system->dPassingStarV[0] = 17000.0;
-     // system->dPassingStarV[1] = -000.0;
-      system->dPassingStarV[2] = -1000.0;
       GetRelativeVelocity(system);
       dkzi = random_double();
       dVMax = system->dHostApexVelMag + 3.0*system->dPassingStarSigma*1000.0;

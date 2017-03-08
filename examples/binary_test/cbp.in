@@ -7,14 +7,14 @@ iBodyType       0                               # Type of body 0 -> Planet
 dMass		0.0 			# Mass, negative -> Earth masses
 
 # Binary Properties
-dFreeEcc        0.1                   # Free Eccentricity
+dFreeEcc        0.05                   # Free Eccentricity
 dFreeInc        5.0                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
 bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
-dSemi           1.75		# Semi-major axis, negative -> AU
+dSemi           1.25		# Semi-major axis, negative -> AU
 dLongP          304.05
 
 # Output
-saOutputOrder Time CBPR CBPZ Ecce BinaryLongP CBPInsol
+saOutputOrder Time CBPR CBPZ CBPPhi Ecce BinaryLongP CBPInsol

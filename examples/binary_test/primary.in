@@ -4,10 +4,9 @@ saModules stellar binary eqtide
 
 # Physical Parameters
 iBodyType       1               # 1 -> Star
-dMass		1.22 #0.6859945166		# Mass, negative -> Earth masses
-#dRadius		0.00153		# Radius, negative -> Earth radii
+dMass		1.0             # Mass, negative -> Earth masses
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
-dRotPeriod      0.003
+dRotPeriod      -1.0
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
@@ -28,4 +27,4 @@ dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosi
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time TidalQ
+saOutputOrder

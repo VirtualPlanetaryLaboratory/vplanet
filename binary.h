@@ -1,4 +1,4 @@
-/***************** BINARY.H *********************** 
+/***************** BINARY.H ***********************
  *
  * David Fleming (dflemin3), Tue Jan 12 10:23am PDT 2016
  *
@@ -12,6 +12,7 @@
 #define FLUX_INT_MAX            20 /* How many CBP positions per orbit to integrate over */
 #define KEQNTOL                 1.0e-3 /* Tolerance for Kepler eqn computation */
 #define MAX_KEPLER_ITERS        30 /* Maximum number of iterations for Kepler eqn. solver */
+#define FLUX_EARTH              1361 /* Insolation received by Earth in W/m^2 */
 
 /* Options Info */
 /* For options and output, binary has 2100-2200 */
@@ -25,7 +26,7 @@
 #define OPT_LL13V0              2150 // LL13 Vertical epicyclic frequency
 #define OPT_LL13PHIAB           2151 // LL13 Binary Mean Anomaly Initial value
 #define OPT_CBPM0               2152 // CBP Initial mean anomaly
-#define OPT_CBPZETA             2153 // CBP z oscillation phase angle 
+#define OPT_CBPZETA             2153 // CBP z oscillation phase angle
 #define OPT_CBPPSI              2154 // CBP R, phi oscillation phase angle
 #define OPT_HALTHOLMAN          2170 // Holman+Wiegert 1999 Instability limit
 #define OPT_BINUSEMATRIX        2180 // Whether or not to include eqns in matrix
@@ -36,7 +37,7 @@
 #define OUTENDBINARY            2200
 
 // Naming convention same as for OPT_* constants
-#define OUT_FREEECC             2110 
+#define OUT_FREEECC             2110
 #define OUT_FREEINC             2120
 #define OUT_BININC              2125
 #define OUT_BINARGP             2126
@@ -53,6 +54,7 @@
 #define OUT_CBPZDOT             2165
 #define OUT_CBPPHIDOT           2166
 #define OUT_CBPR0               2167
+#define OUT_CBPINSOL            2168
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void AddModuleBinary(MODULE*,int,int);
@@ -124,6 +126,7 @@ void WriteCBPZDotBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double
 void WriteCBPPhiBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPRDotBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteCBPPhiDotBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCBPInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL*,FILE*);
@@ -178,4 +181,7 @@ double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
 double fdFluxExactBinary(BODY*,int,double,double);
+double fdFluxApproxBinary(BODY*,int);
+double fdApproxEqTemp(BODY*,int,double);
+double fdApproxInsol(BODY*,int);
 void binaryDebug(BODY*);

@@ -553,6 +553,9 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));
+
+    // LL13 theory doesn't seem to conserve energy, so force semi-major axis to be constant
+    body[iBody].dSemi = body[iBody].dR0;
   }
   else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
   {
@@ -1091,6 +1094,23 @@ void WriteCBPZDotBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   }
 }
 
+/*! Write Earth-normalized insolation received by CBP averaged over 1 binary orbit
+ *  assuming P_bin << P_cbp
+ */
+void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Make sure that this is a planet, if not, -1
+  if(iBody < 2 || body[iBody].iBodyType != 0)
+  {
+    *dTmp = -1;
+  }
+
+  *dTmp = fdApproxInsol(body,iBody);
+
+  // Always in units of insolation received by Earth
+  strcpy(cUnit,"F/F_Earth");
+}
+
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
   sprintf(output[OUT_FREEECC].cName,"FreeEcc");
@@ -1234,6 +1254,13 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHIDOT].iNum = 1;
   output[OUT_CBPPHIDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHIDOT] = &WriteCBPPhiDotBinary;
+
+  sprintf(output[OUT_CBPINSOL].cName,"CBPInsol");
+  sprintf(output[OUT_CBPINSOL].cDescr,"CBP's binary orbit-averaged Insolation");
+  output[OUT_CBPINSOL].bNeg = 0;
+  output[OUT_CBPINSOL].iNum = 1;
+  output[OUT_CBPINSOL].iModuleBit = BINARY;
+  fnWrite[OUT_CBPINSOL] = &WriteCBPInsol;
 
 }
 
@@ -1706,6 +1733,11 @@ double fdPot0(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
+  /* XXX TESTING 2nd order in binary eccentricity addition
+  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  */
+
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
@@ -1723,6 +1755,11 @@ double fdPot0dR(int j, int k, double R, BODY *body)
   double M = body[0].dMass + body[1].dMass;
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
+
+  /* XXX TESTING 2nd order in binary eccentricity addition
+  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -1745,6 +1782,11 @@ double fdPot1(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
+  /* XXX TESTING 2nd order in binary eccentricity addition
+  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  */
+
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
@@ -1761,6 +1803,11 @@ double fdPot1dR(int j, int k, double R, BODY * body)
   double M = body[0].dMass + body[1].dMass;
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
+
+  /* XXX TESTING 2nd order in binary eccentricity addition
+  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -2036,7 +2083,35 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 /* Misc Functions */
 
-/* Compute the exact flux (as close to exact as you want)
+/*! Compute the approximate flux in the limit P_bin << P_cbp
+ * received by the CBP from the 2 stars averaged over 1 binary orbit
+ * Assumes binary orb elements don't vary much per orbit
+ */
+double fdFluxApproxBinary(BODY *body, int iBody)
+{
+
+  // Compute CBP position in cylindrical coordinates
+  double r = sqrt(body[iBody].dCBPR*body[iBody].dCBPR + body[iBody].dCBPZ*body[iBody].dCBPZ);
+  double psi = body[iBody].dCBPPhi;
+
+  // Intermediate quantities
+  double mu1, mu2, tmp;
+  mu1 = body[0].dMass/(body[0].dMass + body[1].dMass);
+  mu2 = body[1].dMass/(body[0].dMass + body[1].dMass);
+
+  double flux;
+
+  // Monopole term
+  flux = (body[0].dLuminosity + body[1].dLuminosity)/(4.0*PI*r*r);
+
+  // Dipole term
+  tmp = (mu1*body[1].dLuminosity - mu2*body[0].dLuminosity)/(8.0*PI*r*r*r);
+  tmp *= 3.0*body[1].dSemi*body[1].dEcc*cos(psi);
+
+  return (flux + tmp);
+}
+
+/*! Compute the exact flux (as close to exact as you want)
  * received by the CBP from the 2 stars averaged over 1 CBP orbit
  * Assumes binary orb elements don't vary much over 1 CBP orbit
  */
@@ -2109,7 +2184,32 @@ double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
   return flux/FLUX_INT_MAX;
 }
 
-/* Dumps out a bunch of values to see if they agree with LL13 */
+/*! Compute the approximate equlibrirum temperature for a circumbinary
+ *  planet averaged over the binary orbit
+ */
+double fdApproxEqTemp(BODY *body, int iBody, double dAlbedo)
+{
+  // Compute the approximate flux
+  double flux = fdFluxApproxBinary(body,iBody);
+
+  return pow(flux*(1.0-dAlbedo)/(4.0*SIGMA),1./4.);
+}
+
+
+/*! Compute the approximate insolation for a circumbinary
+ *  planet averaged over the binary orbit relative to Earth's
+ * where F_Earth = 1361 W/m^2
+ */
+double fdApproxInsol(BODY *body, int iBody)
+{
+  // Compute the approximate flux
+  double flux = fdFluxApproxBinary(body,iBody);
+
+  return flux/FLUX_EARTH;
+}
+
+
+/*! Dumps out a bunch of values to see if they agree with LL13 */
 void binaryDebug(BODY * body)
 {
   fprintf(stderr,"binary debug information:\n");

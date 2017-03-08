@@ -12,16 +12,13 @@ dRotPeriod      -3.0
 
 # Binary Parameters
 dEcc            0.3 #0.1602 #0.16048             # Binary eccentricity
-dSemi           0.1276            # Binary semimajor axis 
+dSemi           0.15            # Binary semimajor axis 
 dLongP          0.0 #257.79
 dLL13PhiAB      129.84             # Initial binary mean anomaly
 
 # EQTIDE Parameters
-#dTidalTau	-1		# Tidal time lag, negative -> seconds
 dTidalQ		1.0e6 #5e3		# Tidal phase lag
 dK2		0.5 #1.5		# Love number of degree 2
-#sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
-#sTideModel	t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
 saTidePerts	primary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters

@@ -8,7 +8,7 @@
  * that may be used at input) and the system parameter
  * (the property in the BODY struct that is always
  * up-to-date). If unsure between here and orbit.c, put
- * here. Also includes mathemtatical relationships.
+ * here. Also includes mathemtatical relationships
 */
 
 #include <stdio.h>

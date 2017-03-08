@@ -354,7 +354,7 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
         printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge);
+    body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
       // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
@@ -382,7 +382,7 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
         printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    body[iBody].dRadius = fdRadiusFunctionProximaCen(body[iBody].dAge);
+    body[iBody].dRadius = fdRadiusFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
@@ -411,7 +411,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
         printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    body[iBody].dTemperature = fdTemperatureFunctionProximaCen(body[iBody].dAge);
+    body[iBody].dTemperature = fdTemperatureFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
@@ -894,7 +894,7 @@ double fdLuminosity(BODY *body,SYSTEM *system,int *iaBody) {
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    foo = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge);
+    foo = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge,body[iaBody[0]].dMass);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
@@ -911,7 +911,7 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    foo = fdRadiusFunctionProximaCen(body[iaBody[0]].dAge);
+    foo = fdRadiusFunctionProximaCen(body[iaBody[0]].dAge,body[iaBody[0]].dMass);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
@@ -980,7 +980,7 @@ double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge);
+    foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge,body[iaBody[0]].dMass);
     if (!isnan(foo)) return foo;
     else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
   }
@@ -1050,9 +1050,9 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
   }
 }
 
-double fdLuminosityFunctionProximaCen(double dAge) {
+double fdLuminosityFunctionProximaCen(double dAge, double dMass) {
   int iError;
-  double L = fdProximaCenStellar(PROXIMACEN_L, dAge, &iError);
+  double L = fdProximaCenStellar(PROXIMACEN_L, dAge, dMass, &iError);
   if (iError == PROXIMACEN_ERROR)
     return NAN;
   else {
@@ -1060,9 +1060,9 @@ double fdLuminosityFunctionProximaCen(double dAge) {
   }
 }
 
-double fdTemperatureFunctionProximaCen(double dAge) {
+double fdTemperatureFunctionProximaCen(double dAge, double dMass) {
   int iError;
-  double L = fdProximaCenStellar(PROXIMACEN_T, dAge, &iError);
+  double L = fdProximaCenStellar(PROXIMACEN_T, dAge, dMass, &iError);
   if (iError == PROXIMACEN_ERROR)
     return NAN;
   else {
@@ -1070,9 +1070,9 @@ double fdTemperatureFunctionProximaCen(double dAge) {
   }
 }
 
-double fdRadiusFunctionProximaCen(double dAge) {
+double fdRadiusFunctionProximaCen(double dAge, double dMass) {
   int iError;
-  double L = fdProximaCenStellar(PROXIMACEN_R, dAge, &iError);
+  double L = fdProximaCenStellar(PROXIMACEN_R, dAge, dMass, &iError);
   if (iError == PROXIMACEN_ERROR)
     return NAN;
   else {

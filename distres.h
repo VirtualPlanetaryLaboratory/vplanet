@@ -58,6 +58,7 @@ double fdSemiMajAxF31(double, int);
 
 double fdDSemiF27Dalpha(double, int);
 double fdDSemiF31Dalpha(double, int);
+void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
 
 /* DistRes's equations */
 double fdDistResRD2DpDt(BODY*, SYSTEM*, int*);

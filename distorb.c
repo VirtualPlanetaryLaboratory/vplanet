@@ -756,7 +756,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         
         jBody = body[iBody].iaGravPerts[iPert];
         
-        for (j=0;j<LAPLNUM;j++) {
+        for (j=0;j<26;j++) {
           if (body[iBody].dSemi < body[jBody].dSemi) {  
               system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
               system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 0);

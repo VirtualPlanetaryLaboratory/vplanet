@@ -53,6 +53,12 @@ void LogBodyDistRes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 void PropertiesDistRes(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorDistRes(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
+double fdSemiMajAxF27(double, int);
+double fdSemiMajAxF31(double, int);
+
+double fdDSemiF27Dalpha(double, int);
+double fdDSemiF31Dalpha(double, int);
+
 /* DistRes's equations */
 double fdDistResRD2DpDt(BODY*, SYSTEM*, int*);
 double fdDistResRD2DqDt(BODY*, SYSTEM*, int*);

@@ -174,8 +174,8 @@
 #define VZOBL           1403
 #define VDYNELLIP       1404
 
-/* Semi-major axis functions in DistOrb */
-#define LAPLNUM 	      26
+/* Semi-major axis functions in DistOrb (& DistRes?)*/
+#define LAPLNUM 	      31
 
 // ATMESC
 #define VSURFACEWATERMASS  1202

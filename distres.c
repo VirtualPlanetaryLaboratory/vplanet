@@ -225,6 +225,17 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   
   VerifyMeanLongAnom(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   
+  if (iBody == 1) {
+    for (j=26;j<LAPLNUM;j++) {
+        system->fnLaplaceF[j] = malloc(1*sizeof(fnLaplaceFunction));
+        system->fnLaplaceDeriv[j] = malloc(1*sizeof(fnLaplaceFunction));
+      } 
+      system->fnLaplaceF[0][0] = &fdSemiMajAxF1;
+      system->fnLaplaceF[1][0] = &fdSemiMajAxF2;
+      system->fnLaplaceDeriv[0][0] = &fdDSemiF1Dalpha;
+      system->fnLaplaceDeriv[1][0] = &fdDSemiF2Dalpha;
+  }
+  
   if (iBody > 0) {
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* semi major axis */

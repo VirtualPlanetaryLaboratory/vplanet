@@ -272,6 +272,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     printf("PrecA = %e\n",control->Evolve.tmpBody[1].dPrecA);
   */
 
+//   RecalcLaplaceDistRes(body,control,system);
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -313,6 +314,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* First midpoint derivative.*/
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   /* Don't need this timestep info, so assign output to dFoo */
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -338,6 +341,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Second midpoint derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -361,6 +367,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
   /* Full step derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

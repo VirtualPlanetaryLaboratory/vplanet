@@ -38,6 +38,7 @@ void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpda
 #define OUTBODYSTARTDISTRES    2320 /* Start of DISTRES BODY options */
 
 #define OUT_MEANL               2320
+#define OUT_DMEANLDTDISTRES     2321
 
 void HelpOutputDistRes(OUTPUT*);
 

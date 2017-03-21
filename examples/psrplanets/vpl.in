@@ -10,6 +10,6 @@ bDoLog        1
 saBodyFiles   psr.in b.in c.in
 bDoForward    1
 bVarDt        1
-dEta          0.1
+dEta          0.05
 dStopTime     10
-dOutputTime   0.001
+dOutputTime   0.01

@@ -613,7 +613,6 @@ double fdLambdaArg(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ
 }
 
 //--------dR/dh-----------(inner body)------------------------------------------------------
-
 double fdDdistDhDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f27, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[system->imLaplaceN[iBody][jBody]][26];
@@ -1207,6 +1206,27 @@ double fdDdisturbDLambdaPrime2nd(BODY *body, SYSTEM *system, int *iaBody, int iI
 }
 
 //---------dR/da------------------------------------------------------------------
+double fdDdistDaDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return (system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][0] + \
+          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][1] * \
+          (body[iBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[jBody].dHecc) +\
+          system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][2] * \
+          (body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc))\
+          /body[jBody].dSemi;
+}
+
+double fdDdistDaDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return (system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][9] * \
+          (body[iBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[jBody].dHecc))\
+          /body[jBody].dSemi;
+}
+
+double fdDdistDaDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return (system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][13] * \
+          (body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc))\
+          /body[jBody].dSemi;
+}
+
 double fdDdistDaDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   return 1./body[jBody].dSemi*system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][26] \
          *(body[iBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
@@ -1263,6 +1283,16 @@ double fdDdistDaDir26(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
           +(body[jBody].dPinc*body[jBody].dQinc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
 }
 
+double fdDdisturbDSemi0th(BODY *body, SYSTEM *system, int *iaBody) {
+  double y, dMfac, dSemiPrm;
+  dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
+  dSemiPrm = body[iaBody[1]].dSemi/AUCM;
+  y = ( fdDdistDaDir01(body, system, iaBody[0], iaBody[1])\
+      + fdDdistDaDir02(body, system, iaBody[0], iaBody[1])\
+      + fdDdistDaDir03(body, system, iaBody[0], iaBody[1]) ) * dMfac/dSemiPrm;
+  return y;
+}
+
 double fdDdisturbDSemi1st(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -1286,14 +1316,47 @@ double fdDdisturbDSemi2nd(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ) 
 }
 
 //---------dR/da'------------------------------------------------------------------
+double fdDistDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return  (system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][0] + \
+          system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][1] * \
+          (body[iBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[jBody].dHecc) +\
+          system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][2] * \
+          (body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc));
+}
+
+double fdDistDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return (system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][9] * \
+          (body[iBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[jBody].dHecc));
+}
+
+double fdDistDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return (system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][13] * \
+          (body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc));
+}
+
+double fdDdistDaPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir01(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir01(body,system,jBody,iBody);
+}
+
+double fdDdistDaPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir03(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir03(body,system,jBody,iBody);
+}
+
+double fdDdistDaPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir02(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir02(body,system,jBody,iBody);
+}
+
 double fdDistDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return fdDSemiF27Dalpha(body[iBody].dSemi/body[jBody].dSemi, iIndexJ) * \
+  return system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][26] * \
           (body[iBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)) +\
           body[iBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
 }
 
 double fdDistDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return fdDSemiF31Dalpha(body[iBody].dSemi/body[jBody].dSemi, iIndexJ) * \
+  return system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][30] * \
           (body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)) +\
           body[jBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
 }
@@ -1330,6 +1393,16 @@ double fdDdistDaPrmDir25(BODY *body, SYSTEM *system, int iBody, int jBody, int i
 
 double fdDdistDaPrmDir26(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   return -body[jBody].dSemi/body[iBody].dSemi*fdDdistDaDir26(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdisturbDSemiPrime0th(BODY *body, SYSTEM *system, int *iaBody) {
+  double y, dMfac, dSemiPrm;
+  dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
+  dSemiPrm = body[iaBody[0]].dSemi/AUCM;
+  y = ( fdDdistDaPrmDir01(body, system, iaBody[0], iaBody[1]) \
+      + fdDdistDaPrmDir02(body, system, iaBody[0], iaBody[1]) \
+      + fdDdistDaPrmDir03(body, system, iaBody[0], iaBody[1]) ) * dMfac/dSemiPrm;
+  return y;
 }
 
 double fdDdisturbDSemiPrime1st(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ) {
@@ -1380,7 +1453,7 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
   y = fabs(1.-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
-          *fdDdisturbDSemi1st(body,system,iaBody,3)\
+          *(fdDdisturbDSemi0th(body,system,iaBody)+fdDdisturbDSemi1st(body,system,iaBody,3))\
           +( sqrt(y)/(1.+sqrt(y))
           *(body[iaBody[0]].dHecc*fdDdisturbDHecc1st(body,system,iaBody,3)\
           +body[iaBody[0]].dKecc*fdDdisturbDKecc1st(body,system,iaBody,3))\
@@ -1389,7 +1462,7 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
           /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
     sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
-          *fdDdisturbDSemiPrime1st(body,system,iaBody,3)\
+          *(fdDdisturbDSemiPrime0th(body,system,iaBody)+fdDdisturbDSemiPrime1st(body,system,iaBody,3))\
           +( sqrt(y)/(1.+sqrt(y))
           *(body[iaBody[0]].dHecc*fdDdisturbDHeccPrime1st(body,system,iaBody,3)\
           +body[iaBody[0]].dKecc*fdDdisturbDKeccPrime1st(body,system,iaBody,3))\

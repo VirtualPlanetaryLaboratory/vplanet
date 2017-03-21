@@ -493,6 +493,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   if (control->Io.iVerbose >= VERBPROG)
     printf("Evolution completed.\n");
+//     printf("%d\n",body[1].iBadImpulse);
 }
 
 

@@ -272,13 +272,13 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         for (j=26;j<LAPLNUM;j++) {
           if (body[iBody].dSemi < body[jBody].dSemi) {  
               system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 3);
-              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi, 3);    
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,2);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,2);    
               system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
           } else if (body[iBody].dSemi > body[jBody].dSemi) {
               system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
-              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi, 3);
-              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi, 3);  
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,2);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,2);  
               system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
           }
         }
@@ -505,13 +505,13 @@ void RecalcLaplaceDistRes(BODY *body, CONTROL *control, SYSTEM *system) {
       for (j=26;j<LAPLNUM;j++) {
         if (body[iBody].dSemi < body[jBody].dSemi) {  
             system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi, 3);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi, 3);    
+            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,2);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,2);    
             system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
         } else if (body[iBody].dSemi > body[jBody].dSemi) {
             system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi, 3);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi, 3);  
+            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,2);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,2);  
             system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
         }
       }

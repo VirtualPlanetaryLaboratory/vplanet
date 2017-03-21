@@ -80,6 +80,7 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ANGMX               2228
 #define OUT_ANGMY               2229
 #define OUT_ANGMZ               2230
+#define OUT_NBADIMPULSE         2231
 
 #define OUT_DECCDTGALHTIDAL     2250
 #define OUT_DINCDTGALHTIDAL     2251
@@ -118,6 +119,7 @@ void CalcMeanVelDispSolar(SYSTEM*);
 void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
 double NearbyStarFrEnc(SYSTEM*,double);
+int check_dr(BODY*,EVOLVE*,SYSTEM*,int);
 
 double dexdJ(BODY*, int);
 double dexdla(double);

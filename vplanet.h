@@ -958,6 +958,7 @@ typedef struct {
   int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
   int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
   double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
+  double dTStart;      /**< time that encounter begins relative to time step */
   
 } SYSTEM;
 

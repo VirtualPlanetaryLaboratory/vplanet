@@ -846,7 +846,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
       fOut = fopen(cOut,"w");
-      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel x_rel y_rel z_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz vbodyx vbodyy vbodyz\n");
+      fprintf(fOut,"#time encdt tstart MV mass sigma impx impy impz u_rel v_rel w_rel u_apex v_apex w_apex x_rel y_rel z_rel bbodyx bbodyy bbodyx a1 e1 i1 argp1 longa1 meana1 af ef if argpf longaf\n");
       fclose(fOut);
     }
     
@@ -1491,7 +1491,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dp, dkzi, dVMax, dCurrentAge;
+  double dp, dkzi, dVMax, dCurrentAge, dMeanATmp;
   double sinw, cosw, cosw_alt, sign;
   char cOut[NAMELEN];
   int idr;
@@ -1577,8 +1577,8 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     dVMax = 1.0;
     while (dkzi > system->dRelativeVelMag/dVMax || system->dRelativeVelRad >= 0) {
       GetStarVelocity(system); 
-      system->dPassingStarV[0] = 17000.0;
-      system->dPassingStarV[2] = -1000.0;
+     //  system->dPassingStarV[0] = 17000.0;
+//       system->dPassingStarV[2] = -1000.0;
       GetRelativeVelocity(system);
       dkzi = random_double();
       dVMax = system->dHostApexVelMag + 3.0*system->dPassingStarSigma*1000.0;
@@ -1594,19 +1594,6 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     
     body[iBody].iBadImpulse += check_dr(body,evolve,system,iBody);
     
-    /* apply the impulse */
-    ApplyDeltaV(body,system,iBody);
-    cart2osc(body,evolve->iNumBodies);
-    body[iBody].dInc = 2*asin(body[iBody].dSinc);
-    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[iBody].dMassInterior+body[iBody].dMass);
-    CalcEccVec(body,iBody);
-    CalcAngMVec(body,iBody);
-    
-    system->dLastEncTime = system->dCloseEncTime;
-    system->iNEncounters += 1;
-    NextEncounterTime(system,evolve,system->dCloseEncTime);
-  
     /* write out encounter info */
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
@@ -1614,6 +1601,10 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
     
       fprintd(fOut,evolve->dTime/YEARSEC,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dEncDT,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dTStart,4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dPassingStarMagV,4,6);
       fprintf(fOut," ");
@@ -1627,24 +1618,25 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintf(fOut," ");
       fprintd(fOut,system->dPassingStarImpact[2],4,6);
       fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[0],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[1],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[2],4,6);
-      fprintf(fOut," ");
+      // fprintd(fOut,system->dPassingStarV[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dPassingStarV[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dPassingStarV[2],4,6);
+//       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[0],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[1],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[2],4,6);
       fprintf(fOut," ");
-      fprintd(fOut,system->dRelativePos[0],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dRelativePos[1],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dRelativePos[2],4,6);
-      fprintf(fOut," ");
+      
+      // fprintd(fOut,system->dRelativePos[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dRelativePos[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dRelativePos[2],4,6);
+//       fprintf(fOut," ");
       fprintd(fOut,system->dHostApexVel[0],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dHostApexVel[1],4,6);
@@ -1663,25 +1655,68 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintf(fOut," ");
       fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
-      fprintf(fOut," ");
+  //     fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
+//       fprintf(fOut," ");
 
-      fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+      // fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[0]*AUCM/DAYSEC,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[1]*AUCM/DAYSEC,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[2]*AUCM/DAYSEC,4,6);
+      
+      fprintd(fOut,body[iBody].dSemi,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+      fprintd(fOut,body[iBody].dEcc,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+      fprintd(fOut,body[iBody].dInc/DEGRAD,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartVel[0]*AUCM/DAYSEC,4,6);
+      fprintd(fOut,body[iBody].dArgP/DEGRAD,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartVel[1]*AUCM/DAYSEC,4,6);
+      fprintd(fOut,body[iBody].dLongA/DEGRAD,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartVel[2]*AUCM/DAYSEC,4,6);
+      dMeanATmp = body[iBody].dMeanA - body[iBody].dMeanMotion*system->dTStart;
+      while (dMeanATmp < 0.0) dMeanATmp += 2*PI;
+      fprintd(fOut,dMeanATmp/DEGRAD,4,6);
+      fprintf(fOut," ");
+//       fprintf(fOut,"\n");
     
+      fclose(fOut);
+    }
+    
+    /* apply the impulse */
+    ApplyDeltaV(body,system,iBody);
+    cart2osc(body,evolve->iNumBodies);
+    body[iBody].dInc = 2*asin(body[iBody].dSinc);
+    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[iBody].dMassInterior+body[iBody].dMass);
+    CalcEccVec(body,iBody);
+    CalcAngMVec(body,iBody);
+    
+    system->dLastEncTime = system->dCloseEncTime;
+    system->iNEncounters += 1;
+    NextEncounterTime(system,evolve,system->dCloseEncTime);
+  
+    if (system->bOutputEnc) {
+      fOut = fopen(cOut,"a");
+      fprintd(fOut,body[iBody].dSemi,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dEcc,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dInc/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dArgP/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dLongA/DEGRAD,4,6);
       fprintf(fOut,"\n");
     
       fclose(fOut);
@@ -1817,31 +1852,32 @@ int random_int(int n) {
 }
 
 int check_dr(BODY* body, EVOLVE* evolve, SYSTEM *system, int iBody) {
-  double r1x, r1y, r1z, dt, dr, r1, r2, dcross;
+  double r1x, r1y, r1z, dt, dr, r1, r2, dcross, P;
   
-  r1x = body[iBody].dCartPos[0];
-  r1y = body[iBody].dCartPos[1];
-  r1z = body[iBody].dCartPos[2];
-  r1 = sqrt(pow(r1x,2)+pow(r1y,2)+pow(r1z,2));
-  
-  dcross = (system->dPassingStarR[0]*system->dRelativeVel[0]+\
-            system->dPassingStarR[1]*system->dRelativeVel[1]+\
-            system->dPassingStarR[2]*system->dRelativeVel[2])/ \
-            (system->dRelativeVelMag);
+//   r1x = body[iBody].dCartPos[0];
+//   r1y = body[iBody].dCartPos[1];
+//   r1z = body[iBody].dCartPos[2];
+//   r1 = sqrt(pow(r1x,2)+pow(r1y,2)+pow(r1z,2));
+//   
+//   dcross = (system->dPassingStarR[0]*system->dRelativeVel[0]+\
+//             system->dPassingStarR[1]*system->dRelativeVel[1]+\
+//             system->dPassingStarR[2]*system->dRelativeVel[2])/ \
+//             (system->dRelativeVelMag);
 //   dt = 2*fabs(dcross)/system->dRelativeVelMag;
   dt = system->dEncDT;
   
-  body[iBody].dMeanA += body[iBody].dMeanMotion*dt;
-  osc2cart(body,evolve->iNumBodies);
+//   body[iBody].dMeanA += body[iBody].dMeanMotion*dt;
+//   osc2cart(body,evolve->iNumBodies);
+//   
+//   dr = sqrt(pow(r1x-body[iBody].dCartPos[0],2)+pow(r1y-body[iBody].dCartPos[1],2)+pow(r1z-body[iBody].dCartPos[2],2));
+//   r2 = sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+pow(body[iBody].dCartPos[2],2));
+//   
+//   //move secondary back to original position
+//   body[iBody].dMeanA -= body[iBody].dMeanMotion*dt;
+//   osc2cart(body,evolve->iNumBodies);
   
-  dr = sqrt(pow(r1x-body[iBody].dCartPos[0],2)+pow(r1y-body[iBody].dCartPos[1],2)+pow(r1z-body[iBody].dCartPos[2],2));
-  r2 = sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+pow(body[iBody].dCartPos[2],2));
-  
-  //move secondary back to original position
-  body[iBody].dMeanA -= body[iBody].dMeanMotion*dt;
-  osc2cart(body,evolve->iNumBodies);
-  
-  if ((fabs(dr)/r1 >= 0.1) || (fabs(dr)/r2 >= 0.1)) {
+  P = 2*PI/body[1].dMeanMotion;
+  if ((dt/P >= 0.1) || (dt/P >= 0.1)) {
     return 1;
   } else {
     return 0;
@@ -2214,6 +2250,7 @@ void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
     dtime1 += -system->dPassingStarR[i]*system->dRelativeVel[i];
   }
   dtime1 /= vsq;
+  system->dTStart = fabs(dtime1);
   
   system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime1 + system->dPassingStarR[0];
   system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime1 + system->dPassingStarR[1];

@@ -536,13 +536,13 @@ void RecalcLaplaceDistRes(BODY *body, CONTROL *control, SYSTEM *system) {
       for (j=26;j<LAPLNUM;j++) {
         if (body[iBody].dSemi < body[jBody].dSemi) {  
             system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,2);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,2);    
+            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,3);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,3);    
             system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
         } else if (body[iBody].dSemi > body[jBody].dSemi) {
             system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,2);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,2);  
+            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,3);
+            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,3);  
             system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
         }
       }
@@ -1370,18 +1370,18 @@ double fdDistDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
 }
 
 double fdDdistDaPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
-  return (-(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir01(body,system,jBody,iBody)-\
-          1./body[iBody].dSemi*fdDistDir01(body,system,jBody,iBody))*AUCM;
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir01(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir01(body,system,jBody,iBody)*AUCM;
 }
 
 double fdDdistDaPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
-  return (-(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir03(body,system,jBody,iBody)-\
-          1./body[iBody].dSemi*fdDistDir03(body,system,jBody,iBody))*AUCM;
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir03(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir03(body,system,jBody,iBody)*AUCM;
 }
 
 double fdDdistDaPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
-  return (-(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir02(body,system,jBody,iBody)-\
-          1./body[iBody].dSemi*fdDistDir02(body,system,jBody,iBody))*AUCM;
+  return -(body[jBody].dSemi/body[iBody].dSemi)*fdDdistDaDir02(body,system,jBody,iBody)-\
+          1./body[iBody].dSemi*fdDistDir02(body,system,jBody,iBody)*AUCM;
 }
 
 double fdDistDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -1397,13 +1397,13 @@ double fdDistDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ
 }
 
 double fdDdistDaPrmDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (-body[jBody].dSemi/body[iBody].dSemi*fdDdistDaDir11(body,system,jBody,iBody,iIndexJ)\
-         -1./body[iBody].dSemi*fdDistDir11(body,system,jBody,iBody,iIndexJ))*AUCM;
+  return -body[jBody].dSemi/body[iBody].dSemi*fdDdistDaDir11(body,system,jBody,iBody,iIndexJ)\
+         -1./body[iBody].dSemi*fdDistDir11(body,system,jBody,iBody,iIndexJ)*AUCM;
 }
 
 double fdDdistDaPrmDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (-body[jBody].dSemi/body[iBody].dSemi*fdDdistDaDir12(body,system,jBody,iBody,iIndexJ)\
-         -1./body[iBody].dSemi*fdDistDir12(body,system,jBody,iBody,iIndexJ))*AUCM;
+  return -body[jBody].dSemi/body[iBody].dSemi*fdDdistDaDir12(body,system,jBody,iBody,iIndexJ)\
+         -1./body[iBody].dSemi*fdDistDir12(body,system,jBody,iBody,iIndexJ)*AUCM;
 }
 // Need to be fixed below! *AUCM and product term!
 double fdDdistDaPrmDir21(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -1484,7 +1484,7 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   
-//   sum += sqrt(dMu/pow(body[iaBody[0]].dSemi/AUCM,3));
+  sum += sqrt(dMu/pow(body[iaBody[0]].dSemi/AUCM,3));
   y = fabs(1.-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\

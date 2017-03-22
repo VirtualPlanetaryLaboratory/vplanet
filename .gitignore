@@ -78,3 +78,7 @@ bigplanet/Dev
 proximacenbradius.py
 proximacenstellar.py
 sandbox
+*.aux
+*.bbl
+*.blg
+proxcen.pdf

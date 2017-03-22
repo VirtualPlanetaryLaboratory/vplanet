@@ -5,8 +5,7 @@ saModules       stellar eqtide binary
 # Physical Parameters
 iBodyType     1 # Star!
 dMass         1.0                         # Mass, solar masses
-#dRadius       0.005
-dRotPeriod      -0.5 #-1.67
+dRotPeriod      -1.67
 dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
 dObliquity      0.0
 
@@ -14,9 +13,9 @@ dObliquity      0.0
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
-dTidalQ		1.0e6		# Tidal phase lag
+dTidalQ		1.0e5   	# Tidal phase lag
 dK2		0.5		# Love number of degree 2
-dMaxLockDiff    0.01
+dMaxLockDiff    0.001
 sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 saTidePerts	secondary	# Body name(s) of tidal perturbers
 

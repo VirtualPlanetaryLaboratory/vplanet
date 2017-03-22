@@ -721,6 +721,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
     // Init orbital elements
     fdAssignOrbitalElements(body,iBody);
+    body[iBody].dSemi = body[iBody].dR0; // Fix semi-major axis to be guiding center
 
     // Set up initial orbital elements that are primary variables
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
@@ -1412,7 +1413,7 @@ void fdAssignOrbitalElements(BODY *body, int iBody)
   body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
 }
 
-/* Compute a body's semimajor axis
+/* Compute a body's semi-major axis
  * a = -mu/(2*eps)
  */
 double fdComputeSemi(BODY *body, int iBody)
@@ -1733,10 +1734,9 @@ double fdPot0(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
-  /* XXX TESTING 2nd order in binary eccentricity addition
+  /* XXX TESTING 2nd order in binary eccentricity addition */
   alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
   alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
@@ -1756,10 +1756,9 @@ double fdPot0dR(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
-  /* XXX TESTING 2nd order in binary eccentricity addition
+  /* XXX TESTING 2nd order in binary eccentricity addition */
   alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
   alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -1782,10 +1781,9 @@ double fdPot1(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
-  /* XXX TESTING 2nd order in binary eccentricity addition
+  /* XXX TESTING 2nd order in binary eccentricity addition */
   alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
   alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
@@ -1804,10 +1802,9 @@ double fdPot1dR(int j, int k, double R, BODY * body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
-  /* XXX TESTING 2nd order in binary eccentricity addition
+  /* XXX TESTING 2nd order in binary eccentricity addition */
   alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
   alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  */
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 

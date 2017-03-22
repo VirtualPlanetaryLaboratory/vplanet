@@ -246,7 +246,7 @@ double fdRadiusStarDt(BODY *body, int iBody)
 /*! Compute change in star's angular momentum due to magnetic braking */
 double fdJBrakingStarDt(BODY *body, int iBody)
 {
-  double Jdot = 0.0;
+  double Jdot;
   double dOmegaCrit;
 
   // Now, let's calculate dJ/dt due to magnetic braking
@@ -256,10 +256,10 @@ double fdJBrakingStarDt(BODY *body, int iBody)
   else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
   if (body[iBody].iWindModel == STELLAR_MODEL_REINERS) {
     if (body[iBody].dRotRate >= dOmegaCrit) {
-      Jdot += -RM12CONST * body[iBody].dRotRate * pow(body[iBody].dRadius, 16. / 3.)
+      Jdot = -RM12CONST * body[iBody].dRotRate * pow(body[iBody].dRadius, 16. / 3.)
                         * pow(body[iBody].dMass, -2. / 3);
     } else {
-      Jdot += -RM12CONST * pow(body[iBody].dRotRate / dOmegaCrit, 4.) * body[iBody].dRotRate
+      Jdot = -RM12CONST * pow(body[iBody].dRotRate / dOmegaCrit, 4.) * body[iBody].dRotRate
                         * pow(body[iBody].dRadius, 16. / 3.) * pow(body[iBody].dMass, -2. / 3);
     }
   }
@@ -336,10 +336,10 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   double adot = 0.0;
 
   // XXX Probably broken XXX
-  return 0.0;
 
   // If orbit isn't circular, pass
-  if(body[iBody].dEcc > TINY)
+  //if(body[iBody].dEcc > TINY)
+  if(0) // HACK
   {
     return 0.0;
   }
@@ -376,7 +376,7 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
  */
 double fdEccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
 
-  /* XXX BROKEN XXX */
+  /* XXX BROKEN (probably) XXX */
 
   return 0.0;
   // iaBody [0] is ALWAYS the current body: one of the stars
@@ -406,7 +406,7 @@ double fdEccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
       {
         Jdot += fdJStarDt(body,iTmp);
       }
-      // Not tidally locked or still eccentric, do nothing
+      // Not tidally locked, do nothing
       else
       {
         continue;
@@ -414,7 +414,7 @@ double fdEccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
     }
 
     // Compute, return change in eccentricity
-    // - since decrease in angular momentum makes orbit more eccentric
+    // since decrease in angular momentum makes orbit more eccentric
     return -(1.0-body[iBody].dEcc*body[iBody].dEcc)*Jdot/(J*body[iBody].dEcc);
   }
 }

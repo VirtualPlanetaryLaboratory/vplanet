@@ -6,18 +6,18 @@ saModules       stellar eqtide binary
 iBodyType     1 # Star!
 dMass         1.0 # Mass, solar masses
 #dRadius       0.005
-dRotPeriod    -1.0 #-1.67 #0.007
+dRotPeriod    -1.67 #0.007
 dRadGyra      0.5             # Radius of gyration (moment of inertia constant)
 dObliquity    0.0
 
 # Orbital properties
-dOrbPeriod  -3.0 #-5.0
-dEcc        0.1 #0.2
+dOrbPeriod  -5.0
+dEcc        0.2
 
 # EQTIDE Parameters
-dTidalQ		1.0e6		# Tidal phase lag
+dTidalQ		1.0e5		# Tidal phase lag
 dK2		0.5		# Love number of degree 2
-dMaxLockDiff    0.01
+dMaxLockDiff    0.001
 saTidePerts	primary   	# Body name(s) of tidal perturbers
 
 # Stellar param

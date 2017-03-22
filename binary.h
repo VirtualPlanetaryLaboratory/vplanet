@@ -12,7 +12,7 @@
 #define FLUX_INT_MAX            20 /* How many CBP positions per orbit to integrate over */
 #define KEQNTOL                 1.0e-3 /* Tolerance for Kepler eqn computation */
 #define MAX_KEPLER_ITERS        30 /* Maximum number of iterations for Kepler eqn. solver */
-#define FLUX_EARTH              1361 /* Insolation received by Earth in W/m^2 */
+#define FLUX_EARTH              1366 /* Insolation received by Earth in W/m^2 */
 
 /* Options Info */
 /* For options and output, binary has 2100-2200 */

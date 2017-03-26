@@ -1735,8 +1735,8 @@ double fdPot0(int j, int k, double R, BODY *body)
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
   /* XXX TESTING 2nd order in binary eccentricity addition */
-  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
@@ -1757,8 +1757,8 @@ double fdPot0dR(int j, int k, double R, BODY *body)
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
   /* XXX TESTING 2nd order in binary eccentricity addition */
-  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -1782,8 +1782,8 @@ double fdPot1(int j, int k, double R, BODY *body)
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
   /* XXX TESTING 2nd order in binary eccentricity addition */
-  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
@@ -1803,8 +1803,8 @@ double fdPot1dR(int j, int k, double R, BODY * body)
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
   /* XXX TESTING 2nd order in binary eccentricity addition */
-  alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
-  alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 

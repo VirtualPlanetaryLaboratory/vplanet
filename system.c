@@ -336,6 +336,7 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   double adot = 0.0;
 
   // XXX Probably broken XXX
+  return 0.0;
 
   // If orbit isn't circular, pass
   //if(body[iBody].dEcc > TINY)

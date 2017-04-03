@@ -18,4 +18,4 @@ dLongP          129.75                # CBP longitude of pericenter
 dCBPM0          358.85                # CBP mean anomaly
 
 # Outputs
-saOutputOrder Time CBPR CBPZ CBPPhi Ecce BinaryInc BinaryLongP CBPInsol
+saOutputOrder Time CBPR CBPZ CBPPhi Eccentricity BinaryInc BinaryLongP CBPInsol

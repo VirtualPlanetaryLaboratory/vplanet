@@ -14,7 +14,7 @@ double fdMeanMotionToSemi(double,double,double);
 double fdMeanMotionToSemi(double,double,double);
 
 double fdOrbAngMom(BODY*, CONTROL*);
-double fdTotAngMom(BODY*, CONTROL*);
+double fdTotAngMom(BODY*, CONTROL*, SYSTEM*);
 
 
 double fdOrbPotEnergy(double,double,double);

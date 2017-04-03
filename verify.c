@@ -460,6 +460,26 @@ void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
   }
 }
 
+/*
+ *
+ * System-level verify routines
+ *
+ */
+
+/*! Verify Initial angular momentum, energy for conservation checks.  Initialize
+ *  here so anything that changes E, J is monitored to ensure conservation */
+void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTIONS *options) {
+
+  // Compute initial total angular momentum
+  system->dTotAngMomInit = fdTotAngMom(body,control,system);
+  system->dTotAngMom = system->dTotAngMomInit;
+
+  // Compute initial total energy
+  system->dTotEnInit = 0.0; // TODO
+  system->dTotEn = system->dTotEnInit;
+
+}
+
 
 /*
  *
@@ -521,4 +541,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     }
 
   }
+
+  // Verify system (initialize angular momentum, energy) now that everything else
+  // has been verified
+  VerifySystem(body,update,control,system,options);
+
 }

@@ -46,7 +46,7 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
  */
 
 /* Compute the total orbital angular momentum in the SYSTEM
- * as L = mu*sqrt(GMA(1-e^2)) for each orbiting body
+ * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
 double fdOrbAngMom(BODY *body, CONTROL *control) {
 
@@ -75,23 +75,25 @@ double fdOrbAngMom(BODY *body, CONTROL *control) {
       dMass = body[0].dMass;
     }
 
-    dTot += dMass*body[iBody].dMass*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1-body[iBody].dEcc*body[iBody].dEcc))/(dMass+body[iBody].dMass);
+    dTot += dMass*body[iBody].dMass*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc))/(dMass+body[iBody].dMass);
   }
 
   return dTot;
 }
 
-double fdTotAngMom(BODY *body, CONTROL *control) {
+/* Compute the total angular momentum in the system */
+double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
   int iBody;
 
   // Total orbital angular momentum
   dTot = fdOrbAngMom(body,control);
 
-  // Add all rotational angular momentum
+  // Add all rotational angular momentum, angular momentum lost
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+    dTot += body[iBody].dLostAngMom;
   }
 
   return dTot;
@@ -192,47 +194,6 @@ void CalcPQ(BODY *body, int iBody) {
  * When eccentric, de/dt = (1-e^2) * (dJ_star/dt)/(J * e)
  */
 
-/*! Compute change in orbital angular momentum due to change in stellar
- * angular momentum for a tidally locked star experiencing changes
- * in its radius and angular momentum due to magnetic braking
- */
-double fdJStarDt(BODY *body, int iBody)
-{
-  double Jdot = 0.0;
-  double dOmegaCrit;
-  double dRadMinus, dRadPlus, dDRdt;
-  double eps = 10 * YEARDAY * DAYSEC;
-
-  // Now, let's calculate dJ/dt due to magnetic braking
-  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
-  // This dJ/dt takes angular momentum from star, star can't lose it, so orbit does
-  if (body[iBody].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
-  else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
-  if (body[iBody].iWindModel == STELLAR_MODEL_REINERS) {
-    if (body[iBody].dRotRate >= dOmegaCrit) {
-      Jdot += -RM12CONST * body[iBody].dRotRate * pow(body[iBody].dRadius, 16. / 3.)
-                        * pow(body[iBody].dMass, -2. / 3);
-    } else {
-      Jdot += -RM12CONST * pow(body[iBody].dRotRate / dOmegaCrit, 4.) * body[iBody].dRotRate
-                        * pow(body[iBody].dRadius, 16. / 3.) * pow(body[iBody].dMass, -2. / 3);
-    }
-  }
-
-  // Angular momentum change due to stellar contraction/expansion
-  // J = Iw -> dJ/dt = w (dI/dt) where dw/dt = 0 since tidally locked
-  // where I = m * r_g^2 * r^2
-  // and dI/dt = 2 * m * r_g^2 * r * dr/dt
-  dRadMinus = fdRadiusFunctionBaraffe(body[iBody].dAge - eps, body[iBody].dMass);
-  dRadPlus = fdRadiusFunctionBaraffe(body[iBody].dAge + eps, body[iBody].dMass);
-  dDRdt = (dRadPlus - dRadMinus) /  (2. * eps);
-
-  // If radius increases, star wants to spin down, can't, so it dumps the
-  // angular momentum into the orbit
-  Jdot += 2.0*body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*dDRdt*body[iBody].dRotRate;
-
-  return Jdot;
-}
-
 /*! Compute rate of change in star's radius*/
 double fdRadiusStarDt(BODY *body, int iBody)
 {
@@ -279,6 +240,9 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
   double num, denom, tmp;
   double M = body[0].dMass + body[1].dMass;
   double mu = body[0].dMass*body[1].dMass/M;
+
+  /* XXX BROKEN XXX */
+  return 0.0;
 
   // Both tidally locked
   if(iNumLocked > 1)

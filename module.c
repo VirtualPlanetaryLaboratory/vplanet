@@ -1276,7 +1276,7 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     (*iVar)++;
 
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 1;
+    update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 2;
     update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 2; // Both stars
     update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt]*sizeof(int));
     update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt][0] = iBody;
@@ -1300,7 +1300,7 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     (*iVar)++;
 
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 1;
+    update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 2;
     update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 2; // Both stars
     update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt]*sizeof(int));
     update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt][0] = iBody;

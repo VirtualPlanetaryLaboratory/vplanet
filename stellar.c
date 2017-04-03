@@ -24,6 +24,7 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iWindModel = src[iBody].iWindModel;
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
+  dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
 }
 
 /**************** STELLAR options ********************/
@@ -475,11 +476,14 @@ void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) 
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  // Nothing
+ // Nothing
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int bStellar=0;
+
+  /* Default to initially no angular momentum lost to space */
+  body[iBody].dLostAngMom = 0.0;
 
   /* Stellar is active for this body if this subroutine is called. */
 
@@ -611,6 +615,19 @@ void HelpOutputStellar(OUTPUT *output) {
   printf("\n ------ STELLAR output ------\n");
   for (iOut=OUTSTARTSTELLAR;iOut<OUTENDSTELLAR;iOut++)
     WriteHelpOutput(&output[iOut]);
+}
+
+void WriteLostAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dLostAngMom;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime)/(fdUnitsMass(units->iMass)*fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength));
+    fsUnitsAngMom(units,cUnit);
+  }
 }
 
 void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -833,6 +850,15 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFRAC].iNum = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
+
+  sprintf(output[OUT_LOSTANGMOM].cName,"LostAngMom");
+  sprintf(output[OUT_LOSTANGMOM].cDescr,"Lost Angular Momentum due to Magnetic Braking");
+  sprintf(output[OUT_LOSTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_LOSTANGMOM].bNeg = 1;
+  output[OUT_LOSTANGMOM].iNum = 1;
+  output[OUT_LOSTANGMOM].dNeg = 1.0;
+  output[OUT_LOSTANGMOM].iModuleBit = STELLAR;
+  fnWrite[OUT_LOSTANGMOM] = &WriteLostAngMom;
 }
 
 /************ STELLAR Logging Functions **************/
@@ -923,8 +949,8 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
-  double dDRadiusDt = 0;
-  double dDJDt = 0;
+  double dDRadiusDt = 0.0;
+  double dDJDt = 0.0;
   double dOmegaCrit;
 
   // First, let's calculate dR/dt due to contraction/expansion

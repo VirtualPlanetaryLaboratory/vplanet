@@ -1,4 +1,3 @@
- 
 /************************ OUTPUT.C **********************/
 /*
  * Rory Barnes, Wed May  7 16:38:28 PDT 2014
@@ -517,7 +516,7 @@ void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteTotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdTotAngMom(body,control);
+  *dTmp = fdTotAngMom(body,control,system);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

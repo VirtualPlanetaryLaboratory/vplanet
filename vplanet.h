@@ -559,6 +559,7 @@ typedef struct {
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
+  double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -849,8 +850,8 @@ typedef double (*fnLaplaceFunction)(double,int);
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
-  double dTotAngMomInit; /**< System's Initial Angular Momentum */
 
+  double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
 
   /* DISTORB tools */
@@ -886,6 +887,7 @@ typedef struct {
   double *dLOrb;
 
   double dTotEnInit;     /**< System's Initial Energy */
+  double dTotEn;         /** < System's total energy */
 
   double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
   double *dPassingStarR;
@@ -1258,7 +1260,6 @@ typedef struct {
   double *pdLuminosityStellar;
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
-
   double *pdRotRateStellar;
 
   /* POISE */

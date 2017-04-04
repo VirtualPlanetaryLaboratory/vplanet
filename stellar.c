@@ -344,6 +344,16 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
 }
 
+void VerifyLostAngMom(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
+  update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
+  update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;
+
+  update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
+  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
+}
+
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
   // Assign luminosity
@@ -482,9 +492,6 @@ void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDA
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int bStellar=0;
 
-  /* Default to initially no angular momentum lost to space */
-  body[iBody].dLostAngMom = 0.0;
-
   /* Stellar is active for this body if this subroutine is called. */
 
   if (update[iBody].iNumLuminosity > 1) {
@@ -510,6 +517,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLostAngMom(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
@@ -543,6 +551,10 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
   update[iBody].iNumRot++;
 
+  if (update[iBody].iNumLostAngMom == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostAngMom++;
+
   if (body[iBody].dTemperature > 0) {
     if (update[iBody].iNumTemperature == 0)
       update[iBody].iNumVars++;
@@ -567,6 +579,11 @@ void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int
 void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iRotStellar = (*iEqn)++;
+}
+
+void FinalizeUpdateLostAngMomStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iLostAngMomStellar = (*iEqn)++;
 }
 
 void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -619,7 +636,8 @@ void HelpOutputStellar(OUTPUT *output) {
 
 void WriteLostAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dLostAngMom;
+  // Negative because lost amount should be positive while it's a net negative from the system
+  *dTmp = -body[iBody].dLostAngMom;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -909,6 +927,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
   module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
+  module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateLostAngMomStellar;
 }
 
 /************* STELLAR Functions ************/

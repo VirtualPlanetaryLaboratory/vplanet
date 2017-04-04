@@ -93,7 +93,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-    dTot += body[iBody].dLostAngMom;
+    dTot -= body[iBody].dLostAngMom; // Minus because lost amount is > 0
   }
 
   return dTot;

@@ -185,6 +185,7 @@
 // STELLAR
 #define VLUMINOSITY        1502
 #define VTEMPERATURE       1503
+#define VLOSTANGMOM        1504
 
 // POISE
 #define VICEMASS           1851
@@ -1254,6 +1255,9 @@ typedef struct {
   int iNumTemperature;
 
   int iRotStellar;           /**< iEqn number for the evolution of rotation in STELLAR */
+  int iLostAngMom;           /**< iEqn number for the evolution of lost angular momentum */
+  int iLostAngMomStellar;    /**< iEqn number for the evolution of lost angular momentum in STELLAR */
+  int iNumLostAngMom;       /**< Number of Equations Affecting lost angular momentum [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       function that returns these variables due to STELLAR evolution. */
@@ -1261,6 +1265,7 @@ typedef struct {
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
   double *pdRotRateStellar;
+  double *pdLostAngMomStellar;
 
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
@@ -1616,6 +1621,7 @@ typedef void (*fnFinalizeUpdateEccZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
@@ -1683,6 +1689,8 @@ typedef struct {
   fnFinalizeUpdate238UNumCrustModule **fnFinalizeUpdate238UNumCrust;
   /*! Function pointers to finalize Mantle's uranium-238 */
   fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  /*! Function pointers to finalize lost angular momentum */
+  fnFinalizeUpdateLostAngMomModule **fnFinalizeUpdateLostAngMom;
 
 
   /*! These functions assign Equation and Module information regarding

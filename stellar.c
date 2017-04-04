@@ -947,30 +947,31 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
 }
 
-double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
+/*! Compute the instataneous change in stellar radius according to the Baraffe models.
+ * Valid for the Baraffe stellar models
+ */
+double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
+  // Note: Compute a very simple derivative. NOTE: This won't work if variables like the
+  // stellar mass are changing, too! Perhaps it's better to keep track of the previous
+  // values of the radius and compute the derivative from those? TODO: Check this.
 
-  double dDRadiusDt = 0.0;
+  // Delta t = 10 years since  10 yr << typical stellar evolution timescales
+  double eps = 10.0 * YEARDAY * DAYSEC;
+  double dRadMinus, dRadPlus;
+
+  dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
+  dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
+
+  return (dRadPlus - dRadMinus) /  (2. * eps);
+}
+
+/*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty
+ * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis.
+ */
+double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
 
-  // First, let's calculate dR/dt due to contraction/expansion
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
-    // Compute a very simple derivative. NOTE: This won't work if variables like the
-    // stellar mass are changing, too! Perhaps it's better to keep track of the previous
-    // values of the radius and compute the derivative from those? TODO: Check this.
-
-    // Delta t = 10 years. TODO: Check this.
-    double eps = 10 * YEARDAY * DAYSEC;
-    double dRadMinus, dRadPlus;
-
-    dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
-    dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
-    dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
-
-  }
-
-  // Now, let's calculate dJ/dt due to magnetic braking
-  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
   if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
   else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
   if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
@@ -983,20 +984,64 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
     }
   }
 
+  return dDJDt;
+}
+
+/*! Compute the change in rotation rate when the radius changes via conservation
+ * of angular momentum:
+ * dw/dt = -2 dR/dt * w/R
+ */
+double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dDRadiusDt;
+
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  //
-  // The equation below comes from conservation of angular momentum:
-  //
-  // dw/dt = d(I/J)/dt = (1/I) * dJ/dt - (J/I^2) * dI/dt
-  //
-  // where dJ/dt is due to winds and dI/dt is due to contraction.
-  if (body[iaBody[0]].dAge >= 1.e6 * YEARSEC) {
-    return dDJDt / (body[iaBody[0]].dRadGyra * body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius)
-               - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
-  } else {
-    return 0.;
+  // Also, only applies when you're using a stellar model!
+  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
   }
+
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+  return -2.0*dDRadiusDt*body[iaBody[0]].dRotRate/body[iaBody[0]].dRadius;
+}
+
+/*! Compute the change in rotation rate due to magnetic braking via
+ * dw/dt = dJ/dt / I for moment of inertia I
+ */
+double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dDJDt, dMomIn;
+
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC)
+  {
+    return 0.0;
+  }
+  else
+  {
+    // Now, let's calculate dJ/dt due to magnetic braking
+    dDJDt = fdDJDtMagBrakingStellar(body,system,iaBody);
+
+    // Calculate moment of inertia
+    dMomIn = body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;
+
+    return dDJDt/dMomIn;
+  }
+}
+
+/*! Compute the change in rotation rate when the radius and total angular momentum
+ * are changing.
+ */
+double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
+
+  // Contributions due to contraction and magnetic braking
+  // dw_net/dt = dw_contraction/dt + dw_mag_braking/dt
+  return fdDRotRateDtCon(body,system,iaBody) + fdDRotRateDtMagBrake(body,system,iaBody);
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {

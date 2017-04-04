@@ -118,10 +118,14 @@ double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
 double fdRadiusFunctionProximaCen(double,double);
 double fdDRotRateDt(BODY*,SYSTEM*,int*);
+double fdDRotRateDtCon(BODY*,SYSTEM*,int*);
+double fdDRotRateDtMagBrake(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 double fdTemperatureFunctionProximaCen(double,double);
 void fdHabitableZoneKopparapu2013(double,double,double*);
+double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
+double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

@@ -1012,8 +1012,8 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // so lost angular momentum is due to radius evolution and is lost to disk
-  // so ignore magnetic braking early on.
-  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC)
+  // so ignore magnetic braking early on.  Only works with a stellar model selected
+  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
   {
     return 0.0;
   }

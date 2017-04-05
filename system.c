@@ -45,7 +45,7 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
  * Angular Momentum
  */
 
-/* Compute the total orbital angular momentum in the SYSTEM
+/* Compute the total orbital angular momentum in the system
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
 double fdOrbAngMom(BODY *body, CONTROL *control) {
@@ -81,7 +81,7 @@ double fdOrbAngMom(BODY *body, CONTROL *control) {
   return dTot;
 }
 
-/* Compute the total angular momentum in the system */
+/* Compute the total angular momentum in the system, including lost angular momentum */
 double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
   int iBody;
@@ -93,7 +93,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-    dTot -= body[iBody].dLostAngMom; // Minus because lost amount is > 0
+    dTot += body[iBody].dLostAngMom;
   }
 
   return dTot;
@@ -105,52 +105,94 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
  *
  */
 
-// Broken XXX: Account for multiple bodies
-double fdOrbPotEnergy(double dMass1, double dMass2,double dSemi) {
-  return -BIGG*dMass1*dMass2/dSemi;
+/*! Compute orbital potential energy neglecting planet-planet potential energy */
+double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+  double dMass; // Mass of central body or bodies if using binary and not secondary star
+
+  // Figure out central body mass
+  // If using binary, you orbit 2 stars
+  if(body[iBody].bBinary)
+  {
+    if(iBody > 1) // Only planets orbit two stars, stars orbit barycenter
+    {
+      dMass = body[0].dMass + body[1].dMass;
+    }
+    else
+    {
+      dMass = body[0].dMass;
+    }
+  }
+  else
+  {
+    dMass = body[0].dMass;
+  }
+
+  return -BIGG*dMass*body[iBody].dMass/body[iBody].dSemi;
 }
 
-// Broken XXX: Account for multiple bodies
-double fdOrbKinEnergy(double dMass1,double dMass2,double dSemi) {
-  return 0.5*BIGG*dMass1*dMass2/dSemi;
+/*! Compute orbital kinetic energy of a body */
+double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+  double dMass;
+
+  // Figure out central body mass
+  // If using binary, you orbit 2 stars
+  if(body[iBody].bBinary)
+  {
+    if(iBody > 1) // Only planets orbit two stars, stars orbit barycenter
+    {
+      dMass = body[0].dMass + body[1].dMass;
+    }
+    else
+    {
+      dMass = body[0].dMass;
+    }
+  }
+  else
+  {
+    dMass = body[0].dMass;
+  }
+
+  return 0.5*BIGG*dMass*body[iBody].dMass/body[iBody].dSemi;
 }
 
-double fdOrbEnergy(BODY *body,int iBody) {
-  /* XXX Broken -- needs to include multiple bodies */
-  return fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi) + fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
+/*! Compute total orbital energy for a given body */
+double fdOrbEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+
+  return fdOrbKinEnergy(body,control,system,iBody) + fdOrbPotEnergy(body,control,system,iBody);
 }
 
-double fdKinEnergy(BODY *body) {
-  double dKE;
+/*! Compute total non-orbital kinetic energy of a body  */
+double fdKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+
+  return fdRotKinEnergy(body[iBody].dMass,body[iBody].dRadius,body[iBody].dRadGyra,body[iBody].dRotRate);
+}
+
+/*! Compute a body's non-orbital potential energy */
+double fdPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
+
+  return fdBodyPotEnergy(body[iBody].dMass,body[iBody].dRadius);
+}
+
+/*! Compute the total energy in the entire system, include lost energy */
+double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
+  double dTot = 0.0;
   int iBody;
 
-  /* XXX Broken -- needs to include multiple bodies
-  dKE = fdOrbKinEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
-  for (iBody=0;iBody<2;iBody++)
-    dKE += fdRotKinEnergy(body[iBody].dMass,body[iBody].dRadius,body[iBody].dRadGyra,body[iBody].dRotRate);
+  // Add all rotational angular momentum, angular momentum lost
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
+  {
+    // Add body's potential, kinetic energy
+    dTot += fdPotEnergy(body,control,system,iBody);
+    dTot += fdKinEnergy(body,control,system,iBody);
 
-  return dKE;
-  */
-  return 0;
-}
+    // Add body's total orbital energy
+    dTot += fdOrbEnergy(body,control,system,iBody);
 
-double fdPotEnergy(BODY *body) {
-  double dPE;
-  int iBody;
+    // Add back in lost energy
+    dTot += body[iBody].dLostEng;
+  }
 
-  /* XXX Broken -- needs to include multiple bodies
-  dPE = fdOrbPotEnergy(body[0].dMass,body[1].dMass,body[1].dSemi);
-  for (iBody=0;iBody<2;iBody++)
-    dPE += fdBodyPotEnergy(body[iBody]);
-
-  return dPE;
-  */
-  return 0;
-}
-
-double fdTotEnergy(BODY *body) {
-  /* XXX Broken -- needs to include multiple bodies */
-  return fdKinEnergy(body) + fdPotEnergy(body);
+  return dTot;
 }
 
 int bPrimary(BODY *body,int iBody) {

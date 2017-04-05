@@ -235,6 +235,7 @@ double fdCPLDYoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
 double fdCPLDeccDt(BODY*,UPDATE*,int*);
+double fdDEdTCPLEqtide(BODY*,SYSTEM*,int*);
 
 /******************** CTL Functions ********************/
 

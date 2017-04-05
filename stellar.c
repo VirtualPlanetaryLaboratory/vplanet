@@ -24,7 +24,6 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iWindModel = src[iBody].iWindModel;
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
-  dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
 }
 
 /**************** STELLAR options ********************/
@@ -344,7 +343,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
 }
 
-void VerifyLostAngMom(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
@@ -352,6 +351,16 @@ void VerifyLostAngMom(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
 
   update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
   fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
+}
+
+void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+  update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
+  update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
+
+  update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtConStellar;
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -517,7 +526,8 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyLostAngMom(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
@@ -555,6 +565,10 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
   update[iBody].iNumLostAngMom++;
 
+  if (update[iBody].iNumLostEng == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostEng++;
+
   if (body[iBody].dTemperature > 0) {
     if (update[iBody].iNumTemperature == 0)
       update[iBody].iNumVars++;
@@ -584,6 +598,11 @@ void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,in
 void FinalizeUpdateLostAngMomStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iLostAngMomStellar = (*iEqn)++;
+}
+
+void FinalizeUpdateLostEngStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iLostEngStellar = (*iEqn)++;
 }
 
 void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -632,20 +651,6 @@ void HelpOutputStellar(OUTPUT *output) {
   printf("\n ------ STELLAR output ------\n");
   for (iOut=OUTSTARTSTELLAR;iOut<OUTENDSTELLAR;iOut++)
     WriteHelpOutput(&output[iOut]);
-}
-
-void WriteLostAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  // Negative because lost amount should be positive while it's a net negative from the system
-  *dTmp = -body[iBody].dLostAngMom;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp *= fdUnitsTime(units->iTime)/(fdUnitsMass(units->iMass)*fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength));
-    fsUnitsAngMom(units,cUnit);
-  }
 }
 
 void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -868,15 +873,6 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFRAC].iNum = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
-
-  sprintf(output[OUT_LOSTANGMOM].cName,"LostAngMom");
-  sprintf(output[OUT_LOSTANGMOM].cDescr,"Lost Angular Momentum due to Magnetic Braking");
-  sprintf(output[OUT_LOSTANGMOM].cNeg,"kgm^2/s");
-  output[OUT_LOSTANGMOM].bNeg = 1;
-  output[OUT_LOSTANGMOM].iNum = 1;
-  output[OUT_LOSTANGMOM].dNeg = 1.0;
-  output[OUT_LOSTANGMOM].iModuleBit = STELLAR;
-  fnWrite[OUT_LOSTANGMOM] = &WriteLostAngMom;
 }
 
 /************ STELLAR Logging Functions **************/
@@ -928,6 +924,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
   module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateLostAngMomStellar;
+  module->fnFinalizeUpdateLostEng[iBody][iModule] = &FinalizeUpdateLostEngStellar;
 }
 
 /************* STELLAR Functions ************/
@@ -984,12 +981,42 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return (dRadPlus - dRadMinus) /  (2. * eps);
 }
 
+/*! Compute instataneous change in energy due to stellar evolution
+ * dE/dt = ALPHA*G*M^2/R^2 where E_pot = -ALPHA*G*M^2/R
+ */
+double fdDEDtConStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dDRadiusDt;
+
+  // Note: only applies when you're using a stellar model!
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
+  }
+  else
+  {
+    // Compute the instataneous change in stellar radius
+    dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+    return ALPHA_STRUCT*BIGG*body[iBody].dMass*body[iBody].dMass*dDRadiusDt/(body[iBody].dRadius*body[iBody].dRadius);
+  }
+}
+
 /*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty
  * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis.
  */
 double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
+
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // so lost angular momentum is due to radius evolution and is lost to disk
+  // so ignore magnetic braking early on.
+  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC)
+  {
+    return 0.0;
+  }
 
   if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
   else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
@@ -1003,7 +1030,7 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
     }
   }
 
-  return dDJDt;
+  return -dDJDt; // Return positive amount
 }
 
 /*! Compute the change in rotation rate when the radius changes via conservation
@@ -1043,8 +1070,8 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
   }
   else
   {
-    // Now, let's calculate dJ/dt due to magnetic braking
-    dDJDt = fdDJDtMagBrakingStellar(body,system,iaBody);
+    // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
+    dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 
     // Calculate moment of inertia
     dMomIn = body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;

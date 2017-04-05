@@ -24,4 +24,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sWindModel    reiners
 
-saOutputOrder	Time -TotAngMom -LostAngMom -RotAngMom -OrbAngMom Semim -Radius -OrbPer -RotPer Ecce -RotRate -MeanMotion 
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -OrbPer -RotPer Ecce -RotRate -MeanMotion 

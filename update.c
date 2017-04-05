@@ -118,6 +118,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumAngMY =0;
     update[iBody].iNumAngMZ =0;
     update[iBody].iNumLostAngMom=0;
+    update[iBody].iNumLostEng=0;
 
     update[iBody].iNumVars=0;
 
@@ -1690,6 +1691,36 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateLostAngMom[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    /* Lost Energy */
+    update[iBody].iLostEng = -1;
+    if (update[iBody].iNumLostEng) {
+      update[iBody].iLostEng = iVar;
+      update[iBody].iaVar[iVar] = VLOSTENG;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumLostEng;
+      update[iBody].pdVar[iVar] = &body[iBody].dLostEng;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dLostEng;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumLostEng*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateLostEng[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

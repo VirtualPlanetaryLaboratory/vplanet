@@ -73,8 +73,8 @@ double fdPerToFreq(double dPeriod) {
  * Physical Relationships
  */
 
-double fdBodyPotEnergy(BODY body) {
-  return -0.6*BIGG*body.dMass*body.dMass/body.dRadius;
+double fdBodyPotEnergy(double dMass, double dRadius) {
+  return -ALPHA_STRUCT*BIGG*dMass*dMass/dRadius;
 }
 
 double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
@@ -244,6 +244,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dEcc = src[iBody].dEcc; // XXX iBody=0 could be in galhabit?
     dest[iBody].dPrecA = src[iBody].dPrecA;
     dest[iBody].dObliquity = src[iBody].dObliquity;
+    dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
+    dest[iBody].dLostEng = src[iBody].dLostEng;
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 

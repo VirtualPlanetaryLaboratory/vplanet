@@ -471,10 +471,11 @@ void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
 void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTIONS *options) {
   int iBody;
 
-  // Initially no lost angular momentum
+  // Initially no lost angular momentum, energy
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
     body[iBody].dLostAngMom = 0.0;
+    body[iBody].dLostEng = 0.0;
   }
 
   // Compute initial total angular momentum
@@ -482,9 +483,8 @@ void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTI
   system->dTotAngMom = system->dTotAngMomInit;
 
   // Compute initial total energy
-  system->dTotEnInit = 0.0; // TODO
+  system->dTotEnInit = fdTotEnergy(body,control,system);
   system->dTotEn = system->dTotEnInit;
-
 }
 
 

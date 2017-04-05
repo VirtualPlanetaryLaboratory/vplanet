@@ -85,7 +85,6 @@ void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_LXUV	              1511
 #define OUT_TEMPERATURE	        1512
 #define OUT_LXUVFRAC            1513
-#define OUT_LOSTANGMOM          1514
 
 #define OUT_HZLIMRECVENUS       1520 // Recent Venus HZ Limit
 #define OUT_HZLIMRUNAWAY         1522 // Recent Venus HZ Limit
@@ -102,7 +101,6 @@ void WriteLuminosity(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUVFrac(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteLostAngMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL*,FILE*);
@@ -126,6 +124,7 @@ double fdTemperatureFunctionProximaCen(double,double);
 void fdHabitableZoneKopparapu2013(double,double,double*);
 double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
 double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
+double fdDEDtConStellar(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

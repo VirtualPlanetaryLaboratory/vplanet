@@ -95,6 +95,7 @@
 #define RHOBROCK      3370
 #define BROCKTIME     5000  //relaxation timescale for bedrock
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
+#define ALPHA_STRUCT  0.6 // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
 /* Exit Status */
 
@@ -186,6 +187,7 @@
 #define VLUMINOSITY        1502
 #define VTEMPERATURE       1503
 #define VLOSTANGMOM        1504
+#define VLOSTENG           1505
 
 // POISE
 #define VICEMASS           1851
@@ -561,6 +563,7 @@ typedef struct {
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
+  double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -999,6 +1002,7 @@ typedef struct {
   int *iaZoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Z */
   int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
   int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
+  int iLostEngEqtide;    /**< Equation # Corresponding to EQTIDE's lost energy [tidal heating] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       semi-major axis' derivative due to EQTIDE. */
@@ -1027,6 +1031,10 @@ typedef struct {
   /*! Points to the elements in UPDATE's daDerivProc matrix that contains the
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the
+      lost energy via tidal heating's derivatives due to EQTIDE. */
+  double *pdLostEngEqtide;
 
   /* RADHEAT Mantle */
   int i26AlMan;            /**< Variable # Corresponding to Aluminum-26 */
@@ -1258,6 +1266,9 @@ typedef struct {
   int iLostAngMom;           /**< iEqn number for the evolution of lost angular momentum */
   int iLostAngMomStellar;    /**< iEqn number for the evolution of lost angular momentum in STELLAR */
   int iNumLostAngMom;       /**< Number of Equations Affecting lost angular momentum [1] */
+  int iLostEng;           /**< iEqn number for the evolution of lost energy */
+  int iLostEngStellar;    /**< iEqn number for the evolution of lost energy in STELLAR */
+  int iNumLostEng;       /**< Number of Equations Affecting lost angular momentum [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       function that returns these variables due to STELLAR evolution. */
@@ -1266,6 +1277,7 @@ typedef struct {
   double *pdRadiusStellar;
   double *pdRotRateStellar;
   double *pdLostAngMomStellar;
+  double *pdLostEngStellar;
 
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
@@ -1622,7 +1634,7 @@ typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
-
+typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1691,6 +1703,8 @@ typedef struct {
   fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
   /*! Function pointers to finalize lost angular momentum */
   fnFinalizeUpdateLostAngMomModule **fnFinalizeUpdateLostAngMom;
+  /*! Function pointers to finalize lost energy */
+  fnFinalizeUpdateLostEngModule **fnFinalizeUpdateLostEng;
 
 
   /*! These functions assign Equation and Module information regarding

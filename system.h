@@ -16,16 +16,15 @@ double fdMeanMotionToSemi(double,double,double);
 double fdOrbAngMom(BODY*, CONTROL*);
 double fdTotAngMom(BODY*, CONTROL*, SYSTEM*);
 
-
-double fdOrbPotEnergy(double,double,double);
-double fdOrbKinEnergy(double,double,double);
-double fdKinEnergy(BODY*);
-double fdPotEnergy(BODY*);
+double fdOrbPotEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdOrbKinEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdOrbEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdKinEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdPotEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdTotEnergy(BODY*,CONTROL*,SYSTEM*);
 
 int bPrimary(BODY*,int);
 
-double fdOrbEnergy(BODY*,int);
-double fdTotEnergy(BODY *);
 
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);

@@ -729,6 +729,29 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
   }
 }
 
+void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody, fnUpdateVariable ***fnUpdate) {
+  if (control->Evolve.iEqtideModel == CTL)
+  {
+    fprintf(stderr,"ERROR: Lost energy due to tidal heating not implemented for CTL model!\n");
+    exit(1);
+  }
+  else if(control->Evolve.iEqtideModel == CPL)
+  {
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
+
+    update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
+    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
+  }
+  else
+  {
+    fprintf(stderr,"ERROR: Must use CPL or CTL model!\n");
+    exit(1);
+  }
+}
+
 void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
   double dMeanMotion;
   int iOrbiter;
@@ -1306,6 +1329,8 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if (control->Evolve.iEqtideModel == CPL)
     VerifyCPL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
 
+  VerifyLostEngEqtide(body,update,control,options,iBody,fnUpdate);
+
   body[iBody].dTidalZ=malloc(control->Evolve.iNumBodies*sizeof(double));
   body[iBody].dTidalChi=malloc(control->Evolve.iNumBodies*sizeof(double));
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorEqtide;
@@ -1330,7 +1355,11 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
 
   if (update[iBody].iNumRot == 0)
     update[iBody].iNumVars++;
-  update[iBody].iNumRot += body[iBody].iTidePerts;;
+  update[iBody].iNumRot += body[iBody].iTidePerts;
+
+  if (update[iBody].iNumLostEng == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostEng++;
 
   /* Eqtide is complicated by the possibility that 1 body could be perturbed
      by multiple others. saEqtidePertubers is the list of those bodies
@@ -1359,6 +1388,12 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
 void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iHeccEqtide=*iEqn;
+  (*iEqn)++;
+}
+
+void FinalizeUpdateLostEngEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
+  update[iBody].iLostEngEqtide=*iEqn;
   (*iEqn)++;
 }
 
@@ -2539,8 +2574,7 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblEqtide;
   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblEqtide;
   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblEqtide;
-
-
+  module->fnFinalizeUpdateLostEng[iBody][iModule] =&FinalizeUpdateLostEngEqtide;
 }
 
 /************* EQTIDE Functions ************/
@@ -2661,6 +2695,14 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalBeta[0] = fdCTLBeta(body[iBody].dEccSq);
     fdaChi(body,body[iBody].dMeanMotion,body[iBody].dSemi,iBody,0);
   }
+}
+
+/*! Lost energy due to tidal heating in the CPL model. */
+double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+
+  return TINY; //fdCPLTidePower(body,iBody); // TODO need to fix this
 }
 
 double fdTidePower(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iTideModel) {

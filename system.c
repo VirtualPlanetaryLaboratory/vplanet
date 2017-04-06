@@ -55,7 +55,7 @@ double fdOrbAngMom(BODY *body, CONTROL *control) {
     // If using binary, you orbit 2 stars
     if(body[iBody].bBinary)
     {
-      if(iBody > 1) // Only planets orbit two stars, stars orbit barycenter
+      if(iBody > 1) // Panets orbit two stars
       {
         dMass = body[0].dMass + body[1].dMass;
       }

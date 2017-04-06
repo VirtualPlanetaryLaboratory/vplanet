@@ -124,7 +124,10 @@ double fdTemperatureFunctionProximaCen(double,double);
 void fdHabitableZoneKopparapu2013(double,double,double*);
 double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
 double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
-double fdDEDtConStellar(BODY*,SYSTEM*,int*);
+double fdDEDtPotConStellar(BODY*,SYSTEM*,int*);
+double fdDEDtRotConStellar(BODY*,SYSTEM*,int*);
+double fdDEDtRotBrakeStellar(BODY*,SYSTEM*,int*);
+double fdDEDtStellar(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

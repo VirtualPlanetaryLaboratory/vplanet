@@ -2702,7 +2702,7 @@ double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0];
 
-  return TINY; //fdCPLTidePower(body,iBody); // TODO need to fix this
+  return fdCPLTidePower(body,iBody);
 }
 
 double fdTidePower(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iTideModel) {

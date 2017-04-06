@@ -8,12 +8,6 @@
  * properties.
 */
 
-/* where something like iBody == 0 occurs
- * ~50
- * ~74
- * ~110
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -109,6 +103,12 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
 
+  // Ignore central body or other stars if not using binary
+  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  {
+    return 0.0;
+  }
+
   // Figure out central body mass
   // If using binary, you orbit 2 stars
   if(body[iBody].bBinary)
@@ -133,6 +133,12 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 /*! Compute orbital kinetic energy of a body */
 double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass;
+
+  // Ignore central body or other stars if not using binary
+  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  {
+    return 0.0;
+  }
 
   // Figure out central body mass
   // If using binary, you orbit 2 stars

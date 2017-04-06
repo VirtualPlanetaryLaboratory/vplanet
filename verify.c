@@ -15,6 +15,23 @@
 #include "vplanet.h"
 
 /*
+ * Utility functions
+ */
+
+/*! Check to see if two decimals numbers are equal (1) or not (0) */
+ int bFloatComparison(double x, double y)
+ {
+   if(fabs(x - y) < TINY)
+   {
+     return 1;
+   }
+   else
+   {
+     return 0;
+   }
+ }
+
+/*
  * Exit Calls
  */
 
@@ -472,6 +489,8 @@ void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTI
   int iBody;
 
   // Initially no lost angular momentum, energy
+  // Set to TINY, not 0 since these are integrated
+  // and it being 0 can mess up the time step
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
     body[iBody].dLostAngMom = 0.0;

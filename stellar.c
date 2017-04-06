@@ -360,7 +360,7 @@ void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE 
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
 
   update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
-  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtConStellar;
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -971,6 +971,12 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius and compute the derivative from those? TODO: Check this.
 
+  // TODO In Baraffe models, looks like radius doesn't change for t <= 1 Myr??
+  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
+  }
+
   // Delta t = 10 years since  10 yr << typical stellar evolution timescales
   double eps = 10.0 * YEARDAY * DAYSEC;
   double dRadMinus, dRadPlus;
@@ -981,26 +987,54 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return (dRadPlus - dRadMinus) /  (2. * eps);
 }
 
-/*! Compute instataneous change in energy due to stellar evolution
- * dE/dt = ALPHA*G*M^2/R^2 where E_pot = -ALPHA*G*M^2/R
- */
-double fdDEDtConStellar(BODY *body,SYSTEM *system,int *iaBody)
+/*! Compute instataneous change in potential energy due to stellar radius evolution */
+double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0];
-  double dDRadiusDt;
+  double dDRadiusDt, dEdt;
 
-  // Note: only applies when you're using a stellar model!
-  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
-    return 0.0;
-  }
-  else
-  {
-    // Compute the instataneous change in stellar radius
-    dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
 
-    return ALPHA_STRUCT*BIGG*body[iBody].dMass*body[iBody].dMass*dDRadiusDt/(body[iBody].dRadius*body[iBody].dRadius);
-  }
+  dEdt = ALPHA_STRUCT*BIGG*body[iBody].dMass*body[iBody].dMass*dDRadiusDt/(body[iBody].dRadius*body[iBody].dRadius);
+
+  // TODO: what do I do when the radius expands (along the main sequence?)
+  return -dEdt; // Negative because I want to store energy removed from system as positive quantity
+}
+
+/*! Compute instataneous change in rotational energy due to stellar radius evolution */
+double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dDRadiusDt, dEdt;
+
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+  dEdt = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*dDRadiusDt*body[iBody].dRotRate*body[iBody].dRotRate;
+
+  return -dEdt; // If E_rot increases, energy un-lost
+}
+
+/*! Compute instataneous change in rotational energy due to stellar magnetic braking */
+double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dJDt, dEdt;
+
+  // Compute the instataneous change in stellar angular momentum
+  dJDt = fdDJDtMagBrakingStellar(body,system,iaBody);
+
+  dEdt = body[iBody].dRotRate*dJDt;
+
+  // dJ/dt < 0 -> lose energy, so store positive amount of lost energy
+  return dEdt;
+}
+
+/*! Compute total energy lost due to stellar evolution */
+double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody);
 }
 
 /*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty

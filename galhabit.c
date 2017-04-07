@@ -1491,7 +1491,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dp, dkzi, dVMax, dCurrentAge, dMeanATmp;
+  double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
   char cOut[NAMELEN];
   int idr;
@@ -1531,6 +1531,10 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
   while (body[iBody].dLongA < 0) {
     body[iBody].dLongA += 2*PI;
   }
+  
+  // if (body[iBody].dEcc != body[iBody].dEcc) {
+//     printf("stop\n");
+//   }
   
   sinw = (-body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
          -body[iBody].dEccY*body[iBody].dAngMY*body[iBody].dAngMZ \
@@ -1695,7 +1699,21 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     
     /* apply the impulse */
     ApplyDeltaV(body,system,iBody);
+    //Vis viva integral
+    C = 0.5*(pow(body[iBody].dCartVel[0],2)+pow(body[iBody].dCartVel[1],2)+\
+          pow(body[iBody].dCartVel[2],2))\
+          -KGAUSS*KGAUSS*(body[iBody].dMassInterior+body[iBody].dMass)/MSUN\
+          /sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+\
+          pow(body[iBody].dCartPos[2],2));
+    
+    if (C >= 0) {
+      body[iBody].iDisrupt = 1;
+    }
+    
     cart2osc(body,evolve->iNumBodies);
+    if (body[iBody].dEcc >= 1) {
+      body[iBody].iDisrupt = 1;
+    }
     body[iBody].dInc = 2*asin(body[iBody].dSinc);
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[iBody].dMassInterior+body[iBody].dMass);

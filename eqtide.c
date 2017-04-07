@@ -160,7 +160,8 @@ void ReadFixOrbit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     if (iFile > 0)
       /* Set to default */
-      AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+//       AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+			control->Evolve.bFixOrbit[iFile-1] = 0;
 }
 
 /* Force Equilibrium Spin Rate? */

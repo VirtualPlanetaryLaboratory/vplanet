@@ -987,7 +987,9 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return (dRadPlus - dRadMinus) /  (2. * eps);
 }
 
-/*! Compute instataneous change in potential energy due to stellar radius evolution */
+/*! Compute instataneous change in potential energy due to stellar radius evolution
+ * Note that this energy is released as radiation
+ */
 double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0];
@@ -1002,7 +1004,9 @@ double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
   return -dEdt; // Negative because I want to store energy removed from system as positive quantity
 }
 
-/*! Compute instataneous change in rotational energy due to stellar radius evolution */
+/*! Compute instataneous change in rotational energy due to stellar radius evolution
+ * and considering angular momentum conservation
+ */
 double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iBody = iaBody[0];
@@ -1013,7 +1017,7 @@ double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 
   dEdt = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*dDRadiusDt*body[iBody].dRotRate*body[iBody].dRotRate;
 
-  return -dEdt; // If E_rot increases, energy un-lost
+  return -dEdt; // If E_rot increases, energy un-lost, so negative sign
 }
 
 /*! Compute instataneous change in rotational energy due to stellar magnetic braking */
@@ -1028,7 +1032,7 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
   dEdt = body[iBody].dRotRate*dJDt;
 
   // dJ/dt < 0 -> lose energy, so store positive amount of lost energy
-  return dEdt;
+  return dEdt; // Negative sign built into dJDt so not needed here
 }
 
 /*! Compute total energy lost due to stellar evolution */

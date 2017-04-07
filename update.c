@@ -128,7 +128,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       module->fnInitializeUpdate[iBody][iModule](body,update,iBody);
 
     // Initialize multi-module equations
-    //InitializeUpdateMulti(body,control,module,update,fnUpdate,iBody);
+    InitializeUpdateMulti(body,control,module,update,fnUpdate,iBody);
 
     // The second dimension of the Update matrix is the variables
     (*fnUpdate)[iBody]=malloc(update[iBody].iNumVars*sizeof(fnUpdateVariable*));
@@ -1728,7 +1728,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     }
 
     // Finalize adding multi-module equations to the matrix
-    //FinalizeUpdateMulti(body,control,module,update,fnUpdate,&iVar,iBody,iFoo);
+    FinalizeUpdateMulti(body,control,module,update,fnUpdate,&iVar,iBody,iFoo);
 
   }
 }

@@ -69,7 +69,7 @@ dPresSWind     -1  #-0.2
 
 #Output
 #saOutputOrder Time TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
-saOutputOrder Time -Tman -TCore -RIC -MagMom -MagPauseRad -SurfEnFluxTot TidalQ -RadPowerTot $
+saOutputOrder Time DeltaTime -Tman -TCore -RIC -MagMom -MagPauseRad -SurfEnFluxTot TidalQ -RadPowerTot $
 -TDotMan Eccentricity SemimajorAxis -SurfEnFluxEqtide K2 ImK2 TidalQ
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

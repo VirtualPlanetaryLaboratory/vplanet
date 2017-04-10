@@ -1000,7 +1000,6 @@ double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 
   dEdt = ALPHA_STRUCT*BIGG*body[iBody].dMass*body[iBody].dMass*dDRadiusDt/(body[iBody].dRadius*body[iBody].dRadius);
 
-  // TODO: what do I do when the radius expands (along the main sequence?)
   return -dEdt; // Negative because I want to store energy removed from system as positive quantity
 }
 

@@ -1000,6 +1000,16 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
+  // If it's the first step, see if it's a runaway greenhouse
+  if (evolve->bFirstStep)
+  {
+    // RG -> no ocean tides
+    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+    {
+      body[iBody].bOceanTides = 0;
+    }
+  }
+
   // Case: No oceans, no envelope
   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
   {
@@ -1127,7 +1137,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bOceanTides = 0;
     }
     // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
-    else if(bOceans && (body[iBody].dSurfaceWaterMass > 0.0) && body[iBody].bRunaway)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
     }
@@ -1143,14 +1153,14 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bEnvTides = 0;
     }
     // Still have the envelope!
-    else if(bEnv && (body[iBody].dEnvelopeMass > 0.0))
+    else if(bEnv && (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
     {
       body[iBody].bEnvTides = 1;
     }
 
     // Enfore that they are mutually exclusive
     // i.e. if using EnvTides or an envelope exists, ocean can't do anything
-    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > 0.0))
+    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
       body[iBody].bOceanTides = 0;
   }
 }
@@ -1172,27 +1182,17 @@ void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
   }
 }
 
-/*! Binary-Eqtide-Stellar Hecc derivative set-up*/
-void InitializeUpdateEqBinStHecc(BODY *body,UPDATE *update,int iBody) {
+/*! Binary-Eqtide-Stellar lost energy derivative set-up*/
+void InitializeUpdateEqBinStLostEng(BODY *body,UPDATE *update,int iBody) {
   // Only valid if BINARY, EQTIDE, and STELLAR used
   if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
-    if (update[iBody].iNumHecc == 0)
+    if (update[iBody].iNumLostEng == 0)
       update[iBody].iNumVars++;
-    update[iBody].iNumHecc++;
+    update[iBody].iNumLostEng++;
   }
 }
 
-/*! Binary-Eqtide-Stellar Kecc derivative set-up*/
-void InitializeUpdateEqBinStKecc(BODY *body,UPDATE *update,int iBody) {
-  // Only valid if BINARY, EQTIDE, and STELLAR used
-  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
-  {
-    if (update[iBody].iNumKecc == 0)
-      update[iBody].iNumVars++;
-    update[iBody].iNumKecc++;
-  }
-}
 
 /*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
 void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -1201,17 +1201,10 @@ void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar
   (*iEqn)++;
 }
 
-/*! Finalize update (for malloc-ing) for Bin-eq-st Hecc derivative */
-void FinalizeUpdateMultiEqBinStHecc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+/*! Finalize update (for malloc-ing) for Bin-eq-st lost energy derivative */
+void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iHeccBinEqSt = (*iEqn);
-  (*iEqn)++;
-}
-
-/*! Finalize update (for malloc-ing) for Bin-eq-st Kecc derivative */
-void FinalizeUpdateMultiEqBinStKecc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iKeccBinEqSt = (*iEqn);
+  update[iBody].iLostEngBinEqSt = (*iEqn);
   (*iEqn)++;
 }
 
@@ -1222,10 +1215,9 @@ void FinalizeUpdateMultiEqBinStKecc(BODY *body,UPDATE *update,int *iEqn,int iVar
  */
 void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody)
 {
-  // Initialize update struct to accomodate equation
+  // Initialize update struct to accomodate multi-module equations
   InitializeUpdateEqBinStSemi(body,update,iBody);
-  InitializeUpdateEqBinStHecc(body,update,iBody);
-  InitializeUpdateEqBinStKecc(body,update,iBody);
+  InitializeUpdateEqBinStLostEng(body,update,iBody);
 
   /* More equations here! */
 }
@@ -1252,11 +1244,6 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
                   // the semi-major axis changes so start this at 1
     FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
-    // Malloc stuff, increment iVar
-    (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
-    update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
-    (*iVar)++;
-
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
     update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
@@ -1266,53 +1253,18 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
     (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
 
-    /* Add change in Hecc due to BINARY-EQTIDE-STELLAR coupling */
+    /* Add change in lost energy due to BINARY-EQTIDE-STELLAR coupling */
 
-    // Other star (primary) can also influence this equation
-    iOtherBody = 0;
+    iEqn = 2; // 1 from STELLAR, 1 from EQTIDE
+    FinalizeUpdateMultiEqBinStLostEng(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
-    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
-    iEqn = 1; // When EQTIDE is set, already have an equation for how
-                  // the Hecc changes so start this at 1
-    FinalizeUpdateMultiEqBinStHecc(body,update,(&iEqn),(*iVar),iBody,iFoo);
-
-    // Malloc stuff, increment iVar
-    (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
-    update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
-    (*iVar)++;
-
-    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 2;
-    update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = 2; // Both stars
-    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iHecc][update[iBody].iHeccBinEqSt]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt][0] = iBody;
-    update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccBinEqSt][1] = iOtherBody;
-    update[iBody].pdDHeccDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iHecc][update[iBody].iHeccBinEqSt];
-    (*fnUpdate)[iBody][update[iBody].iHecc][update[iBody].iHeccBinEqSt] = &fdHeccDtEqBinSt;
-
-    /* Add change in Kecc due to BINARY-EQTIDE-STELLAR coupling */
-
-    // Other star (primary) can also influence this equation
-    iOtherBody = 0;
-
-    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
-    iEqn = 1; // When EQTIDE is set, already have an equation for how
-                  // the Kecc changes so start this at 1
-    FinalizeUpdateMultiEqBinStKecc(body,update,(&iEqn),(*iVar),iBody,iFoo);
-
-    // Malloc stuff, increment iVar
-    (*fnUpdate)[iBody][(*iVar)]=malloc(iEqn*sizeof(fnUpdateVariable));
-    update[iBody].daDerivProc[(*iVar)]=malloc(iEqn*sizeof(double));
-    (*iVar)++;
-
-    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 2;
-    update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = 2; // Both stars
-    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iKecc][update[iBody].iKeccBinEqSt]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt][0] = iBody;
-    update[iBody].iaBody[update[iBody].iKecc][update[iBody].iKeccBinEqSt][1] = iOtherBody;
-    update[iBody].pdDKeccDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iKecc][update[iBody].iKeccBinEqSt];
-    (*fnUpdate)[iBody][update[iBody].iKecc][update[iBody].iKeccBinEqSt] = &fdKeccDtEqBinSt;
+    // Add dLostEnergy dt from Binary-Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt][0] = iBody;
+    update[iBody].pdDLostEngDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt];
+    (*fnUpdate)[iBody][update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = &fdLostEngEqBinSt;
   }
 
 /* Add more equations below! */

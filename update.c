@@ -946,6 +946,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateSemi[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
+      iEqn++; // There's a multi-module eqn!
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
@@ -1721,6 +1723,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateLostEng[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      iEqn++; // There's a multi-module eqn!
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

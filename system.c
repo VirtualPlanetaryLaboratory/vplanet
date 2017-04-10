@@ -234,105 +234,73 @@ void CalcPQ(BODY *body, int iBody) {
 
 /*
  * Change in semi-major axis due to binary - eqtide - stellar coupling
- * Right now, applies to tidally-locked binary stars (since the angular
- * momentum from spinning-down stars must go somewhere)
+ * due to stellar evolution (magnetic braking and radius contraction)
  * Note: body 1 has orbital information for binary
- *
- * When circular, da/dt = 2 * a * (1/J_orb)*dJ_star/dt for angular momentum J
- * When eccentric, de/dt = (1-e^2) * (dJ_star/dt)/(J * e)
  */
 
-/*! Compute rate of change in star's radius*/
-double fdRadiusStarDt(BODY *body, int iBody)
-{
-  double eps = 10 * YEARDAY * DAYSEC;
-
-  double dRadMinus = fdRadiusFunctionBaraffe(body[iBody].dAge - eps, body[iBody].dMass);
-  double dRadPlus = fdRadiusFunctionBaraffe(body[iBody].dAge + eps, body[iBody].dMass);
-  return (dRadPlus - dRadMinus) /  (2. * eps);
-}
-
-/*! Compute change in star's angular momentum due to magnetic braking */
-double fdJBrakingStarDt(BODY *body, int iBody)
-{
-  double Jdot;
-  double dOmegaCrit;
-
-  // Now, let's calculate dJ/dt due to magnetic braking
-  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
-  // This dJ/dt takes angular momentum from star, star can't lose it, so orbit does
-  if (body[iBody].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
-  else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
-  if (body[iBody].iWindModel == STELLAR_MODEL_REINERS) {
-    if (body[iBody].dRotRate >= dOmegaCrit) {
-      Jdot = -RM12CONST * body[iBody].dRotRate * pow(body[iBody].dRadius, 16. / 3.)
-                        * pow(body[iBody].dMass, -2. / 3);
-    } else {
-      Jdot = -RM12CONST * pow(body[iBody].dRotRate / dOmegaCrit, 4.) * body[iBody].dRotRate
-                        * pow(body[iBody].dRadius, 16. / 3.) * pow(body[iBody].dMass, -2. / 3);
-    }
-  }
-
-  return Jdot;
-}
-
-/* Compute rate of change of semi-major axis for tidally locked star(s)
+/*! Compute rate of change of semi-major axis for tidally locked star(s)
  * if iNumLocked = 2, both are locked, otherwise, iBody gives body struct
  * index for star that is tidally locked
  */
 double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
 {
   double adot = 0.0;
-  double Jdot;
+  double Jdot = 0.0;
   double R1dot, R2dot, Rdot;
   double num, denom, tmp;
   double M = body[0].dMass + body[1].dMass;
   double mu = body[0].dMass*body[1].dMass/M;
-
-  /* XXX BROKEN XXX */
-  return 0.0;
+  double dMeanMotion = body[1].dMeanMotion;
+  double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
+  SYSTEM *system; // Dummy system struct
+  double eDot = body[0].dDeccDtEqtide + body[1].dDeccDtEqtide;
 
   // Both tidally locked
   if(iNumLocked > 1)
   {
     // Compute change in angular momentum due to magnetic braking for both stars
-    Jdot = fdJBrakingStarDt(body,0);
-    Jdot += fdJBrakingStarDt(body,1);
+    // and compute star's change in radii
 
-    // Compute star's change in radii
-    R1dot = fdRadiusStarDt(body,0);
-    R2dot = fdRadiusStarDt(body,1);
+    int iaBody[1] = {0};
+    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
+    R1dot = fdDRadiusDtStellar(body,system,iaBody);
+
+    iaBody[0] = 1;
+    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
+    R2dot = fdDRadiusDtStellar(body,system,iaBody);
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
 
-    num = Jdot - 2.0*body[0].dRotRate*tmp;
+    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J; // TODO: should have a factor of ~1.5?
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*body[0].dRotRate*pow(body[1].dSemi,4));
-    denom = mu*BIGG*M/(2.0*sqrt(BIGG*M*body[1].dSemi)) - tmp;
+    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
+    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
 
     adot = num/denom;
   }
-  // Just one is tidally locked
-  else
+  // Just one (body[iBody]) is tidally locked
+  else if(iNumLocked == 1)
   {
-    // Compute change in angular momentum due to magnetic braking for tidally-locked star
-    Jdot = fdJBrakingStarDt(body,iBody);
-
-    // Compute star's change in radii
-    Rdot = fdRadiusStarDt(body,iBody);
+    int iaBody[1] = {iBody};
+    Jdot = -fdDJDtMagBrakingStellar(body,system,iaBody);
+    Rdot = fdDRadiusDtStellar(body,system,iaBody);
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
 
-    num = Jdot - 2.0*body[iBody].dRotRate*tmp;
+    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J;
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*body[iBody].dRotRate*pow(body[1].dSemi,4));
-    denom = mu*BIGG*M/(2.0*sqrt(BIGG*M*body[1].dSemi)) - tmp;
+    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
+    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
 
     adot = num/denom;
+  }
+  else
+  {
+    adot = 0.0;
   }
 
   return adot;
@@ -342,117 +310,116 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
  * and BINARY, EQTIDE, and STELLAR are active
  */
 double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
-  // iaBody [0] is ALWAYS the current body: one of the stars
   int iBody = iaBody[0]; // Secondary body
   int iTmp;
   double adot = 0.0;
 
-  // XXX Probably broken XXX
-  return 0.0;
-
-  // If orbit isn't circular, pass
-  //if(body[iBody].dEcc > TINY)
-  if(0) // HACK
+  // Both are tidally locked
+  if(body[0].bTideLock && body[1].bTideLock)
   {
-    return 0.0;
+    adot = fdSemiTidalLockBinEqSt(body,2,-1);
   }
-  // Circular orbit! If tidally locked, do stuff!
+  // Primary is tidally locked
+  else if(body[0].bTideLock && !body[1].bTideLock)
+  {
+    adot = fdSemiTidalLockBinEqSt(body,1,0);
+  }
+  // Secondary is tidally locked
+  else if(!body[0].bTideLock && body[1].bTideLock)
+  {
+    adot = fdSemiTidalLockBinEqSt(body,1,1);
+  }
   else
   {
-    // Both are tidally locked
-    if(body[0].bTideLock && body[1].bTideLock)
-    {
-      adot = fdSemiTidalLockBinEqSt(body,2,-1);
-    }
-    // Primary is tidally locked
-    else if(body[0].bTideLock && !body[1].bTideLock)
-    {
-      adot = fdSemiTidalLockBinEqSt(body,1,0);
-    }
-    // Secondary is tidally locked
-    else if(!body[0].bTideLock && body[1].bTideLock)
-    {
-      adot = fdSemiTidalLockBinEqSt(body,1,1);
-    }
-    else
-    {
-      adot = 0.0;
-    }
-
-    return adot;
+    adot = 0.0;
   }
+
+  return adot;
 }
 
-/*! Compute change in binary Ecc when eccentric, tidally locked
- * and BINARY, EQTIDE, and STELLAR are active.  Note: This isn't added to matrix
- * but instead computes the de/dt needed for Hecc, Kecc derivatives
+/*! Compute lost energy rate (tidal heating) for tidally locked binaries undergoing
+ * magnetic braking and radius contraction
  */
-double fdEccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdLostEnergyTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody, double aDot)
+{
+  double eDot = 0.0;
+  double R1dot, R2dot, Rdot, tmp;
+  double M = body[0].dMass + body[1].dMass;
+  SYSTEM *system; // Dummy system struct
 
-  /* XXX BROKEN (probably) XXX */
+  // Both tidally locked
+  if(iNumLocked > 1)
+  {
+    int iaBody[1] = {0};
+    R1dot = fdDRadiusDtStellar(body,system,iaBody);
+
+    iaBody[0] = 1;
+    R2dot = fdDRadiusDtStellar(body,system,iaBody);
+
+    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
+    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
+    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
+
+    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
+    eDot += tmp*aDot;
+
+    tmp = -body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot*BIGG*M/pow(body[1].dSemi,3);
+    tmp += -body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot*BIGG*M/pow(body[1].dSemi,3);
+    eDot += tmp;
+  }
+  // Just one (body[iBody]) is tidally locked
+  else if(iNumLocked == 1)
+  {
+    int iaBody[1] = {iBody};
+    Rdot = fdDRadiusDtStellar(body,system,iaBody);
+
+    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
+    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
+
+    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
+    eDot += tmp*aDot;
+
+    tmp = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot*BIGG*M/pow(body[1].dSemi,3);
+    eDot += tmp;
+  }
+  else
+  {
+    eDot = 0.0;
+  }
+
+  return eDot;
+}
+
+/*! Derivative for lost energy rate (tidal heating) for tidally locked binaries undergoing
+ * magnetic braking and radius contraction
+ */
+double fdLostEngEqBinSt(BODY *body, SYSTEM *system, int *iaBody)
+{
+  double dEDot;
 
   return 0.0;
-  // iaBody [0] is ALWAYS the current body: one of the stars
-  int iBody = iaBody[0]; // Secondary body
-  int iTmp; // for loop index
+  // Compute change in semi-major axis
+  double aDot = fdSemiDtEqBinSt(body,system,iaBody);
 
-  // If orbit is circular, pass
-  if(body[iBody].dEcc < TINY)
+  // Both are tidally locked
+  if(body[0].bTideLock && body[1].bTideLock)
   {
-    return 0.0;
+    dEDot = fdLostEnergyTidalLockBinEqSt(body,2,-1,aDot);
   }
-    // Eccentric orbit! If tidally locked, do stuff!
-    else
-    {
-    // Compute current orbital angular momentum
-    double M = body[0].dMass + body[1].dMass;
-    double mu = body[0].dMass*body[1].dMass/M;
-    double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
-
-    // Initial change in angular momentum is null
-    double Jdot = 0.0;
-
-    // Loop over stars, Only exchange angular momemntum with orbit if tidally locked
-    for(iTmp = 0; iTmp < 2; iTmp++)
-    {
-      if(body[iBody].bTideLock)
-      {
-        Jdot += fdJStarDt(body,iTmp);
-      }
-      // Not tidally locked, do nothing
-      else
-      {
-        continue;
-      }
-    }
-
-    // Compute, return change in eccentricity
-    // since decrease in angular momentum makes orbit more eccentric
-    return -(1.0-body[iBody].dEcc*body[iBody].dEcc)*Jdot/(J*body[iBody].dEcc);
+  // Primary is tidally locked
+  else if(body[0].bTideLock && !body[1].bTideLock)
+  {
+    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,0,aDot);
   }
-}
+  // Secondary is tidally locked
+  else if(!body[0].bTideLock && body[1].bTideLock)
+  {
+    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,1,aDot);
+  }
+  else
+  {
+    dEDot = 0.0;
+  }
 
-
-/*! Compute change in binary Hecc when eccentric, tidally locked
- * and BINARY, EQTIDE, and STELLAR are active.
- */
-double fdHeccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
-
-  // Get change in eccentricity
-  double dedt = fdEccDtEqBinSt(body,system,iaBody);
-
-  // Return change in Hecc
-  return dedt * sin(body[iaBody[0]].dLongP);
-}
-
-/*! Compute change in binary Kecc when eccentric, tidally locked
- * and BINARY, EQTIDE, and STELLAR are active.
- */
-double fdKeccDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
-
-  // Get change in eccentricity
-  double dedt = fdEccDtEqBinSt(body,system,iaBody);
-
-  // Return change in Kecc
-  return dedt * cos(body[iaBody[0]].dLongP);
+  return dEDot;
 }

@@ -1026,12 +1026,13 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
   double dJDt, dEdt;
 
   // Compute the instataneous change in stellar angular momentum
-  dJDt = fdDJDtMagBrakingStellar(body,system,iaBody);
+  dJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 
+  // TODO: is this valid when tidally locked?
   dEdt = body[iBody].dRotRate*dJDt;
 
   // dJ/dt < 0 -> lose energy, so store positive amount of lost energy
-  return dEdt; // Negative sign built into dJDt so not needed here
+  return -dEdt; 
 }
 
 /*! Compute total energy lost due to stellar evolution */

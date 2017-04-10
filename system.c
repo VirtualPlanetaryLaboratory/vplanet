@@ -272,7 +272,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
 
-    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J; // TODO: should have a factor of ~1.5?
+    num = Jdot - 2.0*dMeanMotion*tmp + 1.5*mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J; // TODO: should have a factor of ~1.5?
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
@@ -290,7 +290,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
 
-    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J;
+    num = Jdot - 2.0*dMeanMotion*tmp + 1.5*mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J;
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
     tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;

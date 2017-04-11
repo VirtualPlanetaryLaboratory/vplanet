@@ -39,40 +39,41 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
  * Angular Momentum
  */
 
-/* Compute the total orbital angular momentum in the system
+/*! Compute the orbital angular momentum of the iBodyth body
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
-double fdOrbAngMom(BODY *body, CONTROL *control) {
+double fdOrbAngMom(BODY *body, int iBody) {
 
-  double dTot = 0.0;
-  double dMass; // Mass of central body or bodies if using binary and not secondary star
+  double dMass, mu; // Mass of central body or bodies if using binary and not secondary star
 
-  int iBody;
-  for(iBody = 1; iBody < control->Evolve.iNumBodies; iBody++)
+  // Central body (or primary binary star) doesn't orbit itself
+  if(iBody < 1)
   {
+    return 0.0;
+  }
 
-    // Figure out central body mass
-    // If using binary, you orbit 2 stars
-    if(body[iBody].bBinary)
+  // Figure out central body mass
+  // If using binary, you orbit 2 stars
+  if(body[iBody].bBinary)
+  {
+    if(iBody > 1) // Panets orbit two stars
     {
-      if(iBody > 1) // Panets orbit two stars
-      {
-        dMass = body[0].dMass + body[1].dMass;
-      }
-      else
-      {
-        dMass = body[0].dMass;
-      }
+      dMass = body[0].dMass + body[1].dMass;
     }
     else
     {
       dMass = body[0].dMass;
     }
-
-    dTot += dMass*body[iBody].dMass*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc))/(dMass+body[iBody].dMass);
+  }
+  else
+  {
+    dMass = body[0].dMass;
   }
 
-  return dTot;
+  // Compute reduced mass
+  mu = dMass*body[iBody].dMass/(dMass+body[iBody].dMass);
+
+  return mu*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc));
 }
 
 /* Compute the total angular momentum in the system, including lost angular momentum */
@@ -80,12 +81,10 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
   int iBody;
 
-  // Total orbital angular momentum
-  dTot = fdOrbAngMom(body,control);
-
-  // Add all rotational angular momentum, angular momentum lost
+  // Add all rotational, orbital angular momentum, angular momentum lost
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {
+    dTot += fdOrbAngMom(body,iBody);
     dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
     dTot += body[iBody].dLostAngMom;
   }
@@ -253,7 +252,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
   double dMeanMotion = body[1].dMeanMotion;
   double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
   SYSTEM *system; // Dummy system struct
-  double eDot = body[0].dDeccDtEqtide + body[1].dDeccDtEqtide;
+  double eDot = body[1].dDeccDtEqtide;
 
   // Both tidally locked
   if(iNumLocked > 1)
@@ -272,7 +271,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
 
-    num = Jdot - 2.0*dMeanMotion*tmp + 1.5*mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J; // TODO: should have a factor of ~1.5?
+    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J; // TODO: should have a factor of ~1.5?
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
@@ -290,7 +289,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
 
-    num = Jdot - 2.0*dMeanMotion*tmp + 1.5*mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J;
+    num = Jdot - 2.0*dMeanMotion*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*eDot/J;
 
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
     tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;

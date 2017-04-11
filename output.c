@@ -249,7 +249,7 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
 
-  *dTmp = fdOrbAngMom(body,control);
+  *dTmp = fdOrbAngMom(body,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -922,7 +922,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ROTANGMOM].bNeg = 1;
   output[OUT_ROTANGMOM].iNum = 1;
   output[OUT_ROTANGMOM].dNeg = 1.0;
-  output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR;
+  output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR + BINARY;
   fnWrite[OUT_ROTANGMOM] = &WriteRotAngMom;
 
   sprintf(output[OUT_ROTKINENERGY].cName,"RotKinEnergy");
@@ -984,7 +984,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;
-  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR;
+  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 
   sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");

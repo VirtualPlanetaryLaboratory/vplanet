@@ -10,7 +10,7 @@ dRadGyra      0.5             # Radius of gyration (moment of inertia constant)
 dObliquity    0.0
 
 # Orbital properties
-dOrbPeriod  -5.0
+dOrbPeriod  -9.0
 dEcc        0.10
 
 # EQTIDE Parameters

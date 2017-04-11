@@ -2929,9 +2929,7 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
  * Derivatives
  */
 
-/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57)
- * TODO: doesn't work when optimized (-O3 flag?)
- */
+/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57) */
 double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
 {
   int iB0=iaBody[0],iB1=iaBody[1];

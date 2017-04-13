@@ -45,7 +45,7 @@ mathtext.fallback_to_cm       : True
 mathtext.default              : it                # The default font to use for math. Can be any of the LaTeX font names
 
 # AXES
-#axes.hold                     : True
+axes.hold                     : True
 axes.facecolor                : w
 axes.edgecolor                : k
 axes.linewidth                : 1.0

@@ -1,83 +1,80 @@
 # Earthlike parameters for Proxima b
-sName			b	# Body's name
-saModules 		atmesc distorb distrot eqtide radheat thermint 
+sName		b	# Body's name
+saModules 	atmesc distorb distrot eqtide radheat thermint 
 
 # Physical Parameters
-dMass			-1.3	# Mass, negative -> Earth masses
-sMassRad		Sotin  	# Radius, negative -> Earth radii
-dRadGyra		0.5	# Radius of gyration; ang. mom. coeff.
+dMass		-1.3	# Mass, negative -> Earth masses
+sMassRad	Sotin  	# Radius, negative -> Earth radii
+dRadGyra	0.5	# Radius of gyration; ang. mom. coeff.
 
 # Rotational Properties
-dRotPeriod		-1  	# Rotation period, negative -> days
-dObliquity		23.5	# Obliquity, negative -> deg
+dRotPeriod	-1  	# Rotation period, negative -> days
+dObliquity	23.5	# Obliquity, negative -> deg
 
 # Orbital Parameters
-dEcc            	0.3	# Eccentricity
-#dSemi          	-0.05	# Semi-major axis, negative -> AU
-dOrbPeriod		-11.3	# Orbital period, negative -> d
+dEcc            0.3	# Eccentricity
+#dSemi          -0.05	# Semi-major axis, negative -> AU
+dOrbPeriod	-11.3	# Orbital period, negative -> d
 
 # ATMESC Parameters
-dXFrac          	1.0     # X-Ray/XUV absorption radius in planet radii
-dAtmXAbsEffH    	0.30    # Atmospheric XUV absorption efficiency (epsilon)
-dSurfWaterMass   	-10     # Initial water mass, negative ->Earth oceans
-bHaltSurfaceDesiccated  0       # Halt when dry?
-bHaltEnvelopeGone       0	# Halt when H enevlope evaporated?
-dMinSurfWaterMass      	-1e-5   # Desiccated limit (Earth oceans)
-sPlanetRadiusModel      proximacenb 
-dEnvelopeMass           -0.001  # Initial envelope mass (Earth masses)
+dXFrac          1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH    0.30    # Atmospheric XUV absorption efficiency (epsilon)
+dSurfWaterMass   	-10  	  # Initial water mass, negative ->Earth oceans
+bHaltSurfaceDesiccated  0 	  # Halt when dry?
+bHaltEnvelopeGone       0	  # Halt when H enevlope evaporated?
+dMinSurfWaterMass      	-1.e-5    # Planet is desiccated when water content drops below this (Earth oceans)
 
 # DISTORB Parameters
-dInc			20.0	# Orbital inclination
-dLongA			20.677	# Longitude of ascending node
-dArgP 			248.87	# Argument of periastron
-sOrbitModel 		rd4	# Orbital evolution model
-#dDfcrit    		0.1
-bOutputLapl  		0	# Output Laplace coefficients?
-bGRCorr    		1	# Include 1st order general relativity?
-bInvPlane  		1	# Reference orbits to invariable plane?
+dInc		20.0	# Orbital inclination
+dLongA		20.677	# Longitude of ascending node
+dArgP 		248.87	# Argument of periastron
+sOrbitModel 	rd4	# Orbital evolution model
+#dDfcrit    	0.1
+bOutputLapl  	0	# Output Laplace coefficients?
+bGRCorr    	1	# Include 1st order general relativity?
+bInvPlane  	1	# Reference orbits to invariable plane?
 
 # DISTROT Parameters
-dPrecA			0	# Precession angle
-bCalcDynEllip   	1	# Modify shape based on rotation rate?
+dPrecA		0	# Precession angle
+bCalcDynEllip   1	# Modify shape based on rotation rate?
 
 # EQTIDE Parameters
-dTidalQ			12	# Tidal Quality Factor
-#bForceEqSpin		1	# Tidally lock at start?
-#dHaltMinEcc		0.01	# Halt integration at this eccentricity
-saTidePerts		proxima # Name(s) of tidal perturbers
+dTidalQ		12	# Tidal Quality Factor
+#bForceEqSpin	1	# Tidally lock at start?
+#dHaltMinEcc	0.01	# Halt integration at this eccentricity
+saTidePerts	proxima # Name(s) of tidal perturbers
 
 # RADHEAT Parameters
 #40K, negative -> Earth
-d40KNumMan      	-1	# Number of mantle postassium-40 atoms
-d40KNumCore   		-1	# Number of core postassium-40 atoms
-d40KNumCrust		-1	# Number of crust postassium-40 atoms
+d40KNumMan      -1	# Number of mantle postassium-40 atoms
+d40KNumCore   	-1	# Number of core postassium-40 atoms
+d40KNumCrust	-1	# Number of crust postassium-40 atoms
 #232Th, negative -> Earth
-d232ThNumMan    	-1	# Number of mantle thorium-232 atoms
-d232ThNumCore   	-1	# Number of core thorium-232 atoms
-d232ThNumCrust  	-1	# Number of crust thorium-232 atoms
+d232ThNumMan    -1	# Number of mantle thorium-232 atoms
+d232ThNumCore   -1	# Number of core thorium-232 atoms
+d232ThNumCrust  -1	# Number of crust thorium-232 atoms
 #235U, negative -> Earth
-d235UNumMan     	-1	# Number of mantle uranium-235 atoms
-d235UNumCore    	-1	# Number of core uranium-235 atoms
-d235UNumCrust		-1	# Number of crust uranium-235 atoms
+d235UNumMan     -1	# Number of mantle uranium-235 atoms
+d235UNumCore    -1	# Number of core uranium-235 atoms
+d235UNumCrust	-1	# Number of crust uranium-235 atoms
 #238U, negative -> Earth
-d238UNumMan     	-1	# Number of mantle uranium-238 atoms
-d238UNumCore    	-1	# Number of core uranium-238 atoms
-d238UNumCrust		-1	# Number of crust uranium-238 atoms
+d238UNumMan     -1	# Number of mantle uranium-238 atoms
+d238UNumCore    -1	# Number of core uranium-238 atoms
+d238UNumCrust	-1	# Number of crust uranium-238 atoms
 
 # THERMINT Parameters
-dTMan           	3000.0	# Initial mantle temp.
-dTCore    		6000.0  # Initial core temp
-#dViscRatioMan 		2.7      #5
-#dEruptEff 		0.1          #.2
-#dViscRef  		5e7     #1e8
-#dTrefLind 		5705.    #def is 5430.
-#dDTChiRef 		300.     ## def is 100.
+dTMan           3000.0	# Initial mantle temp.
+dTCore    	6000.0  # Initial core temp
+#dViscRatioMan 	2.7      #5
+#dEruptEff 0.1          #.2
+#dViscRef  5e7     #1e8
+#dTrefLind 5705.    #def is 5430.
+#dDTChiRef 300.     ## def is 100.
 
 
 
 saOutputOrder 	Time Semim -OrbPer Ecce Inc LongP LongA $   # Orbit
-		-RotPer Obli PrecA DynEllip -Radius $       # Rotation
-		-TMan -TCore -RIC -SurfEnFluxTot -MagMom $  # Geophysics
-		TidalQ -RadPowerTot -PowerEqtide $         # Geophys, con't
-		-SurfEnFluxTot $	    		    # Geophys, con't
-		-EnvelopeMass -OxygenMass -SurfWaterMass    # Atmosphere
+		-RotPer Obli PrecA $                 # Rotation
+		-TMan -TCore -RIC -SurfEnFluxTot -MagMom $ # Geophysics
+		-OxygenMass -SurfWaterMass          # Atmosphere
+		

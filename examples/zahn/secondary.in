@@ -10,11 +10,11 @@ dRadGyra      0.5             # Radius of gyration (moment of inertia constant)
 dObliquity    0.0
 
 # Orbital properties
-dOrbPeriod  -9.0
-dEcc        0.10
+dOrbPeriod  -5.0
+dEcc        0.20
 
 # EQTIDE Parameters
-dTidalQ		1.0e6		# Tidal phase lag
+dTidalQ		1.0e5		# Tidal phase lag
 dK2		0.5		# Love number of degree 2
 dMaxLockDiff    0.01
 saTidePerts	primary   	# Body name(s) of tidal perturbers

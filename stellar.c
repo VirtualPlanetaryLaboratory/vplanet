@@ -1032,7 +1032,7 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
   dEdt = body[iBody].dRotRate*dJDt;
 
   // dJ/dt < 0 -> lose energy, so store positive amount of lost energy
-  return -dEdt; 
+  return -dEdt;
 }
 
 /*! Compute total energy lost due to stellar evolution */
@@ -1051,7 +1051,7 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // so lost angular momentum is due to radius evolution and is lost to disk
   // so ignore magnetic braking early on.  Only works with a stellar model selected
-  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
   {
     return 0.0;
   }
@@ -1082,7 +1082,7 @@ double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
-  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
   {
     return 0.0;
   }
@@ -1102,7 +1102,7 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC)
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC)
   {
     return 0.0;
   }

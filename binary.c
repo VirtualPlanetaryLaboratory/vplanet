@@ -326,7 +326,22 @@ void ReadHaltHolmanUnstable(BODY *body,CONTROL *control,FILES *files,OPTIONS *op
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltHolmanUnstable,files->iNumInputs);
+      control->Halt[iFile-1].bHaltHolmanUnstable = 0;
+}
+
+void ReadHaltRocheLobe(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltRocheLobe = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      control->Halt[iFile-1].bHaltRocheLobe = 0;
 }
 
 void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -341,7 +356,7 @@ void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bBinaryUseMatrix = 1; // Default to using the matrix
+      body[iFile-1].bBinaryUseMatrix = 0; // Default to using the matrix
 }
 
 /* Init Options BINARY */
@@ -438,6 +453,12 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTHOLMAN].cDefault,"0");
   options[OPT_HALTHOLMAN].iType = 0;
   fnRead[OPT_HALTHOLMAN] = &ReadHaltHolmanUnstable;
+
+  sprintf(options[OPT_HALTROCHELOBE].cName,"bHaltRocheLobe");
+  sprintf(options[OPT_HALTROCHELOBE].cDescr,"Halt roche lobe crossing occurs?");
+  sprintf(options[OPT_HALTROCHELOBE].cDefault,"0");
+  options[OPT_HALTROCHELOBE].iType = 0;
+  fnRead[OPT_HALTROCHELOBE] = &ReadHaltRocheLobe;
 
   sprintf(options[OPT_BINUSEMATRIX].cName,"bBinaryUseMatrix");
   sprintf(options[OPT_BINUSEMATRIX].cDescr,"Use matrix or compute main variables on the fly?");
@@ -826,8 +847,7 @@ void FinalizeUpdateCBPPhiDotBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,i
 /***************** BINARY Halts *****************/
 
 
-/*
- * If the CBP's dSemi is less than the Holman stability limit, it's unstable and
+/*!If the CBP's dSemi is less than the Holman stability limit, it's unstable and
  * integration ends
  */
 int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
@@ -851,15 +871,39 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
     return 0;
 }
 
+/*! If the secondary enters the roche lobe of the primary, HALT! */
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  double r_crit = fdRocheLobe(body);
+
+  // Check for roche lobe crossing
+  if(body[iBody].iBodyType == 1 && iBody == 1)
+  {
+    if(body[iBody].dSemi <= r_crit)
+    {
+      if(io->iVerbose >= VERBPROG)
+      {
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,r_crit/AUCM);
+      }
+      return 1;
+    }
+    return 0;
+  }
+  else // Doesn't apply to CBP, central star
+    return 0;
+}
+
 void CountHaltsBinary(HALT *halt,int *iHalt) {
   if(halt->bHaltHolmanUnstable)
+    (*iHalt)++;
+  if(halt->bHaltRocheLobe)
     (*iHalt)++;
 }
 
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].bHaltHolmanUnstable)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltHolmanUnstable;
-
+  if (control->Halt[iBody].bHaltRocheLobe)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltRocheLobe;
 }
 
 /************* BINARY Outputs ******************/
@@ -1622,8 +1666,7 @@ double fdEccToTrue(double E, double e)
   return 2.0*atan2(sqrt(1.-e)*cos(E/2.),sqrt(1.+e)*sin(E/2.));
 }
 
-/*
- * Compute the dynamical stability limit, a_crit, first computed by
+/*!Compute the dynamical stability limit, a_crit, first computed by
  * Holman and Wieget 1999 that depends on binary dSemi, dEcc
  * If CBP.dSemi < a_crit, planet is unstable and system should halt
  */
@@ -1634,6 +1677,26 @@ double fdHolmanStability(BODY *body)
   double mu = body[1].dMass/(body[0].dMass + body[1].dMass);
 
   return (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
+}
+
+/*! Compute the roche lobe of the primary according to Egglton's formula given
+ * in https://en.wikipedia.org/wiki/Roche_lobe
+ */
+double fdRocheLobe(BODY *body)
+{
+  double q = body[0].dMass/body[1].dMass;
+  double num = 0.49*pow(q,2./3.);
+  double denom = 0.6*pow(q,2./3.) + log(1.0 + pow(q,1./3.));
+
+  double rochelobe = (num/denom)*body[1].dSemi;
+
+  // Enforce hard radius limit
+  if(rochelobe < body[0].dRadius)
+  {
+    return body[0].dRadius;
+  }
+  else
+    return rochelobe;
 }
 
 /* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset

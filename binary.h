@@ -29,6 +29,7 @@
 #define OPT_CBPZETA             2153 // CBP z oscillation phase angle
 #define OPT_CBPPSI              2154 // CBP R, phi oscillation phase angle
 #define OPT_HALTHOLMAN          2170 // Holman+Wiegert 1999 Instability limit
+#define OPT_HALTROCHELOBE           2175 // Halt if roche lobe crossing occurs
 #define OPT_BINUSEMATRIX        2180 // Whether or not to include eqns in matrix
 
 /* Output Info */
@@ -79,10 +80,12 @@ void ReadCBPM0(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadCBPZeta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadCBPPsi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltHolmanUnstable(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltRocheLobe(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadBinaryUseMatrix(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt);
 void CountHaltsBinary(HALT*,int*);
 
@@ -150,6 +153,7 @@ double fdComputeLongA(BODY*,int);
 void fdComputeEccVector(BODY*,double*,int);
 double fdComputeArgPeri(BODY*,int);
 double fdHolmanStability(BODY*);
+double fdRocheLobe(BODY*);
 double fdMeanAnomaly(double,double,double);
 double fdMeanToEccentric(double,double);
 double fdEccToTrue(double,double);

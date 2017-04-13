@@ -1347,6 +1347,7 @@ typedef struct {
 
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
+  int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
 } HALT;
 
 /* Units. These can be different for different bodies. If set

@@ -38,20 +38,17 @@ double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
 	return C;
 }
 
-double fdProximaCenBRadius(double C, double A, double M){
+double fdProximaCenBRadius(double C, double A){
 	double dx, dy;
 	int xi, yi;
-  
+
 	// Let's enforce a minimum age of 0.001 GYR and a maximum age of 10.0 GYR
 	A /= YEARSEC;
 	if (A < 1e7) A = 1e7;
 	if (A > 1e10) A = 1e10;
 	
-	// If the planet is rocky, use the Sotin+07 relation
-	if (C < 0.00001) 
-	  return fdMassToRad_Sotin07(M);
-	
 	// Let's enforce the bounds for the composition as well
+	if (C < 0.00001) C = 0.00001;
 	if (C > 0.01) C = 0.01;
 	
 	// Get the lower bounds

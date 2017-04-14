@@ -18,7 +18,6 @@ if __name__ == '__main__':
   parser.add_argument("-x", "--xaxis", default = None, help = 'Parameter to plot on the x-axis')
   parser.add_argument("-y", "--yaxis", nargs = '*', default = None, help = 'Parameter(s) to plot on the y-axis')
   parser.add_argument("-a", "--aaxis", default = None, help = 'Parameter to control line alpha')
-  parser.add_argument("-n", "--nolog", action = 'store_true', help = 'Force linear axes everywhere')
   args = parser.parse_args()
 
   # Help?
@@ -30,4 +29,4 @@ if __name__ == '__main__':
     quit()
 
   # Plot
-  fig, _ = QuickPlot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis, nolog = args.nolog)
+  fig, _ = QuickPlot(bodies = args.bodies, xaxis = args.xaxis, yaxis = args.yaxis, aaxis = args.aaxis)

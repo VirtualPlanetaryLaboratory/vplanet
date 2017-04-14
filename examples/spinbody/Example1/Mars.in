@@ -1,0 +1,22 @@
+# Planet a parameters
+sName                     Mars          # Body's name
+saModules                 spinbody      # Modules to apply, exact spelling required
+
+saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+# Physical Properties
+dMass                     -0.107        # Mass, negative -> Earth masses
+dRadius                   -0.532        # Radius, negative -> Earth radii
+dRotPeriod                -1.027        # Rotation period, negative -> days
+dObliquity                25.19         # Obliquity (deg)
+dRadGyra                  0.5           # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                     -1.52366231   # Semi-major axis, negative -> AU
+dEcc                       0.09341233   # Eccentricity
+dInc                       1.85061      # Inclination
+dLongP                     336.04084    # Longitude of pericenter
+dLongA                     49.57854     # Longitude of ascending node
+dMeanA                     355.45332    # Mean Anomoly

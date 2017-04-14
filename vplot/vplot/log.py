@@ -125,7 +125,7 @@ class LogBody(object):
   def __repr__(self):
     return "<VPLOT Log Object: %s>" % self._name
 
-def GetLog(sysname = '', path = '.', benchmark = False, logfile = None, **kwargs):
+def GetLog(sysname = '', path = '.', benchmark = False, **kwargs):
   '''
   
   '''
@@ -139,9 +139,7 @@ def GetLog(sysname = '', path = '.', benchmark = False, logfile = None, **kwargs
   # Get the log file
   lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
-    lf = os.path.join(path, logfile)
-    if lf is None:
-      raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
+    raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:
     raise Exception("There doesn't seem to be a log file in this directory.")
   else:

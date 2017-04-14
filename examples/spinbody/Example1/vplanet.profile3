@@ -1,0 +1,2000 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 31.52     16.99    16.99 21165850     0.00     0.00  fdGetUpdateInfo
+ 23.36     29.58    12.59 105829250     0.00     0.00  fdDVelXDt
+ 21.73     41.29    11.71  5291461     0.00     0.00  RungeKutta4Step
+  8.51     45.88     4.59 105829250     0.00     0.00  fdDVelYDt
+  6.75     49.52     3.64 105829250     0.00     0.00  fdDVelZDt
+  1.18     50.15     0.64 105829250     0.00     0.00  fdDPositionZDt
+  1.13     50.76     0.61 26457305     0.00     0.00  BodyCopySpiNBody
+  1.02     51.31     0.55 105829250     0.00     0.00  fdDPositionYDt
+  0.99     51.85     0.54 105829250     0.00     0.00  fdDPositionXDt
+  0.95     52.36     0.51  5291461     0.00     0.00  BodyCopy
+  0.82     52.80     0.44 21165847     0.00     0.00  PropertiesAuxiliary
+  0.67     53.16     0.36 84663388     0.00     0.00  fdSemiToMeanMotion
+  0.50     53.43     0.27        1     0.27    53.85  Evolve
+  0.48     53.69     0.26 21165847     0.00     0.00  PropsAuxGeneral
+  0.11     53.75     0.06 105829235     0.00     0.00  PropertiesSpiNBody
+  0.09     53.80     0.05  5291461     0.00     0.00  fbCheckHalt
+  0.06     53.83     0.03 26457305     0.00     0.00  ForceBehaviorSpiNBody
+  0.04     53.85     0.02  5291466     0.00     0.00  fdNextOutput
+  0.04     53.87     0.02        5     0.00     0.00  ReadOutputOrder
+  0.02     53.88     0.01       10     0.00     0.00  LogOutputOrder
+  0.02     53.89     0.01                             fdD235UNumCrustDt
+  0.02     53.90     0.01                             fdSemiToPeriod
+  0.01     53.90     0.01        5     0.00     0.00  AddModuleSpiNBody
+  0.00     53.90     0.00  5291462     0.00     0.00  AssignDt
+  0.00     53.90     0.00   124574     0.00     0.00  sLower
+  0.00     53.90     0.00     9546     0.00     0.00  CheckComment
+  0.00     53.90     0.00      406     0.00     0.00  GetLine
+  0.00     53.90     0.00      283     0.00     0.00  fprintd
+  0.00     53.90     0.00      245     0.00     0.00  AddOptionDouble
+  0.00     53.90     0.00      119     0.00     0.00  CGSUnits
+  0.00     53.90     0.00      118     0.00     0.00  WriteLogEntry
+  0.00     53.90     0.00       88     0.00     0.00  fdUnitsTime
+  0.00     53.90     0.00       79     0.00     0.00  UpdateFoundOption
+  0.00     53.90     0.00       78     0.00     0.00  fsUnitsTime
+  0.00     53.90     0.00       77     0.00     0.00  AddOptionInt
+  0.00     53.90     0.00       75     0.00     0.00  NotPrimaryInput
+  0.00     53.90     0.00       72     0.00     0.00  AddOptionString
+  0.00     53.90     0.00       61     0.00     0.00  AssignDefaultDouble
+  0.00     53.90     0.00       53     0.00     0.00  AddOptionBool
+  0.00     53.90     0.00       45     0.00     0.00  fdUnitsLength
+  0.00     53.90     0.00       40     0.00     0.00  WritePositionX
+  0.00     53.90     0.00       40     0.00     0.00  WritePositionY
+  0.00     53.90     0.00       40     0.00     0.00  WritePositionZ
+  0.00     53.90     0.00       40     0.00     0.00  WriteVelX
+  0.00     53.90     0.00       40     0.00     0.00  WriteVelY
+  0.00     53.90     0.00       40     0.00     0.00  WriteVelZ
+  0.00     53.90     0.00       36     0.00     0.00  AssignDefaultInt
+  0.00     53.90     0.00       32     0.00     0.00  WriteDeltaTime
+  0.00     53.90     0.00       32     0.00     0.00  WriteTime
+  0.00     53.90     0.00       32     0.00     0.00  fsUnitsLength
+  0.00     53.90     0.00       20     0.00     0.00  fdUnitsMass
+  0.00     53.90     0.00       20     0.00     0.00  fsUnitsMass
+  0.00     53.90     0.00       19     0.00     0.00  dNegativeDouble
+  0.00     53.90     0.00       12     0.00     0.00  AddOptionStringArray
+  0.00     53.90     0.00       12     0.00     0.00  GetPos
+  0.00     53.90     0.00       12     0.00     0.00  GetWords
+  0.00     53.90     0.00       12     0.00     0.00  xinit
+  0.00     53.90     0.00       12     0.00     0.00  yinit
+  0.00     53.90     0.00       11     0.00     0.00  UpdateFoundOptionMulti
+  0.00     53.90     0.00       10     0.00     0.00  LogBodyRelations
+  0.00     53.90     0.00       10     0.00     0.00  LogBodySpiNBody
+  0.00     53.90     0.00       10     0.00     0.00  LogGridOutput
+  0.00     53.90     0.00       10     0.00     0.00  PrintModuleList
+  0.00     53.90     0.00       10     0.00     0.00  WriteBodyType
+  0.00     53.90     0.00       10     0.00     0.00  WriteHZLimitDryRunaway
+  0.00     53.90     0.00       10     0.00     0.00  WriteMass
+  0.00     53.90     0.00       10     0.00     0.00  WriteRadius
+  0.00     53.90     0.00        9     0.00     0.00  CheckDuplication
+  0.00     53.90     0.00        8     0.00     0.00  fsUnitsEnergy
+  0.00     53.90     0.00        8     0.00     0.00  xangle1
+  0.00     53.90     0.00        8     0.00     0.00  xangle2
+  0.00     53.90     0.00        8     0.00     0.00  yangle1
+  0.00     53.90     0.00        8     0.00     0.00  yangle2
+  0.00     53.90     0.00        8     0.00     0.00  zangle1
+  0.00     53.90     0.00        8     0.00     0.00  zangle2
+  0.00     53.90     0.00        6     0.00     0.00  InitializeInput
+  0.00     53.90     0.00        6     0.00     0.00  ReadAge
+  0.00     53.90     0.00        6     0.00     0.00  ReadAlbedoGlobal
+  0.00     53.90     0.00        6     0.00     0.00  ReadArgP
+  0.00     53.90     0.00        6     0.00     0.00  ReadBodyName
+  0.00     53.90     0.00        6     0.00     0.00  ReadBodyType
+  0.00     53.90     0.00        6     0.00     0.00  ReadCalcDynEllip
+  0.00     53.90     0.00        6     0.00     0.00  ReadColor
+  0.00     53.90     0.00        6     0.00     0.00  ReadDigits
+  0.00     53.90     0.00        6     0.00     0.00  ReadDoBackward
+  0.00     53.90     0.00        6     0.00     0.00  ReadDoForward
+  0.00     53.90     0.00        6     0.00     0.00  ReadDoLog
+  0.00     53.90     0.00        6     0.00     0.00  ReadDynEllip
+  0.00     53.90     0.00        6     0.00     0.00  ReadEcc
+  0.00     53.90     0.00        6     0.00     0.00  ReadEta
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltMaxEcc
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltMerge
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltMinEcc
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltMinObl
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltMinSemi
+  0.00     53.90     0.00        6     0.00     0.00  ReadHaltPosDeDt
+  0.00     53.90     0.00        6     0.00     0.00  ReadHecc
+  0.00     53.90     0.00        6     0.00     0.00  ReadInc
+  0.00     53.90     0.00        6     0.00     0.00  ReadIntegrationMethod
+  0.00     53.90     0.00        6     0.00     0.00  ReadKecc
+  0.00     53.90     0.00        6     0.00     0.00  ReadLXUV
+  0.00     53.90     0.00        6     0.00     0.00  ReadLogFile
+  0.00     53.90     0.00        6     0.00     0.00  ReadLongA
+  0.00     53.90     0.00        6     0.00     0.00  ReadLongP
+  0.00     53.90     0.00        6     0.00     0.00  ReadMass
+  0.00     53.90     0.00        6     0.00     0.00  ReadMassRad
+  0.00     53.90     0.00        6     0.00     0.00  ReadMeanMotion
+  0.00     53.90     0.00        6     0.00     0.00  ReadMinValue
+  0.00     53.90     0.00        6     0.00     0.00  ReadModules
+  0.00     53.90     0.00        6     0.00     0.00  ReadObliquity
+  0.00     53.90     0.00        6     0.00     0.00  ReadOrbPeriod
+  0.00     53.90     0.00        6     0.00     0.00  ReadOutFile
+  0.00     53.90     0.00        6     0.00     0.00  ReadOutputTime
+  0.00     53.90     0.00        6     0.00     0.00  ReadOverwrite
+  0.00     53.90     0.00        6     0.00     0.00  ReadPrecA
+  0.00     53.90     0.00        6     0.00     0.00  ReadRadius
+  0.00     53.90     0.00        6     0.00     0.00  ReadRadiusGyration
+  0.00     53.90     0.00        6     0.00     0.00  ReadRotPeriod
+  0.00     53.90     0.00        6     0.00     0.00  ReadRotRate
+  0.00     53.90     0.00        6     0.00     0.00  ReadRotVel
+  0.00     53.90     0.00        6     0.00     0.00  ReadSciNot
+  0.00     53.90     0.00        6     0.00     0.00  ReadSemiMajorAxis
+  0.00     53.90     0.00        6     0.00     0.00  ReadStopTime
+  0.00     53.90     0.00        6     0.00     0.00  ReadSystemName
+  0.00     53.90     0.00        6     0.00     0.00  ReadTimeStep
+  0.00     53.90     0.00        6     0.00     0.00  ReadUnitAngle
+  0.00     53.90     0.00        6     0.00     0.00  ReadUnitLength
+  0.00     53.90     0.00        6     0.00     0.00  ReadUnitMass
+  0.00     53.90     0.00        6     0.00     0.00  ReadUnitTemp
+  0.00     53.90     0.00        6     0.00     0.00  ReadUnitTime
+  0.00     53.90     0.00        6     0.00     0.00  ReadVarDt
+  0.00     53.90     0.00        6     0.00     0.00  ReadVerbose
+  0.00     53.90     0.00        6     0.00     0.00  ReadViscUMan
+  0.00     53.90     0.00        6     0.00     0.00  ReadXobl
+  0.00     53.90     0.00        6     0.00     0.00  ReadYobl
+  0.00     53.90     0.00        6     0.00     0.00  ReadZobl
+  0.00     53.90     0.00        6     0.00     0.00  fdUnitsEnergy
+  0.00     53.90     0.00        6     0.00     0.00  iGetNumLines
+  0.00     53.90     0.00        5     0.00     0.00  AssignDefaultString
+  0.00     53.90     0.00        5     0.00     0.00  CountHaltsSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeModule
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdatePositionXSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdatePositionYSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdatePositionZSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdateVelXSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdateVelYSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  FinalizeUpdateVelZSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  Helio2Bary
+  0.00     53.90     0.00        5     0.00     0.00  InitializeBodySpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  InitializeControlNULL
+  0.00     53.90     0.00        5     0.00     0.00  InitializeUpdateBodyPerts
+  0.00     53.90     0.00        5     0.00     0.00  InitializeUpdateSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  InitializeUpdateTmpBody
+  0.00     53.90     0.00        5     0.00     0.00  InitializeUpdateTmpBodySpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  OrbElems2Helio
+  0.00     53.90     0.00        5     0.00     0.00  ReadMeanA
+  0.00     53.90     0.00        5     0.00     0.00  ReadOptionsSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  ReadPositionX
+  0.00     53.90     0.00        5     0.00     0.00  ReadPositionY
+  0.00     53.90     0.00        5     0.00     0.00  ReadPositionZ
+  0.00     53.90     0.00        5     0.00     0.00  ReadUseOrbParams
+  0.00     53.90     0.00        5     0.00     0.00  ReadVelX
+  0.00     53.90     0.00        5     0.00     0.00  ReadVelY
+  0.00     53.90     0.00        5     0.00     0.00  ReadVelZ
+  0.00     53.90     0.00        5     0.00     0.00  VerifyHaltSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  VerifyInterior
+  0.00     53.90     0.00        5     0.00     0.00  VerifyMassRad
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMulti
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiAtmescEqtide
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiAtmescEqtideThermint
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiBinaryEqtide
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiDistOrbDistRot
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiEqtideDistOrb
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiEqtideDistorb
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiEqtideStellar
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiEqtideThermint
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiFlareStellar
+  0.00     53.90     0.00        5     0.00     0.00  VerifyModuleMultiRadheatThermint
+  0.00     53.90     0.00        5     0.00     0.00  VerifyPerturbersSpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  VerifyPositionX
+  0.00     53.90     0.00        5     0.00     0.00  VerifyPositionY
+  0.00     53.90     0.00        5     0.00     0.00  VerifyPositionZ
+  0.00     53.90     0.00        5     0.00     0.00  VerifyRotationGeneral
+  0.00     53.90     0.00        5     0.00     0.00  VerifySpiNBody
+  0.00     53.90     0.00        5     0.00     0.00  VerifyVelX
+  0.00     53.90     0.00        5     0.00     0.00  VerifyVelY
+  0.00     53.90     0.00        5     0.00     0.00  VerifyVelZ
+  0.00     53.90     0.00        5     0.00     0.00  bFileExists
+  0.00     53.90     0.00        5     0.00     0.00  fdPerToFreq
+  0.00     53.90     0.00        5     0.00     0.00  fiNumHalts
+  0.00     53.90     0.00        5     0.00     0.00  iAssignTempUnit
+  0.00     53.90     0.00        4     0.00     0.00  WriteOutput
+  0.00     53.90     0.00        4     0.00     0.00  fdKinEnergy
+  0.00     53.90     0.00        4     0.00     0.00  fdPotEnergy
+  0.00     53.90     0.00        4     0.00     0.00  kepler_eqn
+  0.00     53.90     0.00        4     0.00     0.00  signf
+  0.00     53.90     0.00        4     0.00     0.00  vxi
+  0.00     53.90     0.00        4     0.00     0.00  vyi
+  0.00     53.90     0.00        2     0.00     0.00  InitializeBodyModules
+  0.00     53.90     0.00        2     0.00     0.01  LogBody
+  0.00     53.90     0.00        2     0.00     0.00  LogSystem
+  0.00     53.90     0.00        2     0.00     0.00  WriteAge
+  0.00     53.90     0.00        2     0.00     0.00  WriteKinEnergy
+  0.00     53.90     0.00        2     0.00     0.00  WriteLXUVTot
+  0.00     53.90     0.00        2     0.00     0.01  WriteLog
+  0.00     53.90     0.00        2     0.00     0.00  WriteLongP
+  0.00     53.90     0.00        2     0.00     0.00  WritePotEnergy
+  0.00     53.90     0.00        2     0.00     0.00  WriteTotAngMom
+  0.00     53.90     0.00        2     0.00     0.00  WriteTotEnergy
+  0.00     53.90     0.00        2     0.00     0.00  fdTotAngMom
+  0.00     53.90     0.00        2     0.00     0.00  fdTotEnergy
+  0.00     53.90     0.00        2     0.00     0.00  fdUnitsAngle
+  0.00     53.90     0.00        2     0.00     0.00  fdUnitsEnergyFlux
+  0.00     53.90     0.00        2     0.00     0.00  fdUnitsPower
+  0.00     53.90     0.00        2     0.00     0.00  fsUnitsAngMom
+  0.00     53.90     0.00        2     0.00     0.00  fsUnitsAngle
+  0.00     53.90     0.00        2     0.00     0.00  fsUnitsEnergyFlux
+  0.00     53.90     0.00        1     0.00     0.00  InfileCopy
+  0.00     53.90     0.00        1     0.00     0.00  InitializeControl
+  0.00     53.90     0.00        1     0.00     0.00  InitializeControlEvolve
+  0.00     53.90     0.00        1     0.00     0.00  InitializeHalts
+  0.00     53.90     0.00        1     0.00     0.00  InitializeModule
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptions
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsAtmEsc
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsBinary
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsDistOrb
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsDistRot
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsEqtide
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsFlare
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsGalHabit
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsGeneral
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsPoise
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsRadheat
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsSpiNBody
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsStellar
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOptionsThermint
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutput
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputAtmEsc
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputBinary
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputDistOrb
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputDistRot
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputEqtide
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputFlare
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputGalHabit
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputGeneral
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputPoise
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputRadheat
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputSpiNBody
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputStellar
+  0.00     53.90     0.00        1     0.00     0.00  InitializeOutputThermint
+  0.00     53.90     0.00        1     0.00     0.00  InitializeUpdate
+  0.00     53.90     0.00        1     0.00     0.00  LogHalt
+  0.00     53.90     0.00        1     0.00     0.00  LogIntegration
+  0.00     53.90     0.00        1     0.00     0.00  LogOptions
+  0.00     53.90     0.00        1     0.00     0.00  LogUnits
+  0.00     53.90     0.00        1     0.00     0.00  ReadBodyFileNames
+  0.00     53.90     0.00        1     0.00     0.01  ReadInitialOptions
+  0.00     53.90     0.00        1     0.00     0.03  ReadOptions
+  0.00     53.90     0.00        1     0.00     0.00  ReadOptionsGeneral
+  0.00     53.90     0.00        1     0.00     0.00  ReadOptionsModules
+  0.00     53.90     0.00        1     0.00     0.00  Unrecognized
+  0.00     53.90     0.00        1     0.00     0.00  UpdateCopy
+  0.00     53.90     0.00        1     0.00     0.00  VerifyHalts
+  0.00     53.90     0.00        1     0.00     0.00  VerifyIntegration
+  0.00     53.90     0.00        1     0.00     0.00  VerifyOptions
+  0.00     53.90     0.00        1     0.00     0.00  iAssignMassUnit
+  0.00     53.90     0.00        1     0.00     0.00  iAssignUnitAngle
+  0.00     53.90     0.00        1     0.00     0.00  iAssignUnitLength
+  0.00     53.90     0.00        1     0.00     0.00  iAssignUnitTime
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.02% of 53.90 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    0.00   53.88                 main [1]
+                0.27   53.58       1/1           Evolve [2]
+                0.00    0.03       1/1           ReadOptions [19]
+                0.00    0.01       2/2           WriteLog [22]
+                0.00    0.00       1/1           InitializeOptions [226]
+                0.00    0.00       1/1           InitializeOutput [240]
+                0.00    0.00       1/1           VerifyOptions [266]
+-----------------------------------------------
+                0.27   53.58       1/1           main [1]
+[2]     99.9    0.27   53.58       1         Evolve [2]
+               11.71   41.51 5291461/5291461     RungeKutta4Step [3]
+                0.11    0.17 5291462/21165847     PropertiesAuxiliary [8]
+                0.05    0.00 5291461/5291461     fbCheckHalt [17]
+                0.03    0.00 26457305/26457305     ForceBehaviorSpiNBody [18]
+                0.00    0.00       4/21165850     fdGetUpdateInfo [4]
+                0.00    0.00       5/5291466     fdNextOutput [20]
+                0.00    0.00       4/4           WriteOutput [197]
+                0.00    0.00       1/5291462     AssignDt [30]
+                0.00    0.00       1/1           UpdateCopy [263]
+-----------------------------------------------
+               11.71   41.51 5291461/5291461     Evolve [2]
+[3]     98.7   11.71   41.51 5291461         RungeKutta4Step [3]
+               16.99   22.54 21165844/21165850     fdGetUpdateInfo [4]
+                0.51    0.61 5291461/5291461     BodyCopy [9]
+                0.33    0.51 15874383/21165847     PropertiesAuxiliary [8]
+                0.02    0.00 5291461/5291466     fdNextOutput [20]
+                0.00    0.00 5291461/5291462     AssignDt [30]
+-----------------------------------------------
+                0.00    0.00       2/21165850     WriteLog [22]
+                0.00    0.00       4/21165850     Evolve [2]
+               16.99   22.54 21165844/21165850     RungeKutta4Step [3]
+[4]     73.3   16.99   22.54 21165850         fdGetUpdateInfo [4]
+               12.59    0.00 105829250/105829250     fdDVelXDt [5]
+                4.59    0.00 105829250/105829250     fdDVelYDt [6]
+                3.64    0.00 105829250/105829250     fdDVelZDt [7]
+                0.64    0.00 105829250/105829250     fdDPositionZDt [10]
+                0.55    0.00 105829250/105829250     fdDPositionYDt [13]
+                0.54    0.00 105829250/105829250     fdDPositionXDt [14]
+-----------------------------------------------
+               12.59    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[5]     23.4   12.59    0.00 105829250         fdDVelXDt [5]
+-----------------------------------------------
+                4.59    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[6]      8.5    4.59    0.00 105829250         fdDVelYDt [6]
+-----------------------------------------------
+                3.64    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[7]      6.8    3.64    0.00 105829250         fdDVelZDt [7]
+-----------------------------------------------
+                0.00    0.00       2/21165847     WriteLog [22]
+                0.11    0.17 5291462/21165847     Evolve [2]
+                0.33    0.51 15874383/21165847     RungeKutta4Step [3]
+[8]      2.1    0.44    0.68 21165847         PropertiesAuxiliary [8]
+                0.26    0.36 21165847/21165847     PropsAuxGeneral [11]
+                0.06    0.00 105829235/105829235     PropertiesSpiNBody [16]
+-----------------------------------------------
+                0.51    0.61 5291461/5291461     RungeKutta4Step [3]
+[9]      2.1    0.51    0.61 5291461         BodyCopy [9]
+                0.61    0.00 26457305/26457305     BodyCopySpiNBody [12]
+-----------------------------------------------
+                0.64    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[10]     1.2    0.64    0.00 105829250         fdDPositionZDt [10]
+-----------------------------------------------
+                0.26    0.36 21165847/21165847     PropertiesAuxiliary [8]
+[11]     1.2    0.26    0.36 21165847         PropsAuxGeneral [11]
+                0.36    0.00 84663388/84663388     fdSemiToMeanMotion [15]
+-----------------------------------------------
+                0.61    0.00 26457305/26457305     BodyCopy [9]
+[12]     1.1    0.61    0.00 26457305         BodyCopySpiNBody [12]
+-----------------------------------------------
+                0.55    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[13]     1.0    0.55    0.00 105829250         fdDPositionYDt [13]
+-----------------------------------------------
+                0.54    0.00 105829250/105829250     fdGetUpdateInfo [4]
+[14]     1.0    0.54    0.00 105829250         fdDPositionXDt [14]
+-----------------------------------------------
+                0.36    0.00 84663388/84663388     PropsAuxGeneral [11]
+[15]     0.7    0.36    0.00 84663388         fdSemiToMeanMotion [15]
+-----------------------------------------------
+                0.06    0.00 105829235/105829235     PropertiesAuxiliary [8]
+[16]     0.1    0.06    0.00 105829235         PropertiesSpiNBody [16]
+-----------------------------------------------
+                0.05    0.00 5291461/5291461     Evolve [2]
+[17]     0.1    0.05    0.00 5291461         fbCheckHalt [17]
+-----------------------------------------------
+                0.03    0.00 26457305/26457305     Evolve [2]
+[18]     0.1    0.03    0.00 26457305         ForceBehaviorSpiNBody [18]
+-----------------------------------------------
+                0.00    0.03       1/1           main [1]
+[19]     0.0    0.00    0.03       1         ReadOptions [19]
+                0.02    0.00       5/5           ReadOutputOrder [21]
+                0.00    0.01       1/1           ReadInitialOptions [29]
+                0.00    0.00       1/1           InitializeControl [222]
+                0.00    0.00       1/1           ReadOptionsGeneral [260]
+                0.00    0.00       1/1           ReadOptionsModules [261]
+                0.00    0.00       1/1           Unrecognized [262]
+-----------------------------------------------
+                0.00    0.00       5/5291466     Evolve [2]
+                0.02    0.00 5291461/5291466     RungeKutta4Step [3]
+[20]     0.0    0.02    0.00 5291466         fdNextOutput [20]
+-----------------------------------------------
+                0.02    0.00       5/5           ReadOptions [19]
+[21]     0.0    0.02    0.00       5         ReadOutputOrder [21]
+                0.00    0.00  124500/124574      sLower [31]
+                0.00    0.00       5/12          AddOptionStringArray [60]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/11          UpdateFoundOptionMulti [65]
+-----------------------------------------------
+                0.00    0.01       2/2           main [1]
+[22]     0.0    0.00    0.01       2         WriteLog [22]
+                0.00    0.01       2/2           LogBody [24]
+                0.00    0.00       2/21165850     fdGetUpdateInfo [4]
+                0.00    0.00       2/21165847     PropertiesAuxiliary [8]
+                0.00    0.00       2/2           LogSystem [205]
+                0.00    0.00       1/1           LogOptions [257]
+-----------------------------------------------
+                0.01    0.00      10/10          LogBody [24]
+[23]     0.0    0.01    0.00      10         LogOutputOrder [23]
+                0.00    0.00      10/40          WriteVelZ [52]
+                0.00    0.00      10/40          WriteVelY [51]
+                0.00    0.00      10/40          WriteVelX [50]
+                0.00    0.00      10/40          WritePositionZ [49]
+                0.00    0.00      10/40          WritePositionY [48]
+                0.00    0.00      10/40          WritePositionX [47]
+                0.00    0.00      10/32          WriteDeltaTime [54]
+                0.00    0.00      10/32          WriteTime [55]
+-----------------------------------------------
+                0.00    0.01       2/2           WriteLog [22]
+[24]     0.0    0.00    0.01       2         LogBody [24]
+                0.01    0.00      10/10          LogOutputOrder [23]
+                0.00    0.00      40/118         WriteLogEntry [37]
+                0.00    0.00      10/10          PrintModuleList [69]
+                0.00    0.00      10/10          LogBodyRelations [66]
+                0.00    0.00      10/10          LogBodySpiNBody [67]
+                0.00    0.00      10/10          LogGridOutput [68]
+-----------------------------------------------
+                                                 <spontaneous>
+[25]     0.0    0.01    0.00                 fdD235UNumCrustDt [25]
+-----------------------------------------------
+                                                 <spontaneous>
+[26]     0.0    0.01    0.00                 fdSemiToPeriod [26]
+-----------------------------------------------
+                0.01    0.00       5/5           FinalizeModule [28]
+[27]     0.0    0.01    0.00       5         AddModuleSpiNBody [27]
+-----------------------------------------------
+                0.00    0.01       5/5           ReadInitialOptions [29]
+[28]     0.0    0.00    0.01       5         FinalizeModule [28]
+                0.01    0.00       5/5           AddModuleSpiNBody [27]
+-----------------------------------------------
+                0.00    0.01       1/1           ReadOptions [19]
+[29]     0.0    0.00    0.01       1         ReadInitialOptions [29]
+                0.00    0.01       5/5           FinalizeModule [28]
+                0.00    0.00       6/6           InitializeInput [82]
+                0.00    0.00       6/6           ReadVerbose [138]
+                0.00    0.00       6/6           ReadUnitMass [134]
+                0.00    0.00       6/6           ReadUnitTime [136]
+                0.00    0.00       6/6           ReadUnitAngle [132]
+                0.00    0.00       6/6           ReadUnitLength [133]
+                0.00    0.00       6/6           ReadUnitTemp [135]
+                0.00    0.00       6/6           ReadSystemName [130]
+                0.00    0.00       6/6           ReadModules [115]
+                0.00    0.00       1/1           ReadBodyFileNames [259]
+                0.00    0.00       1/2           InitializeBodyModules [204]
+                0.00    0.00       1/1           InitializeModule [225]
+-----------------------------------------------
+                0.00    0.00       1/5291462     Evolve [2]
+                0.00    0.00 5291461/5291462     RungeKutta4Step [3]
+[30]     0.0    0.00    0.00 5291462         AssignDt [30]
+-----------------------------------------------
+                0.00    0.00       1/124574      iAssignUnitTime [270]
+                0.00    0.00       2/124574      iAssignMassUnit [267]
+                0.00    0.00       2/124574      iAssignUnitAngle [268]
+                0.00    0.00       2/124574      iAssignUnitLength [269]
+                0.00    0.00       2/124574      VerifyIntegration [265]
+                0.00    0.00       5/124574      iAssignTempUnit [196]
+                0.00    0.00      60/124574      ReadModules [115]
+                0.00    0.00  124500/124574      ReadOutputOrder [21]
+[31]     0.0    0.00    0.00  124574         sLower [31]
+-----------------------------------------------
+                0.00    0.00     139/9546        InitializeInput [82]
+                0.00    0.00    9407/9546        GetLine [33]
+[32]     0.0    0.00    0.00    9546         CheckComment [32]
+-----------------------------------------------
+                0.00    0.00      12/406         AddOptionStringArray [60]
+                0.00    0.00      72/406         AddOptionString [43]
+                0.00    0.00      77/406         AddOptionInt [41]
+                0.00    0.00     245/406         AddOptionDouble [35]
+[33]     0.0    0.00    0.00     406         GetLine [33]
+                0.00    0.00    9407/9546        CheckComment [32]
+-----------------------------------------------
+                0.00    0.00       1/283         LogHalt [255]
+                0.00    0.00       4/283         LogIntegration [256]
+                0.00    0.00     118/283         WriteLogEntry [37]
+                0.00    0.00     160/283         WriteOutput [197]
+[34]     0.0    0.00    0.00     283         fprintd [34]
+-----------------------------------------------
+                0.00    0.00       5/245         ReadPositionX [163]
+                0.00    0.00       5/245         ReadPositionY [164]
+                0.00    0.00       5/245         ReadPositionZ [165]
+                0.00    0.00       5/245         ReadVelX [167]
+                0.00    0.00       5/245         ReadVelY [168]
+                0.00    0.00       5/245         ReadVelZ [169]
+                0.00    0.00       5/245         ReadMeanA [161]
+                0.00    0.00       6/245         ReadAge [83]
+                0.00    0.00       6/245         ReadAlbedoGlobal [84]
+                0.00    0.00       6/245         ReadEta [96]
+                0.00    0.00       6/245         ReadOutputTime [119]
+                0.00    0.00       6/245         ReadStopTime [129]
+                0.00    0.00       6/245         ReadTimeStep [131]
+                0.00    0.00       6/245         ReadEcc [95]
+                0.00    0.00       6/245         ReadHaltMaxEcc [97]
+                0.00    0.00       6/245         ReadHaltMinEcc [99]
+                0.00    0.00       6/245         ReadHaltMinObl [100]
+                0.00    0.00       6/245         ReadHaltMinSemi [101]
+                0.00    0.00       6/245         ReadHecc [103]
+                0.00    0.00       6/245         ReadKecc [106]
+                0.00    0.00       6/245         ReadLongP [110]
+                0.00    0.00       6/245         ReadLongA [109]
+                0.00    0.00       6/245         ReadArgP [85]
+                0.00    0.00       6/245         ReadInc [104]
+                0.00    0.00       6/245         ReadLXUV [107]
+                0.00    0.00       6/245         ReadMass [111]
+                0.00    0.00       6/245         ReadMeanMotion [113]
+                0.00    0.00       6/245         ReadMinValue [114]
+                0.00    0.00       6/245         ReadObliquity [116]
+                0.00    0.00       6/245         ReadOrbPeriod [117]
+                0.00    0.00       6/245         ReadPrecA [121]
+                0.00    0.00       6/245         ReadDynEllip [94]
+                0.00    0.00       6/245         ReadRadius [122]
+                0.00    0.00       6/245         ReadRadiusGyration [123]
+                0.00    0.00       6/245         ReadRotPeriod [124]
+                0.00    0.00       6/245         ReadRotRate [125]
+                0.00    0.00       6/245         ReadRotVel [126]
+                0.00    0.00       6/245         ReadSemiMajorAxis [128]
+                0.00    0.00       6/245         ReadViscUMan [139]
+                0.00    0.00       6/245         ReadXobl [140]
+                0.00    0.00       6/245         ReadYobl [141]
+                0.00    0.00       6/245         ReadZobl [142]
+[35]     0.0    0.00    0.00     245         AddOptionDouble [35]
+                0.00    0.00     245/406         GetLine [33]
+-----------------------------------------------
+                0.00    0.00       1/119         LogUnits [258]
+                0.00    0.00     118/119         WriteLogEntry [37]
+[36]     0.0    0.00    0.00     119         CGSUnits [36]
+-----------------------------------------------
+                0.00    0.00      18/118         LogSystem [205]
+                0.00    0.00      40/118         LogBody [24]
+                0.00    0.00      60/118         LogBodySpiNBody [67]
+[37]     0.0    0.00    0.00     118         WriteLogEntry [37]
+                0.00    0.00     118/119         CGSUnits [36]
+                0.00    0.00     118/283         fprintd [34]
+                0.00    0.00      10/40          WriteVelZ [52]
+                0.00    0.00      10/40          WriteVelY [51]
+                0.00    0.00      10/40          WriteVelX [50]
+                0.00    0.00      10/40          WritePositionZ [49]
+                0.00    0.00      10/40          WritePositionY [48]
+                0.00    0.00      10/40          WritePositionX [47]
+                0.00    0.00      10/10          WriteHZLimitDryRunaway [71]
+                0.00    0.00      10/10          WriteBodyType [70]
+                0.00    0.00      10/10          WriteRadius [73]
+                0.00    0.00      10/10          WriteMass [72]
+                0.00    0.00       2/2           WriteLXUVTot [208]
+                0.00    0.00       2/2           WriteLongP [209]
+                0.00    0.00       2/32          WriteDeltaTime [54]
+                0.00    0.00       2/2           WriteKinEnergy [207]
+                0.00    0.00       2/2           WritePotEnergy [210]
+                0.00    0.00       2/2           WriteTotEnergy [212]
+                0.00    0.00       2/2           WriteTotAngMom [211]
+                0.00    0.00       2/32          WriteTime [55]
+                0.00    0.00       2/2           WriteAge [206]
+-----------------------------------------------
+                0.00    0.00       1/88          ReadOutputTime [119]
+                0.00    0.00       1/88          ReadStopTime [129]
+                0.00    0.00       2/88          WriteAge [206]
+                0.00    0.00       2/88          WriteTotAngMom [211]
+                0.00    0.00       6/88          fdUnitsPower [217]
+                0.00    0.00      12/88          fdUnitsEnergy [143]
+                0.00    0.00      32/88          WriteDeltaTime [54]
+                0.00    0.00      32/88          WriteTime [55]
+[38]     0.0    0.00    0.00      88         fdUnitsTime [38]
+-----------------------------------------------
+                0.00    0.00       1/79          ReadUnitMass [134]
+                0.00    0.00       1/79          ReadUnitTime [136]
+                0.00    0.00       1/79          ReadUnitAngle [132]
+                0.00    0.00       1/79          ReadUnitLength [133]
+                0.00    0.00       1/79          ReadSystemName [130]
+                0.00    0.00       1/79          ReadEta [96]
+                0.00    0.00       1/79          ReadOutputTime [119]
+                0.00    0.00       1/79          ReadStopTime [129]
+                0.00    0.00       1/79          ReadVarDt [137]
+                0.00    0.00       1/79          ReadDigits [90]
+                0.00    0.00       1/79          ReadDoForward [92]
+                0.00    0.00       1/79          ReadDoLog [93]
+                0.00    0.00       1/79          ReadMinValue [114]
+                0.00    0.00       1/79          ReadOverwrite [120]
+                0.00    0.00       5/79          ReadBodyName [86]
+                0.00    0.00       5/79          ReadEcc [95]
+                0.00    0.00       5/79          ReadLongP [110]
+                0.00    0.00       5/79          ReadLongA [109]
+                0.00    0.00       5/79          ReadInc [104]
+                0.00    0.00       5/79          ReadMass [111]
+                0.00    0.00       5/79          ReadObliquity [116]
+                0.00    0.00       5/79          ReadRadius [122]
+                0.00    0.00       5/79          ReadRadiusGyration [123]
+                0.00    0.00       5/79          ReadRotPeriod [124]
+                0.00    0.00       5/79          ReadSemiMajorAxis [128]
+                0.00    0.00       5/79          ReadMeanA [161]
+                0.00    0.00       5/79          ReadUseOrbParams [166]
+[39]     0.0    0.00    0.00      79         UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       2/78          fsUnitsAngMom [218]
+                0.00    0.00       2/78          fsUnitsEnergyFlux [220]
+                0.00    0.00       2/78          WriteAge [206]
+                0.00    0.00       8/78          fsUnitsEnergy [75]
+                0.00    0.00      32/78          WriteDeltaTime [54]
+                0.00    0.00      32/78          WriteTime [55]
+[40]     0.0    0.00    0.00      78         fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       6/77          ReadVerbose [138]
+                0.00    0.00       6/77          ReadBodyType [87]
+                0.00    0.00       6/77          ReadDigits [90]
+                0.00    0.00       6/77          ReadSciNot [127]
+                0.00    0.00      53/77          AddOptionBool [45]
+[41]     0.0    0.00    0.00      77         AddOptionInt [41]
+                0.00    0.00      77/406         GetLine [33]
+-----------------------------------------------
+                0.00    0.00       5/75          ReadModules [115]
+                0.00    0.00       5/75          ReadBodyName [86]
+                0.00    0.00       5/75          ReadEcc [95]
+                0.00    0.00       5/75          ReadLongP [110]
+                0.00    0.00       5/75          ReadLongA [109]
+                0.00    0.00       5/75          ReadInc [104]
+                0.00    0.00       5/75          ReadMass [111]
+                0.00    0.00       5/75          ReadObliquity [116]
+                0.00    0.00       5/75          ReadOutputOrder [21]
+                0.00    0.00       5/75          ReadRadius [122]
+                0.00    0.00       5/75          ReadRadiusGyration [123]
+                0.00    0.00       5/75          ReadRotPeriod [124]
+                0.00    0.00       5/75          ReadSemiMajorAxis [128]
+                0.00    0.00       5/75          ReadMeanA [161]
+                0.00    0.00       5/75          ReadUseOrbParams [166]
+[42]     0.0    0.00    0.00      75         NotPrimaryInput [42]
+-----------------------------------------------
+                0.00    0.00       6/72          ReadUnitMass [134]
+                0.00    0.00       6/72          ReadUnitTime [136]
+                0.00    0.00       6/72          ReadUnitAngle [132]
+                0.00    0.00       6/72          ReadUnitLength [133]
+                0.00    0.00       6/72          ReadUnitTemp [135]
+                0.00    0.00       6/72          ReadSystemName [130]
+                0.00    0.00       6/72          ReadOutFile [118]
+                0.00    0.00       6/72          ReadBodyName [86]
+                0.00    0.00       6/72          ReadColor [89]
+                0.00    0.00       6/72          ReadIntegrationMethod [105]
+                0.00    0.00       6/72          ReadLogFile [108]
+                0.00    0.00       6/72          ReadMassRad [112]
+[43]     0.0    0.00    0.00      72         AddOptionString [43]
+                0.00    0.00      72/406         GetLine [33]
+-----------------------------------------------
+                0.00    0.00       5/61          ReadAge [83]
+                0.00    0.00       5/61          ReadAlbedoGlobal [84]
+                0.00    0.00       5/61          ReadEta [96]
+                0.00    0.00       5/61          ReadOutputTime [119]
+                0.00    0.00       5/61          ReadStopTime [129]
+                0.00    0.00       5/61          ReadHaltMinEcc [99]
+                0.00    0.00       5/61          ReadHaltMinSemi [101]
+                0.00    0.00       5/61          ReadMeanMotion [113]
+                0.00    0.00       5/61          ReadMinValue [114]
+                0.00    0.00       5/61          ReadOrbPeriod [117]
+                0.00    0.00       5/61          ReadViscUMan [139]
+                0.00    0.00       6/61          ReadTimeStep [131]
+[44]     0.0    0.00    0.00      61         AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       5/53          ReadUseOrbParams [166]
+                0.00    0.00       6/53          ReadDoBackward [91]
+                0.00    0.00       6/53          ReadVarDt [137]
+                0.00    0.00       6/53          ReadDoForward [92]
+                0.00    0.00       6/53          ReadHaltMerge [98]
+                0.00    0.00       6/53          ReadHaltPosDeDt [102]
+                0.00    0.00       6/53          ReadDoLog [93]
+                0.00    0.00       6/53          ReadOverwrite [120]
+                0.00    0.00       6/53          ReadCalcDynEllip [88]
+[45]     0.0    0.00    0.00      53         AddOptionBool [45]
+                0.00    0.00      53/77          AddOptionInt [41]
+-----------------------------------------------
+                0.00    0.00       1/45          ReadSemiMajorAxis [128]
+                0.00    0.00       4/45          fdUnitsPower [217]
+                0.00    0.00       4/45          fdUnitsEnergyFlux [216]
+                0.00    0.00       4/45          WriteTotAngMom [211]
+                0.00    0.00      10/45          WriteHZLimitDryRunaway [71]
+                0.00    0.00      10/45          WriteRadius [73]
+                0.00    0.00      12/45          fdUnitsEnergy [143]
+[46]     0.0    0.00    0.00      45         fdUnitsLength [46]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[47]     0.0    0.00    0.00      40         WritePositionX [47]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[48]     0.0    0.00    0.00      40         WritePositionY [48]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[49]     0.0    0.00    0.00      40         WritePositionZ [49]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[50]     0.0    0.00    0.00      40         WriteVelX [50]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[51]     0.0    0.00    0.00      40         WriteVelY [51]
+-----------------------------------------------
+                0.00    0.00      10/40          WriteLogEntry [37]
+                0.00    0.00      10/40          LogOutputOrder [23]
+                0.00    0.00      20/40          WriteOutput [197]
+[52]     0.0    0.00    0.00      40         WriteVelZ [52]
+-----------------------------------------------
+                0.00    0.00       5/36          ReadBodyType [87]
+                0.00    0.00       5/36          ReadVarDt [137]
+                0.00    0.00       5/36          ReadDigits [90]
+                0.00    0.00       5/36          ReadDoForward [92]
+                0.00    0.00       5/36          ReadHaltPosDeDt [102]
+                0.00    0.00       5/36          ReadDoLog [93]
+                0.00    0.00       6/36          ReadSciNot [127]
+[53]     0.0    0.00    0.00      36         AssignDefaultInt [53]
+-----------------------------------------------
+                0.00    0.00       2/32          WriteLogEntry [37]
+                0.00    0.00      10/32          LogOutputOrder [23]
+                0.00    0.00      20/32          WriteOutput [197]
+[54]     0.0    0.00    0.00      32         WriteDeltaTime [54]
+                0.00    0.00      32/88          fdUnitsTime [38]
+                0.00    0.00      32/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       2/32          WriteLogEntry [37]
+                0.00    0.00      10/32          LogOutputOrder [23]
+                0.00    0.00      20/32          WriteOutput [197]
+[55]     0.0    0.00    0.00      32         WriteTime [55]
+                0.00    0.00      32/88          fdUnitsTime [38]
+                0.00    0.00      32/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       2/32          fsUnitsAngMom [218]
+                0.00    0.00       2/32          fsUnitsEnergyFlux [220]
+                0.00    0.00       8/32          fsUnitsEnergy [75]
+                0.00    0.00      10/32          WriteHZLimitDryRunaway [71]
+                0.00    0.00      10/32          WriteRadius [73]
+[56]     0.0    0.00    0.00      32         fsUnitsLength [56]
+-----------------------------------------------
+                0.00    0.00       2/20          fdUnitsPower [217]
+                0.00    0.00       2/20          WriteTotAngMom [211]
+                0.00    0.00       6/20          fdUnitsEnergy [143]
+                0.00    0.00      10/20          WriteMass [72]
+[57]     0.0    0.00    0.00      20         fdUnitsMass [57]
+-----------------------------------------------
+                0.00    0.00       2/20          fsUnitsAngMom [218]
+                0.00    0.00       8/20          fsUnitsEnergy [75]
+                0.00    0.00      10/20          WriteMass [72]
+[58]     0.0    0.00    0.00      20         fsUnitsMass [58]
+-----------------------------------------------
+                0.00    0.00       4/19          ReadSemiMajorAxis [128]
+                0.00    0.00       5/19          ReadMass [111]
+                0.00    0.00       5/19          ReadRadius [122]
+                0.00    0.00       5/19          ReadRotPeriod [124]
+[59]     0.0    0.00    0.00      19         dNegativeDouble [59]
+-----------------------------------------------
+                0.00    0.00       1/12          ReadBodyFileNames [259]
+                0.00    0.00       5/12          ReadOutputOrder [21]
+                0.00    0.00       6/12          ReadModules [115]
+[60]     0.0    0.00    0.00      12         AddOptionStringArray [60]
+                0.00    0.00      12/406         GetLine [33]
+                0.00    0.00      12/12          GetWords [62]
+-----------------------------------------------
+                0.00    0.00      12/12          GetWords [62]
+[61]     0.0    0.00    0.00      12         GetPos [61]
+-----------------------------------------------
+                0.00    0.00      12/12          AddOptionStringArray [60]
+[62]     0.0    0.00    0.00      12         GetWords [62]
+                0.00    0.00      12/12          GetPos [61]
+-----------------------------------------------
+                0.00    0.00       4/12          vxi [202]
+                0.00    0.00       4/12          vyi [203]
+                0.00    0.00       4/12          OrbElems2Helio [160]
+[63]     0.0    0.00    0.00      12         xinit [63]
+-----------------------------------------------
+                0.00    0.00       4/12          vxi [202]
+                0.00    0.00       4/12          vyi [203]
+                0.00    0.00       4/12          OrbElems2Helio [160]
+[64]     0.0    0.00    0.00      12         yinit [64]
+-----------------------------------------------
+                0.00    0.00       1/11          ReadBodyFileNames [259]
+                0.00    0.00       5/11          ReadModules [115]
+                0.00    0.00       5/11          ReadOutputOrder [21]
+[65]     0.0    0.00    0.00      11         UpdateFoundOptionMulti [65]
+-----------------------------------------------
+                0.00    0.00      10/10          LogBody [24]
+[66]     0.0    0.00    0.00      10         LogBodyRelations [66]
+-----------------------------------------------
+                0.00    0.00      10/10          LogBody [24]
+[67]     0.0    0.00    0.00      10         LogBodySpiNBody [67]
+                0.00    0.00      60/118         WriteLogEntry [37]
+-----------------------------------------------
+                0.00    0.00      10/10          LogBody [24]
+[68]     0.0    0.00    0.00      10         LogGridOutput [68]
+-----------------------------------------------
+                0.00    0.00      10/10          LogBody [24]
+[69]     0.0    0.00    0.00      10         PrintModuleList [69]
+-----------------------------------------------
+                0.00    0.00      10/10          WriteLogEntry [37]
+[70]     0.0    0.00    0.00      10         WriteBodyType [70]
+-----------------------------------------------
+                0.00    0.00      10/10          WriteLogEntry [37]
+[71]     0.0    0.00    0.00      10         WriteHZLimitDryRunaway [71]
+                0.00    0.00      10/45          fdUnitsLength [46]
+                0.00    0.00      10/32          fsUnitsLength [56]
+-----------------------------------------------
+                0.00    0.00      10/10          WriteLogEntry [37]
+[72]     0.0    0.00    0.00      10         WriteMass [72]
+                0.00    0.00      10/20          fdUnitsMass [57]
+                0.00    0.00      10/20          fsUnitsMass [58]
+-----------------------------------------------
+                0.00    0.00      10/10          WriteLogEntry [37]
+[73]     0.0    0.00    0.00      10         WriteRadius [73]
+                0.00    0.00      10/45          fdUnitsLength [46]
+                0.00    0.00      10/32          fsUnitsLength [56]
+-----------------------------------------------
+                0.00    0.00       1/9           ReadSystemName [130]
+                0.00    0.00       1/9           ReadEta [96]
+                0.00    0.00       1/9           ReadOutputTime [119]
+                0.00    0.00       1/9           ReadStopTime [129]
+                0.00    0.00       1/9           ReadVarDt [137]
+                0.00    0.00       1/9           ReadDigits [90]
+                0.00    0.00       1/9           ReadDoForward [92]
+                0.00    0.00       1/9           ReadDoLog [93]
+                0.00    0.00       1/9           ReadOverwrite [120]
+[74]     0.0    0.00    0.00       9         CheckDuplication [74]
+-----------------------------------------------
+                0.00    0.00       2/8           fsUnitsEnergyFlux [220]
+                0.00    0.00       2/8           WriteTotEnergy [212]
+                0.00    0.00       2/8           WritePotEnergy [210]
+                0.00    0.00       2/8           WriteKinEnergy [207]
+[75]     0.0    0.00    0.00       8         fsUnitsEnergy [75]
+                0.00    0.00       8/20          fsUnitsMass [58]
+                0.00    0.00       8/32          fsUnitsLength [56]
+                0.00    0.00       8/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[76]     0.0    0.00    0.00       8         xangle1 [76]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[77]     0.0    0.00    0.00       8         xangle2 [77]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[78]     0.0    0.00    0.00       8         yangle1 [78]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[79]     0.0    0.00    0.00       8         yangle2 [79]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[80]     0.0    0.00    0.00       8         zangle1 [80]
+-----------------------------------------------
+                0.00    0.00       8/8           OrbElems2Helio [160]
+[81]     0.0    0.00    0.00       8         zangle2 [81]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[82]     0.0    0.00    0.00       6         InitializeInput [82]
+                0.00    0.00     139/9546        CheckComment [32]
+                0.00    0.00       6/6           iGetNumLines [144]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[83]     0.0    0.00    0.00       6         ReadAge [83]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[84]     0.0    0.00    0.00       6         ReadAlbedoGlobal [84]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[85]     0.0    0.00    0.00       6         ReadArgP [85]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[86]     0.0    0.00    0.00       6         ReadBodyName [86]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[87]     0.0    0.00    0.00       6         ReadBodyType [87]
+                0.00    0.00       6/77          AddOptionInt [41]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[88]     0.0    0.00    0.00       6         ReadCalcDynEllip [88]
+                0.00    0.00       6/53          AddOptionBool [45]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[89]     0.0    0.00    0.00       6         ReadColor [89]
+                0.00    0.00       6/72          AddOptionString [43]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[90]     0.0    0.00    0.00       6         ReadDigits [90]
+                0.00    0.00       6/77          AddOptionInt [41]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[91]     0.0    0.00    0.00       6         ReadDoBackward [91]
+                0.00    0.00       6/53          AddOptionBool [45]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[92]     0.0    0.00    0.00       6         ReadDoForward [92]
+                0.00    0.00       6/53          AddOptionBool [45]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[93]     0.0    0.00    0.00       6         ReadDoLog [93]
+                0.00    0.00       6/53          AddOptionBool [45]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[94]     0.0    0.00    0.00       6         ReadDynEllip [94]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[95]     0.0    0.00    0.00       6         ReadEcc [95]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[96]     0.0    0.00    0.00       6         ReadEta [96]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[97]     0.0    0.00    0.00       6         ReadHaltMaxEcc [97]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[98]     0.0    0.00    0.00       6         ReadHaltMerge [98]
+                0.00    0.00       6/53          AddOptionBool [45]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[99]     0.0    0.00    0.00       6         ReadHaltMinEcc [99]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[100]    0.0    0.00    0.00       6         ReadHaltMinObl [100]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[101]    0.0    0.00    0.00       6         ReadHaltMinSemi [101]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[102]    0.0    0.00    0.00       6         ReadHaltPosDeDt [102]
+                0.00    0.00       6/53          AddOptionBool [45]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[103]    0.0    0.00    0.00       6         ReadHecc [103]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[104]    0.0    0.00    0.00       6         ReadInc [104]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[105]    0.0    0.00    0.00       6         ReadIntegrationMethod [105]
+                0.00    0.00       6/72          AddOptionString [43]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[106]    0.0    0.00    0.00       6         ReadKecc [106]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[107]    0.0    0.00    0.00       6         ReadLXUV [107]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[108]    0.0    0.00    0.00       6         ReadLogFile [108]
+                0.00    0.00       6/72          AddOptionString [43]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[109]    0.0    0.00    0.00       6         ReadLongA [109]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[110]    0.0    0.00    0.00       6         ReadLongP [110]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[111]    0.0    0.00    0.00       6         ReadMass [111]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/19          dNegativeDouble [59]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[112]    0.0    0.00    0.00       6         ReadMassRad [112]
+                0.00    0.00       6/72          AddOptionString [43]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[113]    0.0    0.00    0.00       6         ReadMeanMotion [113]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[114]    0.0    0.00    0.00       6         ReadMinValue [114]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[115]    0.0    0.00    0.00       6         ReadModules [115]
+                0.00    0.00      60/124574      sLower [31]
+                0.00    0.00       6/12          AddOptionStringArray [60]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/11          UpdateFoundOptionMulti [65]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[116]    0.0    0.00    0.00       6         ReadObliquity [116]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[117]    0.0    0.00    0.00       6         ReadOrbPeriod [117]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[118]    0.0    0.00    0.00       6         ReadOutFile [118]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       5/5           AssignDefaultString [145]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[119]    0.0    0.00    0.00       6         ReadOutputTime [119]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/88          fdUnitsTime [38]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[120]    0.0    0.00    0.00       6         ReadOverwrite [120]
+                0.00    0.00       6/53          AddOptionBool [45]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[121]    0.0    0.00    0.00       6         ReadPrecA [121]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[122]    0.0    0.00    0.00       6         ReadRadius [122]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/19          dNegativeDouble [59]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[123]    0.0    0.00    0.00       6         ReadRadiusGyration [123]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[124]    0.0    0.00    0.00       6         ReadRotPeriod [124]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/19          dNegativeDouble [59]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[125]    0.0    0.00    0.00       6         ReadRotRate [125]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[126]    0.0    0.00    0.00       6         ReadRotVel [126]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[127]    0.0    0.00    0.00       6         ReadSciNot [127]
+                0.00    0.00       6/77          AddOptionInt [41]
+                0.00    0.00       6/36          AssignDefaultInt [53]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[128]    0.0    0.00    0.00       6         ReadSemiMajorAxis [128]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+                0.00    0.00       4/19          dNegativeDouble [59]
+                0.00    0.00       1/45          fdUnitsLength [46]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[129]    0.0    0.00    0.00       6         ReadStopTime [129]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/88          fdUnitsTime [38]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[130]    0.0    0.00    0.00       6         ReadSystemName [130]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[131]    0.0    0.00    0.00       6         ReadTimeStep [131]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       6/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[132]    0.0    0.00    0.00       6         ReadUnitAngle [132]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       1/1           iAssignUnitAngle [268]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[133]    0.0    0.00    0.00       6         ReadUnitLength [133]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       1/1           iAssignUnitLength [269]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[134]    0.0    0.00    0.00       6         ReadUnitMass [134]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       1/1           iAssignMassUnit [267]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[135]    0.0    0.00    0.00       6         ReadUnitTemp [135]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       5/5           iAssignTempUnit [196]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[136]    0.0    0.00    0.00       6         ReadUnitTime [136]
+                0.00    0.00       6/72          AddOptionString [43]
+                0.00    0.00       1/1           iAssignUnitTime [270]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[137]    0.0    0.00    0.00       6         ReadVarDt [137]
+                0.00    0.00       6/53          AddOptionBool [45]
+                0.00    0.00       5/36          AssignDefaultInt [53]
+                0.00    0.00       1/9           CheckDuplication [74]
+                0.00    0.00       1/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadInitialOptions [29]
+[138]    0.0    0.00    0.00       6         ReadVerbose [138]
+                0.00    0.00       6/77          AddOptionInt [41]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[139]    0.0    0.00    0.00       6         ReadViscUMan [139]
+                0.00    0.00       6/245         AddOptionDouble [35]
+                0.00    0.00       5/61          AssignDefaultDouble [44]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[140]    0.0    0.00    0.00       6         ReadXobl [140]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[141]    0.0    0.00    0.00       6         ReadYobl [141]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       6/6           ReadOptionsGeneral [260]
+[142]    0.0    0.00    0.00       6         ReadZobl [142]
+                0.00    0.00       6/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       2/6           WriteTotEnergy [212]
+                0.00    0.00       2/6           WritePotEnergy [210]
+                0.00    0.00       2/6           WriteKinEnergy [207]
+[143]    0.0    0.00    0.00       6         fdUnitsEnergy [143]
+                0.00    0.00      12/45          fdUnitsLength [46]
+                0.00    0.00      12/88          fdUnitsTime [38]
+                0.00    0.00       6/20          fdUnitsMass [57]
+-----------------------------------------------
+                0.00    0.00       6/6           InitializeInput [82]
+[144]    0.0    0.00    0.00       6         iGetNumLines [144]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOutFile [118]
+[145]    0.0    0.00    0.00       5         AssignDefaultString [145]
+-----------------------------------------------
+                0.00    0.00       5/5           fiNumHalts [195]
+[146]    0.0    0.00    0.00       5         CountHaltsSpiNBody [146]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[147]    0.0    0.00    0.00       5         FinalizeUpdatePositionXSpiNBody [147]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[148]    0.0    0.00    0.00       5         FinalizeUpdatePositionYSpiNBody [148]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[149]    0.0    0.00    0.00       5         FinalizeUpdatePositionZSpiNBody [149]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[150]    0.0    0.00    0.00       5         FinalizeUpdateVelXSpiNBody [150]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[151]    0.0    0.00    0.00       5         FinalizeUpdateVelYSpiNBody [151]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[152]    0.0    0.00    0.00       5         FinalizeUpdateVelZSpiNBody [152]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeBodySpiNBody [154]
+[153]    0.0    0.00    0.00       5         Helio2Bary [153]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[154]    0.0    0.00    0.00       5         InitializeBodySpiNBody [154]
+                0.00    0.00       5/5           OrbElems2Helio [160]
+                0.00    0.00       5/5           Helio2Bary [153]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeControl [222]
+[155]    0.0    0.00    0.00       5         InitializeControlNULL [155]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[156]    0.0    0.00    0.00       5         InitializeUpdateBodyPerts [156]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdate [254]
+[157]    0.0    0.00    0.00       5         InitializeUpdateSpiNBody [157]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[158]    0.0    0.00    0.00       5         InitializeUpdateTmpBody [158]
+                0.00    0.00       5/5           InitializeUpdateTmpBodySpiNBody [159]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeUpdateTmpBody [158]
+[159]    0.0    0.00    0.00       5         InitializeUpdateTmpBodySpiNBody [159]
+-----------------------------------------------
+                0.00    0.00       5/5           InitializeBodySpiNBody [154]
+[160]    0.0    0.00    0.00       5         OrbElems2Helio [160]
+                0.00    0.00       8/8           xangle1 [76]
+                0.00    0.00       8/8           xangle2 [77]
+                0.00    0.00       8/8           yangle1 [78]
+                0.00    0.00       8/8           yangle2 [79]
+                0.00    0.00       8/8           zangle1 [80]
+                0.00    0.00       8/8           zangle2 [81]
+                0.00    0.00       4/4           kepler_eqn [200]
+                0.00    0.00       4/12          xinit [63]
+                0.00    0.00       4/12          yinit [64]
+                0.00    0.00       4/4           vxi [202]
+                0.00    0.00       4/4           vyi [203]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[161]    0.0    0.00    0.00       5         ReadMeanA [161]
+                0.00    0.00       5/245         AddOptionDouble [35]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsModules [261]
+[162]    0.0    0.00    0.00       5         ReadOptionsSpiNBody [162]
+                0.00    0.00       5/5           ReadUseOrbParams [166]
+                0.00    0.00       5/5           ReadMeanA [161]
+                0.00    0.00       5/5           ReadVelZ [169]
+                0.00    0.00       5/5           ReadVelY [168]
+                0.00    0.00       5/5           ReadVelX [167]
+                0.00    0.00       5/5           ReadPositionZ [165]
+                0.00    0.00       5/5           ReadPositionY [164]
+                0.00    0.00       5/5           ReadPositionX [163]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[163]    0.0    0.00    0.00       5         ReadPositionX [163]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[164]    0.0    0.00    0.00       5         ReadPositionY [164]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[165]    0.0    0.00    0.00       5         ReadPositionZ [165]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[166]    0.0    0.00    0.00       5         ReadUseOrbParams [166]
+                0.00    0.00       5/53          AddOptionBool [45]
+                0.00    0.00       5/75          NotPrimaryInput [42]
+                0.00    0.00       5/79          UpdateFoundOption [39]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[167]    0.0    0.00    0.00       5         ReadVelX [167]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[168]    0.0    0.00    0.00       5         ReadVelY [168]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+[169]    0.0    0.00    0.00       5         ReadVelZ [169]
+                0.00    0.00       5/245         AddOptionDouble [35]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyHalts [264]
+[170]    0.0    0.00    0.00       5         VerifyHaltSpiNBody [170]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[171]    0.0    0.00    0.00       5         VerifyInterior [171]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[172]    0.0    0.00    0.00       5         VerifyMassRad [172]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[173]    0.0    0.00    0.00       5         VerifyModuleMulti [173]
+                0.00    0.00       5/5           VerifyModuleMultiDistOrbDistRot [177]
+                0.00    0.00       5/5           VerifyModuleMultiRadheatThermint [183]
+                0.00    0.00       5/5           VerifyModuleMultiEqtideDistOrb [178]
+                0.00    0.00       5/5           VerifyModuleMultiAtmescEqtide [174]
+                0.00    0.00       5/5           VerifyModuleMultiEqtideThermint [181]
+                0.00    0.00       5/5           VerifyModuleMultiAtmescEqtideThermint [175]
+                0.00    0.00       5/5           VerifyModuleMultiFlareStellar [182]
+                0.00    0.00       5/5           VerifyModuleMultiBinaryEqtide [176]
+                0.00    0.00       5/5           VerifyModuleMultiEqtideDistorb [179]
+                0.00    0.00       5/5           VerifyModuleMultiEqtideStellar [180]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[174]    0.0    0.00    0.00       5         VerifyModuleMultiAtmescEqtide [174]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[175]    0.0    0.00    0.00       5         VerifyModuleMultiAtmescEqtideThermint [175]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[176]    0.0    0.00    0.00       5         VerifyModuleMultiBinaryEqtide [176]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[177]    0.0    0.00    0.00       5         VerifyModuleMultiDistOrbDistRot [177]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[178]    0.0    0.00    0.00       5         VerifyModuleMultiEqtideDistOrb [178]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[179]    0.0    0.00    0.00       5         VerifyModuleMultiEqtideDistorb [179]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[180]    0.0    0.00    0.00       5         VerifyModuleMultiEqtideStellar [180]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[181]    0.0    0.00    0.00       5         VerifyModuleMultiEqtideThermint [181]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[182]    0.0    0.00    0.00       5         VerifyModuleMultiFlareStellar [182]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+[183]    0.0    0.00    0.00       5         VerifyModuleMultiRadheatThermint [183]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[184]    0.0    0.00    0.00       5         VerifyPerturbersSpiNBody [184]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[185]    0.0    0.00    0.00       5         VerifyPositionX [185]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[186]    0.0    0.00    0.00       5         VerifyPositionY [186]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[187]    0.0    0.00    0.00       5         VerifyPositionZ [187]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[188]    0.0    0.00    0.00       5         VerifyRotationGeneral [188]
+                0.00    0.00       5/5           fdPerToFreq [194]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyOptions [266]
+[189]    0.0    0.00    0.00       5         VerifySpiNBody [189]
+                0.00    0.00       5/5           VerifyPerturbersSpiNBody [184]
+                0.00    0.00       5/5           VerifyVelX [190]
+                0.00    0.00       5/5           VerifyVelY [191]
+                0.00    0.00       5/5           VerifyVelZ [192]
+                0.00    0.00       5/5           VerifyPositionX [185]
+                0.00    0.00       5/5           VerifyPositionY [186]
+                0.00    0.00       5/5           VerifyPositionZ [187]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[190]    0.0    0.00    0.00       5         VerifyVelX [190]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[191]    0.0    0.00    0.00       5         VerifyVelY [191]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifySpiNBody [189]
+[192]    0.0    0.00    0.00       5         VerifyVelZ [192]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyIntegration [265]
+[193]    0.0    0.00    0.00       5         bFileExists [193]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyRotationGeneral [188]
+[194]    0.0    0.00    0.00       5         fdPerToFreq [194]
+-----------------------------------------------
+                0.00    0.00       5/5           VerifyHalts [264]
+[195]    0.0    0.00    0.00       5         fiNumHalts [195]
+                0.00    0.00       5/5           CountHaltsSpiNBody [146]
+-----------------------------------------------
+                0.00    0.00       5/5           ReadUnitTemp [135]
+[196]    0.0    0.00    0.00       5         iAssignTempUnit [196]
+                0.00    0.00       5/124574      sLower [31]
+-----------------------------------------------
+                0.00    0.00       4/4           Evolve [2]
+[197]    0.0    0.00    0.00       4         WriteOutput [197]
+                0.00    0.00     160/283         fprintd [34]
+                0.00    0.00      20/40          WriteVelZ [52]
+                0.00    0.00      20/40          WriteVelY [51]
+                0.00    0.00      20/40          WriteVelX [50]
+                0.00    0.00      20/40          WritePositionZ [49]
+                0.00    0.00      20/40          WritePositionY [48]
+                0.00    0.00      20/40          WritePositionX [47]
+                0.00    0.00      20/32          WriteDeltaTime [54]
+                0.00    0.00      20/32          WriteTime [55]
+-----------------------------------------------
+                0.00    0.00       2/4           WriteKinEnergy [207]
+                0.00    0.00       2/4           fdTotEnergy [214]
+[198]    0.0    0.00    0.00       4         fdKinEnergy [198]
+-----------------------------------------------
+                0.00    0.00       2/4           WritePotEnergy [210]
+                0.00    0.00       2/4           fdTotEnergy [214]
+[199]    0.0    0.00    0.00       4         fdPotEnergy [199]
+-----------------------------------------------
+                0.00    0.00       4/4           OrbElems2Helio [160]
+[200]    0.0    0.00    0.00       4         kepler_eqn [200]
+                0.00    0.00       4/4           signf [201]
+-----------------------------------------------
+                0.00    0.00       4/4           kepler_eqn [200]
+[201]    0.0    0.00    0.00       4         signf [201]
+-----------------------------------------------
+                0.00    0.00       4/4           OrbElems2Helio [160]
+[202]    0.0    0.00    0.00       4         vxi [202]
+                0.00    0.00       4/12          xinit [63]
+                0.00    0.00       4/12          yinit [64]
+-----------------------------------------------
+                0.00    0.00       4/4           OrbElems2Helio [160]
+[203]    0.0    0.00    0.00       4         vyi [203]
+                0.00    0.00       4/12          xinit [63]
+                0.00    0.00       4/12          yinit [64]
+-----------------------------------------------
+                0.00    0.00       1/2           InitializeControlEvolve [223]
+                0.00    0.00       1/2           ReadInitialOptions [29]
+[204]    0.0    0.00    0.00       2         InitializeBodyModules [204]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLog [22]
+[205]    0.0    0.00    0.00       2         LogSystem [205]
+                0.00    0.00      18/118         WriteLogEntry [37]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[206]    0.0    0.00    0.00       2         WriteAge [206]
+                0.00    0.00       2/88          fdUnitsTime [38]
+                0.00    0.00       2/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[207]    0.0    0.00    0.00       2         WriteKinEnergy [207]
+                0.00    0.00       2/4           fdKinEnergy [198]
+                0.00    0.00       2/6           fdUnitsEnergy [143]
+                0.00    0.00       2/8           fsUnitsEnergy [75]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[208]    0.0    0.00    0.00       2         WriteLXUVTot [208]
+                0.00    0.00       2/2           fdUnitsEnergyFlux [216]
+                0.00    0.00       2/2           fsUnitsEnergyFlux [220]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[209]    0.0    0.00    0.00       2         WriteLongP [209]
+                0.00    0.00       2/2           fdUnitsAngle [215]
+                0.00    0.00       2/2           fsUnitsAngle [219]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[210]    0.0    0.00    0.00       2         WritePotEnergy [210]
+                0.00    0.00       2/4           fdPotEnergy [199]
+                0.00    0.00       2/6           fdUnitsEnergy [143]
+                0.00    0.00       2/8           fsUnitsEnergy [75]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[211]    0.0    0.00    0.00       2         WriteTotAngMom [211]
+                0.00    0.00       4/45          fdUnitsLength [46]
+                0.00    0.00       2/2           fdTotAngMom [213]
+                0.00    0.00       2/88          fdUnitsTime [38]
+                0.00    0.00       2/20          fdUnitsMass [57]
+                0.00    0.00       2/2           fsUnitsAngMom [218]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLogEntry [37]
+[212]    0.0    0.00    0.00       2         WriteTotEnergy [212]
+                0.00    0.00       2/2           fdTotEnergy [214]
+                0.00    0.00       2/6           fdUnitsEnergy [143]
+                0.00    0.00       2/8           fsUnitsEnergy [75]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteTotAngMom [211]
+[213]    0.0    0.00    0.00       2         fdTotAngMom [213]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteTotEnergy [212]
+[214]    0.0    0.00    0.00       2         fdTotEnergy [214]
+                0.00    0.00       2/4           fdKinEnergy [198]
+                0.00    0.00       2/4           fdPotEnergy [199]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLongP [209]
+[215]    0.0    0.00    0.00       2         fdUnitsAngle [215]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLXUVTot [208]
+[216]    0.0    0.00    0.00       2         fdUnitsEnergyFlux [216]
+                0.00    0.00       4/45          fdUnitsLength [46]
+                0.00    0.00       2/2           fdUnitsPower [217]
+-----------------------------------------------
+                0.00    0.00       2/2           fdUnitsEnergyFlux [216]
+[217]    0.0    0.00    0.00       2         fdUnitsPower [217]
+                0.00    0.00       6/88          fdUnitsTime [38]
+                0.00    0.00       4/45          fdUnitsLength [46]
+                0.00    0.00       2/20          fdUnitsMass [57]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteTotAngMom [211]
+[218]    0.0    0.00    0.00       2         fsUnitsAngMom [218]
+                0.00    0.00       2/20          fsUnitsMass [58]
+                0.00    0.00       2/32          fsUnitsLength [56]
+                0.00    0.00       2/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLongP [209]
+[219]    0.0    0.00    0.00       2         fsUnitsAngle [219]
+-----------------------------------------------
+                0.00    0.00       2/2           WriteLXUVTot [208]
+[220]    0.0    0.00    0.00       2         fsUnitsEnergyFlux [220]
+                0.00    0.00       2/8           fsUnitsEnergy [75]
+                0.00    0.00       2/32          fsUnitsLength [56]
+                0.00    0.00       2/78          fsUnitsTime [40]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadBodyFileNames [259]
+[221]    0.0    0.00    0.00       1         InfileCopy [221]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadOptions [19]
+[222]    0.0    0.00    0.00       1         InitializeControl [222]
+                0.00    0.00       5/5           InitializeControlNULL [155]
+-----------------------------------------------
+                0.00    0.00       1/1           VerifyOptions [266]
+[223]    0.0    0.00    0.00       1         InitializeControlEvolve [223]
+                0.00    0.00       1/2           InitializeBodyModules [204]
+-----------------------------------------------
+                0.00    0.00       1/1           VerifyOptions [266]
+[224]    0.0    0.00    0.00       1         InitializeHalts [224]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadInitialOptions [29]
+[225]    0.0    0.00    0.00       1         InitializeModule [225]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[226]    0.0    0.00    0.00       1         InitializeOptions [226]
+                0.00    0.00       1/1           InitializeOptionsGeneral [234]
+                0.00    0.00       1/1           InitializeOptionsEqtide [231]
+                0.00    0.00       1/1           InitializeOptionsRadheat [236]
+                0.00    0.00       1/1           InitializeOptionsDistOrb [229]
+                0.00    0.00       1/1           InitializeOptionsDistRot [230]
+                0.00    0.00       1/1           InitializeOptionsThermint [239]
+                0.00    0.00       1/1           InitializeOptionsAtmEsc [227]
+                0.00    0.00       1/1           InitializeOptionsStellar [238]
+                0.00    0.00       1/1           InitializeOptionsPoise [235]
+                0.00    0.00       1/1           InitializeOptionsBinary [228]
+                0.00    0.00       1/1           InitializeOptionsFlare [232]
+                0.00    0.00       1/1           InitializeOptionsGalHabit [233]
+                0.00    0.00       1/1           InitializeOptionsSpiNBody [237]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[227]    0.0    0.00    0.00       1         InitializeOptionsAtmEsc [227]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[228]    0.0    0.00    0.00       1         InitializeOptionsBinary [228]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[229]    0.0    0.00    0.00       1         InitializeOptionsDistOrb [229]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[230]    0.0    0.00    0.00       1         InitializeOptionsDistRot [230]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[231]    0.0    0.00    0.00       1         InitializeOptionsEqtide [231]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[232]    0.0    0.00    0.00       1         InitializeOptionsFlare [232]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[233]    0.0    0.00    0.00       1         InitializeOptionsGalHabit [233]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[234]    0.0    0.00    0.00       1         InitializeOptionsGeneral [234]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[235]    0.0    0.00    0.00       1         InitializeOptionsPoise [235]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[236]    0.0    0.00    0.00       1         InitializeOptionsRadheat [236]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[237]    0.0    0.00    0.00       1         InitializeOptionsSpiNBody [237]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[238]    0.0    0.00    0.00       1         InitializeOptionsStellar [238]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOptions [226]
+[239]    0.0    0.00    0.00       1         InitializeOptionsThermint [239]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[240]    0.0    0.00    0.00       1         InitializeOutput [240]
+                0.00    0.00       1/1           InitializeOutputGeneral [248]
+                0.00    0.00       1/1           InitializeOutputEqtide [245]
+                0.00    0.00       1/1           InitializeOutputRadheat [250]
+                0.00    0.00       1/1           InitializeOutputAtmEsc [241]
+                0.00    0.00       1/1           InitializeOutputStellar [252]
+                0.00    0.00       1/1           InitializeOutputDistOrb [243]
+                0.00    0.00       1/1           InitializeOutputDistRot [244]
+                0.00    0.00       1/1           InitializeOutputThermint [253]
+                0.00    0.00       1/1           InitializeOutputPoise [249]
+                0.00    0.00       1/1           InitializeOutputBinary [242]
+                0.00    0.00       1/1           InitializeOutputFlare [246]
+                0.00    0.00       1/1           InitializeOutputGalHabit [247]
+                0.00    0.00       1/1           InitializeOutputSpiNBody [251]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[241]    0.0    0.00    0.00       1         InitializeOutputAtmEsc [241]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[242]    0.0    0.00    0.00       1         InitializeOutputBinary [242]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[243]    0.0    0.00    0.00       1         InitializeOutputDistOrb [243]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[244]    0.0    0.00    0.00       1         InitializeOutputDistRot [244]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[245]    0.0    0.00    0.00       1         InitializeOutputEqtide [245]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[246]    0.0    0.00    0.00       1         InitializeOutputFlare [246]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[247]    0.0    0.00    0.00       1         InitializeOutputGalHabit [247]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[248]    0.0    0.00    0.00       1         InitializeOutputGeneral [248]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[249]    0.0    0.00    0.00       1         InitializeOutputPoise [249]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[250]    0.0    0.00    0.00       1         InitializeOutputRadheat [250]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[251]    0.0    0.00    0.00       1         InitializeOutputSpiNBody [251]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[252]    0.0    0.00    0.00       1         InitializeOutputStellar [252]
+-----------------------------------------------
+                0.00    0.00       1/1           InitializeOutput [240]
+[253]    0.0    0.00    0.00       1         InitializeOutputThermint [253]
+-----------------------------------------------
+                0.00    0.00       1/1           VerifyOptions [266]
+[254]    0.0    0.00    0.00       1         InitializeUpdate [254]
+                0.00    0.00       5/5           InitializeUpdateSpiNBody [157]
+                0.00    0.00       5/5           FinalizeUpdatePositionXSpiNBody [147]
+                0.00    0.00       5/5           FinalizeUpdatePositionYSpiNBody [148]
+                0.00    0.00       5/5           FinalizeUpdatePositionZSpiNBody [149]
+                0.00    0.00       5/5           FinalizeUpdateVelXSpiNBody [150]
+                0.00    0.00       5/5           FinalizeUpdateVelYSpiNBody [151]
+                0.00    0.00       5/5           FinalizeUpdateVelZSpiNBody [152]
+-----------------------------------------------
+                0.00    0.00       1/1           LogOptions [257]
+[255]    0.0    0.00    0.00       1         LogHalt [255]
+                0.00    0.00       1/283         fprintd [34]
+-----------------------------------------------
+                0.00    0.00       1/1           LogOptions [257]
+[256]    0.0    0.00    0.00       1         LogIntegration [256]
+                0.00    0.00       4/283         fprintd [34]
+-----------------------------------------------
+                0.00    0.00       1/1           WriteLog [22]
+[257]    0.0    0.00    0.00       1         LogOptions [257]
+                0.00    0.00       1/1           LogUnits [258]
+                0.00    0.00       1/1           LogIntegration [256]
+                0.00    0.00       1/1           LogHalt [255]
+-----------------------------------------------
+                0.00    0.00       1/1           LogOptions [257]
+[258]    0.0    0.00    0.00       1         LogUnits [258]
+                0.00    0.00       1/119         CGSUnits [36]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadInitialOptions [29]
+[259]    0.0    0.00    0.00       1         ReadBodyFileNames [259]
+                0.00    0.00       1/12          AddOptionStringArray [60]
+                0.00    0.00       1/1           InfileCopy [221]
+                0.00    0.00       1/11          UpdateFoundOptionMulti [65]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadOptions [19]
+[260]    0.0    0.00    0.00       1         ReadOptionsGeneral [260]
+                0.00    0.00       6/6           ReadZobl [142]
+                0.00    0.00       6/6           ReadYobl [141]
+                0.00    0.00       6/6           ReadXobl [140]
+                0.00    0.00       6/6           ReadRotVel [126]
+                0.00    0.00       6/6           ReadRotRate [125]
+                0.00    0.00       6/6           ReadRotPeriod [124]
+                0.00    0.00       6/6           ReadRadiusGyration [123]
+                0.00    0.00       6/6           ReadRadius [122]
+                0.00    0.00       6/6           ReadObliquity [116]
+                0.00    0.00       6/6           ReadViscUMan [139]
+                0.00    0.00       6/6           ReadCalcDynEllip [88]
+                0.00    0.00       6/6           ReadDynEllip [94]
+                0.00    0.00       6/6           ReadPrecA [121]
+                0.00    0.00       6/6           ReadOverwrite [120]
+                0.00    0.00       6/6           ReadSciNot [127]
+                0.00    0.00       6/6           ReadDigits [90]
+                0.00    0.00       6/6           ReadLongA [109]
+                0.00    0.00       6/6           ReadArgP [85]
+                0.00    0.00       6/6           ReadInc [104]
+                0.00    0.00       6/6           ReadSemiMajorAxis [128]
+                0.00    0.00       6/6           ReadOrbPeriod [117]
+                0.00    0.00       6/6           ReadBodyType [87]
+                0.00    0.00       6/6           ReadMeanMotion [113]
+                0.00    0.00       6/6           ReadEcc [95]
+                0.00    0.00       6/6           ReadMinValue [114]
+                0.00    0.00       6/6           ReadMassRad [112]
+                0.00    0.00       6/6           ReadMass [111]
+                0.00    0.00       6/6           ReadLXUV [107]
+                0.00    0.00       6/6           ReadLongP [110]
+                0.00    0.00       6/6           ReadLogFile [108]
+                0.00    0.00       6/6           ReadDoLog [93]
+                0.00    0.00       6/6           ReadKecc [106]
+                0.00    0.00       6/6           ReadIntegrationMethod [105]
+                0.00    0.00       6/6           ReadHecc [103]
+                0.00    0.00       6/6           ReadHaltPosDeDt [102]
+                0.00    0.00       6/6           ReadHaltMinSemi [101]
+                0.00    0.00       6/6           ReadHaltMinObl [100]
+                0.00    0.00       6/6           ReadHaltMinEcc [99]
+                0.00    0.00       6/6           ReadHaltMerge [98]
+                0.00    0.00       6/6           ReadHaltMaxEcc [97]
+                0.00    0.00       6/6           ReadDoForward [92]
+                0.00    0.00       6/6           ReadColor [89]
+                0.00    0.00       6/6           ReadBodyName [86]
+                0.00    0.00       6/6           ReadVarDt [137]
+                0.00    0.00       6/6           ReadTimeStep [131]
+                0.00    0.00       6/6           ReadStopTime [129]
+                0.00    0.00       6/6           ReadOutputTime [119]
+                0.00    0.00       6/6           ReadEta [96]
+                0.00    0.00       6/6           ReadOutFile [118]
+                0.00    0.00       6/6           ReadDoBackward [91]
+                0.00    0.00       6/6           ReadAlbedoGlobal [84]
+                0.00    0.00       6/6           ReadAge [83]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadOptions [19]
+[261]    0.0    0.00    0.00       1         ReadOptionsModules [261]
+                0.00    0.00       5/5           ReadOptionsSpiNBody [162]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadOptions [19]
+[262]    0.0    0.00    0.00       1         Unrecognized [262]
+-----------------------------------------------
+                0.00    0.00       1/1           Evolve [2]
+[263]    0.0    0.00    0.00       1         UpdateCopy [263]
+-----------------------------------------------
+                0.00    0.00       1/1           VerifyOptions [266]
+[264]    0.0    0.00    0.00       1         VerifyHalts [264]
+                0.00    0.00       5/5           fiNumHalts [195]
+                0.00    0.00       5/5           VerifyHaltSpiNBody [170]
+-----------------------------------------------
+                0.00    0.00       1/1           VerifyOptions [266]
+[265]    0.0    0.00    0.00       1         VerifyIntegration [265]
+                0.00    0.00       5/5           bFileExists [193]
+                0.00    0.00       2/124574      sLower [31]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[266]    0.0    0.00    0.00       1         VerifyOptions [266]
+                0.00    0.00       5/5           VerifyMassRad [172]
+                0.00    0.00       5/5           InitializeBodySpiNBody [154]
+                0.00    0.00       5/5           VerifyRotationGeneral [188]
+                0.00    0.00       5/5           VerifySpiNBody [189]
+                0.00    0.00       5/5           VerifyInterior [171]
+                0.00    0.00       5/5           VerifyModuleMulti [173]
+                0.00    0.00       5/5           InitializeUpdateBodyPerts [156]
+                0.00    0.00       5/5           InitializeUpdateTmpBody [158]
+                0.00    0.00       1/1           VerifyIntegration [265]
+                0.00    0.00       1/1           InitializeControlEvolve [223]
+                0.00    0.00       1/1           InitializeUpdate [254]
+                0.00    0.00       1/1           InitializeHalts [224]
+                0.00    0.00       1/1           VerifyHalts [264]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadUnitMass [134]
+[267]    0.0    0.00    0.00       1         iAssignMassUnit [267]
+                0.00    0.00       2/124574      sLower [31]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadUnitAngle [132]
+[268]    0.0    0.00    0.00       1         iAssignUnitAngle [268]
+                0.00    0.00       2/124574      sLower [31]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadUnitLength [133]
+[269]    0.0    0.00    0.00       1         iAssignUnitLength [269]
+                0.00    0.00       2/124574      sLower [31]
+-----------------------------------------------
+                0.00    0.00       1/1           ReadUnitTime [136]
+[270]    0.0    0.00    0.00       1         iAssignUnitTime [270]
+                0.00    0.00       1/124574      sLower [31]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [27] AddModuleSpiNBody     [259] ReadBodyFileNames     [181] VerifyModuleMultiEqtideThermint
+  [45] AddOptionBool          [86] ReadBodyName          [182] VerifyModuleMultiFlareStellar
+  [35] AddOptionDouble        [87] ReadBodyType          [183] VerifyModuleMultiRadheatThermint
+  [41] AddOptionInt           [88] ReadCalcDynEllip      [266] VerifyOptions
+  [43] AddOptionString        [89] ReadColor             [184] VerifyPerturbersSpiNBody
+  [60] AddOptionStringArray   [90] ReadDigits            [185] VerifyPositionX
+  [44] AssignDefaultDouble    [91] ReadDoBackward        [186] VerifyPositionY
+  [53] AssignDefaultInt       [92] ReadDoForward         [187] VerifyPositionZ
+ [145] AssignDefaultString    [93] ReadDoLog             [188] VerifyRotationGeneral
+  [30] AssignDt               [94] ReadDynEllip          [189] VerifySpiNBody
+   [9] BodyCopy               [95] ReadEcc               [190] VerifyVelX
+  [12] BodyCopySpiNBody       [96] ReadEta               [191] VerifyVelY
+  [36] CGSUnits               [97] ReadHaltMaxEcc        [192] VerifyVelZ
+  [32] CheckComment           [98] ReadHaltMerge         [206] WriteAge
+  [74] CheckDuplication       [99] ReadHaltMinEcc         [70] WriteBodyType
+ [146] CountHaltsSpiNBody    [100] ReadHaltMinObl         [54] WriteDeltaTime
+   [2] Evolve                [101] ReadHaltMinSemi        [71] WriteHZLimitDryRunaway
+  [28] FinalizeModule        [102] ReadHaltPosDeDt       [207] WriteKinEnergy
+ [147] FinalizeUpdatePositionXSpiNBody [103] ReadHecc    [208] WriteLXUVTot
+ [148] FinalizeUpdatePositionYSpiNBody [104] ReadInc      [22] WriteLog
+ [149] FinalizeUpdatePositionZSpiNBody [29] ReadInitialOptions [37] WriteLogEntry
+ [150] FinalizeUpdateVelXSpiNBody [105] ReadIntegrationMethod [209] WriteLongP
+ [151] FinalizeUpdateVelYSpiNBody [106] ReadKecc          [72] WriteMass
+ [152] FinalizeUpdateVelZSpiNBody [107] ReadLXUV         [197] WriteOutput
+  [18] ForceBehaviorSpiNBody [108] ReadLogFile            [47] WritePositionX
+  [33] GetLine               [109] ReadLongA              [48] WritePositionY
+  [61] GetPos                [110] ReadLongP              [49] WritePositionZ
+  [62] GetWords              [111] ReadMass              [210] WritePotEnergy
+ [153] Helio2Bary            [112] ReadMassRad            [73] WriteRadius
+ [221] InfileCopy            [161] ReadMeanA              [55] WriteTime
+ [204] InitializeBodyModules [113] ReadMeanMotion        [211] WriteTotAngMom
+ [154] InitializeBodySpiNBody [114] ReadMinValue         [212] WriteTotEnergy
+ [222] InitializeControl     [115] ReadModules            [50] WriteVelX
+ [223] InitializeControlEvolve [116] ReadObliquity        [51] WriteVelY
+ [155] InitializeControlNULL  [19] ReadOptions            [52] WriteVelZ
+ [224] InitializeHalts       [260] ReadOptionsGeneral    [193] bFileExists
+  [82] InitializeInput       [261] ReadOptionsModules     [59] dNegativeDouble
+ [225] InitializeModule      [162] ReadOptionsSpiNBody    [17] fbCheckHalt
+ [226] InitializeOptions     [117] ReadOrbPeriod          [25] fdD235UNumCrustDt
+ [227] InitializeOptionsAtmEsc [118] ReadOutFile          [14] fdDPositionXDt
+ [228] InitializeOptionsBinary [21] ReadOutputOrder       [13] fdDPositionYDt
+ [229] InitializeOptionsDistOrb [119] ReadOutputTime      [10] fdDPositionZDt
+ [230] InitializeOptionsDistRot [120] ReadOverwrite        [5] fdDVelXDt
+ [231] InitializeOptionsEqtide [163] ReadPositionX         [6] fdDVelYDt
+ [232] InitializeOptionsFlare [164] ReadPositionY          [7] fdDVelZDt
+ [233] InitializeOptionsGalHabit [165] ReadPositionZ       [4] fdGetUpdateInfo
+ [234] InitializeOptionsGeneral [121] ReadPrecA          [198] fdKinEnergy
+ [235] InitializeOptionsPoise [122] ReadRadius            [20] fdNextOutput
+ [236] InitializeOptionsRadheat [123] ReadRadiusGyration [194] fdPerToFreq
+ [237] InitializeOptionsSpiNBody [124] ReadRotPeriod     [199] fdPotEnergy
+ [238] InitializeOptionsStellar [125] ReadRotRate         [15] fdSemiToMeanMotion
+ [239] InitializeOptionsThermint [126] ReadRotVel         [26] fdSemiToPeriod
+ [240] InitializeOutput      [127] ReadSciNot            [213] fdTotAngMom
+ [241] InitializeOutputAtmEsc [128] ReadSemiMajorAxis    [214] fdTotEnergy
+ [242] InitializeOutputBinary [129] ReadStopTime         [215] fdUnitsAngle
+ [243] InitializeOutputDistOrb [130] ReadSystemName      [143] fdUnitsEnergy
+ [244] InitializeOutputDistRot [131] ReadTimeStep        [216] fdUnitsEnergyFlux
+ [245] InitializeOutputEqtide [132] ReadUnitAngle         [46] fdUnitsLength
+ [246] InitializeOutputFlare [133] ReadUnitLength         [57] fdUnitsMass
+ [247] InitializeOutputGalHabit [134] ReadUnitMass       [217] fdUnitsPower
+ [248] InitializeOutputGeneral [135] ReadUnitTemp         [38] fdUnitsTime
+ [249] InitializeOutputPoise [136] ReadUnitTime          [195] fiNumHalts
+ [250] InitializeOutputRadheat [166] ReadUseOrbParams     [34] fprintd
+ [251] InitializeOutputSpiNBody [137] ReadVarDt          [218] fsUnitsAngMom
+ [252] InitializeOutputStellar [167] ReadVelX            [219] fsUnitsAngle
+ [253] InitializeOutputThermint [168] ReadVelY            [75] fsUnitsEnergy
+ [254] InitializeUpdate      [169] ReadVelZ              [220] fsUnitsEnergyFlux
+ [156] InitializeUpdateBodyPerts [138] ReadVerbose        [56] fsUnitsLength
+ [157] InitializeUpdateSpiNBody [139] ReadViscUMan        [58] fsUnitsMass
+ [158] InitializeUpdateTmpBody [140] ReadXobl             [40] fsUnitsTime
+ [159] InitializeUpdateTmpBodySpiNBody [141] ReadYobl    [267] iAssignMassUnit
+  [24] LogBody               [142] ReadZobl              [196] iAssignTempUnit
+  [66] LogBodyRelations        [3] RungeKutta4Step       [268] iAssignUnitAngle
+  [67] LogBodySpiNBody       [262] Unrecognized          [269] iAssignUnitLength
+  [68] LogGridOutput         [263] UpdateCopy            [270] iAssignUnitTime
+ [255] LogHalt                [39] UpdateFoundOption     [144] iGetNumLines
+ [256] LogIntegration         [65] UpdateFoundOptionMulti [200] kepler_eqn
+ [257] LogOptions            [170] VerifyHaltSpiNBody     [31] sLower
+  [23] LogOutputOrder        [264] VerifyHalts           [201] signf
+ [205] LogSystem             [265] VerifyIntegration     [202] vxi
+ [258] LogUnits              [171] VerifyInterior        [203] vyi
+  [42] NotPrimaryInput       [172] VerifyMassRad          [76] xangle1
+ [160] OrbElems2Helio        [173] VerifyModuleMulti      [77] xangle2
+  [69] PrintModuleList       [174] VerifyModuleMultiAtmescEqtide [63] xinit
+   [8] PropertiesAuxiliary   [175] VerifyModuleMultiAtmescEqtideThermint [78] yangle1
+  [16] PropertiesSpiNBody    [176] VerifyModuleMultiBinaryEqtide [79] yangle2
+  [11] PropsAuxGeneral       [177] VerifyModuleMultiDistOrbDistRot [64] yinit
+  [83] ReadAge               [178] VerifyModuleMultiEqtideDistOrb [80] zangle1
+  [84] ReadAlbedoGlobal      [179] VerifyModuleMultiEqtideDistorb [81] zangle2
+  [85] ReadArgP              [180] VerifyModuleMultiEqtideStellar

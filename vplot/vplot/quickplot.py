@@ -41,7 +41,7 @@ def AlphaMap(r = 0, g = 0, b = 0):
     
   return LinearSegmentedColormap('AlphaMap', cdict)
 
-def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None, interactive = True, nolog = False):
+def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = None, interactive = True):
   '''
 
   '''
@@ -57,9 +57,6 @@ def QuickPlot(conf = None, bodies = None, xaxis = None, yaxis = None, aaxis = No
     yaxis = conf.yaxis
   if aaxis is None:
     aaxis = conf.aaxis
-  if nolog:
-    conf.xlog = False
-    conf.ylog = False
   
   # Output object
   output = GetArrays(bodies = bodies)

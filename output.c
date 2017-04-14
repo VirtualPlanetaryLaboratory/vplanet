@@ -1,4 +1,4 @@
- 
+
 /************************ OUTPUT.C **********************/
 /*
  * Rory Barnes, Wed May  7 16:38:28 PDT 2014
@@ -505,7 +505,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = control->Evolve.iDir*control->Evolve.dTime;
+  *dTmp = control->Evolve.dTime;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1590,5 +1590,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
+  InitializeOutputSpiNBody(output, fnWrite);
 
 }

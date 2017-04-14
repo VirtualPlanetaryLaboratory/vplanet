@@ -1199,9 +1199,8 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     /* Option was found */
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-    control->Evolve.bDoBackward = bTmp;
   } else
-    AssignDefaultInt(options,&control->Evolve.bDoBackward,files->iNumInputs);
+    control->Evolve.bDoBackward = atoi(options->cDefault);
 }
 
 /* Output File Name */
@@ -3389,5 +3388,6 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsSpiNBody(options,fnRead);
 
 }

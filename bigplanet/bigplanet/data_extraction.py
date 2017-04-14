@@ -6,18 +6,151 @@ simulations
 
 """
 
-from __future__ import division, print_function, absolute_import
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import numpy as np
 import os
+import sys
 import pandas as pd
 import h5py
 import pickle
+import multiprocessing as mlt
 
 # Tell module what it's allowed to import
 __all__ = ["reduce_dimensions",
            "aggregate_data",
            "Dataset",
-           "extract_data_hdf5"]
+           "extract_data_hdf5",
+           "data_from_dir_hdf5",
+           "add_column"]
+
+
+def find_logfile(direct):
+    """
+    Find path to logfile in given directory.
+
+    Parameters
+    ----------
+    direct : str
+        path to directory where logfile lives
+
+    Returns
+    -------
+    logfile : str
+        complete path to direct's logfile, if it exists
+    """
+
+    logcount = 0
+    for f in os.listdir(direct):
+        if f.endswith(".log"):
+            logfile = os.path.join(direct,f)
+            logcount = logcount + 1
+
+    # Ensure there's just one logfile
+    assert logcount == 1, "ERROR: There can only be one (log)! Number of logs: %d" % logcount
+
+    return logfile
+# end function
+
+
+def parse_log(logfile, body, param):
+    """"
+    Parse log file for one of a body's initial conditions and return it.  This
+    is useful for when a parameter is not outputted but one needs it later on
+    for bigplanet analysis.
+
+    Parameters
+    ----------
+    logfile : str
+        path to the logfile
+    body : str
+        name of body whose variable you're looking for
+    param : str
+        body's parameter
+
+    Returns
+    -------
+    param : float
+        initial condition of interest
+    """
+
+    # Open log file and get lines
+    with open(logfile) as handle:
+        lines = handle.readlines()
+
+    # Loop over all lines in the input file looking for body string of the form
+    # ----- BODY: planet ----
+    to_find_body = "BODY: %s" % body
+    for ii in range(0,len(lines)):
+
+        line = lines[ii].strip(' \t\n\r') # Remove whitespace
+
+        # Found it? If so, now loop over lines below it looking for param
+        # of the form (param)
+        if line.find(to_find_body) != -1:
+            to_find_param = "(%s)" % param
+            found_it = False
+            while not found_it:
+
+                # At the end of the file?
+                if ii == len(lines) - 1:
+                    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+
+                line = lines[ii].strip(' \t\n\r') # Remove whitespace
+
+                # Found it? Done!
+                if line.startswith(to_find_param):
+                    words = line.split()
+                    return float(words[-1])
+
+                # On to the next line
+                ii = ii + 1
+
+    # Didn't find it
+    raise RuntimeError("Couldn't find %s in %s." % (param, logfile))
+# end function
+
+
+def parse_infile(infile, param):
+    """"
+    Parse input file for one of a body's initial conditions and return it.  This
+    is useful for when a parameter is not outputted but one needs it later on
+    for analysis.
+
+    Parameters
+    ----------
+    infile : str
+        path to the input file.  Something like body.in
+    param : str
+        body's parameter
+
+    Returns
+    -------
+    param : float
+        initial condition of interest
+    """
+
+    # Open log file and get lines
+    with open(infile) as handle:
+        lines = handle.readlines()
+
+    # Loop over line, look for parameter
+    for ii in range(0,len(lines)):
+
+        # Remove whitespace
+        line = lines[ii].strip(' \t\n\r')
+
+        # Found it? Done!
+        # Correct line, if it exists, will look something like this:
+        # dParameter some_number # comments
+        if line.startswith(param):
+            words = line.split()
+            return float(words[1])
+
+    # Didn't find it, so why did you tell me to look for it?
+    raise RuntimeError("Couldn't find %s in %s." % (param, infile))
+# end function
+
 
 def get_cols(datadir=".",infiles=None):
     """
@@ -40,7 +173,7 @@ def get_cols(datadir=".",infiles=None):
     """
 
     if infiles is None:
-        IOError("infiles is None!  Must be list of input files.")
+        raise IOError("infiles is None!  Must be list of input files.")
 
     # Dict to hold all columns for each body [like time, semi, ecc ...]
     data_cols = {}
@@ -117,6 +250,7 @@ def get_dirs(src,order="none"):
     # No order, return via listdir which does NOT preserve order
     print("Finding simulation subdirectories in %s ordered by %s." % \
          (src, order))
+    sys.stdout.flush()
 
     # No order
     if order.lower() == "none":
@@ -126,7 +260,7 @@ def get_dirs(src,order="none"):
         dirs = sorted(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src)))
     # Not a valid option!
     else:
-        ValueError("Invalid order: %s." % order)
+        raise ValueError("Invalid order: %s." % order)
 
     return dirs
 #end function
@@ -189,7 +323,7 @@ def halt_check(direct,TOL=1.0e-6):
     for f in os.listdir(direct):
         if f.endswith(".log"):
             logfile = os.path.join(direct,f)
-            logcount = logcount +1
+            logcount = logcount + 1
 
     # Ensure there aren't two+ or 0 logfiles for whatever reason
     assert logcount == 1, "ERROR: There can only be one (log)! Number of logs: %d" % logcount
@@ -211,9 +345,9 @@ def halt_check(direct,TOL=1.0e-6):
                 continue
 
             # Parse for actual sim ending time
-            # Line looks like: (Age) System Age [sec] 3.155760e+09
+            # Line looks like: (Time) Simulation Time [sec] 3.155760e+09
             # Note: code finds this twice with 2nd being final system age
-            if line.startswith("(Age) System Age"):
+            if line.startswith("(Time) Simulation Time"):
                 lasttime = float(line.split()[-1])
                 continue
 
@@ -228,6 +362,9 @@ def halt_check(direct,TOL=1.0e-6):
 # end function
 
 
+# Parallel stuff here
+
+
 #############################################################################
 #
 # Below are data extraction functions that work with the hdf5 data format
@@ -240,17 +377,36 @@ class Dataset(object):
     """
     Abstraction class for working with hdf5 datasets using the h5py
     python wrapper package for VPLANET data.
+
+    TODO: better docs for this class
+
     """
 
-    def __init__(self,data=None,size = 0,order="none",number_to_sim=None):
-        self.data = data # Path to hdf5 dataset
+    def __init__(self,data=None,size=0,order="none",number_to_sim=None,
+                 count_map=None,input_files=None,data_cols=None):
+        self.data = data # Path(s) to hdf5 dataset(s)
         self.size = size # Length of data (number of groups from root)
         self.order = order # How the simulations are ordered
                             # Defaults to None aka ordered as they were found
-        # Private list
-        self.__number_to_sim = number_to_sim # Translates # to sim name
+        self.input_files = input_files # List of names of input files
+        self.data_cols = data_cols # Dict of parameters for each body
 
-    def get(self, simulation, body, variables, dtype=np.float64):
+        # Map sim number to correct hdf5 file when many exist
+        self.__count_map = count_map
+
+        # Translates # to sim name
+        self.__number_to_sim = number_to_sim
+
+        # Check to see if data was extracted in parallel, i.e. data is list
+        # of hdf5 files
+        if hasattr(self.data, "__len__") and (not isinstance(self.data, str)) and (not isinstance(self.data, unicode)):
+            self.__parallel = True
+        else:
+            self.__parallel = False
+    # end function
+
+
+    def get(self, simulation, body, variables, dtype=np.float64, parallel=False):
         """
         Wrapper for get_data_hdf5 function (see its docs).  This is a workhorse
         data accessing function.
@@ -265,6 +421,9 @@ class Dataset(object):
             Name(s) of body's parameters you wish to access
         dtype : numpy datatype (optional)
             Datatype of data to retrieve.  99.999% of the time, it's a float64
+        parallel : bool (optional)
+            whether or not there are multiple hdf5 files to look through.
+            Defaults to False
 
         Returns
         -------
@@ -275,10 +434,11 @@ class Dataset(object):
         # Enforce array bounds for less-cryptic error message
         if simulation >= 0 and simulation < self.size:
             return get_data_hdf5(self.data, simulation, body, variables,
-                                     dtype=dtype)
+                                     dtype=dtype, parallel=self.__parallel)
         else:
-            ValueError("Invalid simulation number: %d. Dataset size: %d" %
+            raise ValueError("Invalid simulation number: %d. Dataset size: %d" %
                   (simulation,self.size))
+        # end function
 
 
     def sim_name(self,sim):
@@ -300,8 +460,14 @@ class Dataset(object):
         if sim >= 0 and sim < self.size and self.__number_to_sim is not None:
             return self.__number_to_sim[sim]
         else:
-            ValueError("Invalid simulation number: %d. Dataset size: %d" %
+            raise ValueError("Invalid simulation number: %d. Dataset size: %d" %
                   (sim,self.size))
+        # end function
+
+
+    def id_to_sim(self):
+        pass
+
 
 
     def __repr__(self):
@@ -312,8 +478,9 @@ class Dataset(object):
 # end class
 
 
-def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
-                       compression="gzip",remove_halts=True):
+def data_from_dir_hdf5(f_set, grpname, datadir=".",data_cols=None,infiles=None,
+                       compression="gzip",remove_halts=True, var_from_log=None,
+                       var_from_infile=None):
     """
     Given a directory where simulation data are stored, the name of each body's output
     columns and the name of the input files, pull the data!
@@ -323,19 +490,26 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
     f_set : HDF5 group
         root dir-level hdf5 group
     grpname : string
-        Name of the hdf5 dataset group that will contain directory's simulation data
-        Named after sim #
+        Name of the hdf5 dataset group that will contain directory's simulation
+        data.  Typically named after sim #
     datadir : str
-        Name of directory where simulation results are kept
+        Name of directory where simulation results are kept.  Defaults to .
     data_cols : dict
-        dictionary contains each body's output variable names
+        dictionary contains each body's output variable names. Defaults to None.
     infiles : list
-        list containing input file names for each body
+        list containing input file names for each body.  Defaults to None
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
         None (no quotes) turns off compression
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
+        Defaults to True
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.  Defaults to None.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files.  Defaults
+        to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
 
     Returns
     -------
@@ -345,7 +519,7 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 
     # data_cols and infiles must be given
     if data_cols is None or infiles is None:
-        ValueError("data_cols and infiles must both be specified.")
+        raise ValueError("data_cols and infiles must both be specified.")
 
     # If user wants to, look for halts/sims not finishing
     if remove_halts:
@@ -356,6 +530,10 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
     # Did it halt? ... assuming user cares
     if halt != 0:
         return 0
+
+    # Find logfile for parsing later?
+    if var_from_log is not None:
+        logfile = find_logfile(datadir)
 
     # No halt, make the group!
     # Create group for each directory
@@ -370,7 +548,6 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
         # Loop over all files in dir, open the one that contains the body name
         for f in os.listdir(datadir):
             if f.endswith(".forward") and (f.find(infile) != -1):
-
                 # For unexpected reasons, this *could* fail, so just chalk it up to
                 # some crazy, unanticipated error.  Maybe vplanet output error?
                 # This should never happen and if it does, who knows
@@ -381,17 +558,60 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
                                              delim_whitespace=True,
                                              engine="c",
                                              names=data_cols[infile + ".in"],
-                                             dtype=np.float64)
+                                             dtype=np.float64,
+                                             memory_map=True)
 
                     # Create corresponding hdf5 subgroup for body, store data as
                     # numpy array. Subgroup's name is body name
                     sub = grp.create_group(infile)
+                    tmp_len = len(tmp[data_cols[infile + ".in"][0]]) # Store this for later
 
                     # Write columns to subgroup as datasets [allows for POSIX-like access]
                     for col in data_cols[infile + ".in"]:
-                        sub.create_dataset(col, data = pd.np.array(tmp[col]), dtype="f",
-                                          compression = compression)
+                        data = pd.np.array(tmp[col])
+                        tmp_dset = sub.create_dataset(col, data.shape,
+                                                      dtype="f",
+                                                      compression=compression)
+                        tmp_dset.id.write(h5py.h5s.ALL, h5py.h5s.ALL, data)
+
+                    # Pull variables from logfile?
+                    if var_from_log is not None:
+                        # Loop over body's, infile's, params if any are given
+                        if infile in var_from_log.keys():
+                            for param in var_from_log[infile]:
+                                var = parse_log(logfile, infile, param)
+
+                                # Create/write dataset
+                                # Make var an array.  Wasteful, but whatever
+                                var = np.ones(tmp_len) * var
+                                tmp_dset = sub.create_dataset(param,
+                                                              var.shape,
+                                                              dtype="f",
+                                                              compression=compression)
+                                tmp_dset.id.write(h5py.h5s.ALL, h5py.h5s.ALL, var)
+
+                    # Pull variables from input file?
+                    if var_from_infile is not None:
+                        # Loop over body's, infile's, params if any are given
+                        if infile in var_from_infile.keys():
+                            for param in var_from_infile[infile]:
+                                # Give path for input file
+                                infile_path = os.path.join(datadir,(infile+".in"))
+                                var = parse_infile(infile_path, param)
+
+                                # Create/write dataset
+                                # Make var an array.  Wasteful, but whatever
+                                var = np.ones(tmp_len) * var
+                                tmp_dset = sub.create_dataset(param,
+                                                              var.shape,
+                                                              dtype="f",
+                                                              compression=compression)
+                                tmp_dset.id.write(h5py.h5s.ALL, h5py.h5s.ALL, var)
+
+
                 except RuntimeError:
+                    print("Did you format var_from_infile/log correctly?")
+                    print("var_from_infile = {'body'} : [list, of, params], ...")
                     raise RuntimeError("Unknown pd.read_table error.")
 
     # Return 1 since 1 new sim was successfully processed/stored
@@ -399,9 +619,98 @@ def data_from_dir_hdf5(f_set,grpname, datadir=".",data_cols=None,infiles=None,
 # End function
 
 
-def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
-                      compression="gzip",remove_halts=False,cadence=None,
-                     skip_body=None):
+def batch_extraction(dirs, src, dset, counter=0, data_cols=None, infiles=None,
+                     compression="gzip",remove_halts=True, var_from_log=None,
+                     var_from_infile=None, cadence=None, order="none",core=None):
+    """
+    Extract the data from a batch of VPLANET simulation directories.
+    Essentially, this calls data_from_dir_hdf5 len(dirs) times and stores the
+    results in their own hdf5 files.
+
+    Parameters
+    ----------
+    dirs : list
+        list of paths to directories where VPLANET simulation results reside
+    src : str
+        Path to simulation suite directory which contains all simulation sub directories
+    dset : string
+        Name of the hdf5 dataset to create for this batch of simulations
+    counter : int
+        keeps track of how many directories this function parases.  Useful for
+        determining total number of simulations
+    data_cols : dict
+        dictionary contains each body's output variable names. Defaults to None.
+    infiles : list
+        list containing input file names for each body.  Defaults to None
+    compression : str
+        compression algorithm used to reduce dataset size.  Defaults to gzip.
+        None (no quotes) turns off compression
+    remove_halts : bool
+        Whether or not to exclude simulations that did not run to completion
+        Defaults to True
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.  Defaults to None.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files.  Defaults
+        to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in.  Currently, this does nothing for this function.
+    core : int
+        If processsing in parallel, keep track of core running this function
+        for bookkeeping later on.  Defaults to None (aka serial process)
+
+    Returns
+    -------
+    counter : int
+        keeps track of how many directories this function parases.  Useful for
+        determining total number of simulations
+    number_to_sum : list
+        dictionary to translate simulation number to simulation name
+    """
+    # Create new hdf5 file
+    f_set = h5py.File(dset, "w")
+
+    # List to store what dir sim # corresponds to
+    number_to_sim = []
+
+    # Loop over all directories and extract the simulation results
+    for direct in dirs:
+
+        # Store data from each simulation, increment counter if succesful
+        res = data_from_dir_hdf5(f_set,str(counter),os.path.join(src,direct),
+                                 data_cols,infiles,compression=compression,
+                                 remove_halts=remove_halts,
+                                 var_from_log=var_from_log,
+                                 var_from_infile=var_from_infile)
+
+        # Increment counter (keeps track of valid parsed simulation dirs)
+        counter += res
+        if res != 0:
+            # store sim - counter mapping
+            number_to_sim.append(direct)
+
+        # Output progress to user?
+        if cadence is not None and counter % int(cadence) == 0 and cadence > 0:
+            print("Simulations processed so far: %d" % counter)
+            sys.stdout.flush()
+
+    # Done! Close file, return stuff
+    f_set.close()
+
+    if core is None:
+        return counter, number_to_sim
+    else:
+        return core, counter, number_to_sim
+# end function
+
+
+def extract_data_hdf5(src=".", dataset="simulation", order="none",
+                      compression="gzip", remove_halts=False, cadence=None,
+                     skip_body=None, var_from_log=None, var_from_infile=None,
+                     parallel=False):
     """
     Given the root directory path for a suite of simulations, pull all the data
     and store it in a hd5f database.  This allows for iteration/processing of data
@@ -412,14 +721,15 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
     src : str
         Path to simulation suite directory which contains all simulation sub directories
     dataset : str
-        Name (including path) of hdf5 database
+        Name (including path) of hdf5 dataset.  Don't include a file extension.
     order : str
-        How user wants dataset ordered.  Defaults to "None" which means
+        How user wants dataset ordered.  Defaults to "none" which means
         the code loads in the data in whatever order the simulation dirs
         are in
     compression : str
         compression algorithm used to reduce dataset size.  Defaults to gzip.
-        None (no quotes) turns off compression. Options: "gzip", "lzf", None
+        None (no quotes) turns off compression. Options: "gzip", "lzf", None.
+        If you're hurting for speed and have tons of storage space, set to None.
     remove_halts : bool
         Whether or not to exclude simulations that did not run to completion
     cadence : int (optional)
@@ -430,6 +740,15 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         the user doesn't care what its output is and hence does not want to save it.
         if skip_body = ["primary.in"], the body primary with input file primary.in will
         be ignored from all data processing
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.  Defaults to None.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files.  Defaults
+        to None. Looks like dict = {"body1" : [var1], "body2" : [var2]}
+    parallel : bool
+        whether or not to extract data in parallel,i.e. use all available cores.
+        Defaults to False.
 
     Returns
     -------
@@ -437,118 +756,361 @@ def extract_data_hdf5(src=".", dataset="simulation.hdf5", order="none",
         See Dataset object docs
     """
 
-    # Only run this function if the dataset doesn't exist in the src dir
-    if (not os.path.exists(dataset)):
+    # Make sure dataset path is clean (no extensions)
+    dataset = os.path.splitext(dataset)[0]
 
-        # Create hdf5 dataset
-        print("Creating hdf5 dataset:",dataset)
-        f_set = h5py.File(dataset, "w")
+    # Only run this function if the dataset doesn't exist in the src dir
+    # TODO: fix this
+    if os.path.exists(dataset + ".hdf5"):
 
         # Dataset exists
-    else:
-        print("Hdf5 dataset already exists.  Reading from: %s." % dataset)
-        print("Using size, order stored in dataset.")
+        print("Hdf5 dataset already exists.  Reading from: %s" % dataset)
+        print("Using metadata stored in dataset object.")
+        sys.stdout.flush()
 
-        # Read existing dataset
-        f_set = h5py.File(dataset, "r")
+        # Load the metadata, return a dataset obj for data-wrangling
+        return load_metadata(dataset)
 
-        try:
-            # Load size
-            length = f_set["meta"][0]
-        except RuntimeError:
-            raise RuntimeError("Failed to load length.  Defaulting to 1000.")
+    # No dataset exists: Make the dataset!
 
-        try:
-            # Load order
-            order = f_set["order"][0]
-        except RuntimeError:
-            raise RuntimeError("Failed to load order.  Defaulting to None.")
-
-        try:
-            # Get list to convert from # -> sim name
-            number_to_sim = list(f_set["number_to_sim"])
-        except RuntimeError:
-            raise RuntimeError("Failed to load number_to_sim.  Defaulting to [].")
-
-        # Close dataset, return object handler
-        f_set.close()
-        return Dataset(dataset,length,order,number_to_sim)
-
-    # Make the dataset!
+    # Create hdf5 dataset
+    print("Creating hdf5 dataset:",(dataset+".hdf5"))
+    sys.stdout.flush()
 
     # Get list of all data directories in src to iterate over
     dirs = get_dirs(src,order=order)
 
-    # Find out what the infiles are based on the first dir
-    # Since they're the same in all dirs
+    # If using parallel, need some additional setup
+    if parallel:
+
+        # Get number of cores
+        N_CORES = mlt.cpu_count()
+
+        # If not using more than one core, why are you using parallel?
+        assert N_CORES > 1, "To run in parallel, must use at least 2 cores."
+
+        # Partition dirs list into one list for each core preserving order
+        dirs_gen = np.array_split(np.array(dirs),N_CORES)
+
+    # Find out what the input files (like body.in) are based on the first
+    # directory since they are assumed to be the same in all directories
     infiles = get_infiles(os.path.join(src,dirs[0]))
 
-    # Skip any bodies?
+    # Skip any bodies (i.e. some bodies didn't have output you care about)?
     if skip_body is not None:
         for sbody in skip_body:
             if sbody in infiles:
                 infiles.remove(sbody)
                 print("Skipped %s." % sbody)
+                sys.stdout.flush()
 
     print("Infiles:",infiles)
+    sys.stdout.flush()
 
     # Get the names of the output variables for each body
     data_cols = get_cols(os.path.join(src,dirs[0]),infiles)
     print("Data Columns:",data_cols)
+    sys.stdout.flush()
 
-    # Loop over directories (and hence simulation) and get the data
-    # User counter for name of group/means to identify simulation
-    counter = 0
+    # How should I process the data: In parallel or serially?
+    if parallel:
 
-    # List to store what dir sim # corresponds to
-    number_to_sim = []
-    for direct in dirs:
+        # Take the threads to the pool
+        pool = mlt.Pool(processes=N_CORES)
 
-        # Store data from each simulation, increment counter if succesful
-        res = data_from_dir_hdf5(f_set,str(counter),os.path.join(src,direct),
-                                 data_cols,infiles,compression=compression,
-                                 remove_halts=remove_halts)
+        # Get base dataset name for naming smaller dataset chunks
+        base_name = os.path.splitext(dataset)[0]
 
-        # Increment counter (keeps track of valid parsed simulation dirs)
-        counter += res
-        if res != 0:
-            # store sim - counter mapping
-            number_to_sim.append(direct)
+        # Make a list of dataset names for all hdf5 files
+        dataset_names = []
+        for ii in range(N_CORES):
+            dataset_names.append(base_name+"_"+str(ii)+".hdf5")
 
-        # Output progress to user?
-        if cadence != None and counter % int(cadence) == 0:
-            print("Simulations processed so far: %d" % counter)
+        # Make list of counts to sync sim-number mapping
+        #counts = [0,len(dirs_gen[0])]
+        #for ii in range(2,N_CORES):
+        #    counts.append(len(dirs_gen[ii-1])+counts[ii-1])
 
-    # Try to store metadata
-    # Add top level dataset with information about dataset
-    # Meta holds the length (number of root level groups aka
-    # number of simulations)
-    # number_to_sim is a python dict that maps #->sim name,
+        # Map: Partition dirs out to corresponding cores, extract data
+        results = [pool.apply_async(batch_extraction,
+                                    (dirs_gen[ii], src, dataset_names[ii]),
+                                    {"counter" : 0,
+                                    "data_cols" : data_cols,
+                                    "infiles" : infiles,
+                                    "compression" : compression,
+                                    "remove_halts" : remove_halts,
+                                    "var_from_log" : var_from_log,
+                                    "var_from_infile" : var_from_infile,
+                                    "cadence" : cadence,
+                                    "order" : order,
+                                    "core" : ii})
+                                    for ii in range(N_CORES)]
 
-    try:
-        # Make variable-length string dtype so hdf5 could understand it
-        string_dt = h5py.special_dtype(vlen=str)
+        # Reduce: Wrap all separate hdf5 files under one class
 
-        f_set.create_dataset("meta", data=np.array([counter]), dtype=np.int64)
-        # Note: for python 3, str replaced by bytes
+        # Get the results once they're done, sort by processor order
+        results = [p.get() for p in results]
+        results.sort()
 
-        f_set.create_dataset("order", data=np.array([order]), dtype=string_dt)
+        # Combine all counts, number_to_sims
+        number_to_sim = []
+        counts = []
+        for res in results:
+            counts.append(res[1])
+            number_to_sim = number_to_sim + res[2]
 
-        data = np.asarray(number_to_sim, dtype=object)
-        f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
+        # Total number of parsed simulations
+        counter = len(number_to_sim)
 
-    except RuntimeError:
-        raise RuntimeError("Unable to store number_to_sim.  Shouldn't happen!")
+        # Make list to keep tracks of bounds of which sims live in which file
+        count_map = [0] + list(np.cumsum(counts[1:]))
+
+        # Make dataset object here, dump it into a pickle file
+        # TODO
+
+        print("It didn't break!")
+        return None
+
+    # Use just one processor like some sort of peasant
+    else:
+
+        # Loop over directories (and hence simulations) and get the data
+        # User counter for name of group/means to identify simulation
+        counter = 0
+
+        # Load data into hdf5 file, get how many there were (counter) and make
+        # a dict to translate between sim number and name (number_to_sim)
+        counter, number_to_sim = batch_extraction(dirs, src, (dataset+".hdf5"),
+                                                  counter=counter,
+                                                  data_cols=data_cols,
+                                                  infiles=infiles,
+                                                  compression=compression,
+                                                  remove_halts=remove_halts,
+                                                  var_from_log=var_from_log,
+                                                  var_from_infile=var_from_infile,
+                                                  cadence=cadence)
+
+        # Store metadata into a handler object
+        try:
+
+            # Save metadata into hdf5 file, return dataset object
+            dataset_obj = save_metadata(dataset, counter, order, number_to_sim,
+                                        infiles, data_cols, var_from_log,
+                                        var_from_infile)
+
+        # This can fail sometimes... but it shouldn't
+        except RuntimeError:
+            raise RuntimeError("Unable to store metadata.  Shouldn't happen!")
+
+        # Create Dataset class to return
+        return dataset_obj
+# End function
+
+
+def save_metadata(dataset, counter, order, number_to_sim, infiles, data_cols,
+                  var_from_log, var_from_infile):
+    """
+    Save simulation suite metadata into a hdf5 file.
+
+    Parameters
+    ----------
+    dataset : str
+        Name (including path) of hdf5 dataset.  Don't include a file extension.
+    counter : int
+        number of processed simulations in the suite
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
+    number_to_sim : list
+        list of mapping between number (index) and simuatin name
+    infiles : list
+        list of the names of simulation input files
+    data_cols : dict
+        dict of bodies and their respective parameters which are simulation
+        outputs
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files. Looks like
+        dict = {"body1" : [var1], "body2" : [var2]}
+
+    Returns
+    -------
+    data : Dataset object
+        See Dataset object docs
+    """
+
+    # TODO
+    # Handle when the input isn't provided
+
+    # Figure out path to where the dataset(s) live
+    path = dataset.split("/")[:-1]
+    path = os.path.join('/', *path)
+
+    # Find all .hdf5 files, sort them so 0th one shows up first
+    # Metadata always in 0th file
+    datasets = []
+    for d_file in os.listdir(path):
+        if d_file.endswith(".hdf5"):
+            datasets.append(os.path.join(path,d_file))
+    datasets.sort()
+
+    # Read existing dataset (always first one in sim dir)
+    # Note that this one already ends in .hdf5
+    f_set = h5py.File(datasets[0], "r+")
+
+    # Make variable-length string dtype so hdf5 could understand it
+    string_dt = h5py.special_dtype(vlen=str)
+
+    # Store size of dataset, i.e. number of simulations
+    f_set.create_dataset("size", data=np.array([counter]), dtype=np.int64)
+
+    # Store how the dataset is ordered
+    data = np.asarray([order], dtype=object)
+    f_set.create_dataset("order", data=data, dtype=string_dt)
+
+    # Store mapping between number, simulation name
+    data = np.asarray(number_to_sim, dtype=object)
+    f_set.create_dataset("number_to_sim", data=data, dtype=string_dt)
+
+    # Store the name of the input files for each simulation
+    data = np.asarray(infiles, dtype=object)
+    f_set.create_dataset("input_files", data=data, dtype=string_dt)
+
+    # Store the names of the variables you're saving
+    data = []
+    for key in data_cols.keys():
+        for var in data_cols[key]:
+            # Make variable look like body_variable
+            data.append(str(key).replace(".in","") + "_" + str(var))
+
+    # Any variables from the log file?
+    if var_from_log is not None:
+        for key in var_from_log.keys():
+            for var in var_from_log[key]:
+                # Make variable look like body_variable
+                data.append(str(key).replace(".in","") + "_" + str(var))
+
+    # Any variables from input files?
+    if var_from_infile is not None:
+        for key in var_from_infile.keys():
+            for var in var_from_infile[key]:
+                # Make variable look like body_variable
+                data.append(str(key).replace(".in","") + "_" + str(var))
+
+    data_cols = np.asarray(data, dtype=object)
+    f_set.create_dataset("data_cols", data=data_cols, dtype=string_dt)
 
     # Close dataset
     f_set.close()
 
-    # Create Dataset class to return
-    return Dataset(dataset,counter,order,number_to_sim)
-# End function
+    # Create dataset object to wrangle all the data
+    dataset_obj = Dataset(data=dataset+".hdf5",size=counter,order=order,
+                          number_to_sim=number_to_sim,
+                          input_files=infiles,
+                          data_cols=data_cols)
+
+    return dataset_obj
+# end function
 
 
-def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
+def load_metadata(dataset):
+    """
+    Load simulation suite metadata from a hdf5 file.
+
+    Parameters
+    ----------
+    dataset : str
+        Name (including path) of hdf5 dataset.  Don't include a file extension.
+    counter : int
+        number of processed simulations in the suite
+    order : str
+        How user wants dataset ordered.  Defaults to "none" which means
+        the code loads in the data in whatever order the simulation dirs
+        are in
+    number_to_sim : list
+        list of mapping between number (index) and simuatin name
+    infiles : list
+        list of the names of simulation input files
+    data_cols : dict
+        dict of bodies and their respective parameters which are simulation
+        outputs
+    var_from_log : dict
+        Dict of bodies, parameters to extract from logfile.
+        Something like dict = {"body1" : [var1, var2], "body2" : [var3, var4]}
+    var_from_infile : dict
+        Dict of input files, parameters to extract from input files. Looks like
+        dict = {"body1" : [var1], "body2" : [var2]}
+
+    Returns
+    -------
+    data : Dataset object
+        See Dataset object docs
+    """
+
+    # Figure out path to where the dataset(s) live
+    path = dataset.split("/")[:-1]
+    path = os.path.join('/', *path)
+
+    # Find all .hdf5 files, sort them so 0th one shows up first
+    datasets = []
+    for d_file in os.listdir(path):
+        if d_file.endswith(".hdf5"):
+            datasets.append(os.path.join(path,d_file))
+    datasets.sort()
+
+    # Read existing dataset (always first one in sim dir)
+    # Note that this one already ends in .hdf5
+    f_set = h5py.File(datasets[0], "r")
+
+    # Try to load metadata
+    # TODO: make this a function
+    try:
+        # Load size
+        length = f_set["size"][0]
+    except RuntimeError:
+        raise RuntimeError("Failed to load size.")
+
+    try:
+        # Load order
+        order = f_set["order"][0]
+    except RuntimeError:
+        raise RuntimeError("Failed to load order.")
+
+    try:
+        # Get list to convert from # -> sim name
+        number_to_sim = list(f_set["number_to_sim"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load number_to_sim.")
+
+    try:
+        # Get list to convert from # -> sim name
+        input_files = list(f_set["input_files"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load input_files.")
+
+    try:
+        # Get list to convert from # -> sim name
+        data_cols = list(f_set["data_cols"])
+    except RuntimeError:
+        raise RuntimeError("Failed to load data_cols.")
+
+    # Close dataset, return object handler
+    f_set.close()
+
+    # TODO: handle parallel datatsets case
+
+    return Dataset(data=dataset+".hdf5",size=length,order=order,
+                   number_to_sim=number_to_sim,
+                   input_files=input_files,
+                   data_cols=data_cols)
+# end function
+
+
+def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64,
+                  parallel=False):
     """
     Given the simulation number, body and the variable, access and return the data.  For example,
     get_data(1,"secondary","Eccentricity") will return a numpy array containing the secondary's
@@ -567,6 +1129,8 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
         Name(s) of the dataset to return for given body
     dtype : datatype (optional)
         Type of data to return.  Defaults to np.float64
+    parallel : bool (optional)
+        whether or not there are many dataset files to look at
 
     Returns
     -------
@@ -577,24 +1141,28 @@ def get_data_hdf5(dataset, simulation, body, variables, dtype=np.float64):
     # Create dataset path
     path = os.path.join(str(simulation),body)
 
+    # If many dataset files exist, figure out which one data lives in
+    if parallel:
+        pass
+        # TODO
+
     data = []
     # Open dataset, access data
     try:
         with h5py.File(dataset, "r") as hf:
 
-            # Only one variable
-            if type(variables) == str:
-                return np.array(hf.get(path)[variables])
-            # Multiple variables
-            else:
+            # Multiple variables (not just a string)
+            if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, unicode)):
                 for var in variables:
                     data.append(np.array(hf.get(path)[var]))
+            # Only one variables
+            else:
+                return np.array(hf.get(path)[variables]).squeeze()
 
-        return np.asarray(data,dtype=dtype)
+        return np.asarray(data,dtype=dtype).squeeze()
     except RuntimeError:
         raise RuntimeError("Invalid get call.  Simulation, body, variable(s) : %s, %s, %s" %
               (simulation,body,variables))
-        return None
 # end function
 
 
@@ -658,16 +1226,17 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
     # If cache exists, load that and return df
     if os.path.exists(cache):
         print("Reading data from cache:",cache)
+        sys.stdout.flush()
         with open(cache, 'rb') as handle:
             return pickle.load(handle)
 
     # User forgot to specify data and cache
     if data is None:
-        ValueError("No data or cache provided!")
+        raise ValueError("No data or cache provided!")
 
     # No cache given, user must supply bodies
     if bodies is None:
-        ValueError("No bodies dict provided!")
+        raise ValueError("No bodies dict provided!")
 
     # If funcs is None, make it empty dict
     if funcs is None:
@@ -713,7 +1282,7 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
                         res[body + "_" + col][i] = new_cols[body][col](data,i,body,fmt=fmt,**kwargs)
 
     else:
-        ValueError("Invalid format: %s" % fmt)
+        raise ValueError("Invalid format: %s" % fmt)
 
     # Convert data dict -> pandas dataframe
     res = pd.DataFrame(res)
@@ -721,6 +1290,7 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
     # Cache the result?
     if cache is not None:
         print("Caching data at %s" % cache)
+        sys.stdout.flush()
         with open(cache, 'wb') as handle:
             pickle.dump(res, handle)
 
@@ -777,7 +1347,7 @@ def add_column(data, df=None, new_cols=None, cache=None, fmt="hdf5", **kwargs):
         return None
 
     if new_cols is None:
-        ValueError("add_column called but no new_cols provided!")
+        raise ValueError("add_column called but no new_cols provided!")
 
     res = {}
 
@@ -846,16 +1416,10 @@ def reduce_dimensions(x, y, z, shape, dims=(-1,), reduce_func = np.nanmean):
     # 1) Reshape x, y, z e.g. 20 -> (5, 4)
     # 2) Apply some function over axes to reduce dimension to 2 for plotting
     # 3) Apply squeeze to remove extra dimension, e.g. (5, 4, 1) -> (5, 4)
-    x = np.squeeze(np.apply_over_axes(np.mean,x.reshape(shape),axes=dims)) # Call mean so dimensions compress properly
+    # Call mean so dimensions compress properly for x, y
+    x = np.squeeze(np.apply_over_axes(np.mean,x.reshape(shape),axes=dims))
     y = np.squeeze(np.apply_over_axes(np.mean,y.reshape(shape),axes=dims))
     z = np.squeeze(np.apply_over_axes(reduce_func,z.reshape(shape),axes=dims))
 
     return x, y, z
 # End function
-
-
-"""
-
-Misc
-
-"""

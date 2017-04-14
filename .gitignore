@@ -74,3 +74,11 @@ bigplanet/dist
 bigplanet/Dev
 *.pkl
 *.ipynb_checkpoints
+*.track1
+proximacenbradius.py
+proximacenstellar.py
+sandbox
+*.aux
+*.bbl
+*.blg
+proxcen.pdf

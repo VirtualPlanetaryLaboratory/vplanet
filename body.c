@@ -242,6 +242,9 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
     dest[iBody].dEcc = src[iBody].dEcc; // XXX iBody=0 could be in galhabit?
+    dest[iBody].dPrecA = src[iBody].dPrecA;
+    dest[iBody].dObliquity = src[iBody].dObliquity;
+
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
     /* Only orbiting bodies retain these parameters unless binary is used*/

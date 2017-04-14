@@ -11,11 +11,11 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 cColor ff0000
 
 # Orbital Properties
-dEcc            0.5			# Eccentricity
+dEcc            0.41			# Eccentricity
 dSemi           -15000.0			# Semi-major axis, negative -> AU
-dInc   40.0
-dArgP  45.0
-dLongA 21.0
+dInc   36
+dArgP  137.0
+dLongA 17.1
 
 dGalacDensity    0.102
 iRandSeed     42
@@ -25,6 +25,13 @@ bRadialMigr 0
 bStellarEnc 0
 bTimeEvolVelDisp 0
 bOutputEnc 0
+
+bHostBinary 1
+dHostBinEcc 0.524
+dHostBinInc 55.0
+dHostBinLongA 122.0
+dHostBinSemi 23.77639
+dHostBinMass1 1.133
 
 # Output
 saOutputOrder Time SemiM Ecce PeriQ ArgP Inc LongA NEncounters FVelDisp DeltaT 

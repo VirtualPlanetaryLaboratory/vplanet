@@ -42,7 +42,7 @@ void ReadForcePrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     body[iFile-1].bForcePrecRate = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&body[iFile-1].bForcePrecRate,files->iNumInputs);
+    body[iFile-1].bForcePrecRate = options->dDefault;
 }
 
 void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -409,10 +409,10 @@ void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime,cUnit);
+//     *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
   }
 }  
   
@@ -435,9 +435,9 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
     *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 }    
   

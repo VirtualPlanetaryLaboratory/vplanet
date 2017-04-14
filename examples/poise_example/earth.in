@@ -1,4 +1,4 @@
-sName        Earth   
+sName        earth   
 saModules   poise
 #saModules    distorb distrot poise
 dMass        3.00316726e-06
@@ -17,7 +17,7 @@ saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime
 #saOutputOrder     Time Ecce Inc LongP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal
 saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
-  -IceFlow -BedrockH EnergyResW EnergyResL -FluxMerid -DivFlux
+  -IceFlow -BedrockH TempMaxLat TempMinLat -FluxMerid -DivFlux
 #saGridOutput     Time -Latitude -TempLat AlbedoLat -AnnInsol -FluxIn -FluxOut EnergyResW EnergyResL
 #saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
 #bInvPlane    1

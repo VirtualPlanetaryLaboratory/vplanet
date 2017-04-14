@@ -14,7 +14,7 @@ dRotPeriod      0.003
 # Binary Parameters
 dEcc            0.1602 #0.16048             # Binary eccentricity
 dSemi           0.1276            # Binary semimajor axis 
-dLongP          257.79
+dLongP          0.0 #257.79
 dLL13PhiAB      129.84             # Initial binary mean anomaly
 
 # EQTIDE Parameters

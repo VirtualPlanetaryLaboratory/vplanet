@@ -971,8 +971,7 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius and compute the derivative from those? TODO: Check this.
 
-  // TODO In Baraffe models, looks like radius doesn't change for t <= 1 Myr??
-  if(body[iaBody[0]].dAge < 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
   {
     return 0.0;
   }
@@ -1028,7 +1027,6 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
   // Compute the instataneous change in stellar angular momentum
   dJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 
-  // TODO: is this valid when tidally locked?
   dEdt = body[iBody].dRotRate*dJDt;
 
   // dJ/dt < 0 -> lose energy, so store positive amount of lost energy

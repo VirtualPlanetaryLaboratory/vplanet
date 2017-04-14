@@ -345,6 +345,8 @@ double fdLostEnergyTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody, doubl
   double M = body[0].dMass + body[1].dMass;
   SYSTEM *system; // Dummy system struct
 
+  return 0.0;
+
   // Both tidally locked
   if(iNumLocked > 1)
   {
@@ -390,6 +392,7 @@ double fdLostEnergyTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody, doubl
 
 /*! Derivative for lost energy rate (tidal heating) for tidally locked binaries undergoing
  * magnetic braking and radius contraction
+ * TODO is the necessary?
  */
 double fdLostEngEqBinSt(BODY *body, SYSTEM *system, int *iaBody)
 {

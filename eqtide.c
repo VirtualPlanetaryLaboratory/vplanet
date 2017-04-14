@@ -2648,15 +2648,7 @@ void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   // PrecA is needed for Xobl,Yobl,Zobl calculations
 
-  // Update eccentricity derivative depending on whether you're orbiting or not
-  if(iBody > 0)
-  {
-    body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
-  }
-  else
-  {
-    body[iBody].dDeccDtEqtide = 0.0;
-  }
+  body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {

@@ -103,7 +103,9 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
   module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule ));
+  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateLostAngMom = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
+  module->fnFinalizeUpdateLostEng = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostEngModule));
 
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
   module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
@@ -227,6 +229,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
   module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
   module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateLostAngMom[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLostAngMomModule));
+  module->fnFinalizeUpdateLostEng[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLostEngModule));
 
   module->fnFinalizeUpdateEccX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccXModule));
   module->fnFinalizeUpdateEccY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccYModule));
@@ -290,6 +294,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLostEng[iBody][iModule] = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdateEccX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateEccY[iBody][iModule] = &FinalizeUpdateNULL;
@@ -478,7 +484,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
     if (!body[iBody].bDistOrb) {
@@ -488,7 +494,7 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OP
   }
 }
 
-void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiRadheatThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   /* This will need modification if material can move between layers */
 
@@ -504,7 +510,7 @@ void VerifyModuleMultiRadheatThermint(BODY *body,CONTROL *control,FILES *files,O
   }
 }
 
-void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iEqtide;
 
   // Eqtide, not thermint
@@ -610,7 +616,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,CONTROL *control,FILES *files,MO
   */
 }
 
-void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   if (body[iBody].bEqtide) {
     if (body[iBody].bDistOrb) {
       control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideDistOrb;
@@ -618,15 +624,56 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,CONTROL *control,FILES *files,MOD
   }
 }
 
-void VerifyModuleMultiEqtideStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   if (body[iBody].bEqtide) {
     if (body[iBody].bStellar) {
+
+      // If you're using stellar and eqtide and this isn't the primary body, you
+      // MUST use binary (binary stars!)
+      if(iBody > 0 && !body[iBody].bBinary)
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: If both stellar AND eqtide are set and iBody > 0, MUST use binary!\n");
+        exit(EXIT_INPUT);
+      }
+
+      // Can't have any ocean, envelope tidal parameters set
+      // Body is a star, but has an ocean or an envelope!
+      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: If both stellar AND eqtide are set, body cannot have bOceanTides or bEnvTides set!\n");
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+
+      if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+	    if (control->Io.iVerbose >= VERBINPUT)
+	      fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_TIDALQOCEAN].cName);
+	    exit(EXIT_INPUT);
+      }
+      if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_K2OCEAN].cName);
+        exit(EXIT_INPUT);
+      }
+      if (options[OPT_TIDALQENV].iLine[iBody+1] > -1) {
+        if (control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_TIDALQENV].cName);
+        exit(EXIT_INPUT);
+        }
+        if (options[OPT_K2ENV].iLine[iBody+1] > -1) {
+          if (control->Io.iVerbose >= VERBINPUT)
+            fprintf(stderr,"ERROR: %s set, but this body is a star!.\n",options[OPT_K2ENV].cName);
+          exit(EXIT_INPUT);
+        }
+
+      // ALl the options are ok! Add in the necessary AuxProps
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideStellar;
     }
   }
 }
 
-void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   /* Ensure that if using Lopez et al radius models, ATMESC uses Lopez et al radius for atmespheric escape
    * while EQTIDE uses a "tidal radius" as it is likely that the radius of the envelope does not really
    * impact tides since the tidal evolution has such a strong (r^5) radius dependent.  Effectively, we assume
@@ -671,8 +718,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
       // Not using tidal radius
       else
       {
-        // Since no tidal radius specified, dRadius better be (or a radius evolution model)
-        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1))
+        // Since no tidal radius specified, dRadius better be (or a radius evolution model or a mass radius relation)
+        if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_PLANETRADIUSMODEL].iLine[iBody+1] > -1) && !(options[OPT_MASSRAD].iLine[iBody+1] > -1))
         {
           fprintf(stderr,"ERROR: Using EQTIDE and bUseTidalRadius == 0 but %s or %s not set!\n",options[OPT_RADIUS].cName,options[OPT_PLANETRADIUSMODEL].cName);
           exit(EXIT_INPUT);
@@ -717,7 +764,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,CONTROL *control,FILES *files,MODU
   }
 }
 
-void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   // If you're using alllll of these, include the force behavior!
   // Also, you MUST have surface water information set if you're using bOceanTides
@@ -796,7 +843,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,CONTROL *control,FILES *fi
 
 }
 
-void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiFlareStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bFlare) {
     if (!body[iBody].bStellar) {
@@ -807,35 +854,59 @@ void VerifyModuleMultiFlareStellar(BODY *body,CONTROL *control,FILES *files,MODU
   }
 }
 
-void VerifyModuleMultiBinaryEqtide(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
+/*
+ * Binary + Stellar coupling.  If using binary, only 1st 2 bodies (0, 1) can be stars
+ */
+void VerifyModuleMultiBinaryStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bBinary) {
+    if (body[iBody].bStellar) {
+      if(iBody > 1) {
+        fprintf(stderr,"ERROR: Only bodies 0 and 1 can be stars when using binary!\n");
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+  }
+}
+
+/*
+ * Coupling Binary, Eqtide, AND stellar
+ */
+void VerifyModuleMultiBinaryEqtideStellar(BODY *body, UPDATE *update, CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bBinary) {
+    if (body[iBody].bStellar) {
+      if (body[iBody].bEqtide) {
+        // TODO ?
+        }
+      }
+    }
+  }
+
+/*
+ * Binary + Eqtide: If using both, only stars (iBodyType == 1, iBody <= 1) can use eqtide
+ */
+void VerifyModuleMultiBinaryEqtide(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce)
 {
   // If binary AND eqtide are called for a body, the body MUST be a star
   if(body[iBody].bBinary) {
     if(body[iBody].bEqtide) {
       // Body isn't a star!
-      if(body[iBody].iBodyType != 1) {
+      if(body[iBody].iBodyType != 1 || iBody > 1) {
         fprintf(stderr,"ERROR: If both binary AND eqtide are used for a body, the body MUST be a star.\n");
-        fprintf(stderr,"Errant body iBody, bBinary, bEqtide: %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide);
+        fprintf(stderr,"Errant body iBody, bBinary, bEqtide:, bStellar %d, %d, %d, %d.\n",iBody,body[iBody].bBinary,body[iBody].bEqtide,body[iBody].bStellar);
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
-
-      // Body is a star, but has an ocean or an envelope!
-      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
-      {
-        fprintf(stderr,"ERROR: If both binary AND eqtide are used for a star, star cannot have bOceanTides or bEnvTides set!\n");
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-      }
-
     }
   }
 }
 
-void VerifyModuleMultiEqtideDistorb(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   if (body[iBody].bEqtide || body[iBody].bDistOrb)
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
-void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody, fnUpdateVariable ****fnUpdate) {
   int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 0) {
@@ -848,26 +919,30 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
   /* Now verify. Even if only module is called, we still need to call
      these functions as some default behavior is set if other modules aren't
      called. */
-  VerifyModuleMultiDistOrbDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiRadheatThermint(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistOrb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistOrb(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiAtmescEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   // Always call after VerifyModuleMultiEqtideThermint !!
-  VerifyModuleMultiAtmescEqtideThermint(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiFlareStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiBinaryEqtide(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistorb(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistorb(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideStellar(body,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiBinaryEqtideStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -1088,4 +1163,110 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
     if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
       body[iBody].bOceanTides = 0;
   }
+}
+
+/*
+ *
+ * Functions required to add multi-body equations to the matrix
+ *
+ */
+
+/*! Binary-Eqtide-Stellar semi-major axis derivative set-up*/
+void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if BINARY, EQTIDE, and STELLAR used
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    if (update[iBody].iNumSemi == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumSemi++;
+  }
+}
+
+/*! Binary-Eqtide-Stellar lost energy derivative set-up*/
+void InitializeUpdateEqBinStLostEng(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if BINARY, EQTIDE, and STELLAR used
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    if (update[iBody].iNumLostEng == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumLostEng++;
+  }
+}
+
+
+/*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
+void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+  update[iBody].iSemiBinEqSt = (*iEqn);
+  (*iEqn)++;
+}
+
+/*! Finalize update (for malloc-ing) for Bin-eq-st lost energy derivative */
+void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+  update[iBody].iLostEngBinEqSt = (*iEqn);
+  (*iEqn)++;
+}
+
+/* GENERAL MULTI-MODULE EQUATION INITIALIZATION/FINALIZATION */
+
+/*!
+ * Initialize adding mutli-module equations to the matrix.
+ */
+void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody)
+{
+  // Initialize update struct to accomodate multi-module equations
+  InitializeUpdateEqBinStSemi(body,update,iBody);
+  InitializeUpdateEqBinStLostEng(body,update,iBody);
+
+  /* More equations here! */
+}
+
+/*!
+ * Finalize adding mutli-module equations to the matrix.
+ */
+void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate,int *iVar, int iBody, int iFoo)
+{
+
+  int iOtherBody, iEqn;
+
+  // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+
+    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
+
+    // Other star (primary) can also influence this equation
+    iOtherBody = 0;
+
+    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
+    iEqn = 1; // When EQTIDE is set, already have an equation for how
+                  // the semi-major axis changes so start this at 1
+    FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
+
+    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][1] = iOtherBody;
+    update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
+    (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
+
+    /* Add change in lost energy due to BINARY-EQTIDE-STELLAR coupling */
+
+    iEqn = 2; // 1 from STELLAR, 1 from EQTIDE
+    FinalizeUpdateMultiEqBinStLostEng(body,update,(&iEqn),(*iVar),iBody,iFoo);
+
+    // Add dLostEnergy dt from Binary-Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt][0] = iBody;
+    update[iBody].pdDLostEngDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt];
+    (*fnUpdate)[iBody][update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = &fdLostEngEqBinSt;
+  }
+
+/* Add more equations below! */
+
 }

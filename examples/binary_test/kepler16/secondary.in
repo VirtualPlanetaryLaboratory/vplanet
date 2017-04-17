@@ -1,6 +1,6 @@
 # Secondary star: Kepler16B
 sName		secondary		# Body's name
-saModules stellar binary 
+saModules stellar binary eqtide 
 
 # Physical Parameters
 iBodyType       1           # 1 -> Star
@@ -15,9 +15,10 @@ dLongP          263.45            # Binary longitude of pericenter
 dLL13PhiAB      129.84            # Initial binary mean anomaly
 
 # EQTIDE Parameters
-#dTidalQ		1.0e6 #5e3		# Tidal phase lag
-#dK2		0.5 #1.5		# Love number of degree 2
-#saTidePerts	primary		# Body name(s) of tidal perturbers
+dTidalQ		1.0e6 #5e3		# Tidal phase lag
+dK2		0.5 #1.5		# Love number of degree 2
+dMaxLockDiff    0.01
+saTidePerts	primary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`

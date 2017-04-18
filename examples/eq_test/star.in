@@ -1,0 +1,22 @@
+sName		star		# Body's name
+saModules eqtide
+
+# Physical Parameters
+dMass		0.12             # Mass, negative -> Earth masses
+dRadGyra	0.5		 # Radius of gyration (moment of inertia constant)
+dRadius         0.0006557        # Stellar Radius (in AU)
+dRotPeriod      -83.5            # Rotation period (negative -> days)
+
+# The first body in the saBodyFiles list must be the central mass.
+# This body carries no orbital information => the coordinate system is bodycentric.
+
+# EQTIDE Parameters
+dTidalQ		1.0e6		# Tidal phase lag
+dK2		0.5		# Love number of degree 2
+sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
+saTidePerts	pandora		# Body name(s) of tidal perturbers
+
+# Some options are allowed to only appear in one file, but it can be primary or body.
+# That should really be documented!
+
+saOutputOrder

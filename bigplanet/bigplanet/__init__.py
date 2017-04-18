@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 """
 @author: dflemin3 2016
+
+bigplanet package init file.
+
 """
 
-__version__ = "0.14"
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+__version__ = "0.19"
 __author__ = "David Fleming (dflemin3@uw.edu)"
-__copyright__ = "Copyright 2016 David P Fleming"
+__copyright__ = "Copyright 2017 David P. Fleming"
 
-from . import bigplot
-from . import data_extraction
-
-from .data_extraction import extract_data_hdf5, aggregate_data, Dataset, reduce_dimensions
-from .bigplot import plot_red_dim, plot_red_dim_contour, red_dim_grid
+from .bigplot import *
+from .data_extraction import *
+from .big_ml import *

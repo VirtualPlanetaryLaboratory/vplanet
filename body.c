@@ -2,13 +2,13 @@
 /*
  * Rory Barnes, Wed May  7 14:40:51 PDT 2014
  *
- * This file contains subroutines that describe 
+ * This file contains subroutines that describe
  * physical properties of any body. This include
  * conversions between the option parameter (a property
- * that may be used at input) and the system parameter 
- * (the property in the BODY struct that is always 
- * up-to-date). If unsure between here and orbit.c, put 
- * here. Also includes mathemtatical relationships.
+ * that may be used at input) and the system parameter
+ * (the property in the BODY struct that is always
+ * up-to-date). If unsure between here and orbit.c, put
+ * here. Also includes mathemtatical relationships
 */
 
 #include <stdio.h>
@@ -20,16 +20,16 @@
 #include "vplanet.h"
 
 
-/* 
- * Mathematical Relationships 
+/*
+ * Mathematical Relationships
  */
 
 int fiSign(double dValue) {
   int iSign;
 
-  if (fabs(dValue) > EPS) 
+  if (fabs(dValue) > EPS)
     iSign = (int)(dValue/fabs(dValue));
-  else 
+  else
     iSign = 0;
 
   return iSign;
@@ -69,12 +69,12 @@ double fdPerToFreq(double dPeriod) {
   return 2*PI/dPeriod;
 }
 
-/* 
- * Physical Relationships 
+/*
+ * Physical Relationships
  */
 
-double fdBodyPotEnergy(BODY body) {
-  return -0.6*BIGG*body.dMass*body.dMass/body.dRadius;
+double fdBodyPotEnergy(double dMass, double dRadius) {
+  return -ALPHA_STRUCT*BIGG*dMass*dMass/dRadius;
 }
 
 double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
@@ -113,16 +113,16 @@ double fdSphereDensity(double dMass,double dRadius) {
  * Published Mass - Radius Relationships
  */
 
-/* Stellar mass-radius relationships from New Light on 
- * Dark Stars, Table 4.1. 
+/* Stellar mass-radius relationships from New Light on
+ * Dark Stars, Table 4.1.
  * See Barnes et al. (2013) Astrobiology 13:225-250.  */
 
 double fdRadToMass_ReidHawley(double dRadius) {
   double x,y;
-    
+
     x = log10(dRadius/RSUN);
     y = 0.1277 + 2.185*x + 3.135*x*x + 1.9031*x*x*x;
-    
+
     return pow(10,y)*MSUN;
 }
 
@@ -131,13 +131,13 @@ double fdMassToRad_ReidHawley(double dMass) {
 
   x = log10(dMass/MSUN);
   y = 0.1424 + 1.568*x - 0.2342*x*x - 0.5581*x*x*x;
-  
+
   return pow(10,y)*RSUN;
 }
 
 /* Stellar mass-radius relationship from
- * Gorda, S. Yu. & Svechnikov, M. A. 1999, Astronomy 
- * Reports, 43, 521-525 */ 
+ * Gorda, S. Yu. & Svechnikov, M. A. 1999, Astronomy
+ * Reports, 43, 521-525 */
 
 double fdMassToRad_GordaSvech99(double dMass) {
   dMass = log10(dMass/MSUN);
@@ -153,23 +153,23 @@ double fdMassToRad_GordaSvech99(double dMass) {
 
 double fdRadToMass_GordaSvech99(double dRadius) {
     double x,y;
-    
+
     x = log10(dRadius/RSUN);
     y = -0.09709 + 0.9709*x - 2.502e-5*x*x - 1.34e-5*x*x*x;
-    
+
     return pow(10,y);
 }
 
 
-/* Stellar mass-radius relationships from 
+/* Stellar mass-radius relationships from
  * Bayless, A.J. & Orosz, J.A. 2006, ApJ, 651, 1155-1165 */
 
 double fdMassToRad_BaylessOrosz06(double dMass) {
     double dRadius;
-    
+
     dMass = dMass/MSUN;
     dRadius = 0.0324 + 0.9343*dMass + 0.0374*dMass*dMass;
-    
+
     return dRadius*RSUN;
 }
 
@@ -183,7 +183,7 @@ double fdRadToMass_BaylessOrosz06(double dRadius) {
 }
 
 
-/* Terrestrial planet mass-radius relationships from 
+/* Terrestrial planet mass-radius relationships from
  * Sotin et al 2007, Icarus, 191, 337-351. */
 
 double fdMassToRad_Sotin07(double dMass) {
@@ -196,7 +196,7 @@ double fdRadToMass_Sotin07(double dRadius) {
 
 double fdMassToRad(double dMass,double iRelation) {
 
-  if (iRelation == 0) 
+  if (iRelation == 0)
     return fdMassToRad_ReidHawley(dMass);
   else if (iRelation == 1)
     return fdMassToRad_GordaSvech99(dMass);
@@ -204,16 +204,16 @@ double fdMassToRad(double dMass,double iRelation) {
     return fdMassToRad_BaylessOrosz06(dMass);
   else if (iRelation == 3)
     return fdMassToRad_Sotin07(dMass);
- 
+
   /* Need to add more! */
- 
+
   /* Whoops! */
   return 1./0;
 }
 
 double fdRadToMass(double dMass,double iRelation) {
 
-  if (iRelation == 0) 
+  if (iRelation == 0)
     return fdRadToMass_ReidHawley(dMass);
   else if (iRelation == 1)
     return fdRadToMass_GordaSvech99(dMass);
@@ -221,9 +221,9 @@ double fdRadToMass(double dMass,double iRelation) {
     return fdRadToMass_BaylessOrosz06(dMass);
   else if (iRelation == 3)
     return fdRadToMass_Sotin07(dMass);
- 
+
   /* Need to add more! XXX */
- 
+
   /* Whoops! */
   return 1./0;
 }
@@ -247,11 +247,13 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dEcc = src[iBody].dEcc; // XXX iBody=0 could be in galhabit?
     dest[iBody].dPrecA = src[iBody].dPrecA;
     dest[iBody].dObliquity = src[iBody].dObliquity;
+    dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
+    dest[iBody].dLostEng = src[iBody].dLostEng;
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
     /* Only orbiting bodies retain these parameters unless binary is used*/
-    
+
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
@@ -281,16 +283,16 @@ double CalcDynEllipEq(BODY *body, int iBody) {
   /* calculate equilibrium shape of planet using scaling laws and solar system values */
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
   double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
-  
+
   EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
   EdVenus = J2Venus/0.336;
   nuEarth = 2*PI/(DAYSEC);
-  
+
   dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
-  
+
   dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
-  
+
   if (dDynEllip < EdVenus) dDynEllip = EdVenus;
-  
+
   return dDynEllip;
 }

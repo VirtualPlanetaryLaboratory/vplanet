@@ -23,5 +23,5 @@ sStellarModel	proxima
 #sXUVModel	ribas
 #sWindModel	Reiners
 
-saOutputOrder 	Time -RotPer Obli -Lumin -LXUVTot -Radius
+saOutputOrder 	Time -TotAngMom -TotEn -RotPer Obli -Lumin -LXUVTot -Radius
 

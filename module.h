@@ -16,7 +16,7 @@ double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);
 void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
 
-void VerifyModuleMulti(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
+void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
@@ -30,3 +30,11 @@ void PropsAuxSpinbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
 
 void ForceBehaviorAtmescEqtideThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+
+void InitializeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int);
+void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int*,int,int);
+
+void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
+void InitializeUpdateEqBinStLostEng(BODY*,UPDATE*,int);
+void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateMultiEqBinStLostEng(BODY*,UPDATE*,int*,int,int,int);

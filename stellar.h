@@ -1,4 +1,4 @@
-/***************** STELLAR.H *********************** 
+/***************** STELLAR.H ***********************
  *
  * Rodrigo Luger, Tue Apr 28 11:04:00 PDT 2014
  *
@@ -11,7 +11,7 @@
 #define TSUN                          5778.             // Solar TEff (K)
 #define RM12OMEGACRIT                 8.56e-6           // Critical angular velocity (1/s) from Reiners & Mohanty (2012)
 #define RM12OMEGACRITFULLYCONVEC      1.82e-6           // Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012)
-#define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)                       
+#define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
@@ -116,11 +116,18 @@ double fdRadius(BODY*,SYSTEM*,int*);
 double fdRadiusFunctionBaraffe(double, double);
 double fdRadiusFunctionProximaCen(double);
 double fdDRotRateDt(BODY*,SYSTEM*,int*);
+double fdDRotRateDtCon(BODY*,SYSTEM*,int*);
+double fdDRotRateDtMagBrake(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 double fdTemperatureFunctionProximaCen(double);
 void fdHabitableZoneKopparapu2013(double,double,double*);
-
+double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
+double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
+double fdDEDtPotConStellar(BODY*,SYSTEM*,int*);
+double fdDEDtRotConStellar(BODY*,SYSTEM*,int*);
+double fdDEDtRotBrakeStellar(BODY*,SYSTEM*,int*);
+double fdDEDtStellar(BODY*,SYSTEM*,int*);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

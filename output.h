@@ -71,6 +71,10 @@
 #define OUT_ORBPOTENERGY        680
 #define OUT_ORBENERGY           690
 
+#define OUT_LOSTENG             691
+#define OUT_LOSTANGMOM          692
+
+
 void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,int);

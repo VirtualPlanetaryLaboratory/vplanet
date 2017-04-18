@@ -1,7 +1,4 @@
 *.txt
-#evolve.c#
-#radheat.h#
-#thermint.h#
 .#thermint.h
 Integr.iNumBodies
 bitbucket_xyz
@@ -38,7 +35,7 @@ util.h~
 verify.c~
 vplanet.h~
 vplanet.key/
-.DS_Store
+*.DS_Store
 examples/gl581/gl581.c.forward
 examples/gl581/gl581.d.forward
 examples/gl581/gl581.log
@@ -49,7 +46,6 @@ vplot/vplot/defaults.pyc
 vplot/vplot/plot.pyc
 vplot/vplot/utils.pyc
 examples/gl581/gl581.star.forward
-.gitignore
 __pycache__
 vplanet.dSYM
 *.forward

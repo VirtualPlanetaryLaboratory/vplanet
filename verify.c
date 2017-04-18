@@ -15,6 +15,23 @@
 #include "vplanet.h"
 
 /*
+ * Utility functions
+ */
+
+/*! Check to see if two decimals numbers are equal (1) or not (0) */
+ int bFloatComparison(double x, double y)
+ {
+   if(fabs(x - y) < TINY)
+   {
+     return 1;
+   }
+   else
+   {
+     return 0;
+   }
+ }
+
+/*
  * Exit Calls
  */
 
@@ -458,6 +475,35 @@ void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
   }
 }
 
+/*
+ *
+ * System-level verify routines
+ *
+ */
+
+/*! Verify Initial angular momentum, energy for conservation checks.  Initialize
+ *  here so anything that changes E, J is monitored to ensure conservation */
+void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTIONS *options) {
+  int iBody;
+
+  // Initially no lost angular momentum, energy
+  // Set to TINY, not 0 since these are integrated
+  // and it being 0 can mess up the time step
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
+  {
+    body[iBody].dLostAngMom = 0.0;
+    body[iBody].dLostEng = 0.0;
+  }
+
+  // Compute initial total angular momentum
+  system->dTotAngMomInit = fdTotAngMom(body,control,system);
+  system->dTotAngMom = system->dTotAngMomInit;
+
+  // Compute initial total energy
+  system->dTotEnInit = fdTotEnergy(body,control,system);
+  system->dTotEn = system->dTotEnInit;
+}
+
 
 /*
  *
@@ -509,7 +555,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyInterior(body,options,iBody);
 
-    VerifyModuleMulti(body,control,files,module,options,iBody);
+    // Verify multi-module couplings
+    VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {
@@ -518,5 +565,10 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     }
 
   }
+
+  // Verify system (initialize angular momentum, energy) now that everything else
+  // has been verified
+  VerifySystem(body,update,control,system,options);
+
 }
 

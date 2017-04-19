@@ -8,7 +8,7 @@ opt:
 	-gcc -o vplanet *.c -lm -O3
 
 profile:
-	-gcc -pg -o vplanet *.c -lm -static -O3
+	-gcc -pg -o vplanet *.c -lm
 
 test:
 	@echo 'Compiling vplanet...'

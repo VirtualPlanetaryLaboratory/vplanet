@@ -443,7 +443,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
-      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) { // XXX Bug? "galhabit",8?
+      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
@@ -988,7 +988,7 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
 
 void PropsAuxSpinbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // Nothing to see here...
-  
+
 }
 
 void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -1036,6 +1036,16 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
   // Set the mantle parameters first
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
+
+  // If it's the first step, see if it's a runaway greenhouse
+  if (evolve->bFirstStep)
+  {
+    // RG -> no ocean tides
+    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+    {
+      body[iBody].bOceanTides = 0;
+    }
+  }
 
   // Case: No oceans, no envelope
   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
@@ -1164,7 +1174,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bOceanTides = 0;
     }
     // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
-    else if(bOceans && (body[iBody].dSurfaceWaterMass > 0.0) && body[iBody].bRunaway)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
     {
       body[iBody].bOceanTides = 0;
     }
@@ -1180,14 +1190,14 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
       body[iBody].bEnvTides = 0;
     }
     // Still have the envelope!
-    else if(bEnv && (body[iBody].dEnvelopeMass > 0.0))
+    else if(bEnv && (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
     {
       body[iBody].bEnvTides = 1;
     }
 
     // Enfore that they are mutually exclusive
     // i.e. if using EnvTides or an envelope exists, ocean can't do anything
-    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > 0.0))
+    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
       body[iBody].bOceanTides = 0;
   }
 }

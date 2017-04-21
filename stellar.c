@@ -964,30 +964,6 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
 }
 
-double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
-
-  double dDRadiusDt = 0;
-  double dDJDt = 0;
-  double dOmegaCrit;
-
-  // First, let's calculate dR/dt due to contraction/expansion
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
-    // Compute a very simple derivative. NOTE: This won't work if variables like the
-    // stellar mass are changing, too! Perhaps it's better to keep track of the previous
-    // values of the radius and compute the derivative from those? TODO: Check this.
-
-    // Delta t = 10 years. TODO: Check this.
-    double eps = 10 * YEARDAY * DAYSEC;
-    double dRadMinus, dRadPlus;
-
-    dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
-    dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
-    dDRadiusDt = (dRadPlus - dRadMinus) /  (2. * eps);
-
-  }
-
-  // Now, let's calculate dJ/dt due to magnetic braking
-  // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
 /*! Compute the instataneous change in stellar radius according to the Baraffe models.
  * Valid for the Baraffe stellar models
  */

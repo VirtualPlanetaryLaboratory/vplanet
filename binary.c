@@ -4,7 +4,7 @@
  *
  * Subroutines that control the integration of the
  * circumbinary planet dynamics module.
- * Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet)
+ * Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet(s))
  * Leung and Lee 2013 Theory ONLY applies to the restricted 3 body approximation.
 */
 
@@ -326,7 +326,22 @@ void ReadHaltHolmanUnstable(BODY *body,CONTROL *control,FILES *files,OPTIONS *op
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltHolmanUnstable,files->iNumInputs);
+      control->Halt[iFile-1].bHaltHolmanUnstable = 0;
+}
+
+void ReadHaltRocheLobe(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltRocheLobe = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      control->Halt[iFile-1].bHaltRocheLobe = 0;
 }
 
 void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -341,7 +356,7 @@ void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bBinaryUseMatrix = 1; // Default to using the matrix
+      body[iFile-1].bBinaryUseMatrix = 0; // Default to using the matrix
 }
 
 /* Init Options BINARY */
@@ -439,6 +454,12 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTHOLMAN].iType = 0;
   fnRead[OPT_HALTHOLMAN] = &ReadHaltHolmanUnstable;
 
+  sprintf(options[OPT_HALTROCHELOBE].cName,"bHaltRocheLobe");
+  sprintf(options[OPT_HALTROCHELOBE].cDescr,"Halt roche lobe crossing occurs?");
+  sprintf(options[OPT_HALTROCHELOBE].cDefault,"0");
+  options[OPT_HALTROCHELOBE].iType = 0;
+  fnRead[OPT_HALTROCHELOBE] = &ReadHaltRocheLobe;
+
   sprintf(options[OPT_BINUSEMATRIX].cName,"bBinaryUseMatrix");
   sprintf(options[OPT_BINUSEMATRIX].cDescr,"Use matrix or compute main variables on the fly?");
   sprintf(options[OPT_BINUSEMATRIX].cDefault,"1");
@@ -457,6 +478,15 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 }
 
 /******************* Verify BINARY ******************/
+
+/*
+ * Note: update always has [0] as the terminal index since ONLY binary can
+ * update these variables.  Theory does NOT apply if another phenomena tries
+ * to change a circumbinary planet's orbital motion.  Also, only iaBody eqns
+ * care about are their own.  CBP only cares about itself since bodies 0 and 1
+ * are assured to be stars in binary, hence binary.  This was all done intentionally
+ * to make it more difficult to mess up the binary equations.
+ */
 
 void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
 
@@ -544,6 +574,9 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));
+
+    // LL13 theory doesn't seem to conserve energy, so force semi-major axis to be constant
+    body[iBody].dSemi = body[iBody].dR0;
   }
   else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
   {
@@ -567,7 +600,7 @@ void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   // If binary is being used, ALL bodies must have correct type
-  if(iBody < 2) // Primary or secondary
+  if(iBody < 2) // Primary or secondary star
   {
     if(body[iBody].iBodyType != 1)
     {
@@ -709,6 +742,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
     // Init orbital elements
     fdAssignOrbitalElements(body,iBody);
+    body[iBody].dSemi = body[iBody].dR0; // Fix semi-major axis to be guiding center
 
     // Set up initial orbital elements that are primary variables
     body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
@@ -813,8 +847,7 @@ void FinalizeUpdateCBPPhiDotBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,i
 /***************** BINARY Halts *****************/
 
 
-/*
- * If the CBP's dSemi is less than the Holman stability limit, it's unstable and
+/*!If the CBP's dSemi is less than the Holman stability limit, it's unstable and
  * integration ends
  */
 int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
@@ -838,15 +871,39 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
     return 0;
 }
 
+/*! If the secondary enters the roche lobe of the primary, HALT! */
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  double r_crit = fdRocheLobe(body);
+
+  // Check for roche lobe crossing
+  if(body[iBody].iBodyType == 1 && iBody == 1)
+  {
+    if(body[iBody].dSemi <= r_crit)
+    {
+      if(io->iVerbose >= VERBPROG)
+      {
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,r_crit/AUCM);
+      }
+      return 1;
+    }
+    return 0;
+  }
+  else // Doesn't apply to CBP, central star
+    return 0;
+}
+
 void CountHaltsBinary(HALT *halt,int *iHalt) {
   if(halt->bHaltHolmanUnstable)
+    (*iHalt)++;
+  if(halt->bHaltRocheLobe)
     (*iHalt)++;
 }
 
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].bHaltHolmanUnstable)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltHolmanUnstable;
-
+  if (control->Halt[iBody].bHaltRocheLobe)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltRocheLobe;
 }
 
 /************* BINARY Outputs ******************/
@@ -1082,6 +1139,23 @@ void WriteCBPZDotBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   }
 }
 
+/*! Write Earth-normalized insolation received by CBP averaged over 1 binary orbit
+ *  assuming P_bin << P_cbp
+ */
+void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Make sure that this is a planet, if not, -1
+  if(iBody < 2 || body[iBody].iBodyType != 0)
+  {
+    *dTmp = -1;
+  }
+
+  *dTmp = fdApproxInsol(body,iBody);
+
+  // Always in units of insolation received by Earth
+  strcpy(cUnit,"F/F_Earth");
+}
+
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
 {
   sprintf(output[OUT_FREEECC].cName,"FreeEcc");
@@ -1225,6 +1299,13 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   output[OUT_CBPPHIDOT].iNum = 1;
   output[OUT_CBPPHIDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHIDOT] = &WriteCBPPhiDotBinary;
+
+  sprintf(output[OUT_CBPINSOL].cName,"CBPInsol");
+  sprintf(output[OUT_CBPINSOL].cDescr,"CBP's binary orbit-averaged Insolation");
+  output[OUT_CBPINSOL].bNeg = 0;
+  output[OUT_CBPINSOL].iNum = 1;
+  output[OUT_CBPINSOL].iModuleBit = BINARY;
+  fnWrite[OUT_CBPINSOL] = &WriteCBPInsol;
 
 }
 
@@ -1376,7 +1457,7 @@ void fdAssignOrbitalElements(BODY *body, int iBody)
   body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
 }
 
-/* Compute a body's semimajor axis
+/* Compute a body's semi-major axis
  * a = -mu/(2*eps)
  */
 double fdComputeSemi(BODY *body, int iBody)
@@ -1585,8 +1666,7 @@ double fdEccToTrue(double E, double e)
   return 2.0*atan2(sqrt(1.-e)*cos(E/2.),sqrt(1.+e)*sin(E/2.));
 }
 
-/*
- * Compute the dynamical stability limit, a_crit, first computed by
+/*!Compute the dynamical stability limit, a_crit, first computed by
  * Holman and Wieget 1999 that depends on binary dSemi, dEcc
  * If CBP.dSemi < a_crit, planet is unstable and system should halt
  */
@@ -1597,6 +1677,26 @@ double fdHolmanStability(BODY *body)
   double mu = body[1].dMass/(body[0].dMass + body[1].dMass);
 
   return (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
+}
+
+/*! Compute the roche lobe of the primary according to Egglton's formula given
+ * in https://en.wikipedia.org/wiki/Roche_lobe
+ */
+double fdRocheLobe(BODY *body)
+{
+  double q = body[0].dMass/body[1].dMass;
+  double num = 0.49*pow(q,2./3.);
+  double denom = 0.6*pow(q,2./3.) + log(1.0 + pow(q,1./3.));
+
+  double rochelobe = (num/denom)*body[1].dSemi;
+
+  // Enforce hard radius limit
+  if(rochelobe < body[0].dRadius)
+  {
+    return body[0].dRadius;
+  }
+  else
+    return rochelobe;
 }
 
 /* Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset
@@ -1697,6 +1797,10 @@ double fdPot0(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
+  /* XXX TESTING 2nd order in binary eccentricity addition */
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
@@ -1714,6 +1818,10 @@ double fdPot0dR(int j, int k, double R, BODY *body)
   double M = body[0].dMass + body[1].dMass;
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
+
+  /* XXX TESTING 2nd order in binary eccentricity addition */
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -1736,6 +1844,10 @@ double fdPot1(int j, int k, double R, BODY *body)
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
 
+  /* XXX TESTING 2nd order in binary eccentricity addition */
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
@@ -1752,6 +1864,10 @@ double fdPot1dR(int j, int k, double R, BODY * body)
   double M = body[0].dMass + body[1].dMass;
   double alphaa = (body[1].dSemi*body[1].dMass/M)/R;
   double alphab = (body[1].dSemi*body[0].dMass/M)/R;
+
+  /* XXX TESTING 2nd order in binary eccentricity addition */
+  //alphaa *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
+  //alphab *= (1.0 + body[1].dEcc*body[1].dEcc/2.);
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
@@ -1875,7 +1991,9 @@ double fdDMk(int k, BODY * body, int iBody)
 
 /*
  * LL13 Functions to compute cylindrical positions, velocities
- * R, phi, z and RDot, phiDot, zDot
+ * R, phi, z and RDot, phiDot, zDot.  Note: iaBody ALWAYS has one element:
+ * the CBP whose equations are being integrated/evaluated since in binary, each
+ * CBP is assured to have bodies 0, 1 be the stars.
  */
 
 /* Computes the CBP orbital radius */
@@ -2025,7 +2143,35 @@ double fdCBPZDotBinary(BODY *body,SYSTEM *system,int *iaBody)
 
 /* Misc Functions */
 
-/* Compute the exact flux (as close to exact as you want)
+/*! Compute the approximate flux in the limit P_bin << P_cbp
+ * received by the CBP from the 2 stars averaged over 1 binary orbit
+ * Assumes binary orb elements don't vary much per orbit
+ */
+double fdFluxApproxBinary(BODY *body, int iBody)
+{
+
+  // Compute CBP position in cylindrical coordinates
+  double r = sqrt(body[iBody].dCBPR*body[iBody].dCBPR + body[iBody].dCBPZ*body[iBody].dCBPZ);
+  double psi = body[iBody].dCBPPhi;
+
+  // Intermediate quantities
+  double mu1, mu2, tmp;
+  mu1 = body[0].dMass/(body[0].dMass + body[1].dMass);
+  mu2 = body[1].dMass/(body[0].dMass + body[1].dMass);
+
+  double flux;
+
+  // Monopole term
+  flux = (body[0].dLuminosity + body[1].dLuminosity)/(4.0*PI*r*r);
+
+  // Dipole term
+  tmp = (mu1*body[1].dLuminosity - mu2*body[0].dLuminosity)/(8.0*PI*r*r*r);
+  tmp *= 3.0*body[1].dSemi*body[1].dEcc*cos(psi);
+
+  return (flux + tmp);
+}
+
+/*! Compute the exact flux (as close to exact as you want)
  * received by the CBP from the 2 stars averaged over 1 CBP orbit
  * Assumes binary orb elements don't vary much over 1 CBP orbit
  */
@@ -2098,7 +2244,32 @@ double fdFluxExactBinary(BODY *body, int iBody, double L0, double L1)
   return flux/FLUX_INT_MAX;
 }
 
-/* Dumps out a bunch of values to see if they agree with LL13 */
+/*! Compute the approximate equlibrirum temperature for a circumbinary
+ *  planet averaged over the binary orbit
+ */
+double fdApproxEqTemp(BODY *body, int iBody, double dAlbedo)
+{
+  // Compute the approximate flux
+  double flux = fdFluxApproxBinary(body,iBody);
+
+  return pow(flux*(1.0-dAlbedo)/(4.0*SIGMA),1./4.);
+}
+
+
+/*! Compute the approximate insolation for a circumbinary
+ *  planet averaged over the binary orbit relative to Earth's
+ * where F_Earth = 1361 W/m^2
+ */
+double fdApproxInsol(BODY *body, int iBody)
+{
+  // Compute the approximate flux
+  double flux = fdFluxApproxBinary(body,iBody);
+
+  return flux/FLUX_EARTH;
+}
+
+
+/*! Dumps out a bunch of values to see if they agree with LL13 */
 void binaryDebug(BODY * body)
 {
   fprintf(stderr,"binary debug information:\n");

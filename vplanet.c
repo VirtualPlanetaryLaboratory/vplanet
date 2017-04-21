@@ -16,7 +16,7 @@
 int main(int argc,char *argv[]) {
   time_t dStartTime;
   dStartTime = time(NULL);
-  
+
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
   OUTPUT *output;
@@ -29,14 +29,14 @@ int main(int argc,char *argv[]) {
   char infile[NAMELEN];
   fnReadOption fnRead[MODULEOPTEND]; // XXX Pointers?
   fnWriteOutput fnWrite[MODULEOUTEND];
-  fnUpdateVariable ***fnUpdate; 
+  fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
   /** Must initialize all options and outputs for all modules
-     independent of what is selected. This allows a complete 
-     help screen as well as checks during ReadOptions. This 
-     also requires the only modifications outside of module.c: 
-     Add explicit references to all modules at the end of 
+     independent of what is selected. This allows a complete
+     help screen as well as checks during ReadOptions. This
+     also requires the only modifications outside of module.c:
+     Add explicit references to all modules at the end of
      options.c, output.c and util.c.
   */
   options = malloc(MODULEOPTEND*sizeof(OPTIONS));
@@ -78,7 +78,7 @@ int main(int argc,char *argv[]) {
     }
     if (memcmp(argv[iOption],"-h",2) == 0)
       Help(options,output,files.cExe);
-  }	  
+  }
 
   if (iQuiet != -1 && iVerbose != -1) {
     fprintf(stderr,"ERROR: -v and -q cannot be set simultaneously.\n");
@@ -87,20 +87,20 @@ int main(int argc,char *argv[]) {
 
   /* Now identify input file, usually vpl.in */
   for (iOption=1;iOption<argc;iOption++) {
-    if (iOption != iVerbose && iOption != iQuiet && iOption != iOverwrite) 
+    if (iOption != iVerbose && iOption != iQuiet && iOption != iOverwrite)
       strcpy(infile,argv[iOption]);
   }
 
   /* Read input files */
   ReadOptions(&body,&control,&files,&module,options,output,&system,&update,fnRead,infile);
 
-  if (control.Io.iVerbose >= VERBINPUT) 
+  if (control.Io.iVerbose >= VERBINPUT)
     printf("Input files read.\n");
 
   /* Check that user options are mutually compatible */
   VerifyOptions(body,&control,&files,&module,options,output,&system,update,&fnOneStep,&fnUpdate);
-  
-  if (control.Io.iVerbose >= VERBINPUT) 
+
+  if (control.Io.iVerbose >= VERBINPUT)
     printf("Input files verified.\n");
 
   control.Evolve.dTime=0;

@@ -20,7 +20,7 @@ mpl.rcParams.update({'font.size': 24})
 
 # Flags to control functionality
 show_plot = True
-save_plot = True
+save_plot = False
 
 # Load in simulation results using vplot
 ocean_path = "Data/ocean/"

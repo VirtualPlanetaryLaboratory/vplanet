@@ -341,6 +341,27 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
 
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
+
+}
+
+void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
+  update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
+  update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;
+
+  update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
+  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
+}
+
+void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+  update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
+  update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
+
+  update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -475,7 +496,7 @@ void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) 
 }
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  // Nothing
+ // Nothing
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -506,6 +527,8 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
@@ -539,6 +562,14 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumVars++;
   update[iBody].iNumRot++;
 
+  if (update[iBody].iNumLostAngMom == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostAngMom++;
+
+  if (update[iBody].iNumLostEng == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostEng++;
+
   if (body[iBody].dTemperature > 0) {
     if (update[iBody].iNumTemperature == 0)
       update[iBody].iNumVars++;
@@ -563,6 +594,16 @@ void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int
 void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iRotStellar = (*iEqn)++;
+}
+
+void FinalizeUpdateLostAngMomStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iLostAngMomStellar = (*iEqn)++;
+}
+
+void FinalizeUpdateLostEngStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iLostEngStellar = (*iEqn)++;
 }
 
 void FinalizeUpdateTemperatureStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -883,6 +924,8 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
   module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
+  module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateLostAngMomStellar;
+  module->fnFinalizeUpdateLostEng[iBody][iModule] = &FinalizeUpdateLostEngStellar;
 }
 
 /************* STELLAR Functions ************/
@@ -945,6 +988,97 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Now, let's calculate dJ/dt due to magnetic braking
   // This is from Reiners & Mohanty (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis
+/*! Compute the instataneous change in stellar radius according to the Baraffe models.
+ * Valid for the Baraffe stellar models
+ */
+double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
+  // Note: Compute a very simple derivative. NOTE: This won't work if variables like the
+  // stellar mass are changing, too! Perhaps it's better to keep track of the previous
+  // values of the radius and compute the derivative from those? TODO: Check this.
+
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
+  }
+
+  // Delta t = 10 years since  10 yr << typical stellar evolution timescales
+  double eps = 10.0 * YEARDAY * DAYSEC;
+  double dRadMinus, dRadPlus;
+
+  dRadMinus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
+  dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
+
+  return (dRadPlus - dRadMinus) /  (2. * eps);
+}
+
+/*! Compute instataneous change in potential energy due to stellar radius evolution
+ * Note that this energy is released as radiation
+ */
+double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dDRadiusDt, dEdt;
+
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+  dEdt = ALPHA_STRUCT*BIGG*body[iBody].dMass*body[iBody].dMass*dDRadiusDt/(body[iBody].dRadius*body[iBody].dRadius);
+
+  return -dEdt; // Negative because I want to store energy removed from system as positive quantity
+}
+
+/*! Compute instataneous change in rotational energy due to stellar radius evolution
+ * and considering angular momentum conservation
+ */
+double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dDRadiusDt, dEdt;
+
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+  dEdt = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*dDRadiusDt*body[iBody].dRotRate*body[iBody].dRotRate;
+
+  return -dEdt; // If E_rot increases, energy un-lost, so negative sign
+}
+
+/*! Compute instataneous change in rotational energy due to stellar magnetic braking */
+double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+  double dJDt, dEdt;
+
+  // Compute the instataneous change in stellar angular momentum
+  dJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
+
+  dEdt = body[iBody].dRotRate*dJDt;
+
+  // dJ/dt < 0 -> lose energy, so store positive amount of lost energy
+  return -dEdt;
+}
+
+/*! Compute total energy lost due to stellar evolution */
+double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody)
+{
+  return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody);
+}
+
+/*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty
+ * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis.
+ */
+double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
+  double dDJDt = 0.0;
+  double dOmegaCrit;
+
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // so lost angular momentum is due to radius evolution and is lost to disk
+  // so ignore magnetic braking early on.  Only works with a stellar model selected
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
+  }
+
   if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
   else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
   if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
@@ -957,20 +1091,64 @@ double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
     }
   }
 
+  return -dDJDt; // Return positive amount
+}
+
+/*! Compute the change in rotation rate when the radius changes via conservation
+ * of angular momentum:
+ * dw/dt = -2 dR/dt * w/R
+ */
+double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dDRadiusDt;
+
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  //
-  // The equation below comes from conservation of angular momentum:
-  //
-  // dw/dt = d(I/J)/dt = (1/I) * dJ/dt - (J/I^2) * dI/dt
-  //
-  // where dJ/dt is due to winds and dI/dt is due to contraction.
-  if (body[iaBody[0]].dAge >= 1.e6 * YEARSEC) {
-    return dDJDt / (body[iaBody[0]].dRadGyra * body[iaBody[0]].dMass * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius)
-               - 2 * body[iaBody[0]].dRotRate / body[iaBody[0]].dRadius * dDRadiusDt;
-  } else {
-    return 0.;
+  // Also, only applies when you're using a stellar model!
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
+  {
+    return 0.0;
   }
+
+  // Compute the instataneous change in stellar radius
+  dDRadiusDt = fdDRadiusDtStellar(body,system,iaBody);
+
+  return -2.0*dDRadiusDt*body[iaBody[0]].dRotRate/body[iaBody[0]].dRadius;
+}
+
+/*! Compute the change in rotation rate due to magnetic braking via
+ * dw/dt = dJ/dt / I for moment of inertia I
+ */
+double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dDJDt, dMomIn;
+
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC)
+  {
+    return 0.0;
+  }
+  else
+  {
+    // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
+    dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
+
+    // Calculate moment of inertia
+    dMomIn = body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;
+
+    return dDJDt/dMomIn;
+  }
+}
+
+/*! Compute the change in rotation rate when the radius and total angular momentum
+ * are changing.
+ */
+double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
+
+  // Contributions due to contraction and magnetic braking
+  // dw_net/dt = dw_contraction/dt + dw_mag_braking/dt
+  return fdDRotRateDtCon(body,system,iaBody) + fdDRotRateDtMagBrake(body,system,iaBody);
 }
 
 double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {

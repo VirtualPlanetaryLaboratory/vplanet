@@ -6,8 +6,11 @@
 \usepackage{rotating}
 \usepackage{subfigure}
 \usepackage{afterpage}
+\usepackage{morefloats}
 \def\imagebox#1#2{\vtop to #1{\null\hbox{#2}\vfill}} % http://tex.stackexchange.com/questions/152818/top-aligned-subfigure-with-bottom-aligned-caption
-\newcommand{\xxx}[1]{{\color{red} #1}} % \xxx makes things RED
+\newcommand{\xxx}[1]{{\color{red} #1}} % Makes things RED
+\newcommand{\cn}{\xxx{(cite)}} % CITATION NEEDED
+\usepackage[nomarkers,figuresonly]{endfloat} % Push floats to the end
 
 \def\mearth{{\rm\,M_\oplus}}
 \def\rearth{{\rm\,R_\oplus}}
@@ -73,7 +76,7 @@ the roles of different radiogenic abundances and tidal heating and
 find that a planet with chondritic abundance may not generate a magnetic field, but
 all other models do maintain a magnetic field. We
 find that if planet b formed {\it in situ}, then it
-experienced $\sim$160 million years in a runaway greenhouse as the star
+experienced $169\pm 13$ million years in a runaway greenhouse as the star
 contracted during its formation. This early phase may have permanently
 desiccated the planet and/or produced a large abiotic
 oxygen atmosphere. On the other hand, if Proxima Centauri b formed
@@ -669,7 +672,7 @@ $L_\mathrm{XUV}/L_\mathrm{bol} = 2.83\times 10^{-4}$
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=6in]{star.pdf}
+\includegraphics[width=4in]{Figures/placeholder.pdf}
 \caption{Luminosity, temperature, radius, and XUV evolution of Proxima
   Centauri from $t_0$ = 1 Myr to the present day. The dashed red lines
   indicate the measured values of each parameter (see text). 1$\sigma$
@@ -814,7 +817,8 @@ integrator \citep{RauchHamilton02} and find that for modest values of
 $e$ and $i$ the two methods are nearly indistinguishable.
  
 \begin{figure}
-\includegraphics[width=\textwidth]{orbcomp_mid_e_i.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
+\centering
 \caption{Comparison between the \distorb module and the N-body code
   {\footnotesize \texttt{HNBody}} for the high $e,i$ case in Table 1.
   Planet b is represented on the left, putative planet c on the
@@ -1002,16 +1006,10 @@ M$_{\odot}$ (with the recently updated masses given by
 the two stars produce a significant quadrupole moment associated 
 with their orbits---a back-of-the-envelope calculation indicates
 that the torque associated with this quadrupole potential would 
-<<<<<<< HEAD
 be equal to the galactic tidal torque at $\sim 2000$ AU. Hence, 
 the effect of the binary host should be minor 
-at Proxima's estimated distance of $\sim$15,000 AU. The importance is increased if Proxima has a significant eccentricity. However, the modeling of the 
-=======
-be equal to the galactic tidal torque at $\sim 2000$ au. Hence, 
-the effect of the binary host should be minor though still important 
-at Prox Cen's estimated distance of $~15,000$ au. The importance is increased if Proxima
-has significant eccentricity. However, the modeling of the 
->>>>>>> cfc9a43f64579f7850f1ebb859ad2b95ec5071ba
+at Proxima's estimated distance of $\sim$15,000 AU. The importance is increased if Proxima 
+has a significant eccentricity. However, the modeling of the
 triple system in a comprehensive way is sufficiently complicated
 \citep[see, \eg][]{Harrington1968, Ford2000} to place it beyond 
 the scope of this work. Instead, we restrict ourselves to the 
@@ -1162,7 +1160,8 @@ AU.  An example of the orbital evolution of Proxima with radial
 migration is shown in Fig.~\ref{fig:galevolution}.
 
 \begin{figure}
-\includegraphics[width=0.95\textwidth]{nomigrdist.pdf}
+\centering
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
 \caption{Stability of Proxima Cenaturi's orbit without radial
   migration. Distributions of trials in which Proxima's orbit about
   $\alpha$ Cen is disrupted (red) and trials in which it survives to
@@ -1180,7 +1179,8 @@ migration is shown in Fig.~\ref{fig:galevolution}.
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=0.95\textwidth]{migrdist.pdf}
+\centering
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
 \caption{Same as Fig.~\ref{fig:galacdist} but with radial migration.
   Systems which formed interior to 4.5 kpc from the galactic center
   are disrupted more frequently than
@@ -1193,7 +1193,7 @@ migration is shown in Fig.~\ref{fig:galevolution}.
 % Fig. 2: Encounter frequency vs. R_gal
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{encvsR.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
 \caption{Stellar encounter rates as a function of galactocentric distance.
   Dark blue points correspond to pre-migration encounter rates, light 
   blue to post-migration. The large outlier in the 
@@ -1209,7 +1209,8 @@ migration is shown in Fig.~\ref{fig:galevolution}.
 % Fig. 3: Sample evolution of Prox's orbit: a) semi, peri, apo, b) incl
 
 \begin{figure}
-\includegraphics[width=\textwidth]{evol_Vpl_0257.pdf}
+\centering
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
 \caption{An example of the orbital evolution of Proxima in the galactic 
   simulations. The upper left panel shows the semi-major axis, periastron 
   distance, and apastron distance, the upper right shows the eccentricity, 
@@ -1273,7 +1274,7 @@ heating is $\sim~1$~kW/m$^{2}$.
 
 \begin{figure} 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{eqtide.pdf}
+\includegraphics[width=0.75\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Evolution of planet b's eccentricity (top), semi-major axis
   (middle), and tidal heating surface flux (bottom) assuming that
@@ -1326,7 +1327,7 @@ eccentricities for long periods of time.
 
 \begin{figure} 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{MultiLow.pdf}
+\includegraphics[width=0.75\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Evolution of orbital elements if a putative planet c exists with an 
 orbital period of 215 days and both orbits are nearly circular and nearly 
@@ -1344,7 +1345,7 @@ oscillation amplitude decays with time.
 
 \begin{figure} 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{MultiHigh.pdf}
+\includegraphics[width=0.75\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Same as Fig.~\ref{fig:MultiLow}, but for the high $e,i$ case.}
 \label{fig:MultiHigh}
@@ -1373,7 +1374,7 @@ of the planetary system.
 
 \begin{figure} 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{MultiSpins.pdf}
+\includegraphics[width=0.75\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Evolution of rotational properties of planet b for the
  two hypothetical multiplanet systems, with the low $e,i$ case 
@@ -1416,7 +1417,7 @@ during which time water is allowed to escape.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=5in]{hzevol.pdf}
+\includegraphics[width=5in]{Figures/HZEvol/hzevol.pdf}
 \caption{Evolution of the HZ of Proxima Centauri, along with the orbits of Proxima Centauri b (solid line) 
 and Mercury (dashed line). The blue region is the conservative HZ of \cite{Kopparapu13}, while the red lines
 are the HZ limits for dry planets of different albedos, $A$, from \cite{Abe11}.}
@@ -1426,183 +1427,461 @@ are the HZ limits for dry planets of different albedos, $A$, from \cite{Abe11}.}
 \subsection{Atmospheric Evolution}
 \label{sec:results:atmesc}
 
-We consider two broad formation scenarios for Proxima b: one in which
-it formed with abundant water and a thin hydrogen envelope of up to
-1\% by mass (due to either \emph{in situ} accretion or from planetary
-formation farther out followed by rapid disk-driven migration; see
-\cite{Luger15}), and one in which it formed with abundant water but no
-hydrogen. In both cases, we assume a fiducial planet mass of $1.27
-\mearth$.
+\xxx{An introduction with discrete scenarios and case study plots, then a 
+transition to hard-core MCMC stuff.}
+
+%We consider two broad formation scenarios for Proxima b: one in which
+%it formed with abundant water and a thin hydrogen envelope of up to
+%1\% by mass (due to either \emph{in situ} accretion or from planetary
+%formation farther out followed by rapid disk-driven migration; see
+%\cite{Luger15}), and one in which it formed with abundant water but no
+%hydrogen. In both cases, we assume a fiducial planet mass of $1.27
+%\mearth$.
+%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=4in]{Figures/placeholder.pdf}
+%\caption{Evolution of the water content and atmospheric O$_2$ pressure
+%  on Proxima b for different initial conditions. The initial water
+%  content is varied between 1 and 10 TO (various colors) for two
+%  different end-member scenarios: no O$_2$ surface sinks (solid lines)
+%  and instantaneous oxygen absorption at the surface (dashed
+%  lines). The planet mass is held constant at 1.27 M$_\oplus$ and the
+%  initial hydrogen envelope fraction is set to zero for all runs. In
+%  all but one of the runs, Proxima b is completely desiccated. For an
+%  initial water content of 10 TO and no surface sinks, the buildup of
+%  $\sim$ 500 bars of atmospheric O$_2$ slows the loss rate of H,
+%  preventing the last $\sim$ 1 TO of water from being lost. In the
+%  scenario that efficient oxygen sinks are present, the atmospheric
+%  O$_2$ mixing ratio never grows sufficiently to limit the escape of
+%  H, and desiccation occurs in all cases. Note that in this scenario,
+%  the curves in the ``O$_2$ pressure'' panel correspond to the
+%  equivalent O$_2$ pressure absorbed at the surface.\vspace{0.2in}}
+%\label{fig:atmesc:mirage}
+%\end{figure}
+%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=4in]{Figures/placeholder.pdf}
+%\caption{Evolution of the water and O$_2$ contents assuming Proxima b
+%  formed with a hydrogen envelope and 3 TO. Line colors correspond to
+%  different initial envelope mass fractions $f_H$, ranging from 0.0001
+%  to 0.01. In all cases, the envelope evaporates completely prior to 1
+%  Gyr. For $f_H \lesssim 0.001$, the H envelope evaporates quickly
+%  enough to allow complete desiccation of the planet prior to its
+%  arrival in the HZ at $\sim$ 160 Myr (note the purpleline on the $y$-axis in the top left panel). For $f_H \approx 0.01$, the
+%  envelope evaporates a few hundred Myr \emph{after} the planet enters
+%  the HZ, preventing any water from being lost and O$_2$ from
+%  accumulating in the atmosphere.  This is the most favorable scenario
+%  for a potentially habitable Proxima b.\vspace{0.2in}}
+%\label{fig:atmesc:hec}
+%\end{figure}
+%
+%In Fig.~\ref{fig:atmesc:mirage} we show the evolution of the latter
+%type of planet, which formed with no significant primordial
+%envelope. We consider four different initial inventories of water: 1,
+%3, 5, and 10 terrestrial oceans (1 TO $\equiv 1.39\times 10^{24}$ g,
+%the total mass of surface water on Earth; see \cite{Kasting88}). As
+%discussed in $\S$~\ref{sec:models:atmesc}, we also consider two end-member
+%scenarios regarding the photolytically-produced O$_2$: no surface
+%sinks (solid lines) and efficient surface sinks (dashed lines). In all
+%cases but one, the planet is completely desiccated within the first
+%160 Myr, building up between tens and hundreds of bars of O$_2$ in
+%either its atmosphere or in the solid body. For an initial water
+%content of 10 TO and no surface sinks, O$_2$ builds up to high enough
+%levels to throttle the supply of H to the upper atmosphere and slow
+%the total escape rate. In this scenario, $\sim 1$ TO of water remains,
+%alongside a thick 500 bar O$_2$ atmosphere. If Proxima b formed with
+%less than ten times Earth's water content, and/or had a persistent
+%convecting, reducing magma ocean, it is likely desiccated today.
+%
+%Next, in Fig.~\ref{fig:atmesc:hec}, we show the results assuming
+%Proxima b formed with a hydrogen envelope. We fix the initial water
+%content at 3 TO and consider initial envelope mass fractions $f_H$
+%ranging from $10^{-4}$ to $10^{-2}$. In all cases, the envelope
+%evaporates completely within the first several hundred Myr. For $f_H
+%\lesssim 10^{-3}$, the envelope evaporates early enough such that all
+%the water is still lost from the planet. For $f_H = 10^{-3}$, only
+%about 0.1 TO remain once the planet enters the HZ; only for $f_H \sim
+%10^{-2}$ does the presence of the envelope guard against all water
+%loss. In these calculations, we assumed inefficient surface sinks, so
+%the escape of water at late times was bottlenecked by the presence of
+%abundant O$_2$. Planets that form with hydrogen envelopes may have
+%quite reducing surfaces, which could absorb most of the O$_2$ and lead
+%to even higher total water loss. As before, a few tens to a few
+%hundreds of bars of O$_2$ remain in the atmosphere or in the solid
+%body at the end of the escape phase.
+%
+%We note that we obtain slightly more hydrogen loss than
+%\cite{OwenMohanty16}, who find that planets more massive than $\sim
+%0.9 \mearth$ with $\sim 1\%$ hydrogen envelopes cannot fully lose
+%their envelopes around M dwarfs, due primarily to the transition from
+%hydrodynamic to ballistic escape at late times. However, their
+%calculations were performed for a $0.4 \msun$ M dwarf, whose pre-main
+%sequence phase lasts $\sim 200 \mathrm{Myr}$, five times shorter than
+%that for Proxima Centauri. Nevertheless, the discrepancy is small: we
+%find that for envelope fractions greater than 1\% or masses greater
+%than our fiducial value of $1.27 \mearth$, the envelope does not
+%completely evaporate, in which case Proxima b would likely be
+%uninhabitable.
+%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=4in]{Figures/placeholder.pdf}
+%\caption{Multiple evolutionary pathways for the water on Proxima
+% b. These plots show the final water and final atmospheric O$_2$ content of the
+% planet for a suite of different initial conditions, assuming inefficient
+% surface sinks for O$_2$. Different marker
+% styles indicate different values of the planet mass, the initial
+% water content, and the initial hydrogen envelope mass fraction $f_H$
+% (the final value of $f_H$ is zero for all planets shown here). 
+% Each panel is divided into
+% quadrants, corresponding to planets that at the end of the
+% simulation have water but no O$_2$ (top left, blue), water and O$_2$ (top
+% right, yellow), neither water nor O$_2$ (bottom left, gray), and O$_2$ but no
+% water (bottom right, red). Habitable planets are those in region shaded
+% blue. Planets in the grey region are desiccated and therefore
+% uninhabitable. Planets in the red region are likewise
+% uninhabitable, but may have atmospheric O$_2$,
+% which could be incorrectly attributed to biology. Finally, planets
+% in the yellow region are habitable, since they have abundant surface
+% water, but may also have substantial atmospheric O$_2$, which could
+% be an impediment to the origin of life. These planets are also
+% particularly problematic in the context of atmospheric
+% characterization, as the presence of water and O$_2$ could fool
+% observers into believing they are inhabited.}
+%\label{fig:atmesc:synthA}
+%\end{figure}
+%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=4in]{Figures/placeholder.pdf}
+%\caption{Same as Fig.~\ref{fig:atmesc:synthB}, but assuming Proxima b
+% has efficient O$_2$ sinks, preventing the buildup of significant oxygen in the
+% atmosphere. The $x$ axis now shows the total amount of oxygen absorbed at the surface.}
+%\label{fig:atmesc:synthB}
+%\end{figure}
+%
+%Finally, in Figs.~\ref{fig:atmesc:synthA}--\ref{fig:atmesc:synthB} we present a summary of our
+%atmospheric escape calculations, showing the many possible
+%evolutionary pathways for Proxima b and how they affect its present
+%habitability. The two panels show the final water content (in TO)
+%versus the final oxygen abundance (in bars) for different initial
+%conditions, assuming inefficient oxygen sinks (Figs.~\ref{fig:atmesc:synthA}) and
+%efficient oxygen sinks (Figs.~\ref{fig:atmesc:synthB}). In all cases shown, the final
+%hydrogen envelope mass is zero.  Different values of the planet mass,
+%initial water content, and hydrogen fraction are indicated with
+%different marker styles (see legend at right). Since the axes are
+%logarithmic, we appended panels to the left and below the main plot,
+%corresponding respectively to final oxygen and water contents of
+%zero. In general, habitable outcomes are those that lie in the top
+%left of the plot (abundant water, low O$_2$). Planets in the top right
+%have abundant water but also build up large amounts of O$_2$, which
+%could render them uninhabitable \citep{LugerBarnes15} and/or fool
+%observers searching for biosignatures \citep{Schwieterman16}. Planets at the bottom of the
+%plot are desiccated and therefore uninhabitable, though some may also
+%be biosignature false positives.
+%
+%While much may be gleaned from the figure, a few results stand
+%out. First, a scenario in which Proxima b formed with a hydrogen
+%envelope of mass $\sim 0.01 \mearth$ is the most favorable for
+%habitability, as such a planet would be a ``habitable evaporated
+%core'' \citep{Luger15} and experience no water loss. However, if
+%Proxima b is more massive than $1.27 \mearth$, the envelope may not
+%completely evaporate and the planet may not be habitable
+%today. Second, scenarios in which Proxima b formed with less hydrogen
+%can still result in present-day surface water, but in all cases in
+%which water remains, $\gtrsim 200$ bars of oxygen are
+%retained. Finally, the primary effect of a larger planet mass is to
+%increase the amount of oxygen in the atmosphere and/or absorbed at the
+%surface; while in some cases a larger planet mass can result in less
+%water loss, habitable scenarios are more likely for a lower planet
+%mass, consistent with the results of \cite{LugerBarnes15}.
+%
+%Further data on Proxima b will greatly aid in distinguishing between
+%these multiple evolutionary pathways. In particular, constraints on
+%the exact mass (via measurements of the orbital inclination) could
+%inform the atmospheric escape history, while a value for the radius
+%could provide a handle on whether or not a hydrogen envelope is
+%present.
+
+We perform a suite of Markov Chain Monte Carlo (MCMC) runs to obtain constraints on the
+present-day water content of Proxima Centauri b using the Python code package \texttt{emcee}
+\citep{ForemanMackey13}. MCMC allows one to sample from multi-dimensional probability 
+distributions that are difficult or impossible to obtain directly, which is the case for
+the ensemble of parameters that control the evolution of the planet surface water content
+in \texttt{VPLANET}. In this section, we develop a framework for inferring the probability 
+distributions of these parameters conditioned on empirical data and our understanding
+of the physical processes at play.
+
+The input parameters to our model make up the state vector $\mathbf{x}$:
+%
+\begin{align}
+\label{eq:mcmcx}
+\mathbf{x} = \{f_\mathrm{sat}, t_\mathrm{sat}, \beta_\mathrm{xuv}, M_\star, t_\star, a, m\},
+\end{align}
+%
+corresponding, respectively, to the stellar mass, the XUV saturation fraction, the XUV saturation timescale,
+the XUV power law exponent, the stellar age, the semi-major axis of the planet, and the
+mass of the planet. Given a value of $\mathbf{x}$, \texttt{VPLANET} computes the evolution of the system from
+time $t = 0$ to $t = t_\star$, yielding the output vector $\mathbf{y}$:
+%
+\begin{align}
+\label{eq:mcmcy}
+\mathbf{y}(\mathbf{x}) = \{L_\star, L_\mathrm{xuv}, t_\mathrm{RG}, m_\mathrm{H}, m_\mathrm{H_2O}, P_\mathrm{O_2}\},
+\end{align}
+%
+corresponding, respectively, to the stellar luminosity, the stellar XUV luminosity, the duration of the 
+runaway greenhouse phase, the mass of the
+planet's hydrogen envelope, the mass of water remaining on its surface, and the amount of oxygen (expressed
+as a partial pressure) retained
+in either the atmosphere or the surface/mantle, all of which are evaluated at $t = t_\star$ (i.e., the present day). 
+Additional parameters that control the evolution of the 
+planet (initial water content, XUV absorption efficiency, etc.) are held fixed in individual runs; see below.
+
+Our goal in this section is to derive posterior distributions for $\mathbf{y}$ (and in particular for $m_\mathrm{H_2O}$) 
+given prior information on both 
+$\mathbf{x}$ and $\mathbf{y}$. Some parameters---such as the present-day stellar luminosity---are well-constrained,
+while others are less well-known and will thus be informed primarily by our choice of prior. This is the case for
+the XUV saturation fraction, saturation timescale, and power law exponent, which have been studied in detail 
+for solar-like stars \citep{Ribas05} but are poorly constrained for M dwarfs \citep[see, e.g.,][]{LugerBarnes2015}. 
+We therefore use flat-log priors for the saturation fraction and timescale, enforcing
+$-5 \leq \log(f_\mathrm{sat}) \leq -2$ and $-0.3 \leq \log(t_\mathrm{sat} / \mathrm{Gyr}) \leq 1$. We use
+a Gaussian prior for the XUV power law exponent, with a mean of 1.23, the value derived by \citep{Ribas05} for
+solar-like stars: $\beta_\mathrm{xuv} \sim \mathcal{N}(-1.23, 0.1)$. We choose an ad hoc standard deviation
+$\sigma = 0.1$ and verify \emph{a posteriori} that our results are not sensitive to this choice. As we show
+below, $\beta_\mathrm{xuv}$ does not strongly correlate with the total water lost or total
+amount of oxygen that builds up on the planet.
+
+We also use a flat prior for the stellar mass ($0.1 \leq M_\star / \mathrm{M}_\oplus \leq 0.15$).
+Although stronger constraints on the stellar mass exist \citep[e.g.,][]{Delfosse00,Segransan2003}, these are derived indirectly from mass-luminosity or mass-radius 
+relations, which are notoriously uncertain for low mass stars \citep[e.g.,][]{Boyajian12}. We thus
+enforce a prior on the present-day luminosity to constrain the value of $M_\star$ via our stellar evolution model (see below).
+We enforce a Gaussian prior on the stellar age $t_\star \sim \mathcal{N}(4.8, 1.4^2)$ Gyr based on the constraints discussed
+in \S\cn. 
+
+Our prior on the semi-major axis $a$ is a combination of a Gaussian prior on the orbital period, 
+$P \sim \mathcal{N}(11.186, 0.002^2)$ days \citep{AngladaEscude16}, and the stellar mass prior. 
+Finally, our prior on the planet mass $m$ combines the empirical minimum mass distribution,
+$m\sin i \sim \mathcal{N}(1.27, 0.18^2)$ M$_\oplus$ \citep{AngladaEscude16}, and the a priori inclination distribution
+for randomly aligned orbits, 
+$\sin i \sim \mathcal{U}(0, 1)$, where $\mathcal{U}$ is a uniform distribution \citep[e.g.,][]{Luger17}.
+
+We further condition our model on measured values of the stellar luminosity $L_\star$ and 
+stellar XUV luminosity $L_\mathrm{xuv}$. We take
+$L_\star \sim \mathcal{N}(1.65, 0.15^2) \times 10^{-3}$ L$_\odot$ \citep{Demory09} and 
+$\log L_\mathrm{xuv} \sim \mathcal{N}(-6.36, 0.3^2)$. We base the latter on \cite{Ribas16}, who compiled a comprehensive
+list of measurements of the emission of Proxima Centauri in the wavelength range 0.6--118 nm. Summing the fluxes over
+this range and neglecting the contribution of flares, we obtain an XUV flux at Proxima Centauri b 
+$F_\mathrm{xuv} \approx 252\ \mathrm{erg\ cm^{-2}\ s^{-1}}$, corresponding to $\log L_\mathrm{xuv} = -6.36$ for $a = 0.0485$ AU. Given the
+lack of uncertainties for many of the values compiled in \cite{Ribas16} and the fact that some of those estimates
+are model extrapolations, it is difficult to establish a reliable error estimate for this value. We make the 
+ad hoc but conservative choice $\sigma = 0.3$ dex, noting that the three measurements that inform the X-ray luminosity 
+of the star in \cite{Ribas16} (which dominates its XUV emission) have a spread corresponding to $\sigma = 0.2$ dex. 
+However, more rigorous constraints on the XUV emission of Proxima Cen with reliable uncertainties are direly needed
+to obtain more reliable estimates of water loss from Proxima Cen b.
+
+Given these constraints, we wish to find the posterior distribution of each of the parameters in Equations~(\ref{eq:mcmcx}) 
+and~(\ref{eq:mcmcy}). We thus define our likelihood function $\mathcal{L}$ for a given state vector $\mathbf{x}$ as
+%
+\begin{align}
+\ln \mathcal{L}(\mathbf{x}) = &- \frac{1}{2}\left[\frac{(L_\mathrm{\star}(\mathbf{x}) - L_\mathrm{\star})^2}{\sigma_{L_\star}^2}
+                              - \frac{(L_\mathrm{xuv}(\mathbf{x}) - L_\mathrm{xuv})^2}{\sigma_{L_\mathrm{xuv}}^2}\right]
+                                \nonumber\\
+                             &+ \ln \mathrm{Prior}(\mathbf{x}) + C,
+\end{align}
+%
+where $L_\mathrm{\star}(\mathbf{x})$ and $L_\mathrm{xuv}(\mathbf{x})$ are, respectively, the model predictions for the present-day 
+stellar luminosity and stellar XUV luminosity given the state vector $\mathbf{x}$, $L_\mathrm{\star}$ and $L_\mathrm{xuv}$ are
+their respective observed values, and $\sigma_{L_\star}^2$ and $\sigma_{L_\mathrm{xuv}}^2$ are the uncertainties on those observations. The
+$\ln \mathrm{Prior}(\mathbf{x})$ term is the prior probability and $C$ is an arbitrary normalization constant. Expressed in this form,
+the observed values of $L_\mathrm{\star}$ and $L_\mathrm{xuv}$ are our ``data,'' while the constraints on the other parameters
+are ``priors,'' though the distinction is purely semantic.
 
 \begin{figure}[ht]
-\centering
-\includegraphics[width=6in]{mirage.pdf}
-\caption{Evolution of the water content and atmospheric O$_2$ pressure
-  on Proxima b for different initial conditions. The initial water
-  content is varied between 1 and 10 TO (various colors) for two
-  different end-member scenarios: no O$_2$ surface sinks (solid lines)
-  and instantaneous oxygen absorption at the surface (dashed
-  lines). The planet mass is held constant at 1.27 M$_\oplus$ and the
-  initial hydrogen envelope fraction is set to zero for all runs. In
-  all but one of the runs, Proxima b is completely desiccated. For an
-  initial water content of 10 TO and no surface sinks, the buildup of
-  $\sim$ 500 bars of atmospheric O$_2$ slows the loss rate of H,
-  preventing the last $\sim$ 1 TO of water from being lost. In the
-  scenario that efficient oxygen sinks are present, the atmospheric
-  O$_2$ mixing ratio never grows sufficiently to limit the escape of
-  H, and desiccation occurs in all cases. Note that in this scenario,
-  the curves in the ``O$_2$ pressure'' panel correspond to the
-  equivalent O$_2$ pressure absorbed at the surface.\vspace{0.2in}}
-\label{fig:atmesc:mirage}
+ \begin{center}
+     \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/star_posteriors.pdf}
+      \caption{Posterior distributions for the various stellar parameters used in the model. The first eight
+               parameters are model inputs, with their corresponding priors shown in red. The combination of
+               these priors and the physical models in \texttt{VPLANET} constrain the stellar and planetary
+               parameters shown in this section. Blue curves show Gaussian fits to the posterior distributions,
+               with the mean and standard deviation indicated at the top right.
+               The last panel shows the duration of the runaway greenhouse
+               phase for Proxima Centauri b, one of the model outputs, which we find to be 169 $\pm$ 13 Myr.}
+    \label{fig:star_posteriors}
+ \end{center}
+\end{figure}
+
+Given this likelihood function, we use MCMC to obtain the posterior probability distributions for each of the parameters
+of interest. We draw each of the $\mathbf{x}$ from their respective prior distributions and run 40 parallel chains of 5,000 
+steps each, discarding the first 500 steps as burn-in. The marginalized posterior distributions for the stellar mass, saturation fraction,
+saturation timescale, age, semi-major axis, planet mass, present-day stellar luminosity, present-day stellar XUV luminosity, and 
+duration of the runaway greenhouse are shown in Figure~\ref{fig:star_posteriors} as the black histograms. The red curves 
+indicate our priors/data, and the purple curve is a Gaussian fit to the runaway greenhouse duration posterior,
+yielding $t_\mathrm{RG} = 169 \pm 13$ Myr.
+
+By construction, the planet mass, stellar age, present-day stellar luminosity, and present-day stellar XUV luminosity posteriors reflect
+their prior distributions. As mentioned above, the stellar mass posterior is entirely informed by the luminosity posterior via the
+\cite{YonseiYale13} stellar evolution tracks. The stellar mass in turn constrains the semi-major axis (via the prior on the period and
+Kepler's laws). The XUV saturation fraction is fairly well constrained by the present-day XUV luminosity; a log-normal fit
+to its posterior yields $\log\ f_\mathrm{sat} = -3.1 \pm 0.5$, which is fully consistent with the observation that M dwarfs
+saturate at or below $\log\ f_\mathrm{sat} \approx -3$ \citep{Jackson2012, Shkolnik2014}. The longer tail at high $f_\mathrm{sat}$ results from the fact that
+this parameter is strongly correlated with the saturation timescale, $t_\mathrm{sat}$ (see Figure~\ref{fig:corner} below). If
+saturation is short-lived, the initial saturation fraction must be higher to match the present-day XUV luminosity. Interestingly,
+our runs do not provide any constraints on $t_\mathrm{sat}$, whose value is equally likely (in log space) across the range 
+$[0.5, 10]$ Gyr. Finally, the posterior for the XUV power law exponent $\beta_\mathrm{xuv}$ (not shown in the Figure) is 
+the same as the adopted prior, as the present data is insufficient to constrain it.
+
+\begin{figure}[ht]
+ \begin{center}
+     \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/planet_epsilon.pdf}
+      \caption{Marginalized posteriors for the present-day water content (left) and atmospheric oxygen
+      pressure (center) on Proxima Cen b. The joint posteriors for these two parameters are shown at the 
+      right. \textbf{(a)} Posteriors for the default run ($m_\mathrm{H_2O}^0 = 5$ TO, $m_\mathrm{H}^0 = 0$,
+      $\epsilon_\mathrm{xuv} = 0.15$, $\zeta_\mathrm{O_2} = 0$). \textbf{(b)} Same as (a), but for
+      $\epsilon_\mathrm{xuv} = 0.05$. \textbf{(c)} Same as (a), but for
+      $\epsilon_\mathrm{xuv} = 0.01$. For $\epsilon_\mathrm{xuv} \gtrsim 0.05$, the planet is desiccated or
+      almost desiccated and builds up between 500 and 900 bars of O$_2$ in most runs. For $\epsilon_\mathrm{xuv} \sim 0.01$,
+      the planet loses less water and builds up less O$_2$, though the loss of more than 1 TO is still likely.
+      }
+    \label{fig:planet_epsilon}
+ \end{center}
 \end{figure}
 
 \begin{figure}[ht]
-\centering
-\includegraphics[width=6in]{hec.pdf}
-\caption{Evolution of the water and O$_2$ contents assuming Proxima b
-  formed with a hydrogen envelope and 3 TO. Line colors correspond to
-  different initial envelope mass fractions $f_H$, ranging from 0.0001
-  to 0.01. In all cases, the envelope evaporates completely prior to 1
-  Gyr. For $f_H \lesssim 0.001$, the H envelope evaporates quickly
-  enough to allow complete desiccation of the planet prior to its
-  arrival in the HZ at $\sim$ 160 Myr (note the purpleline on the $y$-axis in the top left panel). For $f_H \approx 0.01$, the
-  envelope evaporates a few hundred Myr \emph{after} the planet enters
-  the HZ, preventing any water from being lost and O$_2$ from
-  accumulating in the atmosphere.  This is the most favorable scenario
-  for a potentially habitable Proxima b.\vspace{0.2in}}
-\label{fig:atmesc:hec}
+ \begin{center}
+     \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/planet_epsilon10.pdf}
+      \caption{Similar to Figure~\ref{fig:planet_epsilon}, but for an initial water content
+      $m_\mathrm{H_2O}^0 = 10$ TO. As before, the rows correspond to XUV escape efficiencies of
+      0.15, 0.05, and 0.01 from top to bottom, respectively. For high XUV efficiency, Proxima
+      Cen b loses more than 5 TO in most runs (and is desiccated in $\sim$ 20\% of runs). At lower
+      efficiency, the planet loses less water. The amount of O$_2$ that builds up is similar
+      to before, but a buildup of more than 1000 bars is now possible.}
+    \label{fig:planet_epsilon10}
+ \end{center}
 \end{figure}
 
-In Fig.~\ref{fig:atmesc:mirage} we show the evolution of the latter
-type of planet, which formed with no significant primordial
-envelope. We consider four different initial inventories of water: 1,
-3, 5, and 10 terrestrial oceans (1 TO $\equiv 1.39\times 10^{24}$ g,
-the total mass of surface water on Earth; see \cite{Kasting88}). As
-discussed in $\S$~\ref{sec:models:atmesc}, we also consider two end-member
-scenarios regarding the photolytically-produced O$_2$: no surface
-sinks (solid lines) and efficient surface sinks (dashed lines). In all
-cases but one, the planet is completely desiccated within the first
-160 Myr, building up between tens and hundreds of bars of O$_2$ in
-either its atmosphere or in the solid body. For an initial water
-content of 10 TO and no surface sinks, O$_2$ builds up to high enough
-levels to throttle the supply of H to the upper atmosphere and slow
-the total escape rate. In this scenario, $\sim 1$ TO of water remains,
-alongside a thick 500 bar O$_2$ atmosphere. If Proxima b formed with
-less than ten times Earth's water content, and/or had a persistent
-convecting, reducing magma ocean, it is likely desiccated today.
+The two quantities that are of the most interest to us --- the final water content $m_\mathrm{H_2O}$ and final O$_2$ atmospheric 
+pressure $P_\mathrm{O_2}$ of Proxima Cen b --- depend on four additional parameters we must specify: the initial water content $m_\mathrm{H_2O}^0$, the initial hydrogen 
+mass $m_\mathrm{H}^0$ (if the planet formed with a primordial envelope), the XUV escape efficiency $\epsilon_\mathrm{xuv}$, and
+the O$_2$ uptake efficiency $\zeta_\mathrm{O_2}$ of the planet surface. In principle, planet formation models could provide
+priors on $m_\mathrm{H_2O}^0$ and $m_\mathrm{H}^0$, but such models depend on additional parameters that are unknown or poorly 
+constrained. The same is true for the XUV escape efficiency, which can be modeled as in \cite{Ribas16}, and the rate of
+absorption of O$_2$ at the surface, which can be computed as in \cite{Schaefer16}. However, given the large number of unknown
+parameters needed to constrain these four parameters, for simplicity we perform independent MCMC runs for fixed combinations
+of these. By doing this, we circumvent potential biases arising from incorrect priors on these parameters while still
+highlighting how our results scale for different assumptions about their values.
 
-Next, in Fig.~\ref{fig:atmesc:hec}, we show the results assuming
-Proxima b formed with a hydrogen envelope. We fix the initial water
-content at 3 TO and consider initial envelope mass fractions $f_H$
-ranging from $10^{-4}$ to $10^{-2}$. In all cases, the envelope
-evaporates completely within the first several hundred Myr. For $f_H
-\lesssim 10^{-3}$, the envelope evaporates early enough such that all
-the water is still lost from the planet. For $f_H = 10^{-3}$, only
-about 0.1 TO remain once the planet enters the HZ; only for $f_H \sim
-10^{-2}$ does the presence of the envelope guard against all water
-loss. In these calculations, we assumed inefficient surface sinks, so
-the escape of water at late times was bottlenecked by the presence of
-abundant O$_2$. Planets that form with hydrogen envelopes may have
-quite reducing surfaces, which could absorb most of the O$_2$ and lead
-to even higher total water loss. As before, a few tens to a few
-hundreds of bars of O$_2$ remain in the atmosphere or in the solid
-body at the end of the escape phase.
+In the runs discussed below, our default values are $m_\mathrm{H_2O}^0 = 5$ TO, $m_\mathrm{H}^0 = 0\ \mathrm{M_\oplus}$,
+$\epsilon_\mathrm{xuv} = 0.15$, and $\zeta_\mathrm{O_2} = 0$, and we vary each of these parameters in turn. 
+Figure~\ref{fig:planet_epsilon} shows the marginalized posterior distributions for the present-day water content (left column)
+and present-day O$_2$ atmospheric pressure (middle column), as well as a joint posterior for the two parameters (right column)
+for three different values of $\epsilon_\mathrm{xuv}$: \textbf{(a)} 0.15, \textbf{(b)} 0.05, and \textbf{(c)} 0.01. In the first
+two cases, the planet loses all or nearly all of the 5 TO it formed with, building up several hundred bars of O$_2$ (with
+distributions peaking at about 700 bars and with a spread of several hundred bars). For $\epsilon_\mathrm{xuv} = 0.15$, about
+10\% of runs result in no substantial oxygen remaining in the atmosphere; in these runs, the escape was so efficient as to
+remove all of the O$_2$ along with the escaping $H$. In the final case, the amount of water lost is significantly smaller:
+about 2 TO on average, with a peak in the distribution corresponding to a loss of about 0.8 TO. The amount of O$_2$
+remaining is similarly smaller, but still exceeding 100 bars and with similar spread as before. Finally, the joint posterior
+plots emphasize how correlated the present-day water and oxygen content of Proxima Cen b are. Since the rate at which
+oxygen builds up in the atmosphere is initially constant at first \citep{LugerBarnes15}, and since the amount of water
+lost scales with the duration of the escape period, there is a tight linear correlation between the two quantities
+(lower right hand corner of the joint posterior plots). However, as the atmospheric mixing ratio of oxygen increases,
+the rate at which hydrogen escapes---and thus the rate at which oxygen is produced---begins to decrease, leading to a break
+in the linear relationship once $\sim$ 600--700 bars of oxygen build up and leading to the peak in the O$_2$ posteriors
+at around that value.
 
-We note that we obtain slightly more hydrogen loss than
-\cite{OwenMohanty16}, who find that planets more massive than $\sim
-0.9 \mearth$ with $\sim 1\%$ hydrogen envelopes cannot fully lose
-their envelopes around M dwarfs, due primarily to the transition from
-hydrodynamic to ballistic escape at late times. However, their
-calculations were performed for a $0.4 \msun$ M dwarf, whose pre-main
-sequence phase lasts $\sim 200 \mathrm{Myr}$, five times shorter than
-that for Proxima Centauri. Nevertheless, the discrepancy is small: we
-find that for envelope fractions greater than 1\% or masses greater
-than our fiducial value of $1.27 \mearth$, the envelope does not
-completely evaporate, in which case Proxima b would likely be
-uninhabitable.
+Figure~\ref{fig:planet_epsilon10} is similar to Figure~\ref{fig:planet_epsilon}, but shows runs assuming Proxima Cen b
+formed with 10 TO of water. As before, the rows correspond to different escape efficiencies (0.15, 0.05, 0.01, from top
+to bottom). The amount of water lost increases in all cases, and for $\epsilon_\mathrm{xuv} = 0.15$ the planet is
+desiccated or almost desiccated in about 20\% of runs. The amount of O$_2$ that builds up is similar to that in the
+previous figure, but O$_2$ pressures exceeding 1000 bars are now possible in 20--30\% of cases for XUV efficiencies of 0.15
+or 0.05.
 
-\afterpage{\clearpage}
-\begin{sidewaysfigure}[p]
-\centering
-\subfigure{\label{fig:atmesc:synth:a}\imagebox{4in}{\includegraphics[width=5.5in]{synth_a.pdf}}}
-\subfigure{\label{fig:atmesc:synth:c}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
-\caption{Multiple evolutionary pathways for the water on Proxima
-  b. These plots show the final water and final atmospheric O$_2$ content of the
-  planet for a suite of different initial conditions, assuming inefficient
-  surface sinks for O$_2$. Different marker
-  styles indicate different values of the planet mass, the initial
-  water content, and the initial hydrogen envelope mass fraction $f_H$
-  (the final value of $f_H$ is zero for all planets shown here). 
-  Each panel is divided into
-  quadrants, corresponding to planets that at the end of the
-  simulation have water but no O$_2$ (top left, blue), water and O$_2$ (top
-  right, yellow), neither water nor O$_2$ (bottom left, gray), and O$_2$ but no
-  water (bottom right, red). Habitable planets are those in region shaded
-  blue. Planets in the grey region are desiccated and therefore
-  uninhabitable. Planets in the red region are likewise
-  uninhabitable, but may have atmospheric O$_2$,
-  which could be incorrectly attributed to biology. Finally, planets
-  in the yellow region are habitable, since they have abundant surface
-  water, but may also have substantial atmospheric O$_2$, which could
-  be an impediment to the origin of life. These planets are also
-  particularly problematic in the context of atmospheric
-  characterization, as the presence of water and O$_2$ could fool
-  observers into believing they are inhabited.}
-\label{fig:atmesc:synthA}
-\end{sidewaysfigure}
+\begin{figure}[ht]
+ \begin{center}
+     \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/planet_hydrogen.pdf}
+      \caption{Similar to Figure~\ref{fig:planet_epsilon}, but this time varying the initial mass of the primordial
+      hydrogen envelope of Proxima Cen b. Other parameters are set to their default values. The initial mass of hydrogen
+      is $m_\mathrm{H}^0 =$ \textbf{(a)} $0.01\ \mathrm{M_\oplus}$, \textbf{(a)} $0.001\ \mathrm{M_\oplus}$, and
+      \textbf{(a)} $0.0001\ \mathrm{M_\oplus}$. Note the broken axes in the first two rows. In the first two cases,
+      no water is lost in more than half of the runs; in such cases, a thin hydrogen envelope remains today. In the
+      final case, most planets lost all their hydrogen and all their water. In order to prevent the runaway loss
+      of its water, Proxima Cen b must have formed with more than 0.01\% of its mass in the form of a hydrogen envelope.
+      }
+    \label{fig:planet_hydrogen}
+ \end{center}
+\end{figure}
 
-\begin{sidewaysfigure}[p]
-\centering
-\subfigure{\label{fig:atmesc:synth:b}\imagebox{4in}{\includegraphics[width=5.5in]{synth_b.pdf}}}
-\subfigure{\label{fig:atmesc:synth:d}\imagebox{4in}{\includegraphics[width=2.14in]{synth_c.pdf}}}
-\caption{Same as Fig.~\ref{fig:atmesc:synthB}, but assuming Proxima b
-  has efficient O$_2$ sinks, preventing the buildup of significant oxygen in the
-  atmosphere. The $x$ axis now shows the total amount of oxygen absorbed at the surface.}
-\label{fig:atmesc:synthB}
-\end{sidewaysfigure}
+In Figure~\ref{fig:planet_hydrogen} we explore the effect of varying the initial hydrogen content of the planet.
+From top to bottom, the rows correspond to initial hydrogen masses equal to 0.01, 0.001, and 0.0001~$\mathrm{M_\oplus}$.
+In the first two cases, the effect of the envelope is clear, as most planets lose no water and build up no oxygen.
+These are mostly cases in which a portion of the hydrogen envelope remains at the present day. However, if the
+initial hydrogen mass is on the order of 0.0001~$\mathrm{M_\oplus}$ (corresponding to roughly 100 times Earth's
+total atmospheric mass), the shielding effect of the envelope is 
+almost negligible; compare panel \textbf{(c)} to the top panel in Figure~\ref{fig:planet_epsilon} (the default run).
+In this case, most of the water is lost to space in the majority of the runs.
 
-Finally, in Figs.~\ref{fig:atmesc:synthA}--\ref{fig:atmesc:synthB} we present a summary of our
-atmospheric escape calculations, showing the many possible
-evolutionary pathways for Proxima b and how they affect its present
-habitability. The two panels show the final water content (in TO)
-versus the final oxygen abundance (in bars) for different initial
-conditions, assuming inefficient oxygen sinks (Figs.~\ref{fig:atmesc:synthA}) and
-efficient oxygen sinks (Figs.~\ref{fig:atmesc:synthB}). In all cases shown, the final
-hydrogen envelope mass is zero.  Different values of the planet mass,
-initial water content, and hydrogen fraction are indicated with
-different marker styles (see legend at right). Since the axes are
-logarithmic, we appended panels to the left and below the main plot,
-corresponding respectively to final oxygen and water contents of
-zero. In general, habitable outcomes are those that lie in the top
-left of the plot (abundant water, low O$_2$). Planets in the top right
-have abundant water but also build up large amounts of O$_2$, which
-could render them uninhabitable \citep{LugerBarnes15} and/or fool
-observers searching for biosignatures \citep{Schwieterman16}. Planets at the bottom of the
-plot are desiccated and therefore uninhabitable, though some may also
-be biosignature false positives.
+\begin{figure}[ht]
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/planet_magma.pdf}
+     \caption{The same as panel (a) in Figure~\ref{fig:planet_epsilon}, but for efficient surface sinks
+     ($\zeta_\mathrm{O_2} = 1$). The O$_2$ posterior now corresponds to the amount of oxygen (in bars) absorbed
+     at the planet surface. The absence of atmospheric O$_2$ facilitates the loss of hydrogen, which must
+     no longer diffuse through the O$_2$ to escape. In this case, nearly 80\% of runs result in complete desiccation
+     (note the broken axis in the first panel). In all cases, Proxima Cen b loses at least 1 TO.}
+   \label{fig:planet_magma}
+\end{center}
+\end{figure}
 
-While much may be gleaned from the figure, a few results stand
-out. First, a scenario in which Proxima b formed with a hydrogen
-envelope of mass $\sim 0.01 \mearth$ is the most favorable for
-habitability, as such a planet would be a ``habitable evaporated
-core'' \citep{Luger15} and experience no water loss. However, if
-Proxima b is more massive than $1.27 \mearth$, the envelope may not
-completely evaporate and the planet may not be habitable
-today. Second, scenarios in which Proxima b formed with less hydrogen
-can still result in present-day surface water, but in all cases in
-which water remains, $\gtrsim 200$ bars of oxygen are
-retained. Finally, the primary effect of a larger planet mass is to
-increase the amount of oxygen in the atmosphere and/or absorbed at the
-surface; while in some cases a larger planet mass can result in less
-water loss, habitable scenarios are more likely for a lower planet
-mass, consistent with the results of \cite{LugerBarnes15}.
+In Figure~\ref{fig:planet_magma} we show the posteriors assuming the O$_2$ uptake
+efficiency of the surface $\zeta_\mathrm{O_2} = 1$, corresponding to instant O$_2$ removal by the surface. Compare
+to the top panel of Figure~\ref{fig:planet_epsilon}. In this case, the O$_2$ posterior corresponds to the total amount
+of oxygen absorbed by the surface, expressed in bars. While the total amount of oxygen retained by the planet
+is similar, the fraction of runs in which the planet loses all of its water increases from $\sim$ 20 to $\sim$ 80.
+This occurs because the buildup of atmospheric O$_2$ throttles the escape of hydrogen by decreasing its mixing
+ratio in the upper atmosphere; when O$_2$ is quickly absorbed at the surface, hydrogen can escape more easily.
 
-Further data on Proxima b will greatly aid in distinguishing between
-these multiple evolutionary pathways. In particular, constraints on
-the exact mass (via measurements of the orbital inclination) could
-inform the atmospheric escape history, while a value for the radius
-could provide a handle on whether or not a hydrogen envelope is
-present.
+\begin{figure}[hbt]
+ \begin{center}
+     \includegraphics[width=0.8\textwidth]{Figures/WaterLoss/corner.pdf}
+      \caption{Joint posteriors of selected parameters for a run with $\epsilon_\mathrm{xuv} = 0.01$ [same as
+       Figure~\ref{fig:planet_epsilon}(c)]. In addition to the correlation between the amount of water
+       lost and the amount of O$_2$ that builds up, several strong correlations stand out.
+       The strongest ones are between the XUV saturation fraction $f_\mathrm{sat}$ and
+       the water content (negative) and O$_2$ pressure (positive). Since most of the water loss occurs 
+       in the first few 100 Myr, the value of $f_\mathrm{sat}$ is the single most important parameter
+       controlling the present-day water and O$_2$ content of Proxima Cen b. The saturation timescale
+       also correlates with the water and oxygen, but not as strongly; for $t_\mathrm{sat} \gtrsim 2$ Gyr,
+       its exact value does not significantly affect the evolution of the planet. Shorter saturation
+       timescales correlate with higher saturation fractions and therefore indirectly affect the evolution. 
+       Interestingly, the correlation between the XUV power law slope $\beta_\mathrm{xuv}$ and the water or
+       O$_2$ content is negligible, since once saturation ends the water loss rate plummets --- the final
+       water content depends almost entirely on the properties of the star early on.}
+    \label{fig:corner}
+ \end{center}
+\end{figure}
+
+Finally, it is interesting to explore the various correlations between the parameters of the model. It is
+clear from the previous figures that the amount of oxygen that builds up strongly correlates with the
+amount of water lost from the planet, but additional correlations exist. In Figure~\ref{fig:corner} we plot
+the joint posteriors for the XUV saturation fraction, XUV saturation timescale, XUV power law exponent,
+present-day XUV luminosity, present-day water content, and present-day O$_2$ content for a run with
+$m_\mathrm{H_2O}^0 = 5$ TO, $m_\mathrm{H}^0 = 0$, $\epsilon_\mathrm{xuv} = 0.01$, and $\zeta_\mathrm{O_2} = 0$.
+The marginalized posteriors are shown at the top. The strongest correlations are between the final
+water and O$_2$ contents and the XUV saturation fraction (first column, bottom two panels). The higher
+the XUV saturation fraction, the more water is lost and the more O$_2$ builds up. While this
+may be unsurprising, neither the saturation timescale (second column) nor the power law exponent 
+(third column) correlate as strongly
+with the water and O$_2$ content. For saturation timescales longer than about 2 Gyr, the exact duration
+of the saturation phase does not affect the evolution of the planet, since nearly all of the water loss
+occurs in the first few 100 Myr. For the same reason, the value of the power law exponent does not
+significantly correlate with the water or oxygen. On the other hand, the present-day XUV luminosity does correlate
+with water loss, as it implies a higher XUV luminosity at early times.
+An accurate determination of $f_\mathrm{sat}$ and more precise measurements of $L_\mathrm{xuv}$ are therefore
+critical to determining the evolution of the water content of Proxima Cen b.
+
+\xxx{In summary...}
 
 \subsection{Internal Evolution}
 \label{sec:results:internal}
@@ -1631,9 +1910,9 @@ power, mantle temperature, inner core radius, magnetic moment,
 magnetopause radius and surface energy flux for the four cases. The
 dashed black lines represent the modern Earth's value.
 
-\begin{figure} 
+\begin{figure}[ht] 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{NoTides.pdf}
+\includegraphics[width=0.75\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Evolution of internal properties of planet b for different
   assumptions of radiogenic inventory: Earth-like in blue, chondritic
@@ -1764,9 +2043,9 @@ it is possible that the
 core has already solidified, preventing a core dynamo, and exposing the atmosphere to
 stellar flares.
 
-\begin{figure} 
+\begin{figure}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth]{tides.pdf}
+\includegraphics[width=0.5\textwidth]{Figures/placeholder.pdf}
 \end{center}
 \caption{Evolution of internal properties of planet b for three
   different initial eccentricities, as shown in the legend, and
@@ -1810,9 +2089,9 @@ we consider the tidal contribution of surface oceans only if the planet is
 not in the runaway greenhouse limit since otherwise all water would be present
 in the atmosphere.
 
-\begin{figure} 
+\begin{figure}[ht]
 \centering
-\includegraphics[width=1.0\textwidth,height=0.9\textheight]{tidal_hec.pdf}
+\includegraphics[width=1.0\textwidth,height=0.9\textheight]{Figures/placeholder.pdf}
 \caption{Evolution of the orbital, tidal and atmospheric properties of
   Proxima b for the ``CPL" case in light blue, ``No Ocean" case in
   red, ``Ocean" case in dark blue, and the ``Envelope" case in orange

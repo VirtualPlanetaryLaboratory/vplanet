@@ -148,6 +148,17 @@ int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
 
 /* Merge? */
 int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+
+  /* Sometimes integration overshoots and dSemi becomes NaN -> merger */
+  if(body[iBody].dSemi != body[iBody].dSemi)
+  {
+    if (io->iVerbose > VERBPROG)
+      printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
+      printf("Numerical merger: body %d's dSemi became a NaN! Try decreasing dEta by a factor of 10.\n",iBody);
+
+    return 1;
+  }
+
   // Is iBody not using binary?
   if(body[iBody].bBinary == 0) {
     if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
@@ -170,7 +181,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
         return 1;
       }
   }
-  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
+  else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
   {
       // Merge if sum of radii greater than binary perihelion distance
       if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge)

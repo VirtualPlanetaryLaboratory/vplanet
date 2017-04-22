@@ -87,7 +87,7 @@ void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
 /* Verify Functions */
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
-void VerifyRotationEqtide(BODY*,CONTROL*,OPTIONS*,char[],int);
+void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int,fnUpdateVariable***);
 void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
 
@@ -235,6 +235,9 @@ double fdCPLDYoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
 double fdCPLDeccDt(BODY*,UPDATE*,int*);
+double fdDEdTCPLEqtide(BODY*,SYSTEM*,int*);
+double fdCPLDsemiDtLocked(BODY*,SYSTEM*,int*);
+double fdCPLDeccDtLocked(BODY*,UPDATE*,int*);
 
 /******************** CTL Functions ********************/
 

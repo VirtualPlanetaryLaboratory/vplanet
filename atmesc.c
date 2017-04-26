@@ -1249,28 +1249,29 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 double fdXUVEfficiencyBolmont2016(double dFXUV) {
 
   // Polynomial coefficients
-  a0 = 1.49202; 
-  a1 = 5.57875;
-  a2 = 2.27482;
-  b0 = 0.59182134;
-  b1 = -0.36140798;
-  b2 = -0.04011933;
-  b3 = -0.8988;
-  c0 = -0.00441536;
-  c1 = -0.03068399;
-  c2 = 0.04946948;
-  c3 = -0.89880083;
+  double a0 = 1.49202; 
+  double a1 = 5.57875;
+  double a2 = 2.27482;
+  double b0 = 0.59182134;
+  double b1 = -0.36140798;
+  double b2 = -0.04011933;
+  double b3 = -0.8988;
+  double c0 = -0.00441536;
+  double c1 = -0.03068399;
+  double c2 = 0.04946948;
+  double c3 = -0.89880083;
   
   // Convert to erg/cm^2/s and take the log
-  x = log10(dFXUV * 1.e3);
+  double x = log10(dFXUV * 1.e3);
+  double y;
   
   // Piecewise polynomial fit
   if ((x >= -2) && (x < -1))
-    y = 10 ** (a0 * x ** 2 + a1 * x + a2);
+    y = pow(10, a0 * x * x + a1 * x + a2);
   else if ((x >= -1) && (x < 0))
-    y = 10 ** (b0 * x ** 3 + b1 * x ** 2 + b2 * x + b3);
+    y = pow(10, b0 * x * x * x + b1 * x * x + b2 * x + b3);
   else if ((x >= 0) && (x <= 5))
-    y = 10 ** (c0 * x ** 3 + c1 * x ** 2 + c2 * x + c3);
+    y = pow(10, c0 * x * x * x + c1 * x * x + c2 * x + c3);
   else
     y = 0;
   return y;

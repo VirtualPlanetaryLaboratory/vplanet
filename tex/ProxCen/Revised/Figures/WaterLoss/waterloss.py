@@ -663,6 +663,12 @@ def PlotStellarEvol(name = 'w5h0m0', **kwargs):
   Temperature = data['Temperature']
   Radius = data['Radius']
   
+  # Get mean evolution
+  Mean = GetEvol([0.123, -3, 0, 4.78, -1.23], star_in = open('star.in', 'r').read(), 
+                  planet_in = open('planet.in', 'r').read(), vpl_in = open('vpl.in', 'r').read(),
+                  L = L, sigL = sigL, logLXUV = logLXUV, siglogLXUV = siglogLXUV, InitH2O = -5, InitH = 0,
+                  EpsH2O = 0.15, EpsH = 0.15, InstantO2Sink = 0)
+  
   # Plot
   fig, ax = pl.subplots(1,3, figsize = (14, 4))
   fig.subplots_adjust(bottom = 0.15, wspace = 0.3)
@@ -670,7 +676,11 @@ def PlotStellarEvol(name = 'w5h0m0', **kwargs):
     ax[0].plot(Time[i], Luminosity[i], lw = 1, alpha = 0.1, color = 'k')
     ax[1].plot(Time[i], LXUVStellar[i], lw = 1, alpha = 0.3, color = 'k')
     ax[2].plot(Time[i], Radius[i], lw = 1, alpha = 0.1, color = 'k')
-      
+  
+  ax[0].plot(Mean.star.Time, Mean.star.Luminosity, color = 'r')
+  ax[1].plot(Mean.star.Time, Mean.star.LXUVStellar, color = 'r')
+  ax[2].plot(Mean.star.Time, Mean.star.Radius * 215.09, color = 'r')
+  
   # Luminosity
   ax[0].axhline(0.00165, color = 'r', ls = '--')
   ax[0].axhspan(0.00165 - 0.00015, 0.00165 + 0.00015, color = 'r', alpha = 0.3)
@@ -678,6 +688,7 @@ def PlotStellarEvol(name = 'w5h0m0', **kwargs):
   ax[0].set_ylabel('Luminosity (L$_\odot$)')
   ax[0].set_xlabel('Time (years)')
   ax[0].set_xscale('log')
+  ax[0].set_ylim(0.9e-3,1.1e-1)
 
   # XUV Luminosity
   ax[1].axhline(10 ** (-6.4), color = 'r', ls = '--')
@@ -686,13 +697,6 @@ def PlotStellarEvol(name = 'w5h0m0', **kwargs):
   ax[1].set_ylabel('XUV Luminosity (L$_\odot$)')
   ax[1].set_xlabel('Time (years)')
   ax[1].set_xscale('log')
-
-  # Effective Temperature
-  #ax[2].axhline(3098, color = 'r', ls = '--')
-  #ax[2].axhspan(3098 - 56, 3098 + 56, color = 'r', alpha = 0.3)
-  #ax[2].set_ylabel('Effective Temperature (K)')
-  #ax[2].set_xlabel('Time (years)')
-  #ax[2].set_xscale('log')
 
   # Radius
   ax[2].axhline(0.1410, color = 'r', ls = '--')

@@ -1246,6 +1246,37 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUCM * AUCM);
 }
 
+double fdXUVEfficiencyBolmont2016(double dFXUV) {
+
+  // Polynomial coefficients
+  a0 = 1.49202; 
+  a1 = 5.57875;
+  a2 = 2.27482;
+  b0 = 0.59182134;
+  b1 = -0.36140798;
+  b2 = -0.04011933;
+  b3 = -0.8988;
+  c0 = -0.00441536;
+  c1 = -0.03068399;
+  c2 = 0.04946948;
+  c3 = -0.89880083;
+  
+  // Convert to erg/cm^2/s and take the log
+  x = log10(dFXUV * 1.e3);
+  
+  // Piecewise polynomial fit
+  if ((x >= -2) && (x < -1))
+    y = 10 ** (a0 * x ** 2 + a1 * x + a2);
+  else if ((x >= -1) && (x < 0))
+    y = 10 ** (b0 * x ** 3 + b1 * x ** 2 + b2 * x + b3);
+  else if ((x >= 0) && (x <= 5))
+    y = 10 ** (c0 * x ** 3 + c1 * x ** 2 + c2 * x + c3);
+  else
+    y = 0;
+  return y;
+  
+}
+
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 	// Simple least squares linear regression, y(x) = mx + b
 	// from http://en.wikipedia.org/wiki/Simple_linear_regression

@@ -26,6 +26,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMinSurfaceWaterMass = src[iBody].dMinSurfaceWaterMass;
   dest[iBody].dMinEnvelopeMass = src[iBody].dMinEnvelopeMass;
   dest[iBody].iWaterLossModel = src[iBody].iWaterLossModel;
+  dest[iBody].iAtmXAbsEffH2OModel = src[iBody].iAtmXAbsEffH2OModel;
   dest[iBody].dKTide = src[iBody].dKTide;
   dest[iBody].dMDotWater = src[iBody].dMDotWater;
   dest[iBody].dFHRef = src[iBody].dFHRef;
@@ -64,6 +65,29 @@ void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   } else
     if (iFile > 0)
       body[iFile-1].iWaterLossModel = ATMESC_LBEXACT;
+}
+
+void ReadAtmXAbsEffH2OModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"bolm",4)) {
+      body[iFile-1].iAtmXAbsEffH2OModel = ATMESC_BOL16;
+    } else if (!memcmp(sLower(cTmp),"none",4)) {
+      body[iFile-1].iAtmXAbsEffH2OModel = ATMESC_NONE;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BOLMONT16 or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].iAtmXAbsEffH2OModel = ATMESC_NONE;
 }
 
 void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -339,6 +363,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
 
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cName,"sAtmXAbsEffH2OModel");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
+  options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
+  options[OPT_ATMXABSEFFH2OMODEL].iMultiFile = 1;
+  fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
+
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
   sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
@@ -556,7 +587,11 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
   // The XUV flux
   double fxuv = fdInsolation(body, iBody, 1);
-
+  
+  // The H2O XUV escape efficiency
+  if (body[iBody].iAtmXAbsEffH2OModel == ATMESC_BOL16)
+    body[iBody].dAtmXAbsEffH2O = fdXUVEfficiencyBolmont2016(fxuv);
+  
   // Reference hydrogen flux for the water loss
   body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * fxuv * body[iBody].dRadius) /
                        (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
@@ -912,6 +947,23 @@ void WriteOxygenEta(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   strcpy(cUnit,"");
 }
 
+void WriteAtmXAbsEffH2O(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dAtmXAbsEffH2O;
+  strcpy(cUnit,"");
+}
+
+void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  
+  *dTmp = fdInsolation(body, iBody, 1);  
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    strcpy(cUnit,"W/m^2");
+  }
+  
+}
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -972,6 +1024,22 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ETAO].iNum = 1;
   output[OUT_ETAO].iModuleBit = ATMESC;
   fnWrite[OUT_ETAO] = &WriteOxygenEta;
+  
+  sprintf(output[OUT_EPSH2O].cName,"AtmXAbsEffH2O");
+  sprintf(output[OUT_EPSH2O].cDescr,"XUV Atmospheric Escape Efficiency for H2O");
+  output[OUT_EPSH2O].bNeg = 0;
+  output[OUT_EPSH2O].iNum = 1;
+  output[OUT_EPSH2O].iModuleBit = ATMESC;
+  fnWrite[OUT_EPSH2O] = &WriteAtmXAbsEffH2O;
+
+  sprintf(output[OUT_FXUV].cName,"XUVFlux");
+  sprintf(output[OUT_FXUV].cDescr,"XUV Flux Incident on Planet");
+  sprintf(output[OUT_FXUV].cNeg,"erg/cm^2/s");
+  output[OUT_FXUV].dNeg = 1.e3;
+  output[OUT_FXUV].bNeg = 1;
+  output[OUT_FXUV].iNum = 1;
+  output[OUT_FXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_FXUV] = &WriteFXUV;
 
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");

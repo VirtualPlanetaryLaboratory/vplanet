@@ -534,6 +534,7 @@ typedef struct {
   double dAtmXAbsEffH;
   double dAtmXAbsEffH2O;
   int iWaterLossModel;
+  int iAtmXAbsEffH2OModel;
   int iPlanetRadiusModel;
   int bInstantO2Sink;
   double dRGDuration;

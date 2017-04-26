@@ -17,6 +17,7 @@
 #define ATMESC_NONE             5
 #define ATMESC_LOP12            6
 #define ATMESC_PROXCENB         7
+#define ATMESC_BOL16            8
 #define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
 #define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen
@@ -42,6 +43,7 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_INSTANTO2SINK       1221 // Gaseous planet radius model (for atmesc)
 #define OPT_ATMXABSEFFH2O       1222 // Water Absorption efficiency (epsilon)
 #define OPT_OXYGENMANTLEMASS    1223 // Initial oxygen mass in mantle
+#define OPT_ATMXABSEFFH2OMODEL  1224
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -92,6 +94,8 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ETAO               1215
 #define OUT_PLANETRADIUS       1216
 #define OUT_OXYGENMANTLEMASS   1217
+#define OUT_EPSH2O             1218
+#define OUT_FXUV               1219
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
@@ -105,6 +109,7 @@ void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*
 void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteAtmXAbsEffH2O(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -124,6 +129,7 @@ double fdAtomicOxygenMixingRatio(double,double);
 double fdInsolation(BODY*,int,int);
 int fbDoesWaterEscape(BODY*,int);
 double fdPlanetRadius(BODY*,SYSTEM*,int*);
+double fdXUVEfficiencyBolmont2016(double);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

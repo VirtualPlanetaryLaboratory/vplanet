@@ -1315,7 +1315,11 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 }
 
 double fdXUVEfficiencyBolmont2016(double dFXUV) {
-
+  
+  // Based on a piecewise polynomial fit to Figure 2
+  // in Bolmont et al. (2017), the XUV escape efficiency
+  // as a function of XUV flux for the TRAPPIST-1 planets.
+  
   // Polynomial coefficients
   double a0 = 1.49202; 
   double a1 = 5.57875;

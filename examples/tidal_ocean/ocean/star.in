@@ -2,9 +2,9 @@ sName		star		# Body's name
 saModules stellar eqtide
 
 # Physical Parameters
-dMass		0.118             # Mass, negative -> Earth masses
+dMass		0.12             # Mass, negative -> Earth masses
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
-dRotPeriod      83
+dRotPeriod      -83.5
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
@@ -18,7 +18,7 @@ saTidePerts	pandora		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel proximacen              # Stellar evolutin model: `baraffe` or `none`
-sWindModel    none                     # Stellar wind model: `reiners` or `none`
+sWindModel    reiners                    # Stellar wind model: `reiners` or `none`
 dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 # Some options are allowed to only appear in one file, but it can be primary or body.

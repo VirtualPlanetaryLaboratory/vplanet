@@ -27,4 +27,4 @@ dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosi
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder Time -TotAngMom -TotEn
+saOutputOrder Time -TotAngMom -TotEn -Semim Eccentricity

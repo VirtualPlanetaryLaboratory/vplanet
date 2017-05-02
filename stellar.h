@@ -12,12 +12,17 @@
 #define RM12OMEGACRIT                 8.56e-6           // Critical angular velocity (1/s) from Reiners & Mohanty (2012)
 #define RM12OMEGACRITFULLYCONVEC      1.82e-6           // Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012)
 #define RM12CONST                     (2.66e3 * 46.416) // dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012)
+#define SK72CONST                     5.0e-25 // dJ/dt constant from Skumanich 1972 (Repetto+2014)
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
 #define STELLAR_MODEL_CONST           3
 #define STELLAR_MODEL_RIBAS           4
 #define STELLAR_MODEL_PROXIMACEN      5
+
+#define STELLAR_DJDT_NONE             0 // No stellar angular momentum loss via magnetic braking
+#define STELLAR_DJDT_RM12             1 // dJ/dt according to Reiners & Mohanty 2012
+#define STELLAR_DJDT_SK72             2 // dJ/dt according to Skumanich 1972 empirical law
 
 #define HZ_MODEL_KOPPARAPU            1
 #define DRYRGFLUX                     415 // W/m^2 from Abe et al. (2011)
@@ -42,6 +47,7 @@ void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_XUVBETA             1518 // XUV power law decay exponent
 
 #define OPT_HZMODEL             1520 // Habitable zone model
+#define OPT_MAGBRAKINGMODEL           1521 // Magnetic braking model
 
 /* Options Functions */
 void HelpOptionsStellar(OPTIONS*);

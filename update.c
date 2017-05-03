@@ -117,9 +117,14 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumAngMX =0;
     update[iBody].iNumAngMY =0;
     update[iBody].iNumAngMZ =0;
+    update[iBody].iNumPositionX = 0;
+    update[iBody].iNumPositionY = 0;
+    update[iBody].iNumPositionZ = 0;
+    update[iBody].iNumVelX = 0;
+    update[iBody].iNumVelY = 0;
+    update[iBody].iNumVelZ = 0;
     update[iBody].iNumLostAngMom=0;
     update[iBody].iNumLostEng=0;
-
     update[iBody].iNumVars=0;
 
     /* First we must identify how many variables and models must be
@@ -162,6 +167,180 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
        planet's assigned modules. */
 
     iVar=0;
+
+    update[iBody].iPositionX = -1;
+    if (update[iBody].iNumPositionX) {
+      update[iBody].iPositionX = iVar;
+      update[iBody].iaVar[iVar] = VPOSITIONX;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumPositionX;
+      update[iBody].pdVar[iVar] = &body[iBody].dPositionX;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dPositionX;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumPositionX*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionX*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdatePositionX[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iPositionY = -1;
+    if (update[iBody].iNumPositionY) {
+      update[iBody].iPositionY = iVar;
+      update[iBody].iaVar[iVar] = VPOSITIONY;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumPositionY;
+      update[iBody].pdVar[iVar] = &body[iBody].dPositionY;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dPositionY;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumPositionY*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionY*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdatePositionY[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iPositionZ = -1;
+    if (update[iBody].iNumPositionZ) {
+      update[iBody].iPositionZ = iVar;
+      update[iBody].iaVar[iVar] = VPOSITIONZ;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumPositionZ;
+      update[iBody].pdVar[iVar] = &body[iBody].dPositionZ;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dPositionZ;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumPositionZ*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdatePositionZ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iVelX = -1;
+    if (update[iBody].iNumVelX) {
+      update[iBody].iVelX = iVar;
+      update[iBody].iaVar[iVar] = VVELX;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumVelX;
+      update[iBody].pdVar[iVar] = &body[iBody].dVelX;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelX*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dVelX;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumVelX*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelX*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelX*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateVelX[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iVelY = -1;
+    if (update[iBody].iNumVelY) {
+      update[iBody].iVelY = iVar;
+      update[iBody].iaVar[iVar] = VVELY;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumVelY;
+      update[iBody].pdVar[iVar] = &body[iBody].dVelY;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelY*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dVelY;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumVelY*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelY*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelY*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateVelY[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iVelZ = -1;
+    if (update[iBody].iNumVelZ) {
+      update[iBody].iVelZ = iVar;
+      update[iBody].iaVar[iVar] = VVELZ;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumVelZ;
+      update[iBody].pdVar[iVar] = &body[iBody].dVelZ;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dVelZ;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumVelZ*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumVelZ*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateVelZ[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
 
     /* 26Al Core */
     update[iBody].i26AlCore = -1;

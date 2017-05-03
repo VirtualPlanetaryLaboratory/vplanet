@@ -341,6 +341,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
 
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
+
 }
 
 void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {

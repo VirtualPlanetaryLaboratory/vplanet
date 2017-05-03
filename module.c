@@ -1232,17 +1232,24 @@ void InitializeUpdateEqBinStLostEng(BODY *body,UPDATE *update,int iBody) {
 
 
 /*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
-void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iSemiBinEqSt = (*iEqn);
-  (*iEqn)++;
+void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
+    update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+    update[iBody].iSemiBinEqSt = (*iEqn);
+    (*iEqn)++;
+  }
 }
 
 /*! Finalize update (for malloc-ing) for Bin-eq-st lost energy derivative */
-void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iLostEngBinEqSt = (*iEqn);
-  (*iEqn)++;
+void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+    update[iBody].iLostEngBinEqSt = (*iEqn);
+    (*iEqn)++;
+  }
 }
 
 /* GENERAL MULTI-MODULE EQUATION INITIALIZATION/FINALIZATION */
@@ -1276,11 +1283,6 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     // Other star (primary) can also influence this equation
     iOtherBody = 0;
 
-    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
-    iEqn = 1; // When EQTIDE is set, already have an equation for how
-                  // the semi-major axis changes so start this at 1
-    FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
-
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
     update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
@@ -1291,9 +1293,6 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
 
     /* Add change in lost energy due to BINARY-EQTIDE-STELLAR coupling */
-
-    iEqn = 2; // 1 from STELLAR, 1 from EQTIDE
-    FinalizeUpdateMultiEqBinStLostEng(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
     // Add dLostEnergy dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;

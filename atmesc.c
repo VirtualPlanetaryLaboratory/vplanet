@@ -334,7 +334,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/XUV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
-  options[OPT_ATMXABSEFFH2O].dDefault = 0.30;
+  options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
@@ -668,8 +668,8 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // Initialize rg duration
   body[iBody].dRGDuration = 0.;
-  
-  if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
+
+  if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT)
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   // Radius evolution
@@ -1015,10 +1015,10 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
-  
+
   // TODO: Log this the standard way
   fprintf(fp,"(RGDuration) Runaway Greenhouse Duration [years]: %.5e\n", body[iBody].dRGDuration / YEARSEC);
-  
+
 }
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
@@ -1173,7 +1173,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // just remove this equation from the matrix if the
   // escape conditions are not met.
 
-  // 1. Check if there's hydrogen to be lost; this happens first 
+  // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0) {
     // (But let's still check whether the RG phase has ended)
     if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))

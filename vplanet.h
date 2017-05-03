@@ -19,6 +19,7 @@
 #define FLARE         512
 #define BINARY        1024
 #define GALHABIT      2048
+#define SPINBODY      4096
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -174,6 +175,14 @@
 #define VZOBL           1403
 #define VDYNELLIP       1404
 
+//SPINBODY 1600-1700
+#define VVELX           1601
+#define VVELY           1602
+#define VVELZ           1603
+#define VPOSITIONX      1604
+#define VPOSITIONY      1605
+#define VPOSITIONZ      1606
+
 /* Semi-major axis functions in DistOrb */
 #define LAPLNUM 	      26
 
@@ -253,6 +262,17 @@ typedef struct {
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
   double dEccSq;         /**< Eccentricity squared */
+
+  /* SPINBODY parameters */
+  int bSpiNBody;         /**< Has module SPINBODY been implemented */
+  double dVelX;          /**< x Component of the body's velocity */
+  double dVelY;          /**< y Component of the body's velocity */
+  double dVelZ;          /**< z Component of the body's velocity */
+  double dPositionX;     /**< x Component of the body's position */
+  double dPositionY;     /**< y Component of the body's position */
+  double dPositionZ;     /**< z Component of the body's position */
+  double bUseOrbParams;  /**< Boolean flag to use orbital parameters as inputs */
+  double *dDistance3;    /**< Distance cubed to different perturbers */
 
   /* DISTORB parameters */
   int bDistOrb;         /**< Has module DISTORB been implemented */
@@ -994,6 +1014,34 @@ typedef struct {
 
   /* Next comes the identifiers for the module that modifies a variable */
 
+  /* SPINBODY parameters */
+  int iVelX;
+  int iNumVelX;
+  int iVelY;
+  int iNumVelY;
+  int iVelZ;
+  int iNumVelZ;
+  int iPositionX;
+  int iNumPositionX;
+  int iPositionY;
+  int iNumPositionY;
+  int iPositionZ;
+  int iNumPositionZ;
+
+  double dVelX;            /**< x Component of the body's velocity */
+  double dVelY;            /**< y Component of the body's velocity */
+  double dVelZ;            /**< z Component of the body's velocity */
+  double dPositionX;       /**< x Component of the body's position */
+  double dPositionY;       /**< y Component of the body's position */
+  double dPositionZ;       /**< z Component of the body's position */
+
+  double *pdDVelX;
+  double *pdDVelY;
+  double *pdDVelZ;
+  double *pdDPositionX;
+  double *pdDPositionY;
+  double *pdDPositionZ;
+
   /* EQTIDE */
   //  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
   int iHeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's h */
@@ -1585,6 +1633,12 @@ typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
 //All primary variables need a FinalizeUpdate function
 //typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateVelXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateVelYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateVelZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate26AlNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate26AlNumManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1673,6 +1727,15 @@ typedef struct {
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
   // Finalize Primary Variable function pointers
+
+  /*! SpiNBody variable finalize functions */
+  fnFinalizeUpdateVelXModule **fnFinalizeUpdateVelX;
+  fnFinalizeUpdateVelYModule **fnFinalizeUpdateVelY;
+  fnFinalizeUpdateVelZModule **fnFinalizeUpdateVelZ;
+  fnFinalizeUpdatePositionXModule **fnFinalizeUpdatePositionX;
+  fnFinalizeUpdatePositionYModule **fnFinalizeUpdatePositionY;
+  fnFinalizeUpdatePositionZModule **fnFinalizeUpdatePositionZ;
+
   /*! Function pointers to finalize Core's potassium-40 */
   fnFinalizeUpdate26AlNumCoreModule **fnFinalizeUpdate26AlNumCore;
   /*! Function pointers to finalize Mantle's potassium-40 */
@@ -1825,3 +1888,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 #include "galhabit.h"
+#include "spinbody.h"

@@ -1,0 +1,22 @@
+# Planet a parameters
+sName                     Earth          # Body's name
+saModules                 spinbody       # Modules to apply, exact spelling required
+
+saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+# Physical Properties
+dMass                     -1.0           # Mass, negative -> Earth masses
+dRadius                   -1.0           # Radius, negative -> Earth radii
+dRotPeriod                -1             # Rotation period, negative -> days
+dObliquity                23.44          # Obliquity (deg)
+dRadGyra                  0.5            # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                     -1.00000011   # Semi-major axis, negative -> AU
+dEcc                       0.01671022   # Eccentricity
+dInc                       3.4          # Inclination (deg)
+dLongP                     102.94719    # Longitude of pericenter (deg)
+dLongA                     348.73936    # Longitude of ascending node (deg)
+dMeanA                     100.46435    # Mean Anomoly (deg)

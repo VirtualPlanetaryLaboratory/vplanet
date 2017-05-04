@@ -773,25 +773,18 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumX = 0;        //Double used to calculate the net perturbation
   int iPertBody = -1;      //Int used to clean up code.
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
-  //body[iaBody[0]].dDistance3 = malloc(body[iaBody[0]].iGravPerts*sizeof(double));
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
 
     iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing? Is this fast enough?
 
-    //This is faster than using pow() or an iPertBody int, but not very clean
+    //This is faster than using pow() but not very clean
     // Calculate the cube of the distance to each perturbing body. Used in Vy and Vz calculations as well.
     body[iaBody[0]].dDistance3[j] = sqrt((body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)*(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)
           + (body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)*(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)
           + (body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ)*(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ));
     body[iaBody[0]].dDistance3[j] = body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j];
-    //Legacy code that calculated dDistance in X,Y,Z loop. Inefficient
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
-    //printf("\nThe value for distance is %f", dDistance);
+
     dSumX = dSumX + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[j];
   }
 
@@ -800,18 +793,9 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumY = 0;        //Double used to calculate the net perturbation
-  //int iPertBody = -1;      //Int used to clean up code. Faster w/o
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    //iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing?
-
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
     dSumY = dSumY + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[j];
   }
 
@@ -820,18 +804,9 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumZ = 0;        //Double used to calculate the net perturbation
-  //int iPertBody = -1;      //Int used to clean up code.
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    //iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing?
-
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
     dSumZ = dSumZ + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[j];
   }
 

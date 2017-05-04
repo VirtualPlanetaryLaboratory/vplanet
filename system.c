@@ -42,51 +42,88 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 /*! Compute the orbital angular momentum of the iBodyth body
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
-double fdOrbAngMom(BODY *body, int iBody) {
+double * fdOrbAngMom(BODY *body, int iBody) {
 
   double dMass, mu; // Mass of central body or bodies if using binary and not secondary star
 
-  // Central body (or primary binary star) doesn't orbit itself
-  if(iBody < 1)
-  {
-    return 0.0;
-  }
+  if (body[iBody].bSpiNBody) {
+    // For SpiNBody, we just want to make L = m(r x v)
+    // It is the responsibility of the caller to free this memory
+    double * pdOrbMom = malloc(sizeof(double)*3);
 
-  // Figure out central body mass
-  // If using binary, you orbit 2 stars
-  if(body[iBody].bBinary)
-  {
-    if(iBody > 1) // Panets orbit two stars
+    //Calculate the x, y, and z components of orb mom
+    pdOrbMom[0] =    body[iBody].dMass * (body[iBody].dPositionY*body[iBody].dVelZ - body[iBody].dPositionZ*body[iBody].dVelY);
+    pdOrbMom[1] = -1*body[iBody].dMass * (body[iBody].dPositionX*body[iBody].dVelZ - body[iBody].dPositionZ*body[iBody].dVelX);
+    pdOrbMom[2] =    body[iBody].dMass * (body[iBody].dPositionX*body[iBody].dVelY - body[iBody].dPositionY*body[iBody].dVelX);
+    return pdOrbMom;
+  }
+  else {
+    // It is the responsibility of the caller to free this memory
+    double * pdNetOrbMom = malloc(sizeof(double));
+
+    // Central body (or primary binary star) doesn't orbit itself
+    if(iBody < 1)
     {
-      dMass = body[0].dMass + body[1].dMass;
+      *pdNetOrbMom = 0.0;
+      return pdNetOrbMom;
+    }
+
+    // Figure out central body mass
+    // If using binary, you orbit 2 stars
+    if(body[iBody].bBinary)
+    {
+      if(iBody > 1) // Panets orbit two stars
+      {
+        dMass = body[0].dMass + body[1].dMass;
+      }
+      else
+      {
+        dMass = body[0].dMass;
+      }
     }
     else
     {
       dMass = body[0].dMass;
     }
-  }
-  else
-  {
-    dMass = body[0].dMass;
-  }
 
-  // Compute reduced mass
-  mu = dMass*body[iBody].dMass/(dMass+body[iBody].dMass);
+    // Compute reduced mass
+    mu = dMass*body[iBody].dMass/(dMass+body[iBody].dMass);
 
-  return mu*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc));
+    *pdNetOrbMom = mu*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc));
+    return pdNetOrbMom;
+  }
 }
 
 /* Compute the total angular momentum in the system, including lost angular momentum */
 double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
+  // Added the vectorized components of total angular momentum for SpiNBody
+  double daOrbTot[] = {0.0,0.0,0.0};
+  double *pdTmp;
   int iBody;
 
   // Add all rotational, orbital angular momentum, angular momentum lost
-  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
-  {
-    dTot += fdOrbAngMom(body,iBody);
-    dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-    dTot += body[iBody].dLostAngMom;
+    //SpiNBody has direct x,y,z components for position and velocity
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
+    if (body[iBody].bSpiNBody){
+      pdTmp = fdOrbAngMom(body,iBody);
+      for (int i=0; i<3; i++){
+        daOrbTot[i] += *(pdTmp+i);
+      }
+      dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
+      //dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+      //dTot += body[iBody].dLostAngMom;
+      free(pdTmp);
+    }
+    else {
+      for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+        pdTmp = fdOrbAngMom(body,iBody);
+        dTot += *pdTmp;
+        dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+        dTot += body[iBody].dLostAngMom;
+        free(pdTmp);
+      }
+    }
   }
 
   return dTot;

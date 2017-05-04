@@ -1,8 +1,8 @@
 # Planet a parameters
 sName                     Star               # Body's name
-saModules                 spinbody          # Modules to apply, exact spelling required
+saModules                 spinbody          # Modules to apply, exact spelling required 
 
-saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody TotAngMom
 # Physical Properties
 dMass                     -332946.0            # Mass, negative -> Earth masses
 dRadius                   -1000.0            # Radius, negative -> Earth radii

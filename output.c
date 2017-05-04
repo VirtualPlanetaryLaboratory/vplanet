@@ -248,8 +248,17 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
-
-  *dTmp = fdOrbAngMom(body,iBody);
+  double *pdOrbMom;
+  if (body[iBody].bSpiNBody){
+    pdOrbMom = fdOrbAngMom(body,iBody);
+    *dTmp = sqrt(pdOrbMom[0]*pdOrbMom[0]+pdOrbMom[1]*pdOrbMom[1]+pdOrbMom[2]*pdOrbMom[2]);
+    free(pdOrbMom);
+  }
+  else {
+    pdOrbMom = fdOrbAngMom(body,iBody);
+    *dTmp = *pdOrbMom;
+    free(pdOrbMom);
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -984,7 +993,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;
-  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY;
+  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY + SPINBODY;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 
   sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");

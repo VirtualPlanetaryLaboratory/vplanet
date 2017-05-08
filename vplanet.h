@@ -19,7 +19,8 @@
 #define FLARE         512
 #define BINARY        1024
 #define GALHABIT      2048
-#define DISTRES       4096
+#define SPINBODY      4096
+#define DISTRES       8192
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -96,6 +97,7 @@
 #define RHOBROCK      3370
 #define BROCKTIME     5000  //relaxation timescale for bedrock
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
+#define ALPHA_STRUCT  0.6 // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
 /* Exit Status */
 
@@ -177,6 +179,14 @@
 /* Semi-major axis functions in DistOrb (& DistRes?)*/
 #define LAPLNUM 	      31
 
+//SPINBODY 1600-1700
+#define VVELX           1601
+#define VVELY           1602
+#define VVELZ           1603
+#define VPOSITIONX      1604
+#define VPOSITIONY      1605
+#define VPOSITIONZ      1606
+
 // ATMESC
 #define VSURFACEWATERMASS  1202
 #define VENVELOPEMASS      1203
@@ -186,6 +196,8 @@
 // STELLAR
 #define VLUMINOSITY        1502
 #define VTEMPERATURE       1503
+#define VLOSTANGMOM        1504
+#define VLOSTENG           1505
 
 // POISE
 #define VICEMASS           1851
@@ -254,6 +266,17 @@ typedef struct {
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
   double dEccSq;         /**< Eccentricity squared */
+
+  /* SPINBODY parameters */
+  int bSpiNBody;         /**< Has module SPINBODY been implemented */
+  double dVelX;          /**< x Component of the body's velocity */
+  double dVelY;          /**< y Component of the body's velocity */
+  double dVelZ;          /**< z Component of the body's velocity */
+  double dPositionX;     /**< x Component of the body's position */
+  double dPositionY;     /**< y Component of the body's position */
+  double dPositionZ;     /**< z Component of the body's position */
+  double bUseOrbParams;  /**< Boolean flag to use orbital parameters as inputs */
+  double *dDistance3;    /**< Distance cubed to different perturbers */
 
   /* DISTORB parameters */
   int bDistOrb;         /**< Has module DISTORB been implemented */
@@ -342,6 +365,7 @@ typedef struct {
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
+  int bTideLock;         /**< Is a body tidally locked? */
   int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
   int bEnvTides;         /**< Have Q contribution from the envelope as well? */
   int bUseTidalRadius;      /**< Set a fixed tidal radius? */
@@ -581,6 +605,8 @@ typedef struct {
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
+  double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
+  double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
 
   /* PHOTOCHEM Parameters */
   PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
@@ -879,8 +905,8 @@ typedef double (*fnLaplaceFunction)(double,int);
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
-  double dTotAngMomInit; /**< System's Initial Angular Momentum */
 
+  double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
 
   /* DISTORB tools */
@@ -916,6 +942,7 @@ typedef struct {
   double *dLOrb;
 
   double dTotEnInit;     /**< System's Initial Energy */
+  double dTotEn;         /** < System's total energy */
 
   double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
   double *dPassingStarR;
@@ -1021,6 +1048,34 @@ typedef struct {
 
   /* Next comes the identifiers for the module that modifies a variable */
 
+  /* SPINBODY parameters */
+  int iVelX;
+  int iNumVelX;
+  int iVelY;
+  int iNumVelY;
+  int iVelZ;
+  int iNumVelZ;
+  int iPositionX;
+  int iNumPositionX;
+  int iPositionY;
+  int iNumPositionY;
+  int iPositionZ;
+  int iNumPositionZ;
+
+  double dVelX;            /**< x Component of the body's velocity */
+  double dVelY;            /**< y Component of the body's velocity */
+  double dVelZ;            /**< z Component of the body's velocity */
+  double dPositionX;       /**< x Component of the body's position */
+  double dPositionY;       /**< y Component of the body's position */
+  double dPositionZ;       /**< z Component of the body's position */
+
+  double *pdDVelX;
+  double *pdDVelY;
+  double *pdDVelZ;
+  double *pdDPositionX;
+  double *pdDPositionY;
+  double *pdDPositionZ;
+
   /* EQTIDE */
   //  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
   int iHeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's h */
@@ -1030,6 +1085,7 @@ typedef struct {
   int *iaZoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Z */
   int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
   int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
+  int iLostEngEqtide;    /**< Equation # Corresponding to EQTIDE's lost energy [tidal heating] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       semi-major axis' derivative due to EQTIDE. */
@@ -1058,6 +1114,10 @@ typedef struct {
   /*! Points to the elements in UPDATE's daDerivProc matrix that contains the
       rotation rates' derivatives due to EQTIDE. */
   double **padDrotDtEqtide;
+
+  /*! Points to the elements in UPDATE's daDerivProc matrix that contains the
+      lost energy via tidal heating's derivatives due to EQTIDE. */
+  double *pdLostEngEqtide;
 
   /* RADHEAT Mantle */
   int i26AlMan;            /**< Variable # Corresponding to Aluminum-26 */
@@ -1307,14 +1367,21 @@ typedef struct {
   int iNumTemperature;
 
   int iRotStellar;           /**< iEqn number for the evolution of rotation in STELLAR */
+  int iLostAngMom;           /**< iEqn number for the evolution of lost angular momentum */
+  int iLostAngMomStellar;    /**< iEqn number for the evolution of lost angular momentum in STELLAR */
+  int iNumLostAngMom;       /**< Number of Equations Affecting lost angular momentum [1] */
+  int iLostEng;           /**< iEqn number for the evolution of lost energy */
+  int iLostEngStellar;    /**< iEqn number for the evolution of lost energy in STELLAR */
+  int iNumLostEng;       /**< Number of Equations Affecting lost angular momentum [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       function that returns these variables due to STELLAR evolution. */
   double *pdLuminosityStellar;
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
-
   double *pdRotRateStellar;
+  double *pdLostAngMomStellar;
+  double *pdLostEngStellar;
 
   /* POISE */
   int *iaIceMass;  /**< Variable number of ice mass of each latitude */
@@ -1328,6 +1395,15 @@ typedef struct {
   int iLXUV;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
+
+ /* BINARY + EQTIDE + STELLAR */
+ int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
+ int iLostEngBinEqSt;   /**< Equation # Corresponding to BIN+EQ+ST's Change to lost energy */
+
+ /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+     semi-major axis, Hecc and Kecc derivatives due to BIN+EQ+ST. */
+ double *pdDsemiDtBinEqSt;
+ double *pdDLostEngDtBinEqSt;
 
 } UPDATE;
 
@@ -1375,6 +1451,7 @@ typedef struct {
 
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
+  int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
 } HALT;
 
 /* Units. These can be different for different bodies. If set
@@ -1612,6 +1689,12 @@ typedef void (*fnInitializeUpdateTmpBodyModule)(BODY*,CONTROL*,UPDATE*,int);
 
 //All primary variables need a FinalizeUpdate function
 //typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
+typedef void (*fnFinalizeUpdateVelXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateVelYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateVelZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionXModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionYModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePositionZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate26AlNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate26AlNumManModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdate40KNumCoreModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1661,7 +1744,8 @@ typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
-
+typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -1700,6 +1784,15 @@ typedef struct {
   fnInitializeUpdateTmpBodyModule **fnInitializeUpdateTmpBody;
 
   // Finalize Primary Variable function pointers
+
+  /*! SpiNBody variable finalize functions */
+  fnFinalizeUpdateVelXModule **fnFinalizeUpdateVelX;
+  fnFinalizeUpdateVelYModule **fnFinalizeUpdateVelY;
+  fnFinalizeUpdateVelZModule **fnFinalizeUpdateVelZ;
+  fnFinalizeUpdatePositionXModule **fnFinalizeUpdatePositionX;
+  fnFinalizeUpdatePositionYModule **fnFinalizeUpdatePositionY;
+  fnFinalizeUpdatePositionZModule **fnFinalizeUpdatePositionZ;
+
   /*! Function pointers to finalize Core's potassium-40 */
   fnFinalizeUpdate26AlNumCoreModule **fnFinalizeUpdate26AlNumCore;
   /*! Function pointers to finalize Mantle's potassium-40 */
@@ -1728,6 +1821,10 @@ typedef struct {
   fnFinalizeUpdate238UNumCrustModule **fnFinalizeUpdate238UNumCrust;
   /*! Function pointers to finalize Mantle's uranium-238 */
   fnFinalizeUpdate238UNumManModule **fnFinalizeUpdate238UNumMan;
+  /*! Function pointers to finalize lost angular momentum */
+  fnFinalizeUpdateLostAngMomModule **fnFinalizeUpdateLostAngMom;
+  /*! Function pointers to finalize lost energy */
+  fnFinalizeUpdateLostEngModule **fnFinalizeUpdateLostEng;
 
 
   /*! These functions assign Equation and Module information regarding
@@ -1852,3 +1949,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "distres.h"
+#include "spinbody.h"

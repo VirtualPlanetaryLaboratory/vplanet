@@ -15,6 +15,8 @@ dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
 
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
+dAtmXAbsEffH2O            0.15            # H20 XUV absorption efficiency
+dAtmXAbsEffH              0.15            # H XUV absorption efficiency
 dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
 dEnvelopeMass             0.0 #-0.001          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?

@@ -30,4 +30,4 @@ dAge		1e6
 
 #iSciNot		12		# Decade to switch between normal/scientific notation
 
-saOutputOrder	Time -RotPer -Luminosity Radius
+saOutputOrder	Time -TotAngMom -TotEn -RotPer -Luminosity Radius

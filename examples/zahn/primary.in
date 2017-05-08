@@ -1,25 +1,29 @@
 # The host star, the sun -> Primary body!
 sName		primary		# Body's name
-saModules       stellar eqtide
+saModules       stellar eqtide binary
 
 # Physical Parameters
+iBodyType     1 # Star!
 dMass         1.0                         # Mass, solar masses
-dRotPeriod      0.005 #0.007
+dRotPeriod      -1.67
 dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
+dObliquity      0.0
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
-dTidalQ		1.0e5		# Tidal phase lag
+dTidalQ		1.0e6   	# Tidal phase lag
 dK2		0.5		# Love number of degree 2
+dMaxLockDiff    0.01
 sTideModel	p2		# Tidal model, p2=CPL, t8=CTL
 saTidePerts	secondary	# Body name(s) of tidal perturbers
 
 # STELLAR Parameters
 sStellarModel baraffe
+sWindModel    reiners
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time -TidalRadius -Radius -RotPer -RotRate 
+saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom 

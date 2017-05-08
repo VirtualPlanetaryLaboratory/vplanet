@@ -3390,6 +3390,6 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
   InitializeOptionsDistRes(options,fnRead);
-
+  InitializeOptionsSpiNBody(options,fnRead);
 
 }

@@ -245,6 +245,8 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     /* set up indexes for resonance */
     system->iResIndex = malloc(1*sizeof(int*));
     system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    
     /*------------------------------*/
     CheckResonance(body,&control->Evolve,system);
   }
@@ -542,11 +544,18 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else { 
         dPerRat = pow(body[jBody].dSemi/body[iBody].dSemi,1.5);
       }
-      if (dPerRat > 0.9*1.5 && dPerRat < 1.1*1.5) {
-        system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = 3;
+      // 2:1 resonance in the 0th place
+      if (dPerRat > 0.9*2.0 && dPerRat < 1.1*2.0) {
+        system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = 2;
       } else {
         system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = -1;
       }
+      // 3:2 resonance in the 1th place
+      if (dPerRat > 0.9*1.5 && dPerRat < 1.1*1.5) {
+        system->iResIndex[1][system->imLaplaceN[iBody][jBody]] = 3;
+      } else {
+        system->iResIndex[1][system->imLaplaceN[iBody][jBody]] = -1;
+      }      
     }
   }
 }

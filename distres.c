@@ -222,6 +222,7 @@ void InitializeQincDistRes(BODY *body,UPDATE *update,int iBody,int iPert) {
 
 void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iPert, jBody, j;
+  double dPerRat;
   
   VerifyMeanLongAnom(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
   
@@ -240,10 +241,16 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->fnLaplaceDeriv[28][0] = &fdDSemiF27Dalpha; //dummy
     system->fnLaplaceDeriv[29][0] = &fdDSemiF27Dalpha; //dummy
     system->fnLaplaceDeriv[30][0] = &fdDSemiF31Dalpha;
+    
+    /* set up indexes for resonance */
+    system->iResIndex = malloc(1*sizeof(int*));
+    system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    /*------------------------------*/
+    CheckResonance(body,&control->Evolve,system);
   }
   
   if (iBody > 0) {
-    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {        
         /* semi major axis */
         InitializeSemiDistRes(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iSemi][update[iBody].iaSemiDistRes[iPert]] = &fdDistResRD2DaDt;
@@ -283,6 +290,7 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
           }
         }
     }
+    
   }
   
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistRes;
@@ -523,6 +531,25 @@ void PropsAuxDistRes(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void ForceBehaviorDistRes(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
+void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
+  int iBody, jBody;
+  double dPerRat;
+  
+  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      if (body[iBody].dSemi > body[jBody].dSemi) {
+        dPerRat = pow(body[iBody].dSemi/body[jBody].dSemi,1.5);
+      } else { 
+        dPerRat = pow(body[jBody].dSemi/body[iBody].dSemi,1.5);
+      }
+      if (dPerRat > 0.9*1.5 && dPerRat < 1.1*1.5) {
+        system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = 3;
+      } else {
+        system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = -1;
+      }
+    }
+  }
+}
 
 /* 
  * Semi-major axis functions
@@ -1465,15 +1492,23 @@ double fdDdisturbDSemiPrime2nd(BODY *body, SYSTEM *system, int *iaBody, int iInd
 //-------------------DistRes's equations in a h k p q l (2nd order direct integration RD2)--------------------
 double fdDistResRD2DaDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
+  int iRes,iResIndex;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += 2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu) * \
-          fdDdisturbDLambda1st(body,system,iaBody,3); //let's just try the 3:2 res
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += 2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu) * \
-          fdDdisturbDLambdaPrime1st(body,system,iaBody,3);
+  for (iRes=0;iRes<RESNUM;iRes++) {
+    iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+    if (iResIndex == -1) {
+      sum += 0.0;
+    } else {
+      if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+        sum += 2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu) * \
+              fdDdisturbDLambda1st(body,system,iaBody,iResIndex); //let's just try the 3:2 res
+      } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+        sum += 2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu) * \
+              fdDdisturbDLambdaPrime1st(body,system,iaBody,iResIndex);
+      }
+    }
   }
   
   return sum/DAYSEC*AUCM;
@@ -1481,29 +1516,37 @@ double fdDistResRD2DaDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
+  int iRes,iResIndex;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   
   sum += sqrt(dMu/pow(body[iaBody[0]].dSemi/AUCM,3));
   y = fabs(1.-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
-          *(fdDdisturbDSemi0th(body,system,iaBody)+fdDdisturbDSemi1st(body,system,iaBody,3))\
-          +( sqrt(y)/(1.+sqrt(y))
-          *(body[iaBody[0]].dHecc*fdDdisturbDHecc1st(body,system,iaBody,3)\
-          +body[iaBody[0]].dKecc*fdDdisturbDKecc1st(body,system,iaBody,3))\
-          +0.5/sqrt(y)*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body,system,iaBody,3)\
-          +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body,system,iaBody,3)) )\
-          /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
-          *(fdDdisturbDSemiPrime0th(body,system,iaBody)+fdDdisturbDSemiPrime1st(body,system,iaBody,3))\
-          +( sqrt(y)/(1.+sqrt(y))
-          *(body[iaBody[0]].dHecc*fdDdisturbDHeccPrime1st(body,system,iaBody,3)\
-          +body[iaBody[0]].dKecc*fdDdisturbDKeccPrime1st(body,system,iaBody,3))\
-          +0.5/sqrt(y)*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body,system,iaBody,3)\
-          +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body,system,iaBody,3)) )\
-          /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
+  for (iRes=0;iRes<RESNUM;iRes++) {
+    iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+    if (iResIndex == -1) {
+      sum += 0.0;
+    } else {
+      if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+        sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
+              *(fdDdisturbDSemi0th(body,system,iaBody)+fdDdisturbDSemi1st(body,system,iaBody,iResIndex))\
+              +( sqrt(y)/(1.+sqrt(y))
+              *(body[iaBody[0]].dHecc*fdDdisturbDHecc1st(body,system,iaBody,iResIndex)\
+              +body[iaBody[0]].dKecc*fdDdisturbDKecc1st(body,system,iaBody,iResIndex))\
+              +0.5/sqrt(y)*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body,system,iaBody,iResIndex)\
+              +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body,system,iaBody,iResIndex)) )\
+              /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
+      } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+        sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
+              *(fdDdisturbDSemiPrime0th(body,system,iaBody)+fdDdisturbDSemiPrime1st(body,system,iaBody,iResIndex))\
+              +( sqrt(y)/(1.+sqrt(y))
+              *(body[iaBody[0]].dHecc*fdDdisturbDHeccPrime1st(body,system,iaBody,iResIndex)\
+              +body[iaBody[0]].dKecc*fdDdisturbDKeccPrime1st(body,system,iaBody,iResIndex))\
+              +0.5/sqrt(y)*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body,system,iaBody,iResIndex)\
+              +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body,system,iaBody,iResIndex)) )\
+              /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
+      }
+    }
   }
   
   return sum/DAYSEC;
@@ -1512,93 +1555,125 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDistResRD2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
+  int iRes,iResIndex;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
 
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += ( sqrt(y)*fdDdisturbDKecc1st(body, system, iaBody,3) + \
-    body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body, system, iaBody,3)\
-    +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body, system, iaBody,3))/(2*sqrt(y)) \
-    -body[iaBody[0]].dHecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambda1st(body,system,iaBody,3) )\
-    / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  for (iRes=0;iRes<RESNUM;iRes++) {
+    iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+    if (iResIndex == -1) {
+      sum += 0.0;
+    } else {
+      if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+        sum += ( sqrt(y)*fdDdisturbDKecc1st(body, system, iaBody,iResIndex) + \
+        body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body, system, iaBody,iResIndex)\
+        +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body, system, iaBody,iResIndex))/(2*sqrt(y)) \
+        -body[iaBody[0]].dHecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambda1st(body,system,iaBody,iResIndex) )\
+        / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += ( sqrt(y)*fdDdisturbDKeccPrime1st(body, system, iaBody,3) + \
-    body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body, system, iaBody,3)\
-    +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body, system, iaBody,3))/(2*sqrt(y)) \
-    -body[iaBody[0]].dHecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambdaPrime1st(body,system,iaBody,3) )\
-    / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
-  }
-  
+      } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+        sum += ( sqrt(y)*fdDdisturbDKeccPrime1st(body, system, iaBody,iResIndex) + \
+        body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body, system, iaBody,iResIndex)\
+        +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body, system, iaBody,iResIndex))/(2*sqrt(y)) \
+        -body[iaBody[0]].dHecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambdaPrime1st(body,system,iaBody,iResIndex) )\
+        / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+      }
+    }
+  }  
   return sum/DAYSEC;
 }
 
 double fdDistResRD2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
+  int iRes,iResIndex;
   
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
-  if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-    sum += -( sqrt(y)*fdDdisturbDHecc1st(body, system, iaBody,3) + \
-    body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body, system, iaBody,3)\
-    +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body, system, iaBody,3))/(2*sqrt(y)) \
-    +body[iaBody[0]].dKecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambda1st(body,system,iaBody,3) ) \
-    / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+  
+  for (iRes=0;iRes<RESNUM;iRes++) {
+    iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+    if (iResIndex == -1) {
+      sum += 0.0;
+    } else {
+      if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+        sum += -( sqrt(y)*fdDdisturbDHecc1st(body, system, iaBody,iResIndex) + \
+        body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc1st(body, system, iaBody,iResIndex)\
+        +body[iaBody[0]].dQinc*fdDdisturbDQinc1st(body, system, iaBody,iResIndex))/(2*sqrt(y)) \
+        +body[iaBody[0]].dKecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambda1st(body,system,iaBody,iResIndex) ) \
+        / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
       
-  } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-    sum += -( sqrt(y)*fdDdisturbDHeccPrime1st(body, system, iaBody,3) + \
-    body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body, system, iaBody,3)\
-    +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body, system, iaBody,3))/(2*sqrt(y)) \
-    +body[iaBody[0]].dKecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambdaPrime1st(body,system,iaBody,3) )\
-    / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
-  }      
+      } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+        sum += -( sqrt(y)*fdDdisturbDHeccPrime1st(body, system, iaBody,iResIndex) + \
+        body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime1st(body, system, iaBody,iResIndex)\
+        +body[iaBody[0]].dQinc*fdDdisturbDQincPrime1st(body, system, iaBody,iResIndex))/(2*sqrt(y)) \
+        +body[iaBody[0]].dKecc*sqrt(y)/(1.+sqrt(y))*fdDdisturbDLambdaPrime1st(body,system,iaBody,iResIndex) )\
+        / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
+      }  
+    }
+  }    
 
   return sum/DAYSEC;
 }
 
 double fdDistResRD2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
+    int iRes,iResIndex;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
     y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
-    if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*\
-      fdDdisturbDHecc1st(body,system,iaBody,3)+body[iaBody[0]].dHecc*\
-      fdDdisturbDKecc1st(body,system,iaBody,3))+1.0/2.0*fdDdisturbDQinc1st(body,system,iaBody,3)\
-      -body[iaBody[0]].dPinc*fdDdisturbDLambda1st(body,system,iaBody,3) )\
-      /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
-    } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*\
-      fdDdisturbDHeccPrime1st(body,system,iaBody,3)+body[iaBody[0]].dHecc*\
-      fdDdisturbDKeccPrime1st(body,system,iaBody,3))+1.0/2.0*\
-      fdDdisturbDQincPrime1st(body,system,iaBody,3)\
-      -body[iaBody[0]].dPinc*fdDdisturbDLambdaPrime1st(body,system,iaBody,3) )\
-      /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
-    }
     
+    for (iRes=0;iRes<RESNUM;iRes++) {
+      iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+      if (iResIndex == -1) {
+        sum += 0.0;
+      } else {
+        if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+          sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*\
+          fdDdisturbDHecc1st(body,system,iaBody,iResIndex)+body[iaBody[0]].dHecc*\
+          fdDdisturbDKecc1st(body,system,iaBody,iResIndex))+1.0/2.0*fdDdisturbDQinc1st(body,system,iaBody,iResIndex)\
+          -body[iaBody[0]].dPinc*fdDdisturbDLambda1st(body,system,iaBody,iResIndex) )\
+          /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
+        } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+          sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*\
+          fdDdisturbDHeccPrime1st(body,system,iaBody,iResIndex)+body[iaBody[0]].dHecc*\
+          fdDdisturbDKeccPrime1st(body,system,iaBody,iResIndex))+1.0/2.0*\
+          fdDdisturbDQincPrime1st(body,system,iaBody,iResIndex)\
+          -body[iaBody[0]].dPinc*fdDdisturbDLambdaPrime1st(body,system,iaBody,iResIndex) )\
+          /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
+        }
+      }
+    }    
     return sum/DAYSEC;
 }
 
 
 double fdDistResRD2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
+    int iRes,iResIndex;
     
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
     y = fabs(1-pow(body[iaBody[0]].dHecc,2)-pow(body[iaBody[0]].dKecc,2));
-    if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*\
-      fdDdisturbDHecc1st(body,system,iaBody,3)+body[iaBody[0]].dHecc*\
-      fdDdisturbDKecc1st(body,system,iaBody,3))-1.0/2.0*fdDdisturbDPinc1st(body,system,iaBody,3)\
-      -body[iaBody[0]].dQinc*fdDdisturbDLambda1st(body,system,iaBody,3) )\
-      /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
-    } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
-      sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*\
-      fdDdisturbDHeccPrime1st(body,system,iaBody,3)+body[iaBody[0]].dHecc*\
-      fdDdisturbDKeccPrime1st(body,system,iaBody,3))-1.0/2.0*\
-      fdDdisturbDPincPrime1st(body,system,iaBody,3) \
-      -body[iaBody[0]].dQinc*fdDdisturbDLambdaPrime1st(body,system,iaBody,3) )\
-      /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
+    for (iRes=0;iRes<RESNUM;iRes++) {
+      iResIndex = system->iResIndex[iRes][system->imLaplaceN[iaBody[0]][iaBody[1]]];
+      if (iResIndex == -1) {
+        sum += 0.0;
+      } else {
+        if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
+          sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*\
+          fdDdisturbDHecc1st(body,system,iaBody,iResIndex)+body[iaBody[0]].dHecc*\
+          fdDdisturbDKecc1st(body,system,iaBody,iResIndex))-1.0/2.0*fdDdisturbDPinc1st(body,system,iaBody,iResIndex)\
+          -body[iaBody[0]].dQinc*fdDdisturbDLambda1st(body,system,iaBody,iResIndex) )\
+          /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
+        } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
+          sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*\
+          fdDdisturbDHeccPrime1st(body,system,iaBody,iResIndex)+body[iaBody[0]].dHecc*\
+          fdDdisturbDKeccPrime1st(body,system,iaBody,iResIndex))-1.0/2.0*\
+          fdDdisturbDPincPrime1st(body,system,iaBody,iResIndex) \
+          -body[iaBody[0]].dQinc*fdDdisturbDLambdaPrime1st(body,system,iaBody,iResIndex) )\
+          /(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
+        }
+      }
     }
    
     return sum/DAYSEC;

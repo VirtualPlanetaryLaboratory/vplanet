@@ -7,6 +7,8 @@
  *
 */
 
+#define RESNUM      1
+
 void AddModuleDistRes(MODULE*,int,int);
 void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 
@@ -60,7 +62,7 @@ double fdSemiMajAxF31(double, int);
 double fdDSemiF27Dalpha(double, int);
 double fdDSemiF31Dalpha(double, int);
 void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
-
+void CheckResonance(BODY*,EVOLVE*,SYSTEM*);
 /* DistRes's equations */
 double fdDistResRD2DpDt(BODY*, SYSTEM*, int*);
 double fdDistResRD2DqDt(BODY*, SYSTEM*, int*);

@@ -960,6 +960,8 @@ typedef struct {
   double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
   double dTStart;      /**< time that encounter begins relative to time step */
   
+  int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
+
 } SYSTEM;
 
 /*

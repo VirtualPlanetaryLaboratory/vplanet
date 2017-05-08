@@ -18,7 +18,7 @@ void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 #define OPTENDDISTRES         2400 /* End of DISTRES options */
 
 #define OPT_MEANL             2301
-#define OPT_MEANA             2302
+// #define OPT_MEANA             2302
 
 /* Options Functions */
 

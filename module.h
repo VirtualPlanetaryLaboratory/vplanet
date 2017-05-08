@@ -16,7 +16,7 @@ double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);
 void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
 
-void VerifyModuleMulti(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,SYSTEM*,int);
+void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);

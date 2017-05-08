@@ -61,37 +61,37 @@ void ReadMeanL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     if (iFile > 0)
       body[iFile-1].dMeanL = options->dDefault;
 }
-
-void ReadMeanA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (control->Units[iFile].iAngle == 0) {
-      if (dTmp < 0 || dTmp > 2*PI) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);
-      }
-    } else {
-      if (dTmp < 0 || dTmp > 360) {
-        if (control->Io.iVerbose >= VERBERR)
-            fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);
-      }
-      /* Change to radians */
-      dTmp *= DEGRAD;
-    }
-
-    body[iFile-1].dMeanA = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMeanA = options->dDefault;
-}
+// 
+// void ReadMeanA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+//   /* This parameter cannot exist in the primary file */
+//   int lTmp=-1;
+//   double dTmp;
+// 
+//   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+//   if (lTmp >= 0) {
+//     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+//     if (control->Units[iFile].iAngle == 0) {
+//       if (dTmp < 0 || dTmp > 2*PI) {
+//         if (control->Io.iVerbose >= VERBERR)
+//             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
+//         LineExit(files->Infile[iFile].cIn,lTmp);
+//       }
+//     } else {
+//       if (dTmp < 0 || dTmp > 360) {
+//         if (control->Io.iVerbose >= VERBERR)
+//             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
+//         LineExit(files->Infile[iFile].cIn,lTmp);
+//       }
+//       /* Change to radians */
+//       dTmp *= DEGRAD;
+//     }
+// 
+//     body[iFile-1].dMeanA = dTmp;
+//     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+//   } else
+//     if (iFile > 0)
+//       body[iFile-1].dMeanA = options->dDefault;
+// }
 
 void InitializeOptionsDistRes(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MEANL].cName,"dMeanL");
@@ -101,14 +101,14 @@ void InitializeOptionsDistRes(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MEANL].iType = 2;
   options[OPT_MEANL].iMultiFile = 1;
   fnRead[OPT_MEANL] = &ReadMeanL;
-  
-  sprintf(options[OPT_MEANA].cName,"dMeanA");
-  sprintf(options[OPT_MEANA].cDescr,"Mean Anomaly");
-  sprintf(options[OPT_MEANA].cDefault,"0");
-  options[OPT_MEANA].dDefault = 0.0;
-  options[OPT_MEANA].iType = 2;
-  options[OPT_MEANA].iMultiFile = 1;
-  fnRead[OPT_MEANA] = &ReadMeanA;
+//   
+//   sprintf(options[OPT_MEANA].cName,"dMeanA");
+//   sprintf(options[OPT_MEANA].cDescr,"Mean Anomaly");
+//   sprintf(options[OPT_MEANA].cDefault,"0");
+//   options[OPT_MEANA].dDefault = 0.0;
+//   options[OPT_MEANA].iType = 2;
+//   options[OPT_MEANA].iMultiFile = 1;
+//   fnRead[OPT_MEANA] = &ReadMeanA;
 }
 
 void ReadOptionsDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

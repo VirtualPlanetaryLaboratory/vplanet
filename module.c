@@ -384,6 +384,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bDistRes) {
     AddModuleDistRes(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = DISTRES;
+  }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = SPINBODY;
@@ -528,7 +529,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
  * Verify multi-module dependencies
  */
 
-void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
     if (!body[iBody].bDistOrb) {
@@ -543,14 +544,9 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,CONTROL *control,FILES *files,OP
       }
     }
   }
-  if (body[iBody].bDistOrb || body[iBody].bDistRot) {
-    body[iBody].dLOrb = malloc(3*sizeof(double));
-    body[iBody].dLOrbTmp = malloc(3*sizeof(double));
-    if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
-  } 
 }
 
-void VerifyModuleMultiEqtideDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+void VerifyModuleMultiEqtideDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
     if (body[iBody].bEqtide) {
@@ -975,7 +971,7 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,F
 }
 
 
-void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,SYSTEM *system,int iBody) {
+void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
 
   int iNumMultiProps=0,iNumMultiForce=0;
 
@@ -990,9 +986,9 @@ void VerifyModuleMulti(BODY *body,CONTROL *control,FILES *files,MODULE *module,O
      these functions as some default behavior is set if other modules aren't
      called. */
 
-  VerifyModuleMultiDistOrbDistRot(body,control,files,options,system,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistRot(body,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1316,7 +1312,7 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
   int iOtherBody, iEqn;
 
   // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
-  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  if (body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
 
     /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */

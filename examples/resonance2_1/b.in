@@ -4,7 +4,7 @@ dMass        3.00316726e-10
 dRadius      -1.50
 dRotPeriod   -100
 dObliquity   23.5    #no Moons yet in vplanet....
-dSemi        0.6
+dSemi        0.629757
 dEcc         0.1
 dInc         1.1
 dLongP       130.0

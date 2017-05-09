@@ -236,17 +236,27 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->fnLaplaceF[28][0] = &fdSemiMajAxF27;  // dummy
     system->fnLaplaceF[29][0] = &fdSemiMajAxF27;  // dummy
     system->fnLaplaceF[30][0] = &fdSemiMajAxF31;
+    system->fnLaplaceF[44][0] = &fdSemiMajAxF45;
+    system->fnLaplaceF[48][0] = &fdSemiMajAxF49;
+    system->fnLaplaceF[52][0] = &fdSemiMajAxF53;
+    system->fnLaplaceF[56][0] = &fdSemiMajAxF57;
+    system->fnLaplaceF[61][0] = &fdSemiMajAxF62;
+
     system->fnLaplaceDeriv[26][0] = &fdDSemiF27Dalpha;
     system->fnLaplaceDeriv[27][0] = &fdDSemiF27Dalpha; //dummy
     system->fnLaplaceDeriv[28][0] = &fdDSemiF27Dalpha; //dummy
     system->fnLaplaceDeriv[29][0] = &fdDSemiF27Dalpha; //dummy
     system->fnLaplaceDeriv[30][0] = &fdDSemiF31Dalpha;
+    system->fnLaplaceDeriv[44][0] = &fdDSemiF45Dalpha;
+    system->fnLaplaceDeriv[48][0] = &fdDSemiF49Dalpha;
+    system->fnLaplaceDeriv[52][0] = &fdDSemiF53Dalpha;
+    system->fnLaplaceDeriv[56][0] = &fdDSemiF57Dalpha;
+    system->fnLaplaceDeriv[61][0] = &fdDSemiF62Dalpha;
     
     /* set up indexes for resonance */
     system->iResIndex = malloc(1*sizeof(int*));
     system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    
     /*------------------------------*/
     CheckResonance(body,&control->Evolve,system);
   }
@@ -279,16 +289,18 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         
         jBody = body[iBody].iaGravPerts[iPert];
         for (j=26;j<LAPLNUM;j++) {
-          if (body[iBody].dSemi < body[jBody].dSemi) {  
-              system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,3);
-              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,3);    
-              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
-          } else if (body[iBody].dSemi > body[jBody].dSemi) {
-              system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
-              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,3);
-              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,3);  
-              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
+          if (j==26 || j==30 || j==44 || j==48 || j==52 || j==56 || j==61) {
+            if (body[iBody].dSemi < body[jBody].dSemi) {  
+                system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+                system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,3);
+                system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,3);    
+                system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
+            } else if (body[iBody].dSemi > body[jBody].dSemi) {
+                system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
+                system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,3);
+                system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,3);  
+                system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
+            }
           }
         }
     }
@@ -570,16 +582,18 @@ void RecalcLaplaceDistRes(BODY *body, CONTROL *control, SYSTEM *system) {
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++){ 
       jBody = body[iBody].iaGravPerts[iPert];
       for (j=26;j<LAPLNUM;j++) {
-        if (body[iBody].dSemi < body[jBody].dSemi) {  
-            system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,3);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,3);    
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
-        } else if (body[iBody].dSemi > body[jBody].dSemi) {
-            system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
-            system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,3);
-            system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,3);  
-            system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
+        if (j==26 || j==30 || j==44 || j==48 || j==52 || j==56 || j==61) {
+          if (body[iBody].dSemi < body[jBody].dSemi) {  
+              system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[iBody].dSemi/body[jBody].dSemi,3);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[iBody].dSemi/body[jBody].dSemi,3);    
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[iBody].dSemi/body[jBody].dSemi;
+          } else if (body[iBody].dSemi > body[jBody].dSemi) {
+              system->imLaplaceN[iBody][jBody] = CombCount(jBody,iBody,control->Evolve.iNumBodies-1);
+              system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceF[j][0](body[jBody].dSemi/body[iBody].dSemi,3);
+              system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j] = system->fnLaplaceDeriv[j][0](body[jBody].dSemi/body[iBody].dSemi,3);  
+              system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
+          }
         }
       }
     }
@@ -614,39 +628,39 @@ double fdDSemiF31Dalpha(double dAxRatio, int iIndexJ) {
 
 /*--------- f45 ---------------------*/
 double fdSemiMajAxF45(double dAxRatio, int iIndexJ) {
-  return 1./8*((-5.*iIndexJ+4.*pow(iIndexJ,2))*fdLaplaceCoeff(A(iIndexJ))\
+  return 1./8*((-5.*iIndexJ+4.*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(iIndexJ))\
         +(-2.+4.*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(iIndexJ))\
         +pow(dAxRatio,2)*fdDerivLaplaceCoeff(2,A(iIndexJ)));
 }
 
 double fdDSemiF45Dalpha(double dAxRatio, int iIndexJ) {
-  return 1./8*((-2.-1.*iIndexJ+4.*pow(iIndexJ,2))*fdDerivLaplaceCoeff(1,A(iIndexJ))\
+  return 1./8*((-2.-1.*iIndexJ+4.*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(iIndexJ))\
         +(4*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ))\
         +pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ)));
 }
 
 /*--------- f49 ---------------------*/
 double fdSemiMajAxF49(double dAxRatio, int iIndexJ) {
-  return 1./4*((-2.+6.*iIndexJ-4.*pow(iIndexJ,2))*fdLaplaceCoeff(A(iIndexJ-1))\
+  return 1./4*((-2.+6.*iIndexJ-4.*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(iIndexJ-1))\
          +(2.-4.*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(iIndexJ-1))\
          -pow(dAxRatio,2)*fdDerivLaplaceCoeff(2,A(iIndexJ-1)));
 }
 
 double fdDSemiF49Dalpha(double dAxRatio, int iIndexJ) {
-  return 1./4*((2.*iIndexJ-4.*pow(iIndexJ,2))*fdLaplaceCoeff(A(iIndexJ-1))\
+  return 1./4*((2.*iIndexJ-4.*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(iIndexJ-1))\
          -4.*iIndexJ*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ-1))\
          -pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ-1)));
 }
 
 /*--------- f53 ---------------------*/
 double fdSemiMajAxF53(double dAxRatio, int iIndexJ) {
-  return 1./8*((2.-7.*iIndexJ+4.*pow(iIndexJ,2))*fdLaplaceCoeff(A(iIndexJ-2))\
+  return 1./8*((2.-7.*iIndexJ+4.*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(iIndexJ-2))\
          +(-2.+4*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(iIndexJ-2))
          +pow(dAxRatio,2)*fdDerivLaplaceCoeff(2,A(iIndexJ-2)));
 }
 
 double fdDSemiF53Dalpha(double dAxRatio, int iIndexJ) {
-  return 1./8*((-3.*iIndexJ+4.*pow(iIndexJ,2))*fdDerivLaplaceCoeff(1,A(iIndexJ-2))\
+  return 1./8*((-3.*iIndexJ+4.*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(iIndexJ-2))\
          +(4*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(iIndexJ-2))
          +pow(dAxRatio,2)*fdDerivLaplaceCoeff(3,A(iIndexJ-2)));
 }

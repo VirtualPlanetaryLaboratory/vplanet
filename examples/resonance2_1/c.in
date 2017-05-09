@@ -6,7 +6,7 @@ dRotPeriod   -100
 dObliquity   23.5    #no Moons yet in vplanet....
 dSemi        1.0
 dEcc         0.048
-dInc         0.0
+dInc         1e-5
 dLongP       0
 dLongA       0
 # bGRCorr      0

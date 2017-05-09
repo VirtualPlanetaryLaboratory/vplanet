@@ -12,5 +12,5 @@ saBodyFiles   star.in b.in c.in
 bDoForward    1
 bVarDt        1
 dEta          0.1
-dStopTime     100
-dOutputTime   0.1
+dStopTime     100000
+dOutputTime   100

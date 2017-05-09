@@ -58,9 +58,20 @@ void ForceBehaviorDistRes(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,
 
 double fdSemiMajAxF27(double, int);
 double fdSemiMajAxF31(double, int);
+double fdSemiMajAxF45(double, int);
+double fdSemiMajAxF49(double, int);
+double fdSemiMajAxF53(double, int);
+double fdSemiMajAxF57(double, int);
+double fdSemiMajAxF62(double, int);
 
 double fdDSemiF27Dalpha(double, int);
 double fdDSemiF31Dalpha(double, int);
+double fdDSemiF45Dalpha(double, int);
+double fdDSemiF49Dalpha(double, int);
+double fdDSemiF53Dalpha(double, int);
+double fdDSemiF57Dalpha(double, int);
+double fdDSemiF62Dalpha(double, int);
+
 void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
 void CheckResonance(BODY*,EVOLVE*,SYSTEM*);
 /* DistRes's equations */

@@ -770,7 +770,7 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *
     // Set da/dt equation to tidally locked formalism (see Ferraz-Mello et al. 2008)
     if (!control->Evolve.bFixOrbit[iBody] && iBody > 0)
     {
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
+      //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
     }
 
     if (body[iBody].iTidePerts > 1) {
@@ -2623,7 +2623,7 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdat
     // for the orbiter
     if (!evolve->bFixOrbit[iBody] && iBody > 0)
     {
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
+      //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
     }
 
 
@@ -2924,6 +2924,10 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
 /*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57) */
 double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
 {
+
+  // HACK HACK HACK
+  return fdCPLDsemiDt(body,system,iaBody);
+
   int iB0=iaBody[0],iB1=iaBody[1];
 
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
@@ -2946,18 +2950,52 @@ double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
 iaBody[0] = central body */
 
-  double dSum=0;
+  double dSum = 0.0;
 
-  //printf("%.4e %.4e\n", body[iB0].dTidalZ[iB1],body[iB1].dTidalZ[iB0]);
-  //printf("%d %d %d %d %d : %d %d %d %d %d\n",body[iB0].iTidalEpsilon[iB1][0],body[iB0].iTidalEpsilon[iB1][1],body[iB0].iTidalEpsilon[iB1][2],body[iB0].iTidalEpsilon[iB1][5],body[iB0].iTidalEpsilon[iB1][8],body[iB1].iTidalEpsilon[iB0][0],body[iB1].iTidalEpsilon[iB0][1],body[iB1].iTidalEpsilon[iB0][2],body[iB1].iTidalEpsilon[iB0][5],body[iB1].iTidalEpsilon[iB0][8]);
+  // Secondary (orbiter) is tidally locked
+  if(!body[iB0].bTideLock && body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
-  // Contribution from orbiter
-  dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
+    // Contribution from the central body
+    dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
 
-  // Contribution from central body
-  dSum += body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+    return dSum;
+  }
+  // Primary (central body) is tidally locked
+  else if(body[iB0].bTideLock && !body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
-  return body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+    // Contribution from central body
+    dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+
+    return dSum;
+  }
+  // If primary and secondary are tidally locked
+  else if(body[iB0].bTideLock && body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
+
+    // Contribution from central body
+    dSum += body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
+
+    return -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+  }
+  // Neither body is tidally locked
+  else
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
+
+    // Contribution from central body
+    dSum += body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+
+    return body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+  }
 }
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de.

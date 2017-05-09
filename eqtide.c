@@ -768,10 +768,13 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *
     }
 
     // Set da/dt equation to tidally locked formalism (see Ferraz-Mello et al. 2008)
+    // DEPRECATED
+    /*
     if (!control->Evolve.bFixOrbit[iBody] && iBody > 0)
     {
       //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
     }
+    */
 
     if (body[iBody].iTidePerts > 1) {
       fprintf(stderr,"ERROR: %s cannot be true is %s has more than 1 argument.\n",options[OPT_FORCEEQSPIN].cName,options[OPT_TIDEPERTS].cName);
@@ -2621,10 +2624,13 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdat
 
     // Set da/dt equation to tidally locked formalism (see Ferraz-Mello et al. 2008)
     // for the orbiter
+    // DEPRECATED
+    /*
     if (!evolve->bFixOrbit[iBody] && iBody > 0)
     {
       //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
     }
+    */
 
 
     if (io->iVerbose >= VERBPROG) {
@@ -2944,6 +2950,9 @@ iaBody[0] = central body */
   return -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
 }
 
+/*! Equations governing semi-major axis derivative from Ferraz-Mello 2008
+ * Combines tidally-locked and not-tidally locked equations
+ */
 double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iB0=iaBody[0],iB1=iaBody[1];
 

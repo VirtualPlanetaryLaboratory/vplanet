@@ -1002,7 +1002,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTENERGY].bNeg = 1;
   output[OUT_TOTENERGY].dNeg = 1;
   output[OUT_TOTENERGY].iNum = 1;
-  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR;
+  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR + SPINBODY;
   fnWrite[OUT_TOTENERGY] = &WriteTotEnergy;
 
   sprintf(output[OUT_POTENERGY].cName,"PotEnergy");

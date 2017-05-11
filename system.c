@@ -140,7 +140,15 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
 
   // Ignore central body or other stars if not using binary
-  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  if (body[iBody].bSpiNBody && iBody>0){
+    //For SpiNBody, find the heliocentric distance then return the potential.
+    //This ignores planet-planet potential.
+    double Distance = sqrt((body[iBody].dPositionX-body[0].dPositionX)*(body[iBody].dPositionX-body[0].dPositionX)
+        +(body[iBody].dPositionY-body[0].dPositionY)*(body[iBody].dPositionY-body[0].dPositionY)
+        +(body[iBody].dPositionZ-body[0].dPositionZ)*(body[iBody].dPositionZ-body[0].dPositionZ));
+    return -BIGG*body[0].dMass*body[iBody].dMass/Distance;
+  }
+  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
   {
     return 0.0;
   }
@@ -170,8 +178,15 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass;
 
+  if (body[iBody].bSpiNBody && iBody>0){
+    //Energy is calculated in a heliocentric reference frame.
+    double Velocity2 = (body[iBody].dVelX-body[0].dVelX)*(body[iBody].dVelX-body[0].dVelX)
+        +(body[iBody].dVelY-body[0].dVelY)*(body[iBody].dVelY-body[0].dVelY)
+        +(body[iBody].dVelZ-body[0].dVelZ)*(body[iBody].dVelZ-body[0].dVelZ);
+    return 0.5*body[iBody].dMass*Velocity2;
+  }
   // Ignore central body or other stars if not using binary
-  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
   {
     return 0.0;
   }

@@ -904,6 +904,8 @@ typedef struct {
 /* Pointer to Laplace semi-major axis functions in DistOrb */
 typedef double (*fnLaplaceFunction)(double,int);
 
+
+
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
 
@@ -989,6 +991,7 @@ typedef struct {
   double dTStart;      /**< time that encounter begins relative to time step */
   
   int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
+  int *iResOrder;
 
 } SYSTEM;
 

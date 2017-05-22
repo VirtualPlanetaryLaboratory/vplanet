@@ -601,6 +601,7 @@ typedef struct {
   double dSatXUVTime;
   double dXUVBeta;
   int iStellarModel;
+  int iMagBrakingModel;
   int iWindModel;
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter

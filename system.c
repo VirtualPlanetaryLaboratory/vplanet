@@ -315,24 +315,22 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // Both are tidally locked
   if(body[0].bTideLock && body[1].bTideLock)
   {
-    adot = fdSemiTidalLockBinEqSt(body,2,-1);
+    return fdSemiTidalLockBinEqSt(body,2,-1);
   }
   // Primary is tidally locked
   else if(body[0].bTideLock && !body[1].bTideLock)
   {
-    adot = fdSemiTidalLockBinEqSt(body,1,0);
+    return fdSemiTidalLockBinEqSt(body,1,0);
   }
   // Secondary is tidally locked
   else if(!body[0].bTideLock && body[1].bTideLock)
   {
-    adot = fdSemiTidalLockBinEqSt(body,1,1);
+    return fdSemiTidalLockBinEqSt(body,1,1);
   }
   else
   {
-    adot = 0.0;
+    return 0.0;
   }
-
-  return adot;
 }
 
 /*! Compute lost energy rate (tidal heating) for tidally locked binaries undergoing

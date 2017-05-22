@@ -5,9 +5,8 @@ saModules       stellar eqtide binary
 # Physical Parameters
 iBodyType     1 # Star!
 dMass         1.0                         # Mass, solar masses
-dRotPeriod      -1.67
-dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
-dObliquity      0.0
+dRotPeriod    -0.5
+dRadGyra        0.27             # Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
@@ -21,7 +20,6 @@ saTidePerts	secondary	# Body name(s) of tidal perturbers
 
 # STELLAR Parameters
 sStellarModel baraffe
-sWindModel    reiners
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!

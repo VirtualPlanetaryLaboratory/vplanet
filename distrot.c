@@ -760,10 +760,11 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     for (i=0;i<3;i++)
       system->dLOrb[i] += body[jBody].dLOrb[i];
   }
-  Lnorm = sqrt(pow(system->dLOrb[0],2)+pow(system->dLOrb[1],2)+pow(system->dLOrb[2],2));
+  Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
   for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
   
-  Lnorm = sqrt(pow(body[iBody].dLOrb[0],2)+pow(body[iBody].dLOrb[1],2)+pow(body[iBody].dLOrb[2],2));
+  Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+\
+      body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
   for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
   
   body[iBody].dLRot[0] = 0.0;
@@ -780,15 +781,18 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
 
   cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
-  Lnorm = sqrt(pow(body[iBody].dLRotTmp[0],2)+pow(body[iBody].dLRotTmp[1],2)+pow(body[iBody].dLRotTmp[2],2));
+  Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+\
+      body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
   for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
   
   cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
-  Lnorm = sqrt(pow(body[iBody].dLOrbTmp[0],2)+pow(body[iBody].dLOrbTmp[1],2)+pow(body[iBody].dLOrbTmp[2],2));
+  Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+\
+      body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
   for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
   
   cross(body[iBody].dLOrbTmp,body[iBody].dLRotTmp,system->dLOrb);
-  *dTmp = sqrt(pow(system->dLOrb[0],2)+pow(system->dLOrb[1],2)+pow(system->dLOrb[2],2));
+  *dTmp = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+\
+      system->dLOrb[2]*system->dLOrb[2]);
 }  
   
 void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

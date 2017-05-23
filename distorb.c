@@ -1103,7 +1103,7 @@ int HaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
         }
         alpha = mu1 + mu2;
         crit = 1.0 + pow((3./alpha),(4./3))*mu1*mu2;
-        hill = pow(alpha,-3)*(mu1+mu2/(delta*delta))*(mu1*gamma1+mu2*gamma2*delta)*\   
+        hill = pow(alpha,-3)*(mu1+mu2/(delta*delta))*(mu1*gamma1+mu2*gamma2*delta)*\
             (mu1*gamma1+mu2*gamma2*delta);
         if (hill < crit) {
           if (io->iVerbose >= VERBPROG) {

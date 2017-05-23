@@ -1103,7 +1103,8 @@ int HaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
         }
         alpha = mu1 + mu2;
         crit = 1.0 + pow((3./alpha),(4./3))*mu1*mu2;
-        hill = pow(alpha,-3)*(mu1+mu2/pow(delta,2))*pow((mu1*gamma1+mu2*gamma2*delta),2);
+        hill = pow(alpha,-3)*(mu1+mu2/(delta*delta))*(mu1*gamma1+mu2*gamma2*delta)*\   
+            (mu1*gamma1+mu2*gamma2*delta);
         if (hill < crit) {
           if (io->iVerbose >= VERBPROG) {
             printf("HALT: hill stability criterion failed for planets %d and %d",iBody,jBody);
@@ -1683,9 +1684,12 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
     body[jBody].dCartPos[1] = xtmp*(yangle1(body,jBody))+ytmp*(yangle2(body,jBody));
     body[jBody].dCartPos[2] = xtmp*(zangle1(body,jBody))+ytmp*(zangle2(body,jBody));
     
-    dDR = sqrt(pow(body[iBody].dCartPos[0]-body[jBody].dCartPos[0],2) + \
-               pow(body[iBody].dCartPos[1]-body[jBody].dCartPos[1],2) + \
-               pow(body[iBody].dCartPos[2]-body[jBody].dCartPos[2],2));
+    dDR = sqrt((body[iBody].dCartPos[0]-body[jBody].dCartPos[0])*\
+            (body[iBody].dCartPos[0]-body[jBody].dCartPos[0]) + \
+               (body[iBody].dCartPos[1]-body[jBody].dCartPos[1])*\
+               (body[iBody].dCartPos[1]-body[jBody].dCartPos[1]) + \
+               (body[iBody].dCartPos[2]-body[jBody].dCartPos[2])*\
+               (body[iBody].dCartPos[2]-body[jBody].dCartPos[2]));
   
     dDR *= AUCM;
     

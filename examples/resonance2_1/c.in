@@ -1,6 +1,6 @@
 sName        c  
 saModules    distorb distres
-dMass        0.0009547861040430418
+dMass        9.547861040430418e-6
 dRadius      -1.50
 dRotPeriod   -100
 dObliquity   23.5    #no Moons yet in vplanet....

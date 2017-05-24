@@ -257,10 +257,12 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResIndex = malloc(RESNUM*sizeof(int*));
     system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[2] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     
     system->iResOrder = malloc(RESNUM*sizeof(int));
     system->iResOrder[0] = 1;
     system->iResOrder[1] = 1;    
+    system->iResOrder[2] = 2;
 
     /*------------------------------*/
     CheckResonance(body,&control->Evolve,system);
@@ -572,7 +574,13 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         system->iResIndex[1][system->imLaplaceN[iBody][jBody]] = 3;
       } else {
         system->iResIndex[1][system->imLaplaceN[iBody][jBody]] = -1;
-      }      
+      } 
+      // 3:1 resonance in the 2th place
+      if (dPerRat > 0.9*3.0 && dPerRat < 1.1*3.0) {
+        system->iResIndex[2][system->imLaplaceN[iBody][jBody]] = 3;
+      } else {
+        system->iResIndex[2][system->imLaplaceN[iBody][jBody]] = -1;
+      }    
     }
   }
 }
@@ -774,8 +782,7 @@ double fdDdistDhPrmDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int i
   f31 = system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][30] + \
         system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][30]*dAlpha;
   
-  return f31 \
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1));
+  return f31*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1));
 }
 
 double fdDdistDhPrmDir21(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {

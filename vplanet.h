@@ -915,9 +915,9 @@ typedef struct {
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
-  double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
-  double **dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
-  double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
+  double ***dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
+  double ***dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
+  double ***dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
   int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
   double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */

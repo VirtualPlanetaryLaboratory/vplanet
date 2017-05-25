@@ -258,16 +258,19 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[2] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[3] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+
     
     system->iResOrder = malloc(RESNUM*sizeof(int));
     system->iResOrder[0] = 1;
     system->iResOrder[1] = 1;    
     system->iResOrder[2] = 2;
+    system->iResOrder[3] = 2;
 
     /*------------------------------*/
     CheckResonance(body,&control->Evolve,system);
     
-    for (iRes=1;iRes<4;iRes++) {
+    for (iRes=1;iRes<=RESMAX;iRes++) {
       system->dmLaplaceC[iRes] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->dmLaplaceD[iRes] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->dmAlpha0[iRes] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
@@ -307,7 +310,7 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistRes[iPert]] = &fdDistResRD2DqDt;
         
         jBody = body[iBody].iaGravPerts[iPert];
-        for (iRes=1;iRes<4;iRes++) {
+        for (iRes=1;iRes<=RESMAX;iRes++) {
 //           iRes = system->iResIndex[jj][system->imLaplaceN[iBody][jBody]];
           
           for (j=26;j<LAPLNUM;j++) {
@@ -597,6 +600,12 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else {
         system->iResIndex[2][system->imLaplaceN[iBody][jBody]] = -1;
       }    
+      // 5:3 in the 3th place
+      if (dPerRat > 0.9*(5./3) && dPerRat < 1.1*(5./3)) {
+        system->iResIndex[3][system->imLaplaceN[iBody][jBody]] = 5;
+      } else {
+        system->iResIndex[3][system->imLaplaceN[iBody][jBody]] = -1;
+      }   
     }
   }
 }
@@ -611,6 +620,7 @@ void RecalcLaplaceDistRes(BODY *body, CONTROL *control, SYSTEM *system) {
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++){ 
       jBody = body[iBody].iaGravPerts[iPert];
       for (jj=0;jj<RESNUM;jj++) {
+      //xxx needs fixed!
         iRes = system->iResIndex[jj][system->imLaplaceN[iBody][jBody]];
         for (j=26;j<LAPLNUM;j++) {
           if (j==26 || j==30 || j==44 || j==48 || j==52 || j==56 || j==61) {
@@ -944,8 +954,7 @@ double fdDdistDkPrmDir22(BODY *body, SYSTEM *system, int iBody, int jBody, int i
   f49 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][48] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][48]*dAlpha;
   
-  return fdSemiMajAxF49(body[jBody].dSemi/body[iBody].dSemi,iIndexJ)\
-          *(body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))
+  return f49*(body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))
           +body[jBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2)));
 }
 

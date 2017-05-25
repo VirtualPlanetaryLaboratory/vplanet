@@ -684,9 +684,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       system->fnLaplaceDeriv[24][0] = &fdDSemiF25Dalpha;
       system->fnLaplaceDeriv[25][0] = &fdDSemiF26Dalpha;
       
-      system->dmLaplaceC = malloc((RESNUM+1)*sizeof(double**));
-      system->dmLaplaceD = malloc((RESNUM+1)*sizeof(double**));
-      system->dmAlpha0 = malloc((RESNUM+1)*sizeof(double**));
+      system->dmLaplaceC = malloc((RESMAX+1)*sizeof(double**));
+      system->dmLaplaceD = malloc((RESMAX+1)*sizeof(double**));
+      system->dmAlpha0 = malloc((RESMAX+1)*sizeof(double**));
       
       system->dmLaplaceC[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->dmLaplaceD[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));

@@ -1,6 +1,6 @@
 sSystemName   reso
 iVerbose      5
-iDigits       6
+iDigits       8
 bOverwrite    1
 sUnitMass     solar
 sUnitLength   au

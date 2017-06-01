@@ -177,7 +177,7 @@
 #define VDYNELLIP       1404
 
 /* Semi-major axis functions in DistOrb (& DistRes?)*/
-#define LAPLNUM 	      62
+#define LAPLNUM 	      89
 
 //SPINBODY 1600-1700
 #define VVELX           1601

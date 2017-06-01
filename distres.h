@@ -65,6 +65,13 @@ double fdSemiMajAxF53(double, int);
 double fdSemiMajAxF57(double, int);
 double fdSemiMajAxF62(double, int);
 double fdSemiMajAxF82(double, int);
+double fdSemiMajAxF83(double, int);
+double fdSemiMajAxF84(double, int);
+double fdSemiMajAxF85(double, int);
+double fdSemiMajAxF86(double, int);
+double fdSemiMajAxF87(double, int);
+double fdSemiMajAxF88(double, int);
+double fdSemiMajAxF89(double, int);
 
 double fdDSemiF27Dalpha(double, int);
 double fdDSemiF31Dalpha(double, int);
@@ -74,6 +81,13 @@ double fdDSemiF53Dalpha(double, int);
 double fdDSemiF57Dalpha(double, int);
 double fdDSemiF62Dalpha(double, int);
 double fdDSemiF82Dalpha(double, int);
+double fdDSemiF83Dalpha(double, int);
+double fdDSemiF84Dalpha(double, int);
+double fdDSemiF85Dalpha(double, int);
+double fdDSemiF86Dalpha(double, int);
+double fdDSemiF87Dalpha(double, int);
+double fdDSemiF88Dalpha(double, int);
+double fdDSemiF89Dalpha(double, int);
 
 void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
 void CheckResonance(BODY*,EVOLVE*,SYSTEM*);

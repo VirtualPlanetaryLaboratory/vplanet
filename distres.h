@@ -7,8 +7,8 @@
  *
 */
 
-#define RESNUM      6
-#define RESMAX      6
+#define RESNUM      8
+#define RESMAX      8
 
 void AddModuleDistRes(MODULE*,int,int);
 void BodyCopyDistRes(BODY*,BODY*,int,int,int);

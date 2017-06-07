@@ -1351,8 +1351,13 @@ def aggregate_data(data=None, bodies=None, funcs=None, new_cols=None,
     if os.path.exists(cache):
         print("Reading data from cache:",cache)
         sys.stdout.flush()
-        with open(cache, 'rb') as handle:
-            return pickle.load(handle)
+
+        # Check pandas version to make sure I don't break stuff
+        if float(pd.__version__.split(".")[1]) >= 0.2:
+            return pd.read_pickle(cache)
+        else:
+            with open(cache, 'rb') as handle:
+                return pickle.load(handle)
 
     # User forgot to specify data and cache
     if data is None:

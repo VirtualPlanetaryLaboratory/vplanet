@@ -122,6 +122,13 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
 
+  module->fnFinalizeUpdatePositionX = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionXModule));
+  module->fnFinalizeUpdatePositionY = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionYModule));
+  module->fnFinalizeUpdatePositionZ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionZModule));
+  module->fnFinalizeUpdateVelX      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelXModule));
+  module->fnFinalizeUpdateVelY      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelYModule));
+  module->fnFinalizeUpdateVelZ      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelZModule));
+
   // Function Pointer Matrices
   module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -165,6 +172,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bFlare)
     iNumModules++;
   if (body[iBody].bGalHabit)
+    iNumModules++;
+  if (body[iBody].bSpiNBody)
     iNumModules++;
 
   module->iNumModules[iBody] = iNumModules;
@@ -239,6 +248,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateAngMY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
 
+  module->fnFinalizeUpdatePositionX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionXModule));
+  module->fnFinalizeUpdatePositionY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionYModule));
+  module->fnFinalizeUpdatePositionZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionZModule));
+  module->fnFinalizeUpdateVelX[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelXModule));
+  module->fnFinalizeUpdateVelY[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelYModule));
+  module->fnFinalizeUpdateVelZ[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelZModule));
 
   for(iModule = 0; iModule < iNumModules; iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -303,6 +318,13 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
+
+    module->fnFinalizeUpdatePositionX[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePositionY[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePositionZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelX[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelY[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelZ[iBody][iModule]      = &FinalizeUpdateNULL;
   }
 
   /************************
@@ -353,6 +375,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bGalHabit) {
     AddModuleGalHabit(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = GALHABIT;
+  }
+  if (body[iBody].bSpiNBody) {
+    AddModuleSpiNBody(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = SPINBODY;
   }
 }
 
@@ -420,6 +446,9 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
+      } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
+  body[iFile-1].bSpiNBody = 1;
+  module->iBitSum[iFile-1] += SPINBODY;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -459,6 +488,8 @@ void PrintModuleList(FILE *file,int iBitSum) {
     fprintf(file,"STELLAR ");
   if (iBitSum & THERMINT)
     fprintf(file,"THERMINT ");
+  if (iBitSum & SPINBODY)
+    fprintf(file,"SPINBODY ");
 
 }
 
@@ -477,6 +508,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bStellar = 0;
       (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bSpiNBody = 0;
   }
 }
 
@@ -954,6 +986,11 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
+void PropsAuxSpinbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+  // Nothing to see here...
+
+}
+
 void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // This function controls how tidal radius is set.
 
@@ -1195,17 +1232,24 @@ void InitializeUpdateEqBinStLostEng(BODY *body,UPDATE *update,int iBody) {
 
 
 /*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
-void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iSemiBinEqSt = (*iEqn);
-  (*iEqn)++;
+void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
+    update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+    update[iBody].iSemiBinEqSt = (*iEqn);
+    (*iEqn)++;
+  }
 }
 
 /*! Finalize update (for malloc-ing) for Bin-eq-st lost energy derivative */
-void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-  update[iBody].iLostEngBinEqSt = (*iEqn);
-  (*iEqn)++;
+void FinalizeUpdateMultiEqBinStLostEng(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
+  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  {
+    update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
+    update[iBody].iLostEngBinEqSt = (*iEqn);
+    (*iEqn)++;
+  }
 }
 
 /* GENERAL MULTI-MODULE EQUATION INITIALIZATION/FINALIZATION */
@@ -1239,11 +1283,6 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     // Other star (primary) can also influence this equation
     iOtherBody = 0;
 
-    // Finalize update step: semi-major axis eqn for BIN-EQ-ST
-    iEqn = 1; // When EQTIDE is set, already have an equation for how
-                  // the semi-major axis changes so start this at 1
-    FinalizeUpdateMultiEqBinStSemi(body,update,(&iEqn),(*iVar),iBody,iFoo);
-
     // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
     update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
@@ -1254,9 +1293,6 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
     (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
 
     /* Add change in lost energy due to BINARY-EQTIDE-STELLAR coupling */
-
-    iEqn = 2; // 1 from STELLAR, 1 from EQTIDE
-    FinalizeUpdateMultiEqBinStLostEng(body,update,(&iEqn),(*iVar),iBody,iFoo);
 
     // Add dLostEnergy dt from Binary-Eqtide-Stellar coupling to matrix
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngBinEqSt] = 1;

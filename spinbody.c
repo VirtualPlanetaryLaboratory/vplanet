@@ -481,6 +481,122 @@ void Helio2Bary(BODY *body, int iNumBodies, int iBody) {
   free(vcom);
 }
 
+void Bary2Helio(BODY *body, int iBody){
+  //Calculate heliocentric cartesian position
+  body[iBody].dCartPos[0] = body[iBody].dPositionX - body[0].dPositionX;
+  body[iBody].dCartPos[1] = body[iBody].dPositionY - body[0].dPositionY;
+  body[iBody].dCartPos[2] = body[iBody].dPositionZ - body[0].dPositionZ;
+
+  //Calculate heliocentric cartesian velocity
+  body[iBody].dCartVel[0] = body[iBody].dVelX - body[0].dVelX;
+  body[iBody].dCartVel[1] = body[iBody].dVelY - body[0].dVelY;
+  body[iBody].dCartVel[2] = body[iBody].dVelZ - body[0].dVelZ;
+}
+
+void Bary2OrbElems(BODY *body, int iBody){
+  double rsq, normr, vsq, mu, *h, hsq, normh, sinwf, coswf, sinfAngle,
+         cosfAngle, rdot, sinw, cosw, f, cosE;
+
+  h = malloc(3*sizeof(double));
+  //First convert from Barycentric to heliocentric
+  //Helio values are stored in body[iBody].dCartPos and body[iBody].dCartVel
+  Bary2Helio(body, iBody);
+
+  if (iBody==0) {
+    body[iBody].dSemi = 0;
+    body[iBody].dEcc  = 0;
+    body[iBody].dInc  = 0;
+    body[iBody].dLongA = 0;
+    body[iBody].dLongP = 0;
+    body[iBody].dMeanA = 0;
+  } else {
+
+    //Solve for various values that are used repeatedly
+    //Solve for h = r X v
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    hsq = h[0]*h[0]+h[1]*h[1]+h[2]*h[2];                  // ||h||^2
+    normh = sqrt(hsq);                                    // ||h||
+    vsq = body[iBody].dCartVel[0]*body[iBody].dCartVel[0]   // ||v||^2
+         +body[iBody].dCartVel[1]*body[iBody].dCartVel[1]
+         +body[iBody].dCartVel[2]*body[iBody].dCartVel[2];
+    rsq = body[iBody].dCartPos[0]*body[iBody].dCartPos[0]   // ||r||^2
+         +body[iBody].dCartPos[1]*body[iBody].dCartPos[1]
+         +body[iBody].dCartPos[2]*body[iBody].dCartPos[2];
+    normr = sqrt(rsq);                                    // ||r||
+    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]
+           +body[iBody].dCartPos[1]*body[iBody].dCartVel[1]
+           +body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/normr;
+    mu  = BIGG * (body[iBody].dMass + body[0].dMass);     // G(M+m)
+
+    // Solve for semi-major axis
+    body[iBody].dSemi = 1/(2/normr - vsq/mu);
+
+    // Solve for eccentricity
+    body[iBody].dEccSq = 1.0 - hsq/(mu*body[iBody].dSemi);
+    body[iBody].dEcc   = sqrt(body[iBody].dEccSq);
+
+    //Solve for inclination
+    body[iBody].dInc = acos(h[2]/normh);
+    body[iBody].dSinc = 0.5*sin(body[iBody].dInc); //For DistOrb usage
+
+    //Solve for longitude of ascending node
+    body[iBody].dLongA = atan2(h[0],-h[1]);
+    if (body[iBody].dLongA<0){ //Make sure the signs are all right
+      body[iBody].dLongA += 2.0*PI;
+    }
+
+    //Solve for w and f
+    sinwf = body[iBody].dCartPos[2]/(normr*sin(body[iBody].dInc));
+    coswf = (body[iBody].dCartPos[0]/normr+sin(body[iBody].dLongA)*sinwf
+           *cos(body[iBody].dInc))/cos(body[iBody].dLongA);
+    if (body[iBody].dEcc != 0) { //No true anomaly for circular orbits
+      sinfAngle = body[iBody].dSemi*(1-body[iBody].dEccSq)*rdot
+                 /(normh*body[iBody].dEcc);
+      cosfAngle = (body[iBody].dSemi*(1-body[iBody].dEccSq)/normr-1)/body[iBody].dEcc;
+      sinw = sinwf*cosfAngle - coswf*sinfAngle;
+      cosw = sinwf*sinfAngle + coswf*cosfAngle;
+
+      body[iBody].dArgP = atan2(sinw,cosw);
+      body[iBody].dLongP = atan2(sinw,cosw) + body[iBody].dLongA;
+
+      //Ensure all angles are in [0,2PI)
+      if (body[iBody].dLongP >= 2.*PI) {
+        body[iBody].dLongP -= 2.*PI;
+      } else if (body[iBody].dLongP < 0.0) {
+        body[iBody].dLongP += 2.*PI;
+      }
+      if (body[iBody].dArgP >= 2.*PI) {
+        body[iBody].dArgP -= 2.*PI;
+      } else if (body[iBody].dArgP < 0.0) {
+        body[iBody].dArgP += 2.*PI;
+      }
+
+      f = atan2(sinfAngle, cosfAngle);
+      if ( f>= 2.*PI) {
+        f -= 2.*PI;
+      } else if (f < 0.0) {
+        f += 2.*PI;
+      }
+
+      //Calculate Mean anomaly
+      cosE = (cosfAngle+body[iBody].dEcc / (1.0+body[iBody].dEcc*cosfAngle));
+      if (f <= PI){
+        body[iBody].dEccA = acos(cosE);
+      } else {
+        body[iBody].dEccA = 2.*PI - acos(cosE);
+      }
+
+      body[iBody].dMeanA = body[iBody].dEccA
+                          - body[iBody].dEcc * sin(body[iBody].dEccA);
+      if (body[iBody].dMeanA < 0) {
+        body[iBody].dMeanA += 2.*PI;
+      } else if (body[iBody].dMeanA >= 2.*PI){
+        body[iBody].dMeanA -= 2.*PI;
+      }
+    }
+  }
+  free(h);
+}
 //Functions below are EXACTLY the same as in distorb.c, but needed in SpiNBody
 //Should be relocated to system.c?
 

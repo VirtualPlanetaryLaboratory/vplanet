@@ -99,29 +99,29 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
   // Added the vectorized components of total angular momentum for SpiNBody
   double daOrbTot[] = {0.0,0.0,0.0};
-  double *pdTmp;
+  double *pdaTmp;
   int iBody;
 
   // Add all rotational, orbital angular momentum, angular momentum lost
     //SpiNBody has direct x,y,z components for position and velocity
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
     if (body[iBody].bSpiNBody){
-      pdTmp = fdOrbAngMom(body,iBody);
+      pdaTmp = fdOrbAngMom(body,iBody);
       for (int i=0; i<3; i++){
-        daOrbTot[i] += *(pdTmp+i);
+        daOrbTot[i] += *(pdaTmp+i);
       }
       dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
       //dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
       //dTot += body[iBody].dLostAngMom;
-      free(pdTmp);
+      free(pdaTmp);
     }
     else {
       for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-        pdTmp = fdOrbAngMom(body,iBody);
-        dTot += *pdTmp;
+        pdaTmp = fdOrbAngMom(body,iBody);
+        dTot += *pdaTmp;
         dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
         dTot += body[iBody].dLostAngMom;
-        free(pdTmp);
+        free(pdaTmp);
       }
     }
   }
@@ -139,15 +139,21 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
 
-  // Ignore central body or other stars if not using binary
   if (body[iBody].bSpiNBody && iBody>0){
+    double PotEnergy = 0;
     //For SpiNBody, find the heliocentric distance then return the potential.
     //This ignores planet-planet potential.
-    double Distance = sqrt((body[iBody].dPositionX-body[0].dPositionX)*(body[iBody].dPositionX-body[0].dPositionX)
-        +(body[iBody].dPositionY-body[0].dPositionY)*(body[iBody].dPositionY-body[0].dPositionY)
-        +(body[iBody].dPositionZ-body[0].dPositionZ)*(body[iBody].dPositionZ-body[0].dPositionZ));
-    return -BIGG*body[0].dMass*body[iBody].dMass/Distance;
+    for (int i = 0; i < control->Evolve.iNumBodies; i++) {
+      if (i!=iBody){
+        double Distance = sqrt((body[iBody].dPositionX-body[i].dPositionX)*(body[iBody].dPositionX-body[i].dPositionX)
+            +(body[iBody].dPositionY-body[i].dPositionY)*(body[iBody].dPositionY-body[i].dPositionY)
+            +(body[iBody].dPositionZ-body[i].dPositionZ)*(body[iBody].dPositionZ-body[i].dPositionZ));
+        PotEnergy += -BIGG*body[i].dMass*body[iBody].dMass/Distance;
+      }
+    }
+    return(PotEnergy);
   }
+  // Ignore central body or other stars if not using binary
   else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
   {
     return 0.0;
@@ -180,9 +186,9 @@ double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 
   if (body[iBody].bSpiNBody && iBody>0){
     //Energy is calculated in a heliocentric reference frame.
-    double Velocity2 = (body[iBody].dVelX-body[0].dVelX)*(body[iBody].dVelX-body[0].dVelX)
-        +(body[iBody].dVelY-body[0].dVelY)*(body[iBody].dVelY-body[0].dVelY)
-        +(body[iBody].dVelZ-body[0].dVelZ)*(body[iBody].dVelZ-body[0].dVelZ);
+    double Velocity2 = (body[iBody].dVelX)*(body[iBody].dVelX)
+        +(body[iBody].dVelY)*(body[iBody].dVelY)
+        +(body[iBody].dVelZ)*(body[iBody].dVelZ);
     return 0.5*body[iBody].dMass*Velocity2;
   }
   // Ignore central body or other stars if not using binary
@@ -249,6 +255,16 @@ double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
     dTot += body[iBody].dLostEng;
   }
 
+  return dTot;
+}
+
+double fdTotOrbEnergy(BODY *body, CONTROL *control, SYSTEM *system){
+  double dTot = 0.0;
+  int iBody;
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
+    dTot += fdOrbEnergy(body,control,system,iBody);
+  }
   return dTot;
 }
 

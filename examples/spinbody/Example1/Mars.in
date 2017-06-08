@@ -2,7 +2,7 @@
 sName                     Mars          # Body's name
 saModules                 spinbody      # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody SemiMajorAxis Eccentricity Inc
 # Physical Properties
 dMass                     -0.107        # Mass, negative -> Earth masses
 dRadius                   -0.532        # Radius, negative -> Earth radii

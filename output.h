@@ -24,6 +24,7 @@
 
 #define OUT_POTENERGY           191
 #define OUT_KINENERGY           192
+#define OUT_TOTORBENERGY        193
 
 #define OUT_DT			200
 
@@ -76,7 +77,7 @@
 
 
 void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
+void Bary2OrbElems(BODY *body, int iBody);
 void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,int);
 
 void InitializeOutputFunctions(MODULE*,OUTPUT*,int);

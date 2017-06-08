@@ -83,9 +83,12 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]);
 // Coordinate Changes
 void OrbElems2Helio(BODY *body, int iBody);
 void Helio2Bary(BODY *body, int iNumBodies, int iBody);
+void Bary2OrbElems(BODY *body, int iBody);
+void Bary2Helio(BODY *body, int iBody);
 // These functions are defined in distorb.c, but needed in SpiNBody
 // Relocate to system.c?
 
+void cross(double* r,double* v,double* h); //h = r X v
 void kepler_eqn(BODY *body, int iBody);
 double signf(double value);
 double xinit(BODY *body, int iBody);

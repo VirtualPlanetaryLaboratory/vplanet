@@ -54,7 +54,7 @@ void LogDistRes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistRes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistRes Functions */
-void PropertiesDistRes(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxDistRes(BODY*,EVOLVE*,UPDATE*,int);
 void ForceBehaviorDistRes(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fdSemiMajAxF27(double, int);

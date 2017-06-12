@@ -333,6 +333,8 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   }
   
   if (iBody > 0) {
+    control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
+
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {        
         /* semi major axis */
         InitializeSemiDistRes(body,update,iBody,iPert);

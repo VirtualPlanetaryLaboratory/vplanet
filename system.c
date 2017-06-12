@@ -32,7 +32,7 @@ double fdSemiToPeriod(double dSemi,double dMass) {
 
 /* Convert semi-major axis to mean motion */
 double fdSemiToMeanMotion(double dSemi,double dMass) {
-  return pow(BIGG*dMass/pow(dSemi,3),0.5);
+  return pow(BIGG*dMass/(dSemi*dSemi*dSemi),0.5);
 }
 
 /*

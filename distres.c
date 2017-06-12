@@ -783,34 +783,34 @@ double fdDSemiF31Dalpha(double dAxRatio, int iIndexJ) {
 
 /*--------- f32 ---------------------*/
 double fdSemiMajAxF32(double dAxRatio, int iIndexJ) {
-  return 1./8*((4-16*iIndexJ+20*iIndexJ*iIndexJ-8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(fabs(iIndexJ-1)))\
-      +(-4+12*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-1)))\
-      +(3+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-1)))\
-      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-1))));
+  return 1./8*((4-16*iIndexJ+20*iIndexJ*iIndexJ-8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(abs(iIndexJ-1)))\
+      +(-4+12*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-1)))\
+      +(3+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-1)))\
+      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-1))));
 }
 
 double fdDSemiF32Dalpha(double dAxRatio, int iIndexJ) {
   return 1./8*((-4*iIndexJ+16*iIndexJ*iIndexJ-\
-      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-1)))\
-      +(2+16*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-1)))\
-      +(6+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-1)))\
-      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(fabs(iIndexJ-1))));
+      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-1)))\
+      +(2+16*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-1)))\
+      +(6+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-1)))\
+      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(abs(iIndexJ-1))));
 }
 
 /*--------- f33 ---------------------*/
 double fdSemiMajAxF33(double dAxRatio, int iIndexJ) {
-  return 1./16*((-2-iIndexJ+10*iIndexJ*iIndexJ-8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(fabs(iIndexJ-1)))\
-      +(2+9*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-1)))\
-      +(5+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-1)))\
-      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-1))));
+  return 1./16*((-2-iIndexJ+10*iIndexJ*iIndexJ-8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(abs(iIndexJ-1)))\
+      +(2+9*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-1)))\
+      +(5+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-1)))\
+      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-1))));
 }
 
 double fdDSemiF33Dalpha(double dAxRatio, int iIndexJ) {
   return 1./16*((8*iIndexJ+6*iIndexJ*iIndexJ-\
-      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-1)))\
-      +(12+13*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-1)))\
-      +(8+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-1)))\
-      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(fabs(iIndexJ-1))));
+      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-1)))\
+      +(12+13*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-1)))\
+      +(8+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-1)))\
+      +dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(abs(iIndexJ-1))));
 }
 
 /*--------- f34 ---------------------*/
@@ -842,18 +842,18 @@ double fdDSemiF35Dalpha(double dAxRatio, int iIndexJ) {
 
 /*--------- f36 ---------------------*/
 double fdSemiMajAxF36(double dAxRatio, int iIndexJ) {
-  return 1./16*((-8+32*iIndexJ-30*iIndexJ*iIndexJ+8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(fabs(iIndexJ-2)))\
-      +(8-17*iIndexJ+4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-2)))\
-      +(-4-2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-2)))\
-      -dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-2))));
+  return 1./16*((-8+32*iIndexJ-30*iIndexJ*iIndexJ+8*iIndexJ*iIndexJ*iIndexJ)*fdLaplaceCoeff(A(abs(iIndexJ-2)))\
+      +(8-17*iIndexJ+4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-2)))\
+      +(-4-2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-2)))\
+      -dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-2))));
 }
 
 double fdDSemiF36Dalpha(double dAxRatio, int iIndexJ) {
   return 1./16*((15*iIndexJ-26*iIndexJ*iIndexJ+\
-      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(fabs(iIndexJ-2)))\
-      -(21*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(fabs(iIndexJ-2)))\
-      -(7+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(fabs(iIndexJ-2)))\
-      -dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(fabs(iIndexJ-2))));
+      8*iIndexJ*iIndexJ*iIndexJ)*fdDerivLaplaceCoeff(1,A(abs(iIndexJ-2)))\
+      -(21*iIndexJ-4*iIndexJ*iIndexJ)*dAxRatio*fdDerivLaplaceCoeff(2,A(abs(iIndexJ-2)))\
+      -(7+2*iIndexJ)*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(3,A(abs(iIndexJ-2)))\
+      -dAxRatio*dAxRatio*dAxRatio*fdDerivLaplaceCoeff(4,A(abs(iIndexJ-2))));
 }
 
 /*--------- f37 ---------------------*/
@@ -2513,9 +2513,6 @@ double fdDdistresDPinc(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int
     y = ( fdDdistDpDir24(body, system, iaBody[0], iaBody[1], iIndexJ) \
     + fdDdistDpDir25(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   } else if (iOrder == 3) {
-    double y, dMfac, dSemiPrm;
-    dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
-    dSemiPrm = body[iaBody[0]].dSemi/AUCM;
     y = ( fdDdistDpDir35(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDpDir36(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDpDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
@@ -2768,9 +2765,6 @@ double fdDdistresDPincPrime(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ
       + fdDdistDpPrmDir26(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
 
   } else if (iOrder == 3) {
-    double y, dMfac, dSemiPrm;
-    dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
-    dSemiPrm = body[iaBody[0]].dSemi/AUCM;
     y = ( fdDdistDpPrmDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDpPrmDir38(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDpPrmDir39(body, system, iaBody[0], iaBody[1], iIndexJ) \
@@ -3020,9 +3014,6 @@ double fdDdistresDQinc(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int
     y = ( fdDdistDqDir24(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDqDir25(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   } else if (iOrder == 3) {
-    double y, dMfac, dSemiPrm;
-    dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
-    dSemiPrm = body[iaBody[0]].dSemi/AUCM;
     y = ( fdDdistDqDir35(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDqDir36(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDqDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
@@ -3272,9 +3263,6 @@ double fdDdistresDQincPrime(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ
     y = ( fdDdistDqPrmDir25(body, system, iaBody[0], iaBody[1], iIndexJ) \
       + fdDdistDqPrmDir26(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   } else if (iOrder == 3) {
-    double y, dMfac, dSemiPrm;
-    dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
-    dSemiPrm = body[iaBody[0]].dSemi/AUCM;
     y = ( fdDdistDqPrmDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
     + fdDdistDqPrmDir38(body, system, iaBody[0], iaBody[1], iIndexJ) \
     + fdDdistDqPrmDir39(body, system, iaBody[0], iaBody[1], iIndexJ) \
@@ -5033,18 +5021,18 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
       sum += 0.0;
     } else {
       if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
-        sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
-              *(fdDdistresDSemi0th(body,system,iaBody)+\
-              fdDdistresDSemi(body,system,iaBody,iResIndex,iOrder))\
-              +( sqrt(y)/(1.+sqrt(y))*(body[iaBody[0]].dHecc*\
-              fdDdistresDHecc(body,system,iaBody,iResIndex,iOrder)\
-              +body[iaBody[0]].dKecc*\
-              fdDdistresDKecc(body,system,iaBody,iResIndex,iOrder))\
-              +0.5/sqrt(y)*(body[iaBody[0]].dPinc*\
-              fdDdistresDPinc(body,system,iaBody,iResIndex,iOrder)\
-              +body[iaBody[0]].dQinc*\
-              fdDdistresDQinc(body,system,iaBody,iResIndex,iOrder)) )\
-              /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);     
+        sum +=  -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
+               *(fdDdistresDSemi0th(body,system,iaBody)+\
+               fdDdistresDSemi(body,system,iaBody,iResIndex,iOrder))\
+               +( sqrt(y)/(1.+sqrt(y))*(body[iaBody[0]].dHecc*\
+               fdDdistresDHecc(body,system,iaBody,iResIndex,iOrder)\
+               +body[iaBody[0]].dKecc*\
+               fdDdistresDKecc(body,system,iaBody,iResIndex,iOrder))\
+               +0.5/sqrt(y)*(body[iaBody[0]].dPinc*\
+               fdDdistresDPinc(body,system,iaBody,iResIndex,iOrder)\
+               +body[iaBody[0]].dQinc*\
+               fdDdistresDQinc(body,system,iaBody,iResIndex,iOrder)) )\
+               /sqrt(dMu*body[iaBody[0]].dSemi/AUCM);    
       } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
         sum += -2.0*sqrt(body[iaBody[0]].dSemi/AUCM/dMu)\
               *(fdDdistresDSemiPrime0th(body,system,iaBody)+\

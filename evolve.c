@@ -160,7 +160,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	else {
 	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
 	    if (update[iBody].iaType[iVar][iEqn] == 2) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][0](body,system,update[iBody].iaBody[iVar][iEqn]);
 	      //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
 	      if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
 		/* ?Obl require special treatment because they can

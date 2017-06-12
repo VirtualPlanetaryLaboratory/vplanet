@@ -1722,7 +1722,7 @@ typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateDynEllipModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);//deprecated
 typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);

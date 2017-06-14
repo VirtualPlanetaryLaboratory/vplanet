@@ -61,7 +61,7 @@
 #define cLIGHT        299792458.0
 #define MEARTH        5.972186e24 // Prsa et al. 2016
 #define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUCM          1.49598e11  // XXX Change to AUM
+#define AUCM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
 #define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7

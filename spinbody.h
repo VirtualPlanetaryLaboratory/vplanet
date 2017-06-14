@@ -38,6 +38,9 @@
 #define OUT_VELYSPINBODY        1621
 #define OUT_VELZSPINBODY        1622
 
+#define OUT_INCSPINBODY         1630
+#define OUT_LONGASPINBODY       1631
+
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]);
 void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody);
 void ReadPositionX(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile);
@@ -78,6 +81,8 @@ void WritePositionZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteVelX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void WriteVelY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void WriteVelZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
+void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
+void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]);
 
 // Coordinate Changes

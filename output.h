@@ -59,13 +59,14 @@
 #define OUT_HZLIMITDRYRUNAWAY   602
 
 #define OUT_KECC                605
-#define OUT_ORBECC		610
-#define OUT_ORBEN		620
-#define OUT_ORBMEANMOTION	630
-#define OUT_ORBPER		640
-#define OUT_ORBSEMI		650
-#define OUT_ORBANGMOM		660
+#define OUT_ORBECC		          610
+#define OUT_ORBEN		            620
+#define OUT_ORBMEANMOTION	      630
+#define OUT_ORBPER	           	640
+#define OUT_ORBSEMI		          650
+#define OUT_ORBANGMOM		        660
 #define OUT_ARGP                661
+#define OUT_MEANA               662
 
 
 #define OUT_ORBKINENERGY        670

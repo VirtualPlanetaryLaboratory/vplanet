@@ -579,15 +579,14 @@ void Bary2OrbElems(BODY *body, int iBody){
       }
 
       //Calculate Mean anomaly
-      cosE = (cosfAngle+body[iBody].dEcc / (1.0+body[iBody].dEcc*cosfAngle));
+      cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
       if (f <= PI){
         body[iBody].dEccA = acos(cosE);
       } else {
         body[iBody].dEccA = 2.*PI - acos(cosE);
       }
 
-      body[iBody].dMeanA = body[iBody].dEccA
-                          - body[iBody].dEcc * sin(body[iBody].dEccA);
+      body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA);
       if (body[iBody].dMeanA < 0) {
         body[iBody].dMeanA += 2.*PI;
       } else if (body[iBody].dMeanA >= 2.*PI){
@@ -721,6 +720,30 @@ void WriteVelZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dInc;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dLongA;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   //Output example for dPositionX variable
   sprintf(output[OUT_POSITIONXSPINBODY].cName,"PositionXSpiNBody");
@@ -776,6 +799,24 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VELZSPINBODY].iNum = 1;
   output[OUT_VELZSPINBODY].iModuleBit = SPINBODY;
   fnWrite[OUT_VELZSPINBODY] = &WriteVelZ;
+
+  sprintf(output[OUT_INCSPINBODY].cName,"SpiNBodyInc");
+  sprintf(output[OUT_INCSPINBODY].cDescr,"Body's inclination in SpiNBody");
+  sprintf(output[OUT_INCSPINBODY].cNeg,"Deg");
+  output[OUT_INCSPINBODY].bNeg = 1;
+  output[OUT_INCSPINBODY].dNeg = 1./DEGRAD;
+  output[OUT_INCSPINBODY].iNum = 1;
+  output[OUT_INCSPINBODY].iModuleBit = SPINBODY;
+  fnWrite[OUT_INCSPINBODY] = &WriteInclinationSpinBody;
+
+  sprintf(output[OUT_LONGASPINBODY].cName,"SpiNBodyLongA");
+  sprintf(output[OUT_LONGASPINBODY].cDescr,"Body's inclination in SpiNBody");
+  sprintf(output[OUT_LONGASPINBODY].cNeg,"Deg");
+  output[OUT_LONGASPINBODY].bNeg = 1;
+  output[OUT_LONGASPINBODY].dNeg = 1./DEGRAD;
+  output[OUT_LONGASPINBODY].iNum = 1;
+  output[OUT_LONGASPINBODY].iModuleBit = SPINBODY;
+  fnWrite[OUT_LONGASPINBODY] = &WriteLongASpinBody;
 }
 
 //============================ End Writing Functions ===========================

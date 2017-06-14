@@ -129,22 +129,37 @@ void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
  */
 
 void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
 
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  while (*dTmp > 2*PI) {
-    *dTmp -= 2*PI;
+
+  if (body[iBody].bSpiNBody) {
+    *dTmp = body[iBody].dLongP;
+
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle,cUnit);
+    }
+  } else{
+    *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
+
+    while (*dTmp < 0.0) {
+      *dTmp += 2*PI;
+    }
+    while (*dTmp > 2*PI) {
+      *dTmp -= 2*PI;
+    }
+
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle,cUnit);
+    }
   }
 
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
 }
 
 void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -694,6 +709,19 @@ void WriteZobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+void WriteMeanAnomaly(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+
+  *dTmp = body[iBody].dMeanA;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 /*
  * End individual write functions
  */
@@ -871,6 +899,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBECC].bNeg = 0;
   output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
+
+  sprintf(output[OUT_MEANA].cName,"MeanAnomaly");
+  sprintf(output[OUT_MEANA].cDescr,"Orbital Mean Anomaly");
+  sprintf(output[OUT_MEANA].cNeg,"Deg");
+  output[OUT_MEANA].iNum = 1;
+  output[OUT_MEANA].bNeg = 1;
+  output[OUT_MEANA].dNeg = 1/DEGRAD;
+  output[OUT_MEANA].iModuleBit = SPINBODY;
+  fnWrite[OUT_MEANA] = &WriteMeanAnomaly;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
   sprintf(output[OUT_ORBEN].cDescr,"Body's Total Orbital Energy");

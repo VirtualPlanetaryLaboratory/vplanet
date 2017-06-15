@@ -305,6 +305,8 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResIndex[5] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[6] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[7] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[8] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[9] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
 
     system->iResOrder = malloc(RESNUM*sizeof(int));
     system->iResOrder[0] = 1;
@@ -315,7 +317,8 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResOrder[5] = 2;
     system->iResOrder[6] = 3;
     system->iResOrder[7] = 3;
-
+    system->iResOrder[8] = 3;
+    system->iResOrder[9] = 3;
 
     /*------------------------------*/
     
@@ -629,6 +632,7 @@ void ForceBehaviorDistRes(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE
 void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   int iBody, jBody;
   double dPerRat;
+  double dTol = 0.05;
   
   for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
     for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
@@ -637,16 +641,16 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else { 
         dPerRat = pow(body[jBody].dSemi/body[iBody].dSemi,1.5);
       }
-      // 2:1 resonance in the 0th place
-      if (dPerRat > 0.9*2.0 && dPerRat < 1.1*2.0) {
+      // 2:1 resonance in the 0th and 4th place
+      if (dPerRat > (1.0-dTol)*2.0 && dPerRat < (1.0+dTol)*2.0) {
         system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = 2;
         system->iResIndex[4][system->imLaplaceN[iBody][jBody]] = 4;
       } else {
         system->iResIndex[0][system->imLaplaceN[iBody][jBody]] = -1;
         system->iResIndex[4][system->imLaplaceN[iBody][jBody]] = -1;
       }
-      // 3:2 resonance in the 1th place
-      if (dPerRat > 0.9*1.5 && dPerRat < 1.1*1.5) {
+      // 3:2 resonance in the 1th and 5th place
+      if (dPerRat > (1.0-dTol)*1.5 && dPerRat < (1.0+dTol)*1.5) {
         system->iResIndex[1][system->imLaplaceN[iBody][jBody]] = 3;
         system->iResIndex[5][system->imLaplaceN[iBody][jBody]] = 6;
       } else {
@@ -654,28 +658,40 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         system->iResIndex[5][system->imLaplaceN[iBody][jBody]] = -1;
       } 
       // 3:1 resonance in the 2th place
-      if (dPerRat > 0.9*3.0 && dPerRat < 1.1*3.0) {
+      if (dPerRat > (1.0-dTol)*3.0 && dPerRat < (1.0+dTol)*3.0) {
         system->iResIndex[2][system->imLaplaceN[iBody][jBody]] = 3;
       } else {
         system->iResIndex[2][system->imLaplaceN[iBody][jBody]] = -1;
       }    
       // 5:3 in the 3th place
-      if (dPerRat > 0.9*(5./3) && dPerRat < 1.1*(5./3)) {
+      if (dPerRat > (1.0-dTol)*(5./3) && dPerRat < (1.0+dTol)*(5./3)) {
         system->iResIndex[3][system->imLaplaceN[iBody][jBody]] = 5;
       } else {
         system->iResIndex[3][system->imLaplaceN[iBody][jBody]] = -1;
       } 
       // 4:1 in the 6th place
-      if (dPerRat > 0.9*(4.) && dPerRat < 1.1*(4.)) {
+      if (dPerRat > (1.0-dTol)*(4.) && dPerRat < (1.0+dTol)*(4.)) {
         system->iResIndex[6][system->imLaplaceN[iBody][jBody]] = 4;
       } else {
         system->iResIndex[6][system->imLaplaceN[iBody][jBody]] = -1;
       } 
       // 8:5 in the 7th place
-      if (dPerRat > 0.9*(8./5) && dPerRat < 1.1*(8./5)) {
+      if (dPerRat > (1.0-dTol)*(8./5) && dPerRat < (1.0+dTol)*(8./5)) {
         system->iResIndex[7][system->imLaplaceN[iBody][jBody]] = 8;
       } else {
         system->iResIndex[7][system->imLaplaceN[iBody][jBody]] = -1;
+      }
+      // 5:2 in the 8th place
+      if (dPerRat > (1.0-dTol)*(5./2) && dPerRat < (1.0+dTol)*(5./2)) {
+        system->iResIndex[8][system->imLaplaceN[iBody][jBody]] = 5;
+      } else {
+        system->iResIndex[8][system->imLaplaceN[iBody][jBody]] = -1;
+      }
+      // 7:4 in the 8th place
+      if (dPerRat > (1.0-dTol)*(7./4) && dPerRat < (1.0+dTol)*(7./4)) {
+        system->iResIndex[9][system->imLaplaceN[iBody][jBody]] = 7;
+      } else {
+        system->iResIndex[9][system->imLaplaceN[iBody][jBody]] = -1;
       } 
     }
   }

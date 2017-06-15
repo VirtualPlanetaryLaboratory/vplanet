@@ -7,7 +7,7 @@
  *
 */
 
-#define RESNUM      8
+#define RESNUM      10
 #define RESMAX      8
 
 void AddModuleDistRes(MODULE*,int,int);

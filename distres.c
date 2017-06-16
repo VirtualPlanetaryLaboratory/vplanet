@@ -3623,8 +3623,8 @@ double fdDdistresDPincPrime(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
   dSemiPrm = body[iaBody[0]].dSemi/AUCM;
   
-  yc = fdDdistresDHeccPrimeDirCos(body,system,iaBody,iIndexJ,iOrder);
-  ys = fdDdistresDHeccPrimeDirSin(body,system,iaBody,iIndexJ,iOrder);
+  yc = fdDdistresDPincPrimeDirCos(body,system,iaBody,iIndexJ,iOrder);
+  ys = fdDdistresDPincPrimeDirSin(body,system,iaBody,iIndexJ,iOrder);
   
   if (iOrder == 1) {
     if (iIndexJ == 2) {
@@ -4025,256 +4025,389 @@ double fdDdistresDQinc(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int
 
 //---------dR/dq'------------------------------------------------------------------
 
-double fdDdistDqPrmDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir11Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f30, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][29];
   f30 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][29] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][29]*dAlpha;
   
-  return 2*body[iBody].dQinc*f30*\
-    (body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+\
-    body[jBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+  return 2*body[iBody].dQinc*f30*(body[jBody].dKecc);
 }
 
-double fdDdistDqPrmDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir11Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f30, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][29];
+  f30 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][29] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][29]*dAlpha;
+  
+  return 2*body[iBody].dQinc*f30*(body[jBody].dHecc);
+}
+
+double fdDdistDqPrmDir12Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f34, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][33];
   f34 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][33] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][33]*dAlpha;
   
-  return 2*body[iBody].dQinc*f34*(body[iBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-          +body[iBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+  return 2*body[iBody].dQinc*f34*(body[iBody].dKecc);
 }
 
-double fdDdistDqPrmDir17(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir122Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f34, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][33];
+  f34 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][33] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][33]*dAlpha;
+  
+  return 2*body[iBody].dQinc*f34*(body[iBody].dHecc);
+}
+
+double fdDdistDqPrmDir17Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f39, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][38];
   f39 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][38] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][38]*dAlpha;  
 
-  return f39*((body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dQinc*body[jBody].dHecc-body[jBody].dPinc*body[jBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f39*((body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc));     
 }
 
-double fdDdistDqPrmDir18(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir17Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f39, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][38];
+  f39 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][38] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][38]*dAlpha;  
+
+  return f39*(body[jBody].dQinc*body[jBody].dHecc-body[jBody].dPinc*body[jBody].dKecc);     
+}
+
+double fdDdistDqPrmDir18Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f40, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][39];
   f40 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][39] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][39]*dAlpha;  
 
-  return f40*((body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dQinc*body[jBody].dHecc+body[jBody].dPinc*body[jBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f40*((body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc));     
 }
 
-double fdDdistDqPrmDir19(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir18Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f40, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][39];
+  f40 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][39] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][39]*dAlpha;  
+
+  return f40*((body[jBody].dQinc*body[jBody].dHecc+body[jBody].dPinc*body[jBody].dKecc));     
+}
+
+double fdDdistDqPrmDir19Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f41, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][40];
   f41 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][40] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][40]*dAlpha;  
 
-  return f41*((body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f41*((body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc));     
 }
 
-double fdDdistDqPrmDir110(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir19Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f41, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][40];
+  f41 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][40] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][40]*dAlpha;  
+
+  return f41*((body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc));     
+}
+
+double fdDdistDqPrmDir110Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f42, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][41];
   f42 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][41] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][41]*dAlpha;  
 
-  return f42*((body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dQinc*body[iBody].dHecc-body[jBody].dPinc*body[iBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f42*((body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc));     
 }
 
-double fdDdistDqPrmDir112(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  double f44, dAlpha;
-  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][43];
-  f44 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][43] + \
-        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][43]*dAlpha;  
+double fdDdistDqPrmDir110Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f42, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][41];
+  f42 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][41] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][41]*dAlpha;  
 
-  return f44*((body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f42*((body[jBody].dQinc*body[iBody].dHecc-body[jBody].dPinc*body[iBody].dKecc));     
 }
 
-
-double fdDdistDqPrmDir111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f43, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][42];
   f43 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][42] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][42]*dAlpha;  
 
-  return f43*((body[jBody].dQinc*body[iBody].dKecc-body[jBody].dPinc*body[iBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dQinc*body[iBody].dHecc+body[jBody].dPinc*body[iBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f43*((body[jBody].dQinc*body[iBody].dKecc-body[jBody].dPinc*body[iBody].dHecc));     
 }
 
-double fdDdistDqPrmDir113(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f43, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][42];
+  f43 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][42] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][42]*dAlpha;  
+
+  return f43*((body[jBody].dQinc*body[iBody].dHecc+body[jBody].dPinc*body[iBody].dKecc));     
+}
+
+double fdDdistDqPrmDir112Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f44, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][43];
+  f44 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][43] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][43]*dAlpha;  
+
+  return f44*((body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc));     
+}
+
+double fdDdistDqPrmDir112Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f44, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][43];
+  f44 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][43] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][43]*dAlpha;  
+
+  return f44*((body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc));     
+}
+
+double fdDdistDqPrmDir113Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f37, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
   f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][36]*dAlpha;  
 
-  return f37*((2*body[iBody].dQinc*body[jBody].dKecc+2*body[iBody].dPinc*body[jBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         -(2*body[iBody].dQinc*body[jBody].dHecc-2*body[iBody].dPinc*body[jBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f37*((2*body[iBody].dQinc*body[jBody].dKecc+2*body[iBody].dPinc*body[jBody].dHecc));     
 }
 
-double fdDdistDqPrmDir114(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir113Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f37, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
+  f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][36]*dAlpha;  
+
+  return f37*(-(2*body[iBody].dQinc*body[jBody].dHecc-2*body[iBody].dPinc*body[jBody].dKecc));     
+}
+
+double fdDdistDqPrmDir114Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f38, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
   f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][37]*dAlpha;  
 
-  return f38*((2*body[iBody].dQinc*body[iBody].dKecc+2*body[iBody].dPinc*body[iBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         -(2*body[iBody].dQinc*body[iBody].dHecc-2*body[iBody].dPinc*body[iBody].dKecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+  return f38*((2*body[iBody].dQinc*body[iBody].dKecc+2*body[iBody].dPinc*body[iBody].dHecc));     
 }
 
-double fdDdistDqPrmInt13(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return body[iBody].dQinc*(body[iBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-          +body[iBody].dHecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+double fdDdistDqPrmDir114Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f38, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
+  f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][37]*dAlpha;  
+
+  return f38*(-(2*body[iBody].dQinc*body[iBody].dHecc-2*body[iBody].dPinc*body[iBody].dKecc));     
 }
 
-double fdDdistDqPrmInt111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (-(body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
-         *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-         +(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc)\
-         *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));     
+double fdDdistDqPrmInt13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return body[iBody].dQinc*(body[iBody].dKecc);     
 }
 
-double fdDdistDqPrmDir21(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 0;  //true to second order (temporary)
+double fdDdistDqPrmInt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return body[iBody].dQinc*(body[iBody].dHecc);     
 }
 
-double fdDdistDqPrmDir22(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 0;  //true to second order (temporary)
+double fdDdistDqPrmInt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (-(body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc));     
 }
 
-double fdDdistDqPrmDir23(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 0;  //true to second order (temporary)
+double fdDdistDqPrmInt111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return ((body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc));     
 }
 
-double fdDdistDqPrmDir24(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 0;  //true to second order (temporary)
-}
-
-double fdDdistDqPrmDir25(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f62, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][61];
   f62 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][61] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][61]*dAlpha;
 
-  return f62*(body[jBody].dQinc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +body[jBody].dPinc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2)));
+  return f62*(body[jBody].dQinc);
 }
 
-double fdDdistDqPrmDir26(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f62, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][61];
+  f62 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][61] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][61]*dAlpha;
+
+  return f62*(body[jBody].dPinc);
+}
+
+double fdDdistDqPrmDir26Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f57, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
   f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha;
 
-  return f57*(2.*body[iBody].dQinc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*body[iBody].dPinc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2)));
+  return f57*(2.*body[iBody].dQinc);
 }
 
-double fdDdistDqPrmDir37(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir26Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f57, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
+  f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha;
+
+  return f57*(2.*body[iBody].dPinc);
+}
+
+double fdDdistDqPrmDir37Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f88, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][87];
   f88 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][87] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][87]*dAlpha;
   
-  return f88*( (body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          +(body[jBody].dQinc*body[jBody].dHecc+body[jBody].dPinc*body[jBody].dKecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3)));
+  return f88*( (body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc));
 }
 
-double fdDdistDqPrmDir38(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir37Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f88, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][87];
+  f88 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][87] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][87]*dAlpha;
+  
+  return f88*((body[jBody].dQinc*body[jBody].dHecc+body[jBody].dPinc*body[jBody].dKecc));
+}
+
+double fdDdistDqPrmDir38Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f89, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][88];
   f89 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][88] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][88]*dAlpha;
   
-  return f89*( (body[jBody].dQinc*body[iBody].dKecc-body[jBody].dPinc*body[iBody].dHecc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          +(body[jBody].dQinc*body[iBody].dHecc+body[jBody].dPinc*body[iBody].dKecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3)));
+  return f89*( (body[jBody].dQinc*body[iBody].dKecc-body[jBody].dPinc*body[iBody].dHecc));
 }
 
-double fdDdistDqPrmDir39(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir38Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f89, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][88];
+  f89 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][88] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][88]*dAlpha;
+  
+  return f89*( (body[jBody].dQinc*body[iBody].dHecc+body[jBody].dPinc*body[iBody].dKecc));
+}
+
+double fdDdistDqPrmDir39Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f86, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
   f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha;
   
-  return f86*( (2*body[iBody].dQinc*body[jBody].dKecc-2*body[jBody].dHecc*body[iBody].dPinc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          +(2*body[iBody].dQinc*body[jBody].dHecc+2*body[jBody].dKecc*body[iBody].dPinc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3)));
+  return f86*( (2*body[iBody].dQinc*body[jBody].dKecc-2*body[jBody].dHecc*body[iBody].dPinc));
 }
 
-double fdDdistDqPrmDir310(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDqPrmDir39Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f86, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
+  f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha;
+  
+  return f86*((2*body[iBody].dQinc*body[jBody].dHecc+2*body[jBody].dKecc*body[iBody].dPinc));
+}
+
+double fdDdistDqPrmDir310Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f87, dAlpha;
   dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
   f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha;
   
-  return f87*( (2*body[iBody].dQinc*body[iBody].dKecc-2*body[iBody].dHecc*body[iBody].dPinc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          +(2*body[iBody].dQinc*body[iBody].dHecc+2*body[iBody].dKecc*body[iBody].dPinc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3)));
+  return f87*( (2*body[iBody].dQinc*body[iBody].dKecc-2*body[iBody].dHecc*body[iBody].dPinc));
+}
+
+double fdDdistDqPrmDir310Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f87, dAlpha;
+  dAlpha = body[jBody].dSemi/body[iBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
+  f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha;
+  
+  return f87*((2*body[iBody].dQinc*body[iBody].dHecc+2*body[iBody].dKecc*body[iBody].dPinc));
+}
+
+double fdDdistresDQincPrimeDirCos(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  
+  if (iOrder == 1) {
+    y = (fdDdistDqPrmDir11Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir12Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir17Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir18Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir19Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir110Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir111Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir112Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir113Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir114Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDqPrmDir25Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDqPrmDir26Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDqPrmDir37Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir38Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir39Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir310Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
+}
+
+double fdDdistresDQincPrimeDirSin(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  
+  if (iOrder == 1) {
+    y = (fdDdistDqPrmDir11Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir12Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir17Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir18Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir19Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir110Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir111Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+          + fdDdistDqPrmDir112Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir113Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+          + fdDdistDqPrmDir114Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDqPrmDir25Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDqPrmDir26Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDqPrmDir37Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir38Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir39Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDqPrmDir310Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
 }
 
 double fdDdistresDQincPrime(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
-  double y, dMfac, dSemiPrm;
+  double y, yc, ys, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
   dSemiPrm = body[iaBody[0]].dSemi/AUCM;
   
+  yc = fdDdistresDQincPrimeDirCos(body,system,iaBody,iIndexJ,iOrder);
+  ys = fdDdistresDQincPrimeDirSin(body,system,iaBody,iIndexJ,iOrder);
+  
   if (iOrder == 1) {
-    y = (fdDdistDqPrmDir11(body, system, iaBody[0], iaBody[1], iIndexJ)\
-          + fdDdistDqPrmDir12(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir17(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir18(body, system, iaBody[0], iaBody[1], iIndexJ)\
-          + fdDdistDqPrmDir19(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir110(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir111(body, system, iaBody[0], iaBody[1], iIndexJ)\
-          + fdDdistDqPrmDir112(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir113(body, system, iaBody[0], iaBody[1], iIndexJ) \
-          + fdDdistDqPrmDir114(body, system, iaBody[0], iaBody[1], iIndexJ) )* dMfac/dSemiPrm;
     if (iIndexJ == 2) {
-      y += (fdDdistDqPrmInt13(body, system, iaBody[0], iaBody[1], iIndexJ)\
-            +fdDdistDqPrmInt111(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac*dSemiPrm\
+      yc += (fdDdistDqPrmInt13Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+            +fdDdistDqPrmInt111Cos(body, system, iaBody[0], iaBody[1], iIndexJ) ) \
+            /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
+      ys += (fdDdistDqPrmInt13Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+            +fdDdistDqPrmInt111Sin(body, system, iaBody[0], iaBody[1], iIndexJ) ) \
             /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
     }
-  } else if (iOrder == 2) {
-    y = ( fdDdistDqPrmDir25(body, system, iaBody[0], iaBody[1], iIndexJ) \
-      + fdDdistDqPrmDir26(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
-  } else if (iOrder == 3) {
-    y = ( fdDdistDqPrmDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDqPrmDir38(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDqPrmDir39(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDqPrmDir310(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   }
+  
+  y = (yc*cos(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder)) \
+       + ys*sin(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder))) * dMfac/dSemiPrm;
   return y;
 }
 
 //---------dR/dlambda------------------------------------------------------------------
 
-double fdDdistDlDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir11Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f27, f28, f29, f30, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][26];
   f27 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][26] + \
@@ -4296,12 +4429,35 @@ double fdDdistDlDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
         body[iBody].dKecc*body[iBody].dKecc)*f28+(body[jBody].dHecc*body[jBody].dHecc+\
         body[jBody].dKecc*body[jBody].dKecc)*f29+(body[iBody].dPinc*body[iBody].dPinc+\
         body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+\
-        body[jBody].dQinc*body[jBody].dQinc)*f30)\
-          *(-body[iBody].dKecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-          +(body[iBody].dHecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))));
+        body[jBody].dQinc*body[jBody].dQinc)*f30)*(body[iBody].dHecc);
 }
 
-double fdDdistDlDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir11Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f27, f28, f29, f30, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][26];
+  f27 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][26] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][26]*dAlpha;
+        
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][27];
+  f28 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][27] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][27]*dAlpha;      
+        
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][28];
+  f29 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][28] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][28]*dAlpha;  
+
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][29];
+  f30 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][29] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][29]*dAlpha;
+  
+  return (1.-iIndexJ)*(f27+(body[iBody].dHecc*body[iBody].dHecc+\
+        body[iBody].dKecc*body[iBody].dKecc)*f28+(body[jBody].dHecc*body[jBody].dHecc+\
+        body[jBody].dKecc*body[jBody].dKecc)*f29+(body[iBody].dPinc*body[iBody].dPinc+\
+        body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+\
+        body[jBody].dQinc*body[jBody].dQinc)*f30)*(-body[iBody].dKecc);
+}
+
+double fdDdistDlDir12Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f31, f32, f33, f34, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][30];
   f31 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][30] + \
@@ -4323,12 +4479,46 @@ double fdDdistDlDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
         body[iBody].dKecc*body[iBody].dKecc)*f32+(body[jBody].dHecc*body[jBody].dHecc+\
         body[jBody].dKecc*body[jBody].dKecc)*f33+(body[iBody].dPinc*body[iBody].dPinc+\
         body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+\
-        body[jBody].dQinc*body[jBody].dQinc)*f34)\
-          *(-body[jBody].dKecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))\
-          +(body[jBody].dHecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))));
+        body[jBody].dQinc*body[jBody].dQinc)*f34)*(body[jBody].dHecc);
 }
 
-double fdDdistDlDir13(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir12Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f31, f32, f33, f34, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][30];
+  f31 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][30] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][30]*dAlpha;  
+
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][31];
+  f32 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][31] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][31]*dAlpha;      
+        
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][32];
+  f33 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][32] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][32]*dAlpha;  
+
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][33];
+  f34 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][33] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][33]*dAlpha;
+
+  return (1.-iIndexJ)*(f31+(body[iBody].dHecc*body[iBody].dHecc+\
+        body[iBody].dKecc*body[iBody].dKecc)*f32+(body[jBody].dHecc*body[jBody].dHecc+\
+        body[jBody].dKecc*body[jBody].dKecc)*f33+(body[iBody].dPinc*body[iBody].dPinc+\
+        body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+\
+        body[jBody].dQinc*body[jBody].dQinc)*f34)*(-body[jBody].dKecc);
+}
+
+double fdDdistDlDir13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f35, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][34];
+  f35 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][34] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][34]*dAlpha;
+  
+  return (1-iIndexJ)*f35*(-(body[jBody].dHecc*\
+    (body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
+    -2*body[jBody].dKecc*body[iBody].dHecc*body[iBody].dKecc));
+}
+
+double fdDdistDlDir13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f35, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][34];
   f35 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][34] + \
@@ -4336,14 +4526,21 @@ double fdDdistDlDir13(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f35*\
     (-(body[jBody].dKecc*(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
-    +2*body[jBody].dHecc*body[iBody].dHecc*body[iBody].dKecc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[jBody].dHecc*\
-    (body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
-    -2*body[jBody].dKecc*body[iBody].dHecc*body[iBody].dKecc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[jBody].dHecc*body[iBody].dHecc*body[iBody].dKecc));
 }
 
-double fdDdistDlDir14(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir14Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f36, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][35];
+  f36 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][35] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][35]*dAlpha;
+  
+  return (1-iIndexJ)*f36*(-(body[iBody].dHecc*\
+    (body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
+    -2*body[iBody].dKecc*body[jBody].dHecc*body[jBody].dKecc));
+}
+
+double fdDdistDlDir14Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f36, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][35];
   f36 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][35] + \
@@ -4351,14 +4548,21 @@ double fdDdistDlDir14(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f36*\
     (-(body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
-    +2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[iBody].dHecc*\
-    (body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
-    -2*body[iBody].dKecc*body[jBody].dHecc*body[jBody].dKecc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc));
 }
 
-double fdDdistDlDir15(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir15Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f37, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
+  f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][36]*dAlpha;
+  
+  return (1-iIndexJ)*f37*(-(body[iBody].dHecc*\
+    (body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+    -2*body[iBody].dKecc*body[iBody].dPinc*body[iBody].dQinc));
+}
+
+double fdDdistDlDir15Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f37, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
   f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
@@ -4366,14 +4570,21 @@ double fdDdistDlDir15(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f37*\
     (-(body[iBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-    +2*body[iBody].dHecc*body[iBody].dPinc*body[iBody].dQinc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[iBody].dHecc*\
-    (body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-    -2*body[iBody].dKecc*body[iBody].dPinc*body[iBody].dQinc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[iBody].dHecc*body[iBody].dPinc*body[iBody].dQinc));
 }
 
-double fdDdistDlDir16(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f38, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
+  f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][37]*dAlpha;  
+  
+  return (1-iIndexJ)*f38*(-(body[jBody].dHecc*\
+    (body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+    -2*body[jBody].dKecc*body[iBody].dPinc*body[iBody].dQinc));
+}
+
+double fdDdistDlDir16Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f38, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
   f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
@@ -4381,14 +4592,21 @@ double fdDdistDlDir16(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f38*\
     (-(body[jBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-    +2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[jBody].dHecc*\
-    (body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-    -2*body[jBody].dKecc*body[iBody].dPinc*body[iBody].dQinc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc));
 }
 
-double fdDdistDlDir17(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir17Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f39, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][38];
+  f39 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][38] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][38]*dAlpha;  
+  
+  return (1-iIndexJ)*f39*((body[iBody].dHecc*\
+    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
+    +body[iBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc)));
+}
+
+double fdDdistDlDir17Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f39, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][38];
   f39 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][38] + \
@@ -4396,14 +4614,21 @@ double fdDdistDlDir17(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f39*\
     (-(body[iBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    -body[iBody].dHecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[iBody].dHecc*\
-    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    +body[iBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[iBody].dHecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc)));
 }
 
-double fdDdistDlDir18(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir18Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f40, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][39];
+  f40 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][39] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][39]*dAlpha;  
+  
+  return (1-iIndexJ)*f40*((body[iBody].dHecc*\
+    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
+    +body[iBody].dKecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc)));
+}
+
+double fdDdistDlDir18Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f40, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][39];
   f40 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][39] + \
@@ -4411,14 +4636,21 @@ double fdDdistDlDir18(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f40*\
     (-(body[iBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    -body[iBody].dHecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[iBody].dHecc*\
-    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    +body[iBody].dKecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[iBody].dHecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc)));
 }
 
-double fdDdistDlDir19(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir19Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f41, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][40];
+  f41 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][40] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][40]*dAlpha;  
+  
+  return (1-iIndexJ)*f41*((body[iBody].dPinc*\
+    (body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
+    +body[iBody].dQinc*(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc)));
+}
+
+double fdDdistDlDir19Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f41, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][40];
   f41 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][40] + \
@@ -4426,14 +4658,21 @@ double fdDdistDlDir19(BODY *body, SYSTEM *system, int iBody, int jBody, int iInd
   
   return (1-iIndexJ)*f41*\
     (-(body[iBody].dQinc*(body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
-    -body[iBody].dPinc*(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[iBody].dPinc*\
-    (body[jBody].dQinc*body[iBody].dKecc+body[jBody].dPinc*body[iBody].dHecc)\
-    +body[iBody].dQinc*(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[iBody].dPinc*(body[jBody].dPinc*body[iBody].dKecc-body[jBody].dQinc*body[iBody].dHecc)));
 }
 
-double fdDdistDlDir110(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir110Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f42, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][41];
+  f42 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][41] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][41]*dAlpha;  
+  
+  return (1-iIndexJ)*f42*((body[jBody].dHecc*\
+    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
+    +body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc)));
+}
+
+double fdDdistDlDir110Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f42, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][41];
   f42 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][41] + \
@@ -4441,14 +4680,21 @@ double fdDdistDlDir110(BODY *body, SYSTEM *system, int iBody, int jBody, int iIn
   
   return (1-iIndexJ)*f42*\
     (-(body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    -body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[jBody].dHecc*\
-    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    +body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc)));
 }
 
-double fdDdistDlDir111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f43, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][42];
+  f43 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][42] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][42]*dAlpha;  
+  
+  return (1-iIndexJ)*f43*((body[jBody].dHecc*\
+    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
+    +body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc)));
+}
+
+double fdDdistDlDir111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f43, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][42];
   f43 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][42] + \
@@ -4456,14 +4702,21 @@ double fdDdistDlDir111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIn
   
   return (1-iIndexJ)*f43*\
     (-(body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    -body[jBody].dHecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[jBody].dHecc*\
-    (body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc)\
-    +body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[jBody].dHecc*(body[jBody].dQinc*body[iBody].dPinc-body[jBody].dPinc*body[iBody].dQinc)));
 }
 
-double fdDdistDlDir112(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir112Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f44, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][43];
+  f44 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][43] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][43]*dAlpha;  
+  
+  return (1-iIndexJ)*f44*((body[iBody].dPinc*\
+    (body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
+    +body[iBody].dQinc*(body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc)));
+}
+
+double fdDdistDlDir112Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f44, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][43];
   f44 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][43] + \
@@ -4471,14 +4724,21 @@ double fdDdistDlDir112(BODY *body, SYSTEM *system, int iBody, int jBody, int iIn
   
   return (1-iIndexJ)*f44*\
     (-(body[iBody].dQinc*(body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
-    -body[iBody].dPinc*(body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[iBody].dPinc*\
-    (body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
-    +body[iBody].dQinc*(body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    -body[iBody].dPinc*(body[jBody].dPinc*body[jBody].dKecc-body[jBody].dQinc*body[jBody].dHecc)));
 }
 
-double fdDdistDlDir113(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir113Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f37, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
+  f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][36]*dAlpha;
+          
+  return (1-iIndexJ)*f37*(-(body[iBody].dHecc*\
+    (body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+    -2*body[iBody].dKecc*body[jBody].dPinc*body[jBody].dQinc));
+}
+
+double fdDdistDlDir113Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f37, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][36];
   f37 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][36] + \
@@ -4486,14 +4746,21 @@ double fdDdistDlDir113(BODY *body, SYSTEM *system, int iBody, int jBody, int iIn
           
   return (1-iIndexJ)*f37*\
     (-(body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-    +2*body[iBody].dHecc*body[jBody].dPinc*body[jBody].dQinc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[iBody].dHecc*\
-    (body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-    -2*body[iBody].dKecc*body[jBody].dPinc*body[jBody].dQinc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[iBody].dHecc*body[jBody].dPinc*body[jBody].dQinc));
 }
 
-double fdDdistDlDir114(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir114Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f38, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
+  f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][37]*dAlpha;  
+  
+  return (1-iIndexJ)*f38*(-(body[jBody].dHecc*\
+    (body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+    -2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc));
+}
+
+double fdDdistDlDir114Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f38, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][37];
   f38 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][37] + \
@@ -4501,504 +4768,861 @@ double fdDdistDlDir114(BODY *body, SYSTEM *system, int iBody, int jBody, int iIn
   
   return (1-iIndexJ)*f38*\
     (-(body[jBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-    +2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[jBody].dHecc*\
-    (body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-    -2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc));
 }
 
-double fdDdistDlExt13(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlExt13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   return -(-2+(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)+\
       1.5*(body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)+\
       2.*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+\
       body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc))\
-        *(-body[jBody].dKecc*sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+\
-          body[jBody].dHecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+        *(body[jBody].dHecc);
 }
 
-double fdDdistDlExt16(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlExt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -(-2+(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)+\
+      1.5*(body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)+\
+      2.*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+\
+      body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc))\
+        *(-body[jBody].dKecc);
+}
+
+double fdDdistDlExt16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+   return 27./8*((body[iBody].dHecc*\
+    (-body[jBody].dKecc*body[jBody].dKecc+body[jBody].dHecc*body[jBody].dHecc)\
+    +2*body[iBody].dKecc*body[jBody].dHecc*body[jBody].dKecc));
+}
+
+double fdDdistDlExt16Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
    return 27./8*(-(body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-\
     body[jBody].dHecc*body[jBody].dHecc)\
-    +2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))+(body[iBody].dHecc*\
-    (-body[jBody].dKecc*body[jBody].dKecc+body[jBody].dHecc*body[jBody].dHecc)\
-    +2*body[iBody].dKecc*body[jBody].dHecc*body[jBody].dKecc)\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc));
 }
 
-double fdDdistDlExt111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -4*\
-    ((body[iBody].dQinc*(body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc)\
-    +body[iBody].dPinc*(body[jBody].dPinc*body[jBody].dKecc+body[jBody].dQinc*body[jBody].dHecc))\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1))-(body[iBody].dPinc*\
+double fdDdistDlExt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -4*(-(body[iBody].dPinc*\
     (-body[jBody].dQinc*body[jBody].dKecc+body[jBody].dPinc*body[jBody].dHecc)\
-    +body[iBody].dQinc*(body[jBody].dPinc*body[jBody].dKecc+body[jBody].dQinc*body[jBody].dHecc))\
-    *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +body[iBody].dQinc*(body[jBody].dPinc*body[jBody].dKecc+body[jBody].dQinc*body[jBody].dHecc)));
 }
 
-double fdDdistDlDir21(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlExt111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -4*((body[iBody].dQinc*(body[jBody].dQinc*body[jBody].dKecc-body[jBody].dPinc*body[jBody].dHecc)\
+    +body[iBody].dPinc*(body[jBody].dPinc*body[jBody].dKecc+body[jBody].dQinc*body[jBody].dHecc)));
+}
+
+double fdDdistDlDir21Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f45, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][44];
   f45 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][44] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][44]*dAlpha;  
   
-  return (2.-iIndexJ)*f45\
-          *(-(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*(body[iBody].dHecc*body[iBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+  return (2.-iIndexJ)*f45*(2*(body[iBody].dHecc*body[iBody].dKecc));
 }
 
-double fdDdistDlDir22(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir21Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f45, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][44];
+  f45 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][44] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][44]*dAlpha;  
+  
+  return (2.-iIndexJ)*f45*(-(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc));
+}
+
+double fdDdistDlDir22Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f49, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][48];
   f49 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][48] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][48]*dAlpha;  
   
-  return (2.-iIndexJ)*f49\
-          *(-(body[iBody].dKecc*body[jBody].dKecc-body[iBody].dHecc*body[jBody].dHecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +(body[iBody].dHecc*body[jBody].dKecc+body[iBody].dKecc*body[jBody].dHecc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2)));
+  return (2.-iIndexJ)*f49*((body[iBody].dHecc*body[jBody].dKecc+body[iBody].dKecc*body[jBody].dHecc));
 }
 
-double fdDdistDlDir23(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir22Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f49, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][48];
+  f49 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][48] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][48]*dAlpha;  
+  
+  return (2.-iIndexJ)*f49*(-(body[iBody].dKecc*body[jBody].dKecc-body[iBody].dHecc*body[jBody].dHecc));
+}
+
+double fdDdistDlDir23Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f53, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][52];
   f53 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][52] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][52]*dAlpha;  
   
-  return (2.-iIndexJ)*f53\
-          *(-(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*(body[jBody].dHecc*body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+  return (2.-iIndexJ)*f53*(2*(body[jBody].dHecc*body[jBody].dKecc));
 }
 
-double fdDdistDlDir24(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir23Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f53, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][52];
+  f53 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][52] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][52]*dAlpha;  
+  
+  return (2.-iIndexJ)*f53*(-(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc));
+}
+
+double fdDdistDlDir24Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f57, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
   f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha;  
   
-  return (2.-iIndexJ)*f57\
-          *(-(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*(body[iBody].dPinc*body[iBody].dQinc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+  return (2.-iIndexJ)*f57*(2*(body[iBody].dPinc*body[iBody].dQinc));
 }
 
-double fdDdistDlDir25(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir24Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f57, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
+  f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha;  
+  
+  return (2.-iIndexJ)*f57*(-(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc));
+}
+
+double fdDdistDlDir25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f62, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][61];
   f62 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][61] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][61]*dAlpha; 
   
-  return (2.-iIndexJ)*f62\
-          *(-(body[iBody].dQinc*body[jBody].dQinc-body[iBody].dPinc*body[jBody].dPinc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +((body[jBody].dPinc*body[iBody].dQinc+body[iBody].dPinc*body[jBody].dQinc)\
-          *cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+  return (2.-iIndexJ)*f62*((body[jBody].dPinc*body[iBody].dQinc+body[iBody].dPinc*body[jBody].dQinc));
 }
 
-double fdDdistDlDir26(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f62, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][61];
+  f62 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][61] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][61]*dAlpha; 
+  
+  return (2.-iIndexJ)*f62*(-(body[iBody].dQinc*body[jBody].dQinc-body[iBody].dPinc*body[jBody].dPinc));
+}
+
+double fdDdistDlDir26Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f57, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
   f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha; 
   
-  return (2.-iIndexJ)*f57\
-          *(-(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*(body[jBody].dPinc*body[jBody].dQinc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+  return (2.-iIndexJ)*f57*(2*(body[jBody].dPinc*body[jBody].dQinc));
 }
 
-double fdDdistDlExt25(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 27./8\
-          *(-(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
-          *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))\
-          +2*(body[jBody].dHecc*body[jBody].dKecc*cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,2))));
+double fdDdistDlDir26Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f57, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][56];
+  f57 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][56] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][56]*dAlpha; 
+  
+  return (2.-iIndexJ)*f57*(-(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc));
 }
 
-double fdDdistDlDir31(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlExt25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return 27./8*(2*(body[jBody].dHecc*body[jBody].dKecc));
+}
+
+double fdDdistDlExt25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return 27./8*(-(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc));
+}
+
+double fdDdistDlDir31Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f82, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][81];
   f82 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][81] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][81]*dAlpha;
         
-  return (3-iIndexJ)*f82*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dKecc*body[iBody].dKecc*body[iBody].dKecc\
-          -3*body[iBody].dHecc*body[iBody].dHecc*body[iBody].dKecc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(-body[iBody].dHecc*body[iBody].dHecc*body[iBody].dHecc\
+  return (3-iIndexJ)*f82*((-body[iBody].dHecc*body[iBody].dHecc*body[iBody].dHecc\
           +3*body[iBody].dKecc*body[iBody].dKecc*body[iBody].dHecc));
 }
 
-double fdDdistDlDir32(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+double fdDdistDlDir31Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f82, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][81];
+  f82 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][81] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][81]*dAlpha;
+        
+  return (3-iIndexJ)*f82*(-(body[iBody].dKecc*body[iBody].dKecc*body[iBody].dKecc\
+          -3*body[iBody].dHecc*body[iBody].dHecc*body[iBody].dKecc));
+}
+
+double fdDdistDlDir32Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   double f83, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][82];
   f83 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][82] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][82]*dAlpha;
         
-  return (3-iIndexJ)*f83*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dKecc*(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
-          -2*body[jBody].dHecc*body[iBody].dHecc*body[iBody].dKecc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dHecc*(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
+  return (3-iIndexJ)*f83*((body[jBody].dHecc*(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
           +2*body[jBody].dKecc*body[iBody].dKecc*body[iBody].dHecc));
 }
 
-double fdDdistDlDir33(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir32Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  double f83, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][82];
+  f83 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][82] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][82]*dAlpha;
+        
+  return (3-iIndexJ)*f83*(-(body[jBody].dKecc*(body[iBody].dKecc*body[iBody].dKecc-body[iBody].dHecc*body[iBody].dHecc)\
+          -2*body[jBody].dHecc*body[iBody].dHecc*body[iBody].dKecc));
+}
+
+double fdDdistDlDir33Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f84, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][83];
   f84 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][83] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][83]*dAlpha; 
  
-  return (3-iIndexJ)*f84*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
-          -2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dHecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
+  return (3-iIndexJ)*f84*((body[iBody].dHecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
           +2*body[iBody].dKecc*body[jBody].dKecc*body[jBody].dHecc));
 }
 
-double fdDdistDlDir34(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir33Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f84, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][83];
+  f84 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][83] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][83]*dAlpha; 
+ 
+  return (3-iIndexJ)*f84*(-(body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc)\
+          -2*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc));
+}
+
+double fdDdistDlDir34Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f85, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][84];
   f85 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][84] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][84]*dAlpha; 
   
-  return (3-iIndexJ)*f85*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dKecc*body[jBody].dKecc*body[jBody].dKecc\
-          -3*body[jBody].dHecc*body[jBody].dHecc*body[jBody].dKecc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(-body[jBody].dHecc*body[jBody].dHecc*body[jBody].dHecc\
+  return (3-iIndexJ)*f85*((-body[jBody].dHecc*body[jBody].dHecc*body[jBody].dHecc\
           +3*body[jBody].dKecc*body[jBody].dKecc*body[jBody].dHecc));
 }
 
-double fdDdistDlDir35(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir34Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f85, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][84];
+  f85 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][84] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][84]*dAlpha; 
+  
+  return (3-iIndexJ)*f85*(-(body[jBody].dKecc*body[jBody].dKecc*body[jBody].dKecc\
+          -3*body[jBody].dHecc*body[jBody].dHecc*body[jBody].dKecc));
+}
+
+double fdDdistDlDir35Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f86, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
   f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha; 
  
-  return (3-iIndexJ)*f86*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-          -2*body[iBody].dHecc*body[iBody].dPinc*body[iBody].dQinc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dHecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+  return (3-iIndexJ)*f86*((body[iBody].dHecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
           +2*body[iBody].dKecc*body[iBody].dPinc*body[iBody].dQinc));
 }
 
-double fdDdistDlDir36(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir35Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f86, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
+  f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha; 
+ 
+  return (3-iIndexJ)*f86*(-(body[iBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+          -2*body[iBody].dHecc*body[iBody].dPinc*body[iBody].dQinc));
+}
+
+double fdDdistDlDir36Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f87, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
   f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha; 
  
-  return (3-iIndexJ)*f87*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
-          -2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dHecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+  return (3-iIndexJ)*f87*((body[jBody].dHecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
           +2*body[jBody].dKecc*body[iBody].dPinc*body[iBody].dQinc));
 }
 
-double fdDdistDlDir37(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir36Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f87, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
+  f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha; 
+ 
+  return (3-iIndexJ)*f87*(-(body[jBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc)\
+          -2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc));
+}
+
+double fdDdistDlDir37Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f88, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][87];
   f88 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][87] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][87]*dAlpha;
   
-  return (3-iIndexJ)*f88*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
-          -body[iBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc))
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dHecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
+  return (3-iIndexJ)*f88*((body[iBody].dHecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
           +body[iBody].dKecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc)));
 }
 
-double fdDdistDlDir38(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir37Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f88, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][87];
+  f88 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][87] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][87]*dAlpha;
+  
+  return (3-iIndexJ)*f88*(-(body[iBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
+          -body[iBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc)));
+}
+
+double fdDdistDlDir38Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f89, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][88];
   f89 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][88] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][88]*dAlpha;
   
-  return (3-iIndexJ)*f89*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
-          -body[jBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc))
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dHecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
+  return (3-iIndexJ)*f89*((body[jBody].dHecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
           +body[jBody].dKecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc)));
 }
 
-double fdDdistDlDir39(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir38Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f89, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][88];
+  f89 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][88] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][88]*dAlpha;
+  
+  return (3-iIndexJ)*f89*(-(body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc)\
+          -body[jBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc)));
+}
+
+double fdDdistDlDir39Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f86, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
   f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha;  
  
-  return (3-iIndexJ)*f86*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-          -2*body[iBody].dHecc*body[jBody].dPinc*body[jBody].dQinc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[iBody].dHecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+  return (3-iIndexJ)*f86*((body[iBody].dHecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
           +2*body[iBody].dKecc*body[jBody].dPinc*body[jBody].dQinc));
 }
 
-double fdDdistDlDir310(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+double fdDdistDlDir39Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f86, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][85];
+  f86 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][85] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][85]*dAlpha;  
+ 
+  return (3-iIndexJ)*f86*(-(body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+          -2*body[iBody].dHecc*body[jBody].dPinc*body[jBody].dQinc));
+}
+
+double fdDdistDlDir310Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
   double f87, dAlpha;
   dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
   f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
         system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha; 
   
-  return (3-iIndexJ)*f87*(-sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
-          -2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc)
-          +cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,3))\
-          *(body[jBody].dHecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+  return (3-iIndexJ)*f87*((body[jBody].dHecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
           +2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc));
+}
+
+double fdDdistDlDir310Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {        
+  double f87, dAlpha;
+  dAlpha = body[iBody].dSemi/body[jBody].dSemi - system->dmAlpha0[iIndexJ][system->imLaplaceN[iBody][jBody]][86];
+  f87 = system->dmLaplaceC[iIndexJ][system->imLaplaceN[iBody][jBody]][86] + \
+        system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][86]*dAlpha; 
+  
+  return (3-iIndexJ)*f87*(-(body[jBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)\
+          -2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc));
+}
+
+double fdDdistresDLambdaDirCos(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  if (iOrder == 1) {
+    y = ( fdDdistDlDir11Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir12Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDlDir13Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir14Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir15Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir16Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir17Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir18Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir19Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir110Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir111Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir112Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir113Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir114Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDlDir21Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir22Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir23Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir24Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir25Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir26Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDlDir31Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir32Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir33Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir34Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir35Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir36Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir37Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir38Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir39Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir310Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
+}
+
+double fdDdistresDLambdaDirSin(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  if (iOrder == 1) {
+    y = ( fdDdistDlDir11Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir12Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDlDir13Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir14Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir15Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir16Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir17Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir18Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir19Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir110Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir111Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir112Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir113Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlDir114Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDlDir21Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir22Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir23Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir24Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir25Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir26Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDlDir31Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir32Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir33Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir34Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir35Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir36Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir37Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir38Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir39Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlDir310Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
 }
 
 double fdDdistresDLambda(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
   dSemiPrm = body[iaBody[1]].dSemi/AUCM;
+  
+  yc = fdDdistresDLambdaDirCos(body,system,iaBody,iIndexJ,iOrder);
+  ys = fdDdistresDLambdaDirSin(body,system,iaBody,iIndexJ,iOrder); 
   if (iOrder == 1) {
-    y = ( fdDdistDlDir11(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir12(body, system, iaBody[0], iaBody[1], iIndexJ) \
-      + fdDdistDlDir13(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir14(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir15(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir16(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir17(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir18(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir19(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir110(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir111(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir112(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir113(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlDir114(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
     if (iIndexJ == 2) {
-      y += (fdDdistDlExt13(body,system,iaBody[0],iaBody[1],iIndexJ)\
-         + fdDdistDlExt111(body,system,iaBody[0],iaBody[1],iIndexJ))*dMfac/dSemiPrm\
+      yc += (fdDdistDlExt13Cos(body,system,iaBody[0],iaBody[1],iIndexJ)\
+         + fdDdistDlExt111Cos(body,system,iaBody[0],iaBody[1],iIndexJ))\
+            *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
+      ys += (fdDdistDlExt13Sin(body,system,iaBody[0],iaBody[1],iIndexJ)\
+         + fdDdistDlExt111Sin(body,system,iaBody[0],iaBody[1],iIndexJ))\
             *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
     } else if (iIndexJ == 3) {
-      y += (fdDdistDlExt16(body,system,iaBody[0],iaBody[1],iIndexJ))*dMfac/dSemiPrm\
+      yc += (fdDdistDlExt16Cos(body,system,iaBody[0],iaBody[1],iIndexJ))\
+            *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
+      ys += (fdDdistDlExt16Sin(body,system,iaBody[0],iaBody[1],iIndexJ))\
             *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
     }
   } else if (iOrder == 2) {
-    y = ( fdDdistDlDir21(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir22(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir23(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir24(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir25(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir26(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
     if (iIndexJ == 3) {
-      y += (fdDdistDlExt25(body,system,iaBody[0],iaBody[1],iIndexJ))*dMfac/dSemiPrm\
+      yc += (fdDdistDlExt25Cos(body,system,iaBody[0],iaBody[1],iIndexJ))\
+            *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
+      ys += (fdDdistDlExt25Sin(body,system,iaBody[0],iaBody[1],iIndexJ))\
             *body[iaBody[0]].dSemi/body[iaBody[1]].dSemi;
     }
-  } else if (iOrder == 3) {
-    y = ( fdDdistDlDir31(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir32(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir33(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir34(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir35(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir36(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir38(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir39(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlDir310(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   }
+  
+  y = (yc*cos(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder)) \
+       + ys*sin(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder))) * dMfac/dSemiPrm;
   return y;
 }
 
 //---------dR/dlambda'------------------------------------------------------------------
 
-double fdDdistDlPrmDir11(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir11(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir11Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir11Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir12(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir12(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir11Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir11Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir13(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir13(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir12Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir12Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir14(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir14(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir12Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir12Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir15(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir15(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir13Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir16(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir16(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir13Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir17(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir17(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir14Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir14Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir18(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir18(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir14Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir14Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir19(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir19(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir15Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir15Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir110(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir110(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir15Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir15Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir111(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir16Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir112(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir112(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir16Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir16Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir113(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir113(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir17Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir17Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir114(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir114(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir17Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir17Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmInt13(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -0.5*fdDdistDlExt13(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir18Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir18Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmInt16(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -2./3*fdDdistDlExt16(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir18Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir18Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmInt111(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -0.5*fdDdistDlExt111(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir19Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir19Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir21(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir21(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir19Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir19Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir22(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir22(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir110Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir110Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir23(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir23(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir110Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir110Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir24(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir24(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir111Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir25(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir25(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir111Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir26(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir26(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir112Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir112Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmInt25(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -1./3*fdDdistDlExt25(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir112Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir112Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir31(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir31(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir113Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir113Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir32(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir32(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir113Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir113Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir33(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir33(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir114Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir114Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir34(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir34(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmDir114Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(1.-iIndexJ)*fdDdistDlDir114Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir35(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir35(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -0.5*fdDdistDlExt13Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir36(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir36(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -0.5*fdDdistDlExt13Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir37(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir37(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -2./3*fdDdistDlExt16Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir38(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir38(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt16Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -2./3*fdDdistDlExt16Sin(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir39(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir39(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -0.5*fdDdistDlExt111Cos(body,system,jBody,iBody,iIndexJ);
 }
 
-double fdDdistDlPrmDir310(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir310(body,system,jBody,iBody,iIndexJ);
+double fdDdistDlPrmInt111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -0.5*fdDdistDlExt111Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir21Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir21Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir21Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir21Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir22Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir22Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir22Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir22Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir23Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir23Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir23Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir23Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir24Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir24Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir24Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir24Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir25Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir25Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir26Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir26Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir26Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(2.-iIndexJ)*fdDdistDlDir26Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmInt25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -1./3*fdDdistDlExt25Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmInt25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return -1./3*fdDdistDlExt25Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir31Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir31Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir31Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir31Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir32Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir32Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir32Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir32Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir33Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir33Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir33Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir33Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir34Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir34Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir34Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir34Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir35Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir35Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir35Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir35Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir36Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir36Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir36Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir36Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir37Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir37Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir37Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir37Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir38Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir38Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir38Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir38Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir39Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir39Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir39Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir39Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir310Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir310Cos(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistDlPrmDir310Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
+  return (1.*iIndexJ)/(3.-iIndexJ)*fdDdistDlDir310Sin(body,system,jBody,iBody,iIndexJ);
+}
+
+double fdDdistresDLambdaPrimeDirCos(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  if (iOrder == 1) { 
+    y = ( fdDdistDlPrmDir11Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir12Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir13Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir14Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir15Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir16Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir17Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDlPrmDir18Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir19Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir110Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir111Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir112Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir113Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir114Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDlPrmDir21Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir22Cos(body, system, iaBody[0], iaBody[1], iIndexJ)
+    + fdDdistDlPrmDir23Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir24Cos(body, system, iaBody[0], iaBody[1], iIndexJ)
+    + fdDdistDlPrmDir25Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir26Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDlPrmDir31Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir32Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir33Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir34Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir35Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir36Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir37Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir38Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir39Cos(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir310Cos(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
+}
+
+double fdDdistresDLambdaPrimeDirSin(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
+  double y;
+  if (iOrder == 1) { 
+    y = ( fdDdistDlPrmDir11Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir12Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir13Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir14Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir15Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir16Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir17Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+      + fdDdistDlPrmDir18Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir19Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir110Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir111Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir112Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir113Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+      + fdDdistDlPrmDir114Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 2) {
+    y = ( fdDdistDlPrmDir21Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir22Sin(body, system, iaBody[0], iaBody[1], iIndexJ)
+    + fdDdistDlPrmDir23Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir24Sin(body, system, iaBody[0], iaBody[1], iIndexJ)
+    + fdDdistDlPrmDir25Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir26Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  } else if (iOrder == 3) {
+    y = ( fdDdistDlPrmDir31Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir32Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir33Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir34Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir35Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir36Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir37Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir38Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir39Sin(body, system, iaBody[0], iaBody[1], iIndexJ) \
+    + fdDdistDlPrmDir310Sin(body, system, iaBody[0], iaBody[1], iIndexJ) );
+  }
+  return y;
 }
 
 double fdDdistresDLambdaPrime(BODY *body, SYSTEM *system, int *iaBody, int iIndexJ, int iOrder) {
-  double y, dMfac, dSemiPrm;
+  double y, yc, ys, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
   dSemiPrm = body[iaBody[0]].dSemi/AUCM;
+  
+  yc = fdDdistresDLambdaPrimeDirCos(body,system,iaBody,iIndexJ,iOrder);
+  ys = fdDdistresDLambdaPrimeDirSin(body,system,iaBody,iIndexJ,iOrder); 
   if (iOrder == 1) { 
-    y = ( fdDdistDlPrmDir11(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir12(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir13(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir14(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir15(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir16(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir17(body, system, iaBody[0], iaBody[1], iIndexJ) \
-      + fdDdistDlPrmDir18(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir19(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir110(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir111(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir112(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir113(body, system, iaBody[0], iaBody[1], iIndexJ)\
-      + fdDdistDlPrmDir114(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
     if (iIndexJ == 2) {
-       y += (fdDdistDlPrmInt13(body, system, iaBody[0], iaBody[1], iIndexJ)\
-           + fdDdistDlPrmInt111(body, system, iaBody[0], iaBody[1], iIndexJ))* dMfac*dSemiPrm\
+       yc += (fdDdistDlPrmInt13Cos(body, system, iaBody[0], iaBody[1], iIndexJ)\
+           + fdDdistDlPrmInt111Cos(body, system, iaBody[0], iaBody[1], iIndexJ))\
+            /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
+       ys += (fdDdistDlPrmInt13Sin(body, system, iaBody[0], iaBody[1], iIndexJ)\
+           + fdDdistDlPrmInt111Sin(body, system, iaBody[0], iaBody[1], iIndexJ))\
             /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
     } else if (iIndexJ == 3) {
-       y += (fdDdistDlPrmInt16(body, system, iaBody[0], iaBody[1], iIndexJ))* dMfac*dSemiPrm\
+       yc += (fdDdistDlPrmInt16Cos(body, system, iaBody[0], iaBody[1], iIndexJ))\
+            /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
+       ys += (fdDdistDlPrmInt16Sin(body, system, iaBody[0], iaBody[1], iIndexJ))\
             /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
     }
   } else if (iOrder == 2) {
-    y = ( fdDdistDlPrmDir21(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir22(body, system, iaBody[0], iaBody[1], iIndexJ)
-    + fdDdistDlPrmDir23(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir24(body, system, iaBody[0], iaBody[1], iIndexJ)
-    + fdDdistDlPrmDir25(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir26(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
     if (iIndexJ == 3) {
-       y += (fdDdistDlPrmInt25(body, system, iaBody[0], iaBody[1], iIndexJ))* dMfac*dSemiPrm\
+       yc += (fdDdistDlPrmInt25Cos(body, system, iaBody[0], iaBody[1], iIndexJ))\
+            /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
+       ys += (fdDdistDlPrmInt25Sin(body, system, iaBody[0], iaBody[1], iIndexJ))\
             /(body[iaBody[1]].dSemi*body[iaBody[1]].dSemi/AUCM/AUCM);
     }
-  } else if (iOrder == 3) {
-    y = ( fdDdistDlPrmDir31(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir32(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir33(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir34(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir35(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir36(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir37(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir38(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir39(body, system, iaBody[0], iaBody[1], iIndexJ) \
-    + fdDdistDlPrmDir310(body, system, iaBody[0], iaBody[1], iIndexJ) ) * dMfac/dSemiPrm;
   }
+  
+  y = (yc*cos(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder)) \
+       + ys*sin(fdLambdaArg(body,system,iaBody[0],iaBody[1],iIndexJ,iOrder))) * dMfac/dSemiPrm;
   return y;
 }
 

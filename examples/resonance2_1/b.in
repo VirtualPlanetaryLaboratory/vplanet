@@ -12,3 +12,4 @@ dLongA       200.0
 # bGRCorr      0
 saOutputOrder    Time Semim Ecce Inc ArgP LongA MeanL
 dMeanL     300.0
+bResAvg 1

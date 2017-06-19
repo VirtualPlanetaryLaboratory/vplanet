@@ -992,6 +992,12 @@ typedef struct {
   
   int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
   int *iResOrder;
+  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
+  double **dLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
+  double **dCircFreq; /**< Circulation frequency of near resonance */
+  double **dDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
+  double **dDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
+  double **dDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
 
 } SYSTEM;
 

@@ -19,6 +19,7 @@ void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 #define OPTENDDISTRES         2400 /* End of DISTRES options */
 
 #define OPT_MEANL             2301
+#define OPT_RESAVG            2399
 // #define OPT_MEANA             2302
 
 /* Options Functions */
@@ -120,6 +121,11 @@ double fdDSemiF86Dalpha(double, int);
 double fdDSemiF87Dalpha(double, int);
 double fdDSemiF88Dalpha(double, int);
 double fdDSemiF89Dalpha(double, int);
+
+double fdDistfCos(BODY*,SYSTEM*,int,int,int,int);
+double fdDistfSin(BODY*,SYSTEM*,int,int,int,int);
+double fdLibrFreq2(BODY*,SYSTEM*,int,int,int);
+double fdCircFreq(BODY*,SYSTEM*,int,int,int);
 
 void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
 void CheckResonance(BODY*,EVOLVE*,SYSTEM*);

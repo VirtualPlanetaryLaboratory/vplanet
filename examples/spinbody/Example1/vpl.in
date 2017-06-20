@@ -18,6 +18,6 @@ dMinValue                 1e-10           # Minimum value of eccentricity/obliqu
 # Evolution Parameters
 bDoForward                1               # Perform a forward evolution?
 bVarDt                    1               # Use variable timestepping?
-dEta                      0.01            # Coefficient for variable timestepping
+dEta                      0.05            # Coefficient for variable timestepping
 dStopTime                 3.15576e11      # Stop time for evolution
 dOutputTime               1e9             # Output timesteps (assuming in body files)

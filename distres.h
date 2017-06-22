@@ -127,7 +127,7 @@ double fdDistfSin(BODY*,SYSTEM*,int,int,int,int);
 double fdLibrFreq2(BODY*,SYSTEM*,int,int,int);
 double fdCircFreq(BODY*,SYSTEM*,int,int,int);
 
-void RecalcLaplaceDistRes(BODY*,CONTROL*,SYSTEM*);
+void RecalcLaplaceDistRes(BODY*,EVOLVE*,SYSTEM*,int);
 void CheckResonance(BODY*,EVOLVE*,SYSTEM*);
 /* DistRes's equations */
 double fdDistResRD2DpDt(BODY*, SYSTEM*, int*);

@@ -2504,7 +2504,7 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
         alpha1 = body[jBody].dSemi/body[iBody].dSemi;
       }
 
-      for (j=0;j<LAPLNUM;j++) {
+      for (j=0;j<26;j++) {
           dalpha = fabs(alpha1 - system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j]);
           if (dalpha > fabs(system->dDfcrit/system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j])) {
               system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j] = 
@@ -2514,8 +2514,8 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
               system->fnLaplaceDeriv[j][0](alpha1, 0);
                 
               system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j] = alpha1;
-	      if (iVerbose > VERBPROG)
-		printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
+	      // if (iVerbose > VERBPROG)
+// // 		printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
         }
       }
     }

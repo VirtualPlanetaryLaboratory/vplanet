@@ -1536,7 +1536,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                 fp = fopen(cLaplaceFunc,"a");
               }
               if (body[iBody].dSemi < body[jBody].dSemi) {
-                for (j=0;j<LAPLNUM;j++) {
+                for (j=0;j<26;j++) {
                   /* output alpha, laplace func, derivatives for each internal/external pair.
                   external/internal pairs are duplicates and so not output. this can create a
                   large amount of data for systems with lots of planets (78 columns/planet pair) */

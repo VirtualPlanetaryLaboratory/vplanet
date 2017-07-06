@@ -368,6 +368,7 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResIndex[7] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[8] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
     system->iResIndex[9] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iResIndex[10] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
 
     system->iResOrder = malloc(RESNUM*sizeof(int));
     system->iResOrder[0] = 1;
@@ -380,6 +381,7 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->iResOrder[7] = 3;
     system->iResOrder[8] = 3;
     system->iResOrder[9] = 3;
+    system->iResOrder[10] = 1;
 
     /*------------------------------*/
     
@@ -757,6 +759,13 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else {
         system->iResIndex[9][system->imLaplaceN[iBody][jBody]] = -1;
       } 
+      // missed one! 4:3 in the 10th place
+      if (dPerRat > (1.0-dTol)*(4./3) && dPerRat < (1.0+dTol)*(4./3)) {
+        system->iResIndex[10][system->imLaplaceN[iBody][jBody]] = 4;
+      } else {
+        system->iResIndex[10][system->imLaplaceN[iBody][jBody]] = -1;
+      } 
+      
     }
   }
 }

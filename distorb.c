@@ -624,6 +624,8 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody == 1) {
+      system->dLOrb = malloc(3*sizeof(double));
+    
       system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
       system->fnLaplaceDeriv = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
       for (j=0;j<LAPLNUM;j++) {
@@ -740,6 +742,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       
       CalcHK(body,iBody);
       CalcPQ(body,iBody);
+      
+      body[iBody].dLOrb = malloc(3*sizeof(double));
+      body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+    
       /* Body updates */
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* h = Ecc*sin(LongP) */

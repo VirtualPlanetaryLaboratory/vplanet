@@ -531,7 +531,6 @@ class Dataset(object):
             with h5py.File(data_file, "r") as hf:
 
                 # Multiple variables (not just a string)
-                #if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, basestring)):
                 if isinstance(variables, list):
                     for var in variables:
                         data.append(np.array(hf.get(path)[var]))

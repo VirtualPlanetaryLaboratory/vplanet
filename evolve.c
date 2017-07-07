@@ -439,6 +439,9 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
   // Get derivatives at start, useful for logging
   dDt = fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
+  /* hack */
+  CheckTermsRes(body,system,1,2,1);
+
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* Get time to next output */

@@ -136,3 +136,5 @@ double fdDistResRD2DhDt(BODY*, SYSTEM*, int*);
 double fdDistResRD2DkDt(BODY*, SYSTEM*, int*);
 double fdDistResRD2DaDt(BODY*, SYSTEM*, int*);
 double fdDistResRD2DlDt(BODY*, SYSTEM*, int*);
+
+void CheckTermsRes(BODY*,SYSTEM*,int,int,int);

@@ -1376,6 +1376,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
     fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
     if (control->Io.iVerbose >= VERBPROG)
       printf("Runtime = %f s\n", dTotTime);
   }

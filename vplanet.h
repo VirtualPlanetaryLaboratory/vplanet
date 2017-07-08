@@ -1353,7 +1353,7 @@ typedef struct {
   double dStopTime;	 /**< Integration Stop Time */
   double dTimeStep;	 /**< Integration Time step */
   int bVarDt;            /**< Use Variable Timestep? */
-  int nSteps;            /**< Number of Steps Since Last Output */
+  int nSteps;            /**< Total Number of Steps */
   double dMinValue;      /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */

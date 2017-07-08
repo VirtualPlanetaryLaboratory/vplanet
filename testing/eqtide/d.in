@@ -16,4 +16,4 @@ dTidalQ		100
 saTidePerts	star
 dMaxLockDiff	0.1
 
-saOutputOrder Time Semim Ecce -RotPer Obli
+saOutputOrder Time Semim Ecce -RotPer Obli DeltaTime

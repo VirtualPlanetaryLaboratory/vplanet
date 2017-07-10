@@ -15,6 +15,10 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define ANN         0
 #define SEA         1
 
+/* OLR model */
+#define WK97         0
+#define HM16         1
+
 /* Water albedo type */
 #define ALBFIXED    0
 #define ALBTAYLOR   1
@@ -71,6 +75,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_OBLIQAMP        1960
 #define OPT_OBLIQPER        1961
 #define OPT_ACCUMODE        1962
+#define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
 
 /* Options Functions */
@@ -166,8 +171,8 @@ void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int,int,int);
 double OLRwk97(BODY*,int,int,int);
-double dOLRdThm16(BODY*,int,int);
-double OLRhm16(BODY*,int,int);
+double dOLRdThm16(BODY*,int,int,int);
+double OLRhm16(BODY*,int,int,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);

@@ -705,6 +705,7 @@ typedef struct {
   double dObliqAmp;
   double dObliqPer;
   double dObliq0;
+  int bOLRModel;             /**< OLR fit (use with bCalcAB=1) from Kasting model */
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */

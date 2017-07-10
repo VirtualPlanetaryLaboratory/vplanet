@@ -367,6 +367,31 @@ void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     AssignDefaultInt(options,&body[iFile-1].bClimateModel,files->iNumInputs);
 }
 
+void ReadOLRModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  /* OLR model, use #defined variables (used with CalcAB = 1)*/
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"wk97",3)) {
+      body[iFile-1].bOLRModel = WK97;
+    } else if (!memcmp(sLower(cTmp),"hm16",3)) {
+      body[iFile-1].bOLRModel = HM16;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are wk97 or hm16.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);  
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultInt(options,&body[iFile-1].bOLRModel,files->iNumInputs);
+}
+
 void ReadAlbedoType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -842,6 +867,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CLIMATEMODEL].iMultiFile = 1;   
   fnRead[OPT_CLIMATEMODEL] = &ReadClimateModel;
   
+  sprintf(options[OPT_OLRMODEL].cName,"bOLRModel");
+  sprintf(options[OPT_OLRMODEL].cDescr,"Outgoing longwave rad model");
+  sprintf(options[OPT_OLRMODEL].cDefault,"wk97");
+  options[OPT_OLRMODEL].dDefault = WK97;
+  options[OPT_OLRMODEL].iType = 1;  
+  options[OPT_OLRMODEL].iMultiFile = 1;   
+  fnRead[OPT_OLRMODEL] = &ReadOLRModel;
+  
   sprintf(options[OPT_SKIPSEASENABLED].cName,"bSkipSeasEnabled");
   sprintf(options[OPT_SKIPSEASENABLED].cDescr,"Run annual before seasonal and allow skip seas");
   sprintf(options[OPT_SKIPSEASENABLED].cDefault,"0");
@@ -1009,6 +1042,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ACCUMODE].iType = 2;  
   options[OPT_ACCUMODE].iMultiFile = 1;   
   fnRead[OPT_ACCUMODE] = &ReadAccuracyMode;
+
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1446,11 +1480,19 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
           }
         }
         if (body[iBody].bCalcAB) {
-          /* Calculate A and B from williams and kasting 97 result */
-          body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
-          body[iBody].daPlanckBAvg[i] = body[iBody].daPlanckBSea[i];
-          body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
-            - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
+          if (body[iBody].bOLRModel == WK97) {
+            /* Calculate A and B from williams and kasting 97 result */
+            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+            body[iBody].daPlanckBAvg[i] = body[iBody].daPlanckBSea[i];
+            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
+              - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
+          } else {
+            /* Calculate A and B from haqq-misra+ 2016 result */
+            body[iBody].daPlanckBSea[i] = dOLRdThm16(body,iBody,i,SEA);
+            body[iBody].daPlanckBAvg[i] = body[iBody].daPlanckBSea[i];
+            body[iBody].daPlanckASea[i] = OLRhm16(body,iBody,i,SEA) \
+              - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
+          } 
         } else {
           body[iBody].daPlanckBSea[i] = body[iBody].dPlanckB;
           body[iBody].daPlanckBAvg[i] = body[iBody].daPlanckBSea[i];
@@ -3052,9 +3094,15 @@ void PoiseAnnual(BODY *body, int iBody) {
   if (body[iBody].bCalcAB) {
     for (i=0;i<=body[iBody].iNumLats;i++) {
       if (i!=body[iBody].iNumLats) {
-        body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
-        body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
-          - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+        if (body[iBody].bOLRModel == WK97) {
+          body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
+          body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
+            - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+        } else {
+          body[iBody].daPlanckBAnn[i] = dOLRdThm16(body,iBody,i,ANN);
+          body[iBody].daPlanckAAnn[i] = OLRhm16(body,iBody,i,ANN) \
+            - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+        }
       }
   
       if (body[iBody].bMEPDiff) {   
@@ -3155,9 +3203,15 @@ void PoiseAnnual(BODY *body, int iBody) {
     if (body[iBody].bCalcAB == 1) {
       for (i=0;i<=body[iBody].iNumLats;i++) {
         if (i!=body[iBody].iNumLats) {
-          body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
-          body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
-            - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+          if (body[iBody].bOLRModel == WK97) {
+            body[iBody].daPlanckBAnn[i] = dOLRdTwk97(body,iBody,i,ANN);
+            body[iBody].daPlanckAAnn[i] = OLRwk97(body,iBody,i,ANN) \
+              - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+          } else {
+            body[iBody].daPlanckBAnn[i] = dOLRdThm16(body,iBody,i,ANN);
+            body[iBody].daPlanckAAnn[i] = OLRhm16(body,iBody,i,ANN) \
+              - body[iBody].daPlanckBAnn[i]*(body[iBody].daTempAnn[i]);
+          }
         }
   
         if (body[iBody].bMEPDiff) {   
@@ -3205,11 +3259,15 @@ void PoiseAnnual(BODY *body, int iBody) {
   } 
 }
 
-double OLRhm16(BODY *body, int iBody, int iLat) {
+double OLRhm16(BODY *body, int iBody, int iLat, int bModel) {
   double phi, Int, tmpk, f;
   
   phi = log10(body[iBody].dpCO2);
-  tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+  if (bModel == ANN) {
+    tmpk = body[iBody].daTempAnn[iLat]+273.15;
+  } else {
+    tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+  }
   f = 9.12805643869791438760*(tmpk*tmpk*tmpk*tmpk)+4.58408794768168803557*(tmpk*tmpk*tmpk)*phi- \
       8.47261075643147449910e+01*(tmpk*tmpk*tmpk)+4.35517381112690282752e-01*(tmpk*phi*tmpk*phi)-\
       2.86355036260417961103e+01*(tmpk*tmpk)*phi+2.96626642498045896446e+02*(tmpk*tmpk)-\
@@ -3222,17 +3280,21 @@ double OLRhm16(BODY *body, int iBody, int iLat) {
   return Int;
 }
 
-double dOLRdThm16(BODY *body, int iBody, int iLat) {
+double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
   double phi, dI, tmpk, f;
   
   phi = log10(body[iBody].dpCO2);
-  tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+  if (bModel == ANN) {
+    tmpk = body[iBody].daTempAnn[iLat]+273.15;
+  } else {
+    tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+  }
   f = 4*9.12805643869791438760*(tmpk*tmpk*tmpk)+3*4.58408794768168803557*(tmpk*tmpk)*phi- \
       3*8.47261075643147449910e+01*(tmpk*tmpk)+2*4.35517381112690282752e-01*tmpk*(phi*phi)-\
       2*2.86355036260417961103e+01*tmpk*phi+2*2.96626642498045896446e+02*tmpk-\
       6.01082900358299240806e-02*(phi*phi*phi)-2.60414691486954641420*(phi*phi)+\
       5.69812976563675661623e+01*phi-4.62596100127381816947e+02;
-  dI = OLRhm16(body,iBody,iLat) * f / (body[iBody].daTempLW[iLat]+273.15);
+  dI = OLRhm16(body,iBody,iLat,bModel) * f / (body[iBody].daTempLW[iLat]+273.15);
   return dI;
 }
 
@@ -3378,59 +3440,6 @@ double Fresnel(double zenith) {
   
   return A;
 }
-  
-
-void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
-  double phi = log10(body[iBody].dpCO2), albtmp;
-  
-//   if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
-//     albtmp = body[iBody].dIceAlbedo;
-//   } else {
-//     albtmp = body[iBody].dAlbedoLand;
-//   }
-
-/// hack hack hack
-  if ((body[iBody].daTempLand[iLat] <= 0) && (body[iBody].daTempLand[iLat] > -10)) {
-    albtmp = 0.45;
-  } else if (body[iBody].daTempLand[iLat] <= -10) {
-    albtmp = 0.7;
-  } else {
-    albtmp = 0.2;
-  }
-  
-  if (body[iBody].daTempLand[iLat] <= (-23.15)) {
-    body[iBody].daAlbedoLand[iLat] = AlbedoTOA250(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
-  } else if (body[iBody].daTempLand[iLat] <= 76.85) {
-    body[iBody].daAlbedoLand[iLat] = AlbedoTOA350(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
-  } else {
-    fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)\n");
-    exit(EXIT_INPUT);
-  }
-
-//   if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
-//     albtmp = body[iBody].dIceAlbedo;
-//   } else {
-//     albtmp = body[iBody].dAlbedoWater;
-//   }
-  
-  /// hack hack hack
-  if ((body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) && (body[iBody].daTempWater[iLat] > -10)) {
-    albtmp = 0.55;
-  } else if (body[iBody].daTempWater[iLat] <= -10) {
-    albtmp = 0.7;
-  } else {
-    albtmp = Fresnel(zenith);
-  }
-  
-  if (body[iBody].daTempWater[iLat] <= (-23.15)) {
-    body[iBody].daAlbedoWater[iLat] = AlbedoTOA250(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
-  } else if (body[iBody].daTempWater[iLat] <= 76.85) {
-    body[iBody].daAlbedoWater[iLat] = AlbedoTOA350(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
-  } else {
-    fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)");
-    exit(EXIT_INPUT);
-  }
-}
 
 double AlbedoTaylor(double zenith) {
   double mu = cos(zenith);
@@ -3441,6 +3450,68 @@ double AlbedoTaylor(double zenith) {
     return 0.037/0.15;
   }
 }
+ 
+
+void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
+  double phi = log10(body[iBody].dpCO2), albtmp;
+  
+  if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+    albtmp = body[iBody].dIceAlbedo;
+  } else {
+    albtmp = body[iBody].dAlbedoLand;
+  }
+
+/// hack hack hack
+//   if ((body[iBody].daTempLand[iLat] <= 0) && (body[iBody].daTempLand[iLat] > -10)) {
+//     albtmp = 0.45;
+//   } else if (body[iBody].daTempLand[iLat] <= -10) {
+//     albtmp = 0.7;
+//   } else {
+//     albtmp = 0.2;
+//   }
+  
+  if (body[iBody].daTempLand[iLat] <= (-23.15)) {
+    body[iBody].daAlbedoLand[iLat] = AlbedoTOA250(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempLand[iLat] <= 76.85) {
+    body[iBody].daAlbedoLand[iLat] = AlbedoTOA350(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+  } else {
+    // fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)\n");
+//     exit(EXIT_INPUT);
+    body[iBody].daAlbedoLand[iLat] = 0.18;
+  }
+
+  if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
+    albtmp = body[iBody].dIceAlbedo;
+  } else {
+    if (body[iBody].iAlbedoType == ALBFIXED) {
+      albtmp = body[iBody].dAlbedoWater;
+    } else if (body[iBody].iAlbedoType == ALBTAYLOR) {
+      albtmp = AlbedoTaylor(zenith);
+    }
+  }
+  
+//   /// hack hack hack
+//   if ((body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) && (body[iBody].daTempWater[iLat] > -10)) {
+//     albtmp = 0.55;
+//   } else if (body[iBody].daTempWater[iLat] <= -10) {
+//     albtmp = 0.7;
+//   } else {
+//     albtmp = Fresnel(zenith);
+//   }
+  
+  if (body[iBody].daTempWater[iLat] <= (-23.15)) {
+    body[iBody].daAlbedoWater[iLat] = AlbedoTOA250(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempWater[iLat] <= 76.85) {
+    body[iBody].daAlbedoWater[iLat] = AlbedoTOA350(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+  } else {
+    body[iBody].daAlbedoWater[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
+// 
+//     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)");
+//     exit(EXIT_INPUT);
+  }
+}
+
+
 
 void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
@@ -3511,7 +3582,11 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
     zenith = fabs(body[iBody].daLats[iLat] - body[iBody].daDeclination[iDay]);
     
     if (body[iBody].bCalcAB == 1) {
-      AlbedoTOAwk97(body, zenith, iBody, iLat);
+      if (body[iBody].bOLRModel == WK97) {
+        AlbedoTOAwk97(body, zenith, iBody, iLat);
+      } else {
+        AlbedoTOAhm16(body, zenith, iBody, iLat);
+      }
     } else {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*(sin(zenith)*sin(zenith))-1.)/2.;
       body[iBody].daAlbedoWater[iLat] = body[iBody].dAlbedoWater+0.08*(3.*(sin(zenith)*sin(zenith))-1.)/2.;
@@ -3851,10 +3926,18 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].dTGlobalTmp += body[iBody].daTempLW[i]/body[iBody].iNumLats;
           
           if (body[iBody].bCalcAB) {
-            /* Calculate A and B from williams and kasting 97 result */
-            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
-            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
-               - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
+            if (body[iBody].bOLRModel == WK97) {
+              /* Calculate A and B from williams and kasting 97 result */
+              body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+              body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
+                 - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]); 
+            } else {
+              /* Calculate A and B from haqq-misra+ 2016 result */
+              body[iBody].daPlanckBSea[i] = dOLRdThm16(body,iBody,i,SEA);
+              body[iBody].daPlanckASea[i] = OLRhm16(body,iBody,i,SEA) \
+                - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
+            } 
+              
             
             if (body[iBody].bMEPDiff) {   
               if (i==0) {
@@ -3981,10 +4064,17 @@ void PoiseSeasonal(BODY *body, int iBody) {
             // body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
 //             body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
 //                - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]); 
-//               
-            body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
-            body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
-                  - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
+//          
+            if (body[iBody].bOLRModel == WK97) {     
+              body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
+              body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
+                    - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
+            } else {
+              /* Calculate A and B from haqq-misra+ 2016 result */
+              body[iBody].daPlanckBSea[i] = dOLRdThm16(body,iBody,i,SEA);
+              body[iBody].daPlanckASea[i] = OLRhm16(body,iBody,i,SEA) \
+                - body[iBody].daPlanckBSea[i]*(body[iBody].daTempLW[i]);
+            } 
 
             if (body[iBody].bMEPDiff) {   
               if (i==0) {

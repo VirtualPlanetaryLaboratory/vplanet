@@ -1731,8 +1731,7 @@ double fdDdistDhPrmDir12Sin(BODY *body, SYSTEM *system, int iBody, int jBody, in
   return (f31+(body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*f32\
     +(3*body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*f33\
     +(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc\
-    +body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*f34)\
-    *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1));
+    +body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*f34);
 }
 
 double fdDdistDhPrmDir13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -1870,8 +1869,7 @@ double fdDdistDhPrmInt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, in
   return 0.25*((-2+(body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)\
     +1.5*(3*body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)\
     +2*(body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc\
-    +body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))\
-      *sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,1)));
+    +body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)));
 }
 
 double fdDdistDhPrmInt16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -2107,22 +2105,22 @@ double fdDdistresDHeccPrime(BODY *body, SYSTEM *system, int iBody, int jBody, in
     if (iIndexJ == 2) {
       yc += (fdDdistDhPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDhPrmInt111Cos(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDhPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDhPrmInt111Sin(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);                
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);                
     } else if (iIndexJ == 3) {
       yc += (fdDdistDhPrmInt16Cos(body, system, iBody, jBody, iIndexJ)) \
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDhPrmInt16Sin(body, system, iBody, jBody, iIndexJ)) \
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   } else if (iOrder == 2) {
     if (iIndexJ == 3) {
       yc += (fdDdistDhPrmInt25Cos(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDhPrmInt25Sin(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   }
   y = (yc*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes) \
@@ -2973,22 +2971,22 @@ double fdDdistresDKeccPrime(BODY *body, SYSTEM *system, int iBody, int jBody, in
     if (iIndexJ == 2) {
       yc += (fdDdistDkPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDkPrmInt111Cos(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDkPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDkPrmInt111Sin(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     } else if (iIndexJ == 3) {
       yc += (fdDdistDkPrmInt16Cos(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDkPrmInt16Sin(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   } else if (iOrder == 2) {
     if (iIndexJ == 3) {
       yc += (fdDdistDkPrmInt25Cos(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDkPrmInt25Sin(body, system, iBody, jBody, iIndexJ))\
-             /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+             *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   } 
   y = (yc*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes) \
@@ -3179,11 +3177,11 @@ double fdDdistDpDir112Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int 
 }
 
 double fdDdistDpExt13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 4*body[iBody].dPinc*(body[jBody].dKecc);     
+  return 4*(body[iBody].dPinc*(body[jBody].dKecc));     
 }
 
 double fdDdistDpExt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 4*body[iBody].dPinc*(body[jBody].dHecc);     
+  return 4*(body[iBody].dPinc*(body[jBody].dHecc));     
 }
 
 double fdDdistDpExt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -3191,7 +3189,7 @@ double fdDdistDpExt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int 
 }
 
 double fdDdistDpExt111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return -4*((-body[jBody].dPinc*body[jBody].dHecc+body[jBody].dQinc*body[jBody].dKecc));     
+  return 4*((-body[jBody].dPinc*body[jBody].dHecc+body[jBody].dQinc*body[jBody].dKecc));     
 }
 
 double fdDdistDpDir24Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -3751,10 +3749,10 @@ double fdDdistresDPincPrime(BODY *body, SYSTEM *system, int iBody,int jBody, int
     if (iIndexJ == 2) {
       yc += (fdDdistDpPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDpPrmInt111Cos(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDpPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDpPrmInt111Sin(body, system, iBody, jBody, iIndexJ) )\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   }
   y = (yc*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes) \
@@ -4514,10 +4512,10 @@ double fdDdistresDQincPrime(BODY *body, SYSTEM *system, int iBody,int jBody, int
     if (iIndexJ == 2) {
       yc += (fdDdistDqPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDqPrmInt111Cos(body, system, iBody, jBody, iIndexJ) ) \
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
       ys += (fdDdistDqPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
             +fdDdistDqPrmInt111Sin(body, system, iBody, jBody, iIndexJ) ) \
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   }
   
@@ -5723,22 +5721,22 @@ double fdDdistresDLambdaPrime(BODY *body, SYSTEM *system, int iBody, int jBody, 
     if (iIndexJ == 2) {
        yc += (fdDdistDlPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
            + fdDdistDlPrmInt111Cos(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
        ys += (fdDdistDlPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
            + fdDdistDlPrmInt111Sin(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     } else if (iIndexJ == 3) {
        yc += (fdDdistDlPrmInt16Cos(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
        ys += (fdDdistDlPrmInt16Sin(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   } else if (iOrder == 2) {
     if (iIndexJ == 3) {
        yc += (fdDdistDlPrmInt25Cos(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
        ys += (fdDdistDlPrmInt25Sin(body, system, iBody, jBody, iIndexJ))\
-            /(body[jBody].dSemi*body[jBody].dSemi/AUCM/AUCM);
+            *body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi);
     }
   }
   
@@ -5970,7 +5968,8 @@ double fdDdistDaDir112Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int 
 
 double fdDdistDaDir113Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
   return AUCM/body[jBody].dSemi*system->dmLaplaceD[iIndexJ][system->imLaplaceN[iBody][jBody]][36]*\
-    ((body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)));
+    ((body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc)
+    +2*body[iBody].dHecc*body[jBody].dPinc*body[jBody].dQinc));
 }
 
 double fdDdistDaDir113Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
@@ -6724,32 +6723,32 @@ double fdDdistDaPrmDir114Sin(BODY *body, SYSTEM *system, int iBody, int jBody, i
 }
 
 double fdDdistDaPrmInt13Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./4*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 1./2*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt13Cos(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt13Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./4*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 1./2*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt13Sin(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt16Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 4./9*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 8./9*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt16Cos(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt16Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 4./9*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
-        (fdDdistDaExt16Cos(body,system,jBody,iBody,iIndexJ));
+  return 8./9*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+        (fdDdistDaExt16Sin(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt111Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./4*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 1./2*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt111Cos(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt111Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./4*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 1./2*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt111Sin(body,system,jBody,iBody,iIndexJ));
 }
 
@@ -6882,12 +6881,12 @@ double fdDdistDaPrmDir26Sin(BODY *body, SYSTEM *system, int iBody, int jBody, in
 }
 
 double fdDdistDaPrmInt25Cos(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./9*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 2./9*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt25Cos(body,system,jBody,iBody,iIndexJ));
 }
 
 double fdDdistDaPrmInt25Sin(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ) {
-  return 1./9*AUCM*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
+  return 2./9*body[iBody].dSemi*body[iBody].dSemi/(body[jBody].dSemi*body[jBody].dSemi)*\
         (fdDdistDaExt25Sin(body,system,jBody,iBody,iIndexJ));
 }
 
@@ -7211,17 +7210,17 @@ double fdDdistresDSemiPrime(BODY *body, SYSTEM *system, int iBody, int jBody, in
   if (iOrder == 1) {
     if (iIndexJ == 2) {
       yc += (fdDdistDaPrmInt13Cos(body, system, iBody, jBody, iIndexJ)\
-            +fdDdistDaPrmInt111Cos(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
+            +fdDdistDaPrmInt111Cos(body, system, iBody, jBody, iIndexJ));
       ys += (fdDdistDaPrmInt13Sin(body, system, iBody, jBody, iIndexJ)\
-            +fdDdistDaPrmInt111Sin(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
+            +fdDdistDaPrmInt111Sin(body, system, iBody, jBody, iIndexJ));
     } else if (iIndexJ == 3) {
-      yc += (fdDdistDaPrmInt16Cos(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
-      ys += (fdDdistDaPrmInt16Sin(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
+      yc += (fdDdistDaPrmInt16Cos(body, system, iBody, jBody, iIndexJ));
+      ys += (fdDdistDaPrmInt16Sin(body, system, iBody, jBody, iIndexJ));
     }
   } else if (iOrder == 2) {
     if (iIndexJ == 3) {
-      yc += (fdDdistDaPrmInt25Cos(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
-      ys += (fdDdistDaPrmInt25Sin(body, system, iBody, jBody, iIndexJ)) * dSemiPrm;
+      yc += (fdDdistDaPrmInt25Cos(body, system, iBody, jBody, iIndexJ));
+      ys += (fdDdistDaPrmInt25Sin(body, system, iBody, jBody, iIndexJ));
     }
   } 
   
@@ -7890,7 +7889,7 @@ double fdDistResRD2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     return sum/DAYSEC;
 }
 
-void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
+void CheckTermsRes1(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   int iIndexJ = system->iResIndex[iRes][system->imLaplaceN[iBody][jBody]];
   int iOrder = system->iResOrder[iRes];
   
@@ -7909,6 +7908,8 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
 //   printf("dR112dh = %e\n",(fdDdistDhDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dh = %e\n",(fdDdistDhDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR114dh = %e\n",(fdDdistDhDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13dh = %e\n",(fdDdistDhExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDhExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE16dh = %e\n",(fdDdistDhExt16Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDhExt16Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes))); 
   
   //------dk----------------first order--------
   printf("dR11dk = %e\n",(fdDdistDkDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -7925,6 +7926,8 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
 //   printf("dR112dk = %e\n",(fdDdistDkDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dk = %e\n",(fdDdistDkDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR114dk = %e\n",(fdDdistDkDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13dk = %e\n",(fdDdistDkExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDkExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE16dk = %e\n",(fdDdistDkExt16Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDkExt16Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes)));  
   
   //------dp----------------first order--------
   printf("dR11dp = %e\n",(fdDdistDpDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -7941,6 +7944,8 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dp = %e\n",(fdDdistDpDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR113dp = %e\n",(fdDdistDpDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR114dp = %e\n",(fdDdistDpDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13dp = %e\n",(fdDdistDpExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDpExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE111dp = %e\n",(fdDdistDpExt111Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDpExt111Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
   
   //------dq----------------first order--------
   printf("dR11dq = %e\n",(fdDdistDqDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -7957,6 +7962,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dq = %e\n",(fdDdistDqDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR113dq = %e\n",(fdDdistDqDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR114dq = %e\n",(fdDdistDqDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13dq = %e\n",(fdDdistDqExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDqExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE111dq = %e\n",(fdDdistDqExt111Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDqExt111Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));  
+  
   
   //------da----------------first order--------
   printf("dR11da = %e\n",(fdDdistDaDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -7973,6 +7981,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112da = %e\n",(fdDdistDaDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113da = %e\n",(fdDdistDaDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114da = %e\n",(fdDdistDaDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13da = %e\n",(fdDdistDaExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDaExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE16da = %e\n",(fdDdistDaExt16Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDaExt16Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes))); 
+  printf("dRE111da = %e\n",(fdDdistDaExt111Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDaExt111Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));  
   
   //------dl----------------first order--------
   printf("dR11dl = %e\n",(fdDdistDlDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -7989,6 +8000,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dl = %e\n",(fdDdistDlDir112Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir112Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dl = %e\n",(fdDdistDlDir113Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir113Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dl = %e\n",(fdDdistDlDir114Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir114Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE13dl = %e\n",(fdDdistDlExt13Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDlExt13Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRE16dl = %e\n",(fdDdistDlExt16Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDlExt16Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes))); 
+  printf("dRE111dl = %e\n",(fdDdistDlExt111Cos(body, system, iBody, jBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDlExt111Sin(body, system, iBody, jBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));  
   
   //------dhPrm----------------first order--------
   printf("dR11dhPrm = %e\n",(fdDdistDhPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8005,6 +8019,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dhPrm = %e\n",(fdDdistDhPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR113dhPrm = %e\n",(fdDdistDhPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dhPrm = %e\n",(fdDdistDhPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI13dhPrm = %e\n",(fdDdistDhPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDhPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRI16dhPrm = %e\n",(fdDdistDhPrmInt16Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDhPrmInt16Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes)));   
+  printf("dRI111dhPrm = %e\n",(fdDdistDhPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDhPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
   
   //------dkPrm----------------first order--------
   printf("dR11dkPrm = %e\n",(fdDdistDkPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8021,6 +8038,10 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dkPrm = %e\n",(fdDdistDkPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
 //   printf("dR113dkPrm = %e\n",(fdDdistDkPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dkPrm = %e\n",(fdDdistDkPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI13dkPrm = %e\n",(fdDdistDkPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDkPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRI16dkPrm = %e\n",(fdDdistDkPrmInt16Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDkPrmInt16Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes)));   
+  printf("dRI111dkPrm = %e\n",(fdDdistDkPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDkPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  
   
   //------dpPrm----------------first order--------
   printf("dR11dpPrm = %e\n",(fdDdistDpPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8037,6 +8058,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dpPrm = %e\n",(fdDdistDpPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dpPrm = %e\n",(fdDdistDpPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dpPrm = %e\n",(fdDdistDpPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI13dpPrm = %e\n",(fdDdistDpPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDpPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));  
+  printf("dRI111dpPrm = %e\n",(fdDdistDpPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDpPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+    
   
   //------dqPrm----------------first order--------
   printf("dR11dqPrm = %e\n",(fdDdistDqPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8053,6 +8077,9 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dqPrm = %e\n",(fdDdistDqPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dqPrm = %e\n",(fdDdistDqPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dqPrm = %e\n",(fdDdistDqPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+   printf("dRI13dqPrm = %e\n",(fdDdistDqPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDqPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));  
+  printf("dRI111dqPrm = %e\n",(fdDdistDqPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDqPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  
   
   //------daPrm----------------first order--------
   printf("dR11daPrm = %e\n",(fdDdistDaPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8069,6 +8096,11 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112daPrm = %e\n",(fdDdistDaPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113daPrm = %e\n",(fdDdistDaPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114daPrm = %e\n",(fdDdistDaPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI13daPrm = %e\n",(fdDdistDaPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDaPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRI16daPrm = %e\n",(fdDdistDaPrmInt16Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDaPrmInt16Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes)));   
+  printf("dRI111daPrm = %e\n",(fdDdistDaPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDaPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  
+
   
   //------dlPrm----------------first order--------
   printf("dR11dlPrm = %e\n",(fdDdistDlPrmDir11Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir11Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8085,5 +8117,85 @@ void CheckTermsRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
   printf("dR112dlPrm = %e\n",(fdDdistDlPrmDir112Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir112Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR113dlPrm = %e\n",(fdDdistDlPrmDir113Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir113Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
   printf("dR114dlPrm = %e\n",(fdDdistDlPrmDir114Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir114Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI13dlPrm = %e\n",(fdDdistDlPrmInt13Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDlPrmInt13Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  printf("dRI16dlPrm = %e\n",(fdDdistDlPrmInt16Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,1,iRes)+fdDdistDlPrmInt16Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,1,iRes)));   
+  printf("dRI111dlPrm = %e\n",(fdDdistDlPrmInt111Cos(body, system, jBody, iBody, 2)*fdCosLambda(body,system,iBody,jBody,2,1,iRes)+fdDdistDlPrmInt111Sin(body, system, jBody, iBody, 2)*fdSinLambda(body,system,iBody,jBody,2,1,iRes)));
+  
+  
 } 
 
+
+void CheckTermsRes2(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
+  int iIndexJ = system->iResIndex[iRes][system->imLaplaceN[iBody][jBody]];
+  int iOrder = system->iResOrder[iRes];
+
+  //------dh----------------2nd order--------
+  printf("dR21dh = %e\n",(fdDdistDhDir21Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir21Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22dh = %e\n",(fdDdistDhDir22Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir22Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  
+  //------dk----------------2nd order--------
+  printf("dR21dk = %e\n",(fdDdistDkDir21Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir21Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22dk = %e\n",(fdDdistDkDir22Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkDir22Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+
+  //------dp----------------2nd order--------
+  printf("dR24dp = %e\n",(fdDdistDpDir24Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir24Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25dp = %e\n",(fdDdistDpDir25Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpDir25Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+
+  //------dq----------------2nd order--------
+  printf("dR24dq = %e\n",(fdDdistDqDir24Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir24Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25dq = %e\n",(fdDdistDqDir25Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqDir25Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  
+  //------da----------------2nd order--------
+  printf("dR21da = %e\n",(fdDdistDaDir21Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir21Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22da = %e\n",(fdDdistDaDir22Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir22Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23da = %e\n",(fdDdistDaDir23Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir23Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR24da = %e\n",(fdDdistDaDir24Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir24Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25da = %e\n",(fdDdistDaDir25Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir25Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26da = %e\n",(fdDdistDaDir26Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaDir26Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE25da = %e\n",(fdDdistDaExt25Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDaExt25Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+  
+  //------dl----------------2nd order--------
+  printf("dR21dl = %e\n",(fdDdistDlDir21Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir21Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22dl = %e\n",(fdDdistDlDir22Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir22Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23dl = %e\n",(fdDdistDlDir23Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir23Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR24dl = %e\n",(fdDdistDlDir24Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir24Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25dl = %e\n",(fdDdistDlDir25Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir25Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26dl = %e\n",(fdDdistDlDir26Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlDir26Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRE25dl = %e\n",(fdDdistDlExt25Cos(body, system, iBody, jBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDlExt25Sin(body, system, iBody, jBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+
+  //------dhp----------------2nd order--------
+  printf("dR22dhPrm = %e\n",(fdDdistDhPrmDir22Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir22Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23dhPrm = %e\n",(fdDdistDhPrmDir23Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhPrmDir23Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI25dhPrm = %e\n",(fdDdistDhPrmInt25Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDhPrmInt25Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+
+  //------dkp----------------2nd order--------
+  printf("dR22dkPrm = %e\n",(fdDdistDkPrmDir22Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir22Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23dkPrm = %e\n",(fdDdistDkPrmDir23Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDkPrmDir23Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI25dkPrm = %e\n",(fdDdistDkPrmInt25Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDkPrmInt25Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+
+  //------dpp----------------2nd order--------
+  printf("dR25dpPrm = %e\n",(fdDdistDpPrmDir25Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir25Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26dpPrm = %e\n",(fdDdistDpPrmDir26Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDpPrmDir26Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  
+  //------dqp----------------2nd order--------
+  printf("dR25dqPrm = %e\n",(fdDdistDqPrmDir25Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir25Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26dqPrm = %e\n",(fdDdistDqPrmDir26Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDqPrmDir26Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));  
+
+  //------dap----------------2nd order--------
+  printf("dR21daPrm = %e\n",(fdDdistDaPrmDir21Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir21Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22daPrm = %e\n",(fdDdistDaPrmDir22Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir22Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23daPrm = %e\n",(fdDdistDaPrmDir23Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir23Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR24daPrm = %e\n",(fdDdistDaPrmDir24Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir24Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25daPrm = %e\n",(fdDdistDaPrmDir25Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir25Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26daPrm = %e\n",(fdDdistDaPrmDir26Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDaPrmDir26Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI25daPrm = %e\n",(fdDdistDaPrmInt25Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDaPrmInt25Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+  
+  //------dlp----------------2nd order--------
+  printf("dR21dlPrm = %e\n",(fdDdistDlPrmDir21Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir21Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR22dlPrm = %e\n",(fdDdistDlPrmDir22Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir22Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR23dlPrm = %e\n",(fdDdistDlPrmDir23Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir23Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR24dlPrm = %e\n",(fdDdistDlPrmDir24Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir24Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR25dlPrm = %e\n",(fdDdistDlPrmDir25Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir25Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dR26dlPrm = %e\n",(fdDdistDlPrmDir26Cos(body, system, jBody, iBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDlPrmDir26Sin(body, system, jBody, iBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
+  printf("dRI25dlPrm = %e\n",(fdDdistDlPrmInt25Cos(body, system, jBody, iBody, 3)*fdCosLambda(body,system,iBody,jBody,3,2,iRes)+fdDdistDlPrmInt25Sin(body, system, jBody, iBody, 3)*fdSinLambda(body,system,iBody,jBody,3,2,iRes)));
+}

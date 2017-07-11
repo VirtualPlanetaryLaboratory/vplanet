@@ -4069,24 +4069,6 @@ void PoiseSeasonal(BODY *body, int iBody) {
                                   body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
           body[iBody].dTGlobalTmp += body[iBody].daTempLW[i]/body[iBody].iNumLats;
           
-          if (body[iBody].daPlanckBSea[i] != body[iBody].daPlanckBSea[i]) {
-            printf("fudiknenro\n");
-          }
-          
-          if (body[iBody].daPlanckASea[i] != body[iBody].daPlanckASea[i]) {
-            printf("fudiknenro\n");
-          }
-          
-          if (body[iBody].daTempLand[i] != body[iBody].daTempLand[i]) {
-            printf("fudiknenro\n");
-          }
-          
-          if (body[iBody].daTempWater[i] != body[iBody].daTempWater[i]) {
-            printf("fudiknenro\n");
-          }
-          
-          
-          
           if (body[iBody].bCalcAB) {
             /* Calculate A and B from Haqq-Misra et al 2016 result */
             // body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);

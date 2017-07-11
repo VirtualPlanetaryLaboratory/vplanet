@@ -5,7 +5,7 @@ dMass        3.00316726e-06
 dRadius      -1.00
 dRotPeriod   -1.00000
 dObliquity   23.44 #23.682    #no Moons yet in vplanet....
-dSemi        1.0000011
+dSemi        1.655
 #dSemi        1.7
 dEcc         0.0167 #0.036851
 #dInc         5e-5
@@ -37,7 +37,7 @@ dDiffusion        0.44
 #dPlanckB         2.09
 bCalcAB           1
 dTGlobalInit      22.
-dpCO2            0.00028
+dpCO2            8
 #dSurfAlbedo       0.35
 bClimateModel     sea
 iNumYears         4
@@ -54,4 +54,4 @@ dAlbedoWater      0.3
 #iReRunSeas         500
 #iAlbedoType        fix
 bSkipSeasEnabled   0
-
+bOLRModel hm16

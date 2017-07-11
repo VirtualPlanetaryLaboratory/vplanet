@@ -3260,41 +3260,51 @@ void PoiseAnnual(BODY *body, int iBody) {
 }
 
 double OLRhm16(BODY *body, int iBody, int iLat, int bModel) {
-  double phi, Int, tmpk, f;
+  double phi, Int, tmpk, f, dT;
   
   phi = log10(body[iBody].dpCO2);
   if (bModel == ANN) {
-    tmpk = body[iBody].daTempAnn[iLat]+273.15;
+    dT = body[iBody].daTempAnn[iLat]+273.15;
   } else {
-    tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+    dT = body[iBody].daTempLW[iLat]+273.15;
   }
-  f = 9.12805643869791438760*(tmpk*tmpk*tmpk*tmpk)+4.58408794768168803557*(tmpk*tmpk*tmpk)*phi- \
-      8.47261075643147449910e+01*(tmpk*tmpk*tmpk)+4.35517381112690282752e-01*(tmpk*phi*tmpk*phi)-\
-      2.86355036260417961103e+01*(tmpk*tmpk)*phi+2.96626642498045896446e+02*(tmpk*tmpk)-\
-      6.01082900358299240806e-02*tmpk*(phi*phi*phi)-2.60414691486954641420*tmpk*(phi*phi)+\
-      5.69812976563675661623e+01*tmpk*phi-4.62596100127381816947e+02*tmpk+\
-      2.18159373001564722491e-03*(phi*phi*phi*phi)+1.61456772400726950023e-01*(phi*phi*phi)+\
-      3.75623788187470086797*(phi*phi)-3.53347289223180354156e+01*phi+\
-      2.75011005409836684521e+02;
-  Int = pow(10.0,f)/1000.;
+  if (dT > 150) {
+    tmpk = log10(dT);
+    f = 9.12805643869791438760*(tmpk*tmpk*tmpk*tmpk)+4.58408794768168803557*(tmpk*tmpk*tmpk)*phi- \
+        8.47261075643147449910e+01*(tmpk*tmpk*tmpk)+4.35517381112690282752e-01*(tmpk*phi*tmpk*phi)-\
+        2.86355036260417961103e+01*(tmpk*tmpk)*phi+2.96626642498045896446e+02*(tmpk*tmpk)-\
+        6.01082900358299240806e-02*tmpk*(phi*phi*phi)-2.60414691486954641420*tmpk*(phi*phi)+\
+        5.69812976563675661623e+01*tmpk*phi-4.62596100127381816947e+02*tmpk+\
+        2.18159373001564722491e-03*(phi*phi*phi*phi)+1.61456772400726950023e-01*(phi*phi*phi)+\
+        3.75623788187470086797*(phi*phi)-3.53347289223180354156e+01*phi+\
+        2.75011005409836684521e+02;
+    Int = pow(10.0,f)/1000.;
+  } else { 
+    Int = SIGMA * dT*dT*dT*dT; //very cold brrr.... 
+  }
   return Int;
 }
 
 double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
-  double phi, dI, tmpk, f;
+  double phi, dI, tmpk, f, dT;
   
   phi = log10(body[iBody].dpCO2);
   if (bModel == ANN) {
-    tmpk = body[iBody].daTempAnn[iLat]+273.15;
+    dT = body[iBody].daTempAnn[iLat]+273.15;
   } else {
-    tmpk = log10(body[iBody].daTempLW[iLat]+273.15);
+    dT = body[iBody].daTempLW[iLat]+273.15;
   }
-  f = 4*9.12805643869791438760*(tmpk*tmpk*tmpk)+3*4.58408794768168803557*(tmpk*tmpk)*phi- \
+  if (dT > 150) {
+    tmpk = log10(dT);
+    f = 4*9.12805643869791438760*(tmpk*tmpk*tmpk)+3*4.58408794768168803557*(tmpk*tmpk)*phi- \
       3*8.47261075643147449910e+01*(tmpk*tmpk)+2*4.35517381112690282752e-01*tmpk*(phi*phi)-\
       2*2.86355036260417961103e+01*tmpk*phi+2*2.96626642498045896446e+02*tmpk-\
       6.01082900358299240806e-02*(phi*phi*phi)-2.60414691486954641420*(phi*phi)+\
       5.69812976563675661623e+01*phi-4.62596100127381816947e+02;
-  dI = OLRhm16(body,iBody,iLat,bModel) * f / (body[iBody].daTempLW[iLat]+273.15);
+    dI = OLRhm16(body,iBody,iLat,bModel) * f / (body[iBody].daTempLW[iLat]+273.15);
+  } else { 
+    dI = 3 * SIGMA * dT*dT*dT;
+  }
   return dI;
 }
 
@@ -4058,6 +4068,24 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].daTempLW[i] = body[iBody].daLandFrac[i]*body[iBody].daTempLand[i] + \
                                   body[iBody].daWaterFrac[i]*body[iBody].daTempWater[i];
           body[iBody].dTGlobalTmp += body[iBody].daTempLW[i]/body[iBody].iNumLats;
+          
+          if (body[iBody].daPlanckBSea[i] != body[iBody].daPlanckBSea[i]) {
+            printf("fudiknenro\n");
+          }
+          
+          if (body[iBody].daPlanckASea[i] != body[iBody].daPlanckASea[i]) {
+            printf("fudiknenro\n");
+          }
+          
+          if (body[iBody].daTempLand[i] != body[iBody].daTempLand[i]) {
+            printf("fudiknenro\n");
+          }
+          
+          if (body[iBody].daTempWater[i] != body[iBody].daTempWater[i]) {
+            printf("fudiknenro\n");
+          }
+          
+          
           
           if (body[iBody].bCalcAB) {
             /* Calculate A and B from Haqq-Misra et al 2016 result */

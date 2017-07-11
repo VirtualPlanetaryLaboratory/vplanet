@@ -3294,7 +3294,7 @@ double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
   } else {
     dT = body[iBody].daTempLW[iLat]+273.15;
   }
-  if (dT > 150) {
+//   if (dT > 150) {
     tmpk = log10(dT);
     f = 4*9.12805643869791438760*(tmpk*tmpk*tmpk)+3*4.58408794768168803557*(tmpk*tmpk)*phi- \
       3*8.47261075643147449910e+01*(tmpk*tmpk)+2*4.35517381112690282752e-01*tmpk*(phi*phi)-\
@@ -3302,9 +3302,13 @@ double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
       6.01082900358299240806e-02*(phi*phi*phi)-2.60414691486954641420*(phi*phi)+\
       5.69812976563675661623e+01*phi-4.62596100127381816947e+02;
     dI = OLRhm16(body,iBody,iLat,bModel) * f / (body[iBody].daTempLW[iLat]+273.15);
-  } else { 
-    dI = 3 * SIGMA * dT*dT*dT;
-  }
+    
+    if (dI <= 0) {
+      dI = dOLRdTwk97(body,iBody,iLat,bModel);
+    }
+ //  } else { 
+//     dI = 3 * SIGMA * dT*dT*dT;
+//   }
   return dI;
 }
 

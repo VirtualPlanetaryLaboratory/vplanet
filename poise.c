@@ -3559,8 +3559,12 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
 
   // MEM: body[iBody].daIceMassTmp[iLat] not initialized!
-  if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+  if (body[iBody].daTempLand[iLat] <= -10) {
     albtmp = body[iBody].dIceAlbedo;
+  } else if (body[iBody].daTempLand[iLat] > -10 && body[iBody].daIceMassTmp[iLat] > 0) {
+    albtmp = (body[iBody].dIceAlbedo+body[iBody].dAlbedoLand)/2.0;
+  } else if (body[iBody].daTempLand[iLat] <= 0 && body[iBody].daIceMassTmp[iLat] == 0) {
+    albtmp = (body[iBody].dIceAlbedo+body[iBody].dAlbedoLand)/2.0;
   } else {
     albtmp = body[iBody].dAlbedoLand;
   }

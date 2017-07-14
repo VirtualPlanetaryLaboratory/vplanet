@@ -338,6 +338,20 @@ void ReadForceObliq(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   }
 }
 
+void ReadDiffRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bDiffRot = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    AssignDefaultInt(options,&body[iFile-1].bDiffRot,files->iNumInputs);
+  }
+}
+
 void ReadClimateModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -1019,6 +1033,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FORCEOBLIQ].iMultiFile = 1;   
   fnRead[OPT_FORCEOBLIQ] = &ReadForceObliq;
   
+  sprintf(options[OPT_DIFFROT].cName,"bDiffRot");
+  sprintf(options[OPT_DIFFROT].cDescr,"Adjust heat diffusion for rotation rate");
+  sprintf(options[OPT_DIFFROT].cDefault,"0");
+  options[OPT_DIFFROT].dDefault = 0;
+  options[OPT_DIFFROT].iType = 2;  
+  options[OPT_DIFFROT].iMultiFile = 1;   
+  fnRead[OPT_DIFFROT] = &ReadDiffRot;
+  
   sprintf(options[OPT_OBLIQAMP].cName,"dObliqAmp");
   sprintf(options[OPT_OBLIQAMP].cDescr,"Amplitude of forced obliquity oscill");
   sprintf(options[OPT_OBLIQAMP].cDefault,"50");
@@ -1287,6 +1309,9 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         } else {
           body[iBody].daDiffusionAnn[i] = (body[iBody].daPlanckBAnn[i]+body[iBody].daPlanckBAnn[i-1])/8.0;  
         } 
+      } else if (body[iBody].bDiffRot) {
+        body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff*\
+          (body[iBody].dRotRate*body[iBody].dRotRate/(4*PI*PI/DAYSEC/DAYSEC));   
       } else {
         body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff;   
       }
@@ -1508,6 +1533,9 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         } else {
           body[iBody].daDiffusionSea[i] = (body[iBody].daPlanckBSea[i]+body[iBody].daPlanckBSea[i-1])/8.0;  
         } 
+      } else if (body[iBody].bDiffRot) {
+        body[iBody].daDiffusionSea[i] = body[iBody].dDiffCoeff*\
+          (body[iBody].dRotRate*body[iBody].dRotRate/(4*PI*PI/DAYSEC/DAYSEC));   
       } else {
         body[iBody].daDiffusionSea[i] = body[iBody].dDiffCoeff;   
       }
@@ -3600,6 +3628,7 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
         AlbedoTOAwk97(body, zenith, iBody, iLat);
       } else {
         AlbedoTOAhm16(body, zenith, iBody, iLat);
+//         AlbedoTOAwk97(body, zenith, iBody, iLat);
       }
     } else {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*(sin(zenith)*sin(zenith))-1.)/2.;

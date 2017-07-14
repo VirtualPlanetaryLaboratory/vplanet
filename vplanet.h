@@ -671,6 +671,7 @@ typedef struct {
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
   double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
+  int bDiffRot;              /**< Adjust heat diffusion for rotation rate*/
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;

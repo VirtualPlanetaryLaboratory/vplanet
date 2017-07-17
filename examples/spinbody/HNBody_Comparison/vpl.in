@@ -19,6 +19,6 @@ dMinValue                 1e-10           # Minimum value of eccentricity/obliqu
 bDoForward                1               # Perform a forward evolution?
 bVarDt                    0               # Use variable timestepping?
 #dEta                      0.1
-dTimeStep                 0.001           # Timestep in years
+dTimeStep                 0.005           # Timestep in years
 dStopTime                 10000           # Stop time for evolution
-dOutputTime               10000#.1234         # Output timesteps (assuming in body files)
+dOutputTime               0.1234         # Output timesteps (assuming in body files)

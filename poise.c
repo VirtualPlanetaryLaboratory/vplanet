@@ -1430,6 +1430,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].daDiffusionSea = malloc((body[iBody].iNumLats+1)*sizeof(double));
     body[iBody].daPlanckBDaily = malloc(body[iBody].iNumLats*sizeof(double*));
     body[iBody].daPlanckBAvg = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daIceAccumTot = malloc(body[iBody].iNumLats*sizeof(double));
+    body[iBody].daIceAblateTot = malloc(body[iBody].iNumLats*sizeof(double));
     
     InitializeLandWater(body,iBody);
     body[iBody].dLatFHeatCp = 83.5;  //CC sez this is about right
@@ -2245,6 +2247,38 @@ void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+} 
+
+void WriteIceAccum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
+  if (body[iBody].bIceSheets) {
+    *dTmp = body[iBody].daIceAccumTot[body[iBody].iWriteLat]*RHOICE;
+  } else {
+    *dTmp = 0.0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}  
+
+void WriteIceAblate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
+  if (body[iBody].bIceSheets) {
+    *dTmp = body[iBody].daIceAblateTot[body[iBody].iWriteLat]*RHOICE;
+  } else {
+    *dTmp = 0.0;
+  }
+  
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
 }  
 
   
@@ -2521,6 +2555,26 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DICEMASSDT].bGrid = 1;
   output[OUT_DICEMASSDT].iModuleBit = POISE;
   fnWrite[OUT_DICEMASSDT] = &WriteDIceMassDt; 
+  
+  sprintf(output[OUT_ICEACCUM].cName,"IceAccum");
+  sprintf(output[OUT_ICEACCUM].cDescr,"ice growth per orbit (accumulation only)");
+  sprintf(output[OUT_ICEACCUM].cNeg,"kg/m^2/s");
+  output[OUT_ICEACCUM].bNeg = 1;
+  output[OUT_ICEACCUM].dNeg = 1;
+  output[OUT_ICEACCUM].iNum = 1;
+  output[OUT_ICEACCUM].bGrid = 1;
+  output[OUT_ICEACCUM].iModuleBit = POISE;
+  fnWrite[OUT_ICEACCUM] = &WriteIceAccum; 
+  
+  sprintf(output[OUT_ICEABLATE].cName,"IceAblate");
+  sprintf(output[OUT_ICEABLATE].cDescr,"ice decay per orbit (ablation only)");
+  sprintf(output[OUT_ICEABLATE].cNeg,"kg/m^2/s");
+  output[OUT_ICEABLATE].bNeg = 1;
+  output[OUT_ICEABLATE].dNeg = 1;
+  output[OUT_ICEABLATE].iNum = 1;
+  output[OUT_ICEABLATE].bGrid = 1;
+  output[OUT_ICEABLATE].iModuleBit = POISE;
+  fnWrite[OUT_ICEABLATE] = &WriteIceAblate; 
   
   sprintf(output[OUT_ICEFLOW].cName,"IceFlow");
   sprintf(output[OUT_ICEFLOW].cDescr,"flow of ice sheets/area by latitude");
@@ -3887,7 +3941,7 @@ void PoiseSeasonal(BODY *body, int iBody) {
 
   //MatrixSeasonal(body,iBody);
   /* main loop */
-  for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {
+  for (nyear=0;nyear<body[iBody].iNumYears;nyear++) {  //XXX confusing! Should distinguish b/w years/orbits
     body[iBody].dTGlobal = 0.0;
     body[iBody].dFluxInGlobal = 0.0;
     body[iBody].dFluxOutGlobal = 0.0;
@@ -3910,10 +3964,13 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].daEnerResWAnn[i] = 0.0;
         body[iBody].daTempMinLW[i] = HUGE;
         body[iBody].daTempMaxLW[i] = -1*HUGE;
+        
         if (nyear == 0) {
           //reset ice sheet stuff only on first year       
           if (body[iBody].bIceSheets) {
             body[iBody].daIceMassTmp[i] = body[iBody].daIceMass[i];
+            body[iBody].daIceAccumTot[i] = 0;
+            body[iBody].daIceAblateTot[i] = 0;
           }
         }
     }
@@ -3951,6 +4008,15 @@ void PoiseSeasonal(BODY *body, int iBody) {
             //calculate derivative of ice mass density and take an euler step
             body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
             body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
+            if (body[iBody].daIceBalance[i][nstep] >= 0) {
+              body[iBody].daIceAccumTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+            } else {
+              if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
+                body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+              } else {
+                body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+              }
+            }
             if (body[iBody].daIceMassTmp[i] < 0.0) {
                body[iBody].daIceMassTmp[i] = 0.0;
             } //don't let ice mass become negative
@@ -4085,6 +4151,15 @@ void PoiseSeasonal(BODY *body, int iBody) {
             body[iBody].daIceBalance[i][nstep] = IceMassBalance(body,iBody,i);
             body[iBody].daIceMassTmp[i] += h*body[iBody].daIceBalance[i][nstep];
 //             if (i==0) printf("nstep = %d, ice mass 0 = %f\n",nstep,body[iBody].daIceMassTmp[i]);
+            if (body[iBody].daIceBalance[i][nstep] >= 0) {
+              body[iBody].daIceAccumTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+            } else {
+              if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
+                body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+              } else {
+                body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+              }
+            }
             if (body[iBody].daIceMassTmp[i] < 0.0) {
                body[iBody].daIceMassTmp[i] = 0.0;
             } //don't let ice mass become negative

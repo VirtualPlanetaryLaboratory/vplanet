@@ -133,6 +133,8 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TEMPMAXLAT       1951
 #define OUT_SNOWBALL         1952
 #define OUT_PLANCKBAVG       1953
+#define OUT_ICEACCUM         1954
+#define OUT_ICEABLATE        1955
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

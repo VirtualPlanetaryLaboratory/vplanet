@@ -702,7 +702,7 @@ typedef struct {
   int iNStepInYear;        /**< Number of time steps in a year */
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
-  int iNumYears;           /**< Number of years to run seasonal model */
+  int iNumYears;           /**< Number of orbits!!! to run seasonal model */
   double dObliqAmp;
   double dObliqPer;
   double dObliq0;
@@ -793,6 +793,8 @@ typedef struct {
   double *daFluxOutWater;
   double *daFluxSeaIce;
   double **daIceBalance;
+  double *daIceAblateTot;
+  double *daIceAccumTot;
   double *daIceBalanceAnnual;
   double *daIceBalanceAvg;
   double *daIceBalanceTmp;

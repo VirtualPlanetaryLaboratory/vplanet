@@ -1310,7 +1310,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
           body[iBody].daDiffusionAnn[i] = (body[iBody].daPlanckBAnn[i]+body[iBody].daPlanckBAnn[i-1])/8.0;  
         } 
       } else if (body[iBody].bDiffRot) {
-        body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff*\
+        body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff/\
           (body[iBody].dRotRate*body[iBody].dRotRate/(4*PI*PI/DAYSEC/DAYSEC));   
       } else {
         body[iBody].daDiffusionAnn[i] = body[iBody].dDiffCoeff;   
@@ -1536,7 +1536,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
           body[iBody].daDiffusionSea[i] = (body[iBody].daPlanckBSea[i]+body[iBody].daPlanckBSea[i-1])/8.0;  
         } 
       } else if (body[iBody].bDiffRot) {
-        body[iBody].daDiffusionSea[i] = body[iBody].dDiffCoeff*\
+        body[iBody].daDiffusionSea[i] = body[iBody].dDiffCoeff/\
           (body[iBody].dRotRate*body[iBody].dRotRate/(4*PI*PI/DAYSEC/DAYSEC));   
       } else {
         body[iBody].daDiffusionSea[i] = body[iBody].dDiffCoeff;   
@@ -2252,33 +2252,33 @@ void WriteDIceMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 void WriteIceAccum(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
-    *dTmp = body[iBody].daIceAccumTot[body[iBody].iWriteLat]*RHOICE;
+    *dTmp = body[iBody].daIceAccumTot[body[iBody].iWriteLat]/RHOICE;
   } else {
     *dTmp = 0.0;
   }
   
-  if (output->bDoNeg[iBody]) {
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
+  // if (output->bDoNeg[iBody]) {
+//     strcpy(cUnit,output->cNeg);
+//   } else {
+//     *dTmp /= fdUnitsLength(units->iLength);
+//     fsUnitsLength(units->iLength,cUnit);
+//   }
 }  
 
 void WriteIceAblate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
-    *dTmp = body[iBody].daIceAblateTot[body[iBody].iWriteLat]*RHOICE;
+    *dTmp = body[iBody].daIceAblateTot[body[iBody].iWriteLat]/RHOICE;
   } else {
     *dTmp = 0.0;
   }
   
-  if (output->bDoNeg[iBody]) {
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
+  // if (output->bDoNeg[iBody]) {
+//     strcpy(cUnit,output->cNeg);
+//   } else {
+//     *dTmp /= fdUnitsLength(units->iLength);
+//     fsUnitsLength(units->iLength,cUnit);
+//   }
 }  
 
   
@@ -2558,7 +2558,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_ICEACCUM].cName,"IceAccum");
   sprintf(output[OUT_ICEACCUM].cDescr,"ice growth per orbit (accumulation only)");
-  sprintf(output[OUT_ICEACCUM].cNeg,"kg/m^2/s");
+  sprintf(output[OUT_ICEACCUM].cNeg,"m/orbit");
   output[OUT_ICEACCUM].bNeg = 1;
   output[OUT_ICEACCUM].dNeg = 1;
   output[OUT_ICEACCUM].iNum = 1;
@@ -2568,7 +2568,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   
   sprintf(output[OUT_ICEABLATE].cName,"IceAblate");
   sprintf(output[OUT_ICEABLATE].cDescr,"ice decay per orbit (ablation only)");
-  sprintf(output[OUT_ICEABLATE].cNeg,"kg/m^2/s");
+  sprintf(output[OUT_ICEABLATE].cNeg,"m/orbit");
   output[OUT_ICEABLATE].bNeg = 1;
   output[OUT_ICEABLATE].dNeg = 1;
   output[OUT_ICEABLATE].iNum = 1;
@@ -4339,9 +4339,9 @@ void IceSheetTriDiag(BODY *body, int iBody) {
   double bTmp;
   int i, n = body[iBody].iNumLats;
   
-  bTmp = body[iBody].daIceSheetMat[0][0];
-  body[iBody].daIceHeight[0] = body[iBody].daIcePropsTmp[0]/bTmp;
-  for (i=1;i<n;i++) {
+  bTmp = body[iBody].daIceSheetMat[1][1];
+  body[iBody].daIceHeight[1] = body[iBody].daIcePropsTmp[1]/bTmp;
+  for (i=2;i<n-1;i++) {
     body[iBody].daIceGamTmp[i] = body[iBody].daIceSheetMat[i-1][i]/bTmp;
     bTmp = body[iBody].daIceSheetMat[i][i]-body[iBody].daIceSheetMat[i][i-1]*body[iBody].daIceGamTmp[i];
     if (bTmp == 0) {
@@ -4351,7 +4351,7 @@ void IceSheetTriDiag(BODY *body, int iBody) {
     body[iBody].daIceHeight[i] = (body[iBody].daIcePropsTmp[i]-body[iBody].daIceSheetMat[i][i-1]*\
       body[iBody].daIceHeight[i-1])/bTmp;
   }
-  for (i=1;i<n;i++) {
+  for (i=2;i<n-1;i++) {
     body[iBody].daIceHeight[n-i-1] -= body[iBody].daIceGamTmp[n-i]*body[iBody].daIceHeight[n-i];
   }
 }
@@ -4447,8 +4447,13 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
             body[iBody].daDIceHeightDy[iLat];
         body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
       }
+      
+      //test
+      body[iBody].daIceFlow[0] = 0.0;
+      body[iBody].daBasalFlow[0] = 0.;
   
-      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
+
+      for (iLat=1;iLat<body[iBody].iNumLats-1;iLat++) { 
         if (IceTime != evolve->dTime) {
           body[iBody].daIceSheetDiff[iLat] = -0.5*(body[iBody].daIceFlowMid[iLat]+\
             body[iBody].daBasalFlowMid[iLat]);
@@ -4492,8 +4497,8 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
         }   
       }
     
-      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-        for (jLat=0;jLat<body[iBody].iNumLats;jLat++) {
+      for (iLat=1;iLat<body[iBody].iNumLats-1;iLat++) {
+        for (jLat=1;jLat<body[iBody].iNumLats-1;jLat++) {
           if (jLat == iLat) {
             body[iBody].daIceSheetMat[iLat][jLat] = 1.0+0.5*IceDt*\
               (body[iBody].daIceSheetDiff[iLat]/(body[iBody].daYBoundary[iLat]*body[iBody].daYBoundary[iLat])+\

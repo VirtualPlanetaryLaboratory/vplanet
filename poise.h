@@ -183,6 +183,7 @@ void PoiseIceSheets(BODY*,EVOLVE*,int);
 void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
+void Snowball(BODY*,int);
 
 double IceMassBalance(BODY*,int,int);
 

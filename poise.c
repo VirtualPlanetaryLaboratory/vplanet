@@ -1574,6 +1574,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         TGlobalTmp = body[iBody].dTGlobal; 
         PoiseSeasonal(body,iBody); 
         MatrixSeasonal(body,iBody);
+        Snowball(body,iBody);
         if (iVerbose >= VERBINPUT) 
           printf("TGlobal = %f\n",TGlobalTmp);
         count += 1;
@@ -3413,6 +3414,9 @@ double OLRwk97(BODY *body, int iBody, int iLat, int bModel){
   if (Int >= 300) {
     Int = 300.0;
   }
+  if (T < 190) {
+    Int = SIGMA * T*T*T*T;
+  }
   return Int;
 }
   
@@ -3436,6 +3440,10 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat, int bModel){
   if (OLRwk97(body,iBody,iLat,bModel)>=300.0) {
     dI = 0.001;
   }
+  
+  if (T<190) {
+    dI = 4*SIGMA *T*T*T;
+  } 
   return dI;
 }
 
@@ -3502,7 +3510,7 @@ double AlbedoTOA280(double Temp, double pCO2, double zenith, double albsurf) {
   
   dTmp = -6.891e-1 + 1.046*albsurf + 7.8054e-3*T - 2.8373e-3*pCO2 - 2.8899e-1*mu \
       - 3.7412e-2*albsurf*pCO2 - 6.3499e-3*mu*pCO2 + 2.0122e-1*albsurf*mu \
-      - 1.8508e-3*albsurf*T + 1.3649e-4*mu*T + 9.8581e-5*pCO2*Temp \
+      - 1.8508e-3*albsurf*T + 1.3649e-4*mu*T + 9.8581e-5*pCO2*T \
       + 7.3239e-2*albsurf*albsurf - 1.6555e-5*(T*T) + 6.5817e-4*(pCO2*pCO2) \
       + 8.1218e-2*mu*mu;
       
@@ -3636,6 +3644,8 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA280(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempLand[iLat] <= 96.85) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA370(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempLand[iLat] < -83.15) {
+    body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
   } else {
 //     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (190K<T<370K)\n");
     body[iBody].daAlbedoLand[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
@@ -3661,10 +3671,12 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
 //     albtmp = Fresnel(zenith);
 //   }
   
-  if (body[iBody].daTempLand[iLat] >= -83.15 && body[iBody].daTempWater[iLat] <= (6.85)) {
+  if (body[iBody].daTempWater[iLat] >= -83.15 && body[iBody].daTempWater[iLat] <= (6.85)) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA280(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempWater[iLat] <= 96.85) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA370(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
+  } else if (body[iBody].daTempWater[iLat] < -83.15) {
+    body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
   } else {
 //     fprintf(stderr,"Ocean temperature at surface exceeds range for TOA albedo calculation (190<T<370K)\n");
     body[iBody].daAlbedoWater[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)

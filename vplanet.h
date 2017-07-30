@@ -575,6 +575,7 @@ typedef struct {
   double dScaleHeight;  //lehmer var
   double dThermTemp;    //lehmer var
   double dAtmGasConst;  //lehmer var
+  double dFXUV;         //lehmer var
 
   /* STELLAR Parameters */
   int bStellar;

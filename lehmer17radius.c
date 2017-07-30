@@ -26,7 +26,7 @@ double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, do
 	double P;		// pressure at surface due to envelope
 	double Rxuv;	// see above
 
-	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf);	//move to auxprops?; this changes depending on Menv tho. 
+	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf); // [kg/ms2]
 	Rxuv = RadSurf * RadSurf / (H * log(Pxuv/P) + RadSurf);
 	return Rxuv;
 }

@@ -37,6 +37,13 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
   dest[iBody].dRGDuration = src[iBody].dRGDuration;
+  dest[iBody].dRadXUV = src[iBody].dRadXUV;
+  dest[iBody].dRadSurf = src[iBody].dRadSurf;
+  dest[iBody].dPresXUV = src[iBody].dPresXUV;
+  dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
+  dest[iBody].dThermTemp = src[iBody].dThermTemp;
+  dest[iBody].dAtmGasConst = src[iBody].dAtmGasConst;
+  dest[iBody].dFXUV = src[iBody].dFXUV;
 }
 
 /**************** ATMESC options ********************/
@@ -636,10 +643,10 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   }
 
   // The XUV flux
-  double fxuv = fdInsolation(body, iBody, 1);
+  body[iBody].dFXUV = fdInsolation(body, iBody, 1);
 
   // Reference hydrogen flux for the water loss
-  body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * fxuv * body[iBody].dRadius) /
+  body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
                        (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
 
   // Surface gravity
@@ -1093,7 +1100,6 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PLANETRADXUV].iModuleBit = ATMESC;
   fnWrite[OUT_PLANETRADXUV] = &WritePlanetRadXUV;
 
-
 }
 
 /************ ATMESC Logging Functions **************/
@@ -1229,7 +1235,14 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
   }
 
-  return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
+  	// hardcoding in FXUV = 55 W/m2 to replicate lehmer paper
+  	return -body[iaBody[0]].dAtmXAbsEffH * PI * 55.0 * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+  }
+  else{
+  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  }
+
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

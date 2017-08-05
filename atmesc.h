@@ -1,4 +1,4 @@
-/***************** ATMESC.H *********************** 
+/***************** ATMESC.H ***********************
  *
  * Rodrigo Luger, Tue Apr 28 11:04:00 PDT 2014
  *
@@ -97,7 +97,14 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ETAO               1215
 #define OUT_PLANETRADIUS       1216
 #define OUT_OXYGENMANTLEMASS   1217
-#define OUT_PLANETRADXUV		1218
+#define OUT_PLANETRADXUV		   1218
+#define OUT_RADSOLID				   1219
+#define OUT_PRESXUV				     1220
+#define OUT_SCALEHEIGHT			   1221
+#define OUT_THERMTEMP			     1222
+#define OUT_ATMGASCONST			   1223
+#define OUT_PRESSURF			     1224
+#define OUT_DENVMASSDT         1225
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);

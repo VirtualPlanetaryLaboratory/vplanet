@@ -570,7 +570,8 @@ typedef struct {
   int iWaterEscapeRegime;
   double dFHDiffLim;
   double dRadXUV;       //lehmer var
-  double dRadSurf;      //lehmer var
+  double dRadSolid;      //lehmer var
+  double dPresSurf;     //lehmer var
   double dPresXUV;      //lehmer var
   double dScaleHeight;  //lehmer var
   double dThermTemp;    //lehmer var

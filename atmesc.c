@@ -38,7 +38,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
   dest[iBody].dRGDuration = src[iBody].dRGDuration;
   dest[iBody].dRadXUV = src[iBody].dRadXUV;
-  dest[iBody].dRadSurf = src[iBody].dRadSurf;
+  dest[iBody].dRadSolid = src[iBody].dRadSolid;
   dest[iBody].dPresXUV = src[iBody].dPresXUV;
   dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
   dest[iBody].dThermTemp = src[iBody].dThermTemp;
@@ -81,7 +81,7 @@ void ReadAtmGasConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].dAtmGasConst = options->dDefault;    
+      body[iFile-1].dAtmGasConst = options->dDefault;
 }
 
 // Lehmer: Pressure where XUV absorption is unity
@@ -625,6 +625,23 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
+/*
+todo:
+ - change radsurf to radsolid;
+ - output all relevant parameters;
+ - vtest working -- rory if not
+ - pull from master --. resolve conflict
+ - recommit
+ - then pull request
+*/
+
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+  }
+
   // Ktide (due to body zero only). WARNING: not suited for binary...
   double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
@@ -735,10 +752,11 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   /* AtmEsc is active for this body if this subroutine is called. */
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    body[iBody].dRadSurf = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
-    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSurf * body[iBody].dRadSurf);
+    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
-    fprintf(stderr, "Lehmer17 Constants Initialized: Rs=%lf, g=%lf, H=%lf\n",body[iBody].dRadSurf, body[iBody].dGravAccel, body[iBody].dScaleHeight);
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+    fprintf(stderr, "Lehmer17 Constants Initialized: Rs=%lf, g=%lf, H=%lf\n",body[iBody].dRadSolid, body[iBody].dGravAccel, body[iBody].dScaleHeight);
   }
 
   if (body[iBody].dSurfaceWaterMass > 0) {
@@ -1017,8 +1035,82 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
-
 }
+
+void WritedEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
+  double dDeriv;
+
+  /* Ensure that we don't overwrite pdDsemiDt */
+  dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
+  *dTmp = dDeriv;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+
+  }
+}
+
+void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ *dTmp = body[iBody].dThermTemp;
+
+ if (output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else { }
+}
+
+void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dPresSurf;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dPresXUV;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dScaleHeight;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteAtmGasConst(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dAtmGasConst;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadSolid;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+
 
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1099,6 +1191,68 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PLANETRADXUV].iNum = 1;
   output[OUT_PLANETRADXUV].iModuleBit = ATMESC;
   fnWrite[OUT_PLANETRADXUV] = &WritePlanetRadXUV;
+
+  sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
+  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
+  sprintf(output[OUT_DENVMASSDT].cNeg,"kg/s");
+  output[OUT_DENVMASSDT].bNeg = 1;
+  output[OUT_DENVMASSDT].iNum = 1;
+  output[OUT_DENVMASSDT].iModuleBit = ATMESC;
+  fnWrite[OUT_DENVMASSDT] = &WritedEnvMassDt;
+
+  sprintf(output[OUT_THERMTEMP].cName,"ThermTemp");
+  sprintf(output[OUT_THERMTEMP].cDescr,"Isothermal Atmospheric Temperature");
+  sprintf(output[OUT_THERMTEMP].cNeg,"K");
+  output[OUT_THERMTEMP].bNeg = 1;
+  output[OUT_THERMTEMP].dNeg = 1; // default units are K.
+  output[OUT_THERMTEMP].iNum = 1;
+  output[OUT_THERMTEMP].iModuleBit = ATMESC;
+  fnWrite[OUT_THERMTEMP] = &WriteThermTemp;
+
+  sprintf(output[OUT_PRESSURF].cName,"PresSurf");
+  sprintf(output[OUT_PRESSURF].cDescr,"Surface Pressure due to Atmosphere");
+  sprintf(output[OUT_PRESSURF].cNeg,"Pa");
+  output[OUT_PRESSURF].bNeg = 1;
+  output[OUT_PRESSURF].dNeg = 1; // default units are K.
+  output[OUT_PRESSURF].iNum = 1;
+  output[OUT_PRESSURF].iModuleBit = ATMESC;
+  fnWrite[OUT_PRESSURF] = &WritePresSurf;
+
+  sprintf(output[OUT_PRESXUV].cName,"PresXUV");
+  sprintf(output[OUT_PRESXUV].cDescr,"Pressure at base of Thermosphere");
+  sprintf(output[OUT_PRESXUV].cNeg,"Pa");
+  output[OUT_PRESXUV].bNeg = 1;
+  output[OUT_PRESXUV].dNeg = 1;
+  output[OUT_PRESXUV].iNum = 1;
+  output[OUT_PRESXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_PRESXUV] = &WritePresXUV;
+
+  sprintf(output[OUT_SCALEHEIGHT].cName,"ScaleHeight");
+  sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scaling factor in fdLehmerRadius");
+  sprintf(output[OUT_SCALEHEIGHT].cNeg,"J s^2 / kg m");
+  output[OUT_SCALEHEIGHT].bNeg = 1;
+  output[OUT_SCALEHEIGHT].dNeg = 1;
+  output[OUT_SCALEHEIGHT].iNum = 1;
+  output[OUT_SCALEHEIGHT].iModuleBit = ATMESC;
+  fnWrite[OUT_SCALEHEIGHT] = &WriteScaleHeight;
+
+  sprintf(output[OUT_ATMGASCONST].cName,"AtmGasConst");
+  sprintf(output[OUT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
+  sprintf(output[OUT_ATMGASCONST].cNeg,"J / K kg");
+  output[OUT_ATMGASCONST].bNeg = 1;
+  output[OUT_ATMGASCONST].dNeg = 1;
+  output[OUT_ATMGASCONST].iNum = 1;
+  output[OUT_ATMGASCONST].iModuleBit = ATMESC;
+  fnWrite[OUT_ATMGASCONST] = &WriteAtmGasConst;
+
+  sprintf(output[OUT_RADSOLID].cName,"RadSolid");
+  sprintf(output[OUT_RADSOLID].cDescr,"Radius to the solid surface");
+  sprintf(output[OUT_RADSOLID].cNeg,"Earth Radii");
+  output[OUT_RADSOLID].bNeg = 1;
+  output[OUT_RADSOLID].dNeg = 1./REARTH;
+  output[OUT_RADSOLID].iNum = 1;
+  output[OUT_RADSOLID].iModuleBit = ATMESC;
+  fnWrite[OUT_RADSOLID] = &WriteRadSolid;
 
 }
 
@@ -1237,7 +1391,10 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
   	// hardcoding in FXUV = 55 W/m2 to replicate lehmer paper
-  	return -body[iaBody[0]].dAtmXAbsEffH * PI * 55.0 * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+    double foo;
+    foo = -body[iaBody[0]].dAtmXAbsEffH * PI * 55.0 * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+
+  	return foo;
   }
   else{
   	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
@@ -1253,9 +1410,10 @@ double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSurf, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight);
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,0);
+    body[iaBody[0]].dPresSurf = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,1);
   }
-    
+
   double foo;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
     foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 10., body[iaBody[0]].dAge, 1);

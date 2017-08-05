@@ -3,7 +3,7 @@
 #include <math.h>
 #include "vplanet.h"
 
-double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H){
+double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle){
 /**********************************************************
 * Input:
 * ------
@@ -28,5 +28,10 @@ double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, do
 
 	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf); // [kg/ms2]
 	Rxuv = RadSurf * RadSurf / (H * log(Pxuv/P) + RadSurf);
-	return Rxuv;
+	if (toggle == 1){
+		return P;
+	}
+	else{
+		return Rxuv;
+}
 }

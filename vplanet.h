@@ -569,6 +569,15 @@ typedef struct {
   int bRunaway;
   int iWaterEscapeRegime;
   double dFHDiffLim;
+  double dRadXUV;       //lehmer var
+  double dRadSolid;      //lehmer var
+  double dPresSurf;     //lehmer var
+  double dPresXUV;      //lehmer var
+  double dScaleHeight;  //lehmer var
+  double dThermTemp;    //lehmer var
+  double dAtmGasConst;  //lehmer var
+  double dFXUV;         //lehmer var
+  int bCalcFXUV;        
 
   /* STELLAR Parameters */
   int bStellar;
@@ -1889,3 +1898,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "lehmer17radius.h"

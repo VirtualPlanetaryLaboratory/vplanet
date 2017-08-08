@@ -44,9 +44,28 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dThermTemp = src[iBody].dThermTemp;
   dest[iBody].dAtmGasConst = src[iBody].dAtmGasConst;
   dest[iBody].dFXUV = src[iBody].dFXUV;
+  dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
+
 }
 
 /**************** ATMESC options ********************/
+
+void ReadFXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dFXUV = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFXUV = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dFXUV = options->dDefault;
+}
 
 // Lehmer: Thermosphere temperature
 void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
@@ -513,6 +532,12 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMGASCONST].iType = 2;
   options[OPT_ATMGASCONST].iMultiFile = 1;
   fnRead[OPT_ATMGASCONST] = &ReadAtmGasConst;
+
+  sprintf(options[OPT_FXUV].cName,"dFXUV");
+  sprintf(options[OPT_FXUV].cDescr,"XUV Flux");
+  options[OPT_FXUV].iType = 2;
+  options[OPT_FXUV].iMultiFile = 1;
+  fnRead[OPT_FXUV] = &ReadFXUV;
 }
 
 void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -660,7 +685,9 @@ todo:
   }
 
   // The XUV flux
-  body[iBody].dFXUV = fdInsolation(body, iBody, 1);
+  if (body[iBody].bCalcFXUV){
+    body[iBody].dFXUV = fdInsolation(body, iBody, 1);
+  }
 
   // Reference hydrogen flux for the water loss
   body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
@@ -751,13 +778,20 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   /* AtmEsc is active for this body if this subroutine is called. */
 
+  // Is FXUV specified in input file?
+  if (options[OPT_FXUV].iLine[iBody+1] > -1){
+    body[iBody].bCalcFXUV = 0;
+  }
+  else{
+    body[iBody].bCalcFXUV = 1;
+  }
+
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
-    fprintf(stderr, "Lehmer17 Constants Initialized: Rs=%lf, g=%lf, H=%lf\n",body[iBody].dRadSolid, body[iBody].dGravAccel, body[iBody].dScaleHeight);
-  }
+}
 
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -1037,10 +1071,9 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
-void WritedEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
+void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  /* Ensure that we don't overwrite pdDsemiDt */
   dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;
 
@@ -1108,6 +1141,15 @@ void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+}
+
+void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dFXUV;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
 }
 
 
@@ -1198,7 +1240,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DENVMASSDT].bNeg = 1;
   output[OUT_DENVMASSDT].iNum = 1;
   output[OUT_DENVMASSDT].iModuleBit = ATMESC;
-  fnWrite[OUT_DENVMASSDT] = &WritedEnvMassDt;
+  fnWrite[OUT_DENVMASSDT] = &WriteDEnvMassDt;
 
   sprintf(output[OUT_THERMTEMP].cName,"ThermTemp");
   sprintf(output[OUT_THERMTEMP].cDescr,"Isothermal Atmospheric Temperature");
@@ -1213,7 +1255,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_PRESSURF].cDescr,"Surface Pressure due to Atmosphere");
   sprintf(output[OUT_PRESSURF].cNeg,"Pa");
   output[OUT_PRESSURF].bNeg = 1;
-  output[OUT_PRESSURF].dNeg = 1; // default units are K.
+  output[OUT_PRESSURF].dNeg = 1;
   output[OUT_PRESSURF].iNum = 1;
   output[OUT_PRESSURF].iModuleBit = ATMESC;
   fnWrite[OUT_PRESSURF] = &WritePresSurf;
@@ -1253,6 +1295,15 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADSOLID].iNum = 1;
   output[OUT_RADSOLID].iModuleBit = ATMESC;
   fnWrite[OUT_RADSOLID] = &WriteRadSolid;
+
+  sprintf(output[OUT_FXUV].cName,"FXUV");
+  sprintf(output[OUT_FXUV].cDescr,"XUV Flux");
+  sprintf(output[OUT_FXUV].cNeg,"W/m^2");
+  output[OUT_FXUV].bNeg = 1;
+  output[OUT_FXUV].dNeg = 1;
+  output[OUT_FXUV].iNum = 1;
+  output[OUT_FXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_FXUV] = &WriteFXUV;
 
 }
 
@@ -1390,11 +1441,9 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
-  	// hardcoding in FXUV = 55 W/m2 to replicate lehmer paper
-    double foo;
-    foo = -body[iaBody[0]].dAtmXAbsEffH * PI * 55.0 * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+     -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
 
-  	return foo;
   }
   else{
   	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);

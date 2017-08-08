@@ -44,9 +44,10 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_ATMXABSEFFH2O       1222 // Water Absorption efficiency (epsilon)
 #define OPT_OXYGENMANTLEMASS    1223 // Initial oxygen mass in mantle
 
-#define OPT_THERMTEMP			1224 // thermosphere temperature
-#define OPT_PRESXUV				1225 // Pressure at bottom of thermosphere
-#define OPT_ATMGASCONST			1226 // Atmospheric Gas Constant
+#define OPT_THERMTEMP			      1224 // thermosphere temperature
+#define OPT_PRESXUV				      1225 // Pressure at bottom of thermosphere
+#define OPT_ATMGASCONST			    1226 // Atmospheric Gas Constant
+#define OPT_FXUV                1227 //FXUV
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -105,6 +106,7 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ATMGASCONST			   1223
 #define OUT_PRESSURF			     1224
 #define OUT_DENVMASSDT         1225
+#define OUT_FXUV               1226
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);

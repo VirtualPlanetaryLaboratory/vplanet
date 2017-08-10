@@ -37,9 +37,89 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
   dest[iBody].dRGDuration = src[iBody].dRGDuration;
+  dest[iBody].dRadXUV = src[iBody].dRadXUV;
+  dest[iBody].dRadSolid = src[iBody].dRadSolid;
+  dest[iBody].dPresXUV = src[iBody].dPresXUV;
+  dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
+  dest[iBody].dThermTemp = src[iBody].dThermTemp;
+  dest[iBody].dAtmGasConst = src[iBody].dAtmGasConst;
+  dest[iBody].dFXUV = src[iBody].dFXUV;
+  dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
+
 }
 
 /**************** ATMESC options ********************/
+
+void ReadFXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dFXUV = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFXUV = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dFXUV = options->dDefault;
+}
+
+// Lehmer: Thermosphere temperature
+void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dThermTemp = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dThermTemp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dThermTemp = options->dDefault;
+}
+
+// Lehmer: Atmospheric Gas constant
+void ReadAtmGasConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dAtmGasConst = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dAtmGasConst = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dAtmGasConst = options->dDefault;
+}
+
+// Lehmer: Pressure where XUV absorption is unity
+void ReadPresXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dPresXUV = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dPresXUV = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dPresXUV = options->dDefault;
+}
 
 void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -76,13 +156,16 @@ void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (!memcmp(sLower(cTmp),"lo",2)) {
       body[iFile-1].iPlanetRadiusModel = ATMESC_LOP12;
+    } else if (!memcmp(sLower(cTmp),"le",2)) {
+      body[iFile-1].iPlanetRadiusModel = ATMESC_LEHMER17;
     } else if (!memcmp(sLower(cTmp),"pr",2)) {
       body[iFile-1].iPlanetRadiusModel = ATMESC_PROXCENB;
     } else if (!memcmp(sLower(cTmp),"no",2)) {
       body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
-    } else {
+    }
+     else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12, PROXCENB or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12, PROXCENB, LEHMER17 or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -334,7 +417,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/XUV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
-  options[OPT_ATMXABSEFFH2O].dDefault = 0.30;
+  options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
@@ -426,6 +509,35 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
+  sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
+  sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
+  sprintf(options[OPT_THERMTEMP].cDefault,"880");
+  options[OPT_THERMTEMP].dDefault = 880;
+  options[OPT_THERMTEMP].iType = 2;
+  options[OPT_THERMTEMP].iMultiFile = 1;
+  fnRead[OPT_THERMTEMP] = &ReadThermTemp;
+
+  sprintf(options[OPT_PRESXUV].cName,"dPresXUV");
+  sprintf(options[OPT_PRESXUV].cDescr,"Pressure at base of Thermosphere");
+  sprintf(options[OPT_PRESXUV].cDefault,"5 Pa");
+  options[OPT_PRESXUV].dDefault = 5.0;
+  options[OPT_PRESXUV].iType = 2;
+  options[OPT_PRESXUV].iMultiFile = 1;
+  fnRead[OPT_PRESXUV] = &ReadPresXUV;
+
+  sprintf(options[OPT_ATMGASCONST].cName,"dAtmGasConst");
+  sprintf(options[OPT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
+  sprintf(options[OPT_ATMGASCONST].cDefault,"4124");
+  options[OPT_ATMGASCONST].dDefault = 4124.0;
+  options[OPT_ATMGASCONST].iType = 2;
+  options[OPT_ATMGASCONST].iMultiFile = 1;
+  fnRead[OPT_ATMGASCONST] = &ReadAtmGasConst;
+
+  sprintf(options[OPT_FXUV].cName,"dFXUV");
+  sprintf(options[OPT_FXUV].cDescr,"XUV Flux");
+  options[OPT_FXUV].iType = 2;
+  options[OPT_FXUV].iMultiFile = 1;
+  fnRead[OPT_FXUV] = &ReadFXUV;
 }
 
 void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -521,6 +633,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
 
   update[iBody].pdRadiusAtmesc = &update[iBody].daDerivProc[update[iBody].iRadius][0];   // NOTE: This points to the VALUE of the radius
   fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: Same here!
+
 }
 
 void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -536,6 +649,23 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 }
 
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+
+/*
+todo:
+ - change radsurf to radsolid;
+ - output all relevant parameters;
+ - vtest working -- rory if not
+ - pull from master --. resolve conflict
+ - recommit
+ - then pull request
+*/
+
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+  }
 
   // Ktide (due to body zero only). WARNING: not suited for binary...
   double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
@@ -555,10 +685,12 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   }
 
   // The XUV flux
-  double fxuv = fdInsolation(body, iBody, 1);
+  if (body[iBody].bCalcFXUV){
+    body[iBody].dFXUV = fdInsolation(body, iBody, 1);
+  }
 
   // Reference hydrogen flux for the water loss
-  body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * fxuv * body[iBody].dRadius) /
+  body[iBody].dFHRef = (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
                        (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
 
   // Surface gravity
@@ -646,6 +778,21 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   /* AtmEsc is active for this body if this subroutine is called. */
 
+  // Is FXUV specified in input file?
+  if (options[OPT_FXUV].iLine[iBody+1] > -1){
+    body[iBody].bCalcFXUV = 0;
+  }
+  else{
+    body[iBody].bCalcFXUV = 1;
+  }
+
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+}
+
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
     VerifyOxygenMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -662,14 +809,14 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   // Ensure envelope mass is physical
   if (body[iBody].dEnvelopeMass > body[iBody].dMass) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: %s cannot be grater than %s in file %s.\n",options[OPT_ENVELOPEMASS].cName,options[OPT_MASS].cName,files->Infile[iBody+1].cIn);
+      fprintf(stderr,"ERROR: %s cannot be greater than %s in file %s.\n",options[OPT_ENVELOPEMASS].cName,options[OPT_MASS].cName,files->Infile[iBody+1].cIn);
     exit(EXIT_INPUT);
   }
 
   // Initialize rg duration
   body[iBody].dRGDuration = 0.;
-  
-  if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT) 
+
+  if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT)
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   // Radius evolution
@@ -912,6 +1059,101 @@ void WriteOxygenEta(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   strcpy(cUnit,"");
 }
 
+void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadXUV;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
+  double dDeriv;
+
+  dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
+  *dTmp = dDeriv;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+
+  }
+}
+
+void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ *dTmp = body[iBody].dThermTemp;
+
+ if (output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else { }
+}
+
+void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dPresSurf;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dPresXUV;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dScaleHeight;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteAtmGasConst(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dAtmGasConst;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadSolid;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dFXUV;
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+
+
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -982,6 +1224,87 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENVELOPEMASS].iModuleBit = ATMESC;
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
+
+  sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
+  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escpape and equilibrium");
+  sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
+  output[OUT_PLANETRADXUV].bNeg = 1;
+  output[OUT_PLANETRADXUV].dNeg = 1./REARTH;
+  output[OUT_PLANETRADXUV].iNum = 1;
+  output[OUT_PLANETRADXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_PLANETRADXUV] = &WritePlanetRadXUV;
+
+  sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
+  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
+  sprintf(output[OUT_DENVMASSDT].cNeg,"kg/s");
+  output[OUT_DENVMASSDT].bNeg = 1;
+  output[OUT_DENVMASSDT].iNum = 1;
+  output[OUT_DENVMASSDT].iModuleBit = ATMESC;
+  fnWrite[OUT_DENVMASSDT] = &WriteDEnvMassDt;
+
+  sprintf(output[OUT_THERMTEMP].cName,"ThermTemp");
+  sprintf(output[OUT_THERMTEMP].cDescr,"Isothermal Atmospheric Temperature");
+  sprintf(output[OUT_THERMTEMP].cNeg,"K");
+  output[OUT_THERMTEMP].bNeg = 1;
+  output[OUT_THERMTEMP].dNeg = 1; // default units are K.
+  output[OUT_THERMTEMP].iNum = 1;
+  output[OUT_THERMTEMP].iModuleBit = ATMESC;
+  fnWrite[OUT_THERMTEMP] = &WriteThermTemp;
+
+  sprintf(output[OUT_PRESSURF].cName,"PresSurf");
+  sprintf(output[OUT_PRESSURF].cDescr,"Surface Pressure due to Atmosphere");
+  sprintf(output[OUT_PRESSURF].cNeg,"Pa");
+  output[OUT_PRESSURF].bNeg = 1;
+  output[OUT_PRESSURF].dNeg = 1;
+  output[OUT_PRESSURF].iNum = 1;
+  output[OUT_PRESSURF].iModuleBit = ATMESC;
+  fnWrite[OUT_PRESSURF] = &WritePresSurf;
+
+  sprintf(output[OUT_PRESXUV].cName,"PresXUV");
+  sprintf(output[OUT_PRESXUV].cDescr,"Pressure at base of Thermosphere");
+  sprintf(output[OUT_PRESXUV].cNeg,"Pa");
+  output[OUT_PRESXUV].bNeg = 1;
+  output[OUT_PRESXUV].dNeg = 1;
+  output[OUT_PRESXUV].iNum = 1;
+  output[OUT_PRESXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_PRESXUV] = &WritePresXUV;
+
+  sprintf(output[OUT_SCALEHEIGHT].cName,"ScaleHeight");
+  sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scaling factor in fdLehmerRadius");
+  sprintf(output[OUT_SCALEHEIGHT].cNeg,"J s^2 / kg m");
+  output[OUT_SCALEHEIGHT].bNeg = 1;
+  output[OUT_SCALEHEIGHT].dNeg = 1;
+  output[OUT_SCALEHEIGHT].iNum = 1;
+  output[OUT_SCALEHEIGHT].iModuleBit = ATMESC;
+  fnWrite[OUT_SCALEHEIGHT] = &WriteScaleHeight;
+
+  sprintf(output[OUT_ATMGASCONST].cName,"AtmGasConst");
+  sprintf(output[OUT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
+  sprintf(output[OUT_ATMGASCONST].cNeg,"J / K kg");
+  output[OUT_ATMGASCONST].bNeg = 1;
+  output[OUT_ATMGASCONST].dNeg = 1;
+  output[OUT_ATMGASCONST].iNum = 1;
+  output[OUT_ATMGASCONST].iModuleBit = ATMESC;
+  fnWrite[OUT_ATMGASCONST] = &WriteAtmGasConst;
+
+  sprintf(output[OUT_RADSOLID].cName,"RadSolid");
+  sprintf(output[OUT_RADSOLID].cDescr,"Radius to the solid surface");
+  sprintf(output[OUT_RADSOLID].cNeg,"Earth Radii");
+  output[OUT_RADSOLID].bNeg = 1;
+  output[OUT_RADSOLID].dNeg = 1./REARTH;
+  output[OUT_RADSOLID].iNum = 1;
+  output[OUT_RADSOLID].iModuleBit = ATMESC;
+  fnWrite[OUT_RADSOLID] = &WriteRadSolid;
+
+  sprintf(output[OUT_FXUV].cName,"FXUV");
+  sprintf(output[OUT_FXUV].cDescr,"XUV Flux");
+  sprintf(output[OUT_FXUV].cNeg,"W/m^2");
+  output[OUT_FXUV].bNeg = 1;
+  output[OUT_FXUV].dNeg = 1;
+  output[OUT_FXUV].iNum = 1;
+  output[OUT_FXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_FXUV] = &WriteFXUV;
+
 }
 
 /************ ATMESC Logging Functions **************/
@@ -1015,10 +1338,10 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
-  
+
   // TODO: Log this the standard way
   fprintf(fp,"(RGDuration) Runaway Greenhouse Duration [years]: %.5e\n", body[iBody].dRGDuration / YEARSEC);
-  
+
 }
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
@@ -1117,7 +1440,15 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
   }
 
-  return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
+     -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+
+  }
+  else{
+  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+  }
+
 }
 
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
@@ -1126,6 +1457,12 @@ double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 }
 
 double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
+
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,0);
+    body[iaBody[0]].dPresSurf = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,1);
+  }
+
   double foo;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
     foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 10., body[iaBody[0]].dAge, 1);
@@ -1137,6 +1474,8 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   } else
     return body[iaBody[0]].dRadius;
+
+
 }
 
 /************* ATMESC Helper Functions ************/
@@ -1173,7 +1512,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // just remove this equation from the matrix if the
   // escape conditions are not met.
 
-  // 1. Check if there's hydrogen to be lost; this happens first 
+  // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0) {
     // (But let's still check whether the RG phase has ended)
     if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))

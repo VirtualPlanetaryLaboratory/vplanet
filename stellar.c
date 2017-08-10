@@ -23,6 +23,7 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iStellarModel = src[iBody].iStellarModel;
   dest[iBody].iWindModel = src[iBody].iWindModel;
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
+  dest[iBody].iMagBrakingModel = src[iBody].iMagBrakingModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
 }
 
@@ -109,6 +110,31 @@ void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   } else
     if (iFile > 0)
       body[iFile-1].iStellarModel = STELLAR_MODEL_BARAFFE;
+}
+
+void ReadMagBrakingModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp),"re",2)) {
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_RM12;
+    } else if (!memcmp(sLower(cTmp),"no",2)) {
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_NONE;
+    } else if (!memcmp(sLower(cTmp),"sk",2)) {
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_SK72;
+    } else {
+      if (control->Io.iVerbose >= VERBERR)
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, or NONE.\n",options->cName,cTmp);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_RM12; // Default to Reiners & Mohanty 2012 model
 }
 
 void ReadWindModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -275,6 +301,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_STELLARMODEL].iMultiFile = 1;
   fnRead[OPT_STELLARMODEL] = &ReadStellarModel;
 
+  sprintf(options[OPT_MAGBRAKINGMODEL].cName,"sMagBrakingModel");
+  sprintf(options[OPT_MAGBRAKINGMODEL].cDescr,"Magnetic Braking Model");
+  sprintf(options[OPT_MAGBRAKINGMODEL].cDefault,"REINERS");
+  options[OPT_MAGBRAKINGMODEL].iType = 3;
+  options[OPT_MAGBRAKINGMODEL].iMultiFile = 1;
+  fnRead[OPT_MAGBRAKINGMODEL] = &ReadMagBrakingModel;
+
   sprintf(options[OPT_WINDMODEL].cName,"sWindModel");
   sprintf(options[OPT_WINDMODEL].cDescr,"Wind Angular Momentum Loss Model");
   sprintf(options[OPT_WINDMODEL].cDefault,"REINERS");
@@ -341,6 +374,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
 
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
+
 }
 
 void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -1040,11 +1074,18 @@ double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody)
 }
 
 /*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty
- * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis.
+ * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis. Can also selected
+ * Skumanich 1972 model or no model
  */
 double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
+
+  // No magnetic braking
+  if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE)
+  {
+    return 0.0;
+  }
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // so lost angular momentum is due to radius evolution and is lost to disk
@@ -1054,19 +1095,39 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
     return 0.0;
   }
 
-  if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
-  else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
-  if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
-    if (body[iaBody[0]].dRotRate >= dOmegaCrit) {
-      dDJDt = -RM12CONST * body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 16. / 3.)
-                        * pow(body[iaBody[0]].dMass, -2. / 3);
-    } else {
-      dDJDt = -RM12CONST * pow(body[iaBody[0]].dRotRate / dOmegaCrit, 4.) * body[iaBody[0]].dRotRate
-                        * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
+  // Reiners & Mohanty 2012 magnetic braking model
+  if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_RM12)
+  {
+
+    if (body[iaBody[0]].dMass > 0.35 * MSUN) dOmegaCrit = RM12OMEGACRIT;
+    else dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
+    if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
+      if (body[iaBody[0]].dRotRate >= dOmegaCrit) {
+        dDJDt = -RM12CONST * body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 16. / 3.)
+                          * pow(body[iaBody[0]].dMass, -2. / 3);
+      } else {
+        dDJDt = -RM12CONST * pow(body[iaBody[0]].dRotRate / dOmegaCrit, 4.) * body[iaBody[0]].dRotRate
+                          * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
+      }
     }
+
+    return -dDJDt; // Return positive amount of lost angular momentum
+  }
+  // Skumanich 1972 empirical model
+  else if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_SK72)
+  {
+    dDJDt = SK72CONST*body[iaBody[0]].dMass*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;
+    dDJDt *= body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra;
+    dDJDt *= body[iaBody[0]].dRotRate*body[iaBody[0]].dRotRate*body[iaBody[0]].dRotRate;
+
+    return dDJDt; // Return positive amount of los angular momentum
+  }
+  // No magnetic braking
+  else
+  {
+    return 0.0;
   }
 
-  return -dDJDt; // Return positive amount
 }
 
 /*! Compute the change in rotation rate when the radius changes via conservation

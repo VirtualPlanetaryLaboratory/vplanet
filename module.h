@@ -26,6 +26,7 @@ void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtide(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideDistorb(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideStellar(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxSpinbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
 
 void ForceBehaviorAtmescEqtideThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -35,5 +36,5 @@ void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int
 
 void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
 void InitializeUpdateEqBinStLostEng(BODY*,UPDATE*,int);
-void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateMultiEqBinStLostEng(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);
+void FinalizeUpdateMultiEqBinStLostEng(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);

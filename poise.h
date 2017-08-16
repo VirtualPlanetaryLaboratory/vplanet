@@ -18,6 +18,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 /* OLR model */
 #define WK97         0
 #define HM16         1
+#define SMS09        2
 
 /* Water albedo type */
 #define ALBFIXED    0
@@ -176,6 +177,8 @@ double dOLRdTwk97(BODY*,int,int,int);
 double OLRwk97(BODY*,int,int,int);
 double dOLRdThm16(BODY*,int,int,int);
 double OLRhm16(BODY*,int,int,int);
+double dOLRdTsms09(BODY*,int,int,int);
+double OLRsms09(BODY*,int,int,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);

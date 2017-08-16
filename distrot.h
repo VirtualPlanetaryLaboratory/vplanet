@@ -19,6 +19,7 @@ void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 #define OPT_PRECRATE              1404
 #define OPT_READORBITDATA         1405
 #define OPT_FILEORBITDATA         1406
+#define OPT_SPECMOMINERTIA       1407
 
 /* Options Functions */
 void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);

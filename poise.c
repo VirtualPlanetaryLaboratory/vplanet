@@ -933,8 +933,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   
   sprintf(options[OPT_NULANDWATER].cName,"dNuLandWater");
   sprintf(options[OPT_NULANDWATER].cDescr,"Coefficient of land-ocean heat flux");
-  sprintf(options[OPT_NULANDWATER].cDefault,"3");
-  options[OPT_NULANDWATER].dDefault = 3.;
+  sprintf(options[OPT_NULANDWATER].cDefault,"0.81");
+  options[OPT_NULANDWATER].dDefault = 0.81;
   options[OPT_NULANDWATER].iType = 2;  
   options[OPT_NULANDWATER].iMultiFile = 1;   
   fnRead[OPT_NULANDWATER] = &ReadNuLandWater;
@@ -4408,8 +4408,8 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   //elevation feedback modeled by assuming surface temp is affected by height
   dGamma = 9.8e-3; //dry adiabatic lapse rate 
   dh = (body[iBody].daIceMassTmp[iLat]/RHOICE - 1000.+body[iBody].daBedrockH[iLat]);  //height above or below some ref altitude
-  dTs = (body[iBody].daTempLand[iLat]+273.15-dGamma*dh);  //''surface'' temperature of ice
-//   dTs = body[iBody].daTempLand[iLat]+273.15;
+//   dTs = (body[iBody].daTempLand[iLat]+273.15-dGamma*dh);  //''surface'' temperature of ice
+  dTs = body[iBody].daTempLand[iLat]+273.15;
   /* first, calculate melting/accumulation */
   // MEM: body[iBody].daTempLand[iLat] not initialized!
   if (dTs>273.15) {
@@ -4439,9 +4439,9 @@ void IceSheetTriDiag(BODY *body, int iBody) {
   double bTmp;
   int i, n = body[iBody].iNumLats;
   
-  bTmp = body[iBody].daIceSheetMat[1][1];
-  body[iBody].daIceHeight[1] = body[iBody].daIcePropsTmp[1]/bTmp;
-  for (i=2;i<n-1;i++) {
+  bTmp = body[iBody].daIceSheetMat[0][0];
+  body[iBody].daIceHeight[0] = body[iBody].daIcePropsTmp[0]/bTmp;
+  for (i=1;i<n;i++) {
     body[iBody].daIceGamTmp[i] = body[iBody].daIceSheetMat[i-1][i]/bTmp;
     bTmp = body[iBody].daIceSheetMat[i][i]-body[iBody].daIceSheetMat[i][i-1]*body[iBody].daIceGamTmp[i];
     if (bTmp == 0) {
@@ -4554,7 +4554,7 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
 //       body[iBody].daIceFlow[body[iBody].iNumLats] = 0.0;
 //       body[iBody].daBasalFlow[body[iBody].iNumLats] = 0.;
 
-      for (iLat=1;iLat<body[iBody].iNumLats;iLat++) { 
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) { 
         if (IceTime != evolve->dTime) {
           body[iBody].daIceSheetDiff[iLat] = -0.5*(body[iBody].daIceFlowMid[iLat]+\
             body[iBody].daBasalFlowMid[iLat]);
@@ -4567,7 +4567,7 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
         if (iLat == 0) {
           body[iBody].daIceFlowMid[iLat] = 0;
           body[iBody].daBasalFlowMid[iLat] = 0;
-        } else if (iLat == body[iBody].iNumLats-1) {
+        } else if (iLat == body[iBody].iNumLats) {
           body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
              body[iBody].daIceFlow[iLat-1])/2.0;
           body[iBody].daIceFlowMid[iLat+1] = 0;
@@ -4598,8 +4598,8 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
         }   
       }
     
-      for (iLat=1;iLat<body[iBody].iNumLats;iLat++) {
-        for (jLat=1;jLat<body[iBody].iNumLats;jLat++) {
+      for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+        for (jLat=0;jLat<body[iBody].iNumLats;jLat++) {
           if (jLat == iLat) {
             body[iBody].daIceSheetMat[iLat][jLat] = 1.0+0.5*IceDt*\
               (body[iBody].daIceSheetDiff[iLat]/(body[iBody].daYBoundary[iLat]*body[iBody].daYBoundary[iLat])+\

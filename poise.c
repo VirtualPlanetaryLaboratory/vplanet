@@ -4097,10 +4097,12 @@ void PoiseSeasonal(BODY *body, int iBody) {
             if (body[iBody].daIceBalance[i][nstep] >= 0) {
               body[iBody].daIceAccumTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
             } else {
-              if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
-                body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
-              } else {
-                body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+              if (body[iBody].daIceMassTmp[i] > 0) {
+                if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
+                  body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+                } else {
+                  body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+                }
               }
             }
             if (body[iBody].daIceMassTmp[i] < 0.0) {
@@ -4245,10 +4247,12 @@ void PoiseSeasonal(BODY *body, int iBody) {
             if (body[iBody].daIceBalance[i][nstep] >= 0) {
               body[iBody].daIceAccumTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
             } else {
-              if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
-                body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
-              } else {
-                body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+              if (body[iBody].daIceMassTmp[i] > 0) {
+                if (body[iBody].daIceMassTmp[i] >= h*body[iBody].daIceBalance[i][nstep]) {
+                  body[iBody].daIceAblateTot[i] += h*body[iBody].daIceBalance[i][nstep]/body[iBody].iNumYears;
+                } else {
+                  body[iBody].daIceAblateTot[i] += body[iBody].daIceMassTmp[i];
+                }
               }
             }
             if (body[iBody].daIceMassTmp[i] < 0.0) {
@@ -4451,7 +4455,7 @@ void IceSheetTriDiag(BODY *body, int iBody) {
     body[iBody].daIceHeight[i] = (body[iBody].daIcePropsTmp[i]-body[iBody].daIceSheetMat[i][i-1]*\
       body[iBody].daIceHeight[i-1])/bTmp;
   }
-  for (i=2;i<n-1;i++) {
+  for (i=1;i<n;i++) {
     body[iBody].daIceHeight[n-i-1] -= body[iBody].daIceGamTmp[n-i]*body[iBody].daIceHeight[n-i];
   }
 }

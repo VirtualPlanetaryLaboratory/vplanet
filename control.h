@@ -29,6 +29,7 @@ void fsUnitsMass(int,char[]);
 void fsUnitsTemp(int,char[]);
 void fsUnitsTempRate(int,char[]);
 void fsUnitsAngMom(UNITS*,char[]);
+void fsUnitsDensity(UNITS*,char[]);
 void fsUnitsVel(UNITS*,char[]);
 void fsUnitsRate(int,char[]);
 void fsUnitsAngRate(UNITS*,char[]);

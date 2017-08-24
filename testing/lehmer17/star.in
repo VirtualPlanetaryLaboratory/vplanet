@@ -1,0 +1,8 @@
+sName		star
+saModules	stellar
+
+dMass		1.0
+dRotPeriod	-83.5
+dRadGyra	0.5
+
+saOutputOrder	Time

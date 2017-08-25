@@ -324,6 +324,20 @@ void ReadAccuracyMode(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   }
 }
 
+void ReadElevFB(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1, bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bElevFB = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    AssignDefaultInt(options,&body[iFile-1].bElevFB,files->iNumInputs);
+  }
+}
+
 void ReadForceObliq(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1, bTmp;
@@ -664,6 +678,51 @@ void ReadNuLandWater(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   } else
     if (iFile > 0)
       body[iFile-1].dNuLandWater = options->dDefault;
+}
+
+void ReadLapseR(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dLapseR = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dLapseR = options->dDefault;
+}
+
+void ReadRefHeight(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dRefHeight = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dRefHeight = options->dDefault;
+}
+
+void ReadAblateFF(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dAblateFF = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dAblateFF = options->dDefault;
 }
 
 void ReadNStepInYear(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -1066,7 +1125,39 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ACCUMODE].iType = 2;  
   options[OPT_ACCUMODE].iMultiFile = 1;   
   fnRead[OPT_ACCUMODE] = &ReadAccuracyMode;
+  
+  sprintf(options[OPT_ELEVFB].cName,"bElevFB");
+  sprintf(options[OPT_ELEVFB].cDescr,"Use elevation feedback for ice sheet ablation");
+  sprintf(options[OPT_ELEVFB].cDefault,"0");
+  options[OPT_ELEVFB].dDefault = 0;
+  options[OPT_ELEVFB].iType = 2;  
+  options[OPT_ELEVFB].iMultiFile = 1;   
+  fnRead[OPT_ELEVFB] = &ReadElevFB;
+  
+  sprintf(options[OPT_LAPSER].cName,"dLapseR");
+  sprintf(options[OPT_LAPSER].cDescr,"Dry adiabatic lapse rate (for elev feedback)");
+  sprintf(options[OPT_LAPSER].cDefault,"9.8e-3 C/m");
+  options[OPT_LAPSER].dDefault = 9.8e-3;
+  options[OPT_LAPSER].iType = 2;  
+  options[OPT_LAPSER].iMultiFile = 1;   
+  fnRead[OPT_LAPSER] = &ReadLapseR;
 
+  sprintf(options[OPT_REFHEIGHT].cName,"dRefHeight");
+  sprintf(options[OPT_REFHEIGHT].cDescr,"Reference height of atmos temp (for elev feedback)");
+  sprintf(options[OPT_REFHEIGHT].cDefault,"1000 m");
+  options[OPT_REFHEIGHT].dDefault = 1000.0;
+  options[OPT_REFHEIGHT].iType = 2;  
+  options[OPT_REFHEIGHT].iMultiFile = 1;   
+  fnRead[OPT_REFHEIGHT] = &ReadRefHeight;
+
+  sprintf(options[OPT_ABLATEFF].cName,"dAblateFF");
+  sprintf(options[OPT_ABLATEFF].cDescr,"Ice ablation fudge factor");
+  sprintf(options[OPT_ABLATEFF].cDefault,"2.3");
+  options[OPT_ABLATEFF].dDefault = 2.3;
+  options[OPT_ABLATEFF].iType = 2;  
+  options[OPT_ABLATEFF].iMultiFile = 1;   
+  fnRead[OPT_ABLATEFF] = &ReadAblateFF;
+  
 }
 
 void ReadOptionsPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -4409,17 +4500,20 @@ void PoiseSeasonal(BODY *body, int iBody) {
 double IceMassBalance(BODY *body, int iBody, int iLat) {
   double Tice = 273.15, dTmp, dh, dGamma, dTs;
   
-  //elevation feedback modeled by assuming surface temp is affected by height
-  dGamma = 9.8e-3; //dry adiabatic lapse rate 
-  dh = (body[iBody].daIceMassTmp[iLat]/RHOICE - 1000.+body[iBody].daBedrockH[iLat]);  //height above or below some ref altitude
-//   dTs = (body[iBody].daTempLand[iLat]+273.15-dGamma*dh);  //''surface'' temperature of ice
-  dTs = body[iBody].daTempLand[iLat]+273.15;
+  if (body[iBody].bElevFB) {
+    //elevation feedback modeled by assuming surface temp is affected by height
+    dGamma = body[iBody].dLapseR; //dry adiabatic lapse rate 
+    dh = (body[iBody].daIceMassTmp[iLat]/RHOICE - body[iBody].dRefHeight+body[iBody].daBedrockH[iLat]);  //height above or below some ref altitude
+    dTs = (body[iBody].daTempLand[iLat]+273.15-dGamma*dh);  //''surface'' temperature of ice
+  } else {
+    dTs = body[iBody].daTempLand[iLat]+273.15;
+  }
   /* first, calculate melting/accumulation */
   // MEM: body[iBody].daTempLand[iLat] not initialized!
   if (dTs>273.15) {
     /* Ice melting */
     /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
-    dTmp = 2.3*SIGMA*((Tice*Tice*Tice*Tice) - \
+    dTmp = body[iBody].dAblateFF*SIGMA*((Tice*Tice*Tice*Tice) - \
         ((dTs)*(dTs)*(dTs)*(dTs)))/LFICE;
   } else {
     // MEM: body[iBody].dAlbedoGlobal not initialized!

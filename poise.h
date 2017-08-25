@@ -77,6 +77,12 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_OBLIQAMP        1960
 #define OPT_OBLIQPER        1961
 #define OPT_ACCUMODE        1962
+#define OPT_ELEVFB          1963
+#define OPT_LAPSER          1964
+#define OPT_REFHEIGHT       1965
+#define OPT_ABLATEFF        1966
+
+
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
 

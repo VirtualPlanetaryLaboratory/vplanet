@@ -668,6 +668,7 @@ typedef struct {
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
 
+  double dAblateFF;
   int bAccuracyMode;        /**< This forces the model to re-invert matrix every time step */
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dAlbedoGlobalTmp;
@@ -682,6 +683,7 @@ typedef struct {
   double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
   int bDiffRot;              /**< Adjust heat diffusion for rotation rate*/
+  int bElevFB;
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;
@@ -704,6 +706,7 @@ typedef struct {
   double dInitIceHeight;
   double dInitIceLat;
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  double dLapseR;
   double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
   double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
   int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
@@ -721,6 +724,7 @@ typedef struct {
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
+  double dRefHeight;
   int iReRunSeas;
   double dSeaIceConduct;
   int bSeaIceModel;

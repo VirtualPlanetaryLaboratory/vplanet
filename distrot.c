@@ -82,22 +82,7 @@ void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     
 }
 
-void ReadSpecMomInertia(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* Cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    
-    body[iFile-1].dSpecMomInertia = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
-    
-}
 
 void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
@@ -160,14 +145,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PRECRATE].iType = 2;  
   options[OPT_PRECRATE].iMultiFile = 1;   
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
-  
-  sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
-  sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
-  sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
-  options[OPT_SPECMOMINERTIA].dDefault = 0.33;
-  options[OPT_SPECMOMINERTIA].iType = 2;  
-  options[OPT_SPECMOMINERTIA].iMultiFile = 1;   
-  fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
+
   
   sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
   sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data and use with distrot");

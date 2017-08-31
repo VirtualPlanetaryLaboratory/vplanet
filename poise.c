@@ -3101,6 +3101,8 @@ void AnnualInsolation(BODY *body, int iBody) {
     body[iBody].dAstroDist = (1.0 - (body[iBody].dEcc*body[iBody].dEcc))/(1.0+body[iBody].dEcc*cos(TrueA)); 
     
     DailyInsolation(body, iBody, i);
+//     printf("truel = %f, day = %d, dist = %f, decl = %f\n",body[iBody].dTrueL,i,body[iBody].dAstroDist, body[iBody].daDeclination[i]);
+
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);

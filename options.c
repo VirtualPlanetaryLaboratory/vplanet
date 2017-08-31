@@ -2612,7 +2612,9 @@ void ReadSpecMomInertia(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     body[iFile-1].dSpecMomInertia = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
+    if (iFile > 0)
+      body[iFile-1].dSpecMomInertia = options->dDefault;
+//     AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
     
 }
 

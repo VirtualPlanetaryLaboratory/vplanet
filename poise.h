@@ -115,6 +115,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TOTICEFLOW       1926
 #define OUT_TOTICEBALANCE    1927
 #define OUT_SKIPSEAS         1928
+#define OUT_AREAICECOV       1929
 
 #define OUT_LATITUDE         1930
 #define OUT_TEMPLAT          1931
@@ -142,6 +143,9 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_PLANCKBAVG       1953
 #define OUT_ICEACCUM         1954
 #define OUT_ICEABLATE        1955
+#define OUT_TEMPMAXLAND      1956
+#define OUT_TEMPMAXWATER     1957
+
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -185,6 +189,7 @@ double dOLRdThm16(BODY*,int,int,int);
 double OLRhm16(BODY*,int,int,int);
 double dOLRdTsms09(BODY*,int,int,int);
 double OLRsms09(BODY*,int,int,int);
+void AreaIceCovered(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);

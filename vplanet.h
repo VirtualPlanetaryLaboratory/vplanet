@@ -676,6 +676,7 @@ typedef struct {
   int iAlbedoType;            /**< type of water albedo used (fix or tay) */
   double dAlbedoWater;
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  double dAreaIceCov;
   double dAstroDist;         /**< Distance between primary and planet */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
   int bClimateModel;
@@ -850,6 +851,8 @@ typedef struct {
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
   double *daTempMaxLW;         /**< maximum temperature over year */
+  double *daTempMaxLand;
+  double *daTempMaxWater;
   double *daTempMinLW;         /**< minimum temperature over year */
   double *daTempWater;        /**< Temperature over ocean (by lat) */
   double *daTmpTempSea;

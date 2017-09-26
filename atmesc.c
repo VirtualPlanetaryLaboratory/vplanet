@@ -650,16 +650,6 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
-/*
-todo:
- - change radsurf to radsolid;
- - output all relevant parameters;
- - vtest working -- rory if not
- - pull from master --. resolve conflict
- - recommit
- - then pull request
-*/
-
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);

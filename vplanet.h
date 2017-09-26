@@ -356,7 +356,8 @@ typedef struct {
   double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
-  //double dTidalQRock;    /**< Tidal Q in interior */
+  double dTidalQRock;    /**< Tidal Q in interior */
+  double dTidalQGas; /**< Tidal Q gaseous */
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
@@ -577,7 +578,7 @@ typedef struct {
   double dThermTemp;    //lehmer var
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
-  int bCalcFXUV;        
+  int bCalcFXUV;
 
   /* STELLAR Parameters */
   int bStellar;

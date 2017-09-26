@@ -627,8 +627,12 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   // Just thermint, not eqtide
   if(body[iBody].bEnvTides || (body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
     *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  else
+  else if(body[iBody].bAtmEsc & body[iBody].bEqtide) {
+    *dTmp = body[iBody].dTidalQ;
+  }
+  else{
     *dTmp = body[iBody].dK2/body[iBody].dImK2;
+  }
 
   strcpy(cUnit,"");
 }

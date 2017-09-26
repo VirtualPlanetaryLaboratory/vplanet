@@ -47,6 +47,9 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
   dest[iBody].bTideLock = src[iBody].bTideLock;
+  dest[iBody].dTidalQRock = src[iBody].dTidalQRock;
+  dest[iBody].dTidalQGas = src[iBody].dTidalQGas;
+
 
   if (iBody > 0) {
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -108,6 +111,44 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
 }
 
 /**************** EQTIDE options ********************/
+
+/* Tidal Q of Rocky Body */
+
+void ReadTidalQRock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTidalQRock = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTidalQRock = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTidalQRock = options->dDefault;
+}
+
+/* */
+
+void ReadTidalQGas(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTidalQGas = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTidalQGas = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTidalQGas = options->dDefault;
+}
 
 /* Discrete Rotation */
 
@@ -707,6 +748,22 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_OCEANTIDES].cDefault,"0");
   options[OPT_OCEANTIDES].iType = 0;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
+
+  sprintf(options[OPT_TIDALQROCK].cName,"dTidalQRock");
+  sprintf(options[OPT_TIDALQROCK].cDescr,"Tidal Q of Rocky body");
+  sprintf(options[OPT_TIDALQROCK].cDefault,"300");
+  options[OPT_TIDALQROCK].dDefault = 300;
+  options[OPT_TIDALQROCK].iType = 2;
+  options[OPT_TIDALQROCK].iMultiFile = 1;
+  fnRead[OPT_TIDALQROCK] = &ReadTidalQRock;
+
+  sprintf(options[OPT_TIDALQGAS].cName,"dTidalQGas");
+  sprintf(options[OPT_TIDALQGAS].cDescr,"Tidal Q of Gaseous body");
+  sprintf(options[OPT_TIDALQGAS].cDefault,"1e6");
+  options[OPT_TIDALQGAS].dDefault = 1e6;
+  options[OPT_TIDALQGAS].iType = 2;
+  options[OPT_TIDALQGAS].iMultiFile = 1;
+  fnRead[OPT_TIDALQGAS] = &ReadTidalQGas;
 
 }
 
@@ -1676,7 +1733,14 @@ void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
   strcpy(cUnit,"");
 }
+/*
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  *dTmp = body[iBody].dTidalQ;
+
+  strcpy(cUnit,"");
+}
+*/
 void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
 
@@ -2210,7 +2274,14 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQENV].iNum = 1;
   output[OUT_TIDALQENV].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQENV] = WriteTidalQEnv;
-
+/*
+  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
+  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
+  output[OUT_TIDALQ].bNeg = 0;
+  output[OUT_TIDALQ].iNum = 1;
+  output[OUT_TIDALQ].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALQ] = WriteTidalQ;
+*/
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");

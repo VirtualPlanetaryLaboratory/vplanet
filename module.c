@@ -516,6 +516,15 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
  * Verify multi-module dependencies
  */
 
+void VerifyModuleMultiEqtideAtmesc(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bAtmEsc) {
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideAtmesc;
+    }
+  }
+}
+
+
 void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
@@ -736,6 +745,10 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
 
       // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
+
+      // Sets behavior for changing between dTidalQGas and dTidalQRock
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideAtmesc;
+      // add line that checks for bHaltEnvelopeGone and dTidalQRock and dTidalQGas
 
       // Using tidal radus
       if(body[iBody].bUseTidalRadius)
@@ -999,6 +1012,16 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
 
   // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models)
+
+  // this section controls which tidal Q to use for the planets
+  for (iBody = 1; iBody<=evolve->iNumBodies; iBody++) {
+    if (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) {
+      body[iBody].dTidalQ = body[iBody].dTidalQGas;
+    }
+    else if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
+      body[iBody].dTidalQ = body[iBody].dTidalQRock;
+    }
+  }
 }
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -1127,6 +1150,24 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 /*
  * Force Behavior for multi-module calculations
  */
+
+void ForceBehaviorEqtideAtmesc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+  int iBody;
+
+// loop over bodies that are not the star
+  for(iBody = 1; iBody <= evolve->iNumBodies; iBody++) {
+    // if has envelope mass, set tidalq to gaseous tidalq
+    if (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) {
+      body[iBody].dTidalQ = body[iBody].dTidalQGas;
+//      printf("TidalQ set to Gaseous: %lf\n",(body[iBody].dTidalQ));
+    }
+    // if envelope mass is gone or less than equal to minimum, set tidalq to rocky tidalq
+    else if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
+      body[iBody].dTidalQ = body[iBody].dTidalQRock;
+//      printf("TidalQ set to Rocky: %lf\n",(body[iBody].dTidalQ));
+    }
+  }
+}
 
 void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {

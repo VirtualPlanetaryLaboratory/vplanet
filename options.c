@@ -55,6 +55,8 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   char cWord[OPTLEN],cTmp[LINE];
   FILE *fp;
 
+  /* XXX Need to add a check for a carriage return on each line */
+
   iLen=strlen(cOption);
 
   fp=fopen(cFile,"r");
@@ -3389,5 +3391,6 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsSpiNBody(options,fnRead);
 
 }

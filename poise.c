@@ -3013,7 +3013,7 @@ void AreaIceCovered(BODY *body, int iBody) {
   
   body[iBody].dAreaIceCov = 0; 
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    if (body[iBody].daIceMass[iLat] > 0 || body[iBody].daTempMaxLand[iLat] <= -10.) {
+    if (body[iBody].daIceMass[iLat] > 0 || body[iBody].daTempMaxLand[iLat] <= -2.0) {
       body[iBody].dAreaIceCov += body[iBody].daLandFrac[iLat];
     }
     if (body[iBody].daTempMaxWater[iLat] < -2) {
@@ -3962,7 +3962,7 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
     } else {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dAlbedoLand+0.08*(3.*(sin(zenith)*sin(zenith))-1.)/2.;
       body[iBody].daAlbedoWater[iLat] = body[iBody].dAlbedoWater+0.08*(3.*(sin(zenith)*sin(zenith))-1.)/2.;
-      if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -10) {
+      if (body[iBody].daIceMassTmp[iLat] > 0 || body[iBody].daTempLand[iLat] <= -2) {
         body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
       }
       if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {

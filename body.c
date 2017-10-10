@@ -105,6 +105,9 @@ double fdRotVel(double dRadius,double dRotRate) {
   return dRadius*dRotRate;
 }
 
+double fdSphereDensity(double dMass,double dRadius) {
+  return 4*PI*dMass/pow(dRadius,3)/3;
+}
 
 /*
  * Published Mass - Radius Relationships

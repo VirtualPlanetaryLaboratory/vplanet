@@ -569,6 +569,15 @@ typedef struct {
   int bRunaway;
   int iWaterEscapeRegime;
   double dFHDiffLim;
+  double dRadXUV;       //lehmer var
+  double dRadSolid;      //lehmer var
+  double dPresSurf;     //lehmer var
+  double dPresXUV;      //lehmer var
+  double dScaleHeight;  //lehmer var
+  double dThermTemp;    //lehmer var
+  double dAtmGasConst;  //lehmer var
+  double dFXUV;         //lehmer var
+  int bCalcFXUV;        
 
   /* STELLAR Parameters */
   int bStellar;
@@ -1431,7 +1440,7 @@ typedef struct {
   double dStopTime;	 /**< Integration Stop Time */
   double dTimeStep;	 /**< Integration Time step */
   int bVarDt;            /**< Use Variable Timestep? */
-  int nSteps;            /**< Number of Steps Since Last Output */
+  int nSteps;            /**< Total Number of Steps */
   double dMinValue;      /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
@@ -1889,3 +1898,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "lehmer17radius.h"

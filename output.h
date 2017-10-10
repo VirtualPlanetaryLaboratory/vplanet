@@ -26,6 +26,7 @@
 #define OUT_KINENERGY           192
 
 #define OUT_DT			200
+#define OUT_DENSITY			210
 
 #define OUT_LONGP               300
 #define OUT_LXUVTOT             310

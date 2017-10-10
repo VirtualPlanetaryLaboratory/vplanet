@@ -36,6 +36,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
+  dest[iBody].dRGDuration = src[iBody].dRGDuration;
 }
 
 /**************** ATMESC options ********************/
@@ -333,7 +334,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/XUV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
-  options[OPT_ATMXABSEFFH2O].dDefault = 0.30;
+  options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
@@ -505,8 +506,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
         printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
-    body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge);
-
+    body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
@@ -665,6 +665,9 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       fprintf(stderr,"ERROR: %s cannot be grater than %s in file %s.\n",options[OPT_ENVELOPEMASS].cName,options[OPT_MASS].cName,files->Infile[iBody+1].cIn);
     exit(EXIT_INPUT);
   }
+
+  // Initialize rg duration
+  body[iBody].dRGDuration = 0.;
 
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT)
     fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
@@ -1012,6 +1015,10 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
     if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
+
+  // TODO: Log this the standard way
+  fprintf(fp,"(RGDuration) Runaway Greenhouse Duration [years]: %.5e\n", body[iBody].dRGDuration / YEARSEC);
+
 }
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
@@ -1127,7 +1134,7 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
     else
       return body[iaBody[0]].dRadius;
   } else if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_PROXCENB) {
-    return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge);
+    return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   } else
     return body[iaBody[0]].dRadius;
 }
@@ -1167,8 +1174,12 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // escape conditions are not met.
 
   // 1. Check if there's hydrogen to be lost; this happens first
-  if (body[iBody].dEnvelopeMass > 0)
+  if (body[iBody].dEnvelopeMass > 0) {
+    // (But let's still check whether the RG phase has ended)
+    if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
+      body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
+  }
 
   // 2. Check if planet is beyond RG limit; otherwise, assume the
   // cold trap prevents water loss.
@@ -1176,10 +1187,11 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-
-
-  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
+    if (body[iBody].dRGDuration == 0.)
+      body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
+  }
 
   // 3. Is there still water to be lost?
   else if (body[iBody].dSurfaceWaterMass <= 0)

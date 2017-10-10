@@ -46,6 +46,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].bEnvTides = src[iBody].bEnvTides;
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
+  dest[iBody].bTideLock = src[iBody].bTideLock;
 
   if (iBody > 0) {
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -728,11 +729,52 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
   }
 }
 
-void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
+void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody, fnUpdateVariable ***fnUpdate) {
+  if (control->Evolve.iEqtideModel == CTL)
+  {
+    fprintf(stderr,"ERROR: Lost energy due to tidal heating not implemented for CTL model!\n");
+    exit(1);
+  }
+  else if(control->Evolve.iEqtideModel == CPL)
+  {
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
+
+    update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
+    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
+  }
+  else
+  {
+    fprintf(stderr,"ERROR: Must use CPL or CTL model!\n");
+    exit(1);
+  }
+}
+
+void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody,fnUpdateVariable*** fnUpdate) {
   double dMeanMotion;
   int iOrbiter;
 
+  // Default value
+  body[iBody].bTideLock = 0;
+
   if (options[OPT_FORCEEQSPIN].iLine[iBody+1] >= 0) {
+
+    if(iBody > 0)
+    {
+      // If ForceEqSpin, tidally locked to begin the simulation
+      body[iBody].bTideLock = 1;
+    }
+
+    // Set da/dt equation to tidally locked formalism (see Ferraz-Mello et al. 2008)
+    // DEPRECATED
+    /*
+    if (!control->Evolve.bFixOrbit[iBody] && iBody > 0)
+    {
+      //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
+    }
+    */
 
     if (body[iBody].iTidePerts > 1) {
       fprintf(stderr,"ERROR: %s cannot be true is %s has more than 1 argument.\n",options[OPT_FORCEEQSPIN].cName,options[OPT_TIDEPERTS].cName);
@@ -757,6 +799,10 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control,OPTIONS *options,char cFil
     dMeanMotion=fdSemiToMeanMotion(body[iOrbiter].dSemi,body[iBody].dMass+body[body[iBody].iaTidePerts[0]].dMass);
     //XXX Is dEccSq set here??
     body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+  }
+  else // Not tidally locked to begin with
+  {
+    body[iBody].bTideLock = 0;
   }
   CalcXYZobl(body,iBody);
 }
@@ -1290,7 +1336,7 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   VerifyPerturbersEqtide(body,files,options,update,control->Evolve.iNumBodies,iBody);
 
-  VerifyRotationEqtide(body,control,options,files->Infile[iBody+1].cIn,iBody);
+  VerifyRotationEqtide(body,control,update,options,files->Infile[iBody+1].cIn,iBody, fnUpdate);
 
   /* Verify input set correctly and assign update functions */
   if (control->Evolve.iEqtideModel == CTL)
@@ -1298,6 +1344,8 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   if (control->Evolve.iEqtideModel == CPL)
     VerifyCPL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
+
+  VerifyLostEngEqtide(body,update,control,options,iBody,fnUpdate);
 
   body[iBody].dTidalZ=malloc(control->Evolve.iNumBodies*sizeof(double));
   body[iBody].dTidalChi=malloc(control->Evolve.iNumBodies*sizeof(double));
@@ -1323,7 +1371,11 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
 
   if (update[iBody].iNumRot == 0)
     update[iBody].iNumVars++;
-  update[iBody].iNumRot += body[iBody].iTidePerts;;
+  update[iBody].iNumRot += body[iBody].iTidePerts;
+
+  if (update[iBody].iNumLostEng == 0)
+    update[iBody].iNumVars++;
+  update[iBody].iNumLostEng++;
 
   /* Eqtide is complicated by the possibility that 1 body could be perturbed
      by multiple others. saEqtidePertubers is the list of those bodies
@@ -1352,6 +1404,12 @@ void InitializeUpdateEqtide(BODY *body,UPDATE *update,int iBody) {
 void FinalizeUpdateHeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
   update[iBody].iHeccEqtide=*iEqn;
+  (*iEqn)++;
+}
+
+void FinalizeUpdateLostEngEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = EQTIDE;
+  update[iBody].iLostEngEqtide=*iEqn;
   (*iEqn)++;
 }
 
@@ -1447,10 +1505,14 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
+    // Tidally locked!
+    body[iBody].bTideLock = 1;
+
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s tide-locked at ",body[iBody].cName);
       fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
       printf(" years.\n");
+
     }
     return 1;
   }
@@ -2528,8 +2590,7 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblEqtide;
   module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblEqtide;
   module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblEqtide;
-
-
+  module->fnFinalizeUpdateLostEng[iBody][iModule] =&FinalizeUpdateLostEngEqtide;
 }
 
 /************* EQTIDE Functions ************/
@@ -2550,7 +2611,7 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
 
-int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
+int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdateVariable*** fnUpdate, UPDATE *update) {
   double dEqRate,dDiff;
 
   dEqRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
@@ -2558,6 +2619,20 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter) {
   dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
 
   if (dDiff < evolve->dMaxLockDiff[iBody]) {
+    // Tidally locked!
+    body[iBody].bTideLock = 1;
+
+    // Set da/dt equation to tidally locked formalism (see Ferraz-Mello et al. 2008)
+    // for the orbiter
+    // DEPRECATED
+    /*
+    if (!evolve->bFixOrbit[iBody] && iBody > 0)
+    {
+      //fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDtLocked;
+    }
+    */
+
+
     if (io->iVerbose >= VERBPROG) {
       printf("%s spin locked at ",body[iBody].cName);
       fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
@@ -2580,7 +2655,6 @@ void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
   // PrecA is needed for Xobl,Yobl,Zobl calculations
 
   body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
-
 }
 
 void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -2611,7 +2685,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody])
-    body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+      body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     fiaCPLEpsilon(body[iBody].dRotRate,body[iOrbiter].dMeanMotion,body[iBody].iTidalEpsilon[iIndex]);
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
@@ -2647,6 +2721,14 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalBeta[0] = fdCTLBeta(body[iBody].dEccSq);
     fdaChi(body,body[iBody].dMeanMotion,body[iBody].dSemi,iBody,0);
   }
+}
+
+/*! Lost energy due to tidal heating in the CPL model. */
+double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody)
+{
+  int iBody = iaBody[0];
+
+  return fdCPLTidePower(body,iBody);
 }
 
 double fdTidePower(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iTideModel) {
@@ -2687,12 +2769,13 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody])
+    {
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
-
+    }
     /* Tidally Locked? */
     else {
       // Is the body now tidally locked?
-      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter);
+      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,fnUpdate,update);
       // If so, reset the function pointer to return TINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */
@@ -2844,24 +2927,84 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
  * Derivatives
  */
 
+/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57) */
+double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
+{
+
+  // HACK HACK HACK
+  return fdCPLDsemiDt(body,system,iaBody);
+
+  int iB0=iaBody[0],iB1=iaBody[1];
+
+  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
+iaBody[0] = central body */
+
+  double dSum = 0.0;
+
+  // Contribution from orbiter
+  dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
+
+  // Contribution from central body
+  dSum += body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
+
+  return -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+}
+
+/*! Equations governing semi-major axis derivative from Ferraz-Mello 2008
+ * Combines tidally-locked and not-tidally locked equations
+ */
 double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iB0=iaBody[0],iB1=iaBody[1];
 
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
 iaBody[0] = central body */
 
-  double dSum=0;
+  double dSum = 0.0;
 
-  //printf("%.4e %.4e\n", body[iB0].dTidalZ[iB1],body[iB1].dTidalZ[iB0]);
-  //printf("%d %d %d %d %d : %d %d %d %d %d\n",body[iB0].iTidalEpsilon[iB1][0],body[iB0].iTidalEpsilon[iB1][1],body[iB0].iTidalEpsilon[iB1][2],body[iB0].iTidalEpsilon[iB1][5],body[iB0].iTidalEpsilon[iB1][8],body[iB1].iTidalEpsilon[iB0][0],body[iB1].iTidalEpsilon[iB0][1],body[iB1].iTidalEpsilon[iB0][2],body[iB1].iTidalEpsilon[iB0][5],body[iB1].iTidalEpsilon[iB0][8]);
+  // Secondary (orbiter) is tidally locked
+  if(!body[iB0].bTideLock && body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
-  // Contribution from orbiter
-  dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
+    // Contribution from the central body
+    dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
 
-  // Contribution from central body
-  dSum += body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+    return dSum;
+  }
+  // Primary (central body) is tidally locked
+  else if(body[iB0].bTideLock && !body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
-  return body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+    // Contribution from central body
+    dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+
+    return dSum;
+  }
+  // If primary and secondary are tidally locked
+  else if(body[iB0].bTideLock && body[iB1].bTideLock)
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
+
+    // Contribution from central body
+    dSum += body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
+
+    return -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+  }
+  // Neither body is tidally locked
+  else
+  {
+    // Contribution from orbiter
+    dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
+
+    // Contribution from central body
+    dSum += body[iB1].dTidalZ[iB0]*(4*body[iB1].iTidalEpsilon[iB0][0] + body[iB0].dEccSq*(-20*body[iB1].iTidalEpsilon[iB0][0] + 147./2*body[iB1].iTidalEpsilon[iB0][1] + 0.5*body[iB1].iTidalEpsilon[iB0][2] - 3*body[iB1].iTidalEpsilon[iB0][5]) - 4*sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity)*(body[iB1].iTidalEpsilon[iB0][0]-body[iB1].iTidalEpsilon[iB0][8]));
+
+    return body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+  }
 }
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de.
@@ -2878,7 +3021,7 @@ double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
   // Contribution from Orbiter
   dSum += body[iB0].dTidalZ[iB1]*(2*body[iB0].iTidalEpsilon[iB1][0] - 49./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] + 3*body[iB0].iTidalEpsilon[iB1][5]);
 
-  return  -body[iB0].dSemi*sqrt(body[iB0].dEccSq)/(8*BIGG*body[iB0].dMass*body[iB1].dMass)*dSum;
+  return  -dSum*body[iB0].dSemi*body[iB0].dEcc/(8*BIGG*body[iB0].dMass*body[iB1].dMass);
 }
 
 double fdCPLDHeccDt(BODY *body,SYSTEM *system,int *iaBody) {

@@ -1,0 +1,16 @@
+Produce the HZ evolution plot in Barnes et al. (2017). Run vplanet in the following directions:
+1) cpl
+2) no_ocean
+3) ocean
+4) env_ocean
+
+cd to a given directory then type
+
+> vplanet vpl.in
+
+After running vplanet in each directory, run the python script
+
+> python pandora_tidal_ocean_plotting.py
+
+to produce the figure env_tides.pdf.
+

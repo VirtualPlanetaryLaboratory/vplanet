@@ -296,10 +296,10 @@ def get_dirs(src,order="none"):
 
     # No order
     if order.lower() == "none":
-        dirs = filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))
+        dirs = list(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src)))
     # Grid order.  Preserves vspace-given order for a grid of simulations
     elif order.lower() == "grid":
-        dirs = sorted(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src)))
+        dirs = list(sorted(filter(lambda x: os.path.isdir(os.path.join(src, x)), os.listdir(src))))
     # Not a valid option!
     else:
         raise ValueError("Invalid order: %s." % order)
@@ -531,10 +531,10 @@ class Dataset(object):
             with h5py.File(data_file, "r") as hf:
 
                 # Multiple variables (not just a string)
-                if hasattr(variables, "__len__") and (not isinstance(variables, str)) and (not isinstance(variables, unicode)):
+                if isinstance(variables, list):
                     for var in variables:
                         data.append(np.array(hf.get(path)[var]))
-                # Only one variables
+                # Only one variables (string!)
                 else:
                     return np.array(hf.get(path)[variables]).squeeze()
 

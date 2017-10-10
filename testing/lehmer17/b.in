@@ -1,0 +1,20 @@
+sName		b
+saModules	atmesc
+
+dMass		-2
+dObliquity	23.5
+dRadGyra	0.5
+
+dEcc		0.0
+dSemi		0.1
+
+bHaltEnvelopeGone	1
+dEnvelopeMass		-0.06
+dAtmXAbsEffH	0.1
+
+sPlanetRadiusModel	lehmer
+dThermTemp	880
+dPresXUV	5
+dAtmGasConst	4124
+
+saOutputOrder	Time -Mass -EnvelopeMass -Radius -RadXUV

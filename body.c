@@ -293,3 +293,23 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 
   return dDynEllip;
 }
+
+double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle) {
+/**************
+describe stuff here...
+**************/
+	double P;		// pressure at surface due to envelope
+	double Rxuv;	// see above
+
+	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf); // [kg/ms2]
+	Rxuv = RadSurf * RadSurf / (H * log(Pxuv/P) + RadSurf);
+	if (Rxuv <= RadSurf) {
+		Rxuv = RadSurf;
+	}
+	if (toggle == 1) {
+		return P;
+	}
+	else {
+		return Rxuv;
+  }
+}

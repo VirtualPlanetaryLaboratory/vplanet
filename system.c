@@ -304,7 +304,7 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
   return adot;
 }
 
-/*! Compute change in binary semi-major axis when circular, tidally locked
+/*! Compute change in binary semi-major axis when circular, tidally locked, w ~ n
  * and BINARY, EQTIDE, and STELLAR are active
  */
 double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -331,94 +331,4 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   {
     return 0.0;
   }
-}
-
-/*! Compute lost energy rate (tidal heating) for tidally locked binaries undergoing
- * magnetic braking and radius contraction
- */
-double fdLostEnergyTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody, double aDot)
-{
-  double eDot = 0.0;
-  double R1dot, R2dot, Rdot, tmp;
-  double M = body[0].dMass + body[1].dMass;
-  SYSTEM *system; // Dummy system struct
-
-  return 0.0;
-
-  // Both tidally locked
-  if(iNumLocked > 1)
-  {
-    int iaBody[1] = {0};
-    R1dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    iaBody[0] = 1;
-    R2dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
-    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
-
-    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
-    eDot += tmp*aDot;
-
-    tmp = -body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot*BIGG*M/pow(body[1].dSemi,3);
-    tmp += -body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot*BIGG*M/pow(body[1].dSemi,3);
-    eDot += tmp;
-  }
-  // Just one (body[iBody]) is tidally locked
-  else if(iNumLocked == 1)
-  {
-    int iaBody[1] = {iBody};
-    Rdot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
-
-    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
-    eDot += tmp*aDot;
-
-    tmp = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot*BIGG*M/pow(body[1].dSemi,3);
-    eDot += tmp;
-  }
-  else
-  {
-    eDot = 0.0;
-  }
-
-  return eDot;
-}
-
-/*! Derivative for lost energy rate (tidal heating) for tidally locked binaries undergoing
- * magnetic braking and radius contraction
- * TODO is the necessary?
- */
-double fdLostEngEqBinSt(BODY *body, SYSTEM *system, int *iaBody)
-{
-  double dEDot;
-
-  return 0.0;
-  // Compute change in semi-major axis
-  double aDot = fdSemiDtEqBinSt(body,system,iaBody);
-
-  // Both are tidally locked
-  if(body[0].bTideLock && body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,2,-1,aDot);
-  }
-  // Primary is tidally locked
-  else if(body[0].bTideLock && !body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,0,aDot);
-  }
-  // Secondary is tidally locked
-  else if(!body[0].bTideLock && body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,1,aDot);
-  }
-  else
-  {
-    dEDot = 0.0;
-  }
-
-  return dEDot;
 }

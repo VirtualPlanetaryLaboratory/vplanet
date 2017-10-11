@@ -577,7 +577,7 @@ typedef struct {
   double dThermTemp;    //lehmer var
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
-  int bCalcFXUV;        
+  int bCalcFXUV;
 
   /* STELLAR Parameters */
   int bStellar;
@@ -1352,12 +1352,10 @@ typedef struct {
 
  /* BINARY + EQTIDE + STELLAR */
  int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
- int iLostEngBinEqSt;   /**< Equation # Corresponding to BIN+EQ+ST's Change to lost energy */
 
  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
-     semi-major axis, Hecc and Kecc derivatives due to BIN+EQ+ST. */
+     semi-major axis derivatives due to BIN+EQ+ST. */
  double *pdDsemiDtBinEqSt;
- double *pdDLostEngDtBinEqSt;
 
 } UPDATE;
 

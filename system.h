@@ -38,5 +38,3 @@ double fdJStarDt(BODY*,int);
 double fdJBrakingStarDt(BODY*,int);
 double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
-double fdLostEngEqBinSt(BODY*,SYSTEM*,int*);
-double fdLostEnergyTidalLockBinEqSt(BODY*,int,int,double);

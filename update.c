@@ -1904,9 +1904,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateLostEng[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
-      // Add multi-module lost energy eqns here!
-      FinalizeUpdateMultiEqBinStLostEng(body,update,&iEqn,iVar,iBody,iFoo,fnUpdate);
-
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;

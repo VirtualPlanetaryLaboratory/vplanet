@@ -1,6 +1,6 @@
 # The host star, the sun -> Primary body!
 sName		secondary		# Body's name
-saModules       stellar eqtide binary 
+saModules       stellar eqtide 
 
 # Physical Parameters
 iBodyType     1 # Star!
@@ -10,7 +10,7 @@ dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
 dOrbPeriod  -4.0
-dEcc        0.2
+dEcc        0.15
 
 # EQTIDE Parameters
 dTidalQ		1.0e6		# Tidal phase lag

@@ -1126,7 +1126,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         module->fnFinalizeUpdateSemi[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       // Add multi-module dSemi eqns here
-      FinalizeUpdateMultiEqBinStSemi(body,update,&iEqn,iVar,iBody,iFoo,fnUpdate);
+      FinalizeUpdateMultiEqStSemi(body,update,&iEqn,iVar,iBody,iFoo,fnUpdate);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

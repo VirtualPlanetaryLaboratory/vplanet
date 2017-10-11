@@ -1,6 +1,6 @@
 # The host star, the sun -> Primary body!
 sName		primary		# Body's name
-saModules       stellar eqtide binary
+saModules       stellar eqtide
 
 # Physical Parameters
 iBodyType     1 # Star!

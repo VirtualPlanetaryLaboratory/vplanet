@@ -34,5 +34,5 @@ void ForceBehaviorEqtideDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariab
 void InitializeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int);
 void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int*,int,int);
 
-void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
-void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);
+void InitializeUpdateEqStSemi(BODY*,UPDATE*,int);
+void FinalizeUpdateMultiEqStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);

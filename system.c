@@ -229,19 +229,19 @@ void CalcPQ(BODY *body, int iBody) {
  *
  */
 
-/* BINARY - EQTIDE - STELLAR COUPLING */
+/* EQTIDE - STELLAR COUPLING */
 
 /*
- * Change in semi-major axis due to binary - eqtide - stellar coupling
+ * Change in semi-major axis due to eqtide - stellar coupling
  * due to stellar evolution (magnetic braking and radius contraction)
- * Note: body 1 has orbital information for binary
+ * Note: body 1 has orbital information for binary system
  */
 
 /*! Compute rate of change of semi-major axis for tidally locked star(s)
  * if iNumLocked = 2, both are locked, otherwise, iBody gives body struct
  * index for star that is tidally locked
  */
-double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
+double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 {
   double adot = 0.0;
   double Jdot = 0.0;
@@ -305,9 +305,9 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
 }
 
 /*! Compute change in binary semi-major axis when circular, tidally locked, w ~ n
- * and BINARY, EQTIDE, and STELLAR are active
+ * when EQTIDE and STELLAR are active
  */
-double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0]; // Secondary body
   int iTmp;
   double adot = 0.0;
@@ -315,17 +315,17 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // Both are tidally locked
   if(body[0].bTideLock && body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,2,-1);
+    return fdSemiTidalLockEqSt(body,2,-1);
   }
   // Primary is tidally locked
   else if(body[0].bTideLock && !body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,1,0);
+    return fdSemiTidalLockEqSt(body,1,0);
   }
   // Secondary is tidally locked
   else if(!body[0].bTideLock && body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,1,1);
+    return fdSemiTidalLockEqSt(body,1,1);
   }
   else
   {

@@ -660,6 +660,14 @@ void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,F
   if (body[iBody].bEqtide) {
     if (body[iBody].bStellar) {
 
+      // Only call EQTIDE and STELLAR together for 1st 2 bodies for a binary star system
+      if(iBody > 1)
+      {
+        if(control->Io.iVerbose >= VERBINPUT)
+          fprintf(stderr,"ERROR: Can't call EQTIDE and STELLAR for body %d.  Only 0 and 1 for a binary system!\n",iBody);
+        exit(EXIT_INPUT);
+      }
+
       // If you're using stellar and eqtide and this isn't the primary body, it
       // better have iBodyType == 1 (for a star)
       if(iBody > 0 && body[iBody].iBodyType != 1)
@@ -1192,10 +1200,10 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *
  *
  */
 
-/*! Binary-Eqtide-Stellar semi-major axis derivative set-up*/
-void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
-  // Only valid if BINARY, EQTIDE, and STELLAR used
-  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+/*! Eqtide-Stellar semi-major axis derivative set-up*/
+void InitializeUpdateEqStSemi(BODY *body,UPDATE *update,int iBody) {
+  // Only valid if EQTIDE, and STELLAR used and iBodyType == 1
+  if((body[iBody].iBodyType == 1) && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
     if (update[iBody].iNumSemi == 0)
       update[iBody].iNumVars++;
@@ -1204,13 +1212,13 @@ void InitializeUpdateEqBinStSemi(BODY *body,UPDATE *update,int iBody) {
 }
 
 
-/*! Finalize update (for malloc-ing) for Bin-eq-st semi-major axis derivative */
-void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
-  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+/*! Finalize update (for malloc-ing) for Eq-st semi-major axis derivative */
+void FinalizeUpdateMultiEqStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo, fnUpdateVariable ****fnUpdate) {
+  if((body[iBody].iBodyType == 1) && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
-    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
-    update[iBody].iaModule[iVar][(*iEqn)] = BINARY + EQTIDE + STELLAR;
-    update[iBody].iSemiBinEqSt = (*iEqn);
+    /* Add change in semi-major axis due to EQTIDE-STELLAR coupling */
+    update[iBody].iaModule[iVar][(*iEqn)] = EQTIDE + STELLAR;
+    update[iBody].iSemiEqSt = (*iEqn);
     (*iEqn)++;
   }
 }
@@ -1223,7 +1231,7 @@ void FinalizeUpdateMultiEqBinStSemi(BODY *body,UPDATE *update,int *iEqn,int iVar
 void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate, int iBody)
 {
   // Initialize update struct to accomodate multi-module equations
-  InitializeUpdateEqBinStSemi(body,update,iBody);
+  InitializeUpdateEqStSemi(body,update,iBody);
 
   /* More equations here! */
 }
@@ -1236,23 +1244,22 @@ void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *updat
 
   int iOtherBody, iEqn;
 
-  // This equation only valid if BINARY, EQTIDE, and STELLAR used for 2nd body
-  if(body[iBody].bBinary && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
+  // This equation only valid if EQTIDE, and STELLAR used for 2nd body
+  if((body[iBody].iBodyType == 1) && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
   {
-
-    /* Add change in semi-major axis due to BINARY-EQTIDE-STELLAR coupling */
+    /* Add change in semi-major axis due to EQTIDE-STELLAR coupling */
 
     // Other star (primary) can also influence this equation
     iOtherBody = 0;
 
-    // Add dSemi-major axis dt from Binary-Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 1;
-    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = 2; // Both stars
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiBinEqSt]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][0] = iBody;
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiBinEqSt][1] = iOtherBody;
-    update[iBody].pdDsemiDtBinEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiBinEqSt];
-    (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiBinEqSt] = &fdSemiDtEqBinSt;
+    // Add dSemi-major axis dt from Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt] = 2; // Both stars
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][1] = iOtherBody;
+    update[iBody].pdDsemiDtEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiEqSt];
+    (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fdSemiDtEqSt;
 
   }
 

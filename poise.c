@@ -3037,6 +3037,11 @@ void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *
     }
   }
   
+  // hack! test perturbation in q
+ //  if (evolve->dTime >= 100000*YEARSEC) {
+//     body[0].dLuminosity = 3.85e26;
+//   }
+  
   if (body[iBody].bDistRot == 0) {
     PrecessionExplicit(body,evolve,iBody);
     if (body[iBody].bForceObliq) {

@@ -49,7 +49,8 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OUT_ECCA                1055
 
 #define OPT_TIDALQROCK          1056
-#define OPT_TIDALQGAS           1057
+#define OPT_K2ROCK              1057
+
 
 /* Options Functions */
 void HelpOptionsEqtide(OPTIONS*);
@@ -158,6 +159,8 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_POWEREQTIDE         1094
 #define OUT_ENFLUXEQTIDE        1096
 //#define OUT_TIDALQ              1097
+#define OUT_BENV                1098
+#define OUT_BOCEAN              1099
 
 void HelpOutputEqtide(OUTPUT*);
 void WriteBodyDsemiDtEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

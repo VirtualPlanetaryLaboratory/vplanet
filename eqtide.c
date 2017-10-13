@@ -48,7 +48,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
   dest[iBody].bTideLock = src[iBody].bTideLock;
   dest[iBody].dTidalQRock = src[iBody].dTidalQRock;
-  dest[iBody].dTidalQGas = src[iBody].dTidalQGas;
+  dest[iBody].dK2Rock = src[iBody].dK2Rock;
 
 
   if (iBody > 0) {
@@ -132,23 +132,6 @@ void ReadTidalQRock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 }
 
 /* */
-
-void ReadTidalQGas(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dTidalQGas = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dTidalQGas = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dTidalQGas = options->dDefault;
-}
 
 /* Discrete Rotation */
 
@@ -338,6 +321,26 @@ void ReadK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   } else
     if(iFile > 0)
       body[iFile-1].dK2Env = options->dDefault;
+}
+
+void ReadK2Rock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dK2Rock = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dK2Rock = options->dDefault;
 }
 
 /* Maximum allowable offset between primary's spin period and its
@@ -757,13 +760,13 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_TIDALQROCK].iMultiFile = 1;
   fnRead[OPT_TIDALQROCK] = &ReadTidalQRock;
 
-  sprintf(options[OPT_TIDALQGAS].cName,"dTidalQGas");
-  sprintf(options[OPT_TIDALQGAS].cDescr,"Tidal Q of Gaseous body");
-  sprintf(options[OPT_TIDALQGAS].cDefault,"1e6");
-  options[OPT_TIDALQGAS].dDefault = 1e6;
-  options[OPT_TIDALQGAS].iType = 2;
-  options[OPT_TIDALQGAS].iMultiFile = 1;
-  fnRead[OPT_TIDALQGAS] = &ReadTidalQGas;
+  sprintf(options[OPT_K2ROCK].cName,"dK2Rock");
+  sprintf(options[OPT_K2ROCK].cDescr,"Rock's Love Number of Degree 2");
+  sprintf(options[OPT_K2ROCK].cDefault,"0.01");
+  options[OPT_K2ROCK].dDefault = 0.01;
+  options[OPT_K2ROCK].iType = 2;
+  options[OPT_K2ROCK].iMultiFile = 1;
+  fnRead[OPT_K2ROCK] = &ReadK2Rock;
 
 }
 

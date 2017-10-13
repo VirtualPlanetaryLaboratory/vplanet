@@ -624,15 +624,13 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  // change to if eq
   // Just thermint, not eqtide
-  if(body[iBody].bEnvTides || (body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if(body[iBody].bThermint)
     *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  else if(body[iBody].bAtmEsc & body[iBody].bEqtide) {
-    *dTmp = body[iBody].dTidalQ;
-  }
-  else{
+  else
     *dTmp = body[iBody].dK2/body[iBody].dImK2;
-  }
+
 
   strcpy(cUnit,"");
 }

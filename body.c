@@ -295,9 +295,8 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 }
 
 double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle) {
-/**************
-describe stuff here...
-**************/
+// calculate pressure at surface due to envelope
+// and RadXUV, radius from center of planet where optical depth of XUV is unity
 	double P;		// pressure at surface due to envelope
 	double Rxuv;	// see above
 

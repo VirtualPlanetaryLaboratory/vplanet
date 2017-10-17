@@ -428,6 +428,16 @@ void fsUnitsAngMom(UNITS *units,char cUnit[]) {
   strcat(cUnit,cTmp);
 }
 
+void fsUnitsDensity(UNITS *units,char cUnit[]) {
+  char cTmp[OPTLEN];
+  
+  fsUnitsMass(units->iMass,cUnit);
+  strcat(cUnit,"/");
+  fsUnitsLength(units->iLength,cTmp);
+  strcat(cUnit,cTmp);
+  strcat(cUnit,"^3");
+}
+
 void fsUnitsVel(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
   

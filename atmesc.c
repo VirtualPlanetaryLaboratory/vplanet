@@ -1431,6 +1431,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
+    
   	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
 
   }

@@ -62,6 +62,20 @@ void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
+void WriteDensity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = fdSphereDensity(body[iBody].dMass,body[iBody].dRadius);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= pow(fdUnitsLength(units->iLength),3)/fdUnitsMass(units->iLength);
+    fsUnitsDensity(units,cUnit);
+  }
+}
+
+
 /*
  * H
  */
@@ -715,6 +729,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DT].iNum = 1;
   output[OUT_DT].iModuleBit = 1;
   fnWrite[OUT_DT] = &WriteDeltaTime;
+
+  sprintf(output[OUT_DENSITY].cName,"Density");
+  sprintf(output[OUT_DENSITY].cDescr,"Average Density");
+  sprintf(output[OUT_DENSITY].cNeg,"solar");
+  output[OUT_DENSITY].bNeg = 1;
+  output[OUT_DENSITY].dNeg = 1./1420;  // kg/m^3
+  output[OUT_DENSITY].iNum = 1;
+  output[OUT_DENSITY].iModuleBit = 1;
+  fnWrite[OUT_DENSITY] = &WriteDensity;
 
   /*
    * H
@@ -1417,6 +1440,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
     fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
     if (control->Io.iVerbose >= VERBPROG)
       printf("Runtime = %f s\n", dTotTime);
   }

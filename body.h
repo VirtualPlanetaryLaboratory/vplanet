@@ -28,6 +28,7 @@ double fdRadiusFreqToRotVel(double,double);
 double fdRadiusRotVelToFreq(double,double);
 double fdDensityMassToRadius(double,double);
 double fdMassFromRadiusDensity(double,double);
+double fdSphereDensity(double,double);
 
 double fdMassToRad_BaylessOrosz06(double);
 double fdMassToRad_GordaSvech99(double);

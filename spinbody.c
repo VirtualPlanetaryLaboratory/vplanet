@@ -262,6 +262,7 @@ void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 //============================ End Read Inputs =================================
 
 void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  int iTmpBody = 0;
   if (body[iBody].bSpiNBody){
     body[iBody].iGravPerts = control->Evolve.iNumBodies-1; //All bodies except the body itself are perturbers
     body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
@@ -271,7 +272,7 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
     //If orbital parameters are defined, then we want to set position and velocity based on those
     if (body[iBody].bUseOrbParams){
        if (iBody == 0){ //Only want to do this once
-         for (int iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++){
+         for (iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++){
            body[iTmpBody].dCartPos = malloc(3*sizeof(double));
            body[iTmpBody].dCartVel = malloc(3*sizeof(double));
            //Convert all bodies w/ orbital elements to Heliocentric

@@ -213,7 +213,10 @@ elif numvars >= 1:
       for k in range(len(spref)):
         #check if any were not already present in the copied file, then write them
         if sflag[k] < 0:
-          fOut.write('\n'+slines[k])
+          if slines[k].split()[0] == 'rm':
+            raise IOError("No option '%s' to be removed in file %s." % (slines[k].split()[1],flist[i]))
+          else:
+            fOut.write('\n'+slines[k])
 
     fOut.close()
     count += 1    #move to next combination

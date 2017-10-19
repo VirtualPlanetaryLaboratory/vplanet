@@ -43,6 +43,11 @@ for i in range(len(lines)):
     dest = lines[i].split()[1]
   elif lines[i].split()[0] == 'trialname':
     trial = lines[i].split()[1]
+  elif lines[i].split()[0] == 'seed':
+    if np.float(lines[i].split()[1]).is_integer():
+      np.random.seed(np.int(lines[i].split()[1]))
+    else:
+      raise IOError("Attempt to pass non-integer value to seed")
   elif lines[i].split()[0] == 'file':
     flist.append(lines[i].split()[1])
     fline.append(i)
@@ -80,7 +85,18 @@ for i in range(len(lines)):
           array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),np.float(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
-
+    elif values[2][0] == 'g':
+      values[2] = values[2][1:]
+      if np.float(values[2]).is_integer():
+        array = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=np.int(values[2]))
+      else:
+        raise IOError("Attempt to randomly select for '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))       
+    elif values[2][0] == 'u':
+      values[2] = values[2][1:]
+      if np.float(values[2]).is_integer():
+        array = np.random.uniform(low=np.float(values[0]),high=np.float(values[1]),size=np.int(values[2]))
+      else:
+        raise IOError("Attempt to randomly select for '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
 
     else:
       if np.float(values[0]) > np.float(values[1]) and np.float(values[2]) > 0:

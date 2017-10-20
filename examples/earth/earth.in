@@ -9,20 +9,15 @@ dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
 # Orbital Properties
-dEcc            0.1 #0.0167		# Eccentricity
-dSemi           0.05 #-1		# Semi-major axis, negative -> AU
+dEcc            0.0167		# Eccentricity
+dSemi           -1		# Semi-major axis, negative -> AU
 
 
 # RADHEAT Parameters
 # *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-<<<<<<< HEAD
 d40KNumMan    9.721101687979459683e+42
 d40KNumCore   9.581703578252307776e+42
-=======
-d40KNumMan    -1.0
-d40KNumCore   -1.0 #-3.0
->>>>>>> ff7753a07164142ce93d005edb7e3c0cb5943828
 d40KNumCrust  -1.0
 ### 232Th
 d232ThNumMan	 6.078734010302774195e+41
@@ -38,7 +33,6 @@ d238UNumCore	 2.959002795718371557e+39
 d238UNumCrust	-1
 
 ### THERMINT inputs.
-<<<<<<< HEAD
 dTMan          3000
 dTCore         6000
 dEruptEff      0.1
@@ -60,32 +54,17 @@ dViscMeltPhis  7.374509995857124744e-01
 dViscMeltDelta 5.042291150413996448e+00
 
 #Unoptimized Values
-dViscMeltGamma 6
+ViscMeltGamma 6
 dFixMeltfactorUMan 0  
-=======
-dTMan          3000.0
-dTCore         6000.0	#6000
-dEruptEff      0.1		#.2
-dTrefLind      5650.    #def is 5705.
-dDTChiRef      0 #250.     ## def is 300.
-dFixMeltfactorUMan 0 #1  
->>>>>>> ff7753a07164142ce93d005edb7e3c0cb5943828
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dStagLid       0
 dManHFlowPref  1 
 dPresSWind     -1
     
 #Output
-<<<<<<< HEAD
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
 	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad 
-=======
-saOutputOrder Time TidalQ K2 ImK2
-#saOutputOrder TidalQ K2 ImK2 -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad -SurfEnFluxTot
->>>>>>> ff7753a07164142ce93d005edb7e3c0cb5943828
+		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

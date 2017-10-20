@@ -1,0 +1,17 @@
+#
+sName     star		                  # Body's name
+saModules stellar eqtide                     # Modules to apply, exact spelling required
+
+# Output
+saOutputOrder Time -TotEn -TotAngMom
+
+# EQTIDE
+dTidalQ 1.0e6
+dK2     0.5
+dMaxLockDiff  0.01
+sTideModel p2
+saTidePerts planet
+
+# Physical Parameters
+dMass         1.0                         # Mass, solar masses
+sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`

@@ -1,0 +1,27 @@
+# Host star parameters
+sName		proxima
+saModules    	stellar eqtide
+#saModules    	stellar
+#saModules    	eqtide
+
+# Physical properties
+dMass        	0.120
+dRadius      	0.0006557
+dRotPeriod      -10                   # Rotation period, negative -> days#dObliquity      0                    
+dRadGyra        0.5                     # Radius of gyration (moment of inertia constant)
+#dLuminosity	-0.00155
+#dAge		1e6
+
+# EQTIDE parameters
+dTidalQ         1e6                     # Tidal quality factor
+dK2             1                     # Love number of degree 2
+dMaxLockDiff    0.1                     # Difference from tidal rotation period before locking
+saTidePerts     b                    # Body name(s) of tidal perturbers
+
+# STELLAR parameters
+sStellarModel	proxima
+#sXUVModel	ribas
+#sWindModel	Reiners
+
+saOutputOrder 	Time -TotAngMom -TotEn -RotPer Obli -Lumin -LXUVTot -Radius
+

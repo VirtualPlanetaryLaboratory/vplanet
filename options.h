@@ -71,9 +71,9 @@
 #define OPT_BODYTYPE            545
 #define OPT_ORBPER		550
 #define OPT_ORBSEMI		560
-#define OPT_INC       561
-#define OPT_ARGP      562
-#define OPT_LONGA              563
+#define OPT_INC                 561
+#define OPT_ARGP                562
+#define OPT_LONGA               563
 
 
 #define OPT_OBL	                640
@@ -87,6 +87,8 @@
 #define OPT_DYNELLIP            611
 #define OPT_CALCDYNELLIP        612     
 #define OPT_PRILUM	        615
+
+#define OPT_VISCUMAN            630   //Viscosity UMTBL
 
 #define OPT_RADIUS              650
 #define OPT_RG		        655

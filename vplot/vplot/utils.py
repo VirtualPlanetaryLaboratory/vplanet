@@ -273,7 +273,7 @@ def GetConf():
 
   return conf
 
-def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
+def GetArrays(path = '.', bodies = [], benchmark = False, colors = None, logfile = None):
   '''
   
   '''
@@ -302,7 +302,10 @@ def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
   # Get the log file
   lf = [f for f in os.listdir(path) if f.endswith(logext)]
   if len(lf) > 1:
-    raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
+    # Did the user specify a logfile name?
+    lf = os.path.join(path, logfile)
+    if lf is None:
+      raise Exception("There's more than one log file in the cwd! VPLOT is confused.")
   elif len(lf) == 0:
     raise Exception("There doesn't seem to be a log file in this directory.")
   else:
@@ -355,12 +358,12 @@ def GetArrays(path = '.', bodies = [], benchmark = False, colors = None):
       except AttributeError:
         body.color = colors[b]
       
-    # Grab the forward arrays
+    # Grab the forward arrays. Note that they may not exist for this body
     try:
       with open(os.path.join(path, body.fwfile), 'r') as f:
         fwfile = f.readlines()
     except IOError:
-      raise Exception('Unable to open %s.' % body.fwfile)
+      fwfile = ['']
                        
     # Now grab the output order
     outputorder = re.search(r'- BODY: %s -(.*?)\nOutput Order:(.*?)\n' % body.name, 

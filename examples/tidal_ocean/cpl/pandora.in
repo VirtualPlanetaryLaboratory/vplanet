@@ -1,0 +1,36 @@
+# Earthlike parameters
+sName		pandora			# Body's name
+saModules 	eqtide
+
+# Physical Properties
+dMass		-1.27  			# Mass, negative -> Earth masses
+dRadius		-1.07  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	23.5
+dRadGyra	0.5
+
+# Orbital Properties
+dEcc            0.1		# Eccentricity
+dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
+
+# Eqtide Properties
+dTidalQ         12              # Tidal phase lag
+dK2             0.3                 # Love number of degree 2
+dMaxLockDiff    0.1
+saTidePerts     star
+    
+#Output
+saOutputOrder Time -TotEn -TotAngMom TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -SurfEnFluxTot
+
+#		-26AlPowerMan -26AlMassMan -26AlMassCore 
+	    
+#-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
+#		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $
+#		-RadPowerMan -RadPowerCore -RadPowerCrust -RadPowerTotal $
+#		-BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan -FMeltUMan -MeltFactorUMan -MeltMassFluxMan $
+#		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC -ChiOC -ChiIC -DTChi
+
+
+#bFixOrbit	1
+# Output can be in any order and need only be unambiguous. 
+# Units of negative arguments are listed in the onboard help (./vplanet -h).

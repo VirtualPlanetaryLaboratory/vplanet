@@ -41,7 +41,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnInitializeControl[iBody][iModule](control); 
+      module->fnInitializeControl[iBody][iModule](control,iBody); 
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
@@ -426,6 +426,16 @@ void fsUnitsAngMom(UNITS *units,char cUnit[]) {
   strcat(cUnit,"^2/");
   fsUnitsTime(units->iTime,cTmp);
   strcat(cUnit,cTmp);
+}
+
+void fsUnitsDensity(UNITS *units,char cUnit[]) {
+  char cTmp[OPTLEN];
+  
+  fsUnitsMass(units->iMass,cUnit);
+  strcat(cUnit,"/");
+  fsUnitsLength(units->iLength,cTmp);
+  strcat(cUnit,cTmp);
+  strcat(cUnit,"^3");
 }
 
 void fsUnitsVel(UNITS *units,char cUnit[]) {

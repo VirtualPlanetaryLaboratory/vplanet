@@ -81,7 +81,7 @@ void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     body[iFile-1].bGRCorr = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    AssignDefaultInt(options,&body[iFile-1].bGRCorr,files->iNumInputs);
+    body[iFile-1].bGRCorr = atoi(options->cDefault);
 }
 
 void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -221,9 +221,6 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
-  
-
-  
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
@@ -517,6 +514,10 @@ void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
+      if (body[j].bDistOrb == 0) {
+        fprintf(stderr,"ERROR: DistOrb must be the called for all planets\n");
+        exit(EXIT_INPUT);
+      }
       body[iBody].iaGravPerts[iPert] = j;
       iPert++;
     }
@@ -572,6 +573,10 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
+    if (body[j].bDistOrb == 0) {
+        fprintf(stderr,"ERROR: DistOrb must be the called for all planets\n");
+        exit(EXIT_INPUT);
+    }
     body[iBody].iaGravPerts[iPert] = j;
     iPert++;
   }
@@ -589,13 +594,14 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
 }
 
 void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  int i, j=0, iPert=0, jBody=0;
+  int i, j=0, iPert=0, jBody=0,kBody;
   
   VerifyOrbitModel(control,files,options);
 //   VerifyStabilityHalts(control,files,options);
   body[iBody].dLOrb = malloc(3*sizeof(double));
   body[iBody].dLOrbTmp = malloc(3*sizeof(double));
   if (iBody == 1) system->dLOrb = malloc(3*sizeof(double));
+  body[iBody].dMeanA = 0.0;
   
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -722,6 +728,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       } 
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
+	  /* Must initialize dMeanA to prevent memory corruption. This 
+	     parameter has no real meaning in DistOrb runs, but inv_plave
+	     requires it. I will set it to zero for each body. --RKB */
+	  for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
+	    body[kBody].dMeanA = 0;
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }
@@ -1158,7 +1169,9 @@ void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 }  
 
@@ -1178,7 +1191,9 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 } 
 
@@ -1198,7 +1213,9 @@ void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
+    *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+    fsUnitsAngRate(units,cUnit);
   }
 } 
 
@@ -1463,11 +1480,6 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DQINCDTDISTORB] = &WriteBodyDQincDtDistOrb;
 }
 
-void FinalizeOutputFunctionDistOrb(OUTPUT *output,int iBody,int iModule) {
-  
-}
-
-
 /************ DISTORB Logging Functions **************/
 
 void LogOptionsDistOrb(CONTROL *control, FILE *fp) {
@@ -1517,10 +1529,6 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistOrb;
   module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistOrb;
   module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistOrb;
-
-  //module->fnInitializeOutputFunction[iBody][iModule] = &InitializeOutputFunctionEqtide;
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionDistOrb;
-
 }
 
 /************* DistOrb Functions ************/
@@ -2513,6 +2521,7 @@ double vyi(BODY *body, int iBody) {
   return v;
 }
 
+// XXX There is already a similar function to this in body.c
 double signf(double value) {
   if (value > 0) return 1.;
   if (value < 0) return -1.;
@@ -2597,6 +2606,9 @@ void astro2bary(BODY *body, int iNumBodies) {
       body[iBody].dCartVel[i] -= vcom[i];
     }
   }
+
+  free(xcom);
+  free(vcom);
 }
 
 void bary2astro(BODY *body, int iNumBodies) {
@@ -2613,6 +2625,7 @@ void bary2astro(BODY *body, int iNumBodies) {
   }
 }
 
+// XXX Functions like cross and angularmom belong in a general file, like system.c.
 void cross(double *a, double *b, double *c) {
   c[0] = a[1]*b[2] - b[1]*a[2];
   c[1] = a[2]*b[0] - b[2]*a[0];
@@ -2623,16 +2636,22 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   double *rxptmp;
   int i, iBody;
   
+  rxptmp = malloc(3*sizeof(double));
+
   osc2cart(body, iNumBodies);
   astro2bary(body, iNumBodies);
+
+  for (i=0;i<3;i++)
+    AngMom[i]=0;
   
-  rxptmp = malloc(3*sizeof(double));
   for (iBody=0;iBody<iNumBodies;iBody++) {
     cross(body[iBody].dCartPos, body[iBody].dCartVel, rxptmp);
     for (i=0;i<3;i++) {
+      // XXX Why divide by MSUN and not stellar mass?
       AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
     }
   }
+  free(rxptmp);
 }
 
 void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
@@ -2656,6 +2675,9 @@ void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
     body[iBody].dCartVel[1] = vtmp[1];
     body[iBody].dCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
   }
+
+  free(xtmp);
+  free(vtmp);
 }
 
 double normv(double *vector) {
@@ -2665,14 +2687,15 @@ double normv(double *vector) {
 void cart2osc(BODY *body, int iNumBodies) {
   int iBody;
   double r, vsq, rdot, mu, *h, hsq, sinwf, coswf, sinf, cosf, sinw, cosw, cosE, f;
-  
+
+  h = malloc(3*sizeof(double));
+
   for (iBody=1;iBody<iNumBodies;iBody++) {
     r = normv(body[iBody].dCartPos);
     vsq = pow(normv(body[iBody].dCartVel),2);
     rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
             body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
     mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
-    h = malloc(3*sizeof(double));
     cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
     hsq = pow(normv(h),2);
     
@@ -2722,18 +2745,18 @@ void cart2osc(BODY *body, int iNumBodies) {
     if (body[iBody].dMeanA < 0) body[iBody].dMeanA += 2*PI;
     if (body[iBody].dMeanA >= 2*PI) body[iBody].dMeanA -= 2*PI;
   }
+  free(h);
 }
 
 
 void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
-  double *AngMom;
-  AngMom = malloc(3*sizeof(double));
+  double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
   
   /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
      This angle is invariant under rotations. */
   for (iBody=1;iBody<iNumBodies;iBody++) {
-    if (body[iBody].bDistRot) {
+    if (body[iBody].bDistRot) { // XXX No mention of other modules is allowed!! 
       body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
       while (body[iBody].dTrueApA<0) {
         body[iBody].dTrueApA += 2*PI;
@@ -2761,6 +2784,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
     CalcHK(body, iBody);
     CalcPQ(body, iBody);
   }
+
 }
 
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {

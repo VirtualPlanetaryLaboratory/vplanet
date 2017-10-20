@@ -27,6 +27,10 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GASDENSITY         2207
 #define OPT_DMDENSITY          2208
 #define OPT_STARSCALEL         2209
+#define OPT_STELLARENC         2210
+#define OPT_TIMEEVOLVELDISP    2211
+#define OPT_OUTPUTENC          2212
+
 
 /* Options Functions */
 #define OPT_PERIQ              2221
@@ -36,6 +40,9 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_HOSTBININC         2253
 #define OPT_HOSTBINARGP        2254
 #define OPT_HOSTBINLONGA       2255
+#define OPT_HOSTBINMASS1       2256
+#define OPT_MINALLOWED         2257
+#define OPT_GALACTIDES         2258
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 // 
@@ -67,9 +74,17 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_PERIQ               2220
 #define OUT_NENCOUNTERS         2221
 #define OUT_FVELDISP            2222
+#define OUT_DECCDTGALHTIDAL     2250
+#define OUT_DINCDTGALHTIDAL     2251
+#define OUT_DLONGADTGALHTIDAL   2252
+#define OUT_DARGPDTGALHTIDAL    2253
 
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDEccDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDIncDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDArgPDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDLongADtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputGalHabit(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
@@ -91,14 +106,71 @@ void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
 double NearbyStarFrEnc(SYSTEM*,double);
 
-
+double dexdJ(BODY*, int);
+double dexdla(double);
+double dexdap(double,double,double,double);
+double deydJ(BODY*, int);
+double deydla(double);
+double deydap(double,double,double,double);
+double dezdJ(BODY*, int);
+double dezdap(double,double,double);
+void CalcEccVec(BODY*,int);
+void CalcAngMVec(BODY*,int);
+void Rot2Bin(BODY*,int);
 
 /* GalHabit derivatives */
 double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDIncDt(BODY*, SYSTEM*, int*);
 double fdGalHabitDLongADt(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccXDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtTidal(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccXDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtQuad(BODY*, SYSTEM*, int*);
+double fdGalHabitDLongADtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDLongPDtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDArgPDtQuad0(BODY*, SYSTEM*, int*);
+double fdGalHabitDIncDtQuad0(BODY*, SYSTEM*, int*);
 
+double QuadC2(BODY*, int*);
+double DQuadDEccXInner(BODY*, int*);
+double DQuadDEccYInner(BODY*, int*);
+double DQuadDEccZInner(BODY*, int*);
+double DQuadDAngMXInner(BODY*, int*);
+double DQuadDAngMYInner(BODY*, int*);
+double DQuadDAngMZInner(BODY*, int*);
+double DQuadDAngMXOuter(BODY*, int*);
+double DQuadDAngMYOuter(BODY*, int*);
+double DQuadDAngMZOuter(BODY*, int*);
+
+double fdGalHabitDEccXDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccYDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDEccZDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMXDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMYDtBV(BODY*, SYSTEM*, int*);
+double fdGalHabitDAngMZDtBV(BODY*, SYSTEM*, int*);
+
+double OctC3(BODY*, int*);
+double DOctDEccXInner(BODY*, int*);
+double DOctDEccYInner(BODY*, int*);
+double DOctDEccZInner(BODY*, int*);
+double DOctDAngMXInner(BODY*, int*);
+double DOctDAngMYInner(BODY*, int*);
+double DOctDAngMZInner(BODY*, int*);
+double DOctDEccXOuter(BODY*, int*);
+double DOctDEccYOuter(BODY*, int*);
+double DOctDEccZOuter(BODY*, int*);
+double DOctDAngMXOuter(BODY*, int*);
+double DOctDAngMYOuter(BODY*, int*);
+double DOctDAngMZOuter(BODY*, int*);
 
 double random_double();
 double mag2mass(double);
@@ -109,5 +181,5 @@ void VelocityDisp(SYSTEM*);
 void CalcImpactParam(SYSTEM*);
 void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
-void NextEncounterTime(SYSTEM*,double);
+void NextEncounterTime(SYSTEM*,EVOLVE*,double);
 void CalcEncounterRate(SYSTEM*);

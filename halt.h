@@ -7,6 +7,11 @@
  *
 */
 
+#define max(a,b) \
+     ({ __typeof__ (a) _a = (a); \
+             __typeof__ (b) _b = (b); \
+           _a > _b ? _a : _b; })
+
 int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
 void InitializeHalts(CONTROL*,MODULE*);
 void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*);

@@ -32,9 +32,9 @@ void NotPrimaryInput(int iFile,char cName[],char cFile[],int iLine,int iVerbose)
   }
 }
 
-/* Returns the line with the desiried options AND asserts no duplicate 
-   entries. cLine is the entire text of the line, iLine is the line 
-   number. */ 
+/* Returns the line with the desiried options AND asserts no duplicate
+   entries. cLine is the entire text of the line, iLine is the line
+   number. */
 
 /* Is the first non-white space a #? I so, return 1 */
 int CheckComment(char cLine[],int iLen) {
@@ -42,7 +42,7 @@ int CheckComment(char cLine[],int iLen) {
 
   for (iPos=0;iPos<iLen;iPos++) {
     if (!isspace(cLine[iPos])) {
-      if (cLine[iPos] == 35)
+      if (cLine[iPos] == 35) // # is ASCII code 35
       return 1;
     } else
       return 0;
@@ -55,11 +55,14 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   char cWord[OPTLEN],cTmp[LINE];
   FILE *fp;
 
+  /* XXX Need to add a check for a carriage return on each line */
+
   iLen=strlen(cOption);
 
   fp=fopen(cFile,"r");
   memset(cLine,'\0',LINE);
   memset(cTmp,'\0',LINE);
+  memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
     if (!CheckComment(cTmp,iLen)) {
@@ -68,7 +71,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
-            if (iVerbose > VERBINPUT) 
+            if (iVerbose > VERBINPUT)
             fprintf(stderr,"Multiple occurences of parameter %s found.\n",cOption);
           fprintf(stderr,"\t%s, lines: %d and %d\n",cFile,(*iLine+1),iLineTmp+1);
           exit(1);
@@ -86,7 +89,7 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
 }
 
 /* If the previous line ended in $, must find the next valid line
-   (the next lines could be a # or blank). The search is made 
+   (the next lines could be a # or blank). The search is made
    recursively, and cLine and *iLine are the line and line number,
    respectively. */
 
@@ -109,16 +112,17 @@ void GetNextValidLine(char cFile[],int iStart,char cLine[],int *iLine) {
     return;
   }
 
-  /* Now check for blank line, comment (#), or continue ($) */
+  /* Now check for blank line, comment (# = 35), continue ($ = 36)
+     or blank line (line feed = 10). */
 
   for (iPos=0;iPos<LINE;iPos++) {
-    if (cLine[iPos] == 36 || cLine[iPos] == 35 || cLine[iPos] == 10) { 
+    if (cLine[iPos] == 36 || cLine[iPos] == 35 || cLine[iPos] == 10) {
       /* First character is a $, # or \n: continue */
       GetNextValidLine(cFile,iStart+1,cLine,iLine);
       fclose(fp);
       return;
     }
-    if (!isspace(cLine[iPos])) { 
+    if (!isspace(cLine[iPos])) {
       /* Found next valid line */
       fclose(fp);
       return;
@@ -134,7 +138,7 @@ void GetNextValidLine(char cFile[],int iStart,char cLine[],int *iLine) {
 int GetPos(char cLine[]) {
   int iPos;
 
-  for (iPos=0;iPos<strlen(cLine);iPos++) 
+  for (iPos=0;iPos<strlen(cLine);iPos++)
     if (!isspace(cLine[iPos]))
       return iPos;
 
@@ -151,12 +155,23 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
 
+  //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
   for (iPos=GetPos(cLine);iPos<strlen(cLine);iPos++) {
+  //for (iPos=GetPos(cLine);iPos<strlen(cLine)-GetPos(cLine);iPos++) {
+    /* MEM: Something is wrong here, but it is intermittent. Sometimes a call
+       here produces a memory error with valgrind. On 12/14/16 a run without the
+       next print statements produced an error, but with them in, the error
+       disappeared. After commenting out again, the problem was still gone. */
+    /* DEBUG
+    printf("%s\n",cLine);
+    printf("%d %d %d\n",(int)strlen(cLine),GetPos(cLine),iPos);
+    fflush(stdout);
+    */
     iPosStart=0;
     while (!isspace(cLine[iPos])) {
-      if (cLine[iPos] != 35) {
+      if (cLine[iPos] != 35) { // 35 is ASCII code for #
         /* Fill word in */
         cInput[iWord][iPosStart] = cLine[iPos];
         iPosStart++;
@@ -164,7 +179,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
       } else {
         /* If at the start of the word, we must decrement iWord
           so that when it is incremented at the end of the loop
-          the correct number of words is returned. If at the end 
+          the correct number of words is returned. If at the end
           of a word, everything should be fine. */
         if (iPosStart==0) iWord--;
 
@@ -175,14 +190,14 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
     /* Now advance to next word */
     while (isspace(cLine[iPos]))
       iPos++;
-    
+
     iPos--;
     iWord++;
   }
   /* Is the last character a $? If so, remove it and adjust iNumWords */
   if (cInput[iWord-1][strlen(cInput[iWord-1])-1] == 36) {
     *bContinue=1;
-    if (strlen(cInput[iWord-1]) == 1) 
+    if (strlen(cInput[iWord-1]) == 1)
       *iNumWords = iWord-1;
     else
       *iNumWords = iWord;
@@ -197,7 +212,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
    enough. */
 
 void PrintDefault(char cName[],char cDefault[],char cFile[],int iVerbose,int iVerbThreshold) {
-  if (iVerbose >= iVerbThreshold) 
+  if (iVerbose >= iVerbThreshold)
     fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",cName,cFile,cDefault);
 }
 
@@ -217,28 +232,30 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
   int iPos,iWord,bContinue,iNumWords;
   FILE *fp;
 
+  memset(cLine,'\0',LINE);
+
   /* iLine=malloc(MAXLINES*sizeof(int)); */
 
   iLine[0]=-1;
 
-  /* Fencepost problem. If cInput continues across multiple lines, 
-     then we must keep getting more lines. For the first line, we 
-     remove the first word, as it is cOption. iLine must come 
+  /* Fencepost problem. If cInput continues across multiple lines,
+     then we must keep getting more lines. For the first line, we
+     remove the first word, as it is cOption. iLine must come
      preassigned and set to 0. */
 
   /* Initialize the array to have nothing in it. */
-  for (iPos=0;iPos<MAXARRAY;iPos++) 
+  for (iPos=0;iPos<MAXARRAY;iPos++)
     memset(cTmp[iPos],'\0',OPTLEN);
 
   GetLine(cFile,cOption,cLine,&iLine[0],iVerbose);
   GetWords(cLine,cTmp,&iNumWords,&bContinue);
   *iNumLines=1;
-  
+
   for (iWord=0;iWord<iNumWords-1;iWord++) {
     memset(saInput[iWord],'\0',OPTLEN);
     strcpy(saInput[iWord],cTmp[iWord+1]);
-    /* Reset cTmp string: If the next time cTmp is filled, the 
-       new string is longer than the old, then vestigial characters 
+    /* Reset cTmp string: If the next time cTmp is filled, the
+       new string is longer than the old, then vestigial characters
        can remain after a trailing $. */
     memset(cTmp[iWord+1],'\0',OPTLEN);
   }
@@ -246,7 +263,7 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
   *iNumIndices=iNumWords-1;
   /* Reset first cTmp string */
   memset(cTmp[0],'\0',OPTLEN);
-  
+
   /* Now keep getting lines until done */
   while (bContinue) {
     GetNextValidLine(cFile,iLine[*iNumLines-1]+1,cLine,&iLine[*iNumLines]);
@@ -265,7 +282,7 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       }
     }
   }
-}    
+}
 
 /* Get all fields in a double array. The fields are stored in daInput,
    and the lines which were read are in iNumLines. If a parameter is
@@ -301,7 +318,7 @@ void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbo
   AddOptionInt(cFile,cOption,iInput,iLine,iVerbose);
   if (*iLine == -1 )   //PED 4/9/15
       return;
-  if (*iInput == 0 || *iInput == 1) 
+  if (*iInput == 0 || *iInput == 1)
     return;
   else {
     if (iVerbose >= VERBERR) {
@@ -348,9 +365,9 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
         iNumOut=0;
         ok=1;
         for (iPos=1;iPos<LINE;iPos++) { /* Ignore first character, as it makes conditional well-defined */
-          /* printf("%d ",cLine[iPos]); */ 
+          /* printf("%d ",cLine[iPos]); */
           if (ok) {
-            if (cLine[iPos] == 35) {
+            if (cLine[iPos] == 35) { // 35 is ASCII code for #
               /* Pound sign! */
               ok=0;
               iNumOut++;
@@ -362,7 +379,7 @@ int GetNumOut(char cFile[],char cName[],int iLen,int *iLineNum,int iExit) {
       }
     }
     iLine++;
-    for (iPos=0;iPos<LINE;iPos++) 
+    for (iPos=0;iPos<LINE;iPos++)
       cLine[iPos]=0;
   }
   /* Lose the input parameter */
@@ -381,33 +398,37 @@ int iGetNumLines(char cFile[]) {
     fprintf(stderr,"Unable to open %s.\n",cFile);
     exit(EXIT_INPUT);
   }
-  
+
   while(fgets(cLine,LINE,fp) != NULL) {
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set
-       by LINE. If a carriage return is not found in the first LINE 
+       by LINE. If a carriage return is not found in the first LINE
        characters *and* is not preceded by a comment, the line is too long. */
     bComment=0;
     bReturn=0;
-    for (iChar=0;iChar<LINE;iChar++) {
-      if (cLine[iChar] == 35) {
+    for (iChar=0;iChar<LINE && cLine[iChar] != '\0';iChar++) {
+      if (cLine[iChar] == 35) { // 35 is ASCII code for #
 	bComment = 1;
       }
-      if (cLine[iChar] == 10) {
+      // Maybe unnecessary with the second conditional in the loop initialization?
+      if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
 	bReturn = 1;
       }
+
     }
-    
+
     if (!bReturn && !bComment) {
-      fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
-      bFileOK = 0;
+      if (iChar >= LINE) {
+	fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
+	bFileOK = 0;
+      }
     }
   }
-  
-  if (!bFileOK) 
+
+  if (!bFileOK)
     exit(EXIT_INPUT);
-  
+
   return iNumLines;
 }
 
@@ -429,14 +450,14 @@ void InitializeInput(INFILE *input) {
   for (iLine=0;iLine<input->iNumLines;iLine++) {
     /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
-    
+
     /* Now find those lines that are comments or blank */
-    for (iPos=0;iPos<LINE;iPos++) 
+    for (iPos=0;iPos<LINE;iPos++)
       cLine[iPos]='\0';
 
     fgets(cLine,LINE,fp);
     /* Check for # sign or blank line */
-    if (CheckComment(cLine,LINE)) 
+    if (CheckComment(cLine,LINE))
       /* Line is OK */
       input->bLineOK[iLine] = 1;
     else {
@@ -444,7 +465,7 @@ void InitializeInput(INFILE *input) {
       bBlank=0;
       for (iPos=0;iPos<LINE;iPos++) {
         if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
-          bBlank=1;     
+          bBlank=1;
         }
       }
       if (!bBlank) input->bLineOK[iLine] = 1;
@@ -464,7 +485,7 @@ void Unrecognized(FILES files) {
     while (fgets(cLine,LINE,fp) != NULL) {
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */
-        sscanf(cLine,"%s",cWord);       
+        sscanf(cLine,"%s",cWord);
         fprintf(stderr,"ERROR: Unrecognized option \"%s\" in %s, line %d.\n",cWord,files.Infile[iFile].cIn,iLine+1);
         bExit=1;
       }
@@ -486,7 +507,7 @@ void UpdateFoundOptionMulti(INFILE *input,OPTIONS *options,int *iLine,int iNumLi
   int iLineNow;
 
   /*
-    For now options->iLine is a scalar, so just use the first line. 
+    For now options->iLine is a scalar, so just use the first line.
     The user should be able to figure it out from there.
   */
   options->iLine[iFile] = iLine[0];
@@ -498,16 +519,16 @@ void UpdateFoundOptionMulti(INFILE *input,OPTIONS *options,int *iLine,int iNumLi
 
 void CheckDuplication(FILES *files,OPTIONS *options,char cFile[],int iLine,int iVerbose) {
   int iFile;
-  
+
   if (options->iMultiFile) {
     fprintf(stderr,"ERROR: CheckDuplication called, but options.iMultiFile = %d\n",options->iMultiFile);
     exit(EXIT_INPUT);
   }
-  
+
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
     if (options->iLine[iFile] >= 0 && memcmp(files->Infile[iFile].cIn,cFile,strlen(cFile)) != 0) {
       /* Found previously set location */
-      if (iVerbose >= VERBERR) 
+      if (iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Option %s found in multiple files\n",options->cName);
       fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,options->iLine[iFile]);
       fprintf(stderr,"\t%s, Line: %d\n",cFile,iLine);
@@ -552,7 +573,7 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
 }
 
 int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
-  if (memcmp(sLower(cTmp),"g",1) == 0) 
+  if (memcmp(sLower(cTmp),"g",1) == 0)
     return 0;
   else if (memcmp(sLower(cTmp),"k",1) == 0)
     return 1;
@@ -577,7 +598,7 @@ int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
 void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
   int iFileNow,lTmp=-1;
   char cTmp[OPTLEN];
-  /* Mass Unit 
+  /* Mass Unit
      0=gm
      1=kg
      2=solar
@@ -617,7 +638,7 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         /* Wasn't assigned in primary */
         control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-      }  
+      }
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
@@ -657,7 +678,7 @@ int iAssignUnitTime(char cTmp[],int iVerbose,char cFile[],char cName[], int iLin
 void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
   int iFileNow,lTmp=-1;
   char cTmp[OPTLEN];
-  /* Time Unit 
+  /* Time Unit
      0=s
      1=d
      2=yr
@@ -693,7 +714,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         /* Wasn't assigned in primary */
         control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-      }  
+      }
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
@@ -704,7 +725,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         control->Units[iFile].iTime = iAssignUnitTime(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
-    }      
+    }
   }
 }
 
@@ -722,11 +743,11 @@ int iAssignUnitAngle(char cTmp[],int iVerbose,char cFile[],char cName[], int iLi
   /* Whoops! */
   assert(0);
 }
-   
+
 void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
   int iFileNow,lTmp=-1;
   char cTmp[OPTLEN];
-  /* Angle Unit 
+  /* Angle Unit
      0=rad
      1=deg */
 
@@ -759,7 +780,7 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         /* Wasn't assigned in primary */
         control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-      }  
+      }
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
@@ -841,7 +862,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         /* Wasn't assigned in primary */
         control->Units[iFile].iLength = iAssignUnitLength(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-      }  
+      }
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
@@ -857,7 +878,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
 }
 
 int iAssignTempUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
-  if (memcmp(sLower(cTmp),"k",1) == 0) 
+  if (memcmp(sLower(cTmp),"k",1) == 0)
     return 0;
   else if (memcmp(sLower(cTmp),"c",1) == 0)
     return 1;
@@ -912,7 +933,7 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
         /* Wasn't assigned in primary */
         control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-      }  
+      }
     } else {
       /* Not assigned in this file */
       /* Was it assigned in primary? */
@@ -947,9 +968,9 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
   char saTmp[MAXARRAY][OPTLEN];
 
   lTmp=malloc(MAXLINES*sizeof(int));
-  
+
   AddOptionStringArray(infile->cIn,options->cName,saTmp,&iNumIndices,&iNumLines,lTmp,control->Io.iVerbose);
-  
+
   if (lTmp[0] >= 0) {
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR)
@@ -958,26 +979,26 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
     }
     files->iNumInputs=iNumIndices+1;
   } else {
-    if (control->Io.iVerbose >= VERBERR) 
+    if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
     exit(EXIT_INPUT);
   }
-  
+
   /* With body files identified, must allocate space */
-  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));  
+  files->Infile = malloc(files->iNumInputs*sizeof(INFILE));
   files->Infile[0].bLineOK = malloc(infile->iNumLines*sizeof(int));
-  
+
   InfileCopy(&files->Infile[0],infile);
 
-  for (iIndex=0;iIndex<iNumIndices;iIndex++)  
+  for (iIndex=0;iIndex<iNumIndices;iIndex++)
 
     strcpy(files->Infile[iIndex+1].cIn,saTmp[iIndex]);
- 
+
   control->Evolve.iNumBodies=iNumIndices;
   files->Outfile = malloc(iNumIndices*sizeof(OUTFILE));
-  
+
   UpdateFoundOptionMulti(&files->Infile[0],options,lTmp,iNumLines,0);
-  
+
   free(lTmp);
 }
 
@@ -1017,7 +1038,7 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   /* Initialize functions in the module struct */
   InitializeModule(module,control->Evolve.iNumBodies);
   control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
-  /* XXX Does this belong here? Need to know iNumHalts, so should this come in verify? -- I think so 
+  /* XXX Does this belong here? Need to know iNumHalts, so should this come in verify? -- I think so
      InitializeHalt(control,module); */
 
   /* Next we must find the units, modules, and system name */
@@ -1033,17 +1054,19 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
   }
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) 
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
     FinalizeModule(*body,module,iBody);
 
   /* XXX Should check this file here */
+
+  free(input.bLineOK);
 
 }
 
 void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++) 
+  for (iFile=0;iFile<iNumFiles;iFile++)
     if (options->iLine[iFile] != -1)
       /* Options already input in other file */
       return;
@@ -1055,7 +1078,7 @@ void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
 void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++) 
+  for (iFile=0;iFile<iNumFiles;iFile++)
     if (options->iLine[iFile] != -1)
       /* Options already input in other file */
       return;
@@ -1067,7 +1090,7 @@ void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
 void AssignDefaultString(OPTIONS *options,char cOption[],int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++) 
+  for (iFile=0;iFile<iNumFiles;iFile++)
     if (options->iLine[iFile] != -1)
       /* Options already input in other file */
       return;
@@ -1078,7 +1101,7 @@ void AssignDefaultString(OPTIONS *options,char cOption[],int iNumFiles) {
 
 int bOptionAlreadyFound(int *iLine,int iNumFiles) {
   int iFile;
-  
+
   for (iFile=0;iFile<iNumFiles;iFile++) {
     if (iLine[iFile] >= 0)
       return 1;
@@ -1086,7 +1109,7 @@ int bOptionAlreadyFound(int *iLine,int iNumFiles) {
   return 0;
 }
 
-/* 
+/*
  * Here are the subroutines for options used by all modules
  */
 
@@ -1103,14 +1126,14 @@ void ReadAge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
   /* This parameter cannot exist in primary input file */
   int lTmp=-1;
   double dTmp;
-  
+
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     /* Option was found */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile-1].dAge = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    } else 
+    } else
       body[iFile-1].dAge = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1124,7 +1147,7 @@ void ReadAlbedoGlobal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   /* This parameter cannot exist in primary input file */
   int lTmp=-1;
   double dTmp;
-  
+
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     /* Option was found */
@@ -1132,7 +1155,7 @@ void ReadAlbedoGlobal(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (dTmp < 0) {
       fprintf(stderr,"ERROR: %s cannot be negative.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
-    } else 
+    } else
       body[iFile-1].dAlbedoGlobal = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1153,7 +1176,7 @@ void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       if (iTmp < 0) {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);  
+        LineExit(files->Infile[iFile].cIn,lTmp);
     } else
         body[iFile-1].iBodyType = iTmp;
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1178,8 +1201,9 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     /* Option was found */
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+    control->Evolve.bDoBackward = bTmp;
   } else
-    control->Evolve.bDoBackward = atoi(options->cDefault);
+    AssignDefaultInt(options,&control->Evolve.bDoBackward,files->iNumInputs);
 }
 
 /* Output File Name */
@@ -1194,7 +1218,7 @@ void ReadOutFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     strcpy(files->Outfile[iFile-1].cOut,cTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       AssignDefaultString(options,files->Outfile[iFile-1].cOut,files->iNumInputs);
 }
@@ -1218,10 +1242,10 @@ void ReadEta(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     if (control->Evolve.dEta > 1 && control->Io.iVerbose >= VERBALL)
       fprintf(stderr,"WARNING: %s > 1 is not advised (%s:%d).\n",options->cName,files->Infile[iFile].cIn,lTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     AssignDefaultDouble(options,&control->Evolve.dEta,files->iNumInputs);
 }
-  
+
 /* Backward integration output interval */
 
 void ReadOutputTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -1289,7 +1313,7 @@ void ReadTimeStep(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     AssignDefaultDouble(options,&control->Evolve.dTimeStep,files->iNumInputs);
 }
-  
+
 /* Do variable timestep? */
 
 void ReadVarDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -1303,7 +1327,7 @@ void ReadVarDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     control->Evolve.bVarDt = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     AssignDefaultInt(options,&control->Evolve.bVarDt,files->iNumInputs);
 }
 
@@ -1319,7 +1343,7 @@ void ReadBodyName(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     strcpy(body[iFile-1].cName,cTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       sprintf(body[iFile-1].cName,"%d",iFile);
 }
@@ -1332,13 +1356,13 @@ void ReadColor(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
 
   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);    
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     strcpy(body[iFile-1].cColor,cTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       strcpy(body[iFile-1].cColor,options->cDefault);
-}  
+}
 
 /*
  *
@@ -1396,7 +1420,7 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     if (dTmp < 0 || dTmp >= 1) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1442,17 +1466,17 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
 void ReadHaltMaxEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
-     
+
   int lTmp=-1;
   double dTmp;
-  
+
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Halt[iFile-1].dMaxEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1485,13 +1509,22 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else {
     if (iFile == 1)
       control->Halt[iFile-1].bMerge = 0;
-    if (iFile > 1)
-      AssignDefaultInt(options,&control->Halt[iFile-1].bMerge,files->iNumInputs);
+    if (iFile > 1) {
+      /* HaltMerge is unusual in that its default value depends on the body's
+	 modules. These are set in ReadInitialOptions, so they are always
+	 known by ReadOptionsGeneral. Therefore, we can assign it based on
+	 the "bModule" members of the body struct. */
+      // XXX Russell -- Include galhabit?
+      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb || body[iFile-1].bBinary)
+	control->Halt[iFile-1].bMerge = 1;
+      else
+	control->Halt[iFile-1].bMerge = 0;
+    }
   }
 }
 
 /* Minimum Eccentricity */
-  
+
 void ReadHaltMinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -1504,7 +1537,7 @@ void ReadHaltMinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be in the range (0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Halt[iFile-1].dMinEcc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1519,7 +1552,7 @@ void ReadHaltMinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 
 /* Minimum obliquity */
-  
+
 void ReadHaltMinObl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -1531,16 +1564,16 @@ void ReadHaltMinObl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > PI) {
-        if (control->Io.iVerbose >= VERBINPUT) 
+        if (control->Io.iVerbose >= VERBINPUT)
           fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
-        if (control->Io.iVerbose >= VERBINPUT) 
+        if (control->Io.iVerbose >= VERBINPUT)
           fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
-      } 
+        LineExit(files->Infile[iFile].cIn,lTmp);
+      }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
@@ -1565,7 +1598,7 @@ void ReadHaltMinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be larger than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     control->Halt[iFile-1].dMinSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1609,10 +1642,10 @@ void ReadHecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dHecc = options->dDefault;
-}  
+}
 
 /*
  *
@@ -1629,9 +1662,9 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (memcmp(sLower(cTmp),"e",1) == 0) 
+    if (memcmp(sLower(cTmp),"e",1) == 0)
       control->Evolve.iOneStep = EULER;
-    else if (memcmp(sLower(cTmp),"r",1) == 0) 
+    else if (memcmp(sLower(cTmp),"r",1) == 0)
       control->Evolve.iOneStep = RUNGEKUTTA;
     else {
       if (control->Io.iVerbose >= VERBERR) {
@@ -1639,9 +1672,9 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
         fprintf(stderr,"Options are Euler.\n");
       }
       LineExit(files->Infile[iFile].cIn,lTmp);
-    } 
+    }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } 
+  }
   /* If not input, VerifyIntegration assigns default */
 }
 
@@ -1661,10 +1694,10 @@ void ReadKecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dKecc = options->dDefault;
-}  
+}
 
 /*
  *
@@ -1673,7 +1706,7 @@ void ReadKecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
  */
 
 /* Do log file? */
- 
+
 void ReadDoLog(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
@@ -1687,7 +1720,7 @@ void ReadDoLog(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   } else
     AssignDefaultInt(options,&control->Io.bLog,files->iNumInputs);
 }
-  
+
 /* Log file name */
 
 void ReadLogFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -1703,7 +1736,7 @@ void ReadLogFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   } else {
     /* Assign Default */
     if (iFile == files->iNumInputs-1) {
-      for (i=0;i<files->iNumInputs;i++) 
+      for (i=0;i<files->iNumInputs;i++)
         if (options->iLine[i] != -1)
           /* Was aaigned, return */
           return;
@@ -1726,24 +1759,24 @@ void ReadLongP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    
-    body[iFile-1].dLongP = dTmp; 
+
+    body[iFile-1].dLongP = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dLongP = options->dDefault;
-}  
+}
 
 /* Longitude of ascending node */
 
@@ -1759,24 +1792,24 @@ void ReadLongA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
 
-    body[iFile-1].dLongA = dTmp; 
+    body[iFile-1].dLongA = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dLongA = options->dDefault;
-}  
+}
 
 
 /* Argument of pericenter */
@@ -1794,24 +1827,24 @@ void ReadArgP(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
-    
-    body[iFile-1].dArgP = dTmp; 
+
+    body[iFile-1].dArgP = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dArgP = options->dDefault;
-}  
+}
 
 /* Inclination */
 
@@ -1827,22 +1860,22 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
       if (dTmp < 0 || dTmp > PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
 
-    body[iFile-1].dInc = dTmp; 
+    body[iFile-1].dInc = dTmp;
     body[iFile-1].dSinc = sin(0.5*dTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0) {
       body[iFile-1].dInc = options->dDefault;
       body[iFile-1].dSinc = sin(0.5*options->dDefault);
@@ -1859,10 +1892,10 @@ void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dLXUV = options->dDefault;
-}  
+}
 
 /*
  *
@@ -1898,7 +1931,7 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
   /* Must verify in conjuction with Radius, Density and Mass */
   int lTmp=-1;
   char cTmp[OPTLEN];
-    
+
   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
@@ -1921,7 +1954,7 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
         fprintf(stderr,"Options are GS99 (Gorda & Svechnikov 1999), BO06 (Bayless & Orosz 2006), Sotin07 (Sotin et al. 2007), or RH00 (Reid & Hawley 2000).\n");
       }
       LineExit(files->Infile[iFile].cIn,lTmp);
-    } 
+    }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     /* This one is weird, since the default is "none", but if this option
@@ -1945,7 +1978,7 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (dTmp <= 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dMeanMotion = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1973,7 +2006,7 @@ void ReadMinValue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultDouble(options,&control->Evolve.dMinValue,files->iNumInputs);
-}  
+}
 
 /*
  *
@@ -1995,20 +2028,20 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       if (dTmp < 0 || dTmp > PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 180) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,180].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
     body[iFile-1].dObliquity = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dObliquity = options->dDefault;
 }
@@ -2037,13 +2070,13 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
         /* Option is negative */
         bNeg[i] = 1;
         /* Now remove negative sign */
-        for (j=0;j<strlen(saTmp[i]);j++) 
+        for (j=0;j<strlen(saTmp[i]);j++)
         saTmp[i][j] = saTmp[i][j+1];
         saTmp[i][strlen(saTmp[i])] = 0;
       } else
         bNeg[i] = 0;
     }
-    
+
     /* Check for ambiguity */
     for (i=0;i<iNumIndices;i++) {
       count=0; /* Number of possibilities */
@@ -2063,6 +2096,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           count = 1;
           iOut = j;
           if (output[j].bGrid == 1)
+	    // Exit!
             iNumGrid += 1;
           j = MODULEOUTEND; /* Poor man's break! */
         } else {
@@ -2070,18 +2104,19 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
             iLen=iLen1;
           else
             iLen=iLen2;
-          
+
           if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
             /* Output option found! */
             strcpy(cOption[count],output[j].cName);
             count++;
             iOut = j;
             if (output[j].bGrid == 1)
+	      // Exit!
               iNumGrid += 1;
           }
         }
       }
-      
+
       if (count > 1) {
         /* More than one possibility */
         if (iVerbose >= VERBERR) {
@@ -2095,17 +2130,17 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
         }
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
-      
+
       if (!count) {
         /* Option not found */
-        if (iVerbose >= VERBERR) 
+        if (iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
-      
+
       if (count == 1) {
         /* Unique option */
-    
+
         /* Verify and record negative options */
         if (bNeg[i]) {
           // Is the negative option allowed?
@@ -2122,33 +2157,39 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           }
         } else { // Negative option not set, initialize bDoNeg to false
             output[iOut].bDoNeg[iFile-1] = 0;
-        }   
+        }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
-	// Is option part of selected modules?
-	if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
-	  // Parameter is part of selected modules
-	} else {
-	  fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
-	  PrintModuleList(stderr,output[iOut].iModuleBit);
-	  fprintf(stderr,"\n");
-	  ok=0;
-	}
+        // Is option part of selected modules?
+        if (module->iBitSum[iFile-1] & output[iOut].iModuleBit) {
+          // Parameter is part of selected modules
+        } else {
+          fprintf(stderr,"ERROR: Output parameter %s requires module(s): ",output[iOut].cName);
+          PrintModuleList(stderr,output[iOut].iModuleBit);
+          fprintf(stderr,"\n");
+          ok=0;
+        }
       }
     }
 
-    if (!ok) 
+    if (!ok)
       DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
 
+    files->Outfile[iFile-1].iNumCols = iNumIndices;
+    /*
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;
     files->Outfile[iFile-1].iNumGrid = iNumGrid;
+    */
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_OUTPUTORDER],lTmp,files->Infile[iFile].iNumLines,iFile);
+  } else {
+    files->Outfile[iFile-1].iNumCols=0;
   }
+
   free(lTmp);
 }
 
@@ -2171,13 +2212,13 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
         /* Option is negative */
         bNeg[i] = 1;
         /* Now remove negative sign */
-        for (j=0;j<strlen(saTmp[i]);j++) 
+        for (j=0;j<strlen(saTmp[i]);j++)
         saTmp[i][j] = saTmp[i][j+1];
         saTmp[i][strlen(saTmp[i])] = 0;
       } else
         bNeg[i] = 0;
     }
-    
+
     /* Check for ambiguity */
     for (i=0;i<iNumIndices;i++) {
       count=0; /* Number of possibilities */
@@ -2204,7 +2245,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
             iLen=iLen1;
           else
             iLen=iLen2;
-          
+
           if (memcmp(sLower(cTmp),sLower(cOut),iLen) == 0 && iLen1 > iLen2) {
             /* Output option found! */
             strcpy(cOption[count],output[j].cName);
@@ -2215,7 +2256,7 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
           }
         }
       }
-      
+
       if (count > 1) {
         /* More than one possibility */
         if (iVerbose >= VERBERR) {
@@ -2229,17 +2270,17 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
         }
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
-      
+
       if (!count) {
         /* Option not found */
-        if (iVerbose >= VERBERR) 
+        if (iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown output option \"%s\".\n",saTmp[i]);
         LineExit(files->Infile[iFile].cIn,lTmp[0]);
       }
-      
+
       if (count == 1) {
         /* Unique option */
-    
+
         /* Verify and record negative options */
         if (bNeg[i]) {
           // Is the negative option allowed?
@@ -2256,20 +2297,23 @@ void ReadGridOutput(FILES *files,OPTIONS *options,OUTPUT *output,int iFile,int i
           }
         } else { // Negative option not set, initialize bDoNeg to false
             output[iOut].bDoNeg[iFile-1] = 0;
-        }   
+        }
         if (output[iOut].bGrid == 0) {
-          files->Outfile[iFile-1].caCol[i][0]='\0';
+          memset(files->Outfile[iFile-1].caCol[i],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caCol[i],output[iOut].cName);
         } else {
-          files->Outfile[iFile-1].caGrid[iNumGrid-1][0] = '\0';
+          memset(files->Outfile[iFile-1].caGrid[iNumGrid-1],'\0',OPTLEN);
           strcpy(files->Outfile[iFile-1].caGrid[iNumGrid-1],output[iOut].cName);
         }
       }
     }
- 
-    files->Outfile[iFile-1].iNumGrid = iNumGrid;
+
+    //files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile],&options[OPT_GRIDOUTPUT],lTmp,files->Infile[iFile].iNumLines,iFile);
   }
+
+  files->Outfile[iFile-1].iNumGrid = iNumGrid;
+
   free(lTmp);
 }
 
@@ -2310,7 +2354,7 @@ void ReadOrbPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) 
+    if (dTmp < 0)
       body[iFile-1].dOrbPeriod = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       body[iFile-1].dOrbPeriod = dTmp*fdUnitsTime(control->Units[iFile].iTime);
@@ -2334,24 +2378,25 @@ void ReadPrecA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       if (dTmp < 0 || dTmp > 2*PI) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,2*PI].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
     } else {
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR)
             fprintf(stderr,"ERROR: %s must be in the range [0,360].\n",options->cName);
-        LineExit(files->Infile[iFile].cIn,lTmp);        
+        LineExit(files->Infile[iFile].cIn,lTmp);
       }
       /* Change to radians */
       dTmp *= DEGRAD;
     }
 
-    body[iFile-1].dPrecA = dTmp; 
+    body[iFile-1].dPrecA = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else {
     if (iFile > 0)
       body[iFile-1].dPrecA = options->dDefault;
-}  
+  }
+}
 
 void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* Cannot exist in primary file */
@@ -2363,9 +2408,9 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     /* Option was found */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp >= 1) {
-      if (control->Io.iVerbose >= VERBERR) 
+      if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be in the range [0,1).\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dDynEllip = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -2373,7 +2418,7 @@ void ReadDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     if (iFile > 0)
       body[iFile-1].dDynEllip = options->dDefault;
-    
+
 }
 
 void ReadCalcDynEllip(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -2409,7 +2454,7 @@ void ReadRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) 
+    if (dTmp < 0)
       body[iFile-1].dRadius = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       body[iFile-1].dRadius = dTmp*fdUnitsLength(control->Units[iFile].iLength);
@@ -2452,7 +2497,7 @@ void ReadRotPeriod(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) 
+    if (dTmp < 0)
       body[iFile-1].dRotPer = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       if (iFile > 0)
@@ -2475,7 +2520,7 @@ void ReadRotRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     if (iFile > 0)
       body[iFile-1].dRotRate = dTmp/fdUnitsTime(control->Units[iFile].iTime);
@@ -2496,7 +2541,7 @@ void ReadRotVel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
       body[iFile-1].dRotVel = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else 
+    else
       body[iFile-1].dRotVel = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   }
@@ -2521,7 +2566,7 @@ void ReadSciNot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     if (iTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: %s must be non-negative.\n",options->cName);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     if (iTmp > 16) {
       if (control->Io.iVerbose >= VERBERR)
@@ -2530,7 +2575,7 @@ void ReadSciNot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     }
     control->Io.iSciNot = iTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     AssignDefaultInt(options,&control->Io.iSciNot,files->iNumInputs);
 }
 
@@ -2540,13 +2585,13 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   /* This parameter can exist in any file, but only once */
   int lTmp=-1;
   double dTmp;
-    
+
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) 
+    if (dTmp < 0)
       body[iFile-1].dSemi = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else 
+    else
       body[iFile-1].dSemi = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -2563,14 +2608,13 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
     /* Start at 100 because 0-99 are reserved for initial options */
-    for (iOpt=100;iOpt<NUMOPT;iOpt++) 
+    for (iOpt=100;iOpt<NUMOPT;iOpt++)
       /* OutputOrder is special */
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
   }
 }
-
 
 void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -2583,9 +2627,12 @@ void ReadViscUMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
       body[iFile-1].dViscUMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else 
+    else
       body[iFile-1].dViscUMan = dTmp*fdUnitsLength(control->Units[iFile].iLength)/fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultDouble(options,&body[iFile-1].dViscUMan,files->iNumInputs);
   }
 }
 
@@ -2593,7 +2640,7 @@ void ReadOptionsModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,
   int iBody,iModule;
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       module->fnReadOptions[iBody][iModule](body,control,files,options,system,fnRead,iBody);
   }
 }
@@ -2614,10 +2661,10 @@ void ReadXobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dXobl = options->dDefault;
-}  
+}
 
 /*
  *
@@ -2635,10 +2682,10 @@ void ReadYobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dYobl = options->dDefault;
-}  
+}
 
 /*
  *
@@ -2656,10 +2703,10 @@ void ReadZobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dZobl = options->dDefault;
-}  
+}
 
 
 
@@ -2680,8 +2727,8 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
 
   /* Initialize module control */
   InitializeControl(control,module);
-  
-  /* Initialize halts XXX Done in verify 
+
+  /* Initialize halts XXX Done in verify
      InitializeHalt(control,module); */
 
   /* Now read in remaining options */
@@ -2695,7 +2742,9 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
     ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
     if ((*body)[iFile-1].bPoise) {
       ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
-    }
+    } else
+      // Initialize iNumGrid to 0 so no memory issues
+      files->Outfile[iFile-1].iNumGrid = 0;
   }
 
   /* Any unrecognized options? */
@@ -2716,13 +2765,13 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SYSTEMNAME].cDescr,"System Name");
   sprintf(options[OPT_SYSTEMNAME].cDefault,"None - must be supplied");
   options[OPT_SYSTEMNAME].iType = 3;
-  
+
   /*
    *
    *   A
    *
    */
-  
+
   sprintf(options[OPT_AGE].cName,"dAge");
   sprintf(options[OPT_AGE].cDescr,"System Age");
   sprintf(options[OPT_AGE].cDefault,"0");
@@ -2731,40 +2780,40 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_AGE].dNeg = 1e9*YEARSEC;
   sprintf(options[OPT_AGE].cNeg,"Gyr");
   fnRead[OPT_AGE] = &ReadAge;
-  
+
   sprintf(options[OPT_ALBEDOGLOBAL].cName,"dAlbedoGlobal");
   sprintf(options[OPT_ALBEDOGLOBAL].cDescr,"Globally averaged albedo");
   sprintf(options[OPT_ALBEDOGLOBAL].cDefault,"0.3");
   options[OPT_ALBEDOGLOBAL].dDefault = 0;
   options[OPT_ALBEDOGLOBAL].iType = 2;
   fnRead[OPT_ALBEDOGLOBAL] = &ReadAlbedoGlobal;
-  
+
   /*
    *
    *   B
    *
    */
-  
+
   sprintf(options[OPT_BACK].cName,"bDoBackward");
   sprintf(options[OPT_BACK].cDescr,"Do Backward Integration?");
   sprintf(options[OPT_BACK].cDefault,"No");
   options[OPT_BACK].iType = 0;
   fnRead[OPT_BACK] = &ReadDoBackward;
-  
+
   sprintf(options[OPT_OUTFILE].cName,"sOutFile");
   sprintf(options[OPT_OUTFILE].cDescr,"Name of Output File");
   sprintf(options[OPT_OUTFILE].cDefault,"cSystemName.backward");
   options[OPT_OUTFILE].iType = 3;
   options[OPT_OUTFILE].iMultiFile = 1;
   fnRead[OPT_OUTFILE] = &ReadOutFile;
-  
+
   sprintf(options[OPT_ETA].cName,"dEta");
   sprintf(options[OPT_ETA].cDescr,"Variable Time Step Coefficient");
   sprintf(options[OPT_ETA].cDefault,"1");
   options[OPT_ETA].dDefault = 1;
   options[OPT_ETA].iType = 2;
   fnRead[OPT_ETA] = &ReadEta;
-  
+
   sprintf(options[OPT_OUTPUTTIME].cName,"dOutputTime");
   sprintf(options[OPT_OUTPUTTIME].cDescr,"Output Interval");
   sprintf(options[OPT_OUTPUTTIME].cDefault,"1 year");
@@ -2773,7 +2822,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTTIME].dNeg = YEARSEC;
   sprintf(options[OPT_OUTPUTTIME].cNeg,"Years");
   fnRead[OPT_OUTPUTTIME] = &ReadOutputTime;
-  
+
   sprintf(options[OPT_STOPTIME].cName,"dStopTime");
   sprintf(options[OPT_STOPTIME].cDescr,"Integration Stop Time");
   sprintf(options[OPT_STOPTIME].cDefault,"10 years");
@@ -2782,7 +2831,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STOPTIME].cNeg,"Years");
   options[OPT_STOPTIME].iType = 2;
   fnRead[OPT_STOPTIME] = &ReadStopTime;
-  
+
   sprintf(options[OPT_TIMESTEP].cName,"dTimeStep");
   sprintf(options[OPT_TIMESTEP].cDescr,"Integration Timestep");
   sprintf(options[OPT_TIMESTEP].cDefault,"1 year");
@@ -2791,18 +2840,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_TIMESTEP].dNeg = YEARSEC;
   sprintf(options[OPT_TIMESTEP].cNeg,"Years");
   fnRead[OPT_TIMESTEP] = &ReadTimeStep;
-  
+
   sprintf(options[OPT_VARDT].cName,"bVarDt");
   sprintf(options[OPT_VARDT].cDescr,"Use variable timestep?");
   sprintf(options[OPT_VARDT].cDefault,"None");
   options[OPT_VARDT].iType = 0;
   fnRead[OPT_VARDT] = &ReadVarDt;
-  
+
   sprintf(options[OPT_BODYFILES].cName,"saBodyFiles");
   sprintf(options[OPT_BODYFILES].cDescr,"Input files for each body");
   sprintf(options[OPT_BODYFILES].cDefault,"None");
   options[OPT_BODYFILES].iType = 13;
-  
+
   sprintf(options[OPT_BODYNAME].cName,"sName");
   sprintf(options[OPT_BODYNAME].cDescr,"Body's Name");
   sprintf(options[OPT_BODYNAME].cDefault,"Integer of Input Order, i.e. 1");
@@ -2813,38 +2862,38 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    *
    *   C
    *
-   */  
-  
+   */
+
   sprintf(options[OPT_COLOR].cName,"cColor");
   sprintf(options[OPT_COLOR].cDescr,"Body Color");
   sprintf(options[OPT_COLOR].cDefault,"000000");
   options[OPT_COLOR].iType = 2;
   fnRead[OPT_COLOR] = &ReadColor;
-  
+
   /*
    *
    *   E
    *
    */
-  
+
   /*
    *   FORWARD
    *
    */
-  
+
   sprintf(options[OPT_FORW].cName,"bDoForward");
   sprintf(options[OPT_FORW].cDescr,"Do Forward Integration?");
   sprintf(options[OPT_FORW].cDefault,"0");
   options[OPT_FORW].iType = 0;
   fnRead[OPT_FORW] = &ReadDoForward;
-  
-  /* 
+
+  /*
    *
    *   HALT
    *
    */
-  
-  
+
+
   sprintf(options[OPT_HALTMAXECC].cName,"dHaltMaxEcc");
   sprintf(options[OPT_HALTMAXECC].cDescr,"Maximum Eccentricity Value that Halts Integration");
   sprintf(options[OPT_HALTMAXECC].cDefault,"1");
@@ -2854,25 +2903,25 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");
   sprintf(options[OPT_HALTMERGE].cDescr,"Halt at Merge");
-  sprintf(options[OPT_HALTMERGE].cDefault,"1");
+  sprintf(options[OPT_HALTMERGE].cDefault,"If eqtide or distorb called 1, else 0");
   options[OPT_HALTMERGE].iType = 0;
   fnRead[OPT_HALTMERGE] = &ReadHaltMerge;
-  
+
   sprintf(options[OPT_HALTMINECC].cName,"dHaltMinEcc");
   sprintf(options[OPT_HALTMINECC].cDescr,"Minimum Eccentricity Value that Halts Integration");
   sprintf(options[OPT_HALTMINECC].cDefault,"-1");
   options[OPT_HALTMINECC].dDefault = -1;
   options[OPT_HALTMINECC].iType = 2;
   fnRead[OPT_HALTMINECC] = &ReadHaltMinEcc;
-  
+
   sprintf(options[OPT_HALTMINOBL].cName,"dHaltMinObl");
   sprintf(options[OPT_HALTMINOBL].cDescr,"Minimum Obliquity Value that Halts Integration");
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
-  options[OPT_HALTMINOBL].dDefault = -DEGRAD;    
+  options[OPT_HALTMINOBL].dDefault = -DEGRAD;
   options[OPT_HALTMINOBL].iType = 2;
   options[OPT_HALTMINOBL].iMultiFile = 1;
   fnRead[OPT_HALTMINOBL] = &ReadHaltMinObl;
-  
+
   sprintf(options[OPT_HALTMINSEMI].cName,"dHaltMinSemi");
   sprintf(options[OPT_HALTMINSEMI].cDescr,"Minimum Semi-Major Axis Value that Halts Integration");
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
@@ -2881,13 +2930,13 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMINSEMI].dNeg = AUCM;
   sprintf(options[OPT_HALTMINSEMI].cNeg,"AU");
   fnRead[OPT_HALTMINSEMI] = &ReadHaltMinSemi;
-  
+
   sprintf(options[OPT_HALTPOSDEDT].cName,"bHaltPosDeDt");
   sprintf(options[OPT_HALTPOSDEDT].cDescr,"Halt if de/dt > 0?");
   sprintf(options[OPT_HALTPOSDEDT].cDefault,"0");
   options[OPT_HALTPOSDEDT].iType= 0;
   fnRead[OPT_HALTPOSDEDT] = &ReadHaltPosDeDt;
-  
+
   /*
    *
    * H
@@ -2900,24 +2949,24 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HECC].dDefault = -1;
   options[OPT_HECC].iType = 2;
   fnRead[OPT_HECC] = &ReadHecc;
-  
+
   /*
    *
    *   I
    *
    */
-  
+
   sprintf(options[OPT_INTEGRATIONMETHOD].cName,"sIntegrationMethod");
   sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,"Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
   sprintf(options[OPT_INTEGRATIONMETHOD].cDefault,"Runge-Kutta4");
   options[OPT_INTEGRATIONMETHOD].iType=4;
   fnRead[OPT_INTEGRATIONMETHOD] = &ReadIntegrationMethod;
-  
+
   /*
    *
    * K
    *
-   */ 
+   */
 
   sprintf(options[OPT_KECC].cName,"dKecc");
   sprintf(options[OPT_KECC].cDescr,"Poincare's k -- Unsuppoted!");
@@ -2925,42 +2974,42 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_KECC].dDefault = -1;
   options[OPT_KECC].iType = 2;
   fnRead[OPT_KECC] = &ReadKecc;
-  
+
   /*
    *
    *   L
    *
    */
-  
+
   sprintf(options[OPT_LOG].cName,"bDoLog");
   sprintf(options[OPT_LOG].cDescr,"Write Log File?");
   sprintf(options[OPT_LOG].cDefault,"0");
   options[OPT_LOG].iType = 0;
   fnRead[OPT_LOG] = &ReadDoLog;
-  
+
   sprintf(options[OPT_LOGFILE].cName,"sLogFile");
   sprintf(options[OPT_LOGFILE].cDescr,"Log File Name");
   sprintf(options[OPT_LOGFILE].cDefault,"tide.log");
   options[OPT_LOGFILE].iType = 3;
   fnRead[OPT_LOGFILE] = &ReadLogFile;
-  
+
   sprintf(options[OPT_LONGP].cName,"dLongP");
   sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
   sprintf(options[OPT_LONGP].cDefault,"0");
   options[OPT_LONGP].dDefault = 0.0;
-  options[OPT_LONGP].iType = 2;  
-  options[OPT_LONGP].iMultiFile = 1;   
+  options[OPT_LONGP].iType = 2;
+  options[OPT_LONGP].iMultiFile = 1;
 //   options[OPT_LONGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   fnRead[OPT_LONGP] = &ReadLongP;
-  
+
   sprintf(options[OPT_LXUV].cName,"dLXUV");
   sprintf(options[OPT_LXUV].cDescr,"Total XUV Luminosity -- Unsuppoted!");
   sprintf(options[OPT_LXUV].cDefault,"-1");
   options[OPT_LXUV].dDefault = -1;
   options[OPT_LXUV].iType = 2;
   fnRead[OPT_LXUV] = &ReadLXUV;
-  
+
   /*
    *
    *   M
@@ -2985,65 +3034,65 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    *   N
    *
    */
-  
+
   /*
    *
    *   O
    *
    */
-  
+
   sprintf(options[OPT_OUTDIGITS].cName,"iDigits");
   sprintf(options[OPT_OUTDIGITS].cDescr,"Number of Digits After Decimal Point");
   sprintf(options[OPT_OUTDIGITS].cDefault,"4");
   options[OPT_OUTDIGITS].iType = 1;
   fnRead[OPT_OUTDIGITS] = &ReadDigits;
-  
+
   sprintf(options[OPT_OUTPUTORDER].cName,"saOutputOrder");
   sprintf(options[OPT_OUTPUTORDER].cDescr,"Output Parameter(s)");
   sprintf(options[OPT_OUTPUTORDER].cDefault,"None");
   options[OPT_OUTPUTORDER].iType = 14;
   options[OPT_OUTPUTORDER].iMultiFile = 1;
-  
+
   sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
   sprintf(options[OPT_GRIDOUTPUT].cDescr,"Gridded Output Parameter(s)");
   sprintf(options[OPT_GRIDOUTPUT].cDefault,"None");
   options[OPT_GRIDOUTPUT].iType = 14;
   options[OPT_GRIDOUTPUT].iMultiFile = 1;
-  
+
   sprintf(options[OPT_OUTSCINOT].cName,"iSciNot");
   sprintf(options[OPT_OUTSCINOT].cDescr,"Logarithm to Change from Standard to Scientific Notation");
   sprintf(options[OPT_OUTSCINOT].cDefault,"4");
   options[OPT_OUTSCINOT].iType = 1;
   fnRead[OPT_OUTSCINOT] = &ReadSciNot;
-  
+
   sprintf(options[OPT_OVERWRITE].cName,"bOverwrite");
   sprintf(options[OPT_OVERWRITE].cDescr,"Permit file overwrite?");
   sprintf(options[OPT_OVERWRITE].cDefault,"0");
   options[OPT_OVERWRITE].iType = 0;
   fnRead[OPT_OVERWRITE] = &ReadOverwrite;
-  
+
   /*
    *
    *   ORBIT
    *
    */
-  
+
   sprintf(options[OPT_ORBECC].cName,"dEcc");
   sprintf(options[OPT_ORBECC].cDescr,"Orbital Eccentricity");
   sprintf(options[OPT_ORBECC].cDefault,"0");
   options[OPT_ORBECC].dDefault = 0;
   options[OPT_ORBECC].iType = 2;
   fnRead[OPT_ORBECC] = &ReadEcc;
-  
+
   sprintf(options[OPT_ORBMEANMOTION].cName,"dMeanMotion");
   sprintf(options[OPT_ORBMEANMOTION].cDescr,"Orbital Mean Motion");
   sprintf(options[OPT_ORBMEANMOTION].cDefault,"1 /yr");
-  options[OPT_ORBMEANMOTION].dDefault = 1./YEARSEC;    
+  options[OPT_ORBMEANMOTION].dDefault = 1./YEARSEC;
   options[OPT_ORBMEANMOTION].iType = 2;
   options[OPT_ORBMEANMOTION].dNeg = 1./YEARSEC;
   sprintf(options[OPT_ORBMEANMOTION].cNeg,"/Year");
   fnRead[OPT_ORBMEANMOTION] = &ReadMeanMotion;
-  
+
   sprintf(options[OPT_ORBPER].cName,"dOrbPeriod");
   sprintf(options[OPT_ORBPER].cDescr,"Orbital Period");
   sprintf(options[OPT_ORBPER].cDefault,"1 year");
@@ -3052,7 +3101,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBPER].dNeg = DAYSEC;
   sprintf(options[OPT_ORBPER].cNeg,"Days");
   fnRead[OPT_ORBPER] = &ReadOrbPeriod;
-    
+
   sprintf(options[OPT_ORBSEMI].cName,"dSemi");
   sprintf(options[OPT_ORBSEMI].cDescr,"Semi-Major Axis");
   sprintf(options[OPT_ORBSEMI].cDefault,"1 AU");
@@ -3061,76 +3110,76 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dNeg = AUCM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
-  
+
   sprintf(options[OPT_INC].cName,"dInc");
   sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
   sprintf(options[OPT_INC].cDefault,"0");
   options[OPT_INC].dDefault = 0.0;
-  options[OPT_INC].iType = 2;  
-  options[OPT_INC].iMultiFile = 1; 
+  options[OPT_INC].iType = 2;
+  options[OPT_INC].iMultiFile = 1;
 //   options[OPT_INC].dNeg = DEGRAD;
 //   sprintf(options[OPT_INC].cNeg,"Degrees");
   fnRead[OPT_INC] = &ReadInc;
-  
+
   sprintf(options[OPT_ARGP].cName,"dArgP");
   sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
   sprintf(options[OPT_ARGP].cDefault,"0");
   options[OPT_ARGP].dDefault = 0.0;
-  options[OPT_ARGP].iType = 2;  
-  options[OPT_ARGP].iMultiFile = 1; 
+  options[OPT_ARGP].iType = 2;
+  options[OPT_ARGP].iMultiFile = 1;
 //   options[OPT_ARGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_ARGP].cNeg,"Degrees");
   fnRead[OPT_ARGP] = &ReadArgP;
-  
+
 
   /*
    * P
    */
 
   sprintf(options[OPT_PRECA].cName,"dPrecA");
-  sprintf(options[OPT_PRECA].cDescr,"Planet's precession parameter");
+  sprintf(options[OPT_PRECA].cDescr,"Planet's precession angle");
   sprintf(options[OPT_PRECA].cDefault,"0");
   options[OPT_PRECA].dDefault = 0.0;
-  options[OPT_PRECA].iType = 2;  
-  options[OPT_PRECA].iMultiFile = 1; 
+  options[OPT_PRECA].iType = 2;
+  options[OPT_PRECA].iMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_PRECA] = &ReadPrecA;
-  
+
   sprintf(options[OPT_LONGA].cName,"dLongA");
   sprintf(options[OPT_LONGA].cDescr,"Longitude of ascending node of planet's orbital plane");
   sprintf(options[OPT_LONGA].cDefault,"0");
   options[OPT_LONGA].dDefault = 0.0;
-  options[OPT_LONGA].iType = 2;  
-  options[OPT_LONGA].iMultiFile = 1; 
+  options[OPT_LONGA].iType = 2;
+  options[OPT_LONGA].iMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   fnRead[OPT_LONGA] = &ReadLongA;
-  
+
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
   options[OPT_DYNELLIP].dDefault = 0.00328;
-  options[OPT_DYNELLIP].iType = 2;  
-  options[OPT_DYNELLIP].iMultiFile = 1;   
+  options[OPT_DYNELLIP].iType = 2;
+  options[OPT_DYNELLIP].iMultiFile = 1;
   fnRead[OPT_DYNELLIP] = &ReadDynEllip;
-  
+
   sprintf(options[OPT_CALCDYNELLIP].cName,"bCalcDynEllip");
   sprintf(options[OPT_CALCDYNELLIP].cDescr,"Calculate dynamical ellipticity from RotRate");
   sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
   options[OPT_CALCDYNELLIP].dDefault = 0;
-  options[OPT_CALCDYNELLIP].iType = 0;  
-  options[OPT_CALCDYNELLIP].iMultiFile = 1; 
+  options[OPT_CALCDYNELLIP].iType = 0;
+  options[OPT_CALCDYNELLIP].iMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
-  
 
-  
+
+
   /*
    *
    *   BODY PROPERTIES
    *
    */
-  
+
   sprintf(options[OPT_MASS].cName,"dMass");
   sprintf(options[OPT_MASS].cDescr,"Mass");
   sprintf(options[OPT_MASS].cDefault,"1 Earth Mass");
@@ -3140,7 +3189,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MASS].dNeg = MEARTH;
   sprintf(options[OPT_MASS].cNeg,"Earth masses");
   fnRead[OPT_MASS] = &ReadMass;
- 
+
   sprintf(options[OPT_BODYTYPE].cName,"iBodyType");
   sprintf(options[OPT_BODYTYPE].cDescr,"BodyType");
   sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
@@ -3155,8 +3204,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MASSRAD].iType = 3;
   options[OPT_MASSRAD].iMultiFile = 1;
   fnRead[OPT_MASSRAD] = &ReadMassRad;
-  
-  
+
+
   sprintf(options[OPT_OBL].cName,"dObliquity");
   sprintf(options[OPT_OBL].cDescr,"Obliquity");
   sprintf(options[OPT_OBL].cDefault,"0");
@@ -3164,8 +3213,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OBL].iType = 2;
   options[OPT_OBL].iMultiFile = 1;
   fnRead[OPT_OBL] = &ReadObliquity;
-  
-  
+
+
   sprintf(options[OPT_RADIUS].cName,"dRadius");
   sprintf(options[OPT_RADIUS].cDescr,"Radius");
   sprintf(options[OPT_RADIUS].cDefault,"1 Earth Radius");
@@ -3175,7 +3224,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RADIUS].dNeg = REARTH;
   sprintf(options[OPT_RADIUS].cNeg,"Earth radii");
   fnRead[OPT_RADIUS] = &ReadRadius;
-  
+
   sprintf(options[OPT_RG].cName,"dRadGyra");
   sprintf(options[OPT_RG].cDescr,"Radius of Gyration");
   sprintf(options[OPT_RG].cDefault,"0.5");
@@ -3183,7 +3232,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RG].iType = 2;
   options[OPT_RG].iMultiFile = 1;
   fnRead[OPT_RG] = &ReadRadiusGyration;
-  
+
   sprintf(options[OPT_ROTPER].cName,"dRotPeriod");
   sprintf(options[OPT_ROTPER].cDescr,"Rotation Period");
   sprintf(options[OPT_ROTPER].cDefault,"1 Day");
@@ -3193,7 +3242,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROTPER].dNeg = DAYSEC;
   sprintf(options[OPT_ROTPER].cNeg,"Days");
   fnRead[OPT_ROTPER] = &ReadRotPeriod;
-  
+
   sprintf(options[OPT_ROTRATE].cName,"dRotRate");
   sprintf(options[OPT_ROTRATE].cDescr,"Rotational Angular Frequency");
   sprintf(options[OPT_ROTRATE].cDefault,"2*pi/day");
@@ -3203,7 +3252,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROTRATE].dNeg = 1./DAYSEC;
   sprintf(options[OPT_ROTRATE].cNeg,"/Day");
   fnRead[OPT_ROTRATE] = &ReadRotRate;
-  
+
   sprintf(options[OPT_ROTVEL].cName,"dRotVel");
   sprintf(options[OPT_ROTVEL].cDescr,"Rotational Velocity");
   sprintf(options[OPT_ROTVEL].cDefault,"0");
@@ -3213,28 +3262,28 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROTVEL].dNeg = 1e5;
   sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   fnRead[OPT_ROTVEL] = &ReadRotVel;
-  
+
   /*
    *
    *   UNITS
    *
    */
-  
+
   sprintf(options[OPT_UNITANGLE].cName,"sUnitAngle");
   sprintf(options[OPT_UNITANGLE].cDescr,"Angle Units: Degrees Radians");
   sprintf(options[OPT_UNITANGLE].cDefault,"Radians");
   options[OPT_UNITANGLE].iType = 3;
-  
+
   sprintf(options[OPT_UNITLENGTH].cName,"sUnitLength");
   sprintf(options[OPT_UNITLENGTH].cDescr,"Length Units: cm m km Solar Earth Jupiter AU");
   sprintf(options[OPT_UNITLENGTH].cDefault,"cm");
   options[OPT_UNITLENGTH].iType = 3;
-  
+
   sprintf(options[OPT_UNITMASS].cName,"sUnitMass");
   sprintf(options[OPT_UNITMASS].cDescr,"Mass Units: Grams Kilograms Solar Earth Jupiter Saturn");
   sprintf(options[OPT_UNITMASS].cDefault,"grams");
   options[OPT_UNITMASS].iType = 3;
-  
+
   sprintf(options[OPT_UNITTIME].cName,"sUnitTime");
   sprintf(options[OPT_UNITTIME].cDescr,"Time Units: Seconds, Days Years Myr Gyr");
   sprintf(options[OPT_UNITTIME].cDefault,"Seconds");
@@ -3244,18 +3293,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_UNITTEMP].cDescr,"Temperature Units: Kelvin Celsius Farenheit");
   sprintf(options[OPT_UNITTEMP].cDefault,"Kelvin");
   options[OPT_UNITTEMP].iType = 3;
-    
+
   /*
    *
    *   V
    *
    */
-  
+
   sprintf(options[OPT_VERBOSE].cName,"iVerbose");
   sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 1-5");
   sprintf(options[OPT_VERBOSE].cDefault,"3");
   options[OPT_VERBOSE].iType = 1;
-  
+
   sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
   sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");
   sprintf(options[OPT_VISCUMAN].cDefault,"0");
@@ -3264,7 +3313,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCUMAN].iMultiFile = 1;
 //   options[OPT_VISCUMAN].bNeg = 0;
   fnRead[OPT_VISCUMAN] = &ReadViscUMan;
-  
+
   /*
    *
    * X
@@ -3311,12 +3360,13 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
+    memset(options[iOpt].cName,'\0',OPTLEN);
     sprintf(options[iOpt].cName,"null");
     options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
     options[iOpt].iMultiFile=0;
     options[iOpt].iMultiIn=0;
     options[iOpt].iType = -1;
-    
+
     for (iFile=0;iFile<MAXFILES;iFile++) {
       options[iOpt].iLine[iFile] = -1;
       sprintf(options[iOpt].cFile[iFile],"null");
@@ -3341,8 +3391,6 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsSpiNBody(options,fnRead);
 
 }
- 
-
-

@@ -31,4 +31,4 @@ saTidePerts	c d		# Body name(s) of tidal perturbers
 
 #iSciNot		12		# Decade to switch between normal/scientific notation
 
-saOutputOrder	Time -RotPer Luminosity Radius
+saOutputOrder	Time -TotEn -TotAngMom -RotPer Luminosity Radius

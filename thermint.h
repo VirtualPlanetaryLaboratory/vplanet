@@ -11,7 +11,7 @@
 #define TMAN             20                    //index of TMAN variable.
 #define TCORE            21                    //index of TCORE variable.
 
-// !!!HACK!!!  Assume a constant surf temp for now.
+// XXX HACK   Assume a constant surf temp for now.
 #define TSURF  300.0  
 // UNITS CONSTANTS
 #define KM               1e3       //[m] 1 km in m
@@ -93,6 +93,7 @@
 #define VISCMELTDELTA    6.0           //[nd] viscosity-melt reduction coefficient "delta" (DB15 eq 8)
 #define VISCMELTGAMMA    6.0           //[nd] viscosity-melt reduction coefficient "gamma" (DB15 eq 9)
 #define VISCMELTXI       5e-4          //[nd] viscosity-melt reduction coefficient "Xi" (DB15 eq 9)
+#define MELTFACTORLMAN 1.0    //[nd] (Default) viscosity-melt reduction factor "epsilon_phase" XXX Added by Rory -- Check!
 #define MELTFACTORUMAN   1.0           //[nd] (Default) viscosity-melt reduction factor "epsilon_phase"
 #define FIXMELTFACTORUMAN 0.0          //[nd] (Default) switch to fix MeltfactorUMan to a constant value.
 /* TIDAL PROPERTIES */
@@ -160,7 +161,6 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_BLLMAN          1717   //LM TBL thickness
 #define OPT_TJUMPUMAN       1718   //Temperature Jump across UMTBL
 #define OPT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
-#define OPT_VISCUMAN        1720   //Viscosity UMTBL
 #define OPT_VISCLMAN        1721   //Viscosity LMTBL
 #define OPT_SHMODUMAN       1722   //Shear modulus UMTBL
 #define OPT_SHMODLMAN       1723   //Shear modulus LMTBL
@@ -229,6 +229,18 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_VISCMELTGAMMA   1798   //Viscosity Melt Factor Gamma
 #define OPT_VISCMELTDELTA   1799   //Viscosity Melt Factor Delta
 
+/* New Parameters for vemcee */
+#define OPT_ACTVISCMAN      1800  //[J/mol] viscosity activation energy mantle
+#define OPT_SHMODREF        1801  //[Pa] reference kinematic mantle shear modulus
+#define OPT_STIFFNESS       1802  //[Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100)
+#define OPT_DLIND           1803  //[m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23)
+#define OPT_DADCORE         1804  //[m] liq iron core adiabatic length scale (DB15 eq A22)
+#define OPT_ADJUMPM2UM      1805  //[nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM"
+#define OPT_ADJUMPM2LM      1806  //[nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM"
+#define OPT_ADJUMPC2CMB     1807  //[nd] adiabatic temp jump from ave core to CMB. "epsilon_c"
+#define OPT_ELECCONDCORE    1808  //[S/m]  electrical conductivity of core.
+/* End vemcee parameters */
+
 /* Options Functions */
 void HelpOptionsThermint(OPTIONS*);
 void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
@@ -251,6 +263,17 @@ void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* vemcee parameters */
+void ReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* end vemcee parameters */
 
 void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
@@ -297,7 +320,6 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
 #define OUT_SIGNTJUMPUMAN   1720   //Temperature Jump across UMTBL
 #define OUT_SIGNTJUMPLMAN   1721   //Temperature Jump across LMTBL
-#define OUT_VISCUMAN        1722   //Viscosity UMTBL
 #define OUT_VISCLMAN        1723   //Viscosity LMTBL
 #define OUT_SHMODUMAN       1725   //Shear modulus UMTBL
 #define OUT_SHMODLMAN       1726   //Shear modulus LMTBL
@@ -309,8 +331,6 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_TDEPTHMELTMAN   1732   //Temp at base of UM melt region.
 #define OUT_TJUMPMELTMAN    1733   //Temp jump across UM melt region.
 #define OUT_MELTMASSFLUXMAN 1734   //Mantle melt mass flux.
-#define OUT_K2MAN           1735   //Mantle k2 love number
-#define OUT_IMK2MAN         1736   //Mantle Im(k2) love number
 #define OUT_VISCUMANARR     1737   //Viscosity UM Arrhenius
 #define OUT_RAYLEIGHMAN     1738   //Mantle Rayleigh Number
 #define OUT_VISCMMAN        1739   //Viscosity Mid (ave) mantle.

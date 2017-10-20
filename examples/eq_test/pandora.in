@@ -1,0 +1,23 @@
+# Earthlike parameters
+sName		pandora			# Body's name
+saModules 	eqtide
+
+# Physical Properties
+dMass		-1.27  			# Mass, negative -> Earth masses
+dRadius		-1.07  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	0.0
+dRadGyra	0.5
+
+# Orbital Properties
+dEcc            0.1		# Eccentricity
+dSemi           0.05 		# Semi-major axis, negative -> AU
+
+# Eqtide Properties
+dTidalQ         3000              # Tidal phase lag
+dK2             0.3                 # Love number of degree 2
+dMaxLockDiff    0.01
+saTidePerts     star
+
+#Output
+saOutputOrder Time -TotEn -TotAngMom -RotAngMom -OrbAngMom -RotPer -OrbPer SemimajorAxis Eccentricity -SurfEnFluxTot

@@ -285,15 +285,31 @@ elif numvars >= 1:
 
   if mode == 0:
     #iterate over all possible combinations
+    histf = open(dest+'/grid_list.dat','w')
     for tup in it.product(*iterables0):
+      if count == 0:
+        header = 'trial '
+      
+      current_line = ''
       destfull = os.path.join(dest,trial)  #create directory for this combination
       for ii in range(len(tup)):
         n = len(str(len(iter_var[ii])-1)) #number of digits to pad directory index
         index0 = np.where(iter_var[ii]==tup[ii])[0]
         destfull += prefix[ii]+np.str(index0[0]).zfill(n)
+        if count == 0:
+          header += flist[iter_file[ii]][:-3]+'/'+iter_name[ii]+' '
+        current_line += prefix[ii]+np.str(index0[0]).zfill(n)
         if ii != len(tup)-1:
           destfull += '_'
+          current_line += '_'
+        
+      for ii in range(len(tup)):
+        current_line += ' '+'%f'%tup[ii]
 
+      if count == 0:
+        histf.write(header+'\n')
+      histf.write(current_line+'\n')
+      
       if not os.path.exists(destfull):
          os.system('mkdir '+destfull)
 
@@ -344,6 +360,7 @@ elif numvars >= 1:
 
       fOut.close()
       count += 1    #move to next combination
+    histf.close()
       
   else:
     #random draw, iterate linearly

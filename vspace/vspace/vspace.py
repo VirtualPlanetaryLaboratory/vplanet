@@ -99,7 +99,29 @@ for i in range(len(lines)):
 
     for j in range(len(values)):
       values[j] = values[j].strip()  #remove any leading white spaces
-  
+    
+    if mode == 1:
+      if len(values) != 3:
+        if values[2][0] == 'g':
+          if len(values) >= 4 and len(values) < 6:
+            if values[3][:3] == 'min':
+              min_cutoff = np.float(values[3][3:])
+            elif values[3][:3] == 'max':
+              max_cutoff = np.float(values[3][3:])
+            else:
+              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>, <width>, g, min<value>], [<center>, <width>, g, max<value>],[<center>, <width>, g, min<value>, max<value>], or [<center>, <width>, g, max<value>, min<value>]"%(name,flist[fnum-1])) 
+          if len(values) == 5:
+            if values[4][:3] == 'min':
+              min_cutoff = np.float(values[4][3:])
+            elif values[4][:3] == 'max':
+              max_cutoff = np.float(values[4][3:])
+            else:
+              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1])) 
+          if len(values) >= 6:
+             raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1]))         
+        else:
+          raise IOError("Attempt to draw from uniform distributions of '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>,<high>,<type of distribution>], where valid types of distributions are u (uniform), s (uniform in sine), or c (uniform in cosine)."%(name,flist[fnum-1]))
+    
     #user set linear spacing of data
     if values[2][0] == 'n':
       values[2] = values[2][1:]
@@ -126,6 +148,18 @@ for i in range(len(lines)):
     elif values[2][0] == 'g':
       if mode == 1:
         array = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=np.int(randsize))
+        if 'min_cutoff' in vars() and 'max_cutoff' not in vars():
+          for ll in np.arange(len(array)):
+            while array[ll] < min_cutoff:
+              array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+        elif 'min_cutoff' not in vars() and 'max_cutoff' in vars():
+          for ll in np.arange(len(array)):
+            while array[ll] > max_cutoff:
+              array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+        elif 'min_cutoff' in vars() and 'max_cutoff' in vars():
+          for ll in np.arange(len(array)):
+            while array[ll] < min_cutoff or array[ll] > max_cutoff:
+              array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
         

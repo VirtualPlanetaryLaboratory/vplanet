@@ -638,11 +638,13 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  // change to if eq
   // Just thermint, not eqtide
-  if(body[iBody].bEnvTides || (body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if(body[iBody].bThermint)
     *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   else
     *dTmp = body[iBody].dK2/body[iBody].dImK2;
+
 
   strcpy(cUnit,"");
 }
@@ -1438,6 +1440,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
     fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
     if (control->Io.iVerbose >= VERBPROG)
       printf("Runtime = %f s\n", dTotTime);
   }

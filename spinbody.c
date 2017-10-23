@@ -262,8 +262,7 @@ void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 //============================ End Read Inputs =================================
 
 void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  int iTmpBody;
-  
+  int iTmpBody = 0;
   if (body[iBody].bSpiNBody){
     body[iBody].iGravPerts = control->Evolve.iNumBodies-1; //All bodies except the body itself are perturbers
     body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));

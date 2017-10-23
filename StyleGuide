@@ -1,0 +1,103 @@
+VPLANET Style Guide
+
+Variable and funtion names use a "Hungarian style."
+
+
+Subroutine names can begin with a prefix that describes the returned parameter
+"" = void function
+fnb = Boolean Function (returns 0 or 1)
+fni = Integer Function (returns int)
+fnd = Double Function (returns double)
+fns = String function (returns char[])
+fnba = Boolean Array Function
+fnia = Integer Array Function
+fnda = Double Array Function
+fnsa = String Array Function (returns char[][])
+
+Subroutines should be written as:
+
+void ThisIsAFunction(BODY *body,CONTROL *control,...,fnUpdate, double dA,double dB,...,int iA,int iB) {
+  /* This comment describes the point of this function, any potential gotchas or future 
+     improvements. Single line comments with // are OK. The argument list should be 
+     alphabetical, starting with vplanet structs, then any function pointers, then doubles, 
+     then integers, then Booleans. */
+
+  Use spaces instead of tabs to indent code. Tabs can cause conflicts. You should be able
+  to modify your text editor to do this. Two spaces per logic level.
+
+  /* All variables must be declared at the top of the subroutine in the same order as the
+     argument list. */
+  /* Inlcude comments for each variable name, eg: */
+  BODY *tmpBody; // Copy of body struct for RK4 calculations
+  fnUpdateVariable *fnFunctionPointer; // Function pointer to Derivative dx/dt
+  double dAA,*daA; // Astrometric Anomaly; vector of albedos
+  int iAA,*iaA; // index of Asteroid Albedo; vector of Asteroid body numbers
+
+  b = Boolean
+  i = Integer
+  d = Double
+  s = String
+  ba = Boolean Array
+  ia = Integer Array
+  da = Double Array
+  sa = String Array
+  pb = Pointer to Boolean
+  pi = Pointer to Integer 
+  pd = Pointer to Double
+  pab = Pointer to Boolean Array
+  pai = Pointer to Integer Array
+  pad = Pointer to Double Array
+  fnp = Function Pointer
+
+  Unbracketed, single line if/then, for, and while loops are OK, but you should comment them!
+  [Either way it's work.]
+
+  if (...) {
+  } else if (...) {
+  } else {
+  }
+
+  while (...) {
+  }
+
+  do {
+  } while (...);
+
+  for (...; ...; ...) {
+  }
+
+  switch (...) {
+    case 1: {
+      // When you need to declare a variable in a switch, put the block in braces
+      int var;
+      break;
+    }
+    case 2:
+      ...
+      break;
+    default:
+      break;
+  }
+
+  The meat of the subroutine is next, with appropriate comments.
+
+  Make sure to free all mallocked vectors/matrices!
+}
+
+In vplanet.h, use the Doxygen commenting style:
+
+Single line comment:
+double dAge;           /**< Body's Age */
+
+Multi-line comment:
+/*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+    semi-major axis' derivative due to EQTIDE. */
+double *pdDsemiDtEqtide;    
+
+---- Auxiliary Python Code -----
+
+vplot, vspace, bigplanet, more?
+
+Use the PEP 8 guide for python
+
+https://www.python.org/dev/peps/pep-0008/

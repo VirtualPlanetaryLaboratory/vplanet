@@ -650,16 +650,6 @@ void fnForceBehaviorAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
-/*
-todo:
- - change radsurf to radsolid;
- - output all relevant parameters;
- - vtest working -- rory if not
- - pull from master --. resolve conflict
- - recommit
- - then pull request
-*/
-
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
@@ -1441,7 +1431,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
-     -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+    
   	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
 
   }

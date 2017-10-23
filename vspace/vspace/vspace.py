@@ -8,6 +8,13 @@ from IPython.core.debugger import Tracer
 import vspace_hyak
 import itertools as it
 
+def SearchAngleUnit(src,flist):
+  for fcurr in flist:
+    fread = open(src+'/'+fcurr).read()
+    if 'sUnitAngle' in fread:
+      angUnit = fread.split()[np.where(np.asarray(fread.split())=='sUnitAngle')[0][0]+1]
+  
+  return angUnit
 
 if len(sys.argv) < 2:
   raise IOError("Must enter an input file name")
@@ -34,6 +41,10 @@ iter_name = []  #the name of each variable
 prefix = []
 numtry = 1     #number of trials to be generated
 numvars = 0   #number of iter_vars
+angUnit = 0   #angle unit used for sine and cosine sampling
+mode = 0 #sampling mode (0 = grid, 1 = random (also need to set randsize for random))
+randsize = 0   #size of random sample
+
 for i in range(len(lines)):
   if lines[i].split() == []:
     pass  #nothing on this line
@@ -43,6 +54,14 @@ for i in range(len(lines)):
     dest = lines[i].split()[1]
   elif lines[i].split()[0] == 'trialname':
     trial = lines[i].split()[1]
+  elif lines[i].split()[0] == 'samplemode':
+    modename = lines[i].split()[1]
+    if modename.startswith('g') or modename.startswith('G'):
+      mode = 0
+    elif modename.startswith('r') or modename.startswith('R'):
+      mode = 1
+    else:
+      raise IOError("samplemode must be grid or random")
   elif lines[i].split()[0] == 'seed':
     if np.float(lines[i].split()[1]).is_integer():
       np.random.seed(np.int(lines[i].split()[1]))
@@ -51,6 +70,18 @@ for i in range(len(lines)):
   elif lines[i].split()[0] == 'file':
     flist.append(lines[i].split()[1])
     fline.append(i)
+  elif lines[i].split()[0] == 'sUnitAngle':
+    angUnit = lines[i].split()[1]
+  elif lines[i].split()[0] == 'randsize':
+    if np.float(lines[i].split()[1]).is_integer():
+      randsize = np.int(lines[i].split()[1])
+    else:
+      raise IOError("Attempt to pass non-integer value to randsize")
+      
+for i in range(len(lines)):
+  if lines[i].split() == []:
+    pass  #nothing on this line
+  elif lines[i].split()[0] == 'file':
     fnum += 1
 
   if re.search('\[',lines[i]) != None:
@@ -61,18 +92,22 @@ for i in range(len(lines)):
       prefix.append(spl[2].strip())
     else:
       raise IOError("Please provide a short prefix identifying each parameter to be iterated (to be used in directory names): <option> [<range>] <prefix>. Prefix is missing for '%s' for '%s'"%(name,flist[fnum-1]))
-    if len(values) != 3:
-      raise IOError("Attempt to iterate over '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>, <high>, <spacing>], [<low>, <high>, n<number of points>], or [<low>, <high>, l<number of points>] (log spacing) "%(name,flist[fnum-1]))
+    if mode == 0:
+      if len(values) != 3:
+        raise IOError("Attempt to iterate over '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>, <high>, <spacing>], [<low>, <high>, n<number of points>], or [<low>, <high>, l<number of points>] (log spacing) "%(name,flist[fnum-1]))
 
     for j in range(len(values)):
       values[j] = values[j].strip()  #remove any leading white spaces
-
+  
+    #user set linear spacing of data
     if values[2][0] == 'n':
       values[2] = values[2][1:]
       if np.float(values[2]).is_integer():
         array = np.linspace(np.float(values[0]),np.float(values[1]),np.float(values[2]))
       else:
         raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
+    
+    #user set log spacing of data
     elif values[2][0] == 'l':
       values[2] = values[2][1:]
       if np.float(values[0]) < 0:
@@ -85,24 +120,57 @@ for i in range(len(lines)):
           array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),np.float(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
+          
+    #user wants to randomly sample a normal/gaussian distribution
     elif values[2][0] == 'g':
-      values[2] = values[2][1:]
-      if np.float(values[2]).is_integer():
-        array = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=np.int(values[2]))
+      if mode == 1:
+        array = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=np.int(randsize))
       else:
-        raise IOError("Attempt to randomly select for '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))       
+        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
+        
+    #user wants to randomly sample a uniform distribution  
     elif values[2][0] == 'u':
-      values[2] = values[2][1:]
-      if np.float(values[2]).is_integer():
-        array = np.random.uniform(low=np.float(values[0]),high=np.float(values[1]),size=np.int(values[2]))
+      if mode == 1:
+        array = np.random.uniform(low=np.float(values[0]),high=np.float(values[1]),size=np.int(randsize))
       else:
-        raise IOError("Attempt to randomly select for '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
-
+        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))       
+         
+    #user wants to randomly sample a uniform distribution of the SINE of an angle
+    elif values[2][0] == 's':
+      if mode == 1:
+        if angUnit == 0:
+          angUnit = SearchAngleUnit(src,flist)
+        if angUnit.startswith('d') or angUnit.startswith('D'):
+          array = np.arcsin(np.random.uniform(low=np.sin(np.float(values[0])*np.pi/180.0),high=np.sin(np.float(values[1])*np.pi/180.0),size=np.int(randsize)))*180/np.pi
+        elif angUnit.startswith('r') or angUnit.startswith('R'):
+          array = np.arcsin(np.random.uniform(low=np.sin(np.float(values[0])),high=np.sin(np.float(values[1])),size=np.int(randsize)))
+        else:
+          raise IOError("Cannot randomly sample sin(%s): improper angle units set"%name) 
+      else:
+        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
+      
+    #user wants to randomly sample a uniform distribution of the COSINE of an angle
+    elif values[2][0] == 'c':
+      if mode == 1:
+        if angUnit == 0:
+          angUnit = SearchAngleUnit(src,flist)
+        if angUnit.startswith('d') or angUnit.startswith('D'):
+          array = np.arccos(np.random.uniform(low=np.cos(np.float(values[0])*np.pi/180.0),high=np.cos(np.float(values[1])*np.pi/180.0),size=np.int(randsize)))*180/np.pi
+        elif angUnit.startswith('r') or angUnit.startswith('R'):
+          array = np.arccos(np.random.uniform(low=np.cos(np.float(values[0])),high=np.cos(np.float(values[1])),size=np.int(randsize)))
+        else:
+          raise IOError("Cannot randomly sample cos(%s): improper angle units set"%name) 
+      else:
+        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
+    
+    #user set the spacing size of data    
     else:
       if np.float(values[0]) > np.float(values[1]) and np.float(values[2]) > 0:
         raise IOError("Attempt to iterate over '%s' for '%s', but start value > end value and spacing is positive"%(name,flist[fnum-1]))
       else:
         array = np.arange(np.float(values[0]),np.float(values[1])+np.float(values[2]),np.float(values[2]))
+    
+    #add to iterables    
     iter_var.append(array)
     iter_file.append(fnum-1)
     iter_name.append(name)
@@ -118,6 +186,10 @@ if dest is None:
 if flist == []:
   raise IOError("No files-to-be-copied provided in file '%s'. Use syntax 'file <filename>'")
 
+if mode == 1:
+  if randsize == 0:
+    raise IOError("Must set randsize > 0 for random sampling mode")
+      
 if not os.path.exists(src):
   raise IOError("Source folder '%s' does not exist"%src)
 
@@ -176,67 +248,128 @@ elif numvars >= 1:
   iter_name = np.array(iter_name)
   iterables0 = [x for x in iter_var]  #create list of iterables
 
-  #iterate over all possible combinations
-  for tup in it.product(*iterables0):
-    destfull = os.path.join(dest,trial)  #create directory for this combination
-    for ii in range(len(tup)):
-      n = len(str(len(iter_var[ii])))
-      index0 = np.where(iter_var[ii]==tup[ii])[0]
-      destfull += prefix[ii]+np.str(index0[0]).zfill(n)
-      if ii != len(tup)-1:
-        destfull += '_'
+  if mode == 0:
+    #iterate over all possible combinations
+    for tup in it.product(*iterables0):
+      destfull = os.path.join(dest,trial)  #create directory for this combination
+      for ii in range(len(tup)):
+        n = len(str(len(iter_var[ii])-1)) #number of digits to pad directory index
+        index0 = np.where(iter_var[ii]==tup[ii])[0]
+        destfull += prefix[ii]+np.str(index0[0]).zfill(n)
+        if ii != len(tup)-1:
+          destfull += '_'
 
-    if not os.path.exists(destfull):
-       os.system('mkdir '+destfull)
+      if not os.path.exists(destfull):
+         os.system('mkdir '+destfull)
 
-    for i in range(fnum):
-      #read in file to be copied
-      try:
-        fIn = open(os.path.join(src,flist[i]),'r')
-      except IOError:
-        print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
+      for i in range(fnum):
+        #read in file to be copied
+        try:
+          fIn = open(os.path.join(src,flist[i]),'r')
+        except IOError:
+          print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
 
-      #find the lines in 'inputf' that correspond to this file
-      slines = lines[fline[i]+1:fline[i+1]]
-      slines = [slines[j] for j in range(len(slines)) if slines[j].split() != []]
-      sflag = np.zeros(len(slines)) - 1   #bookkeeping (has option been found in file?)
-      spref = [slines[j].split()[0] for j in range(len(slines))]   #option name
-      dlines = fIn.readlines()
-      fIn.close()
+        #find the lines in 'inputf' that correspond to this file
+        slines = lines[fline[i]+1:fline[i+1]]
+        slines = [slines[j] for j in range(len(slines)) if slines[j].split() != []]
+        sflag = np.zeros(len(slines)) - 1   #bookkeeping (has option been found in file?)
+        spref = [slines[j].split()[0] for j in range(len(slines))]   #option name
+        dlines = fIn.readlines()
+        fIn.close()
 
-      #create file out
-      fOut = open(os.path.join(destfull,flist[i]),'w')
+        #create file out
+        fOut = open(os.path.join(destfull,flist[i]),'w')
 
-      for j in range(len(dlines)):
+        for j in range(len(dlines)):
+          for k in range(len(spref)):
+            if dlines[j].split() != []:
+              if dlines[j].split()[0] == spref[k]:
+                sflag[k] = 1   #option in file to be copied matched with option from inputf
+                dlines[j] = slines[k]
+                for m in range(len(iter_file)):
+                  if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
+                    dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
+                if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+                  dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+              elif slines[k].split()[0] == 'rm':
+                #remove an option by placing a comment!
+                if dlines[j].split()[0] == slines[k].split()[1]:
+                  dlines[j] = '#'+dlines[j]
+                  sflag[k] = 1
+
+          fOut.write(dlines[j])  #write to the copied file
+
         for k in range(len(spref)):
-          if dlines[j].split() != []:
-            if dlines[j].split()[0] == spref[k]:
-              sflag[k] = 1   #option in file to be copied matched with option from inputf
-              dlines[j] = slines[k]
-              for m in range(len(iter_file)):
-                if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
-                  dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
-              if dlines[j][-1] != '\n' and j < (len(dlines)-1):
-                dlines[j] = dlines[j]+'\n'  #add a newline, just in case
-            elif slines[k].split()[0] == 'rm':
-              #remove an option by placing a comment!
-              if dlines[j].split()[0] == slines[k].split()[1]:
-                dlines[j] = '#'+dlines[j]
-                sflag[k] = 1
+          #check if any were not already present in the copied file, then write them
+          if sflag[k] < 0:
+            if slines[k].split()[0] == 'rm':
+              raise IOError("No option '%s' to be removed in file %s." % (slines[k].split()[1],flist[i]))
+            else:
+              fOut.write('\n'+slines[k])
 
-        fOut.write(dlines[j])  #write to the copied file
+      fOut.close()
+      count += 1    #move to next combination
+      
+  else:
+    #random draw, iterate linearly
+    n = len(str(randsize-1)) #number of digits to pad directory index
+    for count in np.arange(randsize):
+      tup = []
+      for ii in np.arange(len(iterables0)):
+        tup.append(iterables0[ii][count])
+    
+      destfull = os.path.join(dest,trial)  #create directory for this combination
+      destfull += 'rand_'+np.str(count).zfill(n)
+      if not os.path.exists(destfull):
+        os.system('mkdir '+destfull)
 
-      for k in range(len(spref)):
-        #check if any were not already present in the copied file, then write them
-        if sflag[k] < 0:
-          if slines[k].split()[0] == 'rm':
-            raise IOError("No option '%s' to be removed in file %s." % (slines[k].split()[1],flist[i]))
-          else:
-            fOut.write('\n'+slines[k])
+      for i in range(fnum):
+        #read in file to be copied
+        try:
+          fIn = open(os.path.join(src,flist[i]),'r')
+        except IOError:
+          print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
 
-    fOut.close()
-    count += 1    #move to next combination
+        #find the lines in 'inputf' that correspond to this file
+        slines = lines[fline[i]+1:fline[i+1]]
+        slines = [slines[j] for j in range(len(slines)) if slines[j].split() != []]
+        sflag = np.zeros(len(slines)) - 1   #bookkeeping (has option been found in file?)
+        spref = [slines[j].split()[0] for j in range(len(slines))]   #option name
+        dlines = fIn.readlines()
+        fIn.close()
 
+        #create file out
+        fOut = open(os.path.join(destfull,flist[i]),'w')
+
+        for j in range(len(dlines)):
+          for k in range(len(spref)):
+            if dlines[j].split() != []:
+              if dlines[j].split()[0] == spref[k]:
+                sflag[k] = 1   #option in file to be copied matched with option from inputf
+                dlines[j] = slines[k]
+                for m in range(len(iter_file)):
+                  if iter_file[m] == i and iter_name[m] == dlines[j].split()[0]:
+                    dlines[j] = dlines[j].split()[0] + ' ' +str(tup[m])
+                if dlines[j][-1] != '\n' and j < (len(dlines)-1):
+                  dlines[j] = dlines[j]+'\n'  #add a newline, just in case
+              elif slines[k].split()[0] == 'rm':
+                #remove an option by placing a comment!
+                if dlines[j].split()[0] == slines[k].split()[1]:
+                  dlines[j] = '#'+dlines[j]
+                  sflag[k] = 1
+
+          fOut.write(dlines[j])  #write to the copied file
+
+        for k in range(len(spref)):
+          #check if any were not already present in the copied file, then write them
+          if sflag[k] < 0:
+            if slines[k].split()[0] == 'rm':
+              raise IOError("No option '%s' to be removed in file %s." % (slines[k].split()[1],flist[i]))
+            else:
+              fOut.write('\n'+slines[k])
+
+      fOut.close()
+      
 # Just do this block if you want to
 if(False):
     # Now that all the simulation directories have been populated,

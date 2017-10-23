@@ -7,6 +7,7 @@ import re
 from IPython.core.debugger import Tracer
 import vspace_hyak
 import itertools as it
+import matplotlib.pyplot as plt
 
 def SearchAngleUnit(src,flist):
   for fcurr in flist:
@@ -313,10 +314,21 @@ elif numvars >= 1:
   else:
     #random draw, iterate linearly
     n = len(str(randsize-1)) #number of digits to pad directory index
+    histf = open(dest+'/rand_list.dat','w')
     for count in np.arange(randsize):
       tup = []
+      if count == 0:
+        header = 'trial '
+      current_line = 'rand_'+np.str(count).zfill(n)+' '
       for ii in np.arange(len(iterables0)):
         tup.append(iterables0[ii][count])
+        if count == 0:
+          header += flist[iter_file[ii]][:-3]+'/'+iter_name[ii]+' '
+        current_line += '%f'%iterables0[ii][count]+' '
+        
+      if count == 0:
+        histf.write(header+'\n')
+      histf.write(current_line+'\n')      
     
       destfull = os.path.join(dest,trial)  #create directory for this combination
       destfull += 'rand_'+np.str(count).zfill(n)
@@ -369,7 +381,17 @@ elif numvars >= 1:
               fOut.write('\n'+slines[k])
 
       fOut.close()
-      
+    
+    histf.close()
+    
+    for ii in np.arange(len(iterables0)):
+      plt.figure(figsize=(8,8))
+      plt.hist(iterables0[ii],histtype='stepfilled',color='0.5',edgecolor='None')
+      plt.xlabel(iter_name[ii])
+      plt.ylabel('Number of trials')
+      plt.savefig(dest+'/hist_'+flist[iter_file[ii]][:-3]+'_'+iter_name[ii]+'.pdf')
+      plt.close()
+    
 # Just do this block if you want to
 if(False):
     # Now that all the simulation directories have been populated,

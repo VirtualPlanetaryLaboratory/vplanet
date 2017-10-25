@@ -1000,10 +1000,6 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     InitializeRotEqtide(body,update,iBody,iPert);
     fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
 
-    /* Internal Energy XXX
-    InitializeIntEnEqtide(update,iBody,iPert,body[iBody].iaTidePerts[iPert]);
-    fnUpdate[iBody][update[iBody].iIntEn][update[iBody].iaIntEnEqtide[iPert]] = &fdCTLDrotrateDt;
-    */
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -2099,8 +2095,7 @@ void WriteRotTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
  */
 
 void WriteSemiTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdTimescale(body[1].dSemi,*(update[1].pdDsemiDtEqtide));
+  *dTmp = fdTimescale(body[iBody].dSemi,*(update[iBody].pdDsemiDtEqtide));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2389,16 +2384,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_GAMMAORB].iNum = 1;
   output[OUT_GAMMAORB].iModuleBit = EQTIDE;
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
-
-  // + THERMINT?? XXX
-  /* dflemin3: 08/10/2016: moved to output.c
-  sprintf(output[OUT_IMK2].cName,"ImK2");
-  sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
-  output[OUT_IMK2].bNeg = 0;
-  output[OUT_IMK2].iNum = 1;
-  output[OUT_IMK2].iModuleBit = EQTIDE;
-  fnWrite[OUT_IMK2] = &WriteImK2;
-  */
 
   sprintf(output[OUT_K2OCEAN].cName,"OceanK2");
   sprintf(output[OUT_K2OCEAN].cDescr,"K2_Ocean");
@@ -3036,27 +3021,6 @@ double fdCPLDKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
      iaBody[0] = the orbiter, iaBody[0] = central body */
 
   return body[iaBody[0]].dDeccDtEqtide * cos(body[iaBody[0]].dLongP);
-}
-
-double fdCPLDsemiDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
-  double foo;
-
-  /* XXX Not fixed */
-  // foo = body.dTidalZ[0]*(4*body.iTidalEpsilon[0][0] + dEcc*dEcc*(-20*body.iTidalEpsilon[0][0] + 147./2*body.iTidalEpsilon[0][1] + 0.5*body.iTidalEpsilon[0][2] - 3*body.iTidalEpsilon[0][5]) - 4*sin(body.dObliquity)*sin(body.dObliquity)*(body.iTidalEpsilon[0][0]-body.iTidalEpsilon[0][8]));
-
-  return -1;
-  //return dSemi*dSemi/(4*BIGG*body.dMass*dMassPert)*foo;
-
-}
-
-double fdCPLDeccDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
-  double foo;
-
-  /* XXX Not fixed */
-  //foo = body.dTidalZ*(2*body.iTidalEpsilon[0] - 49./2*body.iTidalEpsilon[1] + 0.5*body.iTidalEpsilon[2] + 3*body.iTidalEpsilon[5]);
-
-  //return -dSemi*dEcc/(8*BIGG*body.dMass*dMassPert) * foo;
-  return -1;
 }
 
 double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {

@@ -516,6 +516,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
  * Verify multi-module dependencies
  */
 
+
 void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   if (body[iBody].bDistRot) {
@@ -713,6 +714,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
    * Q, k_2 and Im(k_2) for the world
    */
 
+   // dImK2Env has no read options, so must initialize here!
+   body[iBody].dImK2Env = 1;
+
   // If this is the star (body 0 or body 1 in binary), tidal radius == radius
   if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar))
   {
@@ -734,9 +738,86 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
     if(body[iBody].bAtmEsc)
     {
 
-      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius
-      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
+      // if user wants to include tides due to envelope: (do same with oceans)
+      if (body[iBody].bEnvTides) {
+        // they better have defined k2Env, tidalqenv, denvmass
+        if (!(options[OPT_TIDALQENV].iLine[iBody+1] > -1)) {
+          fprintf(stderr,"ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_TIDALQENV].cName);
+          exit(EXIT_INPUT);
+        }
+        // k2env not set
+        else if (!(options[OPT_K2ENV].iLine[iBody+1] > -1)) {
+          fprintf(stderr,"ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_K2ENV].cName);
+          exit(EXIT_INPUT);
+        }
+        // envmass not set
+        else if (!(options[OPT_ENVELOPEMASS].iLine[iBody+1] > -1)) {
+          fprintf(stderr, "ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_ENVELOPEMASS].cName);
+          exit(EXIT_INPUT);
+        }
+      }
 
+      if (body[iBody].bOceanTides) {
+        // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
+        if (!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1)) {
+          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
+          exit(EXIT_INPUT);
+        }
+        else if (!(options[OPT_SURFACEWATERMASS].iLine[iBody+1] > -1)) {
+          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_SURFACEWATERMASS].cName);
+          exit(EXIT_INPUT);
+        }
+        else if (!(options[OPT_K2OCEAN].iLine[iBody+1] > -1)) {
+          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_K2OCEAN].cName);
+          exit(EXIT_INPUT);
+        }
+      }
+      // now lets check there's actually an envelope
+      // there is not an envelope!!
+      if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
+        body[iBody].bEnv = 0;
+      }
+      else {
+        body[iBody].bEnv = 1;
+        body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
+      }
+      // what about an ocean?
+      if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+        body[iBody].bOcean = 0;
+      }
+      else {
+        body[iBody].bOcean = 1;
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+      }
+
+      // there's definitely at least gonna be some rock...
+      body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
+
+      // if there is an envelope/ocean, we calculate ImK2Env/ImK2Ocean
+      if (body[iBody].bEnv && (body[iBody].dTidalQ != body[iBody].dTidalQEnv)) {
+        fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+        body[iBody].dTidalQ = body[iBody].dTidalQEnv;
+        body[iBody].dK2 = body[iBody].dK2Env;
+        body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
+        body[iBody].dImK2 = body[iBody].dImK2Env;
+      }
+      else {
+        if (body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQOcean)) {
+          fprintf(stderr,"Using dTidalQOcean for %s.\n",body[iBody].cName);
+          body[iBody].dTidalQ = body[iBody].dTidalQOcean;
+          body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+          body[iBody].dImK2 = body[iBody].dImK2Ocean;
+          body[iBody].dK2 = body[iBody].dK2Ocean;
+        }
+        else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQRock) && (iBody != 0)){
+          fprintf(stderr,"Using dTidalQRock for %s.\n",body[iBody].cName);
+          // now we just use dTidalQRock and dK2Rock
+          body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
+          body[iBody].dTidalQ = body[iBody].dTidalQRock;
+          body[iBody].dK2 = body[iBody].dK2Rock;
+          body[iBody].dImK2 = body[iBody].dImK2Rock;
+        }
+    }
       // Using tidal radus
       if(body[iBody].bUseTidalRadius)
       {
@@ -747,6 +828,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
           exit(EXIT_INPUT);
         }
       }
+
+
       // Not using tidal radius
       else
       {
@@ -769,7 +852,17 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
         // No tidal radius given -> just use specified radius
         body[iBody].dTidalRadius = body[iBody].dRadius;
       }
+
+      // now we need to do verify steps to make sure everything is set:
+      // Sets behavior for changing between dTidalQEnv, dTidalQOcean, and dTidalQRock
+      control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorEqtideAtmesc;
+
+      // Set a PropsAuxMultiAtmescEqtide here that controls dRadius/dTidalRadius
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtide;
+
     }
+
+
     // Not using ATMESC
     else
     {
@@ -792,10 +885,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
 
       // TidalRadius == radius as without ATMESC, planet radius doesn't evolve
       body[iBody].dTidalRadius = body[iBody].dRadius;
+      }
     }
   }
-}
-
 void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
 
   // If you're using alllll of these, include the force behavior!
@@ -997,9 +1089,8 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
   if(!body[iBody].bUseTidalRadius)
     body[iBody].dTidalRadius = body[iBody].dRadius;
-
-  // Otherwise, dTidalRadius fixed while dRadius can evolve (i.e. if using ATMESC dRadius(t) models)
 }
+
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but
@@ -1133,8 +1224,53 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
     RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
+  };
+}
+
+void ForceBehaviorEqtideAtmesc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+
+  int iBody;
+  // add print statement
+  // output options for benv
+  // if benv and denvmass less than dminenvmass, same with oceans, bEnv set initially in verify
+  // specify k2rock, gas, ocean,
+  // specify tidalqrock, gas, ocean;
+  // verify checks
+
+  // there are a few cases we want to account for:
+  // 1) env -> ocean -> rock; 2) ocean -> rock; 3) env -> rock
+  for (iBody = 1; iBody<=evolve->iNumBodies-1; iBody++) {
+
+    // We think there is an envelope, but there isnt!
+    if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
+      fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      body[iBody].bEnv = 0;
+
+      // is there an ocean? lets set tidalq to that!
+      if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+        fprintf(stderr," dTidalQOcean,\n");
+        body[iBody].dTidalQ = body[iBody].dTidalQOcean;
+        body[iBody].dK2 = body[iBody].dK2Ocean;
+        body[iBody].dImK2 = body[iBody].dImK2Ocean;
+      }
+      // there is not ocean, so lets use dTidalQRock!
+      else {
+        fprintf(stderr," dTidalQRock.\n");
+        body[iBody].dTidalQ = body[iBody].dTidalQRock;
+        body[iBody].dK2 = body[iBody].dK2Rock;
+        body[iBody].dImK2 = body[iBody].dImK2Rock;
+      }
+    }
+    // we think theres an ocean, but there isnt!!
+    else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
+      fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      body[iBody].dTidalQ = body[iBody].dTidalQRock;
+      body[iBody].dK2 = body[iBody].dK2Rock;
+      body[iBody].dImK2 = body[iBody].dImK2Rock;
+    }
   }
 }
+
 
 void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
 

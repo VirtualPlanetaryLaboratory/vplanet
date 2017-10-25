@@ -344,12 +344,16 @@ typedef struct {
   double dImK2;          /**< Imaginary part of Love's K_2 */
   double dK2Ocean;       /**< Ocean's Love Number */
   double dK2Env;         /**< Envelope's Love Number */
+  double dK2Rock;
   double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dImK2Rock;
   double dTidalQ;	 /**< Body's Tidal Q */
-  //double dTidalQRock;    /**< Tidal Q in interior */
+  double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
+  int bOcean;            /** <is there an ocean? */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
+  int bEnv;              /**< is there an envelope? */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
@@ -559,14 +563,14 @@ typedef struct {
   int iWaterEscapeRegime;
   double dFHDiffLim;
   double dRadXUV;       //lehmer var
-  double dRadSolid;      //lehmer var
+  double dRadSolid;     //lehmer var
   double dPresSurf;     //lehmer var
   double dPresXUV;      //lehmer var
   double dScaleHeight;  //lehmer var
   double dThermTemp;    //lehmer var
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
-  int bCalcFXUV;        
+  int bCalcFXUV;
 
   /* STELLAR Parameters */
   int bStellar;
@@ -1888,4 +1892,3 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
-#include "lehmer17radius.h"

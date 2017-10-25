@@ -9,51 +9,62 @@ dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
 # Orbital Properties
-dEcc            0.1 #0.0167		# Eccentricity
-dSemi           0.05 #-1		# Semi-major axis, negative -> AU
+dEcc            0.0167		# Eccentricity
+dSemi           -1		# Semi-major axis, negative -> AU
+
 
 # RADHEAT Parameters
-### 26Al
-d26AlMassMan	0		# Earth masses
-d26AlMassCore	0	        # Earth masses
-
+# *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-d40KNumMan    -1.0
-d40KNumCore   -1.0 #-3.0
+d40KNumMan    9.721101687979459683e+42
+d40KNumCore   9.581703578252307776e+42
 d40KNumCrust  -1.0
 ### 232Th
-d232ThNumMan	-1			# Number of thorium-232 atoms, negative -> Earth
-d232ThNumCore	-1
+d232ThNumMan	 6.078734010302774195e+41
+d232ThNumCore	 1.356572883180321510e+40
 d232ThNumCrust	-1
 ### 235U
-d235UNumMan	-1			# Number of uranium-238 atims, negative -> Earth
-d235UNumCore	-1
+d235UNumMan   9.896626348523395688e+40
+d235UNumCore	 2.451488161969154328e+39
 d235UNumCrust	-1
 ### 238U
-d238UNumMan	-1.0  #-1.16			# Number of uranium-238 atims, negative -> Earth
-d238UNumCore	-1
+d238UNumMan	 2.868293704328590673e+41
+d238UNumCore	 2.959002795718371557e+39
 d238UNumCrust	-1
 
 ### THERMINT inputs.
-dTMan          3000.0
-dTCore         6000.0	#6000
-dEruptEff      0.1		#.2
-dTrefLind      5650.    #def is 5705.
-dDTChiRef      0 #250.     ## def is 300.
-dFixMeltfactorUMan 0 #1  
+dTMan          3000
+dTCore         6000
+dEruptEff      0.1
+
+#Optimized Values
+dViscRef       9.407846599871450663e+07
+dViscJumpMan   4.235490921557827804e+00
+dDLind         5.869101214631569572e+06
+dTrefLind      5.641407275956552439e+03 
+dDAdCore       6.171466430100195110e+06 
+dAdJumpM2UM    6.313339234908937891e-01 
+dAdJumpM2LM    1.022084013592421847e+00
+dAdJumpC2CMB   9.867251831327034095e-01
+dMagMomCoef    1.571053922912512557e-01
+dDTChiRef      0
+dShModRef      4.421713356992416084e+06
+dViscMeltB     2.042864920855121280e+00
+dViscMeltPhis  7.374509995857124744e-01
+dViscMeltDelta 5.042291150413996448e+00
+
+#Unoptimized Values
+ViscMeltGamma 6
+dFixMeltfactorUMan 0  
 #dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
-dViscJumpMan   2.85
-dViscRef       1.0e8	   #1e8
-dStagLid       1
-dManHFlowPref  1.  #0.04    ###Note: 1/25=0.04
-dMagMomCoef    0.15
-dPresSWind     -1  #-0.2
+dStagLid       0
+dManHFlowPref  1 
+dPresSWind     -1
     
 #Output
-saOutputOrder Time TidalQ K2 ImK2
-#saOutputOrder TidalQ K2 ImK2 -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad -SurfEnFluxTot
+saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
+	    -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
+		-MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
 
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    

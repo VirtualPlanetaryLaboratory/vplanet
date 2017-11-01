@@ -1,0 +1,20 @@
+# Earth's parameters
+sName		cbp			# Body's name
+saModules       binary
+
+# Physical Properties
+iBodyType       0                               # Type of body 0 -> Planet
+dMass		0.0 			# Mass, negative -> Earth masses
+
+# Binary Properties
+dFreeEcc        0.03                   # Free Eccentricity
+dFreeInc        0.3083                     # Free Inclination [deg]
+bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
+bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
+
+# Orbital Properties
+dSemi           0.7016		# Semi-major axis, negative -> AU
+dLongP          304.05
+
+# Output
+saOutputOrder Time Semim Ecce BinaryLongA BinaryInc BinaryLongP #TMan TCore SurfWater Envelop

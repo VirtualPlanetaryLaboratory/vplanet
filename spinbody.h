@@ -38,6 +38,9 @@
 #define OUT_VELYSPINBODY        1621
 #define OUT_VELZSPINBODY        1622
 
+#define OUT_INCSPINBODY         1630
+#define OUT_LONGASPINBODY       1631
+
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]);
 void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody);
 void ReadPositionX(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile);
@@ -78,14 +81,19 @@ void WritePositionZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteVelX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void WriteVelY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void WriteVelZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
+void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
+void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]);
 
 // Coordinate Changes
 void OrbElems2Helio(BODY *body, int iBody);
 void Helio2Bary(BODY *body, int iNumBodies, int iBody);
+void Bary2OrbElems(BODY *body, int iBody);
+void Bary2Helio(BODY *body, int iBody);
 // These functions are defined in distorb.c, but needed in SpiNBody
 // Relocate to system.c?
 
+void cross(double* r,double* v,double* h); //h = r X v
 void kepler_eqn(BODY *body, int iBody);
 double signf(double value);
 double xinit(BODY *body, int iBody);

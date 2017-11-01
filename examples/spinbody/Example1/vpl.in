@@ -12,7 +12,7 @@ sUnitAngle                deg             # Options: deg, rad
 
 # Input/Output
 bDoLog                    1               # Write a log file?
-iDigits                   10              # Maximum number of digits to right of decimal
+iDigits                   16              # Maximum number of digits to right of decimal
 dMinValue                 1e-10           # Minimum value of eccentricity/obliquity
 
 # Evolution Parameters

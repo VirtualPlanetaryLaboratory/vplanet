@@ -78,3 +78,7 @@ sandbox
 *.bbl
 *.blg
 proxcen.pdf
+examples/spinbody/HNBody_Comparison/*.pdf
+examples/spinbody/HNBody_Comparison/*.png
+examples/spinbody/Example1/*.pdf
+examples/spinbody/Examples/*.png

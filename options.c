@@ -1182,7 +1182,14 @@ void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     } else
       if (iFile > 0)
-        AssignDefaultInt(options,&body[iFile-1].iBodyType,files->iNumInputs);
+      {
+        if(iFile == 1) {
+          body[iFile-1].iBodyType = 1; // Body 1 defaults to star type (1)
+        }
+        else {
+          body[iFile-1].iBodyType = 0; // Body > 1 defaults to planet type (0)
+        }
+      }
 }
 
 /*

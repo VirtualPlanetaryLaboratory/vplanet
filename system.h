@@ -30,13 +30,8 @@ void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
 /* Multi-body derivative equations */
-double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdEccDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdHeccDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdKeccDtEqBinSt(BODY*,SYSTEM*,int*);
+double fdSemiDtEqSt(BODY*,SYSTEM*,int*);
 double fdJStarDt(BODY*,int);
 double fdJBrakingStarDt(BODY*,int);
 double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
-double fdLostEngEqBinSt(BODY*,SYSTEM*,int*);
-double fdLostEnergyTidalLockBinEqSt(BODY*,int,int,double);

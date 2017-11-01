@@ -18,13 +18,14 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 import numpy as np
 from sklearn import preprocessing
+import itertools
 
 # Tell module what it's allowed to import
 __all__ = ["poly_features",
            "fourier_features",
            "scale_data",
            "extract_features",
-           "naive_nn_layer"]
+           "relu_features"]
 
 def extract_features(df, features, target):
     """
@@ -151,7 +152,7 @@ def fourier_features(X, k=1000, v = None, b = None, sigma = 1.0,
 # end function
 
 
-def naive_nn_layer(X, k = 5000, v = None, verbose = False):
+def relu_features(X, k = 5000, v = None, verbose = False):
     """
     Perform a naive approximation to the first layer of a neural network to
     transform a d dimensional feature vector for a given sample to k via a
@@ -163,7 +164,8 @@ def naive_nn_layer(X, k = 5000, v = None, verbose = False):
     where v is a d x k matrix where each column is a d x 1 vector whose entries
     are sampled from the standard normal distribution.  Even though this is a
     trivial transformation, it typically works pretty well for large k!  This is
-    also known as a random Rectified Linear (ReLu) layer and works crazy well.
+    also known as a random Rectified Linear (ReLu) layer and works crazy well when
+    k is large, say, of order the number of samples.
 
     Parameters
     ----------

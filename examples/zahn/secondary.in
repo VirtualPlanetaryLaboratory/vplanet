@@ -9,8 +9,8 @@ dRotPeriod    -0.5
 dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
-dOrbPeriod  -3.0
-dEcc        0.1
+dOrbPeriod  -5.0
+dEcc        0.15
 
 # EQTIDE Parameters
 dTidalQ		1.0e6		# Tidal phase lag

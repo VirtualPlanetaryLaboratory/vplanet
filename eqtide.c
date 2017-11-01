@@ -3001,7 +3001,9 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
  * Derivatives
  */
 
-/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57) */
+/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57)
+ * DEPRECATED
+ */
 double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
 {
 
@@ -3033,11 +3035,13 @@ double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
 iaBody[0] = central body */
 
-  double dSum = 0.0;
+  double dSum;
 
-  // Secondary (orbiter) is tidally locked
+  // Primary (central body) is tidally locked
   if(!body[iB0].bTideLock && body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
@@ -3046,9 +3050,11 @@ iaBody[0] = central body */
 
     return dSum;
   }
-  // Primary (central body) is tidally locked
+  // Secondary (orbiter) is tidally locked
   else if(body[iB0].bTideLock && !body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
@@ -3060,6 +3066,8 @@ iaBody[0] = central body */
   // If primary and secondary are tidally locked
   else if(body[iB0].bTideLock && body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
@@ -3071,6 +3079,8 @@ iaBody[0] = central body */
   // Neither body is tidally locked
   else
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 

@@ -19,4 +19,4 @@ dEcc                       0.01671022   # Eccentricity
 dInc                       3.4          # Inclination (deg)
 dLongP                     102.94719    # Longitude of pericenter (deg)
 dLongA                     348.73936    # Longitude of ascending node (deg)
-dMeanA                     100.46435    # Mean Anomoly (deg)
+dMeanA                     357.51716    # Mean Anomoly (deg)

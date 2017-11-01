@@ -63,8 +63,8 @@ dTCore         6000.0	#6000
 dEruptEff      0.1		#.2
 dTrefLind      5650.    #def is 5705.
 dDTChiRef      0.0     ## def is 300.
-dFixMeltfactorUMan 0  
-#dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
+#dFixMeltfactorUMan 0  
+dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
 dViscJumpMan   2.85
 dViscRef       1.0e8	   #1e8
 dStagLid       1
@@ -75,7 +75,7 @@ dPresSWind     -1  #-0.2
 #Output
 saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass $ 
 -TMan -TCore -RIC -EnvelopeMass -OxygenMass
-
+saOutputOrder
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $

@@ -36,7 +36,7 @@
  * DISTORB: 1300 - 1400
  * DISTROT: 1400 - 1500
  * STELLAR: 1500 - 1600
- * ??: 1600 - 1700
+ * SPINBODY: 1600 - 1700
  * THERMINT: 1700 - 1900
  * POISE: 1900 - 2000
  * FLARE: 2000 - 2100
@@ -61,7 +61,8 @@
 #define cLIGHT        299792458.0
 #define MEARTH        5.972186e24 // Prsa et al. 2016
 #define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUCM          1.49598e11  // XXX Change to AUM
+#define AUCM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
+//#define AUCM          1.49598e11  // Old AUCM intended to keep tests passing
 #define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7   // Seconds per year
@@ -1344,14 +1345,12 @@ typedef struct {
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 
- /* BINARY + EQTIDE + STELLAR */
- int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
- int iLostEngBinEqSt;   /**< Equation # Corresponding to BIN+EQ+ST's Change to lost energy */
+ /* EQTIDE + STELLAR */
+ int iSemiEqSt;      /**< Equation # Corresponding to EQ+ST's Change to Semi-major Axis */
 
  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
-     semi-major axis, Hecc and Kecc derivatives due to BIN+EQ+ST. */
- double *pdDsemiDtBinEqSt;
- double *pdDLostEngDtBinEqSt;
+     semi-major axis derivatives due to EQTIDE+STELLAR. */
+ double *pdDsemiDtEqSt;
 
 } UPDATE;
 

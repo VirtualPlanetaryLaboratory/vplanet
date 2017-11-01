@@ -13,12 +13,13 @@ double fdSemiToMeanMotion(double,double);
 double fdMeanMotionToSemi(double,double,double);
 double fdMeanMotionToSemi(double,double,double);
 
-double fdOrbAngMom(BODY*,int);
+double * fdOrbAngMom(BODY*,int);
 double fdTotAngMom(BODY*,CONTROL*,SYSTEM*);
 
 double fdOrbPotEnergy(BODY*,CONTROL*,SYSTEM*,int);
 double fdOrbKinEnergy(BODY*,CONTROL*,SYSTEM*,int);
 double fdOrbEnergy(BODY*,CONTROL*,SYSTEM*,int);
+double fdTotOrbEnergy(BODY*, CONTROL*, SYSTEM*);
 double fdKinEnergy(BODY*,CONTROL*,SYSTEM*,int);
 double fdPotEnergy(BODY*,CONTROL*,SYSTEM*,int);
 double fdTotEnergy(BODY*,CONTROL*,SYSTEM*);
@@ -30,13 +31,8 @@ void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
 /* Multi-body derivative equations */
-double fdSemiDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdEccDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdHeccDtEqBinSt(BODY*,SYSTEM*,int*);
-double fdKeccDtEqBinSt(BODY*,SYSTEM*,int*);
+double fdSemiDtEqSt(BODY*,SYSTEM*,int*);
 double fdJStarDt(BODY*,int);
 double fdJBrakingStarDt(BODY*,int);
 double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
-double fdLostEngEqBinSt(BODY*,SYSTEM*,int*);
-double fdLostEnergyTidalLockBinEqSt(BODY*,int,int,double);

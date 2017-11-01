@@ -38,6 +38,7 @@ double fdRadToMass_BaylessOrosz06(double);
 double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
+double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle);
 
 void BodyCopy(BODY*,BODY*,EVOLVE*);
 

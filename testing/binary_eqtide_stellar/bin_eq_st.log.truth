@@ -88,9 +88,9 @@ Color: 000000
 (EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: -nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103489e+18 
 (EnvK2) K2_Env []: 0.010000 
@@ -191,9 +191,9 @@ Color: 000000
 (EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: -nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391637e+16 
 (EnvK2) K2_Env []: 0.010000 
@@ -244,8 +244,8 @@ Color: 000000
 (Eccentricity) Orbital Eccentricity []: 0.047201 
 (OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
-(OrbPeriod) Orbital Period [sec]: 1.968031e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.049579e+11 
+(OrbPeriod) Orbital Period [sec]: 2.029842e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.071442e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
@@ -334,9 +334,9 @@ Color: 000000
 (EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: -nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103489e+18 
 (EnvK2) K2_Env []: 0.010000 
@@ -437,9 +437,9 @@ Color: 000000
 (EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: -nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
 (RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391636e+16 
 (EnvK2) K2_Env []: 0.010000 
@@ -490,8 +490,8 @@ Color: 000000
 (Eccentricity) Orbital Eccentricity []: 0.048829 
 (OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
-(OrbPeriod) Orbital Period [sec]: 1.968031e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.049579e+11 
+(OrbPeriod) Orbital Period [sec]: 2.008981e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.064088e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 

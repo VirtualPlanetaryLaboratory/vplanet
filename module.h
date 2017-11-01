@@ -36,7 +36,5 @@ void ForceBehaviorEqtideAtmesc(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariabl
 void InitializeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int);
 void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int*,int,int);
 
-void InitializeUpdateEqBinStSemi(BODY*,UPDATE*,int);
-void InitializeUpdateEqBinStLostEng(BODY*,UPDATE*,int);
-void FinalizeUpdateMultiEqBinStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);
-void FinalizeUpdateMultiEqBinStLostEng(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);
+void InitializeUpdateEqStSemi(BODY*,UPDATE*,int);
+void FinalizeUpdateMultiEqStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);

@@ -574,9 +574,6 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
     // Set CBP orbital elements, mean motion
     fdAssignOrbitalElements(body,iBody);
     body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dR0,(body[0].dMass + body[1].dMass + body[iBody].dMass));
-
-    // LL13 theory doesn't seem to conserve energy, so force semi-major axis to be constant
-    body[iBody].dSemi = body[iBody].dR0;
   }
   else if(body[iBody].iBodyType == 1 && iBody == 1) // Binary
   {

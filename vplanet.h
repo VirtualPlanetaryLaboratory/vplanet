@@ -1355,14 +1355,12 @@ typedef struct {
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 
- /* BINARY + EQTIDE + STELLAR */
- int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
- int iLostEngBinEqSt;   /**< Equation # Corresponding to BIN+EQ+ST's Change to lost energy */
+ /* EQTIDE + STELLAR */
+ int iSemiEqSt;      /**< Equation # Corresponding to EQ+ST's Change to Semi-major Axis */
 
  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
-     semi-major axis, Hecc and Kecc derivatives due to BIN+EQ+ST. */
- double *pdDsemiDtBinEqSt;
- double *pdDLostEngDtBinEqSt;
+     semi-major axis derivatives due to EQTIDE+STELLAR. */
+ double *pdDsemiDtEqSt;
 
 } UPDATE;
 

@@ -34,12 +34,7 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
 
 /* iBodyType */
 void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if(body[iBody].bBinary) {
-    *dTmp = body[iBody].iBodyType;
-  }
-  else
-    *dTmp = -1;
-
+  *dTmp = body[iBody].iBodyType;
   strcpy(cUnit,"");
 }
 

@@ -105,6 +105,9 @@ double fdRotVel(double dRadius,double dRotRate) {
   return dRadius*dRotRate;
 }
 
+double fdSphereDensity(double dMass,double dRadius) {
+  return 4*PI*dMass/pow(dRadius,3)/3;
+}
 
 /*
  * Published Mass - Radius Relationships
@@ -292,4 +295,23 @@ double CalcDynEllipEq(BODY *body, int iBody) {
   if (dDynEllip < EdVenus) dDynEllip = EdVenus;
 
   return dDynEllip;
+}
+
+double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle) {
+// calculate pressure at surface due to envelope
+// and RadXUV, radius from center of planet where optical depth of XUV is unity
+	double P;		// pressure at surface due to envelope
+	double Rxuv;	// see above
+
+	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf); // [kg/ms2]
+	Rxuv = RadSurf * RadSurf / (H * log(Pxuv/P) + RadSurf);
+	if (Rxuv <= RadSurf) {
+		Rxuv = RadSurf;
+	}
+	if (toggle == 1) {
+		return P;
+	}
+	else {
+		return Rxuv;
+  }
 }

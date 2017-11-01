@@ -415,12 +415,13 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
  */
 
 void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
-  int iDir,iBody,iModule;
+  int iDir,iBody,iModule,nSteps;
   double dTimeOut;
   double dDt,dFoo;
   double dEqSpinRate;
 
   control->Evolve.nSteps=0;
+  nSteps=0;
 
   if (control->Evolve.bDoForward)
     iDir=1;
@@ -485,14 +486,15 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
       body[iBody].dAge += iDir*dDt;
 
     control->Evolve.dTime += dDt;
-    control->Evolve.nSteps++;
+    nSteps++;
 
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {
       dFoo = fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
-      control->Evolve.nSteps=0;
+      control->Evolve.nSteps += nSteps;
+      nSteps=0;
     }
 
     /* Get auxiliary properties for next step -- first call

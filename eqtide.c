@@ -1644,7 +1644,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     iPert=1;
   else
     iPert=0;
-  /* XXX Broken */
+  /* XXX Broken
 
   if (control->Evolve.iEqtideModel == CPL)
     *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
@@ -1658,6 +1658,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
     fsUnitsVel(units,cUnit);
   }
+  */
 }
 
 void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

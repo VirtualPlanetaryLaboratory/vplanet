@@ -303,6 +303,11 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
       exit(EXIT_INPUT);
     }
+    if (iNLines < (control->Evolve.dStopTime/control->Evolve.dTimeStep+1) ) {
+      fprintf(stderr,"ERROR: Input orbit data must at least as long as vplanet integration (%f years)\n",control->Evolve.dStopTime/YEARSEC);
+      exit(EXIT_INPUT);
+    }
+    
   }
 }
  

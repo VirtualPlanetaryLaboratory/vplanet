@@ -835,6 +835,8 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     } else {
       /* Conditions for recalc'ing eigenvalues */
       if (iBody == 1) {
+        system->dLOrb = malloc(3*sizeof(double));
+        
         system->dmLaplaceD = malloc(1*sizeof(double*));
         system->dmAlpha0 = malloc(1*sizeof(double*));
       
@@ -851,6 +853,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
 
       for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
+          body[jBody].dLOrb = malloc(3*sizeof(double));
+          body[jBody].dLOrbTmp = malloc(3*sizeof(double));
+      
           if (body[iBody].dSemi < body[jBody].dSemi) {  
               system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
               system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][0] = body[iBody].dSemi/body[jBody].dSemi;

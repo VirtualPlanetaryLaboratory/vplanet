@@ -37,7 +37,7 @@
  * DISTORB: 1300 - 1400
  * DISTROT: 1400 - 1500
  * STELLAR: 1500 - 1600
- * ??: 1600 - 1700
+ * SPINBODY: 1600 - 1700
  * THERMINT: 1700 - 1900
  * POISE: 1900 - 2000
  * FLARE: 2000 - 2100
@@ -51,7 +51,7 @@
  group on Fundamental constants, as described in Prsa et al. 2016. */
 
 #define BIGG          6.67428e-11  // From Luzum et al., 2011; value recommended by IAU NSFA in Prsa et al. 2016
-#define PI            3.1415926535
+#define PI            M_PI    // Quick fix -- prolly should change throughout
 
 #define KGAUSS        0.01720209895
 #define S0            0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
@@ -62,42 +62,45 @@
 #define cLIGHT        299792458.0
 #define MEARTH        5.972186e24 // Prsa et al. 2016
 #define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUCM          1.49598e11  // XXX Change to AUM
+#define AUCM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
+//#define AUCM          1.49598e11  // Old AUCM intended to keep tests passing
 #define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
-#define YEARSEC       3.15576e7
-#define DAYSEC        86400
+#define YEARSEC       3.15576e7   // Seconds per year
+#define DAYSEC        86400       // Seconds per day
 #define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
 #define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
 #define MJUP          1.898130e27 // Prsa et al. 2016
-#define RNEP          2.4764e7
-#define MNEP          1.0244e26
-#define RHOEARTH      5515
-#define eEARTH        0.016710219
-#define YEARDAY       365.25
-#define MSAT          5.6851e26
-#define DEGRAD        0.017453292519444445
-#define ATOMMASS      1.660538921e-27
-#define SIGMA         5.670367e-8
-#define LFICE         3.34e5
-#define RHOICE        916.7   //density of ice kg/m^3
-#define MOCEAN        1.4e21  //mass of earth ocean in kg
-#define a1ICE         3.615e-13  //coeff of ice deformability at T<263K (Pa^-3 s^-1)
-#define a2ICE         1.733e3    //coeff of ice deformability at T>=263K (Pa^-3 s^-1)
-#define Q1ICE         6e4        //energy in ice deformation at T<263K (J/mol)
-#define Q2ICE         13.9e4     //energy in ice deformation at T>=263 (J/mol)
-#define RGAS          8.3144598  //gas constant in J K^-1 mol^-1
-#define nGLEN         3.0  //Glen's law coefficient
-#define RHOSED        2390  //sediment density from Huybers&Tziperman08
-#define RHOH2O        1000
+#define RNEP          2.4764e7    // Neptune's Radius (ref?)
+#define MNEP          1.0244e26   // Neptune's Mass (ref?)
+#define RHOEARTH      5515        // Earth's Density
+#define eEARTH        0.016710219 // Earth's Eccentricity
+#define YEARDAY       365.25      // Days per year (more precise??)
+#define MSAT          5.6851e26   // Saturns' Mass (ref?)
+#define DEGRAD        0.017453292519444445 // Degrees per radian
+#define ATOMMASS      1.660538921e-27 // Atomic Mass
+#define SIGMA         5.670367e-8 // Stefan-Boltzmann Constant
+#define LFICE         3.34e5      // ???
+#define RHOICE        916.7       //density of ice kg/m^3
+#define MOCEAN        1.4e21      //mass of earth ocean in kg (ref?)
+#define a1ICE         3.615e-13   //coeff of ice deformability at T<263K (Pa^-3 s^-1 - ref?)
+#define a2ICE         1.733e3     //coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
+#define Q1ICE         6e4         //energy in ice deformation at T<263K (J/mol)
+#define Q2ICE         13.9e4      //energy in ice deformation at T>=263 (J/mol)
+#define RGAS          8.3144598   //gas constant in J K^-1 mol^-1
+#define nGLEN         3.0         //Glen's law coefficient
+#define RHOSED        2390        //sediment density from Huybers&Tziperman08
+#define RHOH2O        1000        // Density of liquid water
 #define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
+
 #define SEDH          10      //depth of sediment layer (m)
 #define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
 #define SEDMU         3e9     //reference viscosity for sediment (Pa s)
 #define RHOBROCK      3370
 #define BROCKTIME     5000  //relaxation timescale for bedrock
+
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
-#define ALPHA_STRUCT  0.6 // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
+#define ALPHA_STRUCT  0.6         // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
 /* Exit Status */
 
@@ -118,7 +121,7 @@
 
 /* File Limits */
 
-#define MAXBODIES     10
+#define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
@@ -141,66 +144,66 @@
 
 /* Indices for variables in the update struct. These are the primary
    variables. */
-#define VSEMI        1001
-#define VECC         1002
-#define VROT         1003
-#define VOBL         1004
-#define VRADIUS      1005
-#define VMASS        1006
+#define VSEMI              1001 // Semi-major axis
+#define VECC               1002 // Eccentricity
+#define VROT               1003 // Rotational Frequency
+#define VOBL               1004 // Obliquity
+#define VRADIUS            1005 // Radius
+#define VMASS              1006 // Mass
 
 // RADHEAT
-#define VNUM26ALMAN     1100
-#define VNUM26ALCORE    1105
-#define VNUM40KMAN      1110
-#define VNUM232THMAN    1115
-#define VNUM238UMAN     1120
-#define VNUM235UMAN     1125
-#define VNUM40KCORE     1130
-#define VNUM232THCORE   1135
-#define VNUM238UCORE    1140
-#define VNUM235UCORE    1145
+#define VNUM26ALMAN        1100 // 26Al in Mantle
+#define VNUM26ALCORE       1105 // 26Al in Core
+#define VNUM40KMAN         1110 // 40K in Mantle
+#define VNUM40KCORE        1115 // 40K in Core
+#define VNUM232THMAN       1120 // 232Th in Mantle
+#define VNUM232THCORE      1125 // 232Th in Core
+#define VNUM235UMAN        1130 // 235U in Mantle
+#define VNUM235UCORE       1135 // 235U in Core
+#define VNUM238UMAN        1140 // 238U in Mantle
+#define VNUM238UCORE       1145 // 238U in Core
 
 // THERMINT
-#define VTMAN           1201
-#define VTCORE          1202
+#define VTMAN              1201 // Mantle Temperature
+#define VTCORE             1202 // Core Temperature
 
 //DistOrb
-#define VHECC           1301
-#define VKECC           1302
-#define VPINC           1303
-#define VQINC           1304
+#define VHECC              1301 // Poincare's h
+#define VKECC              1302 // Poincare's k
+#define VPINC              1303 // Poincare's p
+#define VQINC              1304 // Poincare's q
 
 //DISTROT
-#define VXOBL           1401
-#define VYOBL           1402
-#define VZOBL           1403
-#define VDYNELLIP       1404
+#define VXOBL              1401 // Detrick's X
+#define VYOBL              1402 // Detrick's Y
+#define VZOBL              1403 // Detrick's Z
+#define VDYNELLIP          1404 // Dynamical Ellipticity
 
 /* Semi-major axis functions in DistOrb (& DistRes?)*/
 #define LAPLNUM 	      89
 
 //SPINBODY 1600-1700
-#define VVELX           1601
-#define VVELY           1602
-#define VVELZ           1603
-#define VPOSITIONX      1604
-#define VPOSITIONY      1605
-#define VPOSITIONZ      1606
+#define VVELX              1601 // Cartesian X Velocity
+#define VVELY              1602 // Cartesian Y Velocity
+#define VVELZ              1603 // Cartesian Z Velocity
+#define VPOSITIONX         1604 // Cartesian X Position
+#define VPOSITIONY         1605 // Cartesian Y Position
+#define VPOSITIONZ         1606 // Cartesian Z Position
 
 // ATMESC
-#define VSURFACEWATERMASS  1202
-#define VENVELOPEMASS      1203
-#define VOXYGENMASS        1204
-#define VOXYGENMANTLEMASS  1205
+#define VSURFACEWATERMASS  1202 // Surface Water Mass
+#define VENVELOPEMASS      1203 // Envelope Mass
+#define VOXYGENMASS        1204 // Atmospheric Oxygen Mass
+#define VOXYGENMANTLEMASS  1205 // Mantle Oxygen Mass
 
 // STELLAR
-#define VLUMINOSITY        1502
-#define VTEMPERATURE       1503
-#define VLOSTANGMOM        1504
-#define VLOSTENG           1505
+#define VLUMINOSITY        1502 // Luminosity
+#define VTEMPERATURE       1503 // Temperature
+#define VLOSTANGMOM        1504 // Lost Angular Momentum
+#define VLOSTENG           1505 // Lost Energy
 
 // POISE
-#define VICEMASS           1851
+#define VICEMASS           1851 // Ice Mass
 
 // BINARY: 2000-2999, inclusive
 // Primary variables that control CBP's cylindrical positions, velocities
@@ -212,7 +215,7 @@
 #define VCBPZDOT           2050
 
 // FLARE
-#define VLXUV           1901
+#define VLXUV              1901 // XUV Luminosity from Flares
 
 //GALHABIT
 #define VECCX           2201
@@ -279,11 +282,11 @@ typedef struct {
   double *dDistance3;    /**< Distance cubed to different perturbers */
 
   /* DISTORB parameters */
-  int bDistOrb;         /**< Has module DISTORB been implemented */
-  double dHecc;           /**< Poincare H */
-  double dKecc;           /**< Poincare K */
-  double dPinc;           /**< Poincare P */
-  double dQinc;           /**< Poincare Q */
+  int bDistOrb;          /**< Has module DISTORB been implemented */
+  double dHecc;          /**< Poincare H */
+  double dKecc;          /**< Poincare K */
+  double dPinc;          /**< Poincare P */
+  double dQinc;          /**< Poincare Q */
   double dSinc;          /**< sin(0.5*Inclination) */
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
@@ -310,25 +313,25 @@ typedef struct {
   
 
   /* BINARY parameters */
-  int bBinary;          /** Apply BINARY module? */
-  int bBinaryUseMatrix; /** Include eqns in matrix or solve for main variables on the fly? */
-  double dR0;           /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;         /** < CBP orbital radius */
-  double dCBPZ;         /** < CBP height above/below the orbital plane */
-  double dCBPPhi;       /** < CBP azimuthal angle in orbital plane */
-  double dCBPRDot;      /** < CBP radial orbital velocity */
-  double dCBPZDot;      /** < CBP z orbital velocity */
-  double dCBPPhiDot;    /** < CBP phi angular orbital velocity */
-  double dFreeEcc;      /**< CBP's free eccentricity */
-  double dFreeInc;      /**< CBP's free inclination, or binary's inclination */
-  double dInc;          /**< CBP's actual inclication */
-  double dLL13N0;       /**< CBP's Mean motion defined in LL13 eqn 12 */
-  double dLL13K0;       /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
-  double dLL13V0;       /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
-  double dLL13PhiAB;    /**< Binary's initial mean anomaly */
-  double dCBPM0;        /**< CBP's initial mean anomaly */
-  double dCBPZeta;      /**< CBP's z oscillation angle (see LL13 eqn 35) */
-  double dCBPPsi;       /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
+  int bBinary;           /** Apply BINARY module? */
+  int bBinaryUseMatrix;  /** Include eqns in matrix or solve for main variables on the fly? */
+  double dR0;            /**< Guiding Radius,initially equal to dSemi */
+  double dCBPR;          /** < CBP orbital radius */
+  double dCBPZ;          /** < CBP height above/below the orbital plane */
+  double dCBPPhi;        /** < CBP azimuthal angle in orbital plane */
+  double dCBPRDot;       /** < CBP radial orbital velocity */
+  double dCBPZDot;       /** < CBP z orbital velocity */
+  double dCBPPhiDot;     /** < CBP phi angular orbital velocity */
+  double dFreeEcc;       /**< CBP's free eccentricity */
+  double dFreeInc;       /**< CBP's free inclination, or binary's inclination */
+  double dInc;           /**< CBP's actual inclication */
+  double dLL13N0;        /**< CBP's Mean motion defined in LL13 eqn 12 */
+  double dLL13K0;        /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
+  double dLL13V0;        /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+  double dLL13PhiAB;     /**< Binary's initial mean anomaly */
+  double dCBPM0;         /**< CBP's initial mean anomaly */
+  double dCBPZeta;       /**< CBP's z oscillation angle (see LL13 eqn 35) */
+  double dCBPPsi;        /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
 
   /* DISTROT parameters */
   int bDistRot;
@@ -337,7 +340,7 @@ typedef struct {
   double dDynEllip;      /**< Dynamical ellipticity */
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
-  double dZobl;           /**< cos(obliq) */
+  double dZobl;          /**< cos(obliq) */
   double *dLRot;
   double *dLRotTmp;
   int bForcePrecRate;
@@ -396,32 +399,30 @@ typedef struct {
   int **iTidalEpsilon;   /**< Signs of Phase Lags */
   double dDeccDtEqtide;  /**< Eccentricity time rate of change */
   double *daDoblDtEqtide;  /**< Obliquity time rate of change */
-  // XXX dRotRateDtEqtide???, dSemiDtEqtide?
-
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
-  int bRadheat;             /**< Apply Module RADHEAT? */
-  double d26AlConstMan;      /**< Body's Mantle 26Al Decay Constant */
-  double d26AlNumMan;        /**< Body's Mantle Number of Aluminum-26 Atoms */
-  double d26AlPowerMan;      /**< Body's Mantle Internal Power Due to Aluminum-26 Decay */
-  double d26AlMassMan;       /**< Body's Mantle Total Mass of Aluminum-26 */
-  double d26AlConstCore;
-  double d26AlNumCore;
-  double d26AlPowerCore;
-  double d26AlMassCore;
+  int bRadheat;          /**< Apply Module RADHEAT? */
+  double d26AlConstMan;  /**< Body's Mantle 26Al Decay Constant */
+  double d26AlMassMan;   /**< Body's Mantle Mass of 26Al */
+  double d26AlNumMan;    /**< Body's Mantle Number of 26Al Atoms */
+  double d26AlPowerMan;  /**< Body's Mantle Internal Power Due to 26Al Decay */
+  double d26AlConstCore; /**< Body's Core 26Al Decay Constant */
+  double d26AlMassCore;  /**< Body's Core Mass in 26Al */
+  double d26AlNumCore;   /**< Body's Core Number of 26Al Atoms */
+  double d26AlPowerCore; /**< Body's Core Power from 26Al */
 
-  double d40KConstMan;      /**< Body's Mantle Potassium-40 Decay Constant */
-  double d40KNumMan;        /**< Body's Mantle Number of Potassium-40 Atoms */
-  double d40KPowerMan;      /**< Body's Mantle Internal Power Due to Potassium-40 Decay */
-  double d40KMassMan;       /**< Body's Mantle Total Mass of Potassium-40 */
-  double d40KConstCore;
-  double d40KNumCore;
-  double d40KPowerCore;
-  double d40KMassCore;
-  double d40KConstCrust;
-  double d40KNumCrust;
-  double d40KPowerCrust;
-  double d40KMassCrust;
+  double d40KConstMan;   /**< Body's Mantle 40K Decay Constant */
+  double d40KMassMan;    /**< Body's Mantle Mass of 40K */
+  double d40KNumMan;     /**< Body's Mantle Number of 40K Atoms */
+  double d40KPowerMan;   /**< Body's Mantle Internal Power Due to 40K Decay */
+  double d40KConstCore;  /**< Body's Core 40K Decay Constant */
+  double d40KNumCore;    /**< Body's Core Number of 40K Atoms */
+  double d40KPowerCore;  /**< Body's Core Power due to 40K */
+  double d40KMassCore;   /**< Body's Core Mass of 40K */
+  double d40KConstCrust; /**< Body's Crust 40K Decay Constant */
+  double d40KNumCrust;   /**< Body's Crust Number of 40K Atoms */
+  double d40KPowerCrust; /**< Body's Crust Power due to 40K */
+  double d40KMassCrust;  /**< Body's Crust Mass of 40K */
 
   double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
   double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
@@ -623,38 +624,38 @@ typedef struct {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
 
-  /* PHOTOCHEM Parameters */
-  PHOTOCHEM Photochem;   /**< Properties for PHOTOCHEM module N/I */
+  /* PHOTOCHEM Parameters 
+  PHOTOCHEM Photochem;   // Properties for PHOTOCHEM module N/I 
   double dNumAtmLayers;
   double dNumAtmMolecules;
   char saMoleculeList[MAXSPECIES][NAMELEN];
-  double **daAtmConcentrations; /* TBA: OceanConcentration, IntConcentration */
+  double **daAtmConcentrations; // TBA: OceanConcentration, IntConcentration
   double dTropoHeight;
   double dAtmHeight;
-  double dInsolation;   /* Orbit-averaged Insolation */
+  double dInsolation;   // Orbit-averaged Insolation
   double dSurfPressure;
-  //double dSurfAlbedo;   /* Bolometric, ultimately will be array */
-  int iResolveSeasons;  /* ISEASON in PHOTOCHEM.f */
+  //double dSurfAlbedo;   // Bolometric, ultimately will be array
+  int iResolveSeasons;  // ISEASON in PHOTOCHEM.f
   double dPhotoZenithAngle;
-  int iVaryZenithAngle; /* IZYO2 in PHOTOCHEM.f */
-  int iHiResGrid;       /* LGRID in PHOTOCHEM.f (default = 0, but if hi res., must change INO and IO2) */
-  int iOxyAbsCoeffApprox; /* IO2 in PHOTOCHEM.f */
-  int iNitroAbsCoeffApprox; /* INO in PHOTOCHEM.f */
-  double dJacobianPerturbFact; /* EPSJ */
+  int iVaryZenithAngle; // IZYO2 in PHOTOCHEM.f 
+  int iHiResGrid;       // LGRID in PHOTOCHEM.f (default = 0, but if hi res., must change INO and IO2) 
+  int iOxyAbsCoeffApprox; // IO2 in PHOTOCHEM.f
+  int iNitroAbsCoeffApprox; // INO in PHOTOCHEM.f
+  double dJacobianPerturbFact; // EPSJ 
   int bLightning;
   double dLightningAmount;
-  int iAerScattering; /* How do aerosols scatter? Mie or fractal. Must read files -- talk to Giada */
-  int iMaxNumReactions; /* Total number of reactions possible for input species list */
-  int iMaxWavelengthBin; /* Maximum number of wavelength bins -- not all species are created equal */
-  int iNumPhotolysisRx; /* Number of photochemical reactions */
+  int iAerScattering; // How do aerosols scatter? Mie or fractal. Must read files -- talk to Giada 
+  int iMaxNumReactions; // Total number of reactions possible for input species list
+  int iMaxWavelengthBin; // Maximum number of wavelength bins -- not all species are created equal 
+  int iNumPhotolysisRx; // Number of photochemical reactions
   int iNumPhotoSpecies;
-  int iNumAqueousSpecies; /* Species that dissolve in rain --- must read file */
-  int iML; /* =12; Shawn doesn't know what these are */
-  int iML1; /* =ML+1 */
-  int iML2; /* =2*ML */
+  int iNumAqueousSpecies; // Species that dissolve in rain --- must read file 
+  int iML; // =12; Shawn doesn't know what these are 
+  int iML1; // =ML+1 
+  int iML2; // =2*ML 
   double daAtmTempProfile;
   double daAtmPressProfile;
-  double ***daParticleInfo; /* First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius */
+  double ***daParticleInfo; // First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius 
 
   double daEddyDiffProfile;
 
@@ -665,9 +666,10 @@ typedef struct {
   int bAtmNitrogen;
   int bAtmChlorine;
 
-  /* CLIMA Parameters */
+  // CLIMA Parameters 
   double dArgonPressure;
   double dClimaZenithAngle;
+  */
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
@@ -1431,14 +1433,12 @@ typedef struct {
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 
- /* BINARY + EQTIDE + STELLAR */
- int iSemiBinEqSt;      /**< Equation # Corresponding to BIN+EQ+ST's Change to Semi-major Axis */
- int iLostEngBinEqSt;   /**< Equation # Corresponding to BIN+EQ+ST's Change to lost energy */
+ /* EQTIDE + STELLAR */
+ int iSemiEqSt;      /**< Equation # Corresponding to EQ+ST's Change to Semi-major Axis */
 
  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
-     semi-major axis, Hecc and Kecc derivatives due to BIN+EQ+ST. */
- double *pdDsemiDtBinEqSt;
- double *pdDLostEngDtBinEqSt;
+     semi-major axis derivatives due to EQTIDE+STELLAR. */
+ double *pdDsemiDtEqSt;
 
 } UPDATE;
 

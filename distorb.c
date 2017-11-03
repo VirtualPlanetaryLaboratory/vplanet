@@ -2,7 +2,7 @@
 /*
  * Russell Deitrick, April 28, 2015
  *
- * Subroutines that control the integration of the orbital model. 
+ * Subroutines that control the integration of the orbital model.
 */
 
 #include <stdio.h>
@@ -32,13 +32,13 @@ void InitializeBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,int iBody,
       body[iBody].iGravPerts = control->Evolve.iNumBodies - 2;
       body[iBody].iDistOrbModel = RD4;
     } else if (control->Evolve.iDistOrbModel == LL2) {
-      /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs. 
+      /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs.
          Number of eigenfrequencies = number of planets. */
       body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
       body[iBody].iDistOrbModel = LL2;
     }
   }
-  
+
   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
 }
 
@@ -68,7 +68,7 @@ void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     if (system->dDfcrit > 1 && control->Io.iVerbose >= VERBALL)
       fprintf(stderr,"WARNING: %s > 1 is not advised (%s:%d).\n",options->cName,files->Infile[iFile].cIn,lTmp);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     AssignDefaultDouble(options,&system->dDfcrit,files->iNumInputs);
 }
 
@@ -166,7 +166,7 @@ void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     body[iFile-1].bEigenSet = options->dDefault;
 //     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
-} 
+}
 
 void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -176,15 +176,15 @@ void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    
+
     dTmp *= DEGRAD/3600./YEARSEC;
-    
-    body[iFile-1].dEigenvalue = dTmp; 
+
+    body[iFile-1].dEigenvalue = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dEigenvalue = options->dDefault;
-}  
+}
 
 void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -194,13 +194,13 @@ void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    
-    body[iFile-1].dEigenvector = dTmp; 
+
+    body[iFile-1].dEigenvector = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else 
+  } else
     if (iFile > 0)
       body[iFile-1].dEigenvector = options->dDefault;
-}  
+}
 
 void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -224,7 +224,7 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     } else {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are ll2 or rd4.\n",options->cName,cTmp);
-      LineExit(files->Infile[iFile].cIn,lTmp);  
+      LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -237,87 +237,87 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
   options[OPT_DFCRIT].dDefault = 0.1;
-  options[OPT_DFCRIT].iType = 2;  
-  options[OPT_DFCRIT].iMultiFile = 0; 
+  options[OPT_DFCRIT].iType = 2;
+  options[OPT_DFCRIT].iMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
-  
+
   sprintf(options[OPT_GRCORR].cName,"bGRCorr");
   sprintf(options[OPT_GRCORR].cDescr,"Use general relativity correction");
   sprintf(options[OPT_GRCORR].cDefault,"0");
   options[OPT_GRCORR].dDefault = 0;
-  options[OPT_GRCORR].iType = 0;  
-  options[OPT_GRCORR].iMultiFile = 1; 
+  options[OPT_GRCORR].iType = 0;
+  options[OPT_GRCORR].iMultiFile = 1;
   fnRead[OPT_GRCORR] = &ReadGRCorr;
-  
+
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
   sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");
   sprintf(options[OPT_INVPLANE].cDefault,"0");
   options[OPT_INVPLANE].dDefault = 0;
-  options[OPT_INVPLANE].iType = 0;  
-  options[OPT_INVPLANE].iMultiFile = 0; 
+  options[OPT_INVPLANE].iType = 0;
+  options[OPT_INVPLANE].iMultiFile = 0;
   fnRead[OPT_INVPLANE] = &ReadInvPlane;
-  
+
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
   sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: ll2 [laplace-lagrange (eigen), 2nd order] rd4 [direct dist-fxn, 4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault,"rd4");
   options[OPT_ORBITMODEL].dDefault = RD4;
   options[OPT_ORBITMODEL].iType = 1;
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
-  
+
   sprintf(options[OPT_ORMAXECC].cName,"bOverrideMaxEcc");
   sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity in DistOrb (MaxEcc = MAXORBDISTORB)");
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
-  options[OPT_ORMAXECC].iType = 0;  
-  options[OPT_ORMAXECC].iMultiFile = 0; 
+  options[OPT_ORMAXECC].iType = 0;
+  options[OPT_ORMAXECC].iMultiFile = 0;
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
-  
+
   sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
   sprintf(options[OPT_HALTHILLSTAB].cDescr,"Enforce Hill stability criterion (halt if failed)");
   sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
   options[OPT_HALTHILLSTAB].dDefault = 0;
-  options[OPT_HALTHILLSTAB].iType = 0;  
-  options[OPT_HALTHILLSTAB].iMultiFile = 0; 
+  options[OPT_HALTHILLSTAB].iType = 0;
+  options[OPT_HALTHILLSTAB].iMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
-  
+
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
   sprintf(options[OPT_HALTCLOSEENC].cDescr,"Halt if orbits get too close");
   sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
   options[OPT_HALTCLOSEENC].dDefault = 0;
-  options[OPT_HALTCLOSEENC].iType = 0;  
-  options[OPT_HALTCLOSEENC].iMultiFile = 0; 
+  options[OPT_HALTCLOSEENC].iType = 0;
+  options[OPT_HALTCLOSEENC].iMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
-  
+
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
   sprintf(options[OPT_EIGENSET].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
-  options[OPT_EIGENSET].iType = 0;  
-  options[OPT_EIGENSET].iMultiFile = 0; 
+  options[OPT_EIGENSET].iType = 0;
+  options[OPT_EIGENSET].iMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
-  
+
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
   sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
   options[OPT_EIGENVALUE].dDefault = 0;
-  options[OPT_EIGENVALUE].iType = 0;  
-  options[OPT_EIGENVALUE].iMultiFile = 0; 
+  options[OPT_EIGENVALUE].iType = 0;
+  options[OPT_EIGENVALUE].iMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
-  
+
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
   sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
   options[OPT_EIGENVECTOR].dDefault = 0;
-  options[OPT_EIGENVECTOR].iType = 0;  
-  options[OPT_EIGENVECTOR].iMultiFile = 0; 
+  options[OPT_EIGENVECTOR].iType = 0;
+  options[OPT_EIGENVECTOR].iMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
-  
+
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
   sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data");
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
   options[OPT_OUTPUTLAPL].dDefault = 0;
-  options[OPT_OUTPUTLAPL].iType = 0;  
-  options[OPT_OUTPUTLAPL].iMultiFile = 0; 
+  options[OPT_OUTPUTLAPL].iType = 0;
+  options[OPT_OUTPUTLAPL].iMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
   
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
@@ -332,20 +332,20 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  for (iOpt=OPTSTARTDISTORB;iOpt<OPTENDDISTORB;iOpt++) { 
+  for (iOpt=OPTSTARTDISTORB;iOpt<OPTENDDISTORB;iOpt++) {
       if (options[iOpt].iType != -1) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
   }
 }
-    
+
 
 /******************* Verify DISTORB ******************/
 
 
 /*
  *
- * Pericenter/Ascending node 
+ * Pericenter/Ascending node
  *
  */
 
@@ -398,37 +398,37 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
     } else if (!memcmp(sLower(cTmp),"rd4",3)) {
       control->Evolve.iDistOrbModel = RD4;
     }
-    if (control->Io.iVerbose >= VERBINPUT) 
+    if (control->Io.iVerbose >= VERBINPUT)
       fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
     options[OPT_ORBITMODEL].iLine[0] = 1;
-  }  
+  }
 }
 
 
 // void VerifyStabilityHalts(CONTROL *control,FILES *files,OPTIONS *options) {
 //   int iFile, iHillSet, iCloseSet;
 //   /* make sure user doesn't set both bHaltHillStab and bHaltCloseEnc */
-//   
+//
 // }
 
 void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
-  if (options[OPT_LONGA].iLine[iBody+1] > -1 && options[OPT_LONGP].iLine[iBody+1] > -1 && options[OPT_ARGP].iLine[iBody+1] == -1) 
+  if (options[OPT_LONGA].iLine[iBody+1] > -1 && options[OPT_LONGP].iLine[iBody+1] > -1 && options[OPT_ARGP].iLine[iBody+1] == -1)
     return;
 
   /* If none are set, raise error */
   if (options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_LONGP].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1) {
-    if (iVerbose >= VERBERR) 
+    if (iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Must set two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
     exit(EXIT_INPUT);
   }
-  
+
   /* At least 2 must be set */
   if ((options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_LONGP].iLine[iBody+1] == -1) || (options[OPT_LONGA].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1) || (options[OPT_LONGP].iLine[iBody+1] == -1 && options[OPT_ARGP].iLine[iBody+1] == -1)) {
-    if (iVerbose >= VERBERR) 
+    if (iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Must set two of %s, %s, and %s in File: %s.\n",options[OPT_LONGA].cName,options[OPT_LONGP].cName,options[OPT_ARGP].cName, cFile);
     exit(EXIT_INPUT);
   }
@@ -441,25 +441,25 @@ void VerifyPericenter(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],
 
   /* Was LONGA set? */
   if (options[OPT_LONGA].iLine[iBody+1] > -1) {
-    
+
     if (options[OPT_LONGP].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
          return;
-    if (options[OPT_ARGP].iLine[iBody+1] > -1) 
+    if (options[OPT_ARGP].iLine[iBody+1] > -1)
       /* Must get radius from density */
-      body[iBody].dLongP = fdCalcLongP(body[iBody].dLongA,body[iBody].dArgP);    
+      body[iBody].dLongP = fdCalcLongP(body[iBody].dLongA,body[iBody].dArgP);
     return;
   }
 
   /* Was LongP set? */
   if (options[OPT_LONGP].iLine[iBody+1] > -1) {
-    
+
     if (options[OPT_LONGA].iLine[iBody+1] > -1)
       /* LONGA and LONGP were the only two set - Nothing to do */
          return;
-    if (options[OPT_ARGP].iLine[iBody+1] > -1) 
+    if (options[OPT_ARGP].iLine[iBody+1] > -1)
       /* Must get radius from density */
-      body[iBody].dLongA = fdCalcLongA(body[iBody].dLongP,body[iBody].dArgP);    
+      body[iBody].dLongA = fdCalcLongA(body[iBody].dLongP,body[iBody].dArgP);
     return;
   }
 }
@@ -528,7 +528,7 @@ void InitializeQincDistOrbRD4(BODY *body,UPDATE *update,int iBody,int iPert) {
 
 void VerifyPerturbersDistOrbRD4(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
-  
+
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (j != iBody) {
@@ -588,7 +588,7 @@ void InitializeQincDistOrbLL2(BODY *body,UPDATE *update,int iBody,int iPert) {
 
 void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
   int iPert=0, j;
-  
+
 //   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
   for (j=1;j<iNumBodies;j++) {
     if (body[j].bDistOrb == 0) {
@@ -602,7 +602,7 @@ void VerifyPerturbersDistOrbLL2(BODY *body,int iNumBodies,int iBody) {
 
 void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
   int iBody;
-  
+
   for (iBody=2;iBody<iNumBodies;iBody++) {
     if (body[iBody].bGRCorr != body[1].bGRCorr) {
       fprintf(stderr,"ERROR: bGRCorr must be the same for all planets in DistOrb LL2 model\n");
@@ -613,15 +613,15 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
 
 void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0,kBody;
-  
+
   VerifyOrbitModel(control,files,options);
 //   VerifyStabilityHalts(control,files,options);
 
   body[iBody].dMeanA = 0.0;
-  
+
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
-    
+
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody == 1) {
       system->dLOrb = malloc(3*sizeof(double));
@@ -658,7 +658,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       system->fnLaplaceF[23][0] = &fdSemiMajAxF24;
       system->fnLaplaceF[24][0] = &fdSemiMajAxF25;
       system->fnLaplaceF[25][0] = &fdSemiMajAxF26;
-      
+
       system->fnLaplaceDeriv[0][0] = &fdDSemiF1Dalpha;
       system->fnLaplaceDeriv[1][0] = &fdDSemiF2Dalpha;
       system->fnLaplaceDeriv[2][0] = &fdDSemiF3Dalpha;
@@ -693,12 +693,13 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       system->dmLaplaceC[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->dmLaplaceD[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->dmAlpha0[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
+
       for (i=0;i<Nchoosek(control->Evolve.iNumBodies-1,2);i++) {
         system->dmLaplaceC[0][i] = malloc(LAPLNUM*sizeof(double));
         system->dmLaplaceD[0][i] = malloc(LAPLNUM*sizeof(double));
         system->dmAlpha0[0][i] = malloc(LAPLNUM*sizeof(double));
       }
-      
+
       system->imLaplaceN = malloc((control->Evolve.iNumBodies)*sizeof(int*));
       for (i=1;i<control->Evolve.iNumBodies;i++) {
         system->imLaplaceN[i] = malloc((control->Evolve.iNumBodies)*sizeof(int));
@@ -732,6 +733,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         system->scale = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
       }
+
     }
     if (iBody >= 1) {
       VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
@@ -739,7 +741,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
       VerifyPerturbersDistOrbRD4(body,control->Evolve.iNumBodies,iBody);
       control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
-      
+
       CalcHK(body,iBody);
       CalcPQ(body,iBody);
       
@@ -751,19 +753,19 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         /* h = Ecc*sin(LongP) */
         InitializeHeccDistOrbRD4(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbRD4DhDt;
-        
+
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbRD4(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbRD4DkDt;
-        
+
         /* p = s*sin(LongA) */
         InitializePincDistOrbRD4(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fdDistOrbRD4DpDt;
-        
+
         /* q = s*cos(LongA) */
         InitializeQincDistOrbRD4(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fdDistOrbRD4DqDt;
-        
+
         jBody = body[iBody].iaGravPerts[iPert];
         
         for (j=0;j<26;j++) {
@@ -779,10 +781,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
               system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j] = body[jBody].dSemi/body[iBody].dSemi;
           }
         }
-      } 
+      }
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
-	  /* Must initialize dMeanA to prevent memory corruption. This 
+	  /* Must initialize dMeanA to prevent memory corruption. This
 	     parameter has no real meaning in DistOrb runs, but inv_plave
 	     requires it. I will set it to zero for each body. --RKB */
 	  for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
@@ -794,7 +796,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         /* Body updates for general relativistic correction, indexing star as a "perturber"*/
         InitializeHeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
         fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] = &fdApsidalGRDhDt;
-        
+
         InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
         fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[body[iBody].iGravPerts]] = &fdApsidalGRDkDt;
       }
@@ -802,10 +804,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
-    
+
     CalcHK(body,iBody);
     CalcPQ(body,iBody);
-    
+
     if (body[iBody].bEigenSet == 1) {
       /* XXX really stupid hack */
       system->dmEigenValEcc = malloc(2*sizeof(double*));
@@ -813,25 +815,25 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       system->dmEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
       system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
       system->dmEigenPhase = malloc(2*sizeof(double*));
-      
+
       system->dmEigenValEcc[0] = malloc(1*sizeof(double));
       system->dmEigenValInc[0] = malloc(1*sizeof(double));
       system->dmEigenVecEcc[0] = malloc(1*sizeof(double));
       system->dmEigenVecInc[0] = malloc(1*sizeof(double));
       system->dmEigenPhase[0] = malloc(1*sizeof(double));
       system->dmEigenPhase[1] = malloc(1*sizeof(double));
-            
+
       system->dmEigenValEcc[0][0] = 0.0;
       //system->dmEigenValInc[0][0] = -0.000123627489;
       system->dmEigenValInc[0][0] = -0.000119874715;
       system->dmEigenVecEcc[0][0] = 0.0;
       //system->dmEigenVecInc[0][0] = 0.00506143322;
       system->dmEigenVecInc[0][0] = 0.0036367199;
-      
+
       system->dmEigenPhase[0][0] = 0.0;
 //       system->dmEigenPhase[1][0] = atan2(body[iBody].dHecc,body[iBody].dKecc);
       system->dmEigenPhase[1][0] = 2.6348951757;
-      
+
     } else {
       /* Conditions for recalc'ing eigenvalues */
       if (iBody == 1) {
@@ -868,9 +870,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
               system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][1] = fdDerivLaplaceCoeff(1,body[jBody].dSemi/body[iBody].dSemi,2,1.5);
           }
       }
-    
+
 //     body[iBody].dSemiPrev = body[iBody].dSemiPrev;
-        
+
       if (iBody == (control->Evolve.iNumBodies-1)) {
         VerifyGRCorrLL2(body,control->Evolve.iNumBodies);
         if (control->bInvPlane) {
@@ -881,7 +883,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         system->dmEigenValInc = malloc(2*sizeof(double*));
         system->dmEigenVecInc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
         system->dmEigenPhase = malloc(2*sizeof(double*));
-      
+
         system->A = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
         system->B = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
         system->Asoln = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
@@ -895,7 +897,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
            system->dmEigenVecInc[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
            system->Acopy[jBody] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         }
-    
+
         for (i=0;i<2;i++) {
            system->dmEigenValEcc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
            system->dmEigenValInc[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
@@ -904,9 +906,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         system->scale = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
 
-        
+
         SolveEigenVal(body,&control->Evolve,system);
-      
+
         system->etmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
         system->itmp = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
         system->rowswap = malloc((control->Evolve.iNumBodies-1)*sizeof(int));
@@ -914,25 +916,25 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         system->k0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->p0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->q0 = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-  
+
         for (i=0;i<(control->Evolve.iNumBodies-1);i++) {
           system->etmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
           system->itmp[i] = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         }
         system->S = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
         system->T = malloc((control->Evolve.iNumBodies-1)*sizeof(double));
-      
+
         ScaleEigenVec(body,&control->Evolve,system);
       }
     }
-    
-    body[iBody].iGravPerts = control->Evolve.iNumBodies - 1; 
+
+    body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
     VerifyPerturbersDistOrbLL2(body,control->Evolve.iNumBodies,iBody);
-    
+
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* h = Ecc*sin(LongP) */
         InitializeHeccDistOrbLL2(body,update,iBody,iPert);
-        
+
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbLL2(body,update,iBody,iPert);
         if (body[iBody].bEqtide) {
@@ -942,16 +944,16 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
           fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fdDistOrbLL2Hecc;
           fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fdDistOrbLL2Kecc;
         }
-        
+
         /* p = s*sin(LongA) */
         InitializePincDistOrbLL2(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fdDistOrbLL2Pinc;
-        
+
         /* q = s*cos(LongA) */
         InitializeQincDistOrbLL2(body,update,iBody,iPert);
         fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fdDistOrbLL2Qinc;
     }
-    
+
     // if (body[iBody].bGRCorr) {
 //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
 //       LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
@@ -995,7 +997,7 @@ void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
 
   int iPert;
-  
+
   if (body[iBody].bGRCorr) {
     update[iBody].padDHeccDtDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaHeccDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(int));
@@ -1010,14 +1012,14 @@ void FinalizeUpdateHeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
       update[iBody].iaModule[iVar][*iEqn] = DISTORB;
       update[iBody].iaHeccDistOrb[iPert] = (*iEqn)++;
     }
-  } 
+  }
 }
 
 void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
 
   int iPert;
-  
+
   if (body[iBody].bGRCorr) {
     update[iBody].padDKeccDtDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaKeccDistOrb = malloc((body[iBody].iGravPerts+1)*sizeof(int));
@@ -1037,7 +1039,7 @@ void FinalizeUpdateKeccDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-  
+
   update[iBody].padDPincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaPincDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -1048,7 +1050,7 @@ void FinalizeUpdatePincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 void FinalizeUpdateQincDistOrb(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-  
+
   update[iBody].padDQincDtDistOrb = malloc(body[iBody].iGravPerts*sizeof(double*));
   update[iBody].iaQincDistOrb = malloc(body[iBody].iGravPerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -1095,7 +1097,7 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 int HaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   int iPert, jBody;
   double mu1, mu2, alpha, gamma1, gamma2, delta, crit, hill;
-  
+
   if (halt->bHillStab == 1) {
     for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
       /* I have to loop over iBody here, ultimately because I want to have to set bHaltHillStab
@@ -1139,7 +1141,7 @@ int HaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 int HaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   int iPert, jBody;
   double dDR;
-  
+
   if (halt->bCloseEnc == 1) {
     for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -1170,7 +1172,7 @@ int HaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
       }
     }
   }
-  
+
   return 0;
 }
 
@@ -1219,7 +1221,7 @@ void WriteBodyDEccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     dDeriv += 1./sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*(body[iBody].dHecc*(*(update[iBody].padDHeccDtDistOrb[iPert]))+body[iBody].dKecc*(*(update[iBody].padDKeccDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1237,9 +1239,9 @@ void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
     dDeriv += 1./sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1247,8 +1249,8 @@ void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-}  
-  
+}
+
 void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
@@ -1259,7 +1261,7 @@ void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     dDeriv += 1./(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*(body[iBody].dKecc*(*(update[iBody].padDHeccDtDistOrb[iPert]))-body[iBody].dHecc*(*(update[iBody].padDKeccDtDistOrb[iPert])));
   
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1269,7 +1271,7 @@ void WriteBodyDLongPDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 //     fsUnitsAngle(units->iAngle,cUnit);
     fsUnitsAngRate(units,cUnit);
   }
-}  
+}
 
 void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -1279,9 +1281,9 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
     dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1291,7 +1293,7 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 //     fsUnitsAngle(units->iAngle,cUnit);
     fsUnitsAngRate(units,cUnit);
   }
-} 
+}
 
 void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -1301,9 +1303,9 @@ void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   dDeriv=0;
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
     dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1313,21 +1315,22 @@ void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 //     fsUnitsAngle(units->iAngle,cUnit);
     fsUnitsAngRate(units,cUnit);
   }
-} 
+}
 
 void WriteBodySinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   
   *dTmp = sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc);
+
   strcpy(cUnit,"");
-}  
+}
 
 void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (body[iBody].bDistOrb) {
     *dTmp = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));  
-  } else if (body[iBody].bGalHabit) {
+  } else if (body[iBody].bGalHabit || body[iBody].bSpiNBody) {
     *dTmp = body[iBody].dInc;
   }
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1335,7 +1338,7 @@ void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle,cUnit);
   }
-}  
+}
 
 void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (body[iBody].bDistOrb) {
@@ -1343,14 +1346,14 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   } else if (body[iBody].bGalHabit) {
     *dTmp = body[iBody].dLongA;
   }
-  
+
   while (*dTmp < 0.0) {
     *dTmp += 2*PI;
   }
   while (*dTmp > 2*PI) {
     *dTmp -= 2*PI;
   }
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1358,19 +1361,19 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle,cUnit);
   }
-}  
+}
 
 void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
+
   *dTmp = body[iBody].dPinc;
   strcpy(cUnit,"");
-} 
+}
 
 void WriteBodyQinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  
+
   *dTmp = body[iBody].dQinc;
   strcpy(cUnit,"");
-} 
+}
 
 void WriteBodyDHeccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* need to put check for star's output options in verify */
@@ -1379,11 +1382,11 @@ void WriteBodyDHeccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDHeccDtDistOrb[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1400,11 +1403,11 @@ void WriteBodyDKeccDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDKeccDtDistOrb[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1421,11 +1424,11 @@ void WriteBodyDPincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDPincDtDistOrb[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1442,11 +1445,11 @@ void WriteBodyDQincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite pdDrotDt */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDQincDtDistOrb[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1466,7 +1469,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DECCDTDISTORB].dNeg = YEARSEC;
   output[OUT_DECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DECCDTDISTORB] = &WriteBodyDEccDtDistOrb;
-  
+
   sprintf(output[OUT_DSINCDTDISTORB].cName,"DSincDtDistOrb");
   sprintf(output[OUT_DSINCDTDISTORB].cDescr,"Body's dsin(.5*Inc)/dt in DistOrb");
   sprintf(output[OUT_DSINCDTDISTORB].cNeg,"1/year");
@@ -1475,7 +1478,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DSINCDTDISTORB].iNum = 1;
   output[OUT_DSINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DSINCDTDISTORB] = &WriteBodyDSincDtDistOrb;
- 
+
   sprintf(output[OUT_DINCDTDISTORB].cName,"DIncDtDistOrb");
   sprintf(output[OUT_DINCDTDISTORB].cDescr,"Body's dInc/dt in DistOrb");
   sprintf(output[OUT_DINCDTDISTORB].cNeg,"deg/year");
@@ -1484,7 +1487,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DINCDTDISTORB].iNum = 1;
   output[OUT_DINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DINCDTDISTORB] = &WriteBodyDIncDtDistOrb;
-  
+
   sprintf(output[OUT_DLONGPDTDISTORB].cName,"DLongPDtDistOrb");
   sprintf(output[OUT_DLONGPDTDISTORB].cDescr,"Body's dvarpi/dt in DistOrb");
   sprintf(output[OUT_DLONGPDTDISTORB].cNeg,"deg/yr");
@@ -1493,7 +1496,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DLONGPDTDISTORB].iNum = 1;
   output[OUT_DLONGPDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGPDTDISTORB] = &WriteBodyDLongPDtDistOrb;
-  
+
   sprintf(output[OUT_DLONGADTDISTORB].cName,"DLongADtDistOrb");
   sprintf(output[OUT_DLONGADTDISTORB].cDescr,"Body's dOmega/dt in DistOrb");
   sprintf(output[OUT_DLONGADTDISTORB].cNeg,"deg/yr");
@@ -1502,43 +1505,43 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DLONGADTDISTORB].iNum = 1;
   output[OUT_DLONGADTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
-  
+
   sprintf(output[OUT_INC].cName,"Inc");
   sprintf(output[OUT_INC].cDescr,"Body's Inclination in DistOrb");
   sprintf(output[OUT_INC].cNeg,"Deg");
   output[OUT_INC].bNeg = 1;
   output[OUT_INC].dNeg = 1./DEGRAD;
   output[OUT_INC].iNum = 1;
-  output[OUT_INC].iModuleBit = DISTORB+GALHABIT;
+  output[OUT_INC].iModuleBit = DISTORB+GALHABIT+SPINBODY;
   fnWrite[OUT_INC] = &WriteBodyInc;
-  
+
   sprintf(output[OUT_SINC].cName,"Sinc");
   sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
   output[OUT_SINC].iNum = 1;
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
-  
+
   sprintf(output[OUT_LONGA].cName,"LongA");
   sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in DistOrb");
   sprintf(output[OUT_LONGA].cNeg,"Deg");
   output[OUT_LONGA].bNeg = 1;
   output[OUT_LONGA].dNeg = 1./DEGRAD;
   output[OUT_LONGA].iNum = 1;
-  output[OUT_LONGA].iModuleBit = DISTORB+GALHABIT;
-  fnWrite[OUT_LONGA] = &WriteBodyLongA; 
+  output[OUT_LONGA].iModuleBit = DISTORB+GALHABIT+SPINBODY;
+  fnWrite[OUT_LONGA] = &WriteBodyLongA;
 
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
   output[OUT_PINC].iNum = 1;
   output[OUT_PINC].iModuleBit = DISTORB;
   fnWrite[OUT_PINC] = &WriteBodyPinc;
-  
+
   sprintf(output[OUT_QINC].cName,"Qinc");
   sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in DistOrb");
   output[OUT_QINC].iNum = 1;
   output[OUT_QINC].iModuleBit = DISTORB;
   fnWrite[OUT_QINC] = &WriteBodyQinc;
-  
+
   sprintf(output[OUT_DHECCDTDISTORB].cName,"DHeccDtDistOrb");
   sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's dh/dt in DistOrb");
   sprintf(output[OUT_DHECCDTDISTORB].cNeg,"1/year");
@@ -1547,7 +1550,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DHECCDTDISTORB].iNum = 1;
   output[OUT_DHECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DHECCDTDISTORB] = &WriteBodyDHeccDtDistOrb;
-  
+
   sprintf(output[OUT_DKECCDTDISTORB].cName,"DKeccDtDistOrb");
   sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's dk/dt in DistOrb");
   sprintf(output[OUT_DKECCDTDISTORB].cNeg,"1/year");
@@ -1556,7 +1559,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DKECCDTDISTORB].iNum = 1;
   output[OUT_DKECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DKECCDTDISTORB] = &WriteBodyDKeccDtDistOrb;
-  
+
   sprintf(output[OUT_DPINCDTDISTORB].cName,"DPincDtDistOrb");
   sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's dp/dt in DistOrb");
   sprintf(output[OUT_DPINCDTDISTORB].cNeg,"1/year");
@@ -1565,7 +1568,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DPINCDTDISTORB].iNum = 1;
   output[OUT_DPINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DPINCDTDISTORB] = &WriteBodyDPincDtDistOrb;
-  
+
   sprintf(output[OUT_DQINCDTDISTORB].cName,"DQincDtDistOrb");
   sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's dq/dt in DistOrb");
   sprintf(output[OUT_DQINCDTDISTORB].cNeg,"1/year");
@@ -1581,7 +1584,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
 void LogOptionsDistOrb(CONTROL *control, FILE *fp) {
 
   fprintf(fp,"-------- DISTORB Options -----\n\n");
-  
+
 }
 
 void LogDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
@@ -1599,7 +1602,7 @@ void LogBodyDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
   fprintf(fp,"----- DISTORB PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=OUTBODYSTARTDISTORB;iOut<OUTENDDISTORB;iOut++) {
-    if (output[iOut].iNum > 0) 
+    if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
 }
@@ -1628,8 +1631,8 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
-void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) { 
-  /* Conflict XXX -- Hopefully this is wrong as there should be no calls to POISE in DISTORB 
+void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  /* Conflict XXX -- Hopefully this is wrong as there should be no calls to POISE in DISTORB
   if (body[iBody].bPoise) {
     body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
     body[iBody].dEcc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
@@ -1651,7 +1654,7 @@ void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE
 double MinOrbitSep2D(BODY *body, int iBody, int jBody) {
   double dTheta=0, dMin, dR1, dR2, dDR;
   int i;
-  
+
   dMin = fabs(body[iBody].dSemi-body[jBody].dSemi);
   for (i=0;i<360;i++) {
     dR1 = body[iBody].dSemi*(1-body[iBody].dHecc*body[iBody].dHecc-body[iBody].dKecc*body[iBody].dKecc)/ \
@@ -1664,16 +1667,16 @@ double MinOrbitSep2D(BODY *body, int iBody, int jBody) {
     }
     dTheta += PI/180.;
   }
-  
+
   return dMin;
 }
 
 double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
   //XXX currently only works if bInvPlane = 1, since dCartPos is not malloc'd otherwise
-    
+
   double dTheta=0, dMin, dR1, dR2, dDR, cosE, f, xtmp, ytmp;
   int i;
-  
+
   dMin = HUGE;
   for (i=0;i<360;i++) {
     f = (dTheta - body[iBody].dLongP);
@@ -1681,23 +1684,23 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
     cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
     if (f <= PI) body[iBody].dEccA = acos(cosE);
     if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
-  
+
     xtmp = xinit(body, iBody);
     ytmp = yinit(body, iBody);
-    
+
     body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
     body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
     body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
-    
+
     f = (dTheta - body[jBody].dLongP);
     while (f<0) f+=2*PI;
     cosE = (cos(f)+body[jBody].dEcc) / (1.0+body[jBody].dEcc*cos(f));
     if (f <= PI) body[jBody].dEccA = acos(cosE);
     if (f > PI) body[jBody].dEccA = 2.*PI - acos(cosE);
-    
+
     xtmp = xinit(body, jBody);
     ytmp = yinit(body, jBody);
-    
+
     body[jBody].dCartPos[0] = xtmp*(xangle1(body,jBody))+ytmp*(xangle2(body,jBody));
     body[jBody].dCartPos[1] = xtmp*(yangle1(body,jBody))+ytmp*(yangle2(body,jBody));
     body[jBody].dCartPos[2] = xtmp*(zangle1(body,jBody))+ytmp*(zangle2(body,jBody));
@@ -1708,15 +1711,15 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
                (body[iBody].dCartPos[1]-body[jBody].dCartPos[1]) + \
                (body[iBody].dCartPos[2]-body[jBody].dCartPos[2])*\
                (body[iBody].dCartPos[2]-body[jBody].dCartPos[2]));
-  
+
     dDR *= AUCM;
-    
+
     if (dDR < dMin) {
       dMin = dDR;
     }
     dTheta += PI/180.;
   }
-  
+
   return dMin;
 }
 
@@ -1725,10 +1728,10 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
 unsigned long int factorial(unsigned int n)
 {
   unsigned long int result;
-  
+
   if (n == 0)
     result = 1;
-  else 
+  else
     result = n * factorial(n - 1);
   return result;
 }
@@ -1737,13 +1740,13 @@ unsigned long int factorial(unsigned int n)
 int Nchoosek(int N, int k) {
   if (N < 0 || k < 0 || N > 10 || k > N) {
     printf("Error: received N = %d, k = %d\n",N,k);
-  } 
+  }
   return factorial(N) / (factorial(k)*factorial(N-k));
 }
 
 /* Gives the index of a pair of values in N choose 2.
-* For example, for 4 planets, the index for the pair 
-* (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */  
+* For example, for 4 planets, the index for the pair
+* (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */
 int CombCount(int x, int y, int N) {
   /* Russell's not sure if this is necessary. XXX
   if (x == 0) {
@@ -1755,11 +1758,11 @@ int CombCount(int x, int y, int N) {
   } else {
     return N*(y-1) + (x-1) - Nchoosek(y+1, 2);
   }
-} 
+}
 
 double ABmatrix(BODY *body, int j, int jBody, int kBody) {
   double AB, alpha, abar, b, n;
-  
+
   if (body[jBody].dSemi > body[kBody].dSemi) {
     alpha = body[kBody].dSemi/body[jBody].dSemi;  //internal perturber
     abar = 1.0;
@@ -1770,6 +1773,7 @@ double ABmatrix(BODY *body, int j, int jBody, int kBody) {
   
   n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(body[jBody].dSemi/AUCM*\
       body[jBody].dSemi/AUCM*body[jBody].dSemi/AUCM));
+
   b = fdLaplaceCoeff(alpha, j, 1.5);
   AB = n/4.0*body[kBody].dMass/(body[0].dMass+body[jBody].dMass)*alpha*abar*b;
   return AB*365.25;  //returns in units of rad/year
@@ -1790,6 +1794,7 @@ double GRCorrMatrix(BODY *body, int jBody, int kBody) {
       cLIGHT/AUCM*DAYSEC* (1.0-body[jBody].dHecc*body[jBody].dHecc-\
       body[jBody].dKecc*body[jBody].dKecc));
     return GRC*365.25; 
+
   } else {
     return 0.0;
   }
@@ -1797,7 +1802,7 @@ double GRCorrMatrix(BODY *body, int jBody, int kBody) {
 
 /* XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (1992)
 Cannot release code with these functions as they are proprietary.
-They will need to be phased out as my new routines are tested and confirmed to work ok. HessEigen has variables renamed from "hqr" but is not fully replaced yet. */  
+They will need to be phased out as my new routines are tested and confirmed to work ok. HessEigen has variables renamed from "hqr" but is not fully replaced yet. */
 
 void HessEigen(double **amat, int origsize, double real[], double imag[])
 /*Finds all eigenvalues of an upper Hess. matrix amat */
@@ -1807,15 +1812,15 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
   //s, r, q, and p are defined in numerical recipes eqns 11.6.23, 11.6.25
 
   anorm = fabs(amat[0][0]);
-  for (i = 1; i <= origsize-1; i++) 
+  for (i = 1; i <= origsize-1; i++)
     for (j = (i-1); j <= origsize-1; j++)
       anorm += fabs(amat[i][j]);
-  
+
   size = origsize-1;
   exshift = 0.0;
   while (size >= 0) {
     iterations = 0;
-    do { 
+    do {
       for (smallsub = size; smallsub >= 1; smallsub--) {
         s = fabs(amat[smallsub-1][smallsub-1]) + fabs(amat[smallsub][smallsub]);
         if (s == 0.0) s = anorm;
@@ -1857,7 +1862,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
             hhvector = -0.4375*s*s;
           }
           ++iterations;
-        
+
 
           for (m = (size-2); m >= smallsub; m--) {
             radic = amat[m][m];
@@ -1934,7 +1939,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
 
 // void Eigen2x2(double **matrix, double *real, double *imag, int *size, int *smallsub) {
 //   double a, b , c, d, radic;
-//   
+//
 //   d = matrix[*size-1][*size-1];
 //   if (*smallsub == *size-1) {
 //     real[*size-1] = d;
@@ -1964,7 +1969,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
 //   /* XXX algorithm is not finished!!! do not eat...er, use */
 //   int i, j, smallsub, sizeprev;
 //   double norm;
-//   
+//
 //   norm = 0.0;
 //   for (i=0;i<size;i++) {
 //     for (j=0;j<size;j++) {
@@ -1972,7 +1977,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
 //     }
 //   }
 //   norm = sqrt(norm);
-//   
+//
 //   for (i=size-1;i>0;i--) {
 //     cond = (fabs(matrix[i][i-1])+norm);
 //     if ((float)cond == (float)norm) {
@@ -1980,10 +1985,10 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
 //       break;
 //     }
 //   }
-//   
+//
 //   sizeprev = size;
 //   Eigen2x2(matrix, real, imag, &size, &smallsub);
-//   
+//
 //   while (size>0) {
 //     if (size==sizeprev) {
 //       for (m=(size-3);m>=smallsub;m--) {
@@ -1992,13 +1997,13 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
 //               matrix[m][m+1];
 //         q = matrix[m+1][m+1] - matrix[m][m] - (matrix[size-1][size-1]-matrix[m][m]) - \
 //             (matrix[size-2][size-2]-matrix[m][m]);
-//         r = matrix[m+2][m+1];      
+//         r = matrix[m+2][m+1];
 //       }
-//     } else { 
+//     } else {
 //       Eigen2x2(matrix,real,imag,&size);
-//     }  
-//   }  
-//   
+//     }
+//   }
+//
 // }
 
 void ElmHess(double **a, int n)
@@ -2088,31 +2093,31 @@ void RowSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
   double dummy;
-  
+
   for (k=0;k<size;k++) {
     dummy = matrix[i][k];
     matrix[i][k] = matrix[j][k];
     matrix[j][k] = dummy;
   }
-}  
+}
 
 void ColSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
   double dummy;
-  
+
   for (k=0;k<size;k++) {
     dummy = matrix[k][i];
     matrix[k][i] = matrix[k][j];
     matrix[k][j] = dummy;
   }
-}  
+}
 
 void HessReduce(double **a, int size) {
   int r, rp, rmax, i, j;
   double max, n;
-  
-  for (r=0;r<size;r++) { 
+
+  for (r=0;r<size;r++) {
     max = 0;
     for (rp=r+1;rp<size;rp++) {
       if (fabs(a[rp][r])>max) {
@@ -2123,10 +2128,10 @@ void HessReduce(double **a, int size) {
     if (max) {
       RowSwap(a,size,rmax,r+1);
       ColSwap(a,size,rmax,r+1);
-      
+
       for (i=r+2;i<size;i++) {
         n = a[i][r]/a[r+1][r];
-        
+
         for (j=0;j<size;j++) {
           a[i][j] -= n*a[r+1][j];
         }
@@ -2141,7 +2146,7 @@ void HessReduce(double **a, int size) {
 void BalanceMatrix(double **a, int size) {
   int i, j, end = 0;
   double rownorm, colnorm, factor;
-  
+
   while (end == 0) {
     for (i=0;i<size;i++) {
       rownorm = 0.0;
@@ -2152,20 +2157,21 @@ void BalanceMatrix(double **a, int size) {
       }
       rownorm = pow(rownorm,0.5);
       colnorm = pow(colnorm,0.5);
-    
+
       factor = sqrt(rownorm/colnorm);
-    
+
       for (j=0;j<size;j++) {
         a[i][j] /= factor;
         a[j][i] *= factor;
       }
     
       if ((factor*colnorm*factor*colnorm+rownorm/factor*rownorm/factor) > 0.95*(colnorm*colnorm+rownorm*rownorm)) {
+
         end = 1;
       }
     }
   }
-}    
+}
 
 void ludcmp(double **a, int n, int *indx, float *d)
 /*Given a matrix a[0...n-1][0..n-1] this routine replaces by the LU decomp of a rowwise permutatio of itself. a and n are input. a is output, arranged with U as the upper triangular components and L as the lower triangular components BELOW the diagonal (diagonal elements of L are all = 1). indx[0..n-1] is an output vector that records the row permutation effected by partial pivoting; d is output as +/- 1 depending on whether the number of row interchanges was even(+) or odd(-). Used in combination with lubksb to solve linear eqns.*/
@@ -2227,7 +2233,7 @@ void LUDecomp(double **amat, double **copy, double *scale, int *rowswap, int siz
 
   double sumk, scaletmp, dummy;
   int i, j, k, swapi;
-  
+
   for (i=0;i<size;i++) {
     scale[i] = 0.0;
     for (j=0;j<size;j++) {
@@ -2244,7 +2250,7 @@ void LUDecomp(double **amat, double **copy, double *scale, int *rowswap, int siz
     }
     scale[i] = 1.0/scale[i];
   }
-  
+
   for (j=0;j<size;j++) {
     scaletmp = 0.0;
     swapi = j;
@@ -2259,27 +2265,27 @@ void LUDecomp(double **amat, double **copy, double *scale, int *rowswap, int siz
         for (k=0;k<j;k++) {
           sumk += copy[i][k]*copy[k][j];
         }
-      } 
+      }
       copy[i][j] -= sumk;
-      
+
       if (i>=j) {
         if (fabs(scale[i]*copy[i][j]) >= scaletmp) {
           scaletmp = fabs(scale[i]*copy[i][j]);
           swapi = i;
         }
       }
-    }  
+    }
     if (swapi != j) {
           RowSwap(copy,size,swapi,j);
           dummy=scale[j];
           scale[j]=scale[swapi];
           scale[swapi]=dummy;
     }
-    
+
     if (copy[j][j] == 0) {
       copy[j][j] = TEENY;
     }
-    for (i=j+1;i<size;i++) { 
+    for (i=j+1;i<size;i++) {
       copy[i][j] /= copy[j][j];
     }
     rowswap[j] = swapi;
@@ -2306,12 +2312,12 @@ void lubksb(double **a, int n, int *indx, double b[])
     for (j = i+1; j <= n-1; j++) sum -= a[i][j]*b[j];
     b[i] = sum/a[i][i] ;
   }
-}  
+}
 
 void LUSolve(double **lumat, double *soln, int *swap, int size) {
   int i, j;
   double dummy, sumj;
-  
+
   for (i=0;i<size;i++) {
     if (swap[i] != i) {
       dummy = soln[i];
@@ -2319,7 +2325,7 @@ void LUSolve(double **lumat, double *soln, int *swap, int size) {
       soln[swap[i]] = dummy;
     }
   }
-  
+
   for (i=0;i<size;i++) {
     sumj = 0.0;
     for (j=0;j<i;j++) {
@@ -2327,7 +2333,7 @@ void LUSolve(double **lumat, double *soln, int *swap, int size) {
     }
     soln[i] = soln[i] - sumj; //diagonals of L matrix are all = 1, so division is unnecessary
   }
-  
+
   for (i=(size-1);i>=0;i--) {
     sumj = 0.0;
     for (j=i+1;j<size;j++) {
@@ -2342,7 +2348,7 @@ void FindEigenVecEcc(SYSTEM *system, int count, int pls) {
   int jj, i, iter = 5;  // iter = # of iterations of inverse routine
   float d;                     // parity for LU factorization
   double mag;                 // normalization for eigenvector
-  
+
   // Subtracts eigenvalue from diagonal elements
   for (jj = 0; jj <= (pls-1); jj++) {
     system->A[jj][jj] -= system->dmEigenValEcc[0][count-1];
@@ -2355,7 +2361,7 @@ void FindEigenVecEcc(SYSTEM *system, int count, int pls) {
   LUDecomp(system->A, system->Acopy, system->scale, system->rowswap, pls);
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
-  for (i = 1; i <= iter; i++) {  
+  for (i = 1; i <= iter; i++) {
 //     lubksb(A, pls, swap, soln);
     LUSolve(system->Acopy,system->Asoln,system->rowswap,pls);
 
@@ -2363,7 +2369,7 @@ void FindEigenVecEcc(SYSTEM *system, int count, int pls) {
     for (jj = 0; jj <= (pls-1); jj++) {
       mag += system->Asoln[jj]*system->Asoln[jj];
     }
-    
+
     for (jj = 0; jj <= (pls-1); jj++) {
       system->Asoln[jj] /= sqrt(mag);
     }
@@ -2375,7 +2381,7 @@ void FindEigenVecInc(SYSTEM *system, int count, int pls) {
   int jj, i, iter = 5;  // iter = # of iterations of inverse routine
   float d;                     // parity for LU factorization
   double mag;                 // normalization for eigenvector
-  
+
   // Subtracts eigenvalue from diagonal elements
   for (jj = 0; jj <= (pls-1); jj++) {
     system->B[jj][jj] -= system->dmEigenValInc[0][count-1];
@@ -2388,7 +2394,7 @@ void FindEigenVecInc(SYSTEM *system, int count, int pls) {
   LUDecomp(system->B, system->Acopy, system->scale, system->rowswap, pls);
 
   // Finds eigenvectors by inverse iteration, normalizing at each step
-  for (i = 1; i <= iter; i++) {  
+  for (i = 1; i <= iter; i++) {
 //     lubksb(A, pls, swap, soln);
     LUSolve(system->Acopy,system->Bsoln,system->rowswap,pls);
 
@@ -2396,19 +2402,19 @@ void FindEigenVecInc(SYSTEM *system, int count, int pls) {
     for (jj = 0; jj <= (pls-1); jj++) {
       mag += system->Bsoln[jj]*system->Bsoln[jj];
     }
-    
+
     for (jj = 0; jj <= (pls-1); jj++) {
       system->Bsoln[jj] /= sqrt(mag);
     }
   }
-}  
-  
+}
+
 void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
-  /* This solves the eigenvalue problem and provides an explicit solution 
+  /* This solves the eigenvalue problem and provides an explicit solution
        to the orbital evolution */
     double parity;
     int j, k, count, i,iBody;
-    
+
     /*First pass through calculates matrices and eigenvalues. Each subsequent pass redefines the matrices
       because they are destroyed by eigenvalue routines, then calculates eigenvectors. */
     for (count=0;count<(evolve->iNumBodies);count++) {
@@ -2419,7 +2425,7 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         for (k=0;k<(evolve->iNumBodies-1);k++) {
           if (j!=k) {
             system->A[j][j] += ABmatrix(body,1,j+1,k+1);
-            system->A[j][k] = -ABmatrix(body,2,j+1,k+1);            
+            system->A[j][k] = -ABmatrix(body,2,j+1,k+1);
             system->B[j][j] += -ABmatrix(body,1,j+1,k+1);
             system->B[j][k] = ABmatrix(body,1,j+1,k+1);
           }
@@ -2427,16 +2433,16 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         if (body[j+1].bGRCorr)
           system->A[j][j] += GRCorrMatrix(body,j+1,j+1);
       }
-      
+
       if (count==0) {
         BalanceMatrix(system->A, (evolve->iNumBodies-1)); //balance matrix
         HessReduce(system->A, (evolve->iNumBodies-1));  //reduce to upper Hess form
-                
+
         BalanceMatrix(system->B, (evolve->iNumBodies-1)); //balance matrix
         HessReduce(system->B, (evolve->iNumBodies-1));  //reduce to upper Hess form
        //  BalanceM(B, (evolve->iNumBodies-1)); //balance matrix
 //         ElmHess(B, (evolve->iNumBodies-1));  //reduce to upper Hess form
-        
+
         HessEigen(system->A, (evolve->iNumBodies-1), system->dmEigenValEcc[0], system->dmEigenValEcc[1]);
         HessEigen(system->B, (evolve->iNumBodies-1), system->dmEigenValInc[0], system->dmEigenValInc[1]);
         // for (i=1;i<(evolve->iNumBodies-1);i++) {
@@ -2445,7 +2451,7 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else {
         FindEigenVecEcc(system,count,(evolve->iNumBodies-1));
         FindEigenVecInc(system,count,(evolve->iNumBodies-1));
-      
+
         for (j=0;j<(evolve->iNumBodies-1);j++) {
           system->dmEigenVecEcc[j][count-1] = system->Asoln[j];
           system->dmEigenVecInc[j][count-1] = system->Bsoln[j];
@@ -2456,14 +2462,14 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 
 void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   int i, j, count;
-  float parity;  
-  
+  float parity;
+
   for (i=0;i<(evolve->iNumBodies-1);i++) {
         system->h0[i] = body[i+1].dHecc;
         system->k0[i] = body[i+1].dKecc;
         system->p0[i] = body[i+1].dPinc;
         system->q0[i] = body[i+1].dQinc;
-  
+
         for (j=0;j<(evolve->iNumBodies-1);j++) {
           system->etmp[i][j] = system->dmEigenVecEcc[i][j];
           system->itmp[i][j] = system->dmEigenVecInc[i][j];
@@ -2477,26 +2483,26 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   LUSolve(system->etmp,system->h0,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->etmp,system->k0,system->rowswap,(evolve->iNumBodies-1));
 
-  
+
   //ludcmp(itmp,(evolve->iNumBodies-1),rowswap,&parity);
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,p0);
 //   lubksb(itmp,(evolve->iNumBodies-1),rowswap,q0);
- 
+
   LUDecomp(system->dmEigenVecInc,system->itmp,system->scale,system->rowswap,(evolve->iNumBodies-1));
 
   LUSolve(system->itmp,system->p0,system->rowswap,(evolve->iNumBodies-1));
   LUSolve(system->itmp,system->q0,system->rowswap,(evolve->iNumBodies-1));
-      
- 
+
+
   for (i=0;i<(evolve->iNumBodies-1);i++) {
     system->S[i] = sqrt(system->h0[i]*system->h0[i] + system->k0[i]*system->k0[i]);
     system->T[i] = sqrt(system->p0[i]*system->p0[i] + system->q0[i]*system->q0[i]);
-    
+
     for (j=0;j<(evolve->iNumBodies-1);j++) {
       system->dmEigenVecEcc[j][i] *= system->S[i];
       system->dmEigenVecInc[j][i] *= system->T[i];
     }
-    
+
     system->dmEigenPhase[0][i] = atan2(system->h0[i],system->k0[i]);
     system->dmEigenPhase[1][i] = atan2(system->p0[i],system->q0[i]);
   }
@@ -2505,7 +2511,7 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
   double alpha1, dalpha;
   int j, iBody, jBody, done=0;
-  
+
   j = 0;
   for (iBody=1;iBody<evolve->iNumBodies-1;iBody++) {
     for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
@@ -2552,7 +2558,7 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       }
     }
   }
-  
+
   if (dalpha > system->dDfcrit) {
     SolveEigenVal(body,evolve,system);
     ScaleEigenVec(body,evolve,system);
@@ -2565,13 +2571,13 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       }
     }
 //     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
-  }  
+  }
 
 }
 
 /*
  * Invariable plane calculations
- */ 
+ */
 
 double xangle1(BODY *body, int iBody) {
   return cos(body[iBody].dLongA)*cos(body[iBody].dLongP-body[iBody].dLongA) - sin(body[iBody].dLongA)*sin(body[iBody].dLongP-body[iBody].dLongA)*(1.0-2.*body[iBody].dSinc*body[iBody].dSinc);
@@ -2614,7 +2620,7 @@ double vxi(BODY *body, int iBody) {
   return -body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*n*sin(body[iBody].dEccA)\
     /sqrt(x*x+y*y);
 }
-  
+
 double vyi(BODY *body, int iBody) {
   double x, y, mu, n, v;
   x = xinit(body, iBody);
@@ -2640,7 +2646,7 @@ void kepler_eqn(BODY *body, int iBody) {
   } else {
     body[iBody].dEccA = body[iBody].dMeanA + signf(sin(body[iBody].dMeanA))*0.85*body[iBody].dEcc;
     di3 = 1.0;
-    
+
     while (di3 > 1e-15) {
       fi = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA) - body[iBody].dMeanA;
       fi1 = 1.0 - body[iBody].dEcc*cos(body[iBody].dEccA);
@@ -2657,16 +2663,16 @@ void kepler_eqn(BODY *body, int iBody) {
 void osc2cart(BODY *body, int iNumBodies) {
   int iBody;
   double xtmp, ytmp, vxtmp, vytmp;
-  
+
   for (iBody=0;iBody<iNumBodies;iBody++) {
     body[iBody].dCartPos = malloc(3*sizeof(double));
     body[iBody].dCartVel = malloc(3*sizeof(double));
-    
+
     if (iBody == 0) {
       body[iBody].dCartPos[0] = 0;
       body[iBody].dCartPos[1] = 0;
       body[iBody].dCartPos[2] = 0;
-  
+
       body[iBody].dCartVel[0] = 0;
       body[iBody].dCartVel[1] = 0;
       body[iBody].dCartVel[2] = 0;
@@ -2676,11 +2682,11 @@ void osc2cart(BODY *body, int iNumBodies) {
       ytmp = yinit(body, iBody);
       vxtmp = vxi(body, iBody);
       vytmp = vyi(body, iBody);
-      
+
       body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
       body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
       body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
-  
+
       body[iBody].dCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
       body[iBody].dCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
       body[iBody].dCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
@@ -2695,7 +2701,7 @@ void astro2bary(BODY *body, int iNumBodies) {
   vcom = malloc(3*sizeof(double));
   mtotal = 0;
   for (iBody=0;iBody<iNumBodies;iBody++) mtotal += body[iBody].dMass;
-  
+
   for (i=0;i<3;i++) {
     xcom[i] = 0;
     vcom[i] = 0;
@@ -2704,7 +2710,7 @@ void astro2bary(BODY *body, int iNumBodies) {
       vcom[i] += (body[iBody].dMass*body[iBody].dCartVel[i]/mtotal);
     }
   }
-  
+
   for (i=0;i<3;i++) {
     for (iBody=0;iBody<iNumBodies;iBody++) {
       body[iBody].dCartPos[i] -= xcom[i];
@@ -2719,7 +2725,7 @@ void astro2bary(BODY *body, int iNumBodies) {
 void bary2astro(BODY *body, int iNumBodies) {
   int i, iBody;
   double xtmp, vtmp;
-  
+
   for (i=0;i<3;i++) {
     xtmp = body[0].dCartPos[i];
     vtmp = body[0].dCartVel[i];
@@ -2740,7 +2746,7 @@ void cross(double *a, double *b, double *c) {
 void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   double *rxptmp;
   int i, iBody;
-  
+
   rxptmp = malloc(3*sizeof(double));
 
   osc2cart(body, iNumBodies);
@@ -2748,7 +2754,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
   for (i=0;i<3;i++)
     AngMom[i]=0;
-  
+
   for (iBody=0;iBody<iNumBodies;iBody++) {
     cross(body[iBody].dCartPos, body[iBody].dCartVel, rxptmp);
     for (i=0;i<3;i++) {
@@ -2761,10 +2767,10 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
 void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
   double *xtmp, *vtmp;
-  int iBody;  
+  int iBody;
   xtmp = malloc(3*sizeof(double));
   vtmp = malloc(3*sizeof(double));
-  
+
   for (iBody=0;iBody<iNumBodies;iBody++) {
     xtmp[0] = body[iBody].dCartPos[0]*cos(system->dThetaInvP)+body[iBody].dCartPos[1]*sin(system->dThetaInvP);
     xtmp[1] = -body[iBody].dCartPos[0]*sin(system->dThetaInvP)+body[iBody].dCartPos[1]*cos(system->dThetaInvP);
@@ -2772,7 +2778,7 @@ void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
     vtmp[0] = body[iBody].dCartVel[0]*cos(system->dThetaInvP)+body[iBody].dCartVel[1]*sin(system->dThetaInvP);
     vtmp[1] = -body[iBody].dCartVel[0]*sin(system->dThetaInvP)+body[iBody].dCartVel[1]*cos(system->dThetaInvP);
     vtmp[2] = body[iBody].dCartVel[2];
-    
+
     body[iBody].dCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
     body[iBody].dCartPos[1] = xtmp[1];
     body[iBody].dCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
@@ -2808,11 +2814,10 @@ void cart2osc(BODY *body, int iNumBodies) {
     if (body[iBody].dEcc != 0) {
       body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUCM));
     }
-    
+
     body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
     body[iBody].dLongA = atan2(h[0],-h[1]);
-    if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;
-    
+    if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;    
     sinwf = body[iBody].dCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-body[iBody].dSinc*body[iBody].dSinc));
     coswf = (body[iBody].dCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*body[iBody].dSinc*body[iBody].dSinc))/cos(body[iBody].dLongA);
     
@@ -2835,7 +2840,7 @@ void cart2osc(BODY *body, int iNumBodies) {
         body[iBody].dArgP += 2.*PI;
       }
     }
-    
+
     f = atan2(sinf, cosf);
     if (f >= 2.*PI) {
       f -= 2.*PI;
@@ -2845,7 +2850,7 @@ void cart2osc(BODY *body, int iNumBodies) {
     cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
     if (f <= PI) body[iBody].dEccA = acos(cosE);
     if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
-    
+
     body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA);
     if (body[iBody].dMeanA < 0) body[iBody].dMeanA += 2*PI;
     if (body[iBody].dMeanA >= 2*PI) body[iBody].dMeanA -= 2*PI;
@@ -2857,18 +2862,18 @@ void cart2osc(BODY *body, int iNumBodies) {
 void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
   double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
-  
-  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled. 
+
+  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled.
      This angle is invariant under rotations. */
   for (iBody=1;iBody<iNumBodies;iBody++) {
-    if (body[iBody].bDistRot) { // XXX No mention of other modules is allowed!! 
+    if (body[iBody].bDistRot) { // XXX No mention of other modules is allowed!!
       body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
       while (body[iBody].dTrueApA<0) {
         body[iBody].dTrueApA += 2*PI;
       }
     }
   }
-  
+
   angularmom(body, AngMom, iNumBodies);
   system->dThetaInvP = atan2(AngMom[1],AngMom[0]);
   system->dPhiInvP = atan2(sqrt(AngMom[0]*AngMom[0]+AngMom[1]*AngMom[1]),AngMom[2]);
@@ -2895,10 +2900,10 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
 // void rotate_rev(BODY *body, SYSTEM *system, int iNumBodies) {
 //   double *xtmp, *vtmp;
 //   int iBody;
-//   
+//
 //   xtmp = malloc(3*sizeof(double));
 //   vtmp = malloc(3*sizeof(double));
-//   
+//
 //   for (iBody=0;iBody<iNumBodies;iBody++) {
 //     xtmp[0] = body[iBody].dCartPos[0]*cos(-system->dPhiInvP)-body[iBody].dCartPos[2]*sin(-system->dPhiInvP);
 //     xtmp[1] = body[iBody].dCartPos[1];
@@ -2906,16 +2911,16 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
 //     vtmp[0] = body[iBody].dCartVel[0]*cos(-system->dPhiInvP)-body[iBody].dCartVel[2]*sin(-system->dPhiInvP);
 //     vtmp[1] = body[iBody].dCartVel[1];
 //     vtmp[2] = body[iBody].dCartVel[0]*sin(-system->dPhiInvP)+body[iBody].dCartVel[2]*cos(-system->dPhiInvP);
-//     
+//
 //     body[iBody].dCartPos[0] = xtmp[0]*cos(-system->dThetaInvP)+xtmp[1]*sin(-system->dThetaInvP);
 //     body[iBody].dCartPos[1] = -xtmp[0]*sin(-system->dThetaInvP)+xtmp[1]*cos(-system->dThetaInvP);
 //     body[iBody].dCartPos[2] = xtmp[2];
 //     body[iBody].dCartVel[0] = vtmp[0]*cos(-system->dThetaInvP)+vtmp[1]*sin(-system->dThetaInvP);
 //     body[iBody].dCartVel[1] = -vtmp[0]*sin(-system->dThetaInvP)+vtmp[1]*cos(-system->dThetaInvP);
-//     body[iBody].dCartVel[2] = vtmp[2];  
+//     body[iBody].dCartVel[2] = vtmp[2];
 //   }
 // }
-// 
+//
 // void inv2input_plane(BODY *body, SYSTEM *system, int iNumBodies) {
 //   osc2cart(body, iNumBodies);
 //   astro2bary(body, iNumBodies);
@@ -2926,8 +2931,8 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
 
 
 
-// 
-/* 
+//
+/*
  * Semi-major axis functions
  */
 
@@ -2949,14 +2954,14 @@ double fdLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS) {
     for (k = 1; k <= iIndexJ; k++)
       fac *= (dIndexS + k - 1.0) / (k) * dAxRatio;
   }
- 
+
   while (term >= 1.0e-15*sum) {
     term = 1.0;
     for (k = 1; k <= n; k++) {
       term *= (dIndexS + k - 1.0) * (dIndexS + iIndexJ + k - 1.0) / (k * (iIndexJ + k)) * dAxRatio*dAxRatio;
     }
     sum = sum + term;
-    
+
     n++;
   }
   return 2.0*fac*sum;
@@ -3071,7 +3076,7 @@ double fdDSemiF7Dalpha(double dAxRatio, int iIndexJ) {
   - 7.*dAxRatio*dAxRatio*(fdDerivLaplaceCoeff(2,B(abs(iIndexJ-1)))+fdDerivLaplaceCoeff(2,B(iIndexJ+1)))\
   - dAxRatio*dAxRatio*dAxRatio*(fdDerivLaplaceCoeff(3,B(abs(iIndexJ-1)))+fdDerivLaplaceCoeff(3,B(iIndexJ+1))) );
 }
-  
+
 /*--------- f8 ----------------------*/
 double fdSemiMajAxF8(double dAxRatio, int iIndexJ) {
   return 3./16 * dAxRatio*dAxRatio * ( fdLaplaceCoeff(C(abs(iIndexJ-2))) \
@@ -3112,8 +3117,8 @@ double fdDSemiF10Dalpha(double dAxRatio, int iIndexJ) {
     - 4. * dAxRatio * fdDerivLaplaceCoeff(2,A(iIndexJ+1)) \
     - dAxRatio*dAxRatio * fdDerivLaplaceCoeff(3,A(iIndexJ+1)) );
 }
-  
-  
+
+
 /*--------- f11 ----------------------*/
 double fdSemiMajAxF11(double dAxRatio, int iIndexJ) {
   return 1./32*((-6.*iIndexJ-26.*iIndexJ*iIndexJ-36.*iIndexJ*iIndexJ*iIndexJ \
@@ -3131,7 +3136,7 @@ double fdDSemiF11Dalpha(double dAxRatio, int iIndexJ) {
     - 10.*dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(4,A(iIndexJ+1)) \
     - dAxRatio*dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(5,A(iIndexJ+1)) );
 }
-  
+
 /*--------- f12 ----------------------*/
 double fdSemiMajAxF12(double dAxRatio, int iIndexJ) {
   return 1./32 * ( (4. + 2.*iIndexJ - 22.*iIndexJ*iIndexJ - 36.*iIndexJ*iIndexJ*iIndexJ - 16.*iIndexJ*iIndexJ*iIndexJ*iIndexJ) * \
@@ -3174,7 +3179,7 @@ double fdSemiMajAxF14(double dAxRatio, int iIndexJ) {
 double fdDSemiF14Dalpha(double dAxRatio, int iIndexJ) {
   return fdLaplaceCoeff(B(iIndexJ+1)) + dAxRatio*fdDerivLaplaceCoeff(1,B(iIndexJ+1));
 }
-  
+
 /*--------- f15 ----------------------*/
 double fdSemiMajAxF15(double dAxRatio, int iIndexJ) {
   return 1./4 * ( (2. - 4.*iIndexJ*iIndexJ) * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
@@ -3188,7 +3193,7 @@ double fdDSemiF15Dalpha(double dAxRatio, int iIndexJ) {
    + 7.*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) \
    + dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(3,B(iIndexJ+1)) );
 }
-  
+
 /*--------- f16 ----------------------*/
 double fdSemiMajAxF16(double dAxRatio, int iIndexJ) {
   return -1./2 * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
@@ -3200,7 +3205,7 @@ double fdDSemiF16Dalpha(double dAxRatio, int iIndexJ) {
     -3.* dAxRatio * ( 2.*(fdLaplaceCoeff(C(iIndexJ)) + 1./2 * fdLaplaceCoeff(C(iIndexJ+2))) \
     + dAxRatio*(fdDerivLaplaceCoeff(1,C(iIndexJ)) + 1./2 * fdDerivLaplaceCoeff(1,C(iIndexJ+2))) );
 }
-  
+
 /*--------- f17 ----------------------*/
 double fdSemiMajAxF17(double dAxRatio, int iIndexJ) {
   return 1./64 * ( (12. + 64.*iIndexJ + 109.*iIndexJ*iIndexJ + 72.*iIndexJ*iIndexJ*iIndexJ + 16.*iIndexJ*iIndexJ*iIndexJ*iIndexJ) \
@@ -3219,7 +3224,7 @@ double fdDSemiF17Dalpha(double dAxRatio, int iIndexJ) {
     + 12.*dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(4,A(iIndexJ+2)) \
     + dAxRatio*dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(5,A(iIndexJ+2)) );
 }
-  
+
 /*--------- f18 ----------------------*/
 double fdSemiMajAxF18(double dAxRatio, int iIndexJ) {
   return 1./16 * ( (12. - 15.*iIndexJ + 4.*iIndexJ*iIndexJ) * dAxRatio * fdLaplaceCoeff(B(abs(iIndexJ-1))) \
@@ -3289,7 +3294,7 @@ double fdDSemiF22Dalpha(double dAxRatio, int iIndexJ) {
    - 7.*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
    - dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
 }
-  
+
 /*--------- f23 ----------------------*/
 double fdSemiMajAxF23(double dAxRatio, int iIndexJ) {
   return 1./4 * ( dAxRatio * iIndexJ * (6. + 4.*iIndexJ) * fdLaplaceCoeff(B(iIndexJ+2)) \
@@ -3317,21 +3322,21 @@ double fdDSemiF24Dalpha(double dAxRatio, int iIndexJ) {
    + (7.-4.*iIndexJ)*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,B(iIndexJ)) \
    +  dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(3,B(iIndexJ)) );
 }
-  
+
 /*--------- f25 ----------------------*/
 double fdSemiMajAxF25(double dAxRatio, int iIndexJ) {
   return 1./8 * ( (-3. - 4.*iIndexJ) * iIndexJ * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) \
    + 4.*iIndexJ*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
    - dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) );
 }
- 
+
 double fdDSemiF25Dalpha(double dAxRatio, int iIndexJ) {
   return 1./8 * ( (-3. - 4.*iIndexJ) * iIndexJ * fdLaplaceCoeff(B(iIndexJ+1)) \
    + (5.*iIndexJ-4.*iIndexJ*iIndexJ)*dAxRatio * fdDerivLaplaceCoeff(1,B(iIndexJ+1)) \
    + (-3.+4.*iIndexJ)* dAxRatio*dAxRatio * fdDerivLaplaceCoeff(2,B(iIndexJ+1)) \
    - dAxRatio*dAxRatio*dAxRatio * fdDerivLaplaceCoeff(3,B(iIndexJ+1)) );
 }
- 
+
 /*--------- f26 ----------------------*/
 double fdSemiMajAxF26(double dAxRatio, int iIndexJ) {
   return 1./2 * dAxRatio * fdLaplaceCoeff(B(iIndexJ+1)) + 3./4 * dAxRatio*dAxRatio * fdLaplaceCoeff(C(iIndexJ)) \
@@ -3343,7 +3348,7 @@ double fdDSemiF26Dalpha(double dAxRatio, int iIndexJ) {
     + 3./4 * dAxRatio * ( 2.*(fdLaplaceCoeff(C(iIndexJ)) + 2.*fdLaplaceCoeff(C(iIndexJ+2))) \
     + dAxRatio*(fdDerivLaplaceCoeff(1,C(iIndexJ)) + 2.*fdDerivLaplaceCoeff(1,C(iIndexJ+2))) ) ;
 }
-  
+
 
 //----------------Disturbing function h k p q----------------------------------------------
 //--------dR/dh-----------(inner body)------------------------------------------------------
@@ -3354,7 +3359,7 @@ double fdDdistDhDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
 double fdDdistDhDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dHecc*( system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][9] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][11] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][12] ) + (2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dKecc + 3*body[iBody].dHecc*body[iBody].dHecc*body[jBody].dHecc+body[jBody].dHecc*body[iBody].dKecc*body[iBody].dKecc)*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][10];
 } 
- 
+
 double fdDdistDhDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][14];
 }
@@ -3394,7 +3399,7 @@ double fdDdistDhDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
 double fdDdistDhDir014(BODY *body, SYSTEM *system, int iBody, int jBody) { 
   return ( body[jBody].dHecc*(body[jBody].dPinc*body[jBody].dPinc-body[jBody].dQinc*body[jBody].dQinc) + 2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc)*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][18];
 }
-  
+
 double fdDdisturbDHecc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3805,7 +3810,7 @@ double fdDdistDqDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dQinc*body[jBody].dQinc - body[iBody].dQinc*body[jBody].dPinc*body[jBody].dPinc + 2*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dPinc )*system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][25];
 }
 
-  
+
 double fdDdisturbDQinc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3857,7 +3862,7 @@ double fdDdistDqPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
 double fdDdistDqPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[iBody].dKecc*body[jBody].dQinc - body[iBody].dHecc*body[iBody].dHecc*body[jBody].dQinc + 2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dPinc )*system->dmLaplaceC[0][system->imLaplaceN[jBody][iBody]][24];
 }
-  
+
 double fdDdistDqPrmDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dKecc*body[jBody].dKecc - body[iBody].dQinc*body[jBody].dHecc*body[jBody].dHecc + 2*body[iBody].dPinc*body[jBody].dHecc*body[jBody].dKecc )*system->dmLaplaceC[0][system->imLaplaceN[jBody][iBody]][17];
 }
@@ -3918,32 +3923,32 @@ double fdDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += ( sqrt(y)*fdDdisturbDKecc(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
-      
+
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
     sum += ( sqrt(y)*fdDdisturbDKeccPrime(body, system, iaBody) + body[iaBody[0]].dKecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   }
-  
+
   return sum/DAYSEC;
 }
 
 double fdDistOrbRD4DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
-  
+
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += -( sqrt(y)*fdDdisturbDHecc(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPinc(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQinc(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
-      
+
   } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
     sum += -( sqrt(y)*fdDdisturbDHeccPrime(body, system, iaBody) + body[iaBody[0]].dHecc*(body[iaBody[0]].dPinc*fdDdisturbDPincPrime(body, system, iaBody) +body[iaBody[0]].dQinc*fdDdisturbDQincPrime(body, system, iaBody))/(2*sqrt(y)) ) / sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
-  }      
+  }
 
   return sum/DAYSEC;
 }
 
 double fdDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
-    
+
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
     y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
@@ -3951,14 +3956,14 @@ double fdDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) + 1.0/2.0*fdDdisturbDQincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
-    
+
     return sum/DAYSEC;
 }
 
 
 double fdDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
-    
+
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
     y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
@@ -3966,7 +3971,7 @@ double fdDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dQinc*(-body[iaBody[0]].dKecc*fdDdisturbDHeccPrime(body, system, iaBody)+body[iaBody[0]].dHecc*fdDdisturbDKeccPrime(body, system, iaBody)) - 1.0/2.0*fdDdisturbDPincPrime(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUCM*(y)));
     }
-   
+
     return sum/DAYSEC;
 }
 
@@ -3997,10 +4002,10 @@ double fdDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);  
+  return system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*cos(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }
 
 double fdDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
-  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);    
+  return -system->dmEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->dmEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->dmEigenPhase[1][iaBody[1]-1]);
 }

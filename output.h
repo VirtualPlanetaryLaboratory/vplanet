@@ -24,6 +24,7 @@
 
 #define OUT_POTENERGY           191
 #define OUT_KINENERGY           192
+#define OUT_TOTORBENERGY        193
 
 #define OUT_DT			200
 #define OUT_DENSITY			210
@@ -59,13 +60,14 @@
 #define OUT_HZLIMITDRYRUNAWAY   602
 
 #define OUT_KECC                605
-#define OUT_ORBECC		610
-#define OUT_ORBEN		620
-#define OUT_ORBMEANMOTION	630
-#define OUT_ORBPER		640
-#define OUT_ORBSEMI		650
-#define OUT_ORBANGMOM		660
+#define OUT_ORBECC		          610
+#define OUT_ORBEN		            620
+#define OUT_ORBMEANMOTION	      630
+#define OUT_ORBPER	           	640
+#define OUT_ORBSEMI		          650
+#define OUT_ORBANGMOM		        660
 #define OUT_ARGP                661
+#define OUT_MEANA               662
 
 
 #define OUT_ORBKINENERGY        670
@@ -77,7 +79,7 @@
 
 
 void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
+void Bary2OrbElems(BODY *body, int iBody);
 void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,int);
 
 void InitializeOutputFunctions(MODULE*,OUTPUT*,int);

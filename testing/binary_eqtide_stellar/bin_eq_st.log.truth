@@ -13,7 +13,7 @@ Time Units: Seconds
 Angle Units: Radians
 
 ------- FORMATTING -----
-Verbosity Level: 5
+Verbosity Level: 0
 Crossover Decade for Scientific Notation: 4
 Number of Digits After Decimal: 6
 Integration Method: Runge-Kutta4
@@ -29,11 +29,12 @@ Minimum Value of ecc and obl: 1.000000e-10
 ---- INITIAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 0.000000 
 (Time) Simulation Time [sec]: 0.000000 
-(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 6.639522e+44 
-(TotEnergy) Total Energy [kg*m^2/sec^2]: 0.000000 
-(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: 0.000000 
-(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 0.000000 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 6.639519e+44 
+(TotEnergy) Total System Energy [kg*m^2/sec^2]: -5.633197e+40 
+(PotEnergy) Body's non-orbital Potential Energy [kg*m^2/sec^2]: -5.145169e+40 
+(KinEnergy) Body's non-orbital Kinetic Energy [kg*m^2/sec^2]: 1.574965e+39 
 (DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(Density) Average Density [kg/m^3]: 1881.399177 
 (LongP) Body's Longitude of pericenter [rad]: 0.000000 
 (LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: 4.075010e+23 
 
@@ -49,12 +50,12 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 1.000000 
 (Radius) Radius [m]: 1.448144e+09 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.746202e+43 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.574965e+39 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.574965e+39 
 (RotVel) Rotational Velocity [m/sec]: 9.610954e+04 
 (BodyType) Type of Body (0 == planet) []: 1.000000 
 (RotRate) Rotational Frequency [/sec]: 6.636738e-05 
 (RotPer) Rotational Period [sec]: 9.467280e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 105.107883 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 105.108424 
 (TidalQ) Tidal Q []: 1.000000e+06 
 (ImK2) Im(k_2) []: 5.000000e-07 
 (K2) k_2 []: 0.500000 
@@ -64,48 +65,49 @@ Color: 000000
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.000000 
 (Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
+(LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (primary)------
 (BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579361e-14 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -6.014290e-23 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766192e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557476e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198311e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858188e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.557476e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766192e-06 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579406e-14 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -6.014321e-23 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766194e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557471e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198314e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858184e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.557471e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103495e+18 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103489e+18 
 (EnvK2) K2_Env []: 0.010000 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE []: -1.000000 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 2.769930e+21 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 105.107883 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 2.769945e+21 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 105.108424 
 Tidal Perturbers: secondary
 ----- STELLAR PARAMETERS (primary)------
 (Luminosity) Luminosity [kg*m^2/sec^3]: 4.075010e+26 
 (LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 4.075010e+23 
 (Temperature) Effective Temperature [K]: 4061.717198 
 (LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.001000 
-(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 1.226793e+11 
-(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 1.628054e+11 
-(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 1.623245e+11 
-(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 2.979787e+11 
-(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 3.250175e+11 
+(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 1.226792e+11 
+(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 1.628053e+11 
+(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 1.623243e+11 
+(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 2.979785e+11 
+(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 3.250173e+11 
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
@@ -123,7 +125,7 @@ Tidal Perturbers: secondary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -139,12 +141,12 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 1.000000 
 (Radius) Radius [m]: 1.050193e+09 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 7.351484e+42 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 2.439493e+38 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 2.439493e+38 
 (RotVel) Rotational Velocity [m/sec]: 6.969852e+04 
 (BodyType) Type of Body (0 == planet) []: 1.000000 
 (RotRate) Rotational Frequency [/sec]: 6.636738e-05 
 (RotPer) Rotational Period [sec]: 9.467280e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 462.143982 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 462.146360 
 (TidalQ) Tidal Q []: 1.000000e+06 
 (ImK2) Im(k_2) []: 5.000000e-07 
 (K2) k_2 []: 0.500000 
@@ -154,60 +156,61 @@ Color: 000000
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.033941 
 (Eccentricity) Orbital Eccentricity []: 0.160480 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.766192e-06 
-(OrbPeriod) Orbital Period [sec]: 3.557476e+06 
-(SemiMajorAxis) Semi-major Axis [m]: 3.355483e+10 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 5.449915e+38 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.089983e+39 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.766194e-06 
+(OrbPeriod) Orbital Period [sec]: 3.557471e+06 
+(SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
+(LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
+(LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (secondary)------
 (TidalRadius) Tidal Radius [m]: 1.050193e+09 
-(DsemiDtEqtide) Total da/dt in EQTIDE [m/sec]: 1.724793e-08 
-(DeccDtEqtide) Total de/dt in EQTIDE [/sec]: 1.474858e-19 
-(DMeanMotionDtEqtide) Total dMeanMotion/dt in EQTIDE [/sec^2]: -1.361793e-24 
-(DOrbPerDtEqtide) Total dOrbPer/dt in EQTIDE []: 2.742933e-12 
-(EccTimeEqtide) Timescale for Eccentricity Evolution (e/[de/dt]) in EQTIDE [sec]: 1.088105e+18 
-(SemiTimeEqtide) Timescale for Semi-major Axis Evolution (a/[da/dt]) in EQTIDE [sec]: 1.945441e+18 
-(DHEccDtEqtide) Time Rate of Change of Poincare's h in EQTIDE [/sec]: -1.441496e-19 
-(DKEccDtEqtide) Time Rate of Change of Poincare's k in EQTIDE [/sec]: -3.119257e-20 
+(DsemiDtEqtide) Total da/dt in EQTIDE [m/sec]: 1.724802e-08 
+(DeccDtEqtide) Total de/dt in EQTIDE [/sec]: 1.474867e-19 
+(DMeanMotionDtEqtide) Total dMeanMotion/dt in EQTIDE [/sec^2]: -1.361803e-24 
+(DOrbPerDtEqtide) Total dOrbPer/dt in EQTIDE []: 2.742945e-12 
+(EccTimeEqtide) Timescale for Eccentricity Evolution (e/[de/dt]) in EQTIDE [sec]: 1.088098e+18 
+(SemiTimeEqtide) Timescale for Semi-major Axis Evolution (a/[da/dt]) in EQTIDE [sec]: 1.945430e+18 
+(DHEccDtEqtide) Time Rate of Change of Poincare's h in EQTIDE [/sec]: -1.441504e-19 
+(DKEccDtEqtide) Time Rate of Change of Poincare's k in EQTIDE [/sec]: -3.119275e-20 
 (DXoblDtEqtide) Time Rate of Change of Laskar's X in EQTIDE [/sec]: 0.000000 
 (DYoblDtEqtide) Time Rate of Change of Laskar's Y in EQTIDE [/sec]: 0.000000 
 (DZoblDtEqtide) Time Rate of Change of Laskar's Z in EQTIDE [/sec]: 0.000000 
 (BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280803e-12 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -8.978665e-22 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766192e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557476e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198311e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858188e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.557476e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766192e-06 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280810e-12 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -8.978712e-22 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766194e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557471e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198314e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858184e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.557471e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391675e+16 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391637e+16 
 (EnvK2) K2_Env []: 0.010000 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE []: -1.000000 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 6.405087e+21 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 462.143982 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 6.405120e+21 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 462.146360 
 Tidal Perturbers: primary
 ----- STELLAR PARAMETERS (secondary)------
 (Luminosity) Luminosity [kg*m^2/sec^3]: 8.588343e+25 
 (LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 8.588343e+22 
 (Temperature) Effective Temperature [K]: 3231.063534 
 (LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.001000 
-(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 5.746064e+10 
-(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 7.579638e+10 
-(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 7.602987e+10 
-(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 1.443818e+11 
-(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 1.574642e+11 
+(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 5.746059e+10 
+(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 7.579631e+10 
+(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 7.602980e+10 
+(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 1.443816e+11 
+(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 1.574640e+11 
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
@@ -225,7 +228,7 @@ Tidal Perturbers: primary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -235,17 +238,17 @@ Module Bit Sum: 1025
 Color: 000000
 (Mass) Mass [kg]: 0.000000 
 (Radius) Radius [m]: 6.378100e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 0.000000 
 (BodyType) Type of Body (0 == planet) []: 0.000000 
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399232e+11 
 (Eccentricity) Orbital Eccentricity []: 0.047201 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
-(MeanMotion) Orbital Mean Motion [/sec]: 3.192622e-07 
-(OrbPeriod) Orbital Period [sec]: 1.968033e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.049580e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 0.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
+(MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
+(OrbPeriod) Orbital Period [sec]: 2.029842e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.071442e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
@@ -253,17 +256,17 @@ Color: 000000
 (ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 1.116317 
 (BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 4.758971 
 (BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 5.875288 
-(LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215083e-07 
-(LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167789e-07 
-(LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261691e-07 
-(CBPR) CBP's Orbital Radius [m]: 1.025978e+11 
-(CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 5.647630e+08 
+(LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
+(LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
+(LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
+(CBPR) CBP's Orbital Radius [m]: 1.025977e+11 
+(CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 5.647625e+08 
 (CBPPhi) CBP Orbital Azimuthal Angle [rad]: 0.067304 
-(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: 717.023637 
+(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: 717.023947 
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: -0.000000 
-(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.372002e-07 
-(R0) CBP's Orbital Guiding Center Radius [m]: 1.049580e+11 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.718996 
+(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.372007e-07 
+(R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.719000 
 Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
 Grid Output Order:
 
@@ -272,11 +275,12 @@ Grid Output Order:
 ---- FINAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 3.155760e+09 
 (Time) Simulation Time [sec]: 3.155760e+09 
-(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 6.639522e+44 
-(TotEnergy) Total Energy [kg*m^2/sec^2]: 0.000000 
-(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: 0.000000 
-(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 0.000000 
-(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 6.639519e+44 
+(TotEnergy) Total System Energy [kg*m^2/sec^2]: -5.633197e+40 
+(PotEnergy) Body's non-orbital Potential Energy [kg*m^2/sec^2]: -5.145169e+40 
+(KinEnergy) Body's non-orbital Kinetic Energy [kg*m^2/sec^2]: 1.574965e+39 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: 2.608066e+05 
+(Density) Average Density [kg/m^3]: 1881.399177 
 (LongP) Body's Longitude of pericenter [rad]: 0.000000 
 (LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: 4.075010e+23 
 
@@ -292,12 +296,12 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 1.000000 
 (Radius) Radius [m]: 1.448144e+09 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.746202e+43 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.574965e+39 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.574965e+39 
 (RotVel) Rotational Velocity [m/sec]: 9.610954e+04 
 (BodyType) Type of Body (0 == planet) []: 1.000000 
 (RotRate) Rotational Frequency [/sec]: 6.636738e-05 
 (RotPer) Rotational Period [sec]: 9.467280e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 105.107882 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 105.108423 
 (TidalQ) Tidal Q []: 1.000000e+06 
 (ImK2) Im(k_2) []: 5.000000e-07 
 (K2) k_2 []: 0.500000 
@@ -307,48 +311,49 @@ Color: 000000
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.000000 
 (Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
+(LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 8.741280e+30 
+(LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (primary)------
 (BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579361e-14 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -6.014290e-23 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766192e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557476e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198311e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858188e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.557476e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766192e-06 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579406e-14 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -6.014321e-23 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766194e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557471e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198314e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858184e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.557471e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103495e+18 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 1.103489e+18 
 (EnvK2) K2_Env []: 0.010000 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE []: -1.000000 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 2.769930e+21 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 105.107882 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 2.769945e+21 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 105.108423 
 Tidal Perturbers: secondary
 ----- STELLAR PARAMETERS (primary)------
 (Luminosity) Luminosity [kg*m^2/sec^3]: 4.075010e+26 
 (LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 4.075010e+23 
 (Temperature) Effective Temperature [K]: 4061.717198 
 (LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.001000 
-(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 1.226793e+11 
-(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 1.628054e+11 
-(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 1.623245e+11 
-(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 2.979787e+11 
-(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 3.250175e+11 
+(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 1.226792e+11 
+(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 1.628053e+11 
+(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 1.623243e+11 
+(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 2.979785e+11 
+(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 3.250173e+11 
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
@@ -366,7 +371,7 @@ Tidal Perturbers: secondary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -382,12 +387,12 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 1.000000 
 (Radius) Radius [m]: 1.050193e+09 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 7.351484e+42 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 2.439493e+38 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 2.439493e+38 
 (RotVel) Rotational Velocity [m/sec]: 6.969852e+04 
 (BodyType) Type of Body (0 == planet) []: 1.000000 
 (RotRate) Rotational Frequency [/sec]: 6.636737e-05 
 (RotPer) Rotational Period [sec]: 9.467280e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 462.143958 
+(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 462.146336 
 (TidalQ) Tidal Q []: 1.000000e+06 
 (ImK2) Im(k_2) []: 5.000000e-07 
 (K2) k_2 []: 0.500000 
@@ -397,60 +402,61 @@ Color: 000000
 (HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.033941 
 (Eccentricity) Orbital Eccentricity []: 0.160480 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.766192e-06 
-(OrbPeriod) Orbital Period [sec]: 3.557476e+06 
-(SemiMajorAxis) Semi-major Axis [m]: 3.355483e+10 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 5.449915e+38 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.089983e+39 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.766194e-06 
+(OrbPeriod) Orbital Period [sec]: 3.557471e+06 
+(SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
+(LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 2.021302e+31 
+(LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (secondary)------
 (TidalRadius) Tidal Radius [m]: 1.050193e+09 
-(DsemiDtEqtide) Total da/dt in EQTIDE [m/sec]: 1.724793e-08 
-(DeccDtEqtide) Total de/dt in EQTIDE [/sec]: 1.474858e-19 
-(DMeanMotionDtEqtide) Total dMeanMotion/dt in EQTIDE [/sec^2]: -1.361793e-24 
-(DOrbPerDtEqtide) Total dOrbPer/dt in EQTIDE []: 2.742933e-12 
-(EccTimeEqtide) Timescale for Eccentricity Evolution (e/[de/dt]) in EQTIDE [sec]: 1.088105e+18 
-(SemiTimeEqtide) Timescale for Semi-major Axis Evolution (a/[da/dt]) in EQTIDE [sec]: 1.945441e+18 
-(DHEccDtEqtide) Time Rate of Change of Poincare's h in EQTIDE [/sec]: -1.441496e-19 
-(DKEccDtEqtide) Time Rate of Change of Poincare's k in EQTIDE [/sec]: -3.119257e-20 
+(DsemiDtEqtide) Total da/dt in EQTIDE [m/sec]: 1.724802e-08 
+(DeccDtEqtide) Total de/dt in EQTIDE [/sec]: 1.474867e-19 
+(DMeanMotionDtEqtide) Total dMeanMotion/dt in EQTIDE [/sec^2]: -1.361803e-24 
+(DOrbPerDtEqtide) Total dOrbPer/dt in EQTIDE []: 2.742945e-12 
+(EccTimeEqtide) Timescale for Eccentricity Evolution (e/[de/dt]) in EQTIDE [sec]: 1.088098e+18 
+(SemiTimeEqtide) Timescale for Semi-major Axis Evolution (a/[da/dt]) in EQTIDE [sec]: 1.945430e+18 
+(DHEccDtEqtide) Time Rate of Change of Poincare's h in EQTIDE [/sec]: -1.441504e-19 
+(DKEccDtEqtide) Time Rate of Change of Poincare's k in EQTIDE [/sec]: -3.119275e-20 
 (DXoblDtEqtide) Time Rate of Change of Laskar's X in EQTIDE [/sec]: 0.000000 
 (DYoblDtEqtide) Time Rate of Change of Laskar's Y in EQTIDE [/sec]: 0.000000 
 (DZoblDtEqtide) Time Rate of Change of Laskar's Z in EQTIDE [/sec]: 0.000000 
 (BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
-(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280803e-12 
-(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -8.978665e-22 
-(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766192e-06 
-(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557476e+06 
-(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198311e-06 
-(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858188e+06 
-(EqRotPer) Equilibrium Rotation Period [sec]: 3.557476e+06 
-(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766192e-06 
+(DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280810e-12 
+(DRotRateDtEqtide) Time Rate of Change of Rotational Frequency in EQTIDE [/sec^2]: -8.978712e-22 
+(EqRotRateDiscrete) CPL2 Discrete Equilibrium Spin Rate [/sec]: 1.766194e-06 
+(EqRotPerDiscrete) CPL2 Discrete Equilibrium Spin Period [sec]: 3.557471e+06 
+(EqRotRateCont) CPL2 Continuous Equilibrium Spin Rate [/sec]: 2.198314e-06 
+(EqRotPerCont) CPL2 Continuous Equilibrium Rotation Period [sec]: 2.858184e+06 
+(EqRotPer) Equilibrium Rotation Period [sec]: 3.557471e+06 
+(EqRotRate) Equilibrium Rotation Rate [/sec]: 1.766194e-06 
 (GammaRot) Gamma_Rotation [cgs]: -1.000000 
 (GammaOrb) Gamma_Orbital [cgs]: -1.000000 
-(OceanK2) K2_Ocean []: 0.000000 
+(OceanK2) K2_Ocean []: 1.000000 
 (EnvTidalQ) Envelope Tidal Q []: 0.010000 
-(OceanTidalQ) Ocean Tidal Q []: nan 
+(OceanTidalQ) Ocean Tidal Q []: 30.000000 
 (TideLock) Tidally Locked? []: 0.000000 
-(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391675e+16 
+(RotTimeEqtide) Timescale for Rotational Evolution in EQTIDE [sec]: 7.391636e+16 
 (EnvK2) K2_Env []: 0.010000 
 (OblTimeEqtide) Timescale for Obliquity Evolution in EQTIDE []: -1.000000 
-(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 6.405086e+21 
-(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 462.143958 
+(PowerEqtide) Internal Power due to Tides in EQTIDE [kg*m^2/sec^3]: 6.405119e+21 
+(SurfEnFluxEqtide) Surface Energy Flux due to Tides in EQTIDE [kg*m^2/sec^2/(m^2*sec)]: 462.146336 
 Tidal Perturbers: primary
 ----- STELLAR PARAMETERS (secondary)------
 (Luminosity) Luminosity [kg*m^2/sec^3]: 8.588343e+25 
 (LXUVStellar) Base X-ray/XUV Luminosity [kg*m^2/sec^3]: 8.588343e+22 
 (Temperature) Effective Temperature [K]: 3231.063534 
 (LXUVFrac) X-ray/XUV Luminosity Fraction []: 0.001000 
-(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 5.746064e+10 
-(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 7.579638e+10 
-(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 7.602987e+10 
-(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 1.443818e+11 
-(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 1.574642e+11 
+(HZLimRecVenus) Recent Venus Habitable Zone Limit [m]: 5.746059e+10 
+(HZLimRunaway) Runaway Greenhouse Habitable Zone Limit [m]: 7.579631e+10 
+(HZLimMoistGreenhouse) Moist Greenhouse Habitable Zone Limit [m]: 7.602980e+10 
+(HZLimMaxGreenhouse) Maximum Greenhouse Habitable Zone Limit [m]: 1.443816e+11 
+(HZLimEarlyMars) Early Mars Habitable Zone Limit [m]: 1.574640e+11 
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
@@ -468,7 +474,7 @@ Tidal Perturbers: primary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -478,36 +484,37 @@ Module Bit Sum: 1025
 Color: 000000
 (Mass) Mass [kg]: 0.000000 
 (Radius) Radius [m]: 6.378100e+06 
+(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 0.000000 
 (BodyType) Type of Body (0 == planet) []: 0.000000 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399346e+11 
-(Eccentricity) Orbital Eccentricity []: 0.048891 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
-(MeanMotion) Orbital Mean Motion [/sec]: 3.192622e-07 
-(OrbPeriod) Orbital Period [sec]: 1.968033e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.049580e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091387e+44 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 0.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -5.449915e+38 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399341e+11 
+(Eccentricity) Orbital Eccentricity []: 0.048829 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
+(MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
+(OrbPeriod) Orbital Period [sec]: 2.008981e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.064088e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
 (BinaryInc) CBP's Inclination in Binary [rad]: 0.005402 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.999694 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 2.523105 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 3.522798 
-(LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215083e-07 
-(LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167789e-07 
-(LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261691e-07 
-(CBPR) CBP's Orbital Radius [m]: 1.019071e+11 
-(CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 2.404309e+08 
-(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 2.975053 
-(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: -848.712886 
-(CBPZDot) CBP's Z Orbital Velocity [m/sec]: 166.681740 
-(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.405945e-07 
-(R0) CBP's Orbital Guiding Center Radius [m]: 1.049580e+11 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.779227 
+(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.999773 
+(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 2.523121 
+(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 3.522894 
+(LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
+(LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
+(LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
+(CBPR) CBP's Orbital Radius [m]: 1.019035e+11 
+(CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 2.411124e+08 
+(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 2.976446 
+(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: -845.853578 
+(CBPZDot) CBP's Z Orbital Velocity [m/sec]: 166.577012 
+(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.406090e-07 
+(R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.779424 
 Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
 Grid Output Order:
 
 Runtime = 1.000000 s
+Total Number of Steps = 121

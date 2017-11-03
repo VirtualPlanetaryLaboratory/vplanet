@@ -42,51 +42,88 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 /*! Compute the orbital angular momentum of the iBodyth body
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
-double fdOrbAngMom(BODY *body, int iBody) {
+double * fdOrbAngMom(BODY *body, int iBody) {
 
   double dMass, mu; // Mass of central body or bodies if using binary and not secondary star
 
-  // Central body (or primary binary star) doesn't orbit itself
-  if(iBody < 1)
-  {
-    return 0.0;
-  }
+  if (body[iBody].bSpiNBody) {
+    // For SpiNBody, we just want to make L = m(r x v)
+    // It is the responsibility of the caller to free this memory
+    double * pdOrbMom = malloc(sizeof(double)*3);
 
-  // Figure out central body mass
-  // If using binary, you orbit 2 stars
-  if(body[iBody].bBinary)
-  {
-    if(iBody > 1) // Panets orbit two stars
+    //Calculate the x, y, and z components of orb mom
+    pdOrbMom[0] =    body[iBody].dMass * (body[iBody].dPositionY*body[iBody].dVelZ - body[iBody].dPositionZ*body[iBody].dVelY);
+    pdOrbMom[1] = -1*body[iBody].dMass * (body[iBody].dPositionX*body[iBody].dVelZ - body[iBody].dPositionZ*body[iBody].dVelX);
+    pdOrbMom[2] =    body[iBody].dMass * (body[iBody].dPositionX*body[iBody].dVelY - body[iBody].dPositionY*body[iBody].dVelX);
+    return pdOrbMom;
+  }
+  else {
+    // It is the responsibility of the caller to free this memory
+    double * pdNetOrbMom = malloc(sizeof(double));
+
+    // Central body (or primary binary star) doesn't orbit itself
+    if(iBody < 1)
     {
-      dMass = body[0].dMass + body[1].dMass;
+      *pdNetOrbMom = 0.0;
+      return pdNetOrbMom;
+    }
+
+    // Figure out central body mass
+    // If using binary, you orbit 2 stars
+    if(body[iBody].bBinary)
+    {
+      if(iBody > 1) // Panets orbit two stars
+      {
+        dMass = body[0].dMass + body[1].dMass;
+      }
+      else
+      {
+        dMass = body[0].dMass;
+      }
     }
     else
     {
       dMass = body[0].dMass;
     }
-  }
-  else
-  {
-    dMass = body[0].dMass;
-  }
 
-  // Compute reduced mass
-  mu = dMass*body[iBody].dMass/(dMass+body[iBody].dMass);
+    // Compute reduced mass
+    mu = dMass*body[iBody].dMass/(dMass+body[iBody].dMass);
 
-  return mu*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc));
+    *pdNetOrbMom = mu*sqrt(BIGG*(dMass+body[iBody].dMass)*body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc));
+    return pdNetOrbMom;
+  }
 }
 
 /* Compute the total angular momentum in the system, including lost angular momentum */
 double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
-  int iBody;
+  // Added the vectorized components of total angular momentum for SpiNBody
+  double daOrbTot[] = {0.0,0.0,0.0};
+  double *pdaTmp;
+  int iBody, i;
 
   // Add all rotational, orbital angular momentum, angular momentum lost
-  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
-  {
-    dTot += fdOrbAngMom(body,iBody);
-    dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-    dTot += body[iBody].dLostAngMom;
+    //SpiNBody has direct x,y,z components for position and velocity
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
+    if (body[iBody].bSpiNBody){
+      pdaTmp = fdOrbAngMom(body,iBody);
+      for (i=0; i<3; i++){
+        daOrbTot[i] += *(pdaTmp+i);
+      }
+      dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
+      //dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+      //dTot += body[iBody].dLostAngMom;
+      free(pdaTmp);
+    }
+    else {
+      for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+        pdaTmp = fdOrbAngMom(body,iBody);
+        dTot += *pdaTmp;
+        dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+        dTot += body[iBody].dLostAngMom;
+        free(pdaTmp);
+      }
+    }
   }
 
   return dTot;
@@ -101,9 +138,24 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 /*! Compute orbital potential energy neglecting planet-planet potential energy */
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
-
+  int i;
+  
+  if (body[iBody].bSpiNBody && iBody>0){
+    double PotEnergy = 0;
+    //For SpiNBody, find the heliocentric distance then return the potential.
+    //This ignores planet-planet potential.
+    for (i = 0; i < control->Evolve.iNumBodies; i++) {
+      if (i!=iBody){
+        double Distance = sqrt((body[iBody].dPositionX-body[i].dPositionX)*(body[iBody].dPositionX-body[i].dPositionX)
+            +(body[iBody].dPositionY-body[i].dPositionY)*(body[iBody].dPositionY-body[i].dPositionY)
+            +(body[iBody].dPositionZ-body[i].dPositionZ)*(body[iBody].dPositionZ-body[i].dPositionZ));
+        PotEnergy += -BIGG*body[i].dMass*body[iBody].dMass/Distance;
+      }
+    }
+    return(PotEnergy);
+  }
   // Ignore central body or other stars if not using binary
-  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
   {
     return 0.0;
   }
@@ -133,8 +185,15 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass;
 
+  if (body[iBody].bSpiNBody && iBody>0){
+    //Energy is calculated in a heliocentric reference frame.
+    double Velocity2 = (body[iBody].dVelX)*(body[iBody].dVelX)
+        +(body[iBody].dVelY)*(body[iBody].dVelY)
+        +(body[iBody].dVelZ)*(body[iBody].dVelZ);
+    return 0.5*body[iBody].dMass*Velocity2;
+  }
   // Ignore central body or other stars if not using binary
-  if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
+  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
   {
     return 0.0;
   }
@@ -200,6 +259,16 @@ double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
   return dTot;
 }
 
+double fdTotOrbEnergy(BODY *body, CONTROL *control, SYSTEM *system){
+  double dTot = 0.0;
+  int iBody;
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
+    dTot += fdOrbEnergy(body,control,system,iBody);
+  }
+  return dTot;
+}
+
 int bPrimary(BODY *body,int iBody) {
   int iBodyPert,bPrimary=1;  /* Assume primary body to start */
 
@@ -229,19 +298,19 @@ void CalcPQ(BODY *body, int iBody) {
  *
  */
 
-/* BINARY - EQTIDE - STELLAR COUPLING */
+/* EQTIDE - STELLAR COUPLING */
 
 /*
- * Change in semi-major axis due to binary - eqtide - stellar coupling
+ * Change in semi-major axis due to eqtide - stellar coupling
  * due to stellar evolution (magnetic braking and radius contraction)
- * Note: body 1 has orbital information for binary
+ * Note: body 1 has orbital information for binary system
  */
 
 /*! Compute rate of change of semi-major axis for tidally locked star(s)
  * if iNumLocked = 2, both are locked, otherwise, iBody gives body struct
  * index for star that is tidally locked
  */
-double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
+double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 {
   double adot = 0.0;
   double Jdot = 0.0;
@@ -304,10 +373,10 @@ double fdSemiTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody)
   return adot;
 }
 
-/*! Compute change in binary semi-major axis when circular, tidally locked
- * and BINARY, EQTIDE, and STELLAR are active
+/*! Compute change in binary semi-major axis when circular, tidally locked, w ~ n
+ * when EQTIDE and STELLAR are active
  */
-double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
+double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0]; // Secondary body
   int iTmp;
   double adot = 0.0;
@@ -315,110 +384,20 @@ double fdSemiDtEqBinSt(BODY *body, SYSTEM *system, int *iaBody) {
   // Both are tidally locked
   if(body[0].bTideLock && body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,2,-1);
+    return fdSemiTidalLockEqSt(body,2,-1);
   }
   // Primary is tidally locked
   else if(body[0].bTideLock && !body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,1,0);
+    return fdSemiTidalLockEqSt(body,1,0);
   }
   // Secondary is tidally locked
   else if(!body[0].bTideLock && body[1].bTideLock)
   {
-    return fdSemiTidalLockBinEqSt(body,1,1);
+    return fdSemiTidalLockEqSt(body,1,1);
   }
   else
   {
     return 0.0;
   }
-}
-
-/*! Compute lost energy rate (tidal heating) for tidally locked binaries undergoing
- * magnetic braking and radius contraction
- */
-double fdLostEnergyTidalLockBinEqSt(BODY *body, int iNumLocked, int iBody, double aDot)
-{
-  double eDot = 0.0;
-  double R1dot, R2dot, Rdot, tmp;
-  double M = body[0].dMass + body[1].dMass;
-  SYSTEM *system; // Dummy system struct
-
-  return 0.0;
-
-  // Both tidally locked
-  if(iNumLocked > 1)
-  {
-    int iaBody[1] = {0};
-    R1dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    iaBody[0] = 1;
-    R2dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
-    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
-
-    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
-    eDot += tmp*aDot;
-
-    tmp = -body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot*BIGG*M/pow(body[1].dSemi,3);
-    tmp += -body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot*BIGG*M/pow(body[1].dSemi,3);
-    eDot += tmp;
-  }
-  // Just one (body[iBody]) is tidally locked
-  else if(iNumLocked == 1)
-  {
-    int iaBody[1] = {iBody};
-    Rdot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
-    tmp *= 3.0*BIGG*M/(2.0*pow(body[1].dSemi,4));
-
-    tmp -= BIGG*body[0].dMass*body[1].dMass/(2.0*body[1].dSemi*body[1].dSemi);
-    eDot += tmp*aDot;
-
-    tmp = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot*BIGG*M/pow(body[1].dSemi,3);
-    eDot += tmp;
-  }
-  else
-  {
-    eDot = 0.0;
-  }
-
-  return eDot;
-}
-
-/*! Derivative for lost energy rate (tidal heating) for tidally locked binaries undergoing
- * magnetic braking and radius contraction
- * TODO is the necessary?
- */
-double fdLostEngEqBinSt(BODY *body, SYSTEM *system, int *iaBody)
-{
-  double dEDot;
-
-  return 0.0;
-  // Compute change in semi-major axis
-  double aDot = fdSemiDtEqBinSt(body,system,iaBody);
-
-  // Both are tidally locked
-  if(body[0].bTideLock && body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,2,-1,aDot);
-  }
-  // Primary is tidally locked
-  else if(body[0].bTideLock && !body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,0,aDot);
-  }
-  // Secondary is tidally locked
-  else if(!body[0].bTideLock && body[1].bTideLock)
-  {
-    dEDot = fdLostEnergyTidalLockBinEqSt(body,1,1,aDot);
-  }
-  else
-  {
-    dEDot = 0.0;
-  }
-
-  return dEDot;
 }

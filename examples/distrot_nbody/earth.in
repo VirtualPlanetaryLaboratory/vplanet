@@ -1,5 +1,5 @@
 sName        Earth   
-saModules    distorb distrot
+saModules     distrot
 dMass        3.00316726e-06
 dRadius      -1.50
 dRotPeriod   -100
@@ -10,10 +10,13 @@ dInc         5e-5
 dLongP       102.94719
 dLongA       348.73936
 # bGRCorr      0
-saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA -TotEn -TotAngMom
+#saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
+saOutputOrder Time Obliq PrecA
 dDynEllip    3.28e-3
 dPrecA       0.0
-bForcePrecRate    0
+bForcePrecRate    1
 bCalcDynEllip    1
+bReadOrbitData  1
+sFileOrbitData orbit.dat
 #bOverrideMaxEcc  1
 #dHaltMaxEcc     0.4

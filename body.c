@@ -282,17 +282,23 @@ void CalcXYZobl(BODY *body, int iBody) {
 double CalcDynEllipEq(BODY *body, int iBody) {
   /* calculate equilibrium shape of planet using scaling laws and solar system values */
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
-  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
+  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip, dJ2;
 
-  EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
-  EdVenus = J2Venus/0.336;
   nuEarth = 2*PI/(DAYSEC);
+  dJ2 = J2Earth*pow(body[iBody].dRotRate/nuEarth,2)*pow(body[iBody].dRadius/REARTH,3)*MEARTH/body[iBody].dMass;
+  
+  if (dJ2 < J2Venus) dJ2 = J2Venus;
+  
+  dDynEllip = dJ2/body[iBody].dSpecMomInertia;
+  
+  // EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
+//   EdVenus = J2Venus/0.336;
+//   nuEarth = 2*PI/(DAYSEC);
+// 
+//   dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+// 
+//   dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
 
-  dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
-
-  dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
-
-  if (dDynEllip < EdVenus) dDynEllip = EdVenus;
 
   return dDynEllip;
 }

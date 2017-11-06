@@ -35,45 +35,23 @@ Minimum Value of ecc and obl: 0.000000
 ---- INITIAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 0.000000 
 (Time) Simulation Time [sec]: 0.000000 
-(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 1.475354e+42 
-(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.839366e+41 
-(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.839902e+41 
-(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 5.361320e+37 
-(DeltaTime) Average Timestep Over Last Output Interval [sec]: 0.000000 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 3.380078e+43 
+(TotEnergy) Total System Energy [kg*m^2/sec^2]: -7.839546e+41 
+(PotEnergy) Body's non-orbital Potential Energy [kg*m^2/sec^2]: -7.839908e+41 
+(KinEnergy) Body's non-orbital Kinetic Energy [kg*m^2/sec^2]: 5.361272e+37 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(Density) Average Density [kg/m^3]: 1.011156e+06 
 (LongP) Body's Longitude of pericenter [rad]: 3.926991 
-(LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: -1.000000 
+(LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 
 ----- BODY: Sun ----
 Active Modules: 
-Module Bit Sum: 0
+Module Bit Sum: 1
 Color: 000000
 (Mass) Mass [kg]: 1.988416e+30 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
-(Radius) Radius [m]: 2.019573e+08 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.474458e+42 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 5.361282e+37 
-(RotVel) Rotational Velocity [m/sec]: 1.468675e+04 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
-(HEcc) Poincare's h (=e*sin(varpi) []: -1.000000 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
-(KEcc) Poincare's k (=e*cos(varpi) []: -1.000000 
-(Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
-(OrbPeriod) Orbital Period [sec]: -1.000000 
-(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
-(ArgP) Body's argument of pericenter [rad]: 8.955210e+38 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(Radius) Radius [m]: 2.019571e+08 
+(BodyType) Type of Body (0 == planet) []: 1.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 Output Order:
 Grid Output Order:
 
@@ -82,44 +60,34 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 3.300865e+23 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 6.378100e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 2.441274e+32 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 8.876722e+27 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 8.876722e+27 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.178779 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.101597 
 (Eccentricity) Orbital Eccentricity []: 0.205631 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 8.266739e-07 
-(OrbPeriod) Orbital Period [sec]: 7.600561e+06 
-(SemiMajorAxis) Semi-major Axis [m]: 5.790923e+10 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -3.782352e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 8.266750e-07 
+(OrbPeriod) Orbital Period [sec]: 7.600551e+06 
+(SemiMajorAxis) Semi-major Axis [m]: 5.790918e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955206e+38 
 (ArgP) Body's argument of pericenter [rad]: 0.719181 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 3.782349e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -7.564698e+32 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -7.564705e+32 
 ----- DISTORB PARAMETERS (Mercury)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.110692 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.055318 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 0.334847 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.018179 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.052245 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -1.407237e-14 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -1.407237e-14 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -7.025409e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -8.064434e-13 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 8.119335e-13 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.798500e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.420342e-13 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -8.064434e-13 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 8.065459e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.743763e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.410710e-13 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -4.444169e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 8.024918e-15 
 Output Order:
@@ -137,53 +105,52 @@ Color: 000000
 (Zobl) Body's cos(obl) []: -0.998939 
 (Radius) Radius [m]: 6.058557e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.332762e+31 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.988617e+24 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.988617e+24 
 (RotVel) Rotational Velocity [m/sec]: 1.807997 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 2.984203e-07 
 (RotPer) Rotational Period [sec]: 2.105482e+07 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.006168 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.002799 
 (Eccentricity) Orbital Eccentricity []: 0.006773 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 3.236474e-07 
-(OrbPeriod) Orbital Period [sec]: 1.941368e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.082072e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.984500e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 3.236478e-07 
+(OrbPeriod) Orbital Period [sec]: 1.941365e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.082071e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 1.844247e+40 
 (ArgP) Body's argument of pericenter [rad]: 1.321611 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.984498e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.968996e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.969001e+33 
 ----- DISTORB PARAMETERS (Venus)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.038472 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.019235 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 0.675221 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.012023 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.015014 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 2.763617e-14 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 2.763617e-14 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.381553e-14 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.234276e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 2.912488e-14 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.372215e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.010915e-15 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.234276e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 2.910075e-14 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.372209e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.011066e-15 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.491009e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 3.764701e-14 
 -----DISTROT PARAMETERS (Venus)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.827122 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.562023 
 (DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -8.624704e-14 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: -6.350411e-12 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: -6.350411e-12 
 (DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: 1.688069e-13 
 (DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: -2.540631e-13 
 (DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -3.989500e-15 
 (OblTimeDistRot) Obliquity timescale in DistRot [rad]: 3.642551e+13 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 9.894139e+11 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 9.894139e+11 
 (XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 5.923929e+12 
 (YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.936030e+12 
 (ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.506580e+14 
 (DynEllip) dynamical ellipticity of planet []: 1.312500e-05 
+(PrecFNat) natural precession freq of planet [rad/sec]: -6.903590e-12 
 Output Order:
 Grid Output Order:
 
@@ -199,53 +166,52 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 0.917477 
 (Radius) Radius [m]: 6.378100e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.416473e+33 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.605875e+29 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.605875e+29 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.016655 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.001223 
 (Eccentricity) Orbital Eccentricity []: 0.016700 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.990984e-07 
-(OrbPeriod) Orbital Period [sec]: 3.155819e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.495980e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.648762e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.990986e-07 
+(OrbPeriod) Orbital Period [sec]: 3.155815e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.495979e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.660383e+40 
 (ArgP) Body's argument of pericenter [rad]: 3.068278 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.648760e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.297520e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.297525e+33 
 ----- DISTORB PARAMETERS (Earth)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.027029 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.013514 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 4.712417 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.013514 
-(Qinc) Body's q = s* cos(Omega) in DistOrb []: 3.838270e-07 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -2.729048e-14 
+(Qinc) Body's q = s* cos(Omega) in DistOrb []: 3.838294e-07 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -2.729048e-14 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -1.364399e-14 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.471380e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 1.753353e-12 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.471380e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 1.753337e-12 
 (DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.111473e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -3.017581e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -3.017556e-14 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 1.364305e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -3.339934e-14 
 -----DISTROT PARAMETERS (Earth)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.955573 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.294754 
-(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.186899e-14 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 7.712277e-12 
-(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -9.674425e-13 
-(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 2.912068e-12 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.186900e-14 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: 7.712277e-12 
+(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -9.674438e-13 
+(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 2.912067e-12 
 (DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: 2.858866e-14 
 (OblTimeDistRot) Obliquity timescale in DistRot [rad]: 4.371277e+13 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 8.146991e+11 
-(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 1.033653e+12 
-(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.433986e+11 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 8.146991e+11 
+(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 1.033652e+12 
+(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.433987e+11 
 (ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 3.497890e+13 
 (DynEllip) dynamical ellipticity of planet []: 0.003280 
+(PrecFNat) natural precession freq of planet [rad/sec]: 2.461564e-12 
 Output Order: Time[year] Eccentricity[] Inc[deg] ArgP[deg] LongA[deg] Obliquity[deg] PrecA[deg]
 Grid Output Order:
 
@@ -261,53 +227,52 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 0.904906 
 (Radius) Radius [m]: 3.393277e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.309224e+32 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 4.640184e+27 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 4.640184e+27 
 (RotVel) Rotational Velocity [m/sec]: 240.530700 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 7.088449e-05 
 (RotPer) Rotational Period [sec]: 8.863977e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: -0.061388 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.070409 
 (Eccentricity) Orbital Eccentricity []: 0.093412 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.058914e-07 
-(OrbPeriod) Orbital Period [sec]: 5.933612e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 2.278925e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.868255e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.058915e-07 
+(OrbPeriod) Orbital Period [sec]: 5.933604e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 2.278923e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 3.513190e+39 
 (ArgP) Body's argument of pericenter [rad]: 5.907990 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.868253e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.736506e+32 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.736510e+32 
 ----- DISTORB PARAMETERS (Mars)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.028935 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.014467 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.941325 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.004850 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.013630 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 1.354147e-14 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 1.354147e-14 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 6.770025e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.343479e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 2.440094e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 1.529073e-13 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 1.714660e-13 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.343479e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 2.438538e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 1.527977e-13 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 1.713704e-13 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -3.421059e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -4.987334e-15 
 -----DISTROT PARAMETERS (Mars)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.043216 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.999066 
 (DOblDtDistRot) Body's dobl/dt in DistRot [rad]: 1.061649e-14 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 1.312997e-12 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: 1.312997e-12 
 (DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -1.553705e-13 
 (DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 5.368803e-13 
 (DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -4.518507e-15 
 (OblTimeDistRot) Obliquity timescale in DistRot [rad]: 2.959163e+14 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 4.785377e+12 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 4.785377e+12 
 (XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 6.436227e+12 
 (YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 1.862613e+12 
 (ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.213120e+14 
 (DynEllip) dynamical ellipticity of planet []: 0.005363 
+(PrecFNat) natural precession freq of planet [rad/sec]: 1.166764e-12 
 Output Order:
 Grid Output Order:
 
@@ -316,44 +281,34 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 1.897947e+27 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 3.158315e+36 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.148396e+32 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.148396e+32 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: -0.002018 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.048351 
 (Eccentricity) Orbital Eccentricity []: 0.048393 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.678217e-08 
-(OrbPeriod) Orbital Period [sec]: 3.743965e+08 
-(SemiMajorAxis) Semi-major Axis [m]: 7.784127e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.617917e+35 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.678219e-08 
+(OrbPeriod) Orbital Period [sec]: 3.743960e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 7.784120e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 1.925876e+43 
 (ArgP) Body's argument of pericenter [rad]: 0.992728 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.617916e+35 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.235831e+35 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.235834e+35 
 ----- DISTORB PARAMETERS (Jupiter)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.005116 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.002558 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.248738 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.002199 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.001307 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -4.822150e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -4.822150e-15 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -2.411067e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -4.853188e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 9.710683e-13 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 4.528377e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 4.191675e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -4.853188e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 9.703825e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 4.525061e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 4.191537e-14 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -4.271384e-15 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -1.190342e-14 
 Output Order:
@@ -364,44 +319,34 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 5.682650e+26 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 6.378100e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.202810e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.528185e+31 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.528185e+31 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.052374 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.013758 
 (Eccentricity) Orbital Eccentricity []: 0.054151 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 6.760934e-09 
-(OrbPeriod) Orbital Period [sec]: 9.293368e+08 
-(SemiMajorAxis) Semi-major Axis [m]: 1.426727e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.642970e+34 
+(MeanMotion) Orbital Mean Motion [/sec]: 6.760943e-09 
+(OrbPeriod) Orbital Period [sec]: 9.293356e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 1.426725e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 7.806875e+42 
 (ArgP) Body's argument of pericenter [rad]: 5.726604 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.642968e+34 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.285935e+34 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.285940e+34 
 ----- DISTORB PARAMETERS (Saturn)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.016797 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.008399 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 1.870499 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.008024 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.002480 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 2.511434e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 2.511434e-15 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.255673e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -3.724858e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 2.509994e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -5.045260e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.537818e-13 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -3.724858e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 2.509991e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -5.045264e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.537816e-13 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 1.043570e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 2.951825e-14 
 Output Order:
@@ -412,42 +357,32 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 8.680213e+25 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.444447e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 5.252159e+30 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 5.252159e+30 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.020807 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.042330 
 (Eccentricity) Orbital Eccentricity []: 0.047168 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 5.770915e-10 
-(OrbPeriod) Orbital Period [sec]: 1.088768e+10 
-(SemiMajorAxis) Semi-major Axis [m]: 7.358915e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -7.827060e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 5.770922e-10 
+(OrbPeriod) Orbital Period [sec]: 1.088766e+10 
+(SemiMajorAxis) Semi-major Axis [m]: 7.358908e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.709566e+42 
 (ArgP) Body's argument of pericenter [rad]: 3.821392 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 7.827054e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.565411e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.565412e+33 
 ----- DISTORB PARAMETERS (George)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.017359 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.008680 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.146524 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.007874 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.003651 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 2.142598e-16 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 2.142598e-16 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.071259e-16 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -4.131562e-14 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 3.210601e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -4.131562e-14 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 3.210601e-14 
 (DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.437466e-15 
 (DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -5.085200e-16 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.480250e-16 
@@ -460,44 +395,34 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 1.023948e+26 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.703920e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 6.195627e+30 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 6.195627e+30 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.004006 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.007594 
 (Eccentricity) Orbital Eccentricity []: 0.008586 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.207538e-09 
-(OrbPeriod) Orbital Period [sec]: 5.203304e+09 
-(SemiMajorAxis) Semi-major Axis [m]: 4.498257e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.955210e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.510482e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.207539e-09 
+(OrbPeriod) Orbital Period [sec]: 5.203297e+09 
+(SemiMajorAxis) Semi-major Axis [m]: 4.498253e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.501661e+42 
 (ArgP) Body's argument of pericenter [rad]: 3.708903 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.510481e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.020962e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.020964e+33 
 ----- DISTORB PARAMETERS (Neptune)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.012883 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.006442 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 3.059750 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.000527 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.006420 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 4.061048e-17 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 4.061048e-17 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 2.030482e-17 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -8.694293e-14 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 5.107572e-14 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.387691e-16 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.500462e-16 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -8.694293e-14 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 5.107520e-14 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.387651e-16 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.500483e-16 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 5.598369e-16 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 2.554835e-17 
 Output Order:
@@ -508,45 +433,23 @@ Grid Output Order:
 ---- FINAL SYSTEM PROPERTIES ----
 (Age) System Age [sec]: 3.155760e+10 
 (Time) Simulation Time [sec]: 3.155760e+10 
-(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 1.475354e+42 
-(TotEnergy) Total Energy [kg*m^2/sec^2]: -7.839366e+41 
-(PotEnergy) Total Potential Energy [kg*m^2/sec^2]: -7.839902e+41 
-(KinEnergy) Total Kinetic Energy [kg*m^2/sec^2]: 5.361320e+37 
-(DeltaTime) Average Timestep Over Last Output Interval [sec]: inf 
+(TotAngMom) Total Angular Momentum [kg*m^2/sec]: 3.380078e+43 
+(TotEnergy) Total System Energy [kg*m^2/sec^2]: -7.839546e+41 
+(PotEnergy) Body's non-orbital Potential Energy [kg*m^2/sec^2]: -7.839908e+41 
+(KinEnergy) Body's non-orbital Kinetic Energy [kg*m^2/sec^2]: 5.361272e+37 
+(DeltaTime) Average Timestep Over Last Output Interval [sec]: 1.051920e+10 
+(Density) Average Density [kg/m^3]: 1.011156e+06 
 (LongP) Body's Longitude of pericenter [rad]: 3.926991 
-(LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: -1.000000 
+(LXUVTot) Total XUV Luminosity [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 
 ----- BODY: Sun ----
 Active Modules: 
-Module Bit Sum: 0
+Module Bit Sum: 1
 Color: 000000
 (Mass) Mass [kg]: 1.988416e+30 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
-(Radius) Radius [m]: 2.019573e+08 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.474458e+42 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 5.361282e+37 
-(RotVel) Rotational Velocity [m/sec]: 1.468675e+04 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
-(HEcc) Poincare's h (=e*sin(varpi) []: -1.000000 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
-(KEcc) Poincare's k (=e*cos(varpi) []: -1.000000 
-(Eccentricity) Orbital Eccentricity []: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: -1.000000 
-(OrbPeriod) Orbital Period [sec]: -1.000000 
-(SemiMajorAxis) Semi-major Axis [m]: -1.000000 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 8.954831e+38 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: -1.000000 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(Radius) Radius [m]: 2.019571e+08 
+(BodyType) Type of Body (0 == planet) []: 1.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 Output Order:
 Grid Output Order:
 
@@ -555,46 +458,36 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 3.300865e+23 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 6.378100e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 2.441274e+32 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 8.876722e+27 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 8.876722e+27 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
-(HEcc) Poincare's h (=e*sin(varpi) []: 0.181697 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
-(KEcc) Poincare's k (=e*cos(varpi) []: 0.096701 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: 0.181680 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.096732 
 (Eccentricity) Orbital Eccentricity []: 0.205827 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 8.266739e-07 
-(OrbPeriod) Orbital Period [sec]: 7.600561e+06 
-(SemiMajorAxis) Semi-major Axis [m]: 5.790923e+10 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 0.772435 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 3.782349e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -7.564698e+32 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -3.782352e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 8.266750e-07 
+(OrbPeriod) Orbital Period [sec]: 7.600551e+06 
+(SemiMajorAxis) Semi-major Axis [m]: 5.790918e+10 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954827e+38 
+(ArgP) Body's argument of pericenter [rad]: 0.772265 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -7.564705e+32 
 ----- DISTORB PARAMETERS (Mercury)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.110257 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.055100 
-(LongA) Body's Longitude of ascending node in DistOrb [rad]: 0.309276 
+(LongA) Body's Longitude of ascending node in DistOrb [rad]: 0.309277 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.016771 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.052486 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -1.349222e-14 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -6.735862e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -8.141609e-13 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 8.104936e-13 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.379155e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.443818e-13 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -4.478233e-14 
-(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 7.237905e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -1.349223e-14 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -6.735866e-15 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -8.141221e-13 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 8.051060e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.329529e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.433885e-13 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -4.478030e-14 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 7.237278e-15 
 Output Order:
 Grid Output Order:
 
@@ -610,53 +503,52 @@ Color: 000000
 (Zobl) Body's cos(obl) []: -0.999062 
 (Radius) Radius [m]: 6.058557e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.332762e+31 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.988617e+24 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.988617e+24 
 (RotVel) Rotational Velocity [m/sec]: 1.807997 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 2.984203e-07 
 (RotPer) Rotational Period [sec]: 2.105482e+07 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.005751 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.002600 
 (Eccentricity) Orbital Eccentricity []: 0.006311 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 3.236474e-07 
-(OrbPeriod) Orbital Period [sec]: 1.941368e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.082072e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 1.390399 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.984498e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.968996e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.984500e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 3.236478e-07 
+(OrbPeriod) Orbital Period [sec]: 1.941365e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.082071e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 1.844252e+40 
+(ArgP) Body's argument of pericenter [rad]: 1.390400 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.969001e+33 
 ----- DISTORB PARAMETERS (Venus)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.039326 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.019662 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 0.604965 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.011182 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.016172 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 2.648566e-14 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.324027e-14 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.218657e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: -1.250555e-13 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.270501e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.609584e-15 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.835060e-14 
-(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 3.570020e-14 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 2.648564e-14 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.324026e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.218660e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: -1.249913e-13 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.270541e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.609329e-15 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.835065e-14 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 3.570022e-14 
 -----DISTROT PARAMETERS (Venus)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.652379 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.757893 
-(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.660199e-14 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: -5.900405e-12 
-(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: 1.068002e-13 
-(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: -2.773510e-13 
-(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -3.745712e-15 
-(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 4.101189e+13 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 1.064874e+12 
-(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 9.363277e+12 
-(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.605539e+12 
-(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.669719e+14 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.660205e-14 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: -5.900403e-12 
+(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: 1.068003e-13 
+(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: -2.773509e-13 
+(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -3.745715e-15 
+(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 4.101186e+13 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 1.064874e+12 
+(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 9.363272e+12 
+(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.605541e+12 
+(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.669717e+14 
 (DynEllip) dynamical ellipticity of planet []: 1.312500e-05 
+(PrecFNat) natural precession freq of planet [rad/sec]: -6.904378e-12 
 Output Order:
 Grid Output Order:
 
@@ -667,58 +559,57 @@ Color: 000000
 (Mass) Mass [kg]: 5.971546e+24 
 (Obliquity) Obliquity [rad]: 0.406847 
 (PrecA) Body's precession angle [rad]: 0.543056 
-(Xobl) Body's sin(obl)*cos(pA) []: 0.338786 
+(Xobl) Body's sin(obl)*cos(pA) []: 0.338785 
 (Yobl) Body's sin(obl)*sin(pA) []: 0.204488 
 (Zobl) Body's cos(obl) []: 0.918373 
 (Radius) Radius [m]: 6.378100e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.416473e+33 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.605875e+29 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.605875e+29 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 7.272205e-05 
 (RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.016267 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.000287 
 (Eccentricity) Orbital Eccentricity []: 0.016269 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.990984e-07 
-(OrbPeriod) Orbital Period [sec]: 3.155819e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.495980e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 3.202534 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.648760e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.297520e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.648762e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.990986e-07 
+(OrbPeriod) Orbital Period [sec]: 3.155815e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.495979e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.660402e+40 
+(ArgP) Body's argument of pericenter [rad]: 3.202533 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.297525e+33 
 ----- DISTORB PARAMETERS (Earth)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.026169 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.013084 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 4.633818 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.013044 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.001027 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -2.723796e-14 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -1.361782e-14 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.510635e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 1.774027e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.348135e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -2.910454e-14 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 1.615416e-14 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -2.723794e-14 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -1.361780e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.510635e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 1.774040e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.348132e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -2.910475e-14 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 1.615415e-14 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -3.167903e-14 
 -----DISTROT PARAMETERS (Earth)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.894083 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.447901 
-(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.093446e-14 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 7.738739e-12 
-(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -1.638251e-12 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: -7.093444e-14 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: 7.738739e-12 
+(DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -1.638252e-12 
 (DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 2.588109e-12 
 (DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: 2.806988e-14 
-(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 4.428867e+13 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 8.119133e+11 
-(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 6.104070e+11 
-(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.863824e+11 
-(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 3.562537e+13 
+(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 4.428868e+13 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 8.119133e+11 
+(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 6.104065e+11 
+(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 3.863825e+11 
+(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 3.562538e+13 
 (DynEllip) dynamical ellipticity of planet []: 0.003280 
+(PrecFNat) natural precession freq of planet [rad/sec]: 2.463915e-12 
 Output Order: Time[year] Eccentricity[] Inc[deg] ArgP[deg] LongA[deg] Obliquity[deg] PrecA[deg]
 Grid Output Order:
 
@@ -734,53 +625,52 @@ Color: 000000
 (Zobl) Body's cos(obl) []: 0.904779 
 (Radius) Radius [m]: 3.393277e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.309224e+32 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 4.640184e+27 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 4.640184e+27 
 (RotVel) Rotational Velocity [m/sec]: 240.530700 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (RotRate) Rotational Frequency [/sec]: 7.088449e-05 
 (RotPer) Rotational Period [sec]: 8.863977e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
-(HEcc) Poincare's h (=e*sin(varpi) []: -0.056345 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
-(KEcc) Poincare's k (=e*cos(varpi) []: 0.075623 
+(HEcc) Poincare's h (=e*sin(varpi) []: -0.056349 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
+(KEcc) Poincare's k (=e*cos(varpi) []: 0.075621 
 (Eccentricity) Orbital Eccentricity []: 0.094306 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.058914e-07 
-(OrbPeriod) Orbital Period [sec]: 5.933612e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 2.278925e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 6.059021 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.868253e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.736506e+32 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.868255e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.058915e-07 
+(OrbPeriod) Orbital Period [sec]: 5.933604e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 2.278923e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 3.512893e+39 
+(ArgP) Body's argument of pericenter [rad]: 6.058971 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.736510e+32 
 ----- DISTORB PARAMETERS (Mars)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.029361 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.014680 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.867010 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.005935 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.013427 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 1.346393e-14 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 6.731239e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -2.366678e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 2.422016e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 1.665034e-13 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 1.588254e-13 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -3.449877e-14 
-(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -7.888793e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 1.346406e-14 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 6.731303e-15 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -2.366682e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 2.420440e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 1.663759e-13 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 1.587454e-13 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -3.449886e-14 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -7.888766e-15 
 -----DISTROT PARAMETERS (Mars)------
 (CassiniOne) First Cassini parameter (misalignment of Cassini state vectors) []: 0.075965 
 (CassiniTwo) Second Cassini parameter (alignment of Cassini state vectors []: 0.997110 
-(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: 8.164916e-15 
-(DPrecADtDistRot) Body's dpA/dt in DistRot [rad]: 1.317266e-12 
+(DOblDtDistRot) Body's dobl/dt in DistRot [rad]: 8.165028e-15 
+(DPrecADtDistRot) Body's dpA/dt in DistRot [rad/sec]: 1.317266e-12 
 (DXoblDtDistRot) Body's dXobl/dt in DistRot [/sec]: -1.803291e-13 
-(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 5.312772e-13 
-(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -3.477283e-15 
-(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 3.847673e+14 
-(PrecATimeDistRot) Axial precession timescale in DistRot [rad]: 4.769869e+12 
-(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 5.545416e+12 
-(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 1.882257e+12 
-(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.875808e+14 
+(DYoblDtDistRot) Body's dYobl/dt in DistRot [/sec]: 5.312773e-13 
+(DZoblDtDistRot) Body's dZobl/dt in DistRot [/sec]: -3.477331e-15 
+(OblTimeDistRot) Obliquity timescale in DistRot [rad]: 3.847620e+14 
+(PrecATimeDistRot) Axial precession timescale in DistRot [sec]: 4.769868e+12 
+(XoblTimeDistRot) Xobl timescale in DistRot [/sec]: 5.545418e+12 
+(YoblTimeDistRot) Yobl timescale in DistRot [/sec]: 1.882256e+12 
+(ZoblTimeDistRot) Zobl timescale in DistRot [/sec]: 2.875769e+14 
 (DynEllip) dynamical ellipticity of planet []: 0.005363 
+(PrecFNat) natural precession freq of planet [rad/sec]: 1.166897e-12 
 Output Order:
 Grid Output Order:
 
@@ -789,45 +679,35 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 1.897947e+27 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 3.158315e+36 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.148396e+32 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.148396e+32 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
-(HEcc) Poincare's h (=e*sin(varpi) []: -0.000510 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
+(HEcc) Poincare's h (=e*sin(varpi) []: -0.000511 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.049625 
 (Eccentricity) Orbital Eccentricity []: 0.049628 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.678217e-08 
-(OrbPeriod) Orbital Period [sec]: 3.743965e+08 
-(SemiMajorAxis) Semi-major Axis [m]: 7.784127e+11 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
-(ArgP) Body's argument of pericenter [rad]: 1.180195 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.617916e+35 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.235831e+35 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.617917e+35 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.678219e-08 
+(OrbPeriod) Orbital Period [sec]: 3.743960e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 7.784120e+11 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 1.925760e+43 
+(ArgP) Body's argument of pericenter [rad]: 1.180174 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.235834e+35 
 ----- DISTORB PARAMETERS (Jupiter)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.004974 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.002487 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.092711 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.002309 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.000923 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: -4.159867e-15 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -2.079927e-15 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -5.034559e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 1.020459e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 5.024721e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 3.875648e-14 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.716584e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: -4.159875e-15 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: -2.079931e-15 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -5.034559e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 1.019756e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 5.021145e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 3.875738e-14 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.716580e-15 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -1.239806e-14 
 Output Order:
 Grid Output Order:
@@ -837,45 +717,35 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 5.682650e+26 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 6.378100e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 4.202810e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 1.528185e+31 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 1.528185e+31 
 (RotVel) Rotational Velocity [m/sec]: 463.828521 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.050529 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.009028 
 (Eccentricity) Orbital Eccentricity []: 0.051330 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 6.760934e-09 
-(OrbPeriod) Orbital Period [sec]: 9.293368e+08 
-(SemiMajorAxis) Semi-major Axis [m]: 1.426727e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -2.642970e+34 
+(MeanMotion) Orbital Mean Motion [/sec]: 6.760943e-09 
+(OrbPeriod) Orbital Period [sec]: 9.293356e+08 
+(SemiMajorAxis) Semi-major Axis [m]: 1.426725e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 7.808040e+42 
 (ArgP) Body's argument of pericenter [rad]: 5.924213 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 2.642968e+34 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -5.285935e+34 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -5.285940e+34 
 ----- DISTORB PARAMETERS (Saturn)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.016865 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.008433 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 1.752963 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.008293 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.001528 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 1.823248e-15 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 9.115918e-16 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -3.725178e-12 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 2.566537e-12 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -6.628988e-14 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.456694e-13 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 6.587344e-15 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 1.823227e-15 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 9.115812e-16 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -3.725178e-12 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 2.566575e-12 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -6.628998e-14 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -1.456714e-13 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 6.587334e-15 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 3.072817e-14 
 Output Order:
 Grid Output Order:
@@ -885,44 +755,34 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 8.680213e+25 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.444447e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 5.252159e+30 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 5.252159e+30 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.020762 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: -0.042346 
 (Eccentricity) Orbital Eccentricity []: 0.047162 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 5.770915e-10 
-(OrbPeriod) Orbital Period [sec]: 1.088768e+10 
-(SemiMajorAxis) Semi-major Axis [m]: 7.358915e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -7.827060e+32 
+(MeanMotion) Orbital Mean Motion [/sec]: 5.770922e-10 
+(OrbPeriod) Orbital Period [sec]: 1.088766e+10 
+(SemiMajorAxis) Semi-major Axis [m]: 7.358908e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.709567e+42 
 (ArgP) Body's argument of pericenter [rad]: 3.823707 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 7.827054e+32 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -1.565411e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.565412e+33 
 ----- DISTORB PARAMETERS (George)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.017366 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.008683 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 5.145221 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: -0.007882 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: 0.003642 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 2.078938e-16 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 2.078937e-16 
 (DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 1.039430e-16 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -4.125815e-14 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 3.202818e-14 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -4.125815e-14 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 3.202819e-14 
 (DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: -1.433236e-15 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -5.079977e-16 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: -5.079984e-16 
 (DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: -2.446185e-16 
 (DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: -2.816050e-16 
 Output Order:
@@ -933,47 +793,38 @@ Active Modules: DISTORB
 Module Bit Sum: 17
 Color: 000000
 (Mass) Mass [kg]: 1.023948e+26 
-(Obliquity) Obliquity [rad]: 2.186276 
-(PrecA) Body's precession angle [rad]: 3.926991 
-(Xobl) Body's sin(obl)*cos(pA) []: -1.000000 
-(Yobl) Body's sin(obl)*sin(pA) []: -1.000000 
-(Zobl) Body's cos(obl) []: -1.000000 
 (Radius) Radius [m]: 9.567150e+06 
-(RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 1.703920e+35 
-(RotKinEnergy) Rotational Energy [kg*m^2/sec^2]: 6.195627e+30 
+(RotKinEnergy) Body's Rotational Energy [kg*m^2/sec^2]: 6.195627e+30 
 (RotVel) Rotational Velocity [m/sec]: 695.742781 
-(BodyType) Type of Body (0 == planet) []: -1.000000 
-(RotRate) Rotational Frequency [/sec]: 7.272205e-05 
-(RotPer) Rotational Period [sec]: 8.640000e+04 
-(SurfEnFluxTotal) Total Surface Energy Flux [kg*m^2/sec^2/(m^2*sec)]: 0.000000 
+(BodyType) Type of Body (0 == planet) []: 0.000000 
 (HEcc) Poincare's h (=e*sin(varpi) []: 0.004034 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 0.000000 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: -1.000000 
 (KEcc) Poincare's k (=e*cos(varpi) []: 0.007614 
 (Eccentricity) Orbital Eccentricity []: 0.008617 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
-(MeanMotion) Orbital Mean Motion [/sec]: 1.207538e-09 
-(OrbPeriod) Orbital Period [sec]: 5.203304e+09 
-(SemiMajorAxis) Semi-major Axis [m]: 4.498257e+12 
-(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 8.954831e+38 
+(OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: -1.510482e+33 
+(MeanMotion) Orbital Mean Motion [/sec]: 1.207539e-09 
+(OrbPeriod) Orbital Period [sec]: 5.203297e+09 
+(SemiMajorAxis) Semi-major Axis [m]: 4.498253e+12 
+(OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 2.501660e+42 
 (ArgP) Body's argument of pericenter [rad]: 3.713401 
-(OrbKinEnergy) Orbital Kinetic Energy [kg*m^2/sec^2]: 1.510481e+33 
-(OrbPotEnergy) Orbital Potential Energy [kg*m^2/sec^2]: -3.020962e+33 
-(OrbEnergy) Orbital Energy [kg*m^2/sec^2]: -3.782349e+32 
+(TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -1.967129e+35 
+(OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -3.020964e+33 
 ----- DISTORB PARAMETERS (Neptune)------
 (Inc) Body's Inclination in DistOrb [rad]: 0.012885 
 (Sinc) Body's sin(1/2*Inclination) in DistOrb []: 0.006442 
 (LongA) Body's Longitude of ascending node in DistOrb [rad]: 3.056958 
 (Pinc) Body's p = s*sin(Omega) in DistOrb []: 0.000545 
 (Qinc) Body's q = s* cos(Omega) in DistOrb []: -0.006419 
-(DIncDtDistOrb) Body's dInc/dt in DistOrb [/sec]: 5.462616e-17 
-(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 2.731251e-17 
-(DLongADtDistOrb) Body's dOmega/dt in DistOrb [/sec]: -8.998602e-14 
-(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [/sec]: 5.708586e-14 
-(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.918637e-16 
-(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.327740e-16 
-(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 5.799559e-16 
-(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 2.179116e-17 
+(DIncDtDistOrb) Body's dInc/dt in DistOrb [rad/sec]: 5.462627e-17 
+(DSincDtDistOrb) Body's dsin(.5*Inc)/dt in DistOrb [/sec]: 2.731257e-17 
+(DLongADtDistOrb) Body's dOmega/dt in DistOrb [rad/sec]: -8.998602e-14 
+(DLongPDtDistOrb) Body's dvarpi/dt in DistOrb [rad/sec]: 5.708572e-14 
+(DHeccDtDistOrb) Body's dh/dt in DistOrb [/sec]: 8.918601e-16 
+(DKeccDtDistOrb) Body's dk/dt in DistOrb [/sec]: 6.327697e-16 
+(DPincDtDistOrb) Body's dp/dt in DistOrb [/sec]: 5.799558e-16 
+(DQincDtDistOrb) Body's dq/dt in DistOrb [/sec]: 2.179111e-17 
 Output Order:
 Grid Output Order:
 
-Runtime = 2.000000 s
+Runtime = 1.000000 s
+Total Number of Steps = 3

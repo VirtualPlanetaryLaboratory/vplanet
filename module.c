@@ -121,6 +121,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateAngMX = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL = malloc(iNumBodies*sizeof(fnFinalizeUpdateMeanLModule));
 
   module->fnFinalizeUpdatePositionX = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionXModule));
   module->fnFinalizeUpdatePositionY = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionYModule));
@@ -172,6 +173,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bFlare)
     iNumModules++;
   if (body[iBody].bGalHabit)
+    iNumModules++;
+  if (body[iBody].bDistRes)
     iNumModules++;
   if (body[iBody].bSpiNBody)
     iNumModules++;
@@ -247,6 +250,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateAngMX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMeanLModule));
 
   module->fnFinalizeUpdatePositionX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionXModule));
   module->fnFinalizeUpdatePositionY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionYModule));
@@ -318,6 +322,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMeanL[iBody][iModule] = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdatePositionX[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePositionY[iBody][iModule] = &FinalizeUpdateNULL;
@@ -376,6 +381,10 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleGalHabit(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
+  if (body[iBody].bDistRes) {
+    AddModuleDistRes(module,iBody,iModule);
+    module->iaModule[iBody][iModule++] = DISTRES;
+  }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = SPINBODY;
@@ -422,7 +431,7 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
         body[iFile-1].bDistOrb = 1;
 	module->iBitSum[iFile-1] += DISTORB;
-      } else if (memcmp(sLower(saTmp[iModule]),"distrot",6) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"distrot",7) == 0) {
         body[iFile-1].bDistRot = 1;
 	module->iBitSum[iFile-1] += DISTROT;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
@@ -443,9 +452,12 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
 	body[iFile-1].bFlare = 1;
 	module->iBitSum[iFile-1] += FLARE;
-      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",5) == 0) {
+      } else if (memcmp(sLower(saTmp[iModule]),"galhabit",8) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
+      } else if (memcmp(sLower(saTmp[iModule]),"distres",7) == 0) {
+        body[iFile-1].bDistRes = 1;
+	module->iBitSum[iFile-1] += DISTRES;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
   body[iFile-1].bSpiNBody = 1;
   module->iBitSum[iFile-1] += SPINBODY;
@@ -508,6 +520,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bRadheat = 0;
       (*body)[iBody].bStellar = 0;
       (*body)[iBody].bThermint = 0;
+      (*body)[iBody].bDistRes = 0;
       (*body)[iBody].bSpiNBody = 0;
   }
 }
@@ -521,8 +534,27 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,
 
   if (body[iBody].bDistRot) {
     if (!body[iBody].bDistOrb) {
-      fprintf(stderr,"ERROR: Module DISTROT selected for %s, but DISTORB not selected.\n",body[iBody].cName);
-      exit(EXIT_INPUT);
+      if (!body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Module DISTROT selected for %s, but DISTORB not selected and bReadOrbitData = 0.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
+    } else {
+      if (body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Cannot set both DISTORB and bReadOrbitData for body %s.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
+    }
+  }
+}
+
+void VerifyModuleMultiEqtideDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+
+  if (body[iBody].bDistRot) {
+    if (body[iBody].bEqtide) {
+      if (body[iBody].bReadOrbitData) {
+        fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
+        exit(EXIT_INPUT);
+      }
     }
   }
 }
@@ -1024,7 +1056,9 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,F
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
-void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody, fnUpdateVariable ****fnUpdate) {
+
+void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
+
   int iNumMultiProps=0,iNumMultiForce=0;
 
   if (module->iNumModules[iBody] > 0) {
@@ -1037,7 +1071,10 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
   /* Now verify. Even if only module is called, we still need to call
      these functions as some default behavior is set if other modules aren't
      called. */
+
   VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1214,6 +1251,9 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
+    if (body[1].bDistRes) {
+      RecalcLaplaceDistRes(body,evolve,system,io->iVerbose);
+    }
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   };

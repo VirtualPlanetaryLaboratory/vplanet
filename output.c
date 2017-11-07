@@ -978,7 +978,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + SPINBODY;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
 
   /*
@@ -1601,6 +1601,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
               WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
               WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
                           WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+	                WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
           }
@@ -1630,17 +1631,17 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                 fp = fopen(cLaplaceFunc,"a");
               }
               if (body[iBody].dSemi < body[jBody].dSemi) {
-                for (j=0;j<LAPLNUM;j++) {
+                for (j=0;j<26;j++) {
                   /* output alpha, laplace func, derivatives for each internal/external pair.
                   external/internal pairs are duplicates and so not output. this can create a
                   large amount of data for systems with lots of planets (78 columns/planet pair) */
-                  fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                  fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                  fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                  fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                   fprintf(fp," ");
                 }
               }
@@ -1660,13 +1661,13 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                     /* output alpha, laplace func, derivatives for each internal/external pair.
                     external/internal pairs are duplicates and so not output. this can create a
                     large amount of data for systems with lots of planets (78 columns/planet pair) */
-                    fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                    fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                    fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                    fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                     fprintf(fp," ");
                   }
                 }
@@ -1678,6 +1679,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
+  
+  if (control->bOutputEigen) {
+    if (body[1].bDistOrb) {
+      if (control->Evolve.iDistOrbModel == RD4) {
+         SolveEigenVal(body,&control->Evolve,system);
+      }
+      WriteEigen(control,system);
+    }
+  }
+      
 }
 
 void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
@@ -1723,6 +1734,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
+  InitializeOutputDistRes(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
 
 }

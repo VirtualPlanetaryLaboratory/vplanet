@@ -24,7 +24,7 @@ bIceSheets       1
 dInitIceLat      90.
 dInitIceHeight   0.
 #bHadley          1
-dDiffusion        0.5
+dDiffusion        0.44
 #dPlanckA          185
 #dPlanckB         2.09
 bCalcAB          1
@@ -36,10 +36,9 @@ iNumYears         4
 iNStepInYear      60
 bSeaIceModel      0
 dIceDepRate       3e-5
-dIceAlbedo        0.6
-dAlbedoLand       0.4
+dIceAlbedo        0.65
+dAlbedoLand       0.35
 dAlbedoWater      0.3
 iIceDt             5
 iReRunSeas         500
 iAlbedoType        fix
-iGeography         modn

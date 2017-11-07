@@ -2606,6 +2606,25 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
+void ReadSpecMomInertia(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    
+    body[iFile-1].dSpecMomInertia = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSpecMomInertia = options->dDefault;
+//     AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
+    
+}
+
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
   int iOpt,iFile;
@@ -3269,6 +3288,15 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROTVEL].dNeg = 1e5;
   sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   fnRead[OPT_ROTVEL] = &ReadRotVel;
+  
+    
+  sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
+  sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
+  sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
+  options[OPT_SPECMOMINERTIA].dDefault = 0.33;
+  options[OPT_SPECMOMINERTIA].iType = 2;  
+  options[OPT_SPECMOMINERTIA].iMultiFile = 1;   
+  fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
 
   /*
    *
@@ -3398,6 +3426,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsDistRes(options,fnRead);
   InitializeOptionsSpiNBody(options,fnRead);
 
 }

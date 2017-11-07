@@ -556,7 +556,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     }
 
     VerifyInterior(body,options,iBody);
-
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 

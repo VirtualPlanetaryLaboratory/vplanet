@@ -32,7 +32,7 @@ double fdSemiToPeriod(double dSemi,double dMass) {
 
 /* Convert semi-major axis to mean motion */
 double fdSemiToMeanMotion(double dSemi,double dMass) {
-  return pow(BIGG*dMass/pow(dSemi,3),0.5);
+  return pow(BIGG*dMass/(dSemi*dSemi*dSemi),0.5);
 }
 
 /*
@@ -100,14 +100,14 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   // Added the vectorized components of total angular momentum for SpiNBody
   double daOrbTot[] = {0.0,0.0,0.0};
   double *pdaTmp;
-  int iBody;
+  int iBody, i;
 
   // Add all rotational, orbital angular momentum, angular momentum lost
     //SpiNBody has direct x,y,z components for position and velocity
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
     if (body[iBody].bSpiNBody){
       pdaTmp = fdOrbAngMom(body,iBody);
-      for (int i=0; i<3; i++){
+      for (i=0; i<3; i++){
         daOrbTot[i] += *(pdaTmp+i);
       }
       dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
@@ -138,12 +138,13 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 /*! Compute orbital potential energy neglecting planet-planet potential energy */
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
-
+  int i;
+  
   if (body[iBody].bSpiNBody && iBody>0){
     double PotEnergy = 0;
     //For SpiNBody, find the heliocentric distance then return the potential.
     //This ignores planet-planet potential.
-    for (int i = 0; i < control->Evolve.iNumBodies; i++) {
+    for (i = 0; i < control->Evolve.iNumBodies; i++) {
       if (i!=iBody){
         double Distance = sqrt((body[iBody].dPositionX-body[i].dPositionX)*(body[iBody].dPositionX-body[i].dPositionX)
             +(body[iBody].dPositionY-body[i].dPositionY)*(body[iBody].dPositionY-body[i].dPositionY)

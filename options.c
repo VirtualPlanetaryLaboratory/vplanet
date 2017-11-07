@@ -1925,7 +1925,6 @@ void ReadMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
 }
 
 /* Mass-Radius relationship */
-
 void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with Radius, Density and Mass */

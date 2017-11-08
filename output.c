@@ -1,4 +1,3 @@
- 
 /************************ OUTPUT.C **********************/
 /*
  * Rory Barnes, Wed May  7 16:38:28 PDT 2014
@@ -62,6 +61,20 @@ void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     fsUnitsTime(units->iTime,cUnit);
   }
 }
+
+void WriteDensity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = fdSphereDensity(body[iBody].dMass,body[iBody].dRadius);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= pow(fdUnitsLength(units->iLength),3)/fdUnitsMass(units->iLength);
+    fsUnitsDensity(units,cUnit);
+  }
+}
+
 
 /*
  * H
@@ -250,7 +263,7 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
 
-  *dTmp = fdOrbAngMom(body);
+  *dTmp = fdOrbAngMom(body,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -284,9 +297,23 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   sprintf(cUnit,"");
 }
 
+void WriteLostEng(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dLostEng;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergy(units,cUnit);
+  }
+}
+
 void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdOrbEnergy(body,iBody);
+  *dTmp = fdOrbEnergy(body,control,system,iBody);
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -517,7 +544,20 @@ void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteTotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdTotAngMom(body);
+  *dTmp = fdTotAngMom(body,control,system);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime)/(fdUnitsMass(units->iMass)*fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength));
+    fsUnitsAngMom(units,cUnit);
+  }
+}
+
+void WriteLostAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dLostAngMom;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -530,7 +570,7 @@ void WriteTotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteTotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdTotEnergy(body);
+  *dTmp = fdTotEnergy(body,control,system);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -543,7 +583,7 @@ void WriteTotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WritePotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdPotEnergy(body);
+  *dTmp = fdPotEnergy(body,control,system,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -556,7 +596,7 @@ void WritePotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteKinEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = fdKinEnergy(body);
+  *dTmp = fdKinEnergy(body,control,system,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -569,10 +609,7 @@ void WriteKinEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbKinEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (iBody > 0)
-    *dTmp = fdOrbKinEnergy(body[0].dMass,body[iBody].dMass,body[iBody].dSemi);
-  else
-    *dTmp = -1;
+  *dTmp = fdOrbKinEnergy(body,control,system,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -586,7 +623,7 @@ void WriteOrbKinEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   if (iBody > 0)
-    *dTmp = fdOrbPotEnergy(body[0].dMass,body[iBody].dMass,body[iBody].dSemi);
+    *dTmp = fdOrbPotEnergy(body,control,system,iBody);
   else
     *dTmp = -1;
 
@@ -690,6 +727,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DT].iNum = 1;
   output[OUT_DT].iModuleBit = 1;
   fnWrite[OUT_DT] = &WriteDeltaTime;
+
+  sprintf(output[OUT_DENSITY].cName,"Density");
+  sprintf(output[OUT_DENSITY].cDescr,"Average Density");
+  sprintf(output[OUT_DENSITY].cNeg,"solar");
+  output[OUT_DENSITY].bNeg = 1;
+  output[OUT_DENSITY].dNeg = 1./1420;  // kg/m^3
+  output[OUT_DENSITY].iNum = 1;
+  output[OUT_DENSITY].iModuleBit = 1;
+  fnWrite[OUT_DENSITY] = &WriteDensity;
 
   /*
    * H
@@ -814,7 +860,10 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
+  sprintf(output[OUT_ORBANGMOM].cNeg,"kgm^2/s");
+  output[OUT_ORBANGMOM].bNeg = 1;
   output[OUT_ORBANGMOM].iNum = 1;
+  output[OUT_ORBANGMOM].dNeg = 1.0;
   output[OUT_ORBANGMOM].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBANGMOM] = &WriteOrbAngMom;
 
@@ -826,12 +875,29 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
-  sprintf(output[OUT_ORBEN].cDescr,"Orbital Energy");
+  sprintf(output[OUT_ORBEN].cDescr,"Body's Total Orbital Energy");
   sprintf(output[OUT_ORBEN].cNeg,"ergs");
   output[OUT_ORBEN].bNeg = 1;
   output[OUT_ORBEN].iNum = 1;
   output[OUT_ORBEN].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBEN] = &WriteOrbEnergy;
+
+  sprintf(output[OUT_LOSTENG].cName,"LostEnergy");
+  sprintf(output[OUT_LOSTENG].cDescr,"Body's Total Lost Energy");
+  sprintf(output[OUT_LOSTENG].cNeg,"ergs");
+  output[OUT_LOSTENG].bNeg = 1;
+  output[OUT_LOSTENG].iNum = 1;
+  output[OUT_LOSTENG].iModuleBit = EQTIDE + STELLAR;
+  fnWrite[OUT_LOSTENG] = &WriteLostEng;
+
+  sprintf(output[OUT_LOSTANGMOM].cName,"LostAngMom");
+  sprintf(output[OUT_LOSTANGMOM].cDescr,"Lost Angular Momentum due to Magnetic Braking");
+  sprintf(output[OUT_LOSTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_LOSTANGMOM].bNeg = 1;
+  output[OUT_LOSTANGMOM].iNum = 1;
+  output[OUT_LOSTANGMOM].dNeg = 1.0;
+  output[OUT_LOSTANGMOM].iModuleBit = STELLAR;
+  fnWrite[OUT_LOSTANGMOM] = &WriteLostAngMom;
 
   sprintf(output[OUT_ORBMEANMOTION].cName,"MeanMotion");
   sprintf(output[OUT_ORBMEANMOTION].cDescr,"Orbital Mean Motion");
@@ -875,13 +941,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
-  output[OUT_ROTANGMOM].bNeg = 0;
+  sprintf(output[OUT_ROTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_ROTANGMOM].bNeg = 1;
   output[OUT_ROTANGMOM].iNum = 1;
-  output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR;
+  output[OUT_ROTANGMOM].dNeg = 1.0;
+  output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR + BINARY;
   fnWrite[OUT_ROTANGMOM] = &WriteRotAngMom;
 
   sprintf(output[OUT_ROTKINENERGY].cName,"RotKinEnergy");
-  sprintf(output[OUT_ROTKINENERGY].cDescr,"Rotational Energy");
+  sprintf(output[OUT_ROTKINENERGY].cDescr,"Body's Rotational Energy");
   sprintf(output[OUT_ROTKINENERGY].cNeg,"ergs");
   output[OUT_ROTKINENERGY].iNum = 1;
   output[OUT_ROTKINENERGY].iModuleBit = EQTIDE + DISTORB;
@@ -935,21 +1003,24 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
   sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
+  sprintf(output[OUT_TOTANGMOM].cNeg,"kgm^2/s");
+  output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
-  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR;
+  output[OUT_TOTANGMOM].dNeg = 1.0;
+  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 
   sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");
-  sprintf(output[OUT_TOTENERGY].cDescr,"Total Energy");
+  sprintf(output[OUT_TOTENERGY].cDescr,"Total System Energy");
   sprintf(output[OUT_TOTENERGY].cNeg,"ergs");
   output[OUT_TOTENERGY].bNeg = 1;
   output[OUT_TOTENERGY].dNeg = 1;
   output[OUT_TOTENERGY].iNum = 1;
-  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB;
+  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR;
   fnWrite[OUT_TOTENERGY] = &WriteTotEnergy;
 
   sprintf(output[OUT_POTENERGY].cName,"PotEnergy");
-  sprintf(output[OUT_POTENERGY].cDescr,"Total Potential Energy");
+  sprintf(output[OUT_POTENERGY].cDescr,"Body's non-orbital Potential Energy");
   sprintf(output[OUT_POTENERGY].cNeg,"ergs");
   output[OUT_POTENERGY].bNeg = 1;
   output[OUT_POTENERGY].dNeg = 1;
@@ -958,7 +1029,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_POTENERGY] = &WritePotEnergy;
 
   sprintf(output[OUT_KINENERGY].cName,"KinEnergy");
-  sprintf(output[OUT_KINENERGY].cDescr,"Total Kinetic Energy");
+  sprintf(output[OUT_KINENERGY].cDescr,"Body's non-orbital Kinetic Energy");
   sprintf(output[OUT_KINENERGY].cNeg,"ergs");
   output[OUT_KINENERGY].bNeg = 1;
   output[OUT_KINENERGY].dNeg = 1;
@@ -967,7 +1038,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_KINENERGY] = &WriteKinEnergy;
 
   sprintf(output[OUT_ORBKINENERGY].cName,"OrbKinEnergy");
-  sprintf(output[OUT_ORBKINENERGY].cDescr,"Orbital Kinetic Energy");
+  sprintf(output[OUT_ORBKINENERGY].cDescr,"Body's Orbital Kinetic Energy");
   sprintf(output[OUT_ORBKINENERGY].cNeg,"ergs");
   output[OUT_ORBKINENERGY].bNeg = 1;
   output[OUT_ORBKINENERGY].dNeg = 1;
@@ -976,22 +1047,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ORBKINENERGY] = &WriteOrbKinEnergy;
 
   sprintf(output[OUT_ORBPOTENERGY].cName,"OrbPotEnergy");
-  sprintf(output[OUT_ORBPOTENERGY].cDescr,"Orbital Potential Energy");
+  sprintf(output[OUT_ORBPOTENERGY].cDescr,"Body's Orbital Potential Energy");
   sprintf(output[OUT_ORBPOTENERGY].cNeg,"ergs");
   output[OUT_ORBPOTENERGY].bNeg = 1;
   output[OUT_ORBPOTENERGY].dNeg = 1;
   output[OUT_ORBPOTENERGY].iNum = 1;
   output[OUT_ORBPOTENERGY].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBPOTENERGY] = &WriteOrbPotEnergy;
-
-  sprintf(output[OUT_ORBENERGY].cName,"OrbEnergy");
-  sprintf(output[OUT_ORBENERGY].cDescr,"Orbital Energy");
-  sprintf(output[OUT_ORBENERGY].cNeg,"ergs");
-  output[OUT_ORBENERGY].bNeg = 1;
-  output[OUT_ORBENERGY].dNeg = 1;
-  output[OUT_ORBENERGY].iNum = 1;
-  output[OUT_ORBENERGY].iModuleBit = EQTIDE + DISTORB + BINARY;
-  fnWrite[OUT_ORBENERGY] = &WriteOrbEnergy;
 
   sprintf(output[OUT_IMK2].cName,"ImK2");
   sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
@@ -1376,6 +1438,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
     fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
     if (control->Io.iVerbose >= VERBPROG)
       printf("Runtime = %f s\n", dTotTime);
   }
@@ -1590,5 +1653,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
+  InitializeOutputSpiNBody(output, fnWrite);
 
 }

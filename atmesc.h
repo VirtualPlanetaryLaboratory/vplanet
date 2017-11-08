@@ -1,4 +1,4 @@
-/***************** ATMESC.H *********************** 
+/***************** ATMESC.H ***********************
  *
  * Rodrigo Luger, Tue Apr 28 11:04:00 PDT 2014
  *
@@ -17,7 +17,8 @@
 #define ATMESC_NONE             5
 #define ATMESC_LOP12            6
 #define ATMESC_PROXCENB         7
-#define ATMESC_BOL16            8
+#define ATMESC_LEHMER17         8
+#define ATMESC_BOL16            9
 #define THERMT                  400.                          // Average thermospheric temperature (K, Venus)
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    // Binary diffusion coefficient of H through O (m^-1 s^-1)
 #define QOH                     16.                           // Atomic mass ratio oxygen/hydrogen
@@ -43,7 +44,11 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_INSTANTO2SINK       1221 // Gaseous planet radius model (for atmesc)
 #define OPT_ATMXABSEFFH2O       1222 // Water Absorption efficiency (epsilon)
 #define OPT_OXYGENMANTLEMASS    1223 // Initial oxygen mass in mantle
-#define OPT_ATMXABSEFFH2OMODEL  1224
+#define OPT_THERMTEMP           1224 // thermosphere temperature
+#define OPT_PRESXUV             1225 // Pressure at bottom of thermosphere
+#define OPT_ATMGASCONST         1226 // Atmospheric Gas Constant
+#define OPT_FXUV                1227 //FXUV
+#define OPT_ATMXABSEFFH2OMODEL  1228
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -86,16 +91,24 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUTENDATMESC           1300
 
 /* Body Properties due to atmospheric escape */
-#define OUT_SURFACEWATERMASS	 1210
-#define OUT_ENVELOPEMASS	     1211
+#define OUT_SURFACEWATERMASS   1210
+#define OUT_ENVELOPEMASS       1211
 #define OUT_OXYGENMASS         1212
 #define OUT_RGLIMIT            1213
 #define OUT_XO                 1214
 #define OUT_ETAO               1215
 #define OUT_PLANETRADIUS       1216
 #define OUT_OXYGENMANTLEMASS   1217
-#define OUT_EPSH2O             1218
-#define OUT_FXUV               1219
+#define OUT_PLANETRADXUV       1218
+#define OUT_RADSOLID           1219
+#define OUT_PRESXUV            1220
+#define OUT_SCALEHEIGHT        1221
+#define OUT_THERMTEMP          1222
+#define OUT_ATMGASCONST        1223
+#define OUT_PRESSURF           1224
+#define OUT_DENVMASSDT         1225
+#define OUT_FXUV               1226
+#define OUT_EPSH2O             1227
 
 void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);

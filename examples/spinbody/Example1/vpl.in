@@ -1,0 +1,23 @@
+# Primary input file for VPLANET
+sSystemName               SpiNBody  # System Name
+bOverwrite                1               # Allow file overwrites?
+saBodyFiles               Star.in Mercury.in Venus.in Earth.in Mars.in #The solar system
+
+
+# Input/Output Units
+sUnitMass                 kg              # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength               m               # Options: cm, m, km, Earth, Jupiter, solar, AU   
+sUnitTime                 sec             # Options: sec, day, year, Myr, Gyr
+sUnitAngle                deg             # Options: deg, rad
+
+# Input/Output
+bDoLog                    1               # Write a log file?
+iDigits                   10              # Maximum number of digits to right of decimal
+dMinValue                 1e-10           # Minimum value of eccentricity/obliquity
+
+# Evolution Parameters
+bDoForward                1               # Perform a forward evolution?
+bVarDt                    1               # Use variable timestepping?
+dEta                      0.05            # Coefficient for variable timestepping
+dStopTime                 3.15576e11      # Stop time for evolution
+dOutputTime               1e9             # Output timesteps (assuming in body files)

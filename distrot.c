@@ -299,9 +299,16 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       fprintf(stderr,"ERROR: Cannot use variable time step (%s = 1) if %s = 1\n",options[OPT_VARDT].cName,options[OPT_READORBITDATA].cName);
       exit(EXIT_INPUT);
     }
-    if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
-      fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
-      exit(EXIT_INPUT);
+    if (control->Evolve.bDoForward) {
+      if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
+    } else if (control->Evolve.bDoBackward) {
+      if (body[iBody].daTimeSeries[1] != -1*control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
     }
     if (iNLines < (control->Evolve.dStopTime/control->Evolve.dTimeStep+1) ) {
       fprintf(stderr,"ERROR: Input orbit data must at least as long as vplanet integration (%f years)\n",control->Evolve.dStopTime/YEARSEC);
@@ -510,11 +517,17 @@ void VerifyHaltDistRot(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
-
-  dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
-  dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) > 0) {
+    dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+    dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+      
+  } else {
+    dObldx = 0.0;
+    dObldy = 0.0;
+  }
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
     
@@ -541,10 +554,16 @@ void WriteOblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
-  dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
-  dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) > 0) {
+    dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+    dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  } else {
+    dObldx = 0.0;
+    dObldy = 0.0;
+  }    
+    
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
     
@@ -571,8 +590,13 @@ void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
-  dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
-  dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) != 0) {
+    dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+    dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  } else {
+    dpAdx = 0.0;
+    dpAdy = 0.0;
+  }
   
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
@@ -596,8 +620,13 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
-  dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
-  dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) != 0) {
+    dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+    dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  } else {
+    dpAdx = 0.0;
+    dpAdy = 0.0;
+  }
   
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
@@ -605,7 +634,7 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     dDeriv += dpAdx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dpAdy*(*(update[iBody].padDYoblDtDistRot[iPert]));
 
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -758,106 +787,118 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
   
-  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  if (body[iBody].bDistOrb) {
+    for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
   
-  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
-    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-        body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
-    body[jBody].dLOrb[0] = 0.0;
-    body[jBody].dLOrb[1] = 0.0;
-    body[jBody].dLOrb[2] = h;
+    for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+      h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+      body[jBody].dLOrb[0] = 0.0;
+      body[jBody].dLOrb[1] = 0.0;
+      body[jBody].dLOrb[2] = h;
   
-    inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
-    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
-    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
-    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
-    for (i=0;i<3;i++)
-      system->dLOrb[i] += body[jBody].dLOrb[i];
+      inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
+      RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
+      longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+      RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
+      for (i=0;i<3;i++)
+        system->dLOrb[i] += body[jBody].dLOrb[i];
+    }
+    Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
+    for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
+  
+    Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+\
+        body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
+    for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
+  
+    body[iBody].dLRot[0] = 0.0;
+    body[iBody].dLRot[1] = 0.0;
+    body[iBody].dLRot[2] = 1.0;
+    obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
+
+    inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
+    longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+    RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
+    RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
+    RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
+
+    cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
+    Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+\
+        body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
+    if (Lnorm != 0) {
+      for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
+    }
+    
+    cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
+    Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+\
+        body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
+    for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
+  
+    cross(body[iBody].dLOrbTmp,body[iBody].dLRotTmp,system->dLOrb);
+    *dTmp = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+\
+        system->dLOrb[2]*system->dLOrb[2]);
+  } else {
+    *dTmp = 0.0;
   }
-  Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
-  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
-  
-  Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+\
-      body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
-  
-  body[iBody].dLRot[0] = 0.0;
-  body[iBody].dLRot[1] = 0.0;
-  body[iBody].dLRot[2] = 1.0;
-  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-
-  inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
-  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
-  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
-
-  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
-  Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+\
-      body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
-  
-  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
-  Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+\
-      body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
-  
-  cross(body[iBody].dLOrbTmp,body[iBody].dLRotTmp,system->dLOrb);
-  *dTmp = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+\
-      system->dLOrb[2]*system->dLOrb[2]);
 }  
   
 void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
   
-  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  if (body[iBody].bDistOrb) {
+    for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
   
-  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
-    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-        body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
-    body[jBody].dLOrb[0] = 0.0;
-    body[jBody].dLOrb[1] = 0.0;
-    body[jBody].dLOrb[2] = h;
+    for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+      h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+      body[jBody].dLOrb[0] = 0.0;
+      body[jBody].dLOrb[1] = 0.0;
+      body[jBody].dLOrb[2] = h;
   
-    inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
-    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
-    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
-    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
-    for (i=0;i<3;i++)
-      system->dLOrb[i] += body[jBody].dLOrb[i];
+      inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
+      RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
+      longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+      RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
+      for (i=0;i<3;i++)
+        system->dLOrb[i] += body[jBody].dLOrb[i];
+    }
+    Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
+    for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
+  
+    Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
+    for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
+  
+    body[iBody].dLRot[0] = 0.0;
+    body[iBody].dLRot[1] = 0.0;
+    body[iBody].dLRot[2] = 1.0;
+    obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
+
+    inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
+    longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+    RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
+    RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
+    RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
+
+    cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
+    Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
+    if (Lnorm != 0) {
+      for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
+    }
+    
+    cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
+    Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
+    for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
+  
+    *dTmp = 0.0;
+    for (i=0;i<3;i++) *dTmp += body[iBody].dLRotTmp[i]*body[iBody].dLOrbTmp[i];  
+  } else {
+    *dTmp = 0.0;
   }
-  Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
-  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
-  
-  Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
-  
-  body[iBody].dLRot[0] = 0.0;
-  body[iBody].dLRot[1] = 0.0;
-  body[iBody].dLRot[2] = 1.0;
-  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-
-  inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
-  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
-  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
-
-  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
-  Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
-  
-  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
-  Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
-  
-  *dTmp = 0.0;
-  for (i=0;i<3;i++) *dTmp += body[iBody].dLRotTmp[i]*body[iBody].dLOrbTmp[i];  
 }  
   
 void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

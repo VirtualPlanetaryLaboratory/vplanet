@@ -72,17 +72,7 @@ void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     AssignDefaultDouble(options,&system->dDfcrit,files->iNumInputs);
 }
 
-void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  int lTmp=-1,bTmp;
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    /* Option was found */
-    body[iFile-1].bGRCorr = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    body[iFile-1].bGRCorr = atoi(options->cDefault);
-}
+
 
 void ReadInvPlane(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
@@ -240,14 +230,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DFCRIT].iType = 2;
   options[OPT_DFCRIT].iMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
-
-  sprintf(options[OPT_GRCORR].cName,"bGRCorr");
-  sprintf(options[OPT_GRCORR].cDescr,"Use general relativity correction");
-  sprintf(options[OPT_GRCORR].cDefault,"0");
-  options[OPT_GRCORR].dDefault = 0;
-  options[OPT_GRCORR].iType = 0;
-  options[OPT_GRCORR].iMultiFile = 1;
-  fnRead[OPT_GRCORR] = &ReadGRCorr;
 
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
   sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");

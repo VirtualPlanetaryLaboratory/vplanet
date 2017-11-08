@@ -166,10 +166,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 		/* ?Obl require special treatment because they can
 		   overconstrain obliquity and PrecA */
 		if (iVar == update[iBody].iXobl || iVar == update[iBody].iYobl || iVar == update[iBody].iZobl) {
-		  if (fabs(body[iBody].dPrecA) < EPS)
-		    dMinNow = fabs(sin(body[iBody].dObliquity)/update[iBody].daDerivProc[iVar][iEqn]);
-		  else
-		    dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
 		  if (body[iBody].dObliquity != 0)
 		    dMinNow = fabs(sin(body[iBody].dObliquity)/update[iBody].daDerivProc[iVar][iEqn]);
 		} else if (iVar == update[iBody].iHecc || iVar == update[iBody].iKecc) {
@@ -182,9 +178,9 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 		  dMin = dMinNow;
 	      }
 	    }
-
-	    /* unique to POISE, used for ice sheets to prevent small amounts
-	       of ice -> dDt -> 0 */
+ 
+	    /* unique to POISE, used for ice sheets to prevent small amounts 
+	       of ice -> dDt -> 0 **DEPRECATED** */
 
 	    else if (update[iBody].iaType[iVar][iEqn] == 4) {
 	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
@@ -290,6 +286,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     printf("PrecA = %e\n",control->Evolve.tmpBody[1].dPrecA);
   */
 
+//   RecalcLaplaceDistRes(body,control,system);
   /* Derivatives at start */
   *dDt = fdGetUpdateInfo(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -331,6 +328,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* First midpoint derivative.*/
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
 
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   /* Don't need this timestep info, so assign output to dFoo */
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
@@ -356,6 +355,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Second midpoint derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -379,6 +381,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
   /* Full step derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  
+//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -504,4 +509,5 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
   if (control->Io.iVerbose >= VERBPROG)
     printf("Evolution completed.\n");
+//     printf("%d\n",body[1].iBadImpulse);
 }

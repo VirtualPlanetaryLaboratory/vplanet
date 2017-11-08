@@ -61,7 +61,15 @@ For the time being, this merely comments out the matching line.
     
 How to generate a parameter space
 =================================
-To generate trials that explore a parameter space, simply provide a range of values for 
+VSPACE has two sampling modes: ``grid`` and ``random``, which are specified with the word
+``samplemode``. For example:
+    
+    samplemode random
+
+will allow you to generate trials from a random distribution. 
+
+GRID MODE:
+To generate trials that explore a gridded parameter space, simply provide a range of values for 
 the desired option instead of a single value. These should have 3 entries, surrounded by
 square brackets ``[]``, in the following manner:
   
@@ -109,3 +117,52 @@ would generate initial conditions for every possible combination of ``dSemi`` an
 you like, so you have the power to generate a large number of files very quickly. Use this
 wisely: test with small numbers first to ensure that files end up in the correct locations
 and that initial conditions are indeed output with the desired values.  
+
+RANDOM MODE:
+The syntax for generating randomly sampled data is similar to grid mode, with a few 
+noteable differences. If setting ``samplemode random``, one MUST also set the variable 
+``randsize``, to an integer value--this is the number of samples/trials. 
+
+Additionally, it is good practice to seed the random number generator, to allow for 
+more easily reproducible results. This is accomplished with the variable ``seed``:
+  
+    seed <some integer>
+    
+The options for random mode are set in the same way as grid mode, in the third item
+in the square brackets. The current options are ``g`` (Gaussian/normal distribution), 
+``u`` (uniform distribution), ``s`` (uniform sine distribution), or ``c`` (uniform 
+cosine distribution). 
+
+For Gaussian/normal distributions, the syntax is as below:
+   
+    <option name> [<mean>, <width/stdev>, g] <prefix>
+    
+An example would be:
+    
+    dEcc  [0.1, 0.01, g]  e
+    
+For some parameters, you may want to truncate the distribution at certain values, 
+for example, dEcc should not be < 0 or > 1. You can provide cutoffs with the ``g`` option
+as the 4th or 5th item in ``[]`` with the keyword ``min`` or ``max``, like so:
+    
+    dEcc  [0.1, 0.01, g, min0.0, max1.0]  e
+
+You do not need to provide both min and max, if you need only one, and the order does
+not matter.
+
+A uniform distribution is sampled like so:
+  
+    <option name> [<low>, <high>, u] <prefix>
+    
+For angles, you may want to sample the sine or cosine of the angle uniformly, rather 
+than sampling the angle itself uniformly. You can accomplish this with ``s`` or ``c``,
+for sine and cosine respectively:
+  
+    <option name> [<low angle>, <high angle>, s] <prefix>
+    <option name> [<low angle>, <high angle>, c] <prefix>
+
+Note that <low angle> and <high angle> should be the min and max values of the angle
+ITSELF, not the sine or cosine of the angle. VSPACE does the conversion to and from 
+trig output and angle. The units of the angle can be either radians or degrees, but
+must be consistent with your source ``vpl.in`` file--VSPACE determines the unit from 
+this file. 

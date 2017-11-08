@@ -769,6 +769,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->dPassingStarImpact = malloc(3*sizeof(double));
     system->dHostApexVel = malloc(3*sizeof(double));
     system->dRelativeVel = malloc(3*sizeof(double));
+    system->dRelativePos = malloc(3*sizeof(double));
     if (system->bRadialMigr) {
       dDMR = DarkMatterDensity(system, system->dRForm);
       dStarR = (system->dGalacDensity-system->dGasDensity-system->dDMDensity)*\
@@ -845,7 +846,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
       fOut = fopen(cOut,"w");
-      fprintf(fOut,"#time MV mass sigma impx impy impz u_star v_star w_star u_rel v_rel w_rel u_host v_host w_host Rx Ry Rz bbodyx bbodyy bbodyx vbodyx vbodyy vbodyz rbodyx rbodyy rbodyz\n");
+      fprintf(fOut,"#time encdt tstart MV mass sigma impx impy impz u_rel v_rel w_rel u_apex v_apex w_apex x_rel y_rel z_rel bbodyx bbodyy bbodyx a1 e1 i1 argp1 longa1 meana1 af ef if argpf longaf\n");
       fclose(fOut);
     }
     
@@ -855,6 +856,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
     body[iBody].dRelativeImpact = malloc(3*sizeof(double));
     body[iBody].dRelativeVel = malloc(3*sizeof(double));
+    
     
     control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
     
@@ -1052,12 +1054,30 @@ int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
   return 0;
 }
 
+/* bad impulse? */
+int HaltBadImpulse(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {  
+
+  if (body[iBody].iBadImpulse == 1) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: body %d moving too fast for impulse approx",iBody);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+
+  return 0;
+}
+
 void CountHaltsGalHabit(HALT *halt,int *iNumHalts) { 
   (*iNumHalts)++;
+//   (*iNumHalts)++;
 }
 
 void VerifyHaltGalHabit(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   control->fnHalt[iBody][(*iHalt)++] = &HaltDisrupt;
+//   control->fnHalt[iBody][(*iHalt)++] = &HaltBadImpulse;
+  body[iBody].iDisrupt = 0;
+  body[iBody].iBadImpulse = 0;
 }
 
 
@@ -1076,9 +1096,45 @@ void WriteBodyPeriQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
+void WriteBodyEccX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccX;
+}
+
+void WriteBodyEccY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccY;
+}
+
+void WriteBodyEccZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dEccZ;
+}
+
+void WriteBodyAngMX(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMX;
+}
+
+void WriteBodyAngMY(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMY;
+}
+
+void WriteBodyAngMZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = body[iBody].dAngMZ;
+}
+
+
 void WriteNEncounters(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
  
   *dTmp = (double)system->iNEncounters;
+}
+
+void WriteNBadImpulse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ 
+  *dTmp = (double)body[iBody].iBadImpulse;
 }
 
 void WriteFVelDisp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1225,6 +1281,54 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PERIQ].iModuleBit = GALHABIT;
   fnWrite[OUT_PERIQ] = &WriteBodyPeriQ;
   
+  sprintf(output[OUT_ECCX].cName,"EccX");
+  sprintf(output[OUT_ECCX].cDescr,"X component of ecc vector");
+  sprintf(output[OUT_ECCX].cNeg," ");
+  output[OUT_ECCX].bNeg = 0;
+  output[OUT_ECCX].iNum = 1;
+  output[OUT_ECCX].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCX] = &WriteBodyEccX;
+  
+  sprintf(output[OUT_ECCY].cName,"EccY");
+  sprintf(output[OUT_ECCY].cDescr,"Y component of ecc vector");
+  sprintf(output[OUT_ECCY].cNeg," ");
+  output[OUT_ECCY].bNeg = 0;
+  output[OUT_ECCY].iNum = 1;
+  output[OUT_ECCY].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCY] = &WriteBodyEccY;
+  
+  sprintf(output[OUT_ECCZ].cName,"EccZ");
+  sprintf(output[OUT_ECCZ].cDescr,"Z component of ecc vector");
+  sprintf(output[OUT_ECCZ].cNeg," ");
+  output[OUT_ECCZ].bNeg = 0;
+  output[OUT_ECCZ].iNum = 1;
+  output[OUT_ECCZ].iModuleBit = GALHABIT;
+  fnWrite[OUT_ECCZ] = &WriteBodyEccZ;
+  
+  sprintf(output[OUT_ANGMX].cName,"AngMX");
+  sprintf(output[OUT_ANGMX].cDescr,"X component of angular mom vector");
+  sprintf(output[OUT_ANGMX].cNeg," ");
+  output[OUT_ANGMX].bNeg = 0;
+  output[OUT_ANGMX].iNum = 1;
+  output[OUT_ANGMX].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMX] = &WriteBodyAngMX;
+  
+  sprintf(output[OUT_ANGMY].cName,"AngMY");
+  sprintf(output[OUT_ANGMY].cDescr,"Y component of angular mom vector");
+  sprintf(output[OUT_ANGMY].cNeg," ");
+  output[OUT_ANGMY].bNeg = 0;
+  output[OUT_ANGMY].iNum = 1;
+  output[OUT_ANGMY].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMY] = &WriteBodyAngMY;
+  
+  sprintf(output[OUT_ANGMZ].cName,"AngMZ");
+  sprintf(output[OUT_ANGMZ].cDescr,"Z component of angular mom vector");
+  sprintf(output[OUT_ANGMZ].cNeg," ");
+  output[OUT_ANGMZ].bNeg = 0;
+  output[OUT_ANGMZ].iNum = 1;
+  output[OUT_ANGMZ].iModuleBit = GALHABIT;
+  fnWrite[OUT_ANGMZ] = &WriteBodyAngMZ;
+  
   sprintf(output[OUT_NENCOUNTERS].cName,"NEncounters");
   sprintf(output[OUT_NENCOUNTERS].cDescr,"cumulative number of stellar encounters");
   sprintf(output[OUT_NENCOUNTERS].cNeg," ");
@@ -1232,6 +1336,14 @@ void InitializeOutputGalHabit(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NENCOUNTERS].iNum = 1;
   output[OUT_NENCOUNTERS].iModuleBit = GALHABIT;
   fnWrite[OUT_NENCOUNTERS] = &WriteNEncounters;
+  
+  sprintf(output[OUT_NBADIMPULSE].cName,"NBadImpulse");
+  sprintf(output[OUT_NBADIMPULSE].cDescr,"cumulative number of questionable encounters");
+  sprintf(output[OUT_NBADIMPULSE].cNeg," ");
+  output[OUT_NBADIMPULSE].bNeg = 0;
+  output[OUT_NBADIMPULSE].iNum = 1;
+  output[OUT_NBADIMPULSE].iModuleBit = GALHABIT;
+  fnWrite[OUT_NBADIMPULSE] = &WriteNBadImpulse;
   
   sprintf(output[OUT_FVELDISP].cName,"FVelDisp");
   sprintf(output[OUT_FVELDISP].cDescr,"Scaling factor for velocity dispersion");
@@ -1327,22 +1439,25 @@ void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
 
 /************* GALHABIT Functions ***********/
 void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) { 
-  double sinw, cosw, cosw_alt, sign;
+  double sinw, cosw, cosw_alt, sign, dMu, dL;
   
   /* calculate osculating elements */
   body[iBody].dEcc = sqrt(pow(body[iBody].dEccX,2)+pow(body[iBody].dEccY,2)+pow(body[iBody].dEccZ,2));
-  body[iBody].dAngM = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+\
+//   body[iBody].dAngM = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+\
                                                           pow(body[iBody].dAngMZ,2));
+  dMu = BIGG*(body[iBody].dMassInterior+body[iBody].dMass); //calculate mass coefficient for primary/primary+secondary
+  dL = sqrt(dMu*body[iBody].dSemi);                                                      
+  body[iBody].dAngM = sqrt(1.0-pow(body[iBody].dEcc,2));                                                     
   
   body[iBody].dInc = acos(body[iBody].dAngMZ/body[iBody].dAngM);
   body[iBody].dLongA = atan2(body[iBody].dAngMX,-body[iBody].dAngMY);
   
-  sinw = -body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
+  sinw = (-body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
          -body[iBody].dEccY*body[iBody].dAngMY*body[iBody].dAngMZ \
-         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2));
-  cosw = body[iBody].dAngM*(-body[iBody].dEccX*body[iBody].dAngMY \
+         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)))/body[iBody].dAngM;
+  cosw = (-body[iBody].dEccX*body[iBody].dAngMY \
                             +body[iBody].dEccY*body[iBody].dAngMX);
-  body[iBody].dCosArgP = cosw*body[iBody].dAngM/(body[iBody].dEcc*\
+  body[iBody].dCosArgP = cosw/(body[iBody].dEcc*\
                           sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)));
   
   body[iBody].dArgP = atan2(sinw,cosw);
@@ -1376,9 +1491,10 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  double dp, dkzi, dVMax, dCurrentAge;
+  double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
   char cOut[NAMELEN];
+  int idr;
   FILE *fOut;
   
   dCurrentAge = system->dGalaxyAge-evolve->dStopTime+evolve->dTime;
@@ -1416,12 +1532,16 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dLongA += 2*PI;
   }
   
-  sinw = -body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
+  // if (body[iBody].dEcc != body[iBody].dEcc) {
+//     printf("stop\n");
+//   }
+  
+  sinw = (-body[iBody].dEccX*body[iBody].dAngMX*body[iBody].dAngMZ \
          -body[iBody].dEccY*body[iBody].dAngMY*body[iBody].dAngMZ \
-         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2));
-  cosw = body[iBody].dAngM*(-body[iBody].dEccX*body[iBody].dAngMY \
+         +body[iBody].dEccZ*(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)))/body[iBody].dAngM;
+  cosw = (-body[iBody].dEccX*body[iBody].dAngMY \
                             +body[iBody].dEccY*body[iBody].dAngMX);
-  body[iBody].dCosArgP = cosw*body[iBody].dAngM/(body[iBody].dEcc*\
+  body[iBody].dCosArgP = cosw/(body[iBody].dEcc*\
                           sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)));
                           
   body[iBody].dArgP = atan2(sinw,cosw);
@@ -1437,6 +1557,14 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     body[iBody].dArgP += 2*PI;
   }
   
+  body[iBody].dLongP = body[iBody].dLongA + body[iBody].dArgP; 
+
+  while (body[iBody].dLongP > 2*PI) {
+    body[iBody].dLongP -= 2*PI;
+  }
+  while (body[iBody].dLongP < 0) {
+    body[iBody].dLongP += 2*PI;
+  }
   // if (body[iBody].bHostBinary) {
 //     Rot2Bin(body,iBody);
 //   }
@@ -1453,32 +1581,23 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     dVMax = 1.0;
     while (dkzi > system->dRelativeVelMag/dVMax || system->dRelativeVelRad >= 0) {
       GetStarVelocity(system); 
+     //  system->dPassingStarV[0] = 17000.0;
+//       system->dPassingStarV[2] = -1000.0;
       GetRelativeVelocity(system);
       dkzi = random_double();
       dVMax = system->dHostApexVelMag + 3.0*system->dPassingStarSigma*1000.0;
     }
     
-    /* next calculate impact parameter */
-    CalcImpactParam(system); 
-    
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
     body[iBody].dSinc = sin(0.5*body[iBody].dInc);
     osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
-  
-    /* apply the impulse */
-    ApplyDeltaV(body,system,iBody);
-    cart2osc(body,evolve->iNumBodies);
-    body[iBody].dInc = 2*asin(body[iBody].dSinc);
-    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[iBody].dMassInterior+body[iBody].dMass);
-    CalcEccVec(body,iBody);
-    CalcAngMVec(body,iBody);
     
-    system->dLastEncTime = system->dCloseEncTime;
-    system->iNEncounters += 1;
-    NextEncounterTime(system,evolve,system->dCloseEncTime);
-  
+    /* next calculate impact parameter */
+    CalcImpactParam(body,system,iBody); 
+    
+    body[iBody].iBadImpulse += check_dr(body,evolve,system,iBody);
+    
     /* write out encounter info */
     if (system->bOutputEnc) {
       sprintf(cOut,"%s.%s.Encounters",system->cName,body[iBody].cName);
@@ -1486,6 +1605,10 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       //fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r w_r u_sun v_sun w_sun Rx Ry Rz\n");
     
       fprintd(fOut,evolve->dTime/YEARSEC,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dEncDT,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,system->dTStart,4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dPassingStarMagV,4,6);
       fprintf(fOut," ");
@@ -1499,18 +1622,25 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintf(fOut," ");
       fprintd(fOut,system->dPassingStarImpact[2],4,6);
       fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[0],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[1],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,system->dPassingStarV[2],4,6);
-      fprintf(fOut," ");
+      // fprintd(fOut,system->dPassingStarV[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dPassingStarV[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dPassingStarV[2],4,6);
+//       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[0],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[1],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dRelativeVel[2],4,6);
       fprintf(fOut," ");
+      
+      // fprintd(fOut,system->dRelativePos[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dRelativePos[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,system->dRelativePos[2],4,6);
+//       fprintf(fOut," ");
       fprintd(fOut,system->dHostApexVel[0],4,6);
       fprintf(fOut," ");
       fprintd(fOut,system->dHostApexVel[1],4,6);
@@ -1529,19 +1659,82 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
       fprintf(fOut," ");
       fprintd(fOut,body[iBody].dRelativeImpact[2],4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
-      fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
-      fprintf(fOut," ");
+  //     fprintd(fOut,body[iBody].dRelativeVel[0],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dRelativeVel[1],4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
+//       fprintf(fOut," ");
 
-      fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+      // fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[0]*AUCM/DAYSEC,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[1]*AUCM/DAYSEC,4,6);
+//       fprintf(fOut," ");
+//       fprintd(fOut,body[iBody].dCartVel[2]*AUCM/DAYSEC,4,6);
+      
+      fprintd(fOut,body[iBody].dSemi,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+      fprintd(fOut,body[iBody].dEcc,4,6);
       fprintf(fOut," ");
-      fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+      fprintd(fOut,body[iBody].dInc/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dArgP/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dLongA/DEGRAD,4,6);
+      fprintf(fOut," ");
+      dMeanATmp = body[iBody].dMeanA - body[iBody].dMeanMotion*system->dTStart;
+      while (dMeanATmp < 0.0) dMeanATmp += 2*PI;
+      fprintd(fOut,dMeanATmp/DEGRAD,4,6);
+      fprintf(fOut," ");
+//       fprintf(fOut,"\n");
     
+      fclose(fOut);
+    }
+    
+    /* apply the impulse */
+    ApplyDeltaV(body,system,iBody);
+    //Vis viva integral
+    C = 0.5*(pow(body[iBody].dCartVel[0],2)+pow(body[iBody].dCartVel[1],2)+\
+          pow(body[iBody].dCartVel[2],2))\
+          -KGAUSS*KGAUSS*(body[iBody].dMassInterior+body[iBody].dMass)/MSUN\
+          /sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+\
+          pow(body[iBody].dCartPos[2],2));
+    
+    if (C >= 0) {
+      body[iBody].iDisrupt = 1;
+    }
+    
+    cart2osc(body,evolve->iNumBodies);
+    if (body[iBody].dEcc >= 1) {
+      body[iBody].iDisrupt = 1;
+    }
+    body[iBody].dInc = 2*asin(body[iBody].dSinc);
+    body[iBody].dPeriQ = body[iBody].dSemi*(1.0-body[iBody].dEcc);
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[iBody].dMassInterior+body[iBody].dMass);
+    CalcEccVec(body,iBody);
+    CalcAngMVec(body,iBody);
+    
+    system->dLastEncTime = system->dCloseEncTime;
+    system->iNEncounters += 1;
+    NextEncounterTime(system,evolve,system->dCloseEncTime);
+  
+    if (system->bOutputEnc) {
+      fOut = fopen(cOut,"a");
+      fprintd(fOut,body[iBody].dSemi,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dEcc,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dInc/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dArgP/DEGRAD,4,6);
+      fprintf(fOut," ");
+      fprintd(fOut,body[iBody].dLongA/DEGRAD,4,6);
       fprintf(fOut,"\n");
     
       fclose(fOut);
@@ -1621,6 +1814,10 @@ void CalcEccVec(BODY *body, int iBody) {
 } 
 
 void CalcAngMVec(BODY *body, int iBody) {
+  double dMu, dL;
+  dMu = BIGG*(body[iBody].dMassInterior);//+body[iBody].dMass);
+  dL = sqrt(dMu*body[iBody].dSemi);
+
   body[iBody].dAngM = sqrt((1.0-pow(body[iBody].dEcc,2)));
   body[iBody].dAngMX = body[iBody].dAngM*(sin(body[iBody].dLongA)*sin(body[iBody].dInc));
   body[iBody].dAngMY = -body[iBody].dAngM*(cos(body[iBody].dLongA)*sin(body[iBody].dInc));
@@ -1669,6 +1866,39 @@ int random_int(int n) {
     while ((r = rand()) >= end);
 
     return r % n;
+  }
+}
+
+int check_dr(BODY* body, EVOLVE* evolve, SYSTEM *system, int iBody) {
+  double r1x, r1y, r1z, dt, dr, r1, r2, dcross, P;
+  
+//   r1x = body[iBody].dCartPos[0];
+//   r1y = body[iBody].dCartPos[1];
+//   r1z = body[iBody].dCartPos[2];
+//   r1 = sqrt(pow(r1x,2)+pow(r1y,2)+pow(r1z,2));
+//   
+//   dcross = (system->dPassingStarR[0]*system->dRelativeVel[0]+\
+//             system->dPassingStarR[1]*system->dRelativeVel[1]+\
+//             system->dPassingStarR[2]*system->dRelativeVel[2])/ \
+//             (system->dRelativeVelMag);
+//   dt = 2*fabs(dcross)/system->dRelativeVelMag;
+  dt = system->dEncDT;
+  
+//   body[iBody].dMeanA += body[iBody].dMeanMotion*dt;
+//   osc2cart(body,evolve->iNumBodies);
+//   
+//   dr = sqrt(pow(r1x-body[iBody].dCartPos[0],2)+pow(r1y-body[iBody].dCartPos[1],2)+pow(r1z-body[iBody].dCartPos[2],2));
+//   r2 = sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+pow(body[iBody].dCartPos[2],2));
+//   
+//   //move secondary back to original position
+//   body[iBody].dMeanA -= body[iBody].dMeanMotion*dt;
+//   osc2cart(body,evolve->iNumBodies);
+  
+  P = 2*PI/body[1].dMeanMotion;
+  if ((dt/P >= 0.1) || (dt/P >= 0.1)) {
+    return 1;
+  } else {
+    return 0;
   }
 }
 
@@ -2018,23 +2248,55 @@ void GetStarPosition(SYSTEM *system) {
   system->dPassingStarRMag = r;
 }
 
-void CalcImpactParam(SYSTEM *system) {
-  double vsq = 0.0, dtime = 0.0;
+void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
+  double vsq = 0.0, dtime1 = 0.0, dtime2 = 0.0, imp1, imp2;
   double x, y, z, r;
+  double xcom, ycom, zcom;
   int i;
-  
+  // 
+//   xcom = body[iBody].dMass*body[iBody].dCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   ycom = body[iBody].dMass*body[iBody].dCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   zcom = body[iBody].dMass*body[iBody].dCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+// 
+//   system->dRelativePos[0] = system->dPassingStarR[0] + xcom;
+//   system->dRelativePos[1] = system->dPassingStarR[1] + ycom;
+//   system->dRelativePos[2] = system->dPassingStarR[2] + zcom;
+
+  //calculate impact param for primary
   for (i=0;i<=2;i++) {
     vsq += pow(system->dRelativeVel[i],2);
-    dtime += -system->dPassingStarR[i]*system->dRelativeVel[i];
+    dtime1 += -system->dPassingStarR[i]*system->dRelativeVel[i];
   }
-  dtime /= vsq;
+  dtime1 /= vsq;
+  system->dTStart = fabs(dtime1);
   
-  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime + system->dPassingStarR[0];
-  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime + system->dPassingStarR[1];
-  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime + system->dPassingStarR[2];
-//   r = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+  system->dPassingStarImpact[0] = system->dRelativeVel[0]*dtime1 + system->dPassingStarR[0];
+  system->dPassingStarImpact[1] = system->dRelativeVel[1]*dtime1 + system->dPassingStarR[1];
+  system->dPassingStarImpact[2] = system->dRelativeVel[2]*dtime1 + system->dPassingStarR[2];
+  imp1 = sqrt(pow(system->dPassingStarImpact[0],2)+\
+          pow(system->dPassingStarImpact[1],2)+\
+          pow(system->dPassingStarImpact[2],2));
   
-//   system->dCloseEncTime += dtime;
+  //now calculate impact parameter for secondary
+  dtime2 = 0;
+  for (i=0;i<=2;i++) {
+//     vsq += pow(system->dRelativeVel[i],2);
+    dtime2 += -(system->dPassingStarR[i]-body[iBody].dCartPos[i]*AUCM)*system->dRelativeVel[i];
+  }
+  dtime2 /= vsq;
+  
+  body[iBody].dRelativeImpact[0] = system->dRelativeVel[0]*dtime2 + system->dPassingStarR[0] - body[iBody].dCartPos[0]*AUCM;
+  body[iBody].dRelativeImpact[1] = system->dRelativeVel[1]*dtime2 + system->dPassingStarR[1] - body[iBody].dCartPos[1]*AUCM;
+  body[iBody].dRelativeImpact[2] = system->dRelativeVel[2]*dtime2 + system->dPassingStarR[2] - body[iBody].dCartPos[2]*AUCM;
+  imp2 = sqrt(pow(body[iBody].dRelativeImpact[0],2)+\
+          pow(body[iBody].dRelativeImpact[1],2)+\
+          pow(body[iBody].dRelativeImpact[2],2));
+          
+  if (imp1 < imp2) {
+    system->dEncDT = 2*imp1/system->dRelativeVelMag;
+  } else {
+    system->dEncDT = 2*imp2/system->dRelativeVelMag;
+  }  
 }
 
 void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
@@ -2043,15 +2305,11 @@ void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
   double dPassingStarImpactrsq, dPassingStarV;
   double dDeltaVx, dDeltaVy, dDeltaVz;
 
-  dRelativeImpactx = system->dPassingStarImpact[0]-body[iBody].dCartPos[0]*AUCM;
-  dRelativeImpacty = system->dPassingStarImpact[1]-body[iBody].dCartPos[1]*AUCM;
-  dRelativeImpactz = system->dPassingStarImpact[2]-body[iBody].dCartPos[2]*AUCM;
+  dRelativeImpactx = body[iBody].dRelativeImpact[0];
+  dRelativeImpacty = body[iBody].dRelativeImpact[1];
+  dRelativeImpactz = body[iBody].dRelativeImpact[2];
   dRelativeImpactrsq = pow(dRelativeImpactx,2) + pow(dRelativeImpacty,2) + \
                           pow(dRelativeImpactz,2);           
-                       
-  body[iBody].dRelativeImpact[0] = dRelativeImpactx;
-  body[iBody].dRelativeImpact[1] = dRelativeImpacty;
-  body[iBody].dRelativeImpact[2] = dRelativeImpactz;
 
   dRelativeVx = system->dRelativeVel[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
   dRelativeVy = system->dRelativeVel[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
@@ -2417,8 +2675,11 @@ double dexdla(double dEccY) {
   return -dEccY;
 }
 
-double dexdap(double dEccY, double dEccZ, double dInc, double dLongA) {
-  return -dEccZ*cos(dLongA)*sin(dInc) - dEccY*cos(dInc);
+double dexdap(BODY *body, int iBody) {
+  //return -dEccZ*cos(dLongA)*sin(dInc) - dEccY*cos(dInc);
+  double h = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+ pow(body[iBody].dAngMZ,2));
+  
+  return body[iBody].dEccZ*body[iBody].dAngMY/h - body[iBody].dEccY*body[iBody].dAngMZ/h;
 }
 
 double deydJ(BODY *body, int iBody) {  
@@ -2432,8 +2693,11 @@ double deydla(double dEccX) {
   return dEccX;
 }
 
-double deydap(double dEccX, double dEccZ, double dInc, double dLongA) {
-  return dEccX*cos(dInc) - dEccZ*sin(dLongA)*sin(dInc);
+double deydap(BODY *body, int iBody) {
+//   return dEccX*cos(dInc) - dEccZ*sin(dLongA)*sin(dInc);
+  double h = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+ pow(body[iBody].dAngMZ,2));
+  
+  return body[iBody].dEccX*body[iBody].dAngMZ/h - body[iBody].dEccZ*body[iBody].dAngMX/h;
 }
 
 double dezdJ(BODY *body, int iBody) {
@@ -2450,12 +2714,12 @@ double dezdap(double dArgP, double dEcc, double dInc) {
 
 double fdGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dL;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN;//calculate mass coefficient for primary/primary+secondary
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
 
   return -5.0*PI*KGAUSS*KGAUSS*dRho*\
           pow(body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dEcc,2.)* \
-          sin(2*body[iaBody[0]].dArgP)/DAYSEC/dL;
+          sin(2*body[iaBody[0]].dArgP)/dL/DAYSEC;
 }
 
 double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2469,8 +2733,8 @@ double fdGalHabitDPeriQDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdGalHabitDArgPDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
-  dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN;//calculate mass coefficient for primary/primary+secondary
+  dEcc = body[iaBody[0]].dEcc; //calculate orbiter's eccentricity
 
   return 2*PI*KGAUSS*KGAUSS*dRho*sqrt(pow(body[iaBody[0]].dSemi/AUCM,3)/(dMu*(1.0-pow(dEcc,2))))*\
       (1.-pow(dEcc,2)-5.*(1.-pow(dEcc,2)-pow(cos(body[iaBody[0]].dInc),2))*\
@@ -2491,8 +2755,8 @@ double fdGalHabitDIncDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdGalHabitDLongADt(BODY *body, SYSTEM *system, int *iaBody) {
   double dRho = system->dScalingFTot*system->dGalacDensity/pow(AUPC,3), dMu, dEcc, dL, dJ, dJz;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; //calculate mass coefficient for primary/primary+secondary
-  dEcc = 1.0 - body[iaBody[0]].dPeriQ/body[iaBody[0]].dSemi; //calculate orbiter's eccentricity
+  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN;//calculate mass coefficient for primary/primary+secondary
+  dEcc = body[iaBody[0]].dEcc; //calculate orbiter's eccentricity
   dL = sqrt(dMu*body[iaBody[0]].dSemi/AUCM);
   dJ = dL*sqrt(1.0-pow(dEcc,2));
   dJz = dJ*cos(body[iaBody[0]].dInc);
@@ -2504,13 +2768,13 @@ double fdGalHabitDLongADt(BODY *body, SYSTEM *system, int *iaBody) {
 double fdGalHabitDEccXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   return dexdJ(body,iaBody[0])*fdGalHabitDJDt(body,system,iaBody) + \
          dexdla(body[iaBody[0]].dEccY)*fdGalHabitDLongADt(body,system,iaBody) + \
-         dexdap(body[iaBody[0]].dEccY,body[iaBody[0]].dEccZ,body[iaBody[0]].dInc,body[iaBody[0]].dLongA)*fdGalHabitDArgPDt(body,system,iaBody);
+         dexdap(body,iaBody[0])*fdGalHabitDArgPDt(body,system,iaBody);
 }
 
 double fdGalHabitDEccYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   return deydJ(body,iaBody[0])*fdGalHabitDJDt(body,system,iaBody) + \
          deydla(body[iaBody[0]].dEccX)*fdGalHabitDLongADt(body,system,iaBody) + \
-         deydap(body[iaBody[0]].dEccX,body[iaBody[0]].dEccZ,body[iaBody[0]].dInc, body[iaBody[0]].dLongA)*fdGalHabitDArgPDt(body,system,iaBody);
+         deydap(body,iaBody[0])*fdGalHabitDArgPDt(body,system,iaBody);
 }
 
 double fdGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
@@ -2519,8 +2783,9 @@ double fdGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu, dJ;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; 
+  double dMu, dJ, dL;
+  dMu = BIGG*(body[iaBody[0]].dMassInterior);//+body[iaBody[0]].dMass); 
+  dL = sqrt(dMu*body[iaBody[0]].dSemi);
   dJ = sqrt((1.0-pow(body[iaBody[0]].dEcc,2)));
     
   return sin(body[iaBody[0]].dLongA)*sin(body[iaBody[0]].dInc)*fdGalHabitDJDt(body,system,iaBody) + \
@@ -2528,8 +2793,9 @@ double fdGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdGalHabitDAngMYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu, dJ;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dMassInterior+body[iaBody[0]].dMass)/MSUN; 
+  double dMu, dJ, dL;
+  dMu = BIGG*(body[iaBody[0]].dMassInterior);//+body[iaBody[0]].dMass); 
+  dL = sqrt(dMu*body[iaBody[0]].dSemi);
   dJ = sqrt((1.0-pow(body[iaBody[0]].dEcc,2)));
     
   return -cos(body[iaBody[0]].dLongA)*sin(body[iaBody[0]].dInc)*fdGalHabitDJDt(body,system,iaBody) + \
@@ -2589,141 +2855,141 @@ double BodyDC2Dla(BODY *body,int iBody) {
 }
 
 //------------Derivatives------------------------------------------------
-double fdGalHabitDLongADtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN;
-              
-  return 3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))/\
-          (body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)*\
-          sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDLongPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return dMu*(3*(HostBinA1(body,iaBody[0])*BodyDC1De(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2De(body,iaBody[0]))-\
-          HostBinA0(body,iaBody[0])*BodyDC0De(body,iaBody[0]))*sqrt(1.-pow(body[iaBody[0]].dEcc,2))
-          /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2))/DAYSEC\
-          +3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))*sin(body[iaBody[0]].dIncTmp)*\
-          tan(body[iaBody[0]].dIncTmp/2)/(body[iaBody[0]].dMeanMotion*DAYSEC*\
-          pow(body[iaBody[0]].dSemi/AUCM,2)*sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDArgPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return fdGalHabitDLongPDtQuad0(body,system,iaBody)-\
-          fdGalHabitDLongADtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDIncDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu;
-  dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
-        body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
-  
-  return -3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Dla(body,iaBody[0])+\
-          HostBinA2(body,iaBody[0])*BodyDC2Dla(body,iaBody[0]))\
-          /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)\
-          *sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
-}
-
-double fdGalHabitDEccXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return dexdla(body[iaBody[0]].dEccYTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
-        dexdap(body[iaBody[0]].dEccYTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
-        body[iaBody[0]].dEcc*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
-        sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDEccYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return deydla(body[iaBody[0]].dEccXTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
-          deydap(body[iaBody[0]].dEccXTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) - \
-        body[iaBody[0]].dEcc*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
-        sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDEccZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  return dezdap(body[iaBody[0]].dArgPTmp,body[iaBody[0]].dEcc, body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
-        body[iaBody[0]].dEcc*sin(body[iaBody[0]].dArgPTmp)*\
-        cos(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return dJ*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDLongADtQuad0(body,system,iaBody)+ \
-        dJ*sin(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
-        fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return dJ*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
-        fdGalHabitDLongADtQuad0(body,system,iaBody)- \
-        dJ*cos(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
-        fdGalHabitDIncDtQuad0(body,system,iaBody);
-}
-
-double fdGalHabitDAngMZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
-  double dJ;
-  dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
-  
-  return -dJ*sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody); 
-}
-
-double fdGalHabitDEccXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDEccYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDEccZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDEccYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
-         fdGalHabitDEccZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
-}
-
-double fdGalHabitDAngMXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
-         fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA)+ \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              sin(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDAngMYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
-         fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA)- \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
-              cos(body[iaBody[0]].dHostBinLongA);
-}
-
-double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
-  return fdGalHabitDAngMYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
-         fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
-}
+// double fdGalHabitDLongADtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN;
+//               
+//   return 3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))/\
+//           (body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)*\
+//           sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDLongPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return dMu*(3*(HostBinA1(body,iaBody[0])*BodyDC1De(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2De(body,iaBody[0]))-\
+//           HostBinA0(body,iaBody[0])*BodyDC0De(body,iaBody[0]))*sqrt(1.-pow(body[iaBody[0]].dEcc,2))
+//           /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2))/DAYSEC\
+//           +3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Di(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Di(body,iaBody[0]))*sin(body[iaBody[0]].dIncTmp)*\
+//           tan(body[iaBody[0]].dIncTmp/2)/(body[iaBody[0]].dMeanMotion*DAYSEC*\
+//           pow(body[iaBody[0]].dSemi/AUCM,2)*sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDArgPDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return fdGalHabitDLongPDtQuad0(body,system,iaBody)-\
+//           fdGalHabitDLongADtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDIncDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dMu;
+//   dMu = KGAUSS*KGAUSS*(body[iaBody[0]].dHostBinMass1*(body[0].dMass-\
+//         body[iaBody[0]].dHostBinMass1))/(body[0].dMass)/MSUN; 
+//   
+//   return -3*dMu*(HostBinA1(body,iaBody[0])*BodyDC1Dla(body,iaBody[0])+\
+//           HostBinA2(body,iaBody[0])*BodyDC2Dla(body,iaBody[0]))\
+//           /(body[iaBody[0]].dMeanMotion*DAYSEC*pow(body[iaBody[0]].dSemi/AUCM,2)\
+//           *sqrt(1.0-pow(body[iaBody[0]].dEcc,2)))/DAYSEC;
+// }
+// 
+// double fdGalHabitDEccXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return dexdla(body[iaBody[0]].dEccYTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
+//         dexdap(body[iaBody[0]].dEccYTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
+//         body[iaBody[0]].dEcc*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
+//         sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDEccYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return deydla(body[iaBody[0]].dEccXTmp)*fdGalHabitDLongADtQuad0(body,system,iaBody) +\
+//           deydap(body[iaBody[0]].dEccXTmp,body[iaBody[0]].dEccZTmp,body[iaBody[0]].dIncTmp, body[iaBody[0]].dLongATmp)*fdGalHabitDArgPDtQuad0(body,system,iaBody) - \
+//         body[iaBody[0]].dEcc*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dArgPTmp)*\
+//         sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDEccZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   return dezdap(body[iaBody[0]].dArgPTmp,body[iaBody[0]].dEcc, body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDArgPDtQuad0(body,system,iaBody) + \
+//         body[iaBody[0]].dEcc*sin(body[iaBody[0]].dArgPTmp)*\
+//         cos(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMXDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return dJ*cos(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDLongADtQuad0(body,system,iaBody)+ \
+//         dJ*sin(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
+//         fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMYDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return dJ*sin(body[iaBody[0]].dLongATmp)*sin(body[iaBody[0]].dIncTmp)*\
+//         fdGalHabitDLongADtQuad0(body,system,iaBody)- \
+//         dJ*cos(body[iaBody[0]].dLongATmp)*cos(body[iaBody[0]].dIncTmp) *\
+//         fdGalHabitDIncDtQuad0(body,system,iaBody);
+// }
+// 
+// double fdGalHabitDAngMZDtQuad0(BODY *body, SYSTEM *system, int *iaBody) {
+//   double dJ;
+//   dJ = sqrt(1.0-pow(body[iaBody[0]].dEcc,2));
+//   
+//   return -dJ*sin(body[iaBody[0]].dIncTmp)*fdGalHabitDIncDtQuad0(body,system,iaBody); 
+// }
+// 
+// double fdGalHabitDEccXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDEccYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDEccYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDEccZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDEccYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
+//          fdGalHabitDEccZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
+// }
+// 
+// double fdGalHabitDAngMXDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinLongA) - \
+//          fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA)+ \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               sin(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDAngMYDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMXDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinLongA) + \
+//          fdGalHabitDAngMYDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA)- \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)*\
+//               cos(body[iaBody[0]].dHostBinLongA);
+// }
+// 
+// double fdGalHabitDAngMZDtQuad(BODY *body, SYSTEM *system, int *iaBody) {
+//   return fdGalHabitDAngMYDtQuad0(body,system,iaBody)*sin(body[iaBody[0]].dHostBinInc)+ \
+//          fdGalHabitDAngMZDtQuad0(body,system,iaBody)*cos(body[iaBody[0]].dHostBinInc);
+// }
 
 //----Fuck it, let's try these equations (Breiter & Vokrouhlicky 2015)-----------------------------
 double QuadC2(BODY *body, int *iaBody) {

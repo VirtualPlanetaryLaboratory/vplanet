@@ -74,18 +74,32 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_PERIQ               2220
 #define OUT_NENCOUNTERS         2221
 #define OUT_FVELDISP            2222
+#define OUT_ECCX                2225
+#define OUT_ECCY                2226
+#define OUT_ECCZ                2227
+#define OUT_ANGMX               2228
+#define OUT_ANGMY               2229
+#define OUT_ANGMZ               2230
+#define OUT_NBADIMPULSE         2231
+
 #define OUT_DECCDTGALHTIDAL     2250
 #define OUT_DINCDTGALHTIDAL     2251
 #define OUT_DLONGADTGALHTIDAL   2252
 #define OUT_DARGPDTGALHTIDAL    2253
 
 void HelpOutputGalHabit(OUTPUT*);
-void WriteBodyPeriQGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyPeriQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDEccDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDIncDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDArgPDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDLongADtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputGalHabit(OUTPUT*,fnWriteOutput[]);
+void WriteBodyEccX(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyEccY(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyEccZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMX(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMY(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyAngMZ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsGalHabit(CONTROL*,FILE*);
@@ -105,13 +119,14 @@ void CalcMeanVelDispSolar(SYSTEM*);
 void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
 double NearbyStarFrEnc(SYSTEM*,double);
+int check_dr(BODY*,EVOLVE*,SYSTEM*,int);
 
 double dexdJ(BODY*, int);
 double dexdla(double);
-double dexdap(double,double,double,double);
+double dexdap(BODY*, int);
 double deydJ(BODY*, int);
 double deydla(double);
-double deydap(double,double,double,double);
+double deydap(BODY*,int);
 double dezdJ(BODY*, int);
 double dezdap(double,double,double);
 void CalcEccVec(BODY*,int);
@@ -178,7 +193,7 @@ void GetStarMass(SYSTEM*);
 void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
 void VelocityDisp(SYSTEM*);
-void CalcImpactParam(SYSTEM*);
+void CalcImpactParam(BODY*, SYSTEM*,int);
 void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
 void NextEncounterTime(SYSTEM*,EVOLVE*,double);

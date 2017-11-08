@@ -185,7 +185,8 @@ void ReadFixOrbit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     if (iFile > 0)
       /* Set to default */
-      AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+//       AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+			control->Evolve.bFixOrbit[iFile-1] = 0;
 }
 
 /* Force Equilibrium Spin Rate? */
@@ -2840,7 +2841,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */
       if (evolve->bForceEqSpin[iBody])
-	SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
+	     SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
     }
   }
 
@@ -2883,6 +2884,7 @@ double fdCPLTidePower(BODY *body,int iBody) {
       iOrbiter = iBody;
     iIndex = body[iBody].iaTidePerts[iPert];
 
+    // XXX RB: Does this work with DF's changes to da/dt with the synchronous case?
     dOrbPow += -body[iBody].dTidalZ[iIndex]/8 * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 147./2*body[iBody].iTidalEpsilon[iIndex][1] + 0.5*body[iBody].iTidalEpsilon[iIndex][2] - 3*body[iBody].iTidalEpsilon[iIndex][5]) - 4*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(body[iBody].iTidalEpsilon[iIndex][0] - body[iBody].iTidalEpsilon[iIndex][8]));
 
     dRotPow += body[iBody].dTidalZ[iIndex]*body[iBody].dRotRate/(8*body[iOrbiter].dMeanMotion) * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 49*body[iBody].iTidalEpsilon[iIndex][1] + body[iBody].iTidalEpsilon[iIndex][2]) + 2*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(-2*body[iBody].iTidalEpsilon[iIndex][0] + body[iBody].iTidalEpsilon[iIndex][8] + body[iBody].iTidalEpsilon[iIndex][9]));
@@ -2893,7 +2895,6 @@ double fdCPLTidePower(BODY *body,int iBody) {
 
 /* Tidal Power due to Ocean Tides */
 double fdTidePowerOcean(BODY *body, int iBody) {
-
   // Total CPL Tide Power = Ocean + Man contributions
   return fdCPLTidePower(body,iBody) - fdTidalPowMan(body,iBody);
 }
@@ -2901,7 +2902,6 @@ double fdTidePowerOcean(BODY *body, int iBody) {
 /* Surface Energy Flux due to Ocean Tides */
 // dflemin3: dRadius -> dTidalRadius
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
-
   // Total Ocean Tide power / surface area of body
   return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
@@ -2915,7 +2915,6 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 }
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
-
   // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
@@ -2993,7 +2992,7 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
 double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
 {
 
-  // HACK HACK HACK
+  // HACK HACK HACK XXX
   return fdCPLDsemiDt(body,system,iaBody);
 
   int iB0=iaBody[0],iB1=iaBody[1];
@@ -3005,7 +3004,6 @@ iaBody[0] = central body */
 
   // Contribution from orbiter
   dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
-
   // Contribution from central body
   dSum += body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
 

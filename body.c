@@ -19,15 +19,16 @@
 #include <string.h>
 #include "vplanet.h"
 
-
 /*
  * Mathematical Relationships
  */
 
+
+// Return the sign (-1,0, or 1).
 int fiSign(double dValue) {
   int iSign;
 
-  if (fabs(dValue) > EPS)
+  if (fabs(dValue) > EPS) // EPS set in vplanet.h
     iSign = (int)(dValue/fabs(dValue));
   else
     iSign = 0;
@@ -35,10 +36,12 @@ int fiSign(double dValue) {
   return iSign;
 }
 
-double fdDPerDt(double dRotRate, double dDrotrateDt) {
+// Covnert a rotation rate derivative to a period derivative
+double fdDPerDt(double dRotRate,double dDrotrateDt) {
     return -2*PI*dDrotrateDt/(dRotRate*dRotRate);
 }
 
+// Caclulate the characteristic timescale of a variable (x/(dx/dt))
 double fdTimescale(double dVar,double dDeriv) {
   if (dDeriv != 0)
     return fabs(dVar/dDeriv);
@@ -46,6 +49,7 @@ double fdTimescale(double dVar,double dDeriv) {
     return 0;
 }
 
+// Timescale for multi-module process (x/Sum(dx/dt))
 double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
   double dTime;
   int iPert;
@@ -73,38 +77,49 @@ double fdPerToFreq(double dPeriod) {
  * Physical Relationships
  */
 
+// A body's gravitational potential energy
 double fdBodyPotEnergy(double dMass, double dRadius) {
+  /* ALPHA_STRUCT  is structural constant for spherical mass distribution
+     potential energy (E_pot = -ALPHA*BIGG*M^2/R = 0.6), see vplanet.h. */
   return -ALPHA_STRUCT*BIGG*dMass*dMass/dRadius;
 }
 
+// A body's rotational angular momentum
 double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
   return dRadGyra*dRadGyra*dMass*dRad*dRad*dOmega;
 }
 
+// A body's rotational kinetic energy
 double fdRotKinEnergy(double dMass,double dRadius,double dRadGyra,double dOmega) {
   return 0.5*dRadGyra*dRadGyra*dMass*dRadius*dRadius*dOmega*dOmega;
 }
 
+// Convert a rotational frequency to a rotational velocity
 double fdRadiusFreqToRotVel(double dRadius,double dFreq) {
   return dRadius*dFreq;
 }
 
+// Convert a rotational velocity to a frequency
 double fdRadiusRotVelToFreq(double dRotVel,double dRadius){
   return dRotVel/dRadius;
 }
 
+// Calculate radius from density and mass
 double fdDensityMassToRadius(double dDensity,double dMass) {
   return pow( (3*dDensity/(4*PI*dMass)), (1./3) );
 }
 
+// Calculate Mass from Radius and density
 double fdMassFromRadiusDensity(double dRadius,double dDensity){
   return 4*PI*pow(dRadius,3)/(3*dDensity);
 }
 
+// Calculate rotational velocity from radius and rotation frequency
 double fdRotVel(double dRadius,double dRotRate) {
   return dRadius*dRotRate;
 }
 
+// Calculate density for a uniform sphere
 double fdSphereDensity(double dMass,double dRadius) {
   return 4*PI*dMass/pow(dRadius,3)/3;
 }
@@ -194,15 +209,16 @@ double fdRadToMass_Sotin07(double dRadius) {
     return pow(dRadius/REARTH,3.6765)*MEARTH;
 }
 
+// Assign Radius based on mass and published relationship
 double fdMassToRad(double dMass,double iRelation) {
 
-  if (iRelation == 0)
+  if (iRelation == REIDHAWLEY)
     return fdMassToRad_ReidHawley(dMass);
-  else if (iRelation == 1)
+  else if (iRelation == GORDASVECH99)
     return fdMassToRad_GordaSvech99(dMass);
-  else if (iRelation == 2)
+  else if (iRelation == BAYLESSOROSZ06)
     return fdMassToRad_BaylessOrosz06(dMass);
-  else if (iRelation == 3)
+  else if (iRelation == SOTIN07)
     return fdMassToRad_Sotin07(dMass);
 
   /* Need to add more! */
@@ -211,15 +227,16 @@ double fdMassToRad(double dMass,double iRelation) {
   return 1./0;
 }
 
+// Assign mass from radius and published relationship
 double fdRadToMass(double dMass,double iRelation) {
 
-  if (iRelation == 0)
+  if (iRelation == REIDHAWLEY)
     return fdRadToMass_ReidHawley(dMass);
-  else if (iRelation == 1)
+  else if (iRelation == GORDASVECH99)
     return fdRadToMass_GordaSvech99(dMass);
-  else if (iRelation == 2)
+  else if (iRelation == BAYLESSOROSZ06)
     return fdRadToMass_BaylessOrosz06(dMass);
-  else if (iRelation == 3)
+  else if (iRelation == SOTIN07)
     return fdRadToMass_Sotin07(dMass);
 
   /* Need to add more! XXX */
@@ -228,6 +245,7 @@ double fdRadToMass(double dMass,double iRelation) {
   return 1./0;
 }
 
+// Copy the body struct from src to dest
 void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   int iBody,iModule;
 
@@ -252,8 +270,6 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
-    /* Only orbiting bodies retain these parameters unless binary is used*/
-
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
@@ -261,26 +277,22 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
       dest[iBody].dRadius = src[iBody].dRadius;
       dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
     }
-    /* Copymodule specific properties */
+    /* Copy module-specific properties */
     for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)
-      // Only module reference in file -- can this be changed? XXX
       evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,evolve->iNumBodies,iBody);
   }
 }
 
+// Calculate rotational variables from obliquity and precession angle
 void CalcXYZobl(BODY *body, int iBody) {
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
-
-  if (body[iBody].dZobl > 1)
-    printf("Zobl: %.16e\n",body[iBody].dZobl);
-
 }
 
-
+/* Calculate equilibrium shape of planet using scaling laws and solar system
+   values. If the value is less then Venus', return Venus'. */
 double CalcDynEllipEq(BODY *body, int iBody) {
-  /* calculate equilibrium shape of planet using scaling laws and solar system values */
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
   double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
 
@@ -292,23 +304,24 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 
   dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
 
-  if (dDynEllip < EdVenus) dDynEllip = EdVenus;
+  if (dDynEllip < EdVenus)
+    dDynEllip = EdVenus;
 
   return dDynEllip;
 }
 
-double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle) {
-// calculate pressure at surface due to envelope
-// and RadXUV, radius from center of planet where optical depth of XUV is unity
-	double P;		// pressure at surface due to envelope
-	double Rxuv;	// see above
+/* Lehmer+ (2017)'s model for the radius of a planet losing its atmopshere
+   due to XUV radiation. */
+double fdLehmerRadius(double dMassEnv,double dGravAccel,double dRadSurf,double dPressXUV,double dScaleHeight,int iToggle) {
+	double P;		  // pressure at surface due to envelope
+	double Rxuv;	// radius from center of planet where optical depth of XUV is unity
 
-	P = lil_g * Menv / (4 * PI * RadSurf * RadSurf); // [kg/ms2]
-	Rxuv = RadSurf * RadSurf / (H * log(Pxuv/P) + RadSurf);
-	if (Rxuv <= RadSurf) {
-		Rxuv = RadSurf;
+	P = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+	Rxuv = dRadSurf * dRadSurf / (dScaleHeight * log(dPressXUV/P) + dRadSurf);
+	if (Rxuv <= dRadSurf) {
+		Rxuv = dRadSurf;
 	}
-	if (toggle == 1) {
+	if (iToggle == 1) {
 		return P;
 	}
 	else {

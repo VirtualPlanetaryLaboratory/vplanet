@@ -20,6 +20,7 @@
 #define BINARY        1024
 #define GALHABIT      2048
 #define SPINBODY      4096
+#define DISTRES       8192
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -43,8 +44,8 @@
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
  */
-#define MODULEOPTEND        2300
-#define MODULEOUTEND        2300
+#define MODULEOPTEND        2400
+#define MODULEOUTEND        2400
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -91,11 +92,13 @@
 #define RHOSED        2390        //sediment density from Huybers&Tziperman08
 #define RHOH2O        1000        // Density of liquid water
 #define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
-#define SEDH          10          //depth of sediment layer (m)
-#define SEDD0         2.5e-14     //reference deformation rate for sediment (s^-1)
-#define SEDMU         3e9         //reference viscosity for sediment (Pa s)
-#define RHOBROCK      3370        //???
-#define BROCKTIME     5000        //relaxation timescale for bedrock
+
+#define SEDH          10      //depth of sediment layer (m)
+#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDMU         3e9     //reference viscosity for sediment (Pa s)
+#define RHOBROCK      3370
+#define BROCKTIME     5000  //relaxation timescale for bedrock
+
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
 #define ALPHA_STRUCT  0.6         // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
@@ -176,6 +179,9 @@
 #define VZOBL              1403 // Detrick's Z
 #define VDYNELLIP          1404 // Dynamical Ellipticity
 
+/* Semi-major axis functions in DistOrb (& DistRes?)*/
+#define LAPLNUM 	      89
+
 //SPINBODY 1600-1700
 #define VVELX              1601 // Cartesian X Velocity
 #define VVELY              1602 // Cartesian Y Velocity
@@ -183,9 +189,6 @@
 #define VPOSITIONX         1604 // Cartesian X Position
 #define VPOSITIONY         1605 // Cartesian Y Position
 #define VPOSITIONZ         1606 // Cartesian Z Position
-
-/* Semi-major axis functions in DistOrb */
-#define LAPLNUM 	   26 // XXX Why is this here?
 
 // ATMESC
 #define VSURFACEWATERMASS  1202 // Surface Water Mass
@@ -215,12 +218,24 @@
 #define VLXUV              1901 // XUV Luminosity from Flares
 
 //GALHABIT
-#define VECCX              2201
-#define VECCY              2202
-#define VECCZ              2203
-#define VANGMX             2204
-#define VANGMY             2205
-#define VANGMZ             2206
+#define VECCX           2201
+#define VECCY           2202
+#define VECCZ           2203
+#define VANGMX          2204
+#define VANGMY          2205
+#define VANGMZ          2206
+
+//DISTRES
+#define VMEANL          2301
+
+/* Now define the structs */
+
+#define MAXSPECIES       100
+
+typedef struct {
+  double dInitTimeStep;
+  double dMaxSteps;
+} PHOTOCHEM;
 
 /*! \brief BODY contains all the physical parameters for every body.
  *         Members are broken into chunks by module.
@@ -295,6 +310,7 @@ typedef struct {
   double *dLOrbTmp;
   double dRPeri;
   double dRApo;
+  
 
   /* BINARY parameters */
   int bBinary;           /** Apply BINARY module? */
@@ -331,6 +347,25 @@ typedef struct {
   double dPrecRate;
   int bCalcDynEllip;
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
+  int bReadOrbitData;    /**< Use orbit data from file rather than distorb */
+  char cFileOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
+  double *daTimeSeries;  /**< time series for orbital data */
+  double *daSemiSeries;  /**< time series for orbital data */
+  double *daEccSeries;  /**< time series for orbital data */
+  double *daIncSeries;  /**< time series for orbital data */
+  double *daArgPSeries;  /**< time series for orbital data */
+  double *daLongASeries;  /**< time series for orbital data */
+  double *daMeanASeries;  /**< time series for orbital data */
+  int iCurrentStep;       /**< index for time series arrays */
+  double *daHeccSeries;   /**< time series for orbital data */
+  double *daKeccSeries;   /**< time series for orbital data */
+  double *daPincSeries;   /**< time series for orbital data */
+  double *daQincSeries;   /**< time series for orbital data */
+  double dPdot;
+  double dQdot;
+  int iNLines;
+  double dSpecMomInertia; 
+
 
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
@@ -639,18 +674,23 @@ typedef struct {
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
 
+  double dAblateFF;
+  int bAccuracyMode;        /**< This forces the model to re-invert matrix every time step */
   double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
   double dAlbedoGlobalTmp;
   double dAlbedoLand;
   int iAlbedoType;            /**< type of water albedo used (fix or tay) */
   double dAlbedoWater;
   int bAlbedoZA;             /**< Use albedo based on zenith angle */
+  double dAreaIceCov;
   double dAstroDist;         /**< Distance between primary and planet */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
   int bClimateModel;
   int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
   double dCw_dt;
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
+  int bDiffRot;              /**< Adjust heat diffusion for rotation rate*/
+  int bElevFB;
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;
@@ -673,6 +713,7 @@ typedef struct {
   double dInitIceHeight;
   double dInitIceLat;
   int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
+  double dLapseR;
   double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
   double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
   int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
@@ -681,14 +722,16 @@ typedef struct {
   int iNStepInYear;        /**< Number of time steps in a year */
   double dNuLandWater;        /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
-  int iNumYears;           /**< Number of years to run seasonal model */
+  int iNumYears;           /**< Number of orbits!!! to run seasonal model */
   double dObliqAmp;
   double dObliqPer;
   double dObliq0;
+  int iOLRModel;             /**< OLR fit (use with bCalcAB=1) from Kasting model or Spiegel model */
   double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
+  double dRefHeight;
   int iReRunSeas;
   double dSeaIceConduct;
   int bSeaIceModel;
@@ -771,6 +814,8 @@ typedef struct {
   double *daFluxOutWater;
   double *daFluxSeaIce;
   double **daIceBalance;
+  double *daIceAblateTot;
+  double *daIceAccumTot;
   double *daIceBalanceAnnual;
   double *daIceBalanceAvg;
   double *daIceBalanceTmp;
@@ -812,6 +857,8 @@ typedef struct {
   double *daTempLand;         /**< Temperature over land (by latitude) */
   double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
   double *daTempMaxLW;         /**< maximum temperature over year */
+  double *daTempMaxLand;
+  double *daTempMaxWater;
   double *daTempMinLW;         /**< minimum temperature over year */
   double *daTempWater;        /**< Temperature over ocean (by lat) */
   double *daTmpTempSea;
@@ -869,6 +916,13 @@ typedef struct {
   double dCosArgP;
   double dMinAllowed;  /**< minimum allowed close approach of body to host */
   double dMassInterior;
+  int iBadImpulse;
+
+  
+  //DISTRES
+  int bDistRes;
+  double dMeanL;
+  
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -876,6 +930,8 @@ typedef struct {
 
 /* Pointer to Laplace semi-major axis functions in DistOrb */
 typedef double (*fnLaplaceFunction)(double,int);
+
+
 
 typedef struct {
   char cName[NAMELEN];	 /**< System's Name */
@@ -886,9 +942,9 @@ typedef struct {
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
-  double **dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
-  double **dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
-  double **dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
+  double ***dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
+  double ***dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
+  double ***dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
   int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
   double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
   double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
@@ -947,6 +1003,7 @@ typedef struct {
   double dHostApexVelMag;
   double *dHostApexVel;
   double *dRelativeVel;
+  double *dRelativePos;
   double dRelativeVelRad;
   double dRelativeVelMag;
   double *dGSNumberDens;
@@ -957,7 +1014,17 @@ typedef struct {
   int bStellarEnc;    /**< model stellar encounters? */
   int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
   int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
-
+  double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
+  double dTStart;      /**< time that encounter begins relative to time step */
+  
+  int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
+  int *iResOrder;
+  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
+  double **dLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
+  double **dCircFreq; /**< Circulation frequency of near resonance */
+  double **dDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
+  double **dDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
+  double **dDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
 
 } SYSTEM;
 
@@ -1266,6 +1333,27 @@ typedef struct {
   double **padDAngMYDtGalHabit;
   double **padDAngMZDtGalHabit;
 
+  /* DISTRES */
+  int iNumMeanL;
+  int iMeanL;
+  double dDMeanLDt;
+  int *iaMeanLDistRes;
+  double **padDMeanLDtDistRes;
+  
+  int *iaSemiDistRes;
+  double **padDSemiDtDistRes;
+
+  int *iaHeccDistRes;
+  double **padDHeccDtDistRes;
+  
+  int *iaKeccDistRes;
+  double **padDKeccDtDistRes;
+  
+  int *iaPincDistRes;
+  double **padDPincDtDistRes;
+  
+  int *iaQincDistRes;
+  double **padDQincDtDistRes;
 
   /* ATMESC */
   int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
@@ -1518,6 +1606,7 @@ typedef struct {
   int bSemiMajChange;         /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
   int bInvPlane;       /**< 1 = change input coordinates to invariable plane coordinate */
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
+  int bOutputEigen;      /**< Output eigen values? */
 
 } CONTROL;
 
@@ -1664,7 +1753,7 @@ typedef void (*fnFinalizeUpdateCBPPhiDotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateDynEllipModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateHeccModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateIceMassModule)(BODY*,UPDATE*,int*,int,int,int);//deprecated
 typedef void (*fnFinalizeUpdateKeccModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLuminosityModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLXUVModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1689,6 +1778,7 @@ typedef void (*fnFinalizeUpdateEccZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMXModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMYModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
@@ -1834,6 +1924,9 @@ typedef struct {
   fnFinalizeUpdateAngMYModule **fnFinalizeUpdateAngMY;
   fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
 
+  fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
+
+
   fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
@@ -1890,4 +1983,5 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 #include "galhabit.h"
+#include "distres.h"
 #include "spinbody.h"

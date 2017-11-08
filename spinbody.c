@@ -262,6 +262,7 @@ void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 //============================ End Read Inputs =================================
 
 void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  int iTmpBody = 0;
   if (body[iBody].bSpiNBody){
     body[iBody].iGravPerts = control->Evolve.iNumBodies-1; //All bodies except the body itself are perturbers
     body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
@@ -271,7 +272,7 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
     //If orbital parameters are defined, then we want to set position and velocity based on those
     if (body[iBody].bUseOrbParams){
        if (iBody == 0){ //Only want to do this once
-         for (int iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++){
+         for (iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++){
            body[iTmpBody].dCartPos = malloc(3*sizeof(double));
            body[iTmpBody].dCartVel = malloc(3*sizeof(double));
            //Convert all bodies w/ orbital elements to Heliocentric
@@ -481,6 +482,121 @@ void Helio2Bary(BODY *body, int iNumBodies, int iBody) {
   free(vcom);
 }
 
+void Bary2Helio(BODY *body, int iBody){
+  //Calculate heliocentric cartesian position
+  body[iBody].dCartPos[0] = body[iBody].dPositionX - body[0].dPositionX;
+  body[iBody].dCartPos[1] = body[iBody].dPositionY - body[0].dPositionY;
+  body[iBody].dCartPos[2] = body[iBody].dPositionZ - body[0].dPositionZ;
+
+  //Calculate heliocentric cartesian velocity
+  body[iBody].dCartVel[0] = body[iBody].dVelX - body[0].dVelX;
+  body[iBody].dCartVel[1] = body[iBody].dVelY - body[0].dVelY;
+  body[iBody].dCartVel[2] = body[iBody].dVelZ - body[0].dVelZ;
+}
+
+void Bary2OrbElems(BODY *body, int iBody){
+  double rsq, normr, vsq, mu, *h, hsq, normh, sinwf, coswf, sinfAngle,
+         cosfAngle, rdot, sinw, cosw, f, cosE;
+
+  h = malloc(3*sizeof(double));
+  //First convert from Barycentric to heliocentric
+  //Helio values are stored in body[iBody].dCartPos and body[iBody].dCartVel
+  Bary2Helio(body, iBody);
+
+  if (iBody==0) {
+    body[iBody].dSemi = 0;
+    body[iBody].dEcc  = 0;
+    body[iBody].dInc  = 0;
+    body[iBody].dLongA = 0;
+    body[iBody].dLongP = 0;
+    body[iBody].dMeanA = 0;
+  } else {
+
+    //Solve for various values that are used repeatedly
+    //Solve for h = r X v
+    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    hsq = h[0]*h[0]+h[1]*h[1]+h[2]*h[2];                  // ||h||^2
+    normh = sqrt(hsq);                                    // ||h||
+    vsq = body[iBody].dCartVel[0]*body[iBody].dCartVel[0]   // ||v||^2
+         +body[iBody].dCartVel[1]*body[iBody].dCartVel[1]
+         +body[iBody].dCartVel[2]*body[iBody].dCartVel[2];
+    rsq = body[iBody].dCartPos[0]*body[iBody].dCartPos[0]   // ||r||^2
+         +body[iBody].dCartPos[1]*body[iBody].dCartPos[1]
+         +body[iBody].dCartPos[2]*body[iBody].dCartPos[2];
+    normr = sqrt(rsq);                                    // ||r||
+    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]
+           +body[iBody].dCartPos[1]*body[iBody].dCartVel[1]
+           +body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/normr;
+    mu  = BIGG * (body[iBody].dMass + body[0].dMass);     // G(M+m)
+
+    // Solve for semi-major axis
+    body[iBody].dSemi = 1/(2/normr - vsq/mu);
+
+    // Solve for eccentricity
+    body[iBody].dEccSq = 1.0 - hsq/(mu*body[iBody].dSemi);
+    body[iBody].dEcc   = sqrt(body[iBody].dEccSq);
+
+    //Solve for inclination
+    body[iBody].dInc = acos(h[2]/normh);
+    body[iBody].dSinc = 0.5*sin(body[iBody].dInc); //For DistOrb usage
+
+    //Solve for longitude of ascending node
+    body[iBody].dLongA = atan2(h[0],-h[1]);
+    if (body[iBody].dLongA<0){ //Make sure the signs are all right
+      body[iBody].dLongA += 2.0*PI;
+    }
+
+    //Solve for w and f
+    sinwf = body[iBody].dCartPos[2]/(normr*sin(body[iBody].dInc));
+    coswf = (body[iBody].dCartPos[0]/normr+sin(body[iBody].dLongA)*sinwf
+           *cos(body[iBody].dInc))/cos(body[iBody].dLongA);
+    if (body[iBody].dEcc != 0) { //No true anomaly for circular orbits
+      sinfAngle = body[iBody].dSemi*(1-body[iBody].dEccSq)*rdot
+                 /(normh*body[iBody].dEcc);
+      cosfAngle = (body[iBody].dSemi*(1-body[iBody].dEccSq)/normr-1)/body[iBody].dEcc;
+      sinw = sinwf*cosfAngle - coswf*sinfAngle;
+      cosw = sinwf*sinfAngle + coswf*cosfAngle;
+
+      body[iBody].dArgP = atan2(sinw,cosw);
+      body[iBody].dLongP = atan2(sinw,cosw) + body[iBody].dLongA;
+
+      //Ensure all angles are in [0,2PI)
+      if (body[iBody].dLongP >= 2.*PI) {
+        body[iBody].dLongP -= 2.*PI;
+      } else if (body[iBody].dLongP < 0.0) {
+        body[iBody].dLongP += 2.*PI;
+      }
+      if (body[iBody].dArgP >= 2.*PI) {
+        body[iBody].dArgP -= 2.*PI;
+      } else if (body[iBody].dArgP < 0.0) {
+        body[iBody].dArgP += 2.*PI;
+      }
+
+      f = atan2(sinfAngle, cosfAngle);
+      if ( f>= 2.*PI) {
+        f -= 2.*PI;
+      } else if (f < 0.0) {
+        f += 2.*PI;
+      }
+
+      //Calculate Mean anomaly
+      cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
+      if (f <= PI){
+        body[iBody].dEccA = acos(cosE);
+      } else {
+        body[iBody].dEccA = 2.*PI - acos(cosE);
+      }
+
+      body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA);
+      if (body[iBody].dMeanA < 0) {
+        body[iBody].dMeanA += 2.*PI;
+      } else if (body[iBody].dMeanA >= 2.*PI){
+        body[iBody].dMeanA -= 2.*PI;
+      }
+    }
+  }
+  free(h);
+}
 //Functions below are EXACTLY the same as in distorb.c, but needed in SpiNBody
 //Should be relocated to system.c?
 
@@ -605,6 +721,30 @@ void WriteVelZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dInc;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dLongA;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   //Output example for dPositionX variable
   sprintf(output[OUT_POSITIONXSPINBODY].cName,"PositionXSpiNBody");
@@ -660,6 +800,24 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VELZSPINBODY].iNum = 1;
   output[OUT_VELZSPINBODY].iModuleBit = SPINBODY;
   fnWrite[OUT_VELZSPINBODY] = &WriteVelZ;
+
+  sprintf(output[OUT_INCSPINBODY].cName,"SpiNBodyInc");
+  sprintf(output[OUT_INCSPINBODY].cDescr,"Body's inclination in SpiNBody");
+  sprintf(output[OUT_INCSPINBODY].cNeg,"Deg");
+  output[OUT_INCSPINBODY].bNeg = 1;
+  output[OUT_INCSPINBODY].dNeg = 1./DEGRAD;
+  output[OUT_INCSPINBODY].iNum = 1;
+  output[OUT_INCSPINBODY].iModuleBit = SPINBODY;
+  fnWrite[OUT_INCSPINBODY] = &WriteInclinationSpinBody;
+
+  sprintf(output[OUT_LONGASPINBODY].cName,"SpiNBodyLongA");
+  sprintf(output[OUT_LONGASPINBODY].cDescr,"Body's inclination in SpiNBody");
+  sprintf(output[OUT_LONGASPINBODY].cNeg,"Deg");
+  output[OUT_LONGASPINBODY].bNeg = 1;
+  output[OUT_LONGASPINBODY].dNeg = 1./DEGRAD;
+  output[OUT_LONGASPINBODY].iNum = 1;
+  output[OUT_LONGASPINBODY].iModuleBit = SPINBODY;
+  fnWrite[OUT_LONGASPINBODY] = &WriteLongASpinBody;
 }
 
 //============================ End Writing Functions ===========================
@@ -773,25 +931,18 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumX = 0;        //Double used to calculate the net perturbation
   int iPertBody = -1;      //Int used to clean up code.
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
-  //body[iaBody[0]].dDistance3 = malloc(body[iaBody[0]].iGravPerts*sizeof(double));
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
 
     iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing? Is this fast enough?
 
-    //This is faster than using pow() or an iPertBody int, but not very clean
+    //This is faster than using pow() but not very clean
     // Calculate the cube of the distance to each perturbing body. Used in Vy and Vz calculations as well.
     body[iaBody[0]].dDistance3[j] = sqrt((body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)*(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)
           + (body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)*(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)
           + (body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ)*(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ));
     body[iaBody[0]].dDistance3[j] = body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j];
-    //Legacy code that calculated dDistance in X,Y,Z loop. Inefficient
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
-    //printf("\nThe value for distance is %f", dDistance);
+
     dSumX = dSumX + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[j];
   }
 
@@ -800,18 +951,9 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumY = 0;        //Double used to calculate the net perturbation
-  //int iPertBody = -1;      //Int used to clean up code. Faster w/o
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    //iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing?
-
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
     dSumY = dSumY + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[j];
   }
 
@@ -820,18 +962,9 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumZ = 0;        //Double used to calculate the net perturbation
-  //int iPertBody = -1;      //Int used to clean up code.
   int j;
-  //double dDistance = 0;    //Double used to save distance to perturbing body
-
 
   for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    //iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing?
-
-    //dDistance = sqrt(pow(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX,2)+
-      //pow(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY,2)+
-      //pow(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ,2));
     dSumZ = dSumZ + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[j];
   }
 

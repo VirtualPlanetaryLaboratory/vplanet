@@ -1,6 +1,6 @@
 # The host star, the sun -> Primary body!
 sName		primary		# Body's name
-saModules       stellar eqtide binary
+saModules       stellar eqtide
 
 # Physical Parameters
 iBodyType     1 # Star!
@@ -20,8 +20,9 @@ saTidePerts	secondary	# Body name(s) of tidal perturbers
 
 # STELLAR Parameters
 sStellarModel baraffe
+sMagBrakingModel skumanich
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom 
+saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom -SurfEnFluxTotal 

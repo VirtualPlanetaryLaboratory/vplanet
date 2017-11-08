@@ -17,14 +17,19 @@ void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 
 #define OPT_FORCEPRECRATE         1403
 #define OPT_PRECRATE              1404
-
+#define OPT_READORBITDATA         1405
+#define OPT_FILEORBITDATA         1406
 
 /* Options Functions */
 void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFileOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
 void ReadCalcDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsDistRot(OPTIONS*, fnReadOption[]);
 void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 
 /* Verify Functions */
 void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
@@ -59,6 +64,7 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_YOBLTIMEDISTROT     1448
 #define OUT_ZOBLTIMEDISTROT     1449
 #define OUT_DYNELLIP            1450
+#define OUT_PRECFNAT            1451
 
 void HelpOutputDistRot(OUTPUT*);
 void WriteBodyDOblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -88,6 +94,8 @@ void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,
 void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */
+double fdCentralTorqueR(BODY*, int);
+
 double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);
 double fdDistRotRD4DyDt(BODY*, SYSTEM*, int*);
 double fdDistRotRD4DzDt(BODY*, SYSTEM*, int*);
@@ -97,3 +105,7 @@ double fdAxialGRDxDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DxDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DyDt(BODY*, SYSTEM*, int*);
 double fdDistRotLL2DzDt(BODY*, SYSTEM*, int*);
+
+double fdDistRotExtDxDt(BODY*, SYSTEM*, int*);
+double fdDistRotExtDyDt(BODY*, SYSTEM*, int*);
+double fdDistRotExtDzDt(BODY*, SYSTEM*, int*);

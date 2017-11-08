@@ -1,0 +1,22 @@
+# Planet a parameters
+sName                     Venus         # Body's name
+saModules                 spinbody      # Modules to apply, exact spelling required
+
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly
+# Physical Properties
+dMass                     -0.815        # Mass, negative -> Earth masses
+dRadius                   -0.949        # Radius, negative -> Earth radii
+dRotPeriod                -200          # Rotation period, negative -> days
+dObliquity                0             # Obliquity (deg)
+dRadGyra                  0.5           # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                     -0.72333199   # Semi-major axis, negative -> AU
+dEcc                       0.00677323   # Eccentricity
+dInc                       3.39471      # Inclination
+dLongP                     131.53298    # Longitude of pericenter
+dLongA                     76.68069     # Longitude of ascending node
+dMeanA                     50.44675     # Mean Anomoly

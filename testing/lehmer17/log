@@ -12,12 +12,14 @@ WARNING: atm.star.forward exists.
 WARNING: atm.b.forward exists.
 WARNING: sIntegrationMethod not set, defaulting to Runge-Kutta4.
 WARNING: No rotational information set in file b.in. Defaulting to dRotRate = 2*pi/day.
-Lehmer17 Constants Initialized: Rs=7606866.897262, g=13.363735, H=271564.805896
+WARNING: sTideModel not set in any file, defaulting to p2.
+Using dTidalQEnv for b.
+Envelope lost! Changing dTidalQ to: dTidalQRock.
 Input files read.
 All of star's modules verified.
 All of b's modules verified.
 Input files verified.
 Log file written.
-HALT: star reached the edge of the luminosity grid at 8.314821e+09 years.
-Runtime = 14.000000 s
+Evolution completed.
+Runtime = 10.000000 s
 Log file updated.

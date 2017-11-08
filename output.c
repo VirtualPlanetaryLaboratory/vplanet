@@ -34,12 +34,7 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
 
 /* iBodyType */
 void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if(body[iBody].bBinary) {
-    *dTmp = body[iBody].iBodyType;
-  }
-  else
-    *dTmp = -1;
-
+  *dTmp = body[iBody].iBodyType;
   strcpy(cUnit,"");
 }
 
@@ -143,22 +138,37 @@ void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
  */
 
 void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
 
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  while (*dTmp > 2*PI) {
-    *dTmp -= 2*PI;
+
+  if (body[iBody].bSpiNBody) {
+    *dTmp = body[iBody].dLongP;
+
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle,cUnit);
+    }
+  } else{
+    *dTmp = atan2(body[iBody].dHecc, body[iBody].dKecc);
+
+    while (*dTmp < 0.0) {
+      *dTmp += 2*PI;
+    }
+    while (*dTmp > 2*PI) {
+      *dTmp -= 2*PI;
+    }
+
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle,cUnit);
+    }
   }
 
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
 }
 
 void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -262,8 +272,17 @@ void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
 void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cTmp;
-
-  *dTmp = fdOrbAngMom(body,iBody);
+  double *pdOrbMom;
+  if (body[iBody].bSpiNBody){
+    pdOrbMom = fdOrbAngMom(body,iBody);
+    *dTmp = sqrt(pdOrbMom[0]*pdOrbMom[0]+pdOrbMom[1]*pdOrbMom[1]+pdOrbMom[2]*pdOrbMom[2]);
+    free(pdOrbMom);
+  }
+  else {
+    pdOrbMom = fdOrbAngMom(body,iBody);
+    *dTmp = *pdOrbMom;
+    free(pdOrbMom);
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -636,13 +655,27 @@ void WriteOrbPotEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, UNITS *units, UPDATE *update, int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = fdTotOrbEnergy(body,control,system);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergy(units,cUnit);
+  }
+}
+
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  // change to if eq
   // Just thermint, not eqtide
-  if(body[iBody].bEnvTides || (body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if(body[iBody].bThermint)
     *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
   else
     *dTmp = body[iBody].dK2/body[iBody].dImK2;
+
 
   strcpy(cUnit,"");
 }
@@ -685,6 +718,19 @@ void WriteZobl(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
   *dTmp = body[iBody].dZobl;
   strcpy(cUnit,"");
+}
+
+void WriteMeanAnomaly(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+
+  *dTmp = body[iBody].dMeanA;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
 }
 
 /*
@@ -801,7 +847,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LONGP].bNeg = 1;
   output[OUT_LONGP].dNeg = 1./DEGRAD;
   output[OUT_LONGP].iNum = 1;
-  output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_LONGP] = &WriteLongP;
 
   sprintf(output[OUT_ARGP].cName,"ArgP");
@@ -810,7 +856,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ARGP].bNeg = 1;
   output[OUT_ARGP].dNeg = 1./DEGRAD;
   output[OUT_ARGP].iNum = 1;
-  output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT;
+  output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT + SPINBODY;
   fnWrite[OUT_ARGP] = &WriteBodyArgP;
 
   sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");
@@ -864,15 +910,24 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBANGMOM].bNeg = 1;
   output[OUT_ORBANGMOM].iNum = 1;
   output[OUT_ORBANGMOM].dNeg = 1.0;
-  output[OUT_ORBANGMOM].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBANGMOM].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBANGMOM] = &WriteOrbAngMom;
 
   sprintf(output[OUT_ORBECC].cName,"Eccentricity");
   sprintf(output[OUT_ORBECC].cDescr,"Orbital Eccentricity");
   output[OUT_ORBECC].iNum = 1;
   output[OUT_ORBECC].bNeg = 0;
-  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE;
+  output[OUT_ORBECC].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
+
+  sprintf(output[OUT_MEANA].cName,"MeanAnomaly");
+  sprintf(output[OUT_MEANA].cDescr,"Orbital Mean Anomaly");
+  sprintf(output[OUT_MEANA].cNeg,"Deg");
+  output[OUT_MEANA].iNum = 1;
+  output[OUT_MEANA].bNeg = 1;
+  output[OUT_MEANA].dNeg = 1/DEGRAD;
+  output[OUT_MEANA].iModuleBit = SPINBODY;
+  fnWrite[OUT_MEANA] = &WriteMeanAnomaly;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
   sprintf(output[OUT_ORBEN].cDescr,"Body's Total Orbital Energy");
@@ -905,7 +960,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBMEANMOTION].bNeg = 1;
   output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
   output[OUT_ORBMEANMOTION].iNum = 1;
-  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
 
   sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
@@ -923,7 +978,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUCM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
 
   /*
@@ -1007,7 +1062,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;
-  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY;
+  output[OUT_TOTANGMOM].iModuleBit = EQTIDE + DISTORB + DISTROT + STELLAR + BINARY + SPINBODY;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 
   sprintf(output[OUT_TOTENERGY].cName,"TotEnergy");
@@ -1016,7 +1071,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TOTENERGY].bNeg = 1;
   output[OUT_TOTENERGY].dNeg = 1;
   output[OUT_TOTENERGY].iNum = 1;
-  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR;
+  output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR + SPINBODY;
   fnWrite[OUT_TOTENERGY] = &WriteTotEnergy;
 
   sprintf(output[OUT_POTENERGY].cName,"PotEnergy");
@@ -1043,8 +1098,17 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBKINENERGY].bNeg = 1;
   output[OUT_ORBKINENERGY].dNeg = 1;
   output[OUT_ORBKINENERGY].iNum = 1;
-  output[OUT_ORBKINENERGY].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBKINENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBKINENERGY] = &WriteOrbKinEnergy;
+
+  sprintf(output[OUT_ORBKINENERGY].cName,"TotOrbEnergy");
+  sprintf(output[OUT_ORBKINENERGY].cDescr,"System's Total Orbital Energy");
+  sprintf(output[OUT_ORBKINENERGY].cNeg,"ergs");
+  output[OUT_ORBKINENERGY].bNeg = 1;
+  output[OUT_ORBKINENERGY].dNeg = 1;
+  output[OUT_ORBKINENERGY].iNum = 1;
+  output[OUT_ORBKINENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
+  fnWrite[OUT_ORBKINENERGY] = &WriteTotOrbEnergy;
 
   sprintf(output[OUT_ORBPOTENERGY].cName,"OrbPotEnergy");
   sprintf(output[OUT_ORBPOTENERGY].cDescr,"Body's Orbital Potential Energy");
@@ -1052,7 +1116,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBPOTENERGY].bNeg = 1;
   output[OUT_ORBPOTENERGY].dNeg = 1;
   output[OUT_ORBPOTENERGY].iNum = 1;
-  output[OUT_ORBPOTENERGY].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBPOTENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBPOTENERGY] = &WriteOrbPotEnergy;
 
   sprintf(output[OUT_IMK2].cName,"ImK2");
@@ -1459,6 +1523,12 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
      number of columns. */
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+
+    //Need to get orbital elements for SpiNBody in case they're being output
+    if (body[iBody].bSpiNBody) {
+      Bary2OrbElems(body, iBody);
+    }
+
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       for (iOut=0;iOut<MODULEOUTEND;iOut++) {
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
@@ -1531,6 +1601,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
               WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
               WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
                           WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+	                WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
           }
@@ -1560,17 +1631,17 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                 fp = fopen(cLaplaceFunc,"a");
               }
               if (body[iBody].dSemi < body[jBody].dSemi) {
-                for (j=0;j<LAPLNUM;j++) {
+                for (j=0;j<26;j++) {
                   /* output alpha, laplace func, derivatives for each internal/external pair.
                   external/internal pairs are duplicates and so not output. this can create a
                   large amount of data for systems with lots of planets (78 columns/planet pair) */
-                  fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                  fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                  fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                  fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                   fprintf(fp," ");
                 }
               }
@@ -1590,13 +1661,13 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                     /* output alpha, laplace func, derivatives for each internal/external pair.
                     external/internal pairs are duplicates and so not output. this can create a
                     large amount of data for systems with lots of planets (78 columns/planet pair) */
-                    fprintd(fp,system->dmAlpha0[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                    fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceC[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                    fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceD[system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                    fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                     fprintf(fp," ");
                   }
                 }
@@ -1608,6 +1679,16 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
+  
+  if (control->bOutputEigen) {
+    if (body[1].bDistOrb) {
+      if (control->Evolve.iDistOrbModel == RD4) {
+         SolveEigenVal(body,&control->Evolve,system);
+      }
+      WriteEigen(control,system);
+    }
+  }
+      
 }
 
 void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
@@ -1653,6 +1734,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
+  InitializeOutputDistRes(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
 
 }

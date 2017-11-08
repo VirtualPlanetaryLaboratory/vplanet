@@ -11,9 +11,23 @@
 #include <string.h>
 #include "vplanet.h"
 
+/*
+#ifdef DEBUG
+#define _GNU_SOURCE
+#include <fenv.h>
+#endif
+*/
+
+#include <xmmintrin.h>
+
 /*! \brief Main function. All the magic happens here!
  */
 int main(int argc,char *argv[]) {
+#ifdef DEBUG
+  //  feenableexcept(FE_INVALID | FE_OVERFLOW);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
+#endif
+  
   time_t dStartTime;
   dStartTime = time(NULL);
 

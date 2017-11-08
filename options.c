@@ -1925,7 +1925,6 @@ void ReadMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
 }
 
 /* Mass-Radius relationship */
-
 void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with Radius, Density and Mass */
@@ -1938,16 +1937,16 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (memcmp(sLower(cTmp),"r",1) == 0) {
       /* Reid & Hawley 2000 */
       // XXX Should change number to #define'd variables!
-      control->iMassRad[iFile-1]=0;
+      control->iMassRad[iFile-1]=REIDHAWLEY;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
-      control->iMassRad[iFile-1]=1;
+      control->iMassRad[iFile-1]=GORDASVECH99;
     } else if (memcmp(sLower(cTmp),"b",1) == 0) {
       /* Bayless & Orosz 2006 */
-      control->iMassRad[iFile-1]=2;
+      control->iMassRad[iFile-1]=BAYLESSOROSZ06;
     } else if (memcmp(sLower(cTmp),"s",1) == 0) {
       /* Sotin et al 2007 */
-      control->iMassRad[iFile-1]=3;
+      control->iMassRad[iFile-1]=SOTIN07;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
@@ -3389,8 +3388,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
   InitializeOptionsBinary(options,fnRead);
-  InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
-  InitializeOptionsSpiNBody(options,fnRead);
-
 }

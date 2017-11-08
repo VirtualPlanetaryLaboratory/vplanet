@@ -47,6 +47,9 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
   dest[iBody].bTideLock = src[iBody].bTideLock;
+  dest[iBody].dTidalQRock = src[iBody].dTidalQRock;
+  dest[iBody].dK2Rock = src[iBody].dK2Rock;
+
 
   if (iBody > 0) {
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -109,6 +112,27 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
 
 /**************** EQTIDE options ********************/
 
+/* Tidal Q of Rocky Body */
+
+void ReadTidalQRock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTidalQRock = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTidalQRock = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTidalQRock = options->dDefault;
+}
+
+/* */
+
 /* Discrete Rotation */
 
 void ReadDiscreteRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -161,7 +185,8 @@ void ReadFixOrbit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   } else
     if (iFile > 0)
       /* Set to default */
-      AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+//       AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
+			control->Evolve.bFixOrbit[iFile-1] = 0;
 }
 
 /* Force Equilibrium Spin Rate? */
@@ -297,6 +322,26 @@ void ReadK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   } else
     if(iFile > 0)
       body[iFile-1].dK2Env = options->dDefault;
+}
+
+void ReadK2Rock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if(dTmp < 0) {
+      if(control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dK2Rock = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].dK2Rock = options->dDefault;
 }
 
 /* Maximum allowable offset between primary's spin period and its
@@ -708,6 +753,22 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_OCEANTIDES].iType = 0;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
 
+  sprintf(options[OPT_TIDALQROCK].cName,"dTidalQRock");
+  sprintf(options[OPT_TIDALQROCK].cDescr,"Tidal Q of Rocky body");
+  sprintf(options[OPT_TIDALQROCK].cDefault,"300");
+  options[OPT_TIDALQROCK].dDefault = 300;
+  options[OPT_TIDALQROCK].iType = 2;
+  options[OPT_TIDALQROCK].iMultiFile = 1;
+  fnRead[OPT_TIDALQROCK] = &ReadTidalQRock;
+
+  sprintf(options[OPT_K2ROCK].cName,"dK2Rock");
+  sprintf(options[OPT_K2ROCK].cDescr,"Rock's Love Number of Degree 2");
+  sprintf(options[OPT_K2ROCK].cDefault,"0.01");
+  options[OPT_K2ROCK].dDefault = 0.01;
+  options[OPT_K2ROCK].iType = 2;
+  options[OPT_K2ROCK].iMultiFile = 1;
+  fnRead[OPT_K2ROCK] = &ReadK2Rock;
+
 }
 
 void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -1000,10 +1061,6 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     InitializeRotEqtide(body,update,iBody,iPert);
     fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
 
-    /* Internal Energy XXX
-    InitializeIntEnEqtide(update,iBody,iPert,body[iBody].iaTidePerts[iPert]);
-    fnUpdate[iBody][update[iBody].iIntEn][update[iBody].iaIntEnEqtide[iPert]] = &fdCTLDrotrateDt;
-    */
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -1588,7 +1645,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     iPert=1;
   else
     iPert=0;
-  /* XXX Broken */
+  /* XXX Broken
 
   if (control->Evolve.iEqtideModel == CPL)
     *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
@@ -1602,6 +1659,7 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
     fsUnitsVel(units,cUnit);
   }
+  */
 }
 
 void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1676,7 +1734,14 @@ void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
   strcpy(cUnit,"");
 }
+/*
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  *dTmp = body[iBody].dTidalQ;
+
+  strcpy(cUnit,"");
+}
+*/
 void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
 
@@ -2099,8 +2164,7 @@ void WriteRotTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
  */
 
 void WriteSemiTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to allow for multiple bodies */
-  *dTmp = fdTimescale(body[1].dSemi,*(update[1].pdDsemiDtEqtide));
+  *dTmp = fdTimescale(body[iBody].dSemi,*(update[iBody].pdDsemiDtEqtide));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2210,7 +2274,14 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQENV].iNum = 1;
   output[OUT_TIDALQENV].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQENV] = WriteTidalQEnv;
-
+/*
+  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
+  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
+  output[OUT_TIDALQ].bNeg = 0;
+  output[OUT_TIDALQ].iNum = 1;
+  output[OUT_TIDALQ].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALQ] = WriteTidalQ;
+*/
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");
@@ -2389,16 +2460,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_GAMMAORB].iNum = 1;
   output[OUT_GAMMAORB].iModuleBit = EQTIDE;
   fnWrite[OUT_GAMMAORB] = &WriteGammaOrb;
-
-  // + THERMINT?? XXX
-  /* dflemin3: 08/10/2016: moved to output.c
-  sprintf(output[OUT_IMK2].cName,"ImK2");
-  sprintf(output[OUT_IMK2].cDescr,"Im(k_2)");
-  output[OUT_IMK2].bNeg = 0;
-  output[OUT_IMK2].iNum = 1;
-  output[OUT_IMK2].iModuleBit = EQTIDE;
-  fnWrite[OUT_IMK2] = &WriteImK2;
-  */
 
   sprintf(output[OUT_K2OCEAN].cName,"OceanK2");
   sprintf(output[OUT_K2OCEAN].cDescr,"K2_Ocean");
@@ -2780,7 +2841,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */
       if (evolve->bForceEqSpin[iBody])
-	SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
+	     SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
     }
   }
 
@@ -2823,6 +2884,7 @@ double fdCPLTidePower(BODY *body,int iBody) {
       iOrbiter = iBody;
     iIndex = body[iBody].iaTidePerts[iPert];
 
+    // XXX RB: Does this work with DF's changes to da/dt with the synchronous case?
     dOrbPow += -body[iBody].dTidalZ[iIndex]/8 * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 147./2*body[iBody].iTidalEpsilon[iIndex][1] + 0.5*body[iBody].iTidalEpsilon[iIndex][2] - 3*body[iBody].iTidalEpsilon[iIndex][5]) - 4*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(body[iBody].iTidalEpsilon[iIndex][0] - body[iBody].iTidalEpsilon[iIndex][8]));
 
     dRotPow += body[iBody].dTidalZ[iIndex]*body[iBody].dRotRate/(8*body[iOrbiter].dMeanMotion) * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 49*body[iBody].iTidalEpsilon[iIndex][1] + body[iBody].iTidalEpsilon[iIndex][2]) + 2*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(-2*body[iBody].iTidalEpsilon[iIndex][0] + body[iBody].iTidalEpsilon[iIndex][8] + body[iBody].iTidalEpsilon[iIndex][9]));
@@ -2833,7 +2895,6 @@ double fdCPLTidePower(BODY *body,int iBody) {
 
 /* Tidal Power due to Ocean Tides */
 double fdTidePowerOcean(BODY *body, int iBody) {
-
   // Total CPL Tide Power = Ocean + Man contributions
   return fdCPLTidePower(body,iBody) - fdTidalPowMan(body,iBody);
 }
@@ -2841,7 +2902,6 @@ double fdTidePowerOcean(BODY *body, int iBody) {
 /* Surface Energy Flux due to Ocean Tides */
 // dflemin3: dRadius -> dTidalRadius
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
-
   // Total Ocean Tide power / surface area of body
   return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
@@ -2855,7 +2915,6 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 }
 
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
-
   // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
@@ -2927,11 +2986,13 @@ double fdCPLEqRotRate(double dEccSq,double dMeanMotion,int bDiscrete) {
  * Derivatives
  */
 
-/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57) */
+/*! CPL da/dt when tidally locked (Ferraz-Mello et al. 2008 eqn 57)
+ * DEPRECATED
+ */
 double fdCPLDsemiDtLocked(BODY *body,SYSTEM *system,int *iaBody)
 {
 
-  // HACK HACK HACK
+  // HACK HACK HACK XXX
   return fdCPLDsemiDt(body,system,iaBody);
 
   int iB0=iaBody[0],iB1=iaBody[1];
@@ -2943,7 +3004,6 @@ iaBody[0] = central body */
 
   // Contribution from orbiter
   dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
-
   // Contribution from central body
   dSum += body[iB1].dTidalZ[iB0]*(7.0*body[iB0].dEccSq + sin(body[iB1].dObliquity)*sin(body[iB1].dObliquity))*body[iB1].iTidalEpsilon[iB0][2];
 
@@ -2959,11 +3019,13 @@ double fdCPLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
 iaBody[0] = central body */
 
-  double dSum = 0.0;
+  double dSum;
 
-  // Secondary (orbiter) is tidally locked
+  // Primary (central body) is tidally locked
   if(!body[iB0].bTideLock && body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dSemi*body[iB0].dSemi/(4*BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
@@ -2972,9 +3034,11 @@ iaBody[0] = central body */
 
     return dSum;
   }
-  // Primary (central body) is tidally locked
+  // Secondary (orbiter) is tidally locked
   else if(body[iB0].bTideLock && !body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += -body[iB0].dSemi*body[iB0].dSemi/(BIGG*body[iB0].dMass*body[iB1].dMass)*body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
@@ -2986,6 +3050,8 @@ iaBody[0] = central body */
   // If primary and secondary are tidally locked
   else if(body[iB0].bTideLock && body[iB1].bTideLock)
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dTidalZ[iB1]*(7.0*body[iB0].dEccSq + sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity))*body[iB0].iTidalEpsilon[iB1][2];
 
@@ -2997,6 +3063,8 @@ iaBody[0] = central body */
   // Neither body is tidally locked
   else
   {
+    dSum = 0.0;
+
     // Contribution from orbiter
     dSum += body[iB0].dTidalZ[iB1]*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iB0].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 147./2*body[iB0].iTidalEpsilon[iB1][1] + 0.5*body[iB0].iTidalEpsilon[iB1][2] - 3*body[iB0].iTidalEpsilon[iB1][5]) - 4*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(body[iB0].iTidalEpsilon[iB1][0]-body[iB0].iTidalEpsilon[iB1][8]));
 
@@ -3036,27 +3104,6 @@ double fdCPLDKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
      iaBody[0] = the orbiter, iaBody[0] = central body */
 
   return body[iaBody[0]].dDeccDtEqtide * cos(body[iaBody[0]].dLongP);
-}
-
-double fdCPLDsemiDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
-  double foo;
-
-  /* XXX Not fixed */
-  // foo = body.dTidalZ[0]*(4*body.iTidalEpsilon[0][0] + dEcc*dEcc*(-20*body.iTidalEpsilon[0][0] + 147./2*body.iTidalEpsilon[0][1] + 0.5*body.iTidalEpsilon[0][2] - 3*body.iTidalEpsilon[0][5]) - 4*sin(body.dObliquity)*sin(body.dObliquity)*(body.iTidalEpsilon[0][0]-body.iTidalEpsilon[0][8]));
-
-  return -1;
-  //return dSemi*dSemi/(4*BIGG*body.dMass*dMassPert)*foo;
-
-}
-
-double fdCPLDeccDtBody(BODY body,double dMassPert,double dSemi,double dEcc) {
-  double foo;
-
-  /* XXX Not fixed */
-  //foo = body.dTidalZ*(2*body.iTidalEpsilon[0] - 49./2*body.iTidalEpsilon[1] + 0.5*body.iTidalEpsilon[2] + 3*body.iTidalEpsilon[5]);
-
-  //return -dSemi*dEcc/(8*BIGG*body.dMass*dMassPert) * foo;
-  return -1;
 }
 
 double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {

@@ -1,0 +1,16 @@
+sSystemName   reso
+iVerbose      5
+iDigits       8
+bOverwrite    1
+sUnitMass     solar
+sUnitLength   au
+sUnitTime     y
+sUnitAngle    d
+bDoLog        1
+saBodyFiles   star.in b.in c.in
+
+bDoForward    1
+bVarDt        1
+dEta          0.1
+dStopTime     10000
+dOutputTime   1

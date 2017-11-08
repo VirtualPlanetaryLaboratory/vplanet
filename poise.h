@@ -15,6 +15,11 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define ANN         0
 #define SEA         1
 
+/* OLR model */
+#define WK97         0
+#define HM16         1
+#define SMS09        2
+
 /* Water albedo type */
 #define ALBFIXED    0
 #define ALBTAYLOR   1
@@ -48,6 +53,7 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_SURFALBEDO      1919
 #define OPT_ICEDEPRATE      1920
 #define OPT_SKIPSEASENABLED 1921
+#define OPT_DIFFROT         1922
 
 //#define OPT_LANDGEOM      1940
 #define OPT_HEATCAPLAND     1942
@@ -70,7 +76,14 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_FORCEOBLIQ      1959
 #define OPT_OBLIQAMP        1960
 #define OPT_OBLIQPER        1961
+#define OPT_ACCUMODE        1962
+#define OPT_ELEVFB          1963
+#define OPT_LAPSER          1964
+#define OPT_REFHEIGHT       1965
+#define OPT_ABLATEFF        1966
 
+
+#define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
 
 /* Options Functions */
@@ -102,6 +115,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TOTICEFLOW       1926
 #define OUT_TOTICEBALANCE    1927
 #define OUT_SKIPSEAS         1928
+#define OUT_AREAICECOV       1929
 
 #define OUT_LATITUDE         1930
 #define OUT_TEMPLAT          1931
@@ -126,6 +140,12 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TEMPMINLAT       1950
 #define OUT_TEMPMAXLAT       1951
 #define OUT_SNOWBALL         1952
+#define OUT_PLANCKBAVG       1953
+#define OUT_ICEACCUM         1954
+#define OUT_ICEABLATE        1955
+#define OUT_TEMPMAXLAND      1956
+#define OUT_TEMPMAXWATER     1957
+
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -142,6 +162,7 @@ void WriteAlbedoLat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,ch
 void WriteAnnualInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDailyInsol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePlanckB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePlanckBAvg(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalFluxes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteSeasonalIceBalance(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -164,8 +185,11 @@ void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
 double dOLRdTwk97(BODY*,int,int,int);
 double OLRwk97(BODY*,int,int,int);
-double dOLRdThm16(BODY*,int,int);
-double OLRhm16(BODY*,int,int);
+double dOLRdThm16(BODY*,int,int,int);
+double OLRhm16(BODY*,int,int,int);
+double dOLRdTsms09(BODY*,int,int,int);
+double OLRsms09(BODY*,int,int,int);
+void AreaIceCovered(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
@@ -173,6 +197,7 @@ void PoiseIceSheets(BODY*,EVOLVE*,int);
 void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
+void Snowball(BODY*,int);
 
 double IceMassBalance(BODY*,int,int);
 

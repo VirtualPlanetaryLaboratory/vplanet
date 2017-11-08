@@ -1,6 +1,6 @@
 VPLANET Style Guide
 
-Variable and funtion names use a "Hungarian style."
+Variable and function names use a "Hungarian style."
 
 
 Subroutine names can begin with a prefix that describes the returned parameter
@@ -17,9 +17,9 @@ fnsa = String Array Function (returns char[][])
 Subroutines should be written as:
 
 void ThisIsAFunction(BODY *body,CONTROL *control,...,fnUpdate, double dA,double dB,...,int iA,int iB) {
-  /* This comment describes the point of this function, any potential gotchas or future 
-     improvements. Single line comments with // are OK. The argument list should be 
-     alphabetical, starting with vplanet structs, then any function pointers, then doubles, 
+  /* This comment describes the point of this function, any potential gotchas or future
+     improvements. Single line comments with // are OK. The argument list should be
+     alphabetical, starting with vplanet structs, then any function pointers, then doubles,
      then integers, then Booleans. */
 
   Use spaces instead of tabs to indent code. Tabs can cause conflicts. You should be able
@@ -42,7 +42,7 @@ void ThisIsAFunction(BODY *body,CONTROL *control,...,fnUpdate, double dA,double 
   da = Double Array
   sa = String Array
   pb = Pointer to Boolean
-  pi = Pointer to Integer 
+  pi = Pointer to Integer
   pd = Pointer to Double
   pab = Pointer to Boolean Array
   pai = Pointer to Integer Array
@@ -90,9 +90,9 @@ Single line comment:
 double dAge;           /**< Body's Age */
 
 Multi-line comment:
-/*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+/*! Points to the element in UPDATE's daDerivProc matrix that contains the
     semi-major axis' derivative due to EQTIDE. */
-double *pdDsemiDtEqtide;    
+double *pdDsemiDtEqtide;
 
 ---- Auxiliary Python Code -----
 

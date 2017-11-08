@@ -36,6 +36,7 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_EIGENSET           1370
 #define OPT_EIGENVALUE				 1371
 #define OPT_EIGENVECTOR				 1372
+#define OPT_OUTPUTEIGEN        1397
 #define OPT_OUTPUTLAPL         1398
 #define OPT_ORBITMODEL         1399
 
@@ -109,6 +110,7 @@ void WriteBodyDKeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,d
 void WriteBodyDPincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDQincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void InitializeOutputDistOrb(OUTPUT*,fnWriteOutput[]);
+void WriteEigen(CONTROL*,SYSTEM*);
 
 /* Logging Functions */
 void LogOptionsDistOrb(CONTROL*,FILE*);

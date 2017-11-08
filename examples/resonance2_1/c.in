@@ -1,0 +1,14 @@
+sName        c  
+saModules    distorb distres
+dMass        9.547861040430418e-6
+dRadius      -1.50
+dRotPeriod   -100
+dObliquity   23.5    #no Moons yet in vplanet....
+dSemi        1.0
+dEcc         0.048
+dInc         1e-5
+dLongP       0.0
+dLongA       0.0
+# bGRCorr      0
+saOutputOrder    Time Semim Ecce Inc ArgP LongA MeanL
+dMeanL     0

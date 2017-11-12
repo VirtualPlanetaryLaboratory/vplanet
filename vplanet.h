@@ -757,6 +757,7 @@ typedef struct {
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
   double *daLats;            /**< Latitude of each cell (centered) */
+  double *daPeakInsol;     /**< Annually averaged insolation at each latitude */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
 
   /* Arrays for annual model */

@@ -1303,6 +1303,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   body[iBody].dIceMassTot = 0.0;
   body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double*));
   body[iBody].daAnnualInsol = malloc(body[iBody].iNumLats*sizeof(double));
+  body[iBody].daPeakInsol = malloc(body[iBody].iNumLats*sizeof(double));
   body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion); //number of days in year
   body[iBody].daFlux = malloc(body[iBody].iNumLats*sizeof(double));  
   body[iBody].daFluxIn = malloc(body[iBody].iNumLats*sizeof(double)); 
@@ -2063,6 +2064,17 @@ void WriteAnnualInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
+
+void WritePeakInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].daPeakInsol[body[iBody].iWriteLat];
+
+  if (output->bDoNeg[iBody]) {
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+}
   
 void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   char cOut[NAMELEN];
@@ -2653,6 +2665,16 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ANNUALINSOL].iModuleBit = POISE;
   fnWrite[OUT_ANNUALINSOL] = &WriteAnnualInsol; 
   
+  sprintf(output[OUT_PEAKINSOL].cName,"PeakInsol");
+  sprintf(output[OUT_PEAKINSOL].cDescr,"Peak insolation by latitude.");
+  sprintf(output[OUT_PEAKINSOL].cNeg,"W/m^2");
+  output[OUT_PEAKINSOL].bNeg = 1;
+  output[OUT_PEAKINSOL].dNeg = 1/40.55185;
+  output[OUT_PEAKINSOL].iNum = 1;
+  output[OUT_PEAKINSOL].bGrid = 1;
+  output[OUT_PEAKINSOL].iModuleBit = POISE;
+  fnWrite[OUT_PEAKINSOL] = &WritePeakInsol;
+  
   sprintf(output[OUT_FLUXMERID].cName,"FluxMerid");
   sprintf(output[OUT_FLUXMERID].cDescr,"Total meridional (northward) flux by latitude");
   sprintf(output[OUT_FLUXMERID].cNeg,"PW");
@@ -3170,9 +3192,11 @@ void AnnualInsolation(BODY *body, int iBody) {
   EccA = true2eccA(TrueA, body[iBody].dEcc);
   MeanL = EccA - body[iBody].dEcc*sin(EccA) + LongP;
   
-  for (j=0;j<body[iBody].iNumLats;j++)
+  for (j=0;j<body[iBody].iNumLats;j++) {
     body[iBody].daAnnualInsol[j] = 0.0;
-  
+    body[iBody].daPeakInsol[j] = 0.0;
+  }
+    
   for (i=0;i<body[iBody].iNDays;i++) {
     if (i!=0) {
       MeanL = MeanL + 2*PI/body[iBody].iNDays;
@@ -3203,7 +3227,9 @@ void AnnualInsolation(BODY *body, int iBody) {
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);
-      
+      if (body[iBody].daInsol[j][i] > body[iBody].daPeakInsol[j]) {
+        body[iBody].daPeakInsol[j] = body[iBody].daInsol[j][i];
+      }
     }
   }
 }

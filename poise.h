@@ -145,7 +145,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEABLATE        1955
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
-
+#define OUT_PEAKINSOL        1958
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);

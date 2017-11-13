@@ -187,7 +187,6 @@ void ReadXUVModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       body[iFile-1].iXUVModel = STELLAR_MODEL_RIBAS;
 }
 
-
 void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -209,7 +208,6 @@ void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (iFile > 0)
       body[iFile-1].iHZModel = HZ_MODEL_KOPPARAPU;
 }
-
 
 void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -454,7 +452,6 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
 }
 
 void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
-
 
   // Assign temperature
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -1023,8 +1020,7 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
 /*! Compute instataneous change in potential energy due to stellar radius evolution
  * Note that this energy is released as radiation
  */
-double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
-{
+double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
   double dDRadiusDt, dEdt;
 
@@ -1039,8 +1035,7 @@ double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 /*! Compute instataneous change in rotational energy due to stellar radius evolution
  * and considering angular momentum conservation
  */
-double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
-{
+double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
   double dDRadiusDt, dEdt;
 
@@ -1053,8 +1048,7 @@ double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody)
 }
 
 /*! Compute instataneous change in rotational energy due to stellar magnetic braking */
-double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
-{
+double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
   double dJDt, dEdt;
 
@@ -1068,8 +1062,7 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody)
 }
 
 /*! Compute total energy lost due to stellar evolution */
-double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody)
-{
+double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody);
 }
 
@@ -1296,7 +1289,7 @@ double fdRadiusFunctionProximaCen(double dAge, double dMass) {
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
-// RORY: I don't think so! -- This function should be set to ReturnOutputZero
+  // RORY: I don't think so! -- This function should be set to ReturnOutputZero
   return 0;
 }
 
@@ -1347,8 +1340,7 @@ void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,double *daHZLi
   tstar = dTeff - 5700;
 
   for (i=0;i<6;i++) {
-    seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar +
-c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
+    seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
     // Limits are in AU, convert to meters
     daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUCM;
   }

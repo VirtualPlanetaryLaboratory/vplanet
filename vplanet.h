@@ -310,7 +310,7 @@ typedef struct {
   double *dLOrbTmp;
   double dRPeri;
   double dRApo;
-  
+
 
   /* BINARY parameters */
   int bBinary;           /** Apply BINARY module? */
@@ -364,7 +364,7 @@ typedef struct {
   double dPdot;
   double dQdot;
   int iNLines;
-  double dSpecMomInertia; 
+  double dSpecMomInertia;
 
 
   /* EQTIDE Parameters */
@@ -625,8 +625,8 @@ typedef struct {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
 
-  /* PHOTOCHEM Parameters 
-  PHOTOCHEM Photochem;   // Properties for PHOTOCHEM module N/I 
+  /* PHOTOCHEM Parameters
+  PHOTOCHEM Photochem;   // Properties for PHOTOCHEM module N/I
   double dNumAtmLayers;
   double dNumAtmMolecules;
   char saMoleculeList[MAXSPECIES][NAMELEN];
@@ -638,25 +638,25 @@ typedef struct {
   //double dSurfAlbedo;   // Bolometric, ultimately will be array
   int iResolveSeasons;  // ISEASON in PHOTOCHEM.f
   double dPhotoZenithAngle;
-  int iVaryZenithAngle; // IZYO2 in PHOTOCHEM.f 
-  int iHiResGrid;       // LGRID in PHOTOCHEM.f (default = 0, but if hi res., must change INO and IO2) 
+  int iVaryZenithAngle; // IZYO2 in PHOTOCHEM.f
+  int iHiResGrid;       // LGRID in PHOTOCHEM.f (default = 0, but if hi res., must change INO and IO2)
   int iOxyAbsCoeffApprox; // IO2 in PHOTOCHEM.f
   int iNitroAbsCoeffApprox; // INO in PHOTOCHEM.f
-  double dJacobianPerturbFact; // EPSJ 
+  double dJacobianPerturbFact; // EPSJ
   int bLightning;
   double dLightningAmount;
-  int iAerScattering; // How do aerosols scatter? Mie or fractal. Must read files -- talk to Giada 
+  int iAerScattering; // How do aerosols scatter? Mie or fractal. Must read files -- talk to Giada
   int iMaxNumReactions; // Total number of reactions possible for input species list
-  int iMaxWavelengthBin; // Maximum number of wavelength bins -- not all species are created equal 
+  int iMaxWavelengthBin; // Maximum number of wavelength bins -- not all species are created equal
   int iNumPhotolysisRx; // Number of photochemical reactions
   int iNumPhotoSpecies;
-  int iNumAqueousSpecies; // Species that dissolve in rain --- must read file 
-  int iML; // =12; Shawn doesn't know what these are 
-  int iML1; // =ML+1 
-  int iML2; // =2*ML 
+  int iNumAqueousSpecies; // Species that dissolve in rain --- must read file
+  int iML; // =12; Shawn doesn't know what these are
+  int iML1; // =ML+1
+  int iML2; // =2*ML
   double daAtmTempProfile;
   double daAtmPressProfile;
-  double ***daParticleInfo; // First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius 
+  double ***daParticleInfo; // First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius
 
   double daEddyDiffProfile;
 
@@ -667,7 +667,7 @@ typedef struct {
   int bAtmNitrogen;
   int bAtmChlorine;
 
-  // CLIMA Parameters 
+  // CLIMA Parameters
   double dArgonPressure;
   double dClimaZenithAngle;
   */
@@ -919,11 +919,11 @@ typedef struct {
   double dMassInterior;
   int iBadImpulse;
 
-  
+
   //DISTRES
   int bDistRes;
   double dMeanL;
-  
+
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1017,7 +1017,7 @@ typedef struct {
   int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
   double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
   double dTStart;      /**< time that encounter begins relative to time step */
-  
+
   int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
   int *iResOrder;
   int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
@@ -1340,19 +1340,19 @@ typedef struct {
   double dDMeanLDt;
   int *iaMeanLDistRes;
   double **padDMeanLDtDistRes;
-  
+
   int *iaSemiDistRes;
   double **padDSemiDtDistRes;
 
   int *iaHeccDistRes;
   double **padDHeccDtDistRes;
-  
+
   int *iaKeccDistRes;
   double **padDKeccDtDistRes;
-  
+
   int *iaPincDistRes;
   double **padDPincDtDistRes;
-  
+
   int *iaQincDistRes;
   double **padDQincDtDistRes;
 
@@ -1972,11 +1972,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "eqtide.h"
 #include "radheat.h"
 #include "atmesc.h"
-#include "lopez2012.h"
 #include "stellar.h"
-#include "baraffe2015.h"
-#include "proximacenstellar.h"
-#include "proximacenbradius.h"
 #include "distorb.h"
 #include "thermint.h"
 #include "distrot.h"

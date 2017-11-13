@@ -6,7 +6,6 @@
  * atmospheric escape model.
  *
 */
-// NOTE: Still need to edit module.c, update.c
 
 #include <stdio.h>
 #include <math.h>
@@ -709,7 +708,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   if (body[iBody].bCalcFXUV){
     body[iBody].dFXUV = fdInsolation(body, iBody, 1);
   }
-  
+
   // The H2O XUV escape efficiency
   if (body[iBody].iAtmXAbsEffH2OModel == ATMESC_BOL16)
     body[iBody].dAtmXAbsEffH2O = fdXUVEfficiencyBolmont2016(body[iBody].dFXUV);
@@ -816,7 +815,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
-}
+  }
 
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,fnUpdate,iBody);
@@ -1173,7 +1172,7 @@ void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { 
+  } else {
     strcpy(cUnit,"W/m^2");
   }
 }
@@ -1238,7 +1237,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ETAO].iNum = 1;
   output[OUT_ETAO].iModuleBit = ATMESC;
   fnWrite[OUT_ETAO] = &WriteOxygenEta;
-  
+
   sprintf(output[OUT_EPSH2O].cName,"AtmXAbsEffH2O");
   sprintf(output[OUT_EPSH2O].cDescr,"XUV Atmospheric Escape Efficiency for H2O");
   output[OUT_EPSH2O].bNeg = 0;
@@ -1481,7 +1480,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
-    
+
   	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
 
   }
@@ -1626,13 +1625,13 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 }
 
 double fdXUVEfficiencyBolmont2016(double dFXUV) {
-  
+
   // Based on a piecewise polynomial fit to Figure 2
   // in Bolmont et al. (2017), the XUV escape efficiency
   // as a function of XUV flux for the TRAPPIST-1 planets.
-  
+
   // Polynomial coefficients
-  double a0 = 1.49202; 
+  double a0 = 1.49202;
   double a1 = 5.57875;
   double a2 = 2.27482;
   double b0 = 0.59182134;
@@ -1643,11 +1642,11 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
   double c1 = -0.03068399;
   double c2 = 0.04946948;
   double c3 = -0.89880083;
-  
+
   // Convert to erg/cm^2/s and take the log
   double x = log10(dFXUV * 1.e3);
   double y;
-  
+
   // Piecewise polynomial fit
   if ((x >= -2) && (x < -1))
     y = pow(10, a0 * x * x + a1 * x + a2);
@@ -1658,7 +1657,7 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
   else
     y = 0;
   return y;
-  
+
 }
 
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){

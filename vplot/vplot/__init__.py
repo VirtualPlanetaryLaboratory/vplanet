@@ -20,7 +20,7 @@ if not __VPLOT_SETUP__:
   import os
   import matplotlib.pyplot as pl
   pl.style.use(os.path.join(os.path.dirname(
-               os.path.abspath(__file__)), 
+               os.path.abspath(__file__)),
                'vplot.mplstyle'))
 
   # Force matplotlib to use Palatino Linotype
@@ -34,7 +34,6 @@ if not __VPLOT_SETUP__:
       print("Unable to locate font 'Palatino Linotype'. Please contact")
       print("Rodrigo Luger (rodluger@uw.edu) for help installing it.")
 
-  from . import plot, quickplot, utils, benchmark, log
-  from .benchmark import TestAll
+  from . import plot, quickplot, utils, log
   from .utils import GetOutput
   from .plot import plot, show, savefig, colors, make_pretty

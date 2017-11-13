@@ -93,7 +93,6 @@ def run(name, compare, tolerance, path, maxtime = 100.):
 
 def test_all():
     '''
-    Test all code in the `tests` directory.
 
     '''
 

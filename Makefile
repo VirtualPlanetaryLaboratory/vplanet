@@ -14,4 +14,8 @@ test:
 	@echo 'Compiling vplanet...'
 	-gcc -o vplanet *.c -lm
 	@echo 'Running vtest...'
-	-nosetests -s -v -w tests
+	@if nosetests -s -v -w tests; then\
+	    tests/certificate --pass;\
+	else\
+		tests/certificate --fail;\
+	fi

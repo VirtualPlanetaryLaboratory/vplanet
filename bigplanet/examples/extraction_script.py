@@ -38,7 +38,7 @@ var_from_log = {"secondary" : ["Mass"], "cbp" : ["Mass"]}
 cadence = 100
 
 # Compression algorithm to use
-compression = None #"gzip"
+compression = None # "gzip" is another option
 
 # Use all processors? Best if used on a cluster
 parallel = True
@@ -57,7 +57,7 @@ data = de.extract_data_hdf5(src=src, dataset=dataset, order=order,
                             remove_halts=remove_halts, compression=compression,
                             var_from_log=var_from_log, cadence=cadence, parallel=parallel)
 
-### Make a dataframe of initial conditions! ###
+### Make a dataframe of initial conditions using pandas. ###
 
 # Define the bodies and body variables to extract using a dictionary
 bodies = {'cbp':["Eccentricity","SemimajorAxis","Mass"],
@@ -66,7 +66,14 @@ bodies = {'cbp':["Eccentricity","SemimajorAxis","Mass"],
 # Define the new value (dataframe column) to produce for a given body.  The new column
 # and how to calculate it are given as a dictionary for each body.
 
-new_cols = {}
+# Trivial function to return initial eccentricity
+# This function assumes an hdf5 format
+def trivial(data,sim,body,key=None,fmt="hdf5"):
+    return data.get(sim,body,key)[0]
+
+# Nested dict of body with dict of new column name, name of function that
+# produces said column
+new_cols = {"cbp" : {"InitEcc" : trivial}}
 
 # Define any keyword arguments trivial might need
 kw = {"key" : "Eccentricity"}

@@ -203,7 +203,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 /* Verify halt functions to ensure they are valid and make sense given the
  * enabled modules and the system architecture */
-  int iBody,iModule,iHalt,iHalt0,iHaltNow // Dummy counting variables
+  int iBody,iModule,iHalt,iHalt0,iHaltNow; // Dummy counting variables
   int iHaltMaxEcc=0;  // Counts number of halt max eccentricity
   int iNumMaxEcc=0; // Counts number of max eccentricity occurences
 

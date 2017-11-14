@@ -606,7 +606,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody == 1) {
-      system->dLOrb = malloc(3*sizeof(double));
+      system->daLOrb = malloc(3*sizeof(double));
     
       system->fnLaplaceF = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
       system->fnLaplaceDeriv = malloc(LAPLNUM*sizeof(fnLaplaceFunction*));
@@ -727,8 +727,8 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       CalcHK(body,iBody);
       CalcPQ(body,iBody);
       
-      body[iBody].dLOrb = malloc(3*sizeof(double));
-      body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+      body[iBody].daLOrb = malloc(3*sizeof(double));
+      body[iBody].daLOrbTmp = malloc(3*sizeof(double));
     
       /* Body updates */
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -819,7 +819,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     } else {
       /* Conditions for recalc'ing eigenvalues */
       if (iBody == 1) {
-        system->dLOrb = malloc(3*sizeof(double));
+        system->daLOrb = malloc(3*sizeof(double));
         
         system->dmLaplaceD = malloc(1*sizeof(double*));
         system->dmAlpha0 = malloc(1*sizeof(double*));
@@ -837,8 +837,8 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
 
       for (jBody=1;jBody<(control->Evolve.iNumBodies);jBody++) {
-          body[jBody].dLOrb = malloc(3*sizeof(double));
-          body[jBody].dLOrbTmp = malloc(3*sizeof(double));
+          body[jBody].daLOrb = malloc(3*sizeof(double));
+          body[jBody].daLOrbTmp = malloc(3*sizeof(double));
       
           if (body[iBody].dSemi < body[jBody].dSemi) {  
               system->imLaplaceN[iBody][jBody] = CombCount(iBody,jBody,control->Evolve.iNumBodies-1);
@@ -1670,9 +1670,9 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
     xtmp = xinit(body, iBody);
     ytmp = yinit(body, iBody);
 
-    body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
-    body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
-    body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+    body[iBody].daCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
+    body[iBody].daCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
+    body[iBody].daCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
 
     f = (dTheta - body[jBody].dLongP);
     while (f<0) f+=2*PI;
@@ -1683,16 +1683,16 @@ double MinOrbitSep3D(BODY *body, int iBody, int jBody) {
     xtmp = xinit(body, jBody);
     ytmp = yinit(body, jBody);
 
-    body[jBody].dCartPos[0] = xtmp*(xangle1(body,jBody))+ytmp*(xangle2(body,jBody));
-    body[jBody].dCartPos[1] = xtmp*(yangle1(body,jBody))+ytmp*(yangle2(body,jBody));
-    body[jBody].dCartPos[2] = xtmp*(zangle1(body,jBody))+ytmp*(zangle2(body,jBody));
+    body[jBody].daCartPos[0] = xtmp*(xangle1(body,jBody))+ytmp*(xangle2(body,jBody));
+    body[jBody].daCartPos[1] = xtmp*(yangle1(body,jBody))+ytmp*(yangle2(body,jBody));
+    body[jBody].daCartPos[2] = xtmp*(zangle1(body,jBody))+ytmp*(zangle2(body,jBody));
     
-    dDR = sqrt((body[iBody].dCartPos[0]-body[jBody].dCartPos[0])*\
-            (body[iBody].dCartPos[0]-body[jBody].dCartPos[0]) + \
-               (body[iBody].dCartPos[1]-body[jBody].dCartPos[1])*\
-               (body[iBody].dCartPos[1]-body[jBody].dCartPos[1]) + \
-               (body[iBody].dCartPos[2]-body[jBody].dCartPos[2])*\
-               (body[iBody].dCartPos[2]-body[jBody].dCartPos[2]));
+    dDR = sqrt((body[iBody].daCartPos[0]-body[jBody].daCartPos[0])*\
+            (body[iBody].daCartPos[0]-body[jBody].daCartPos[0]) + \
+               (body[iBody].daCartPos[1]-body[jBody].daCartPos[1])*\
+               (body[iBody].daCartPos[1]-body[jBody].daCartPos[1]) + \
+               (body[iBody].daCartPos[2]-body[jBody].daCartPos[2])*\
+               (body[iBody].daCartPos[2]-body[jBody].daCartPos[2]));
 
     dDR *= AUCM;
 
@@ -2647,17 +2647,17 @@ void osc2cart(BODY *body, int iNumBodies) {
   double xtmp, ytmp, vxtmp, vytmp;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    body[iBody].dCartPos = malloc(3*sizeof(double));
-    body[iBody].dCartVel = malloc(3*sizeof(double));
+    body[iBody].daCartPos = malloc(3*sizeof(double));
+    body[iBody].daCartVel = malloc(3*sizeof(double));
 
     if (iBody == 0) {
-      body[iBody].dCartPos[0] = 0;
-      body[iBody].dCartPos[1] = 0;
-      body[iBody].dCartPos[2] = 0;
+      body[iBody].daCartPos[0] = 0;
+      body[iBody].daCartPos[1] = 0;
+      body[iBody].daCartPos[2] = 0;
 
-      body[iBody].dCartVel[0] = 0;
-      body[iBody].dCartVel[1] = 0;
-      body[iBody].dCartVel[2] = 0;
+      body[iBody].daCartVel[0] = 0;
+      body[iBody].daCartVel[1] = 0;
+      body[iBody].daCartVel[2] = 0;
     } else {
       kepler_eqn(body, iBody);
       xtmp = xinit(body, iBody);
@@ -2665,13 +2665,13 @@ void osc2cart(BODY *body, int iNumBodies) {
       vxtmp = vxi(body, iBody);
       vytmp = vyi(body, iBody);
 
-      body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
-      body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
-      body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+      body[iBody].daCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
+      body[iBody].daCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
+      body[iBody].daCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
 
-      body[iBody].dCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
-      body[iBody].dCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
-      body[iBody].dCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
+      body[iBody].daCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
+      body[iBody].daCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
+      body[iBody].daCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
     }
   }
 }
@@ -2688,15 +2688,15 @@ void astro2bary(BODY *body, int iNumBodies) {
     xcom[i] = 0;
     vcom[i] = 0;
     for (iBody=1;iBody<iNumBodies;iBody++) {
-      xcom[i] += (body[iBody].dMass*body[iBody].dCartPos[i]/mtotal);
-      vcom[i] += (body[iBody].dMass*body[iBody].dCartVel[i]/mtotal);
+      xcom[i] += (body[iBody].dMass*body[iBody].daCartPos[i]/mtotal);
+      vcom[i] += (body[iBody].dMass*body[iBody].daCartVel[i]/mtotal);
     }
   }
 
   for (i=0;i<3;i++) {
     for (iBody=0;iBody<iNumBodies;iBody++) {
-      body[iBody].dCartPos[i] -= xcom[i];
-      body[iBody].dCartVel[i] -= vcom[i];
+      body[iBody].daCartPos[i] -= xcom[i];
+      body[iBody].daCartVel[i] -= vcom[i];
     }
   }
 
@@ -2709,11 +2709,11 @@ void bary2astro(BODY *body, int iNumBodies) {
   double xtmp, vtmp;
 
   for (i=0;i<3;i++) {
-    xtmp = body[0].dCartPos[i];
-    vtmp = body[0].dCartVel[i];
+    xtmp = body[0].daCartPos[i];
+    vtmp = body[0].daCartVel[i];
     for (iBody=0;iBody<iNumBodies;iBody++) {
-      body[iBody].dCartPos[i] -= xtmp;
-      body[iBody].dCartVel[i] -= vtmp;
+      body[iBody].daCartPos[i] -= xtmp;
+      body[iBody].daCartVel[i] -= vtmp;
     }
   }
 }
@@ -2738,7 +2738,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
     AngMom[i]=0;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    cross(body[iBody].dCartPos, body[iBody].dCartVel, rxptmp);
+    cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
     for (i=0;i<3;i++) {
       // XXX Why divide by MSUN and not stellar mass?
       AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
@@ -2754,19 +2754,19 @@ void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
   vtmp = malloc(3*sizeof(double));
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    xtmp[0] = body[iBody].dCartPos[0]*cos(system->dThetaInvP)+body[iBody].dCartPos[1]*sin(system->dThetaInvP);
-    xtmp[1] = -body[iBody].dCartPos[0]*sin(system->dThetaInvP)+body[iBody].dCartPos[1]*cos(system->dThetaInvP);
-    xtmp[2] = body[iBody].dCartPos[2];
-    vtmp[0] = body[iBody].dCartVel[0]*cos(system->dThetaInvP)+body[iBody].dCartVel[1]*sin(system->dThetaInvP);
-    vtmp[1] = -body[iBody].dCartVel[0]*sin(system->dThetaInvP)+body[iBody].dCartVel[1]*cos(system->dThetaInvP);
-    vtmp[2] = body[iBody].dCartVel[2];
+    xtmp[0] = body[iBody].daCartPos[0]*cos(system->dThetaInvP)+body[iBody].daCartPos[1]*sin(system->dThetaInvP);
+    xtmp[1] = -body[iBody].daCartPos[0]*sin(system->dThetaInvP)+body[iBody].daCartPos[1]*cos(system->dThetaInvP);
+    xtmp[2] = body[iBody].daCartPos[2];
+    vtmp[0] = body[iBody].daCartVel[0]*cos(system->dThetaInvP)+body[iBody].daCartVel[1]*sin(system->dThetaInvP);
+    vtmp[1] = -body[iBody].daCartVel[0]*sin(system->dThetaInvP)+body[iBody].daCartVel[1]*cos(system->dThetaInvP);
+    vtmp[2] = body[iBody].daCartVel[2];
 
-    body[iBody].dCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
-    body[iBody].dCartPos[1] = xtmp[1];
-    body[iBody].dCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
-    body[iBody].dCartVel[0] = vtmp[0]*cos(system->dPhiInvP)-vtmp[2]*sin(system->dPhiInvP);
-    body[iBody].dCartVel[1] = vtmp[1];
-    body[iBody].dCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
+    body[iBody].daCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
+    body[iBody].daCartPos[1] = xtmp[1];
+    body[iBody].daCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
+    body[iBody].daCartVel[0] = vtmp[0]*cos(system->dPhiInvP)-vtmp[2]*sin(system->dPhiInvP);
+    body[iBody].daCartVel[1] = vtmp[1];
+    body[iBody].daCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
   }
 
   free(xtmp);
@@ -2784,12 +2784,12 @@ void cart2osc(BODY *body, int iNumBodies) {
   h = malloc(3*sizeof(double));
 
   for (iBody=1;iBody<iNumBodies;iBody++) {
-    r = normv(body[iBody].dCartPos);
-    vsq = normv(body[iBody].dCartVel)*normv(body[iBody].dCartVel);
-    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]+body[iBody].dCartPos[1]*body[iBody].dCartVel[1]+\
-            body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/r;
+    r = normv(body[iBody].daCartPos);
+    vsq = normv(body[iBody].daCartVel)*normv(body[iBody].daCartVel);
+    rdot = (body[iBody].daCartPos[0]*body[iBody].daCartVel[0]+body[iBody].daCartPos[1]*body[iBody].daCartVel[1]+\
+            body[iBody].daCartPos[2]*body[iBody].daCartVel[2])/r;
     mu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
-    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    cross(body[iBody].daCartPos, body[iBody].daCartVel, h);
     hsq = normv(h)*normv(h);
     
     body[iBody].dSemi = pow((2.0/r - vsq/mu),-1)*AUCM;
@@ -2800,8 +2800,8 @@ void cart2osc(BODY *body, int iNumBodies) {
     body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
     body[iBody].dLongA = atan2(h[0],-h[1]);
     if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;    
-    sinwf = body[iBody].dCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-body[iBody].dSinc*body[iBody].dSinc));
-    coswf = (body[iBody].dCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*body[iBody].dSinc*body[iBody].dSinc))/cos(body[iBody].dLongA);
+    sinwf = body[iBody].daCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-body[iBody].dSinc*body[iBody].dSinc));
+    coswf = (body[iBody].daCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*body[iBody].dSinc*body[iBody].dSinc))/cos(body[iBody].dLongA);
     
     sinf = body[iBody].dSemi/AUCM*(1.0-body[iBody].dEcc*body[iBody].dEcc)*rdot/(normv(h)*body[iBody].dEcc);
     cosf = (body[iBody].dSemi/AUCM*(1.0-body[iBody].dEcc*body[iBody].dEcc)/r - 1.0)/body[iBody].dEcc;

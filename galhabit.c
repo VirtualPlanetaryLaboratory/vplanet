@@ -1666,17 +1666,17 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 //       fprintd(fOut,body[iBody].dRelativeVel[2],4,6);
 //       fprintf(fOut," ");
 
-      // fprintd(fOut,body[iBody].dCartPos[0]*AUCM,4,6);
+      // fprintd(fOut,body[iBody].daCartPos[0]*AUCM,4,6);
 //       fprintf(fOut," ");
-//       fprintd(fOut,body[iBody].dCartPos[1]*AUCM,4,6);
+//       fprintd(fOut,body[iBody].daCartPos[1]*AUCM,4,6);
 //       fprintf(fOut," ");
-//       fprintd(fOut,body[iBody].dCartPos[2]*AUCM,4,6);
+//       fprintd(fOut,body[iBody].daCartPos[2]*AUCM,4,6);
 //       fprintf(fOut," ");
-//       fprintd(fOut,body[iBody].dCartVel[0]*AUCM/DAYSEC,4,6);
+//       fprintd(fOut,body[iBody].daCartVel[0]*AUCM/DAYSEC,4,6);
 //       fprintf(fOut," ");
-//       fprintd(fOut,body[iBody].dCartVel[1]*AUCM/DAYSEC,4,6);
+//       fprintd(fOut,body[iBody].daCartVel[1]*AUCM/DAYSEC,4,6);
 //       fprintf(fOut," ");
-//       fprintd(fOut,body[iBody].dCartVel[2]*AUCM/DAYSEC,4,6);
+//       fprintd(fOut,body[iBody].daCartVel[2]*AUCM/DAYSEC,4,6);
       
       fprintd(fOut,body[iBody].dSemi,4,6);
       fprintf(fOut," ");
@@ -1700,11 +1700,11 @@ void ForceBehaviorGalHabit(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
     /* apply the impulse */
     ApplyDeltaV(body,system,iBody);
     //Vis viva integral
-    C = 0.5*(pow(body[iBody].dCartVel[0],2)+pow(body[iBody].dCartVel[1],2)+\
-          pow(body[iBody].dCartVel[2],2))\
+    C = 0.5*(pow(body[iBody].daCartVel[0],2)+pow(body[iBody].daCartVel[1],2)+\
+          pow(body[iBody].daCartVel[2],2))\
           -KGAUSS*KGAUSS*(body[iBody].dMassInterior+body[iBody].dMass)/MSUN\
-          /sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+\
-          pow(body[iBody].dCartPos[2],2));
+          /sqrt(pow(body[iBody].daCartPos[0],2)+pow(body[iBody].daCartPos[1],2)+\
+          pow(body[iBody].daCartPos[2],2));
     
     if (C >= 0) {
       body[iBody].iDisrupt = 1;
@@ -1872,9 +1872,9 @@ int random_int(int n) {
 int check_dr(BODY* body, EVOLVE* evolve, SYSTEM *system, int iBody) {
   double r1x, r1y, r1z, dt, dr, r1, r2, dcross, P;
   
-//   r1x = body[iBody].dCartPos[0];
-//   r1y = body[iBody].dCartPos[1];
-//   r1z = body[iBody].dCartPos[2];
+//   r1x = body[iBody].daCartPos[0];
+//   r1y = body[iBody].daCartPos[1];
+//   r1z = body[iBody].daCartPos[2];
 //   r1 = sqrt(pow(r1x,2)+pow(r1y,2)+pow(r1z,2));
 //   
 //   dcross = (system->dPassingStarR[0]*system->dRelativeVel[0]+\
@@ -1887,8 +1887,8 @@ int check_dr(BODY* body, EVOLVE* evolve, SYSTEM *system, int iBody) {
 //   body[iBody].dMeanA += body[iBody].dMeanMotion*dt;
 //   osc2cart(body,evolve->iNumBodies);
 //   
-//   dr = sqrt(pow(r1x-body[iBody].dCartPos[0],2)+pow(r1y-body[iBody].dCartPos[1],2)+pow(r1z-body[iBody].dCartPos[2],2));
-//   r2 = sqrt(pow(body[iBody].dCartPos[0],2)+pow(body[iBody].dCartPos[1],2)+pow(body[iBody].dCartPos[2],2));
+//   dr = sqrt(pow(r1x-body[iBody].daCartPos[0],2)+pow(r1y-body[iBody].daCartPos[1],2)+pow(r1z-body[iBody].daCartPos[2],2));
+//   r2 = sqrt(pow(body[iBody].daCartPos[0],2)+pow(body[iBody].daCartPos[1],2)+pow(body[iBody].daCartPos[2],2));
 //   
 //   //move secondary back to original position
 //   body[iBody].dMeanA -= body[iBody].dMeanMotion*dt;
@@ -2254,9 +2254,9 @@ void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
   double xcom, ycom, zcom;
   int i;
   // 
-//   xcom = body[iBody].dMass*body[iBody].dCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
-//   ycom = body[iBody].dMass*body[iBody].dCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
-//   zcom = body[iBody].dMass*body[iBody].dCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   xcom = body[iBody].dMass*body[iBody].daCartPos[0]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   ycom = body[iBody].dMass*body[iBody].daCartPos[1]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
+//   zcom = body[iBody].dMass*body[iBody].daCartPos[2]/(body[iBody].dMassInterior+body[iBody].dMass)*AUCM;
 // 
 //   system->dRelativePos[0] = system->dPassingStarR[0] + xcom;
 //   system->dRelativePos[1] = system->dPassingStarR[1] + ycom;
@@ -2281,13 +2281,13 @@ void CalcImpactParam(BODY* body, SYSTEM *system, int iBody) {
   dtime2 = 0;
   for (i=0;i<=2;i++) {
 //     vsq += pow(system->dRelativeVel[i],2);
-    dtime2 += -(system->dPassingStarR[i]-body[iBody].dCartPos[i]*AUCM)*system->dRelativeVel[i];
+    dtime2 += -(system->dPassingStarR[i]-body[iBody].daCartPos[i]*AUCM)*system->dRelativeVel[i];
   }
   dtime2 /= vsq;
   
-  body[iBody].dRelativeImpact[0] = system->dRelativeVel[0]*dtime2 + system->dPassingStarR[0] - body[iBody].dCartPos[0]*AUCM;
-  body[iBody].dRelativeImpact[1] = system->dRelativeVel[1]*dtime2 + system->dPassingStarR[1] - body[iBody].dCartPos[1]*AUCM;
-  body[iBody].dRelativeImpact[2] = system->dRelativeVel[2]*dtime2 + system->dPassingStarR[2] - body[iBody].dCartPos[2]*AUCM;
+  body[iBody].dRelativeImpact[0] = system->dRelativeVel[0]*dtime2 + system->dPassingStarR[0] - body[iBody].daCartPos[0]*AUCM;
+  body[iBody].dRelativeImpact[1] = system->dRelativeVel[1]*dtime2 + system->dPassingStarR[1] - body[iBody].daCartPos[1]*AUCM;
+  body[iBody].dRelativeImpact[2] = system->dRelativeVel[2]*dtime2 + system->dPassingStarR[2] - body[iBody].daCartPos[2]*AUCM;
   imp2 = sqrt(pow(body[iBody].dRelativeImpact[0],2)+\
           pow(body[iBody].dRelativeImpact[1],2)+\
           pow(body[iBody].dRelativeImpact[2],2));
@@ -2311,9 +2311,9 @@ void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
   dRelativeImpactrsq = pow(dRelativeImpactx,2) + pow(dRelativeImpacty,2) + \
                           pow(dRelativeImpactz,2);           
 
-  dRelativeVx = system->dRelativeVel[0]-body[iBody].dCartVel[0]*AUCM/DAYSEC;
-  dRelativeVy = system->dRelativeVel[1]-body[iBody].dCartVel[1]*AUCM/DAYSEC;
-  dRelativeVz = system->dRelativeVel[2]-body[iBody].dCartVel[2]*AUCM/DAYSEC;
+  dRelativeVx = system->dRelativeVel[0]-body[iBody].daCartVel[0]*AUCM/DAYSEC;
+  dRelativeVy = system->dRelativeVel[1]-body[iBody].daCartVel[1]*AUCM/DAYSEC;
+  dRelativeVz = system->dRelativeVel[2]-body[iBody].daCartVel[2]*AUCM/DAYSEC;
 
   body[iBody].dRelativeVel[0] = dRelativeVx;
   body[iBody].dRelativeVel[1] = dRelativeVy;
@@ -2332,9 +2332,9 @@ void ApplyDeltaV(BODY *body, SYSTEM *system, int iBody) {
   dDeltaVz = 2*BIGG*system->dPassingStarMass * (1.0/(dRelativeV*dRelativeImpactrsq)*dRelativeImpactz\
             - 1.0/(dPassingStarV*dPassingStarImpactrsq)*system->dPassingStarImpact[2]);
             
-  body[iBody].dCartVel[0] += dDeltaVx/AUCM*DAYSEC;
-  body[iBody].dCartVel[1] += dDeltaVy/AUCM*DAYSEC;
-  body[iBody].dCartVel[2] += dDeltaVz/AUCM*DAYSEC;
+  body[iBody].daCartVel[0] += dDeltaVx/AUCM*DAYSEC;
+  body[iBody].daCartVel[1] += dDeltaVy/AUCM*DAYSEC;
+  body[iBody].daCartVel[2] += dDeltaVz/AUCM*DAYSEC;
 }
 
 void AdvanceMA(BODY *body, SYSTEM *system, int iBody) {

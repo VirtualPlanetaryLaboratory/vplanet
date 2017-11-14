@@ -60,7 +60,7 @@ void ReadSatXUVTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (dTmp < 0)
       body[iFile-1].dSatXUVTime = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
-      body[iFile-1].dSatXUVTime = dTmp;
+      body[iFile-1].dSatXUVTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)

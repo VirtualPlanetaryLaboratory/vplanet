@@ -243,18 +243,18 @@ void InitializeQincDistRes(BODY *body,UPDATE *update,int iBody,int iPert) {
 void InitializeResAvg(BODY *body,EVOLVE *evolve,SYSTEM *system) {
   int iRes;
   
-  system->dDistCos = malloc(RESNUM*sizeof(double*));
-  system->dDistSin = malloc(RESNUM*sizeof(double*));
-  system->dDistSec = malloc(RESNUM*sizeof(double*));
-  system->dLibrFreq2 = malloc(RESNUM*sizeof(double*));
-  system->dCircFreq = malloc(RESNUM*sizeof(double*));
+  system->daDistCos = malloc(RESNUM*sizeof(double*));
+  system->daDistSin = malloc(RESNUM*sizeof(double*));
+  system->daDistSec = malloc(RESNUM*sizeof(double*));
+  system->daLibrFreq2 = malloc(RESNUM*sizeof(double*));
+  system->daCircFreq = malloc(RESNUM*sizeof(double*));
 
   for (iRes=0;iRes<RESNUM;iRes++) {
-    system->dDistCos[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
-    system->dDistSin[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
-    system->dDistSec[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
-    system->dLibrFreq2[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
-    system->dCircFreq[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
+    system->daDistCos[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
+    system->daDistSin[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
+    system->daDistSec[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
+    system->daLibrFreq2[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
+    system->daCircFreq[iRes] = malloc(Nchoosek(evolve->iNumBodies-1,2)*sizeof(double));
   }
 }
 
@@ -266,14 +266,14 @@ void CalcDistResFreqs(BODY *body, EVOLVE *evolve, SYSTEM *system) {
     for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
       for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
         iPair = system->iaLaplaceN[iBody][jBody];
-        if (system->iResIndex[iRes][iPair]!=-1) {
-          system->dDistCos[iRes][iPair] = fdDistfCos(body,system,iBody,jBody, system->iResIndex[iRes][iPair],system->iResOrder[iRes]);
-          system->dDistSin[iRes][iPair] = fdDistfSin(body,system,iBody,jBody, system->iResIndex[iRes][iPair],system->iResOrder[iRes]);
-          system->dDistSec[iRes][iPair] = sqrt(system->dDistCos[iRes][iPair]*\
-              system->dDistCos[iRes][iPair]+system->dDistSin[iRes][iPair]*\
-              system->dDistSin[iRes][iPair]);
-          system->dLibrFreq2[iRes][iPair] = fdLibrFreq2(body,system,iBody,jBody,iRes);
-          system->dCircFreq[iRes][iPair] = fdCircFreq(body,system,iBody,jBody,iRes);
+        if (system->iaResIndex[iRes][iPair]!=-1) {
+          system->daDistCos[iRes][iPair] = fdDistfCos(body,system,iBody,jBody, system->iaResIndex[iRes][iPair],system->iaResOrder[iRes]);
+          system->daDistSin[iRes][iPair] = fdDistfSin(body,system,iBody,jBody, system->iaResIndex[iRes][iPair],system->iaResOrder[iRes]);
+          system->daDistSec[iRes][iPair] = sqrt(system->daDistCos[iRes][iPair]*\
+              system->daDistCos[iRes][iPair]+system->daDistSin[iRes][iPair]*\
+              system->daDistSin[iRes][iPair]);
+          system->daLibrFreq2[iRes][iPair] = fdLibrFreq2(body,system,iBody,jBody,iRes);
+          system->daCircFreq[iRes][iPair] = fdCircFreq(body,system,iBody,jBody,iRes);
         }
       }
     }
@@ -357,31 +357,31 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     system->fnLaplaceDeriv[88][0] = &fdDSemiF89Dalpha;
 
     /* set up indexes for resonance */
-    system->iResIndex = malloc(RESNUM*sizeof(int*));
-    system->iResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[2] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[3] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[4] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[5] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[6] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[7] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[8] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[9] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
-    system->iResIndex[10] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex = malloc(RESNUM*sizeof(int*));
+    system->iaResIndex[0] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[1] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[2] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[3] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[4] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[5] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[6] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[7] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[8] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[9] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
+    system->iaResIndex[10] = malloc(Nchoosek(control->Evolve.iNumBodies-1,2)*sizeof(int));
 
-    system->iResOrder = malloc(RESNUM*sizeof(int));
-    system->iResOrder[0] = 1;
-    system->iResOrder[1] = 1;    
-    system->iResOrder[2] = 2;
-    system->iResOrder[3] = 2;
-    system->iResOrder[4] = 2;
-    system->iResOrder[5] = 2;
-    system->iResOrder[6] = 3;
-    system->iResOrder[7] = 3;
-    system->iResOrder[8] = 3;
-    system->iResOrder[9] = 3;
-    system->iResOrder[10] = 1;
+    system->iaResOrder = malloc(RESNUM*sizeof(int));
+    system->iaResOrder[0] = 1;
+    system->iaResOrder[1] = 1;    
+    system->iaResOrder[2] = 2;
+    system->iaResOrder[3] = 2;
+    system->iaResOrder[4] = 2;
+    system->iaResOrder[5] = 2;
+    system->iaResOrder[6] = 3;
+    system->iaResOrder[7] = 3;
+    system->iaResOrder[8] = 3;
+    system->iaResOrder[9] = 3;
+    system->iaResOrder[10] = 1;
 
     /*------------------------------*/
     
@@ -428,7 +428,7 @@ void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         
         jBody = body[iBody].iaGravPerts[iPert];
         for (iRes=1;iRes<=RESMAX;iRes++) {
-//           iRes = system->iResIndex[jj][system->iaLaplaceN[iBody][jBody]];
+//           iRes = system->iaResIndex[jj][system->iaLaplaceN[iBody][jBody]];
           
           for (j=26;j<LAPLNUM;j++) {
             if (j<=44 || j==48 || j==52 || j==56 || j==61 || j>=81) {
@@ -709,61 +709,61 @@ void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       }
       // 2:1 resonance in the 0th and 4th place
       if (dPerRat > (1.0-dTol)*2.0 && dPerRat < (1.0+dTol)*2.0) {
-        system->iResIndex[0][system->iaLaplaceN[iBody][jBody]] = 2;
-        system->iResIndex[4][system->iaLaplaceN[iBody][jBody]] = 4;
+        system->iaResIndex[0][system->iaLaplaceN[iBody][jBody]] = 2;
+        system->iaResIndex[4][system->iaLaplaceN[iBody][jBody]] = 4;
       } else {
-        system->iResIndex[0][system->iaLaplaceN[iBody][jBody]] = -1;
-        system->iResIndex[4][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[0][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[4][system->iaLaplaceN[iBody][jBody]] = -1;
       }
       // 3:2 resonance in the 1th and 5th place
       if (dPerRat > (1.0-dTol)*1.5 && dPerRat < (1.0+dTol)*1.5) {
-        system->iResIndex[1][system->iaLaplaceN[iBody][jBody]] = 3;
-        system->iResIndex[5][system->iaLaplaceN[iBody][jBody]] = 6;
+        system->iaResIndex[1][system->iaLaplaceN[iBody][jBody]] = 3;
+        system->iaResIndex[5][system->iaLaplaceN[iBody][jBody]] = 6;
       } else {
-        system->iResIndex[1][system->iaLaplaceN[iBody][jBody]] = -1;
-        system->iResIndex[5][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[1][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[5][system->iaLaplaceN[iBody][jBody]] = -1;
       } 
       // 3:1 resonance in the 2th place
       if (dPerRat > (1.0-dTol)*3.0 && dPerRat < (1.0+dTol)*3.0) {
-        system->iResIndex[2][system->iaLaplaceN[iBody][jBody]] = 3;
+        system->iaResIndex[2][system->iaLaplaceN[iBody][jBody]] = 3;
       } else {
-        system->iResIndex[2][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[2][system->iaLaplaceN[iBody][jBody]] = -1;
       }    
       // 5:3 in the 3th place
       if (dPerRat > (1.0-dTol)*(5./3) && dPerRat < (1.0+dTol)*(5./3)) {
-        system->iResIndex[3][system->iaLaplaceN[iBody][jBody]] = 5;
+        system->iaResIndex[3][system->iaLaplaceN[iBody][jBody]] = 5;
       } else {
-        system->iResIndex[3][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[3][system->iaLaplaceN[iBody][jBody]] = -1;
       } 
       // 4:1 in the 6th place
       if (dPerRat > (1.0-dTol)*(4.) && dPerRat < (1.0+dTol)*(4.)) {
-        system->iResIndex[6][system->iaLaplaceN[iBody][jBody]] = 4;
+        system->iaResIndex[6][system->iaLaplaceN[iBody][jBody]] = 4;
       } else {
-        system->iResIndex[6][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[6][system->iaLaplaceN[iBody][jBody]] = -1;
       } 
       // 8:5 in the 7th place
       if (dPerRat > (1.0-dTol)*(8./5) && dPerRat < (1.0+dTol)*(8./5)) {
-        system->iResIndex[7][system->iaLaplaceN[iBody][jBody]] = 8;
+        system->iaResIndex[7][system->iaLaplaceN[iBody][jBody]] = 8;
       } else {
-        system->iResIndex[7][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[7][system->iaLaplaceN[iBody][jBody]] = -1;
       }
       // 5:2 in the 8th place
       if (dPerRat > (1.0-dTol)*(5./2) && dPerRat < (1.0+dTol)*(5./2)) {
-        system->iResIndex[8][system->iaLaplaceN[iBody][jBody]] = 5;
+        system->iaResIndex[8][system->iaLaplaceN[iBody][jBody]] = 5;
       } else {
-        system->iResIndex[8][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[8][system->iaLaplaceN[iBody][jBody]] = -1;
       }
       // 7:4 in the 9th place
       if (dPerRat > (1.0-dTol)*(7./4) && dPerRat < (1.0+dTol)*(7./4)) {
-        system->iResIndex[9][system->iaLaplaceN[iBody][jBody]] = 7;
+        system->iaResIndex[9][system->iaLaplaceN[iBody][jBody]] = 7;
       } else {
-        system->iResIndex[9][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[9][system->iaLaplaceN[iBody][jBody]] = -1;
       } 
       // missed one! 4:3 in the 10th place
       if (dPerRat > (1.0-dTol)*(4./3) && dPerRat < (1.0+dTol)*(4./3)) {
-        system->iResIndex[10][system->iaLaplaceN[iBody][jBody]] = 4;
+        system->iaResIndex[10][system->iaLaplaceN[iBody][jBody]] = 4;
       } else {
-        system->iResIndex[10][system->iaLaplaceN[iBody][jBody]] = -1;
+        system->iaResIndex[10][system->iaLaplaceN[iBody][jBody]] = -1;
       } 
       
     }
@@ -787,7 +787,7 @@ void RecalcLaplaceDistRes(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose)
       }
   
       for (iRes=1;iRes<=RESMAX;iRes++) {
-        //iRes = system->iResIndex[jj][system->iaLaplaceN[iBody][jBody]];
+        //iRes = system->iaResIndex[jj][system->iaLaplaceN[iBody][jBody]];
         for (j=26;j<LAPLNUM;j++) {
           if (j<=44 || j==48 || j==52 || j==56 || j==61 || j>=81) {
             dalpha = fabs(alpha1 - system->daAlpha0[iRes][system->iaLaplaceN[iBody][jBody]][j]);
@@ -1247,8 +1247,8 @@ double fdLambdaArg(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ
 double fdCosLambda(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ, int iOrder, int iRes) {
   int iPair = system->iaLaplaceN[iBody][jBody];
   if (system->bResAvg == 1) {
-    return -0.5*system->dDistCos[iRes][iPair]/system->dDistSec[iRes][iPair]\
-      *system->dLibrFreq2[iRes][iPair]/(system->dCircFreq[iRes][iPair]*system->dCircFreq[iRes][iPair]);
+    return -0.5*system->daDistCos[iRes][iPair]/system->daDistSec[iRes][iPair]\
+      *system->daLibrFreq2[iRes][iPair]/(system->daCircFreq[iRes][iPair]*system->daCircFreq[iRes][iPair]);
   } else {
     return cos(fdLambdaArg(body,system,iBody,jBody,iIndexJ,iOrder));
   }
@@ -1257,8 +1257,8 @@ double fdCosLambda(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ
 double fdSinLambda(BODY *body, SYSTEM *system, int iBody, int jBody, int iIndexJ, int iOrder, int iRes) {
   int iPair = system->iaLaplaceN[iBody][jBody];
   if (system->bResAvg == 1) {
-    return -0.5*system->dDistSin[iRes][iPair]/system->dDistSec[iRes][iPair]\
-      *system->dLibrFreq2[iRes][iPair]/(system->dCircFreq[iRes][iPair]*system->dCircFreq[iRes][iPair]);
+    return -0.5*system->daDistSin[iRes][iPair]/system->daDistSec[iRes][iPair]\
+      *system->daLibrFreq2[iRes][iPair]/(system->daCircFreq[iRes][iPair]*system->daCircFreq[iRes][iPair]);
   } else {
     return sin(fdLambdaArg(body,system,iBody,jBody,iIndexJ,iOrder));
   }
@@ -7341,8 +7341,8 @@ double fdLibrFreq2(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
   double dMu, dMuPrm, dMu0;
   double df;                     //pythagorean sum of dist cos and sin prefactors
   double omega02;                //libration frequency squared
-  int iOrder = system->iResOrder[iRes];
-  int iIndexJ = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  int iOrder = system->iaResOrder[iRes];
+  int iIndexJ = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
   dMu = body[iBody].dMass;
   dMuPrm = body[jBody].dMass;
   dMu0 = body[0].dMass;
@@ -7356,7 +7356,7 @@ double fdLibrFreq2(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
   F21 = -4./3*dMu/dMu0*(2*pow(dAlpha,2.5)*dRda+pow(dAlpha,3.5)*d2Rda2);
   F22 = 1.0+2*dMu/dMu0*(R+7./3*dAlpha*dRda+2./3*dAlpha*dAlpha*d2Rda2);
   
-  df = system->dDistSec[iRes][system->iaLaplaceN[iBody][jBody]];
+  df = system->daDistSec[iRes][system->iaLaplaceN[iBody][jBody]];
   
   omega02 = -3*KGAUSS*KGAUSS/MSUN*AUCM*AUCM*AUCM/body[jBody].dSemi\
           *( iIndexJ*(F21*dMuPrm/(body[iBody].dSemi*body[iBody].dSemi)*(iOrder-iIndexJ)\
@@ -7376,8 +7376,8 @@ double fdLambdaDotiRes(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
   sum += sqrt(dMu/(body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM));
   y = fabs(1.-body[iBody].dHecc*body[iBody].dHecc-\
     body[iBody].dKecc*body[iBody].dKecc);
-  iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  iOrder = system->iResOrder[iRes];
+  iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  iOrder = system->iaResOrder[iRes];
   if (iResIndex == -1) {
     sum += 0.0;
   } else {
@@ -7419,8 +7419,8 @@ double fdSemiDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
   //Here, iBody = body in question, jBody = perturber
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
   
-  iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  iOrder = system->iResOrder[iRes];
+  iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  iOrder = system->iaResOrder[iRes];
   if (iResIndex == -1) {
     sum += 0.0;
   } else {
@@ -7444,8 +7444,8 @@ double fdHeccDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
   y = fabs(1.-body[iBody].dHecc*body[iBody].dHecc-\
   body[iBody].dKecc*body[iBody].dKecc);
-  iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  iOrder = system->iResOrder[iRes];
+  iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  iOrder = system->iaResOrder[iRes];
   if (iResIndex == -1) {
     sum += 0.0;
   } else {
@@ -7482,8 +7482,8 @@ double fdKeccDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
   y = fabs(1.-body[iBody].dHecc*body[iBody].dHecc-\
   body[iBody].dKecc*body[iBody].dKecc);  
-  iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  iOrder = system->iResOrder[iRes];
+  iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  iOrder = system->iaResOrder[iRes];
   if (iResIndex == -1) {
     sum += 0.0;
   } else {
@@ -7521,8 +7521,8 @@ double fdPincDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
     y = fabs(1.-body[iBody].dHecc*body[iBody].dHecc-\
     body[iBody].dKecc*body[iBody].dKecc);    
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7558,8 +7558,8 @@ double fdQincDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
     y = fabs(1.-body[iBody].dHecc*body[iBody].dHecc-\
        body[iBody].dKecc*body[iBody].dKecc);    
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7590,11 +7590,11 @@ double fdQincDotiRes(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes)
 double fdBetaDot(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
   double f, fc, fs, fcdot, fsdot;
   int iIndexJ, iOrder;
-  f = system->dDistSec[iRes][system->iaLaplaceN[iBody][jBody]];
-  fc = system->dDistCos[iRes][system->iaLaplaceN[iBody][jBody]];
-  fs = system->dDistSin[iRes][system->iaLaplaceN[iBody][jBody]];
-  iIndexJ = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  iOrder = system->iResOrder[iRes];
+  f = system->daDistSec[iRes][system->iaLaplaceN[iBody][jBody]];
+  fc = system->daDistCos[iRes][system->iaLaplaceN[iBody][jBody]];
+  fs = system->daDistSin[iRes][system->iaLaplaceN[iBody][jBody]];
+  iIndexJ = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  iOrder = system->iaResOrder[iRes];
 
   fcdot = ( fdDdistresDHeccDirCos(body,system,iBody,jBody,iIndexJ,iOrder)*\
               fdHeccDotiRes(body,system,iBody,jBody,iRes)\
@@ -7644,8 +7644,8 @@ double fdBetaDot(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
 double fdCircFreq(BODY *body,SYSTEM *system,int iBody,int jBody,int iRes) {
   //iBody should be the inner body
   double omega, theta_dot, beta_dot;
-  int iOrder = system->iResOrder[iRes];
-  int iIndexJ = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  int iOrder = system->iaResOrder[iRes];
+  int iIndexJ = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
   
   theta_dot = iIndexJ*fdLambdaDotiRes(body,system,jBody,iBody,iRes)\
               +(iOrder-iIndexJ)*fdLambdaDotiRes(body,system,iBody,jBody,iRes);
@@ -7664,8 +7664,8 @@ double fdDistResRD2DaDt(BODY *body, SYSTEM *system, int *iaBody) {
   dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
   
   for (iRes=0;iRes<RESNUM;iRes++) {
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7694,8 +7694,8 @@ double fdDistResRD2DlDt(BODY *body, SYSTEM *system, int *iaBody) {
   y = fabs(1.-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-\
     body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
   for (iRes=0;iRes<RESNUM;iRes++) {
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7742,8 +7742,8 @@ double fdDistResRD2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   y = fabs(1.-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-\
     body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
   for (iRes=0;iRes<RESNUM;iRes++) {
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7781,8 +7781,8 @@ double fdDistResRD2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   y = fabs(1.-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-\
     body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);  
   for (iRes=0;iRes<RESNUM;iRes++) {
-    iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-    iOrder = system->iResOrder[iRes];
+    iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+    iOrder = system->iaResOrder[iRes];
     if (iResIndex == -1) {
       sum += 0.0;
     } else {
@@ -7821,8 +7821,8 @@ double fdDistResRD2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     y = fabs(1.-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-\
       body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);    
     for (iRes=0;iRes<RESNUM;iRes++) {
-      iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-      iOrder = system->iResOrder[iRes];
+      iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+      iOrder = system->iaResOrder[iRes];
       if (iResIndex == -1) {
         sum += 0.0;
       } else {
@@ -7859,8 +7859,8 @@ double fdDistResRD2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     y = fabs(1.-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-\
        body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);    
     for (iRes=0;iRes<RESNUM;iRes++) {
-      iResIndex = system->iResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
-      iOrder = system->iResOrder[iRes];
+      iResIndex = system->iaResIndex[iRes][system->iaLaplaceN[iaBody[0]][iaBody[1]]];
+      iOrder = system->iaResOrder[iRes];
       if (iResIndex == -1) {
         sum += 0.0;
       } else {
@@ -7890,8 +7890,8 @@ double fdDistResRD2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 void CheckTermsRes1(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
-  int iIndexJ = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  int iOrder = system->iResOrder[iRes];
+  int iIndexJ = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  int iOrder = system->iaResOrder[iRes];
   
   //------dh----------------first order--------
   printf("dR11dh = %e\n",(fdDdistDhDir11Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir11Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));
@@ -8126,8 +8126,8 @@ void CheckTermsRes1(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) 
 
 
 void CheckTermsRes2(BODY *body, SYSTEM *system, int iBody, int jBody, int iRes) {
-  int iIndexJ = system->iResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
-  int iOrder = system->iResOrder[iRes];
+  int iIndexJ = system->iaResIndex[iRes][system->iaLaplaceN[iBody][jBody]];
+  int iOrder = system->iaResOrder[iRes];
 
   //------dh----------------2nd order--------
   printf("dR21dh = %e\n",(fdDdistDhDir21Cos(body, system, iBody, jBody, iIndexJ)*fdCosLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)+fdDdistDhDir21Sin(body, system, iBody, jBody, iIndexJ)*fdSinLambda(body,system,iBody,jBody,iIndexJ,iOrder,iRes)));

@@ -883,45 +883,44 @@ typedef struct {
   double dLXUVFlare;
 
   // GALHABIT
-  int bGalHabit;
-  double dPeriQ;   /**< Pericenter distance */
-  int iDisrupt;
-  int bGalacTides;
-  double dHostBinSemi;
-  double dHostBinEcc;
-  double dHostBinInc;
-  double dHostBinArgP;
-  double dHostBinLongA;
-  double dHostBinMass1;
-  int bHostBinary;
-  double *dRelativeImpact;
-  double *dRelativeVel;
-  double dEccX;
-  double dEccY;
-  double dEccZ;
-  double dAngMX;
-  double dAngMY;
-  double dAngMZ;
-  double dAngM;
-  double dEccXTmp;          /**< Ecc X in the binary reference plane */
-  double dEccYTmp;
-  double dEccZTmp;
-  double dAngMXTmp;
-  double dAngMYTmp;
-  double dAngMZTmp;
-  double dArgPTmp;
-  double dLongATmp;
-  double dIncTmp;
-  double dCosArgP;
-  double dMinAllowed;  /**< minimum allowed close approach of body to host */
-  double dMassInterior;
-  int iBadImpulse;
+  int bGalHabit;            /**< Use galhabit module */
+  double dPeriQ;            /**< Pericenter distance */
+  int iDisrupt;             /**< Secondary body has been disrupted */
+  int bGalacTides;          /**< Enable galactic tides */
+  double dHostBinSemi;      /**< Semi-major axis of host binary */
+  double dHostBinEcc;       /**< Eccentricity of host binary */
+  double dHostBinInc;       /**< Inclination of host binary */
+  double dHostBinArgP;      /**< Arg pericenter of host binary */
+  double dHostBinLongA;     /**< Long asc node of host binary */
+  double dHostBinMass1;     /**< Mass of large host binary star */
+  int bHostBinary;          /**< Model dynamics of inner host binary */
+  double *daRelativeImpact; /**< Impact param of passing star relative to body */
+  double *daRelativeVel;    /**< Velocity of passing star relative to body */
+  double dEccX;             /**< X component of eccentricity vector */
+  double dEccY;             /**< Y component of eccentricity vector */
+  double dEccZ;             /**< Z component of eccentricity vector */
+  double dAngMX;            /**< X component of orbital momentum vector */
+  double dAngMY;            /**< Y component of orbital momentum vector */
+  double dAngMZ;            /**< Z component of orbital momentum vector */
+  double dAngM;             /**< Magnitude of orbital momentum vector */
+  double dEccXTmp;          /**< Ecc X in the host binary reference plane */
+  double dEccYTmp;          /**< Ecc Y in the host binary reference plane */
+  double dEccZTmp;          /**< Ecc Z in the host binary reference plane */
+  double dAngMXTmp;         /**< AngM X in the host binary reference plane */
+  double dAngMYTmp;         /**< AngM Y in the host binary reference plane */
+  double dAngMZTmp;         /**< AngM Z in the host binary reference plane */
+  double dArgPTmp;          /**< Arg pericenter in the host binary reference plane */
+  double dLongATmp;         /**< Long asc node in the host binary reference plane */
+  double dIncTmp;           /**< Inclination in the host binary reference plane */
+  double dCosArgP;          /**< Cosine of arg pericenter */
+  double dMinAllowed;       /**< minimum allowed close approach of body to host */
+  double dMassInterior;     /**< Total mass of bodies interior to body */
+  int iBadImpulse;          /**< Was there a bad impulse? */
 
-  
   //DISTRES
-  int bDistRes;
-  double dMeanL;
-  
+  int bDistRes;             /**< Use distres model (don't use it for god's sake) */
+  double dMeanL;            /**< Body's mean longitude */
+    
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -941,89 +940,89 @@ typedef struct {
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF;     /**< Pointers to semi-major axis functions  */
   fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives */
-  double ***daLaplaceC;/**< Values of semi-major axis functions */
-  double ***daLaplaceD;/**< Values of semi-major axis derivatives */
-  double ***daAlpha0;  /**< Semi-major axis ratio at the time LaplaceC is determined */
-  int **iaLaplaceN;    /**< Indices for dmLaplaceC corresponding to iBody, jBody */
-  double dDfcrit;      /**< Semi-maj functions will be updated based on this value */
-  double dThetaInvP;   /**< Azimuthal angle of inv plane relative to input plane */
-  double dPhiInvP;     /**< Altitude angle of inv plane relative to input plane */
+  double ***daLaplaceC;   /**< Values of semi-major axis functions */
+  double ***daLaplaceD;   /**< Values of semi-major axis derivatives */
+  double ***daAlpha0;     /**< Semi-major axis ratio at the time LaplaceC is determined */
+  int **iaLaplaceN;       /**< Indices for dmLaplaceC corresponding to iBody, jBody */
+  double dDfcrit;         /**< Semi-maj functions will be updated based on this value */
+  double dThetaInvP;      /**< Azimuthal angle of inv plane relative to input plane */
+  double dPhiInvP;        /**< Altitude angle of inv plane relative to input plane */
   double **daEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange */
   double **daEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange */
   double **daEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange */
   double **daEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange */
-  double **daEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
-  double **daA;       /**< Matrix used for finding eigenvalues for eccentricity */
-  double **daB;       /**< Matrix used for finding eigenvalues for inclination */
-  double *daAsoln;    /**< RHS of eigenvalue problem for ecc */
-  double *daBsoln;    /**< RHS of eigenvalue problem for inc */
-  double **daetmp;    /**< Temporary matrix used in eigenvalue routine */
-  double **daitmp;    /**< Temporary matrix used in eigenvalue routine */
-  double *dah0;       /**< Initial value of Hecc in LL2 solution */
-  double *dak0;       /**< Initial value of Kecc in LL2 solution */
-  double *dap0;       /**< Initial value of Pinc in LL2 solution */
-  double *daq0;       /**< Initial value of Qinc in LL2 solution */
-  double *daS;        /**< Scaling factor for ecc eigenvectors */
-  double *daT;        /**< Scaling factor for inc eigenvectors */
-  int *iaRowswap;     /**< Row interchange array used in eigenvector routine */
-  double **daAcopy;   /**< Copy of eigenvalue matrix for eccentricity */
-  double *daScale;    /**< Used in matrix inversion */ 
-  double *daLOrb;     /**< Total angular momentum of system */
+  double **daEigenPhase;  /**< Phase angles used in Laplace-Lagrange solution */
+  double **daA;           /**< Matrix used for finding eigenvalues for eccentricity */
+  double **daB;           /**< Matrix used for finding eigenvalues for inclination */
+  double *daAsoln;        /**< RHS of eigenvalue problem for ecc */
+  double *daBsoln;        /**< RHS of eigenvalue problem for inc */
+  double **daetmp;        /**< Temporary matrix used in eigenvalue routine */
+  double **daitmp;        /**< Temporary matrix used in eigenvalue routine */
+  double *dah0;           /**< Initial value of Hecc in LL2 solution */
+  double *dak0;           /**< Initial value of Kecc in LL2 solution */
+  double *dap0;           /**< Initial value of Pinc in LL2 solution */
+  double *daq0;           /**< Initial value of Qinc in LL2 solution */
+  double *daS;            /**< Scaling factor for ecc eigenvectors */
+  double *daT;            /**< Scaling factor for inc eigenvectors */
+  int *iaRowswap;         /**< Row interchange array used in eigenvector routine */
+  double **daAcopy;       /**< Copy of eigenvalue matrix for eccentricity */
+  double *daScale;        /**< Used in matrix inversion */ 
+  double *daLOrb;         /**< Total angular momentum of system */
 
-  double dTotEnInit;     /**< System's Initial Energy */
-  double dTotEn;         /** < System's total energy */
+  double dTotEnInit;      /**< System's Initial Energy */
+  double dTotEn;          /** < System's total energy */
 
-  double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
-  double *dPassingStarR;
-  double *dPassingStarV;
-  double dPassingStarVRad;
-  double dPassingStarRMag;
-  double *dPassingStarImpact; /**< 3D impact parameter for passing star */
-  double dPassingStarMass;
-  double dPassingStarSigma;
-  double dPassingStarMagV;
-  double dEncounterRad;
-  double dDeltaTEnc;  /**< time since last encounter */
-  double dEncounterRate; /**< characteristic encounter time */
-  double dCloseEncTime;  /**< time of new close encounter */
-  double dLastEncTime;  /**< time of last encounter */
-  double dNextEncT;
-  int iNEncounters;
-  double dRForm;  /**< galactic formation radius */
-  double dTMigration;  /**< time of radial migration */
-  int bRadialMigr;    /**< use radial migration */
-  double dScalingFTot;    /**< scaling factor for radial migration */
+  double dGalacDensity;     /**< Density of galactic environment (for GalHabit) */
+  double *daPassingStarR;   /**< Initial location of passing star */
+  double *daPassingStarV;   /**< Initial velocity of passing star */
+  double dPassingStarVRad;  /**< Radial velocity of passing star (wrt origin) */
+  double dPassingStarRMag;  /**< Distance to passing star */
+  double *daPassingStarImpact; /**< 3D impact parameter for passing star */
+  double dPassingStarMass;  /**< Mass of passing star */
+  double dPassingStarSigma; /**< Velocity dispersion of passing stars */
+  double dPassingStarMagV;  /**< Magnitude of passing star */
+  double dEncounterRad;     /**< User-set encounter radius (box size) */
+  double dDeltaTEnc;        /**< time since last encounter */
+  double dEncounterRate;    /**< characteristic encounter time */
+  double dCloseEncTime;     /**< time of new close encounter */
+  double dLastEncTime;      /**< time of last encounter */
+  double dNextEncT;         /**< Time of next encounter */
+  int iNEncounters;         /**< Number of encounters */
+  double dRForm;            /**< galactocentric formation radius */
+  double dTMigration;       /**< time of radial migration */
+  int bRadialMigr;          /**< use radial migration */
+  double dScalingFTot;      /**< scaling factor for radial migration */
   double dScalingFStars;    /**< scaling factor for radial migration */
-  double dScalingFVelDisp;
-  double dGasDensity;  /**< density of local ism */
-  double dDMDensity;   /**< density of local dark matter */
-  double dStarScaleL;  /**< scale length of stellar disk */
-  double dVelDispSolar;
-  double dHostApexVelMag;
-  double *dHostApexVel;
-  double *dRelativeVel;
-  double *dRelativePos;
-  double dRelativeVelRad;
-  double dRelativeVelMag;
-  double *dGSNumberDens;
-  double *dGSBinMag;
-  double *dEncounterRateMV;
-  int iSeed;
-  double dGalaxyAge;  /**< present day age of galaxy */
-  int bStellarEnc;    /**< model stellar encounters? */
-  int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
-  int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
-  double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
-  double dTStart;      /**< time that encounter begins relative to time step */
-  
-  int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
-  int *iResOrder;     /**< order of resonance */
-  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
-  double **dLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
-  double **dCircFreq; /**< Circulation frequency of near resonance */
-  double **dDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
-  double **dDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
-  double **dDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
+  double dScalingFVelDisp;  /**< scaling factor for radial migration (velocity disp) */
+  double dGasDensity;       /**< density of local ism */
+  double dDMDensity;        /**< density of local dark matter */
+  double dStarScaleL;       /**< scale length of stellar disk */
+  double dVelDispSolar;     /**< Velocity dispersion in solar neighborhood */
+  double dHostApexVelMag;   /**< Magnitude of host star apex velocity */
+  double *daHostApexVel;    /**< Host star apex velocity vector */
+  double *daRelativeVel;    /**< Relative velocity b/w passing star and orbiter */
+  double *daRelativePos;    /**< Distance b/w passing star and orbiter */
+  double dRelativeVelRad;   /**< Radial component of velocity b/w passing star & orbiter */
+  double dRelativeVelMag;   /**< Magnitude relative velocity b/w passing star & orbiter */
+  double *daGSNumberDens;   /**< Number density of stars in solar neighborhood */
+  double *daGSBinMag;       /**< Magnitude bins of stars in solar neighborhood */
+  double *daEncounterRateMV;/**< Encounter rate of passing stars */
+  int iSeed;                /**< RNG seed for stellar encounters */
+  double dGalaxyAge;        /**< present day age of galaxy */
+  int bStellarEnc;          /**< model stellar encounters? */
+  int bTimeEvolVelDisp;     /**< scale velocity dispersion of passing stars w/ sqrt(t)?*/
+  int bOutputEnc;           /**< output stell encounter info (beware large output!) */
+  double dEncDT;            /**< time b/w stell encounter impulses on primary/2ndary */
+  double dTStart;           /**< time that encounter begins relative to time step */
+
+  int **iaResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
+  int *iaResOrder;     /**< order of resonance */
+  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) */
+  double **daLibrFreq2;/**< Libration frequency of exact resonance via linear theory */
+  double **daCircFreq; /**< Circulation frequency of near resonance */
+  double **daDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
+  double **daDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
+  double **daDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
 
 } SYSTEM;
 
@@ -1073,8 +1072,8 @@ typedef struct {
   int iNumMass;
 
   /* These are the variables that the update matrix modifies */
-  // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
-  // Obliquity is now split into Xobl, Yobl and Zobl to accomedate Laskar
+  // Eccentricity is now split into Hecc and Kecc to accomodate Distorb
+  // Obliquity is now split into Xobl, Yobl and Zobl to accommodate Distrot
   int iRot;             /**< Variable # Corresponding to Rotation Rate */
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
@@ -1294,42 +1293,54 @@ typedef struct {
   double **padDZoblDtDistRot;
 
   /* GALHABIT */
-  int iNumEccX;
-  int iNumEccY;
-  int iNumEccZ;
+  int iNumEccX;       /**< Number of equations for x eccentricity */
+  int iNumEccY;       /**< Number of equations for y eccentricity */
+  int iNumEccZ;       /**< Number of equations for z eccentricity */
 
-  int iEccX;
-  int iEccY;
-  int iEccZ;
-  double dDEccXDt;
-  double dDEccYDt;
-  double dDEccZDt;
+  int iEccX;          /**< Variable # for x eccentricity */
+  int iEccY;          /**< Variable # for y eccentricity */
+  int iEccZ;          /**< Variable # for z eccentricity */
+  double dDEccXDt;    /**< Derivative for ecc x */
+  double dDEccYDt;    /**< Derivative for ecc y */
+  double dDEccZDt;    /**< Derivative for ecc z */
 
-  int *iaEccXGalHabit;
-  int *iaEccYGalHabit;
-  int *iaEccZGalHabit;
+  int *iaEccXGalHabit; /**< Equation # for GalHabit's change in x ecc */
+  int *iaEccYGalHabit; /**< Equation # for GalHabit's change in y ecc */
+  int *iaEccZGalHabit; /**< Equation # for GalHabit's change in z ecc */
 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      x component of ecc derivative due to GALHABIT */
   double **padDEccXDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      y component of ecc derivative due to GALHABIT */
   double **padDEccYDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      z component of ecc derivative due to GALHABIT */
   double **padDEccZDtGalHabit;
 
-  int iNumAngMX;
-  int iNumAngMY;
-  int iNumAngMZ;
+  int iNumAngMX;     /**< Number of equations for x angular momentum*/
+  int iNumAngMY;     /**< Number of equations for y angular momentum*/
+  int iNumAngMZ;     /**< Number of equations for z angular momentum*/
 
-  int iAngMX;
-  int iAngMY;
-  int iAngMZ;
-  double dDAngMXDt;
-  double dDAngMYDt;
-  double dDAngMZDt;
+  int iAngMX;        /**< Variable # for x angular momentum */
+  int iAngMY;        /**< Variable # for y angular momentum */
+  int iAngMZ;        /**< Variable # for z angular momentum */
+  double dDAngMXDt;  /**< Derivative for angular mom x */
+  double dDAngMYDt;  /**< Derivative for angular mom y */
+  double dDAngMZDt;  /**< Derivative for angular mom z */
 
-  int *iaAngMXGalHabit;
-  int *iaAngMYGalHabit;
-  int *iaAngMZGalHabit;
+  int *iaAngMXGalHabit; /**< Equation # for GalHabit's change in x ang mom */
+  int *iaAngMYGalHabit; /**< Equation # for GalHabit's change in y ang mom */
+  int *iaAngMZGalHabit; /**< Equation # for GalHabit's change in z ang mom */
 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      x component of angular mom derivative due to GALHABIT */
   double **padDAngMXDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      y component of angular mom derivative due to GALHABIT */
   double **padDAngMYDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      z component of angular mom derivative due to GALHABIT */
   double **padDAngMZDtGalHabit;
 
   /* DISTRES */
@@ -1418,14 +1429,6 @@ typedef struct {
   double *pdRotRateStellar;
   double *pdLostAngMomStellar;
   double *pdLostEngStellar;
-
-  /* POISE */
-  int *iaIceMass;  /**< Variable number of ice mass of each latitude */
-  int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
-  double ***padDIceMassDtPoise;
-  int *iaIceMassDepMelt;
-  int *iaIceMassFlow;
-  int iIceMass;
 
   /* FLARE */
   int iLXUV;

@@ -441,18 +441,18 @@ void OrbElems2Helio(BODY *body, int iBody) {
     body[iBody].daCartVel[2] = 0;
   } else {
     kepler_eqn(body, iBody);
-    xtmp = xinit(body, iBody);
-    ytmp = yinit(body, iBody);
-    vxtmp = vxi(body, iBody);
-    vytmp = vyi(body, iBody);
+    xtmp = fndXinit(body, iBody);
+    ytmp = fndYinit(body, iBody);
+    vxtmp = fndVxi(body, iBody);
+    vytmp = fndVyi(body, iBody);
 
-    body[iBody].daCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
-    body[iBody].daCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
-    body[iBody].daCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+    body[iBody].daCartPos[0] = xtmp*(fndXangle1(body,iBody))+ytmp*(fndXangle2(body,iBody));
+    body[iBody].daCartPos[1] = xtmp*(fndYangle1(body,iBody))+ytmp*(fndYangle2(body,iBody));
+    body[iBody].daCartPos[2] = xtmp*(fndZangle1(body,iBody))+ytmp*(fndZangle2(body,iBody));
 
-    body[iBody].daCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
-    body[iBody].daCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
-    body[iBody].daCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
+    body[iBody].daCartVel[0] = vxtmp*(fndXangle1(body,iBody))+vytmp*(fndXangle2(body,iBody));
+    body[iBody].daCartVel[1] = vxtmp*(fndYangle1(body,iBody))+vytmp*(fndYangle2(body,iBody));
+    body[iBody].daCartVel[2] = vxtmp*(fndZangle1(body,iBody))+vytmp*(fndZangle2(body,iBody));
   }
 }
 

@@ -279,7 +279,7 @@ void CalcXYZobl(BODY *body, int iBody) {
 }
 
 
-double CalcDynEllipEq(BODY *body, int iBody) {
+double fndCalcDynEllipEq(BODY *body, int iBody) {
   /* calculate equilibrium shape of planet using scaling laws and solar system values */
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
   double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip, dJ2;

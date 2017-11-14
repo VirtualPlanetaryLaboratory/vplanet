@@ -98,7 +98,7 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
       if (iVerbose >= VERBINPUT)
         fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
     }
-    body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
+    body[iBody].dDynEllip = fndCalcDynEllipEq(body,iBody);
   }
 }
 

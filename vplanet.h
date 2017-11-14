@@ -939,36 +939,36 @@ typedef struct {
   double dTotAngMom;     /**< System's Current Angular Momentum */
 
   /* DISTORB tools */
-  fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
-  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
-  double ***dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
-  double ***dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
-  double ***dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
-  int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
-  double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
-  double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
-  double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
-  double **dmEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange solution */
-  double **dmEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange solution */
-  double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
-  double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
-  double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
-  double **A;
-  double **B;
-  double *Asoln;
-  double *Bsoln;
-  double **etmp;
-  double **itmp;
-  double *h0;
-  double *k0;
-  double *p0;
-  double *q0;
-  double *S;
-  double *T;
-  int *rowswap;
-  double **Acopy;
-  double *scale;
-  double *daLOrb;
+  fnLaplaceFunction **fnLaplaceF;     /**< Pointers to semi-major axis functions  */
+  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives */
+  double ***daLaplaceC;/**< Values of semi-major axis functions */
+  double ***daLaplaceD;/**< Values of semi-major axis derivatives */
+  double ***daAlpha0;  /**< Semi-major axis ratio at the time LaplaceC is determined */
+  int **iaLaplaceN;    /**< Indices for dmLaplaceC corresponding to iBody, jBody */
+  double dDfcrit;      /**< Semi-maj functions will be updated based on this value */
+  double dThetaInvP;   /**< Azimuthal angle of inv plane relative to input plane */
+  double dPhiInvP;     /**< Altitude angle of inv plane relative to input plane */
+  double **daEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange */
+  double **daEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange */
+  double **daEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange */
+  double **daEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange */
+  double **daEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
+  double **daA;       /**< Matrix used for finding eigenvalues for eccentricity */
+  double **daB;       /**< Matrix used for finding eigenvalues for inclination */
+  double *daAsoln;    /**< RHS of eigenvalue problem for ecc */
+  double *daBsoln;    /**< RHS of eigenvalue problem for inc */
+  double **daetmp;    /**< Temporary matrix used in eigenvalue routine */
+  double **daitmp;    /**< Temporary matrix used in eigenvalue routine */
+  double *dah0;       /**< Initial value of Hecc in LL2 solution */
+  double *dak0;       /**< Initial value of Kecc in LL2 solution */
+  double *dap0;       /**< Initial value of Pinc in LL2 solution */
+  double *daq0;       /**< Initial value of Qinc in LL2 solution */
+  double *daS;        /**< Scaling factor for ecc eigenvectors */
+  double *daT;        /**< Scaling factor for inc eigenvectors */
+  int *iaRowswap;     /**< Row interchange array used in eigenvector routine */
+  double **daAcopy;   /**< Copy of eigenvalue matrix for eccentricity */
+  double *daScale;    /**< Used in matrix inversion */ 
+  double *daLOrb;     /**< Total angular momentum of system */
 
   double dTotEnInit;     /**< System's Initial Energy */
   double dTotEn;         /** < System's total energy */
@@ -1017,7 +1017,7 @@ typedef struct {
   double dTStart;      /**< time that encounter begins relative to time step */
   
   int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
-  int *iResOrder;
+  int *iResOrder;     /**< order of resonance */
   int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
   double **dLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
   double **dCircFreq; /**< Circulation frequency of near resonance */

@@ -1919,17 +1919,24 @@ typedef struct {
   /*! Function pointers to finalize dynamical ellipticity */
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
 
+  /*! These functions assign Equation and Module information regarding
+      GalHabit's ecc and angm variables in the UPDATE struct. */
+  /*! Function pointers to finalize galhabit's eccx */
   fnFinalizeUpdateEccXModule **fnFinalizeUpdateEccX;
+  /*! Function pointers to finalize galhabit's eccy */
   fnFinalizeUpdateEccYModule **fnFinalizeUpdateEccY;
+  /*! Function pointers to finalize galhabit's eccz */
   fnFinalizeUpdateEccZModule **fnFinalizeUpdateEccZ;
+  /*! Function pointers to finalize galhabit's angmx */
   fnFinalizeUpdateAngMXModule **fnFinalizeUpdateAngMX;
+  /*! Function pointers to finalize galhabit's angmy */
   fnFinalizeUpdateAngMYModule **fnFinalizeUpdateAngMY;
+  /*! Function pointers to finalize galhabit's angmz */
   fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
 
+  /*! Function pointers to finalize mean longitude in distres */
   fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
 
-
-  fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
   /*! These functions log module-specific data. */

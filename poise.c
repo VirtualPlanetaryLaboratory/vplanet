@@ -2788,7 +2788,6 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
   module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
-  module->fnFinalizeUpdateIceMass[iBody][iModule] = &FinalizeUpdateIceMassPoise;
 }
 
 /************* POISE Functions ***********/

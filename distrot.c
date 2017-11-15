@@ -329,13 +329,14 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     control->fnPropsAux[iBody][iModule] = &PropertiesDistRot;
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     
-    CalcXYZobl(body, iBody);
-    
     if (body[iBody].bReadOrbitData) {
       system->dLOrb = malloc(3*sizeof(double)); //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
       body[iBody].dLOrb = malloc(3*sizeof(double));
       body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+      //body[iBody].dPrecA -= body[iBody].daLongASeries[0]; //needed to account possibly different reference location for dPrecA and dLongA
     }
+    
+    CalcXYZobl(body, iBody);
       
     body[iBody].dLRot = malloc(3*sizeof(double));
     body[iBody].dLRotTmp = malloc(3*sizeof(double));

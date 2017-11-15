@@ -291,25 +291,25 @@ typedef struct {
   double dLongA;         /**< Longitude of ascending node */
   double dArgP;          /**< Argument of pericenter */
   double dLongP;         /**< Longitude of pericenter */
-  double dMeanA;         /**< Mean anomaly (currently only used for inv plane calculation) */
-  double dTrueL;         /**< True longitude (currently only used for insolation calculation */
-  double dEccA;          /**< Eccentric anomaly (currently only used for inv plane calculation) */
-  double *dCartPos;      /**< Cartesian position of body (currently only used for inv plane calculation) */
-  double *dCartVel;      /**< Cartesian velocity of body (currently only used for inv plane calculation) */
+  double dMeanA;         /**< Mean anomaly (only used for inv plane calculation) */
+  double dTrueL;         /**< True longitude (only used for insolation calculation */
+  double dEccA;          /**< Eccentric anomaly (only used for inv plane calculation) */
+  double *daCartPos;     /**< Cartesian position of body (only used for inv plane calc) */
+  double *daCartVel;     /**< Cartesian velocity of body (only used for inv plane calc) */
   int iGravPerts;        /**< Number of bodies which perturb the body */
   int *iaGravPerts;      /**< Which bodies are perturbers of the body */
   int iEigFreqs;         /**< Number of eigenfrequencies that control the body's motion */
   int *iaEigFreqs;       /**< Indices of eigenfrequencies */
-  int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot (1=yes)*/
+  int bGRCorr;           /**< Use general relativistic correction in DistOrb+DistRot?*/
   int iDistOrbModel;     /**< Which orbital model to use (RD4 or LL2) */
   double dSemiPrev;      /**< Semi-major axis at which LL2 eigensolution was calc'd */
-  double dEigenvalue;
-  double dEigenvector;
-  int bEigenSet;
-  double *dLOrb;
-  double *dLOrbTmp;
-  double dRPeri;
-  double dRApo;
+  double dEigenvalue;    /**< User input eigenvalue (diagnostic only) */
+  double dEigenvector;   /**< User input eigenvector amplitude (diagnostic only) */
+  int bEigenSet;         /**< Manually set an eigenvalue/frequency */
+  double *daLOrb;        /**< Orbital angular momentum */
+  double *daLOrbTmp;     /**< Temp copy of orbital angular momentum */
+  double dRPeri;         /**< Pericenter distance */
+  double dRApo;          /**< Apocenter distance */
   
 
   /* BINARY parameters */
@@ -341,30 +341,30 @@ typedef struct {
   double dYobl;          /**< sin(obliq)*sin(preca) */
   double dXobl;          /**< sin(obliq)*cos(preca) */
   double dZobl;          /**< cos(obliq) */
-  double *dLRot;
-  double *dLRotTmp;
-  int bForcePrecRate;
-  double dPrecRate;
-  int bCalcDynEllip;
+  double *daLRot;        /**< Spin angular momentum vector */
+  double *daLRotTmp;     /**< Temp copy of spin angular momentum vector */
+  int bForcePrecRate;    /**< Set precession rate to a fixed value */ 
+  double dPrecRate;      /**< Value to set fixed precession rate to */
+  int bCalcDynEllip;     /**< Calc dyn ellipticity from spin, radius, mass, inertia? */
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
   int bReadOrbitData;    /**< Use orbit data from file rather than distorb */
   char cFileOrbitData[NAMELEN];  /**< read orbital data from this file (distorb=0) */
   double *daTimeSeries;  /**< time series for orbital data */
   double *daSemiSeries;  /**< time series for orbital data */
-  double *daEccSeries;  /**< time series for orbital data */
-  double *daIncSeries;  /**< time series for orbital data */
+  double *daEccSeries;   /**< time series for orbital data */
+  double *daIncSeries;   /**< time series for orbital data */
   double *daArgPSeries;  /**< time series for orbital data */
-  double *daLongASeries;  /**< time series for orbital data */
-  double *daMeanASeries;  /**< time series for orbital data */
-  int iCurrentStep;       /**< index for time series arrays */
-  double *daHeccSeries;   /**< time series for orbital data */
-  double *daKeccSeries;   /**< time series for orbital data */
-  double *daPincSeries;   /**< time series for orbital data */
-  double *daQincSeries;   /**< time series for orbital data */
-  double dPdot;
-  double dQdot;
-  int iNLines;
-  double dSpecMomInertia; 
+  double *daLongASeries; /**< time series for orbital data */
+  double *daMeanASeries; /**< time series for orbital data */
+  int iCurrentStep;      /**< index for time series arrays */
+  double *daHeccSeries;  /**< time series for orbital data */
+  double *daKeccSeries;  /**< time series for orbital data */
+  double *daPincSeries;  /**< time series for orbital data */
+  double *daQincSeries;  /**< time series for orbital data */
+  double dPdot;          /**< inclination derivative used for obliquity evol */
+  double dQdot;          /**< inclination derivative used for obliquity evol */
+  int iNLines;           /**< Number of lines of orbital data file */
+  double dSpecMomInertia;/**< C/M/R^2 used for dynamical ellipticity calculation */
 
 
   /* EQTIDE Parameters */
@@ -673,200 +673,198 @@ typedef struct {
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
-
-  double dAblateFF;
-  int bAccuracyMode;        /**< This forces the model to re-invert matrix every time step */
-  double dAlbedoGlobal;     /**< Global average albedo (Bond albedo) */
-  double dAlbedoGlobalTmp;
-  double dAlbedoLand;
-  int iAlbedoType;            /**< type of water albedo used (fix or tay) */
-  double dAlbedoWater;
-  int bAlbedoZA;             /**< Use albedo based on zenith angle */
-  double dAreaIceCov;
+ 
+  double dAblateFF;          /**< Scaling factor for ice ablation rate */
+  int bAccuracyMode;         /**< This forces EBM to re-invert matrix every time step */
+  double dAlbedoGlobal;      /**< Global average albedo (Bond albedo) */
+  double dAlbedoGlobalTmp;   /**< A copy of global average albedo (sometimes needed) */
+  double dAlbedoLand;        /**< Sets base albedo of land (sea model) */
+  double dAlbedoWater;       /**< Sets base albedo of water (sea model) */
+  int bAlbedoZA;             /**< Use albedo based on zenith angle (ann model) */
+  double dAreaIceCov;        /**< Tracks area of surface covered in permanent ice*/
   double dAstroDist;         /**< Distance between primary and planet */
   int bCalcAB;               /**< Calc A and B from Williams & Kasting 1997 */
-  int bClimateModel;
-  int bColdStart;            /**< Start from global glaciation (snowball state) conditions */
-  double dCw_dt;
+  int bClimateModel;         /**< Which EBM to be used (ann or sea) */
+  int bColdStart;            /**< Start from global glaciation (snowball) conditions */
+  double dCw_dt;             /**< Heat capacity of water / EBM time step */
   double dDiffCoeff;         /**< Diffusion coefficient set by user */
-  int bDiffRot;              /**< Adjust heat diffusion for rotation rate*/
-  int bElevFB;
+  int bDiffRot;              /**< Adjust heat diffusion for rotation rate */
+  int bElevFB;               /**< Apply elevation feedback to ice ablation */
   double dFixIceLat;         /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;      /**< Global mean of incoming flux */
-  double dFluxInGlobalTmp;
+  double dFluxInGlobalTmp;   /**< Copy of global mean incoming flux */
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */
-  double dFluxOutGlobalTmp;
-  int bForceObliq;
-  double dFrzTSeaIce;         /**< Freezing temperature of sea water */
-  int iGeography;
-  int bHadley;               /**< Use Hadley circulation when calculating diffusion? */
+  double dFluxOutGlobalTmp;  /**< Copy of global mean outgoing flux */
+  int bForceObliq;           /**< Force obliquity to evolve sinusoidally */
+  double dFrzTSeaIce;        /**< Freezing temperature of sea water */
+  int iGeography;            /**< Type of geography to use (uni3 or modn) */
+  int bHadley;               /**< Use Hadley circ in tropics when calc'ing diffusion? */
   double dHeatCapAnn;        /**< Surface heat capacity in annual model */
-  double dHeatCapLand;        /**< Heat capacity of land */
-  double dHeatCapWater;       /**< Heat capacity of water */
-  double dIceAlbedo;
-  double dIceBalanceTot;
-  double dIceDepRate;
-  double dIceFlowTot;
-  double dIceMassTot;
-  int bIceSheets;
-  int iIceTimeStep;
-  double dInitIceHeight;
-  double dInitIceLat;
-  int bJormungand;           /**< Use with dFixIceLat to enforce cold equator conditions */
-  double dLapseR;
-  double dLatentHeatIce;      /**< Latent heat of fusion of ice over mixing depth*/
-  double dLatFHeatCp;         /**< Latent heat of ice/heat capacity */
-  int bMEPDiff;              /**< Compute Diffusion from maximum entropy production (D = B/4) */
-  double dMixingDepth;        /**< Depth of mixing layer of ocean (for thermal inertia)*/
-  int iNDays;                /**< Number of days in planet's year */
-  int iNStepInYear;        /**< Number of time steps in a year */
-  double dNuLandWater;        /**< Land-ocean interaction term */
+  double dHeatCapLand;       /**< Heat capacity of land */
+  double dHeatCapWater;      /**< Heat capacity of water */
+  double dIceAlbedo;         /**< Base albedo of ice covered surfaces */
+  double dIceBalanceTot;     /**< Total gain/loss in ice globally */
+  double dIceDepRate;        /**< Snow deposition rate when below freezing */
+  double dIceFlowTot;        /**< Total flow of ice (should be zero) */
+  double dIceMassTot;        /**< Total ice mass over entire globe */
+  int bIceSheets;            /**< Use ice sheet model? */
+  int iIceTimeStep;          /**< Time step of ice sheet model (should be > iNumYears) */
+  double dInitIceHeight;     /**< Initial height of ice sheet */
+  double dInitIceLat;        /**< Initial latitude of ice line (ice cap only) */
+  double dLapseR;            /**< Lapse rate used for elevation feedback of ice sheet */
+  double dLatentHeatIce;     /**< Latent heat of fusion of ice over mixing depth*/
+  double dLatFHeatCp;        /**< Latent heat of ice/heat capacity */
+  int bMEPDiff;              /**< Compute diff from maximum entropy prod (D = B/4) */
+  double dMixingDepth;       /**< Depth of mixing layer of ocean (for thermal inertia)*/
+  int iNDays;                /**< Number of days in planet's year/orbit */
+  int iNStepInYear;          /**< Number of time steps in a year/orbit */
+  double dNuLandWater;       /**< Land-ocean interaction term */
   int iNumLats;              /**< Number of latitude cells */
-  int iNumYears;           /**< Number of orbits!!! to run seasonal model */
-  double dObliqAmp;
-  double dObliqPer;
-  double dObliq0;
-  int iOLRModel;             /**< OLR fit (use with bCalcAB=1) from Kasting model or Spiegel model */
-  double dpCO2;              /**< Partial pressure of CO2 in atmos only used if bCalcAB = 1 */
+  int iNumYears;             /**< Number of orbits!!! to run seasonal model */
+  double dObliqAmp;          /**< Amplitude of forced obliquity oscillation */
+  double dObliqPer;          /**< Period of force obliquity oscillation */
+  double dObliq0;            /**< Start obliquity for forced oscillation */
+  int iOLRModel;             /**< OLR fit (use with bCalcAB=1) from Kasting or Spiegel */
+  double dpCO2;              /**< Partial pressure of CO2 (only if bCalcAB = 1) */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
-  double dRefHeight;
-  int iReRunSeas;
-  double dSeaIceConduct;
-  int bSeaIceModel;
-  double dSeasDeltat;
-  double dSeasDeltax;
-  double dSeasOutputTime;
-  double dSeasNextOutput;
-  int bSkipSeas;
-  int bSkipSeasEnabled;
-  int bSnowball;
-  double dSurfAlbedo;
+  double dRefHeight;         /**< Ref height of "surface" in elevation feedback */
+  int iReRunSeas;            /**< When to rerun EBM in ice sheet model */
+  double dSeaIceConduct;     /**< Conductivity of sea ice */
+  int bSeaIceModel;          /**< Use sea ice model? */
+  double dSeasDeltat;        /**< Time step of seasonal model */
+  double dSeasDeltax;        /**< Spacing of grid points in seasonal model */
+  double dSeasOutputTime;    /**< When to output seasonal data */
+  double dSeasNextOutput;    /**< Next time step to output seasonal data */
+  int bSkipSeas;             /**< Ann model will be used if in snowball state */
+  int bSkipSeasEnabled;      /**< Allow ann model to be used if in snowball state? */
+  int bSnowball;             /**< Is planet in snowball state (oceans are frozen)? */
+  double dSurfAlbedo;        /**< Base surface albedo used in ann model */
   double dTGlobal;           /**< Global mean temperature at surface */
-  double dTGlobalInit;
-  double dTGlobalTmp;
-  int iWriteLat;             /**< Stores index of latitude to be written in write function */
+  double dTGlobalInit;       /**< Initial estimate of global surface temperature */
+  double dTGlobalTmp;        /**< Mean global surface temp */
+  int iWriteLat;             /**< Stores index of latitude to be written in write fxn */
 
   /* Arrays used by seasonal and annual */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
   double *daDivFlux;         /**< Divergence of surface flux */
-  double *daDMidPt;
-  double **daInsol;           /**< Daily insolation at each latitude */
+  double *daDMidPt;          /**< Diffusion at edges of grid points */
+  double **daInsol;          /**< Daily insolation at each latitude */
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
   double *daLats;            /**< Latitude of each cell (centered) */
-  double *daPeakInsol;     /**< Annually averaged insolation at each latitude */
+  double *daPeakInsol;       /**< Annually averaged insolation at each latitude */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
 
   /* Arrays for annual model */
-  double *daAlbedoAnn;          /**< Albedo of each cell */
-  double *daDiffusionAnn;       /**< Diffusion coefficient of each latitude boundary */
-  double **dMEulerAnn;
-  double **dMEulerCopyAnn;
-  double **dInvMAnn;
-  double *daLambdaAnn;
-  double **dMClim;
-  double **dMDiffAnn;
-  double *daPlanckAAnn;
-  double *daPlanckBAnn;
-  int *rowswapAnn;
-  double *scaleAnn;
-  double *daSourceF;
-  double *daTempAnn;            /**< Surface temperature in each cell */
-  double *daTempTerms;
-  double *daTmpTempAnn;
-  double *daTmpTempTerms;
-  double *dUnitVAnn;
+  double *daAlbedoAnn;       /**< Albedo of each cell */
+  double *daDiffusionAnn;    /**< Diffusion coefficient of each latitude boundary */
+  double **daMEulerAnn;      /**< Matrix used for Euler step in annual model */
+  double **daMEulerCopyAnn;  /**< Temp copy of Euler matrix */
+  double **daInvMAnn;        /**< Inverted matrix for annual model */
+  double *daLambdaAnn;       /**< Diffusion terms for annual matrix */
+  double **daMClim;          /**< Raw climate matrix for annual model */
+  double **daMDiffAnn;       /**< Diffusion matrix for annual model */
+  double *daPlanckAAnn;      /**< Array of Planck A values for ann model */
+  double *daPlanckBAnn;      /**< Array of Planck B values for ann model */
+  int *iaRowswapAnn;         /**< Array of interchanged rows in matrix inversion */
+  double *daScaleAnn;        /**< Used in matrix inversion routine */
+  double *daSourceF;         /**< Heating terms in EBM */
+  double *daTempAnn;         /**< Surface temperature in each cell */
+  double *daTempTerms;       /**< Temperature dependent terms in matrix */
+  double *daTmpTempAnn;      /**< Temporary copy of temperature */
+  double *daTmpTempTerms;    /**< Temporary copy of temp dependent terms */
+  double *daUnitVAnn;        /**< Unit vector used in matrix inversion */
 
   /* Arrays for seasonal model */
-  double *daAlbedoAvg;
-  double *daAlbedoAvgL;
-  double *daAlbedoAvgW;
-  double *daAlbedoLand;
-  double *daAlbedoLW;
-  double *daAlbedoWater;
-  double *daBasalFlow;        /**< basal flow d(u*h)/dy */
-  double *daBasalFlowMid;     /**< basal flow d(u*h)/dy (midpoints) */
-  double *daBasalVel;         /**< Basal velocity of ice */
-  double *daBedrockH;         /**< Height of bedrock (can be negative) */
-  double *daBedrockHEq;       /**< Equilibrium height of bedrock */
-  double *daDeclination;           /**< Daily solar declination */
-  double *daDeltaTempL;
-  double *daDeltaTempW;       /**< Keep track of temperature change for energy check */
-  double *daDIceHeightDy;
-  double *daDiffusionSea;
-  double *daDivFluxAvg;
-  double **daDivFluxDaily;
-  double *daEnergyResL;
-  double *daEnergyResW;       /**< Energy residuals */
-  double *daEnerResLAnn;
-  double *daEnerResWAnn;      /**< Annually averaged energy residuals */
-  double *daFluxAvg;
-  double *daFluxOutAvg;
-  double **daFluxDaily;
-  double *daFluxInAvg;
-  double **daFluxInDaily;
-  double *daFluxInLand;
-  double *daFluxInWater;
-  double **daFluxOutDaily;
-  double *daFluxOutLand;
-  double *daFluxOutWater;
-  double *daFluxSeaIce;
-  double **daIceBalance;
-  double *daIceAblateTot;
-  double *daIceAccumTot;
-  double *daIceBalanceAnnual;
-  double *daIceBalanceAvg;
-  double *daIceBalanceTmp;
-  double *daIceFlow;
-  double *daIceFlowAvg;
-  double *daIceFlowMid;
-  double *daIceGamTmp;
-  double *daIceHeight;
-  double *daIceMass;
-  double *daIceMassTmp;
-  double *daIcePropsTmp;
-  double *daIceSheetDiff;
-  double **daIceSheetMat;
-  double **dInvMSea;
-  double *daLambdaSea;
-  double *daLandFrac;         /**< Fraction of cell which is land */
-  double **dMDiffSea;
-  double **dMEulerCopySea;
-  double **dMEulerSea;
-  double **dMInit;
-  double **dMLand;
-  double **dMWater;
-  double *daPlanckASea;
-  double *daPlanckBSea;
-  double **daPlanckBDaily;
-  double *daPlanckBAvg;
-  int *rowswapSea;
-  double *scaleSea;
-  double *daSeaIceHeight;     /**< Sea ice height by latitude */
-  double *daSeaIceK;
-  double *daSedShear;         /**< sediment shear stress (for ice sheets) */
-  double *daSourceL;       /**< Land source function: PlanckA - (1-albedo)*Insolation */
-  double *daSourceLW;     /**< Combined source function what matrix operates on */
-  double *daSourceW;       /**< Water source function: PlanckA - (1-albedo)*Insolation */
-  double *daTempAvg;
-  double *daTempAvgL;
-  double *daTempAvgW;
-  double **daTempDaily;
-  double *daTempLand;         /**< Temperature over land (by latitude) */
-  double *daTempLW;            /**< Surface temperature in each cell (avg over land & water) */
-  double *daTempMaxLW;         /**< maximum temperature over year */
-  double *daTempMaxLand;
-  double *daTempMaxWater;
-  double *daTempMinLW;         /**< minimum temperature over year */
-  double *daTempWater;        /**< Temperature over ocean (by lat) */
-  double *daTmpTempSea;
-  double *dUnitVSea;
-  double *daWaterFrac;        /**< Fraction of cell which is water */
-  double *daXBoundary;
-  double *daYBoundary;
+  double *daAlbedoAvg;       /**< Orbit average albedo by latitude */
+  double *daAlbedoAvgL;      /**< Orbit average albedo by latitude on land */
+  double *daAlbedoAvgW;      /**< Orbit average albedo by latitude on water */
+  double *daAlbedoLand;      /**< Albedo of land by latitude */
+  double *daAlbedoLW;        /**< Land-water averaged albedo */
+  double *daAlbedoWater;     /**< Albedo of land by latitude */
+  double *daBasalFlow;       /**< Basal flow of ice = d(u*h)/dy */
+  double *daBasalFlowMid;    /**< Basal flow of ice d(u*h)/dy (midpoints) */
+  double *daBasalVel;        /**< Basal velocity of ice */
+  double *daBedrockH;        /**< Height of bedrock (can be negative) */
+  double *daBedrockHEq;      /**< Equilibrium height of bedrock */
+  double *daDeclination;     /**< Daily solar declination */
+  double *daDeltaTempL;      /**< Keeps track of temp change on land for energy check */
+  double *daDeltaTempW;      /**< Keeps track of temp change on water for energy check */
+  double *daDIceHeightDy;    /**< Gradient of ice height */
+  double *daDiffusionSea;    /**< Diffusion coefficient for seasonal model */
+  double *daDivFluxAvg;      /**< Divergence of flux averaged over orbit */
+  double **daDivFluxDaily;   /**< Daily values of divergence of flux */ 
+  double *daEnergyResL;      /**< Energy residuals on land */
+  double *daEnergyResW;      /**< Energy residuals over water */
+  double *daEnerResLAnn;     /**< Annually averaged energy residuals on land */
+  double *daEnerResWAnn;     /**< Annually averaged energy residuals over water */
+  double *daFluxAvg;         /**< Annually averaged meridional flux */
+  double *daFluxOutAvg;      /**< Annually averaged outgoing flux */
+  double **daFluxDaily;      /**< Daily meridional flux values */
+  double *daFluxInAvg;       /**< Annually averaged incoming flux */
+  double **daFluxInDaily;    /**< Daily incoming flux values */
+  double *daFluxInLand;      /**< Annually averaged incoming flux on land */
+  double *daFluxInWater;     /**< Annually averaged incoming flux on water */
+  double **daFluxOutDaily;   /**< Daily  outgoing flux values */
+  double *daFluxOutLand;     /**< Annually averaged outgoing flux on land */
+  double *daFluxOutWater;    /**< Annually averaged outgoing flux on water */
+  double *daFluxSeaIce;      /**< Heat flux through sea ice */
+  double **daIceBalance;     /**< Gain/loss of ice at each latitude and day */
+  double *daIceAblateTot;    /**< Total ice loss per orbit */
+  double *daIceAccumTot;     /**< Total ice gain per orbit */
+  double *daIceBalanceAnnual;/**< Net ice gain/loss over orbit */
+  double *daIceBalanceAvg;   /**< Average ice gain/loss over orbit */
+  double *daIceBalanceTmp;   /**< Temporary (current) ice gain/loss */
+  double *daIceFlow;         /**< Flow of ice */
+  double *daIceFlowAvg;      /**< Average flow of ice over orbit */
+  double *daIceFlowMid;      /**< Flow of ice at boundaries of grid points */
+  double *daIceGamTmp;       /**< Temporary variable used in ice sheet matrix */
+  double *daIceHeight;       /**< Height of ice sheet */
+  double *daIceMass;         /**< Ice mass per area */
+  double *daIceMassTmp;      /**< Temporary copy of ice mass per area */
+  double *daIcePropsTmp;     /**< Temporary array used in ice sheet matrix */
+  double *daIceSheetDiff;    /**< Diffusion coefficient of ice sheet flow */
+  double **daIceSheetMat;    /**< Matrix used in ice sheet flow */
+  double **daInvMSea;        /**< Inverted matrix in seasonal EBM */
+  double *daLambdaSea;       /**< Diffusion terms in seasonal EBM matrix */
+  double *daLandFrac;        /**< Fraction of cell which is land */
+  double **daMDiffSea;       /**< Diffusion only matrix in seasonal EBM */
+  double **daMEulerCopySea;  /**< Temporary copy of Euler time step matrix (seasonal) */
+  double **daMEulerSea;      /**< Euler time step matrix in seasonal EBM */
+  double **daMInit;          /**< Temporary matrix used in constructing Euler matrix */
+  double **daMLand;          /**< Land terms in seasonal matrix */
+  double **daMWater;         /**< Water terms in seasonal matrix */
+  double *daPlanckASea;      /**< Array of Planck A values in seasonal model */
+  double *daPlanckBSea;      /**< Array of Planck B values in seasonal model */
+  double **daPlanckBDaily;   /**< Array of Planck B values over seasonal cycle */
+  double *daPlanckBAvg;      /**< Orbit averaged Planck B values in seasonal model */
+  int *iaRowswapSea;         /**< Interchanged rows in seasonal matrix inversion */
+  double *daScaleSea;        /**< Used in matrix inversion routine */
+  double *daSeaIceHeight;    /**< Sea ice height by latitude */
+  double *daSeaIceK;         /**< Heat conductivity of sea ice */
+  double *daSedShear;        /**< sediment shear stress (for ice sheets) */
+  double *daSourceL;         /**< Land heating terms: PlanckA - (1-albedo)*Insol */
+  double *daSourceLW;        /**< Combined heat terms what inverser matrix operates on */
+  double *daSourceW;         /**< Water heating terms: PlanckA - (1-albedo)*Insol */
+  double *daTempAvg;         /**< Temperature averaged over orbit and land/water */
+  double *daTempAvgL;        /**< Land temp averaged over orbit */
+  double *daTempAvgW;        /**< Water temp averaged over orbit */
+  double **daTempDaily;      /**< Daily temp over seasonal cycle */
+  double *daTempLand;        /**< Temperature over land (by latitude) */
+  double *daTempLW;          /**< Surface temperature (avg over land & water) */
+  double *daTempMaxLW;       /**< Maximum temperature over year */
+  double *daTempMaxLand;     /**< Maximum temperature over year over land */
+  double *daTempMaxWater;    /**< Maximum temperature over year over water */
+  double *daTempMinLW;       /**< Minimum temperature over year */
+  double *daTempWater;       /**< Temperature over ocean (by lat) */
+  double *daTmpTempSea;      /**< Temporary copy of temp dependent terms (sea EBM)*/
+  double *daUnitVSea;         /**< Unit vector used in matrix routines */
+  double *daWaterFrac;       /**< Fraction of cell which is water */
+  double *daXBoundary;       /**< Locations of grid boundaries in x = sin(lat) */
+  double *daYBoundary;       /**< Locations of grid boundaries in y = R*lat */
 
   // FLARE
   int bFlare;
@@ -885,45 +883,44 @@ typedef struct {
   double dLXUVFlare;
 
   // GALHABIT
-  int bGalHabit;
-  double dPeriQ;   /**< Pericenter distance */
-  int iDisrupt;
-  int bGalacTides;
-  double dHostBinSemi;
-  double dHostBinEcc;
-  double dHostBinInc;
-  double dHostBinArgP;
-  double dHostBinLongA;
-  double dHostBinMass1;
-  int bHostBinary;
-  double *dRelativeImpact;
-  double *dRelativeVel;
-  double dEccX;
-  double dEccY;
-  double dEccZ;
-  double dAngMX;
-  double dAngMY;
-  double dAngMZ;
-  double dAngM;
-  double dEccXTmp;          /**< Ecc X in the binary reference plane */
-  double dEccYTmp;
-  double dEccZTmp;
-  double dAngMXTmp;
-  double dAngMYTmp;
-  double dAngMZTmp;
-  double dArgPTmp;
-  double dLongATmp;
-  double dIncTmp;
-  double dCosArgP;
-  double dMinAllowed;  /**< minimum allowed close approach of body to host */
-  double dMassInterior;
-  int iBadImpulse;
+  int bGalHabit;            /**< Use galhabit module */
+  double dPeriQ;            /**< Pericenter distance */
+  int iDisrupt;             /**< Secondary body has been disrupted */
+  int bGalacTides;          /**< Enable galactic tides */
+  double dHostBinSemi;      /**< Semi-major axis of host binary */
+  double dHostBinEcc;       /**< Eccentricity of host binary */
+  double dHostBinInc;       /**< Inclination of host binary */
+  double dHostBinArgP;      /**< Arg pericenter of host binary */
+  double dHostBinLongA;     /**< Long asc node of host binary */
+  double dHostBinMass1;     /**< Mass of large host binary star */
+  int bHostBinary;          /**< Model dynamics of inner host binary */
+  double *daRelativeImpact; /**< Impact param of passing star relative to body */
+  double *daRelativeVel;    /**< Velocity of passing star relative to body */
+  double dEccX;             /**< X component of eccentricity vector */
+  double dEccY;             /**< Y component of eccentricity vector */
+  double dEccZ;             /**< Z component of eccentricity vector */
+  double dAngMX;            /**< X component of orbital momentum vector */
+  double dAngMY;            /**< Y component of orbital momentum vector */
+  double dAngMZ;            /**< Z component of orbital momentum vector */
+  double dAngM;             /**< Magnitude of orbital momentum vector */
+  double dEccXTmp;          /**< Ecc X in the host binary reference plane */
+  double dEccYTmp;          /**< Ecc Y in the host binary reference plane */
+  double dEccZTmp;          /**< Ecc Z in the host binary reference plane */
+  double dAngMXTmp;         /**< AngM X in the host binary reference plane */
+  double dAngMYTmp;         /**< AngM Y in the host binary reference plane */
+  double dAngMZTmp;         /**< AngM Z in the host binary reference plane */
+  double dArgPTmp;          /**< Arg pericenter in the host binary reference plane */
+  double dLongATmp;         /**< Long asc node in the host binary reference plane */
+  double dIncTmp;           /**< Inclination in the host binary reference plane */
+  double dCosArgP;          /**< Cosine of arg pericenter */
+  double dMinAllowed;       /**< minimum allowed close approach of body to host */
+  double dMassInterior;     /**< Total mass of bodies interior to body */
+  int iBadImpulse;          /**< Was there a bad impulse? */
 
-  
   //DISTRES
-  int bDistRes;
-  double dMeanL;
-  
+  int bDistRes;             /**< Use distres model (don't use it for god's sake) */
+  double dMeanL;            /**< Body's mean longitude */
+    
 } BODY;
 
 /* SYSTEM contains properties of the system that pertain to
@@ -941,91 +938,91 @@ typedef struct {
   double dTotAngMom;     /**< System's Current Angular Momentum */
 
   /* DISTORB tools */
-  fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions for each pair of bodies */
-  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives for pair of bodies */
-  double ***dmLaplaceC;  /**< Values of semi-major axis functions for each pair of bodies */
-  double ***dmLaplaceD;  /**< Values of semi-major axis derivatives for each pair of bodies */
-  double ***dmAlpha0;  /**< Semi-major axis ratio for each pair of bodies, at the time LaplaceC is determined */
-  int **imLaplaceN;   /**< Indices for dmLaplaceC corresponding to iBody, jBody */
-  double dDfcrit;     /**< Semi-maj functions will be updated based on this value, set by user */
-  double dThetaInvP;  /**< Azimuthal angle of invariable plane relative to input plane */
-  double dPhiInvP;    /**< Altitude angle of invariable plane relative to input plane */
-  double **dmEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange solution */
-  double **dmEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange solution */
-  double **dmEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange solution */
-  double **dmEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange solution */
-  double **dmEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
-  double **A;
-  double **B;
-  double *Asoln;
-  double *Bsoln;
-  double **etmp;
-  double **itmp;
-  double *h0;
-  double *k0;
-  double *p0;
-  double *q0;
-  double *S;
-  double *T;
-  int *rowswap;
-  double **Acopy;
-  double *scale;
-  double *dLOrb;
+  fnLaplaceFunction **fnLaplaceF;     /**< Pointers to semi-major axis functions  */
+  fnLaplaceFunction **fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives */
+  double ***daLaplaceC;   /**< Values of semi-major axis functions */
+  double ***daLaplaceD;   /**< Values of semi-major axis derivatives */
+  double ***daAlpha0;     /**< Semi-major axis ratio at the time LaplaceC is determined */
+  int **iaLaplaceN;       /**< Indices for dmLaplaceC corresponding to iBody, jBody */
+  double dDfcrit;         /**< Semi-maj functions will be updated based on this value */
+  double dThetaInvP;      /**< Azimuthal angle of inv plane relative to input plane */
+  double dPhiInvP;        /**< Altitude angle of inv plane relative to input plane */
+  double **daEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange */
+  double **daEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange */
+  double **daEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange */
+  double **daEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange */
+  double **daEigenPhase;  /**< Phase angles used in Laplace-Lagrange solution */
+  double **daA;           /**< Matrix used for finding eigenvalues for eccentricity */
+  double **daB;           /**< Matrix used for finding eigenvalues for inclination */
+  double *daAsoln;        /**< RHS of eigenvalue problem for ecc */
+  double *daBsoln;        /**< RHS of eigenvalue problem for inc */
+  double **daetmp;        /**< Temporary matrix used in eigenvalue routine */
+  double **daitmp;        /**< Temporary matrix used in eigenvalue routine */
+  double *dah0;           /**< Initial value of Hecc in LL2 solution */
+  double *dak0;           /**< Initial value of Kecc in LL2 solution */
+  double *dap0;           /**< Initial value of Pinc in LL2 solution */
+  double *daq0;           /**< Initial value of Qinc in LL2 solution */
+  double *daS;            /**< Scaling factor for ecc eigenvectors */
+  double *daT;            /**< Scaling factor for inc eigenvectors */
+  int *iaRowswap;         /**< Row interchange array used in eigenvector routine */
+  double **daAcopy;       /**< Copy of eigenvalue matrix for eccentricity */
+  double *daScale;        /**< Used in matrix inversion */ 
+  double *daLOrb;         /**< Total angular momentum of system */
 
-  double dTotEnInit;     /**< System's Initial Energy */
-  double dTotEn;         /** < System's total energy */
+  double dTotEnInit;      /**< System's Initial Energy */
+  double dTotEn;          /** < System's total energy */
 
-  double dGalacDensity;  /**< density of galactic environment (for GalHabit) */
-  double *dPassingStarR;
-  double *dPassingStarV;
-  double dPassingStarVRad;
-  double dPassingStarRMag;
-  double *dPassingStarImpact; /**< 3D impact parameter for passing star */
-  double dPassingStarMass;
-  double dPassingStarSigma;
-  double dPassingStarMagV;
-  double dEncounterRad;
-  double dDeltaTEnc;  /**< time since last encounter */
-  double dEncounterRate; /**< characteristic encounter time */
-  double dCloseEncTime;  /**< time of new close encounter */
-  double dLastEncTime;  /**< time of last encounter */
-  double dNextEncT;
-  int iNEncounters;
-  double dRForm;  /**< galactic formation radius */
-  double dTMigration;  /**< time of radial migration */
-  int bRadialMigr;    /**< use radial migration */
-  double dScalingFTot;    /**< scaling factor for radial migration */
+  double dGalacDensity;     /**< Density of galactic environment (for GalHabit) */
+  double *daPassingStarR;   /**< Initial location of passing star */
+  double *daPassingStarV;   /**< Initial velocity of passing star */
+  double dPassingStarVRad;  /**< Radial velocity of passing star (wrt origin) */
+  double dPassingStarRMag;  /**< Distance to passing star */
+  double *daPassingStarImpact; /**< 3D impact parameter for passing star */
+  double dPassingStarMass;  /**< Mass of passing star */
+  double dPassingStarSigma; /**< Velocity dispersion of passing stars */
+  double dPassingStarMagV;  /**< Magnitude of passing star */
+  double dEncounterRad;     /**< User-set encounter radius (box size) */
+  double dDeltaTEnc;        /**< time since last encounter */
+  double dEncounterRate;    /**< characteristic encounter time */
+  double dCloseEncTime;     /**< time of new close encounter */
+  double dLastEncTime;      /**< time of last encounter */
+  double dNextEncT;         /**< Time of next encounter */
+  int iNEncounters;         /**< Number of encounters */
+  double dRForm;            /**< galactocentric formation radius */
+  double dTMigration;       /**< time of radial migration */
+  int bRadialMigr;          /**< use radial migration */
+  double dScalingFTot;      /**< scaling factor for radial migration */
   double dScalingFStars;    /**< scaling factor for radial migration */
-  double dScalingFVelDisp;
-  double dGasDensity;  /**< density of local ism */
-  double dDMDensity;   /**< density of local dark matter */
-  double dStarScaleL;  /**< scale length of stellar disk */
-  double dVelDispSolar;
-  double dHostApexVelMag;
-  double *dHostApexVel;
-  double *dRelativeVel;
-  double *dRelativePos;
-  double dRelativeVelRad;
-  double dRelativeVelMag;
-  double *dGSNumberDens;
-  double *dGSBinMag;
-  double *dEncounterRateMV;
-  int iSeed;
-  double dGalaxyAge;  /**< present day age of galaxy */
-  int bStellarEnc;    /**< model stellar encounters? */
-  int bTimeEvolVelDisp;    /**< scale velocity dispersion of passing stars with sqrt(t)? */
-  int bOutputEnc;      /**< output stellar encounter info (beware large output files!) */
-  double dEncDT;       /**< time between stellar encounter impulses on primary and 2ndary */
-  double dTStart;      /**< time that encounter begins relative to time step */
-  
-  int **iResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
-  int *iResOrder;
-  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) (Malhotra+ 1989) */
-  double **dLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
-  double **dCircFreq; /**< Circulation frequency of near resonance */
-  double **dDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
-  double **dDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
-  double **dDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
+  double dScalingFVelDisp;  /**< scaling factor for radial migration (velocity disp) */
+  double dGasDensity;       /**< density of local ism */
+  double dDMDensity;        /**< density of local dark matter */
+  double dStarScaleL;       /**< scale length of stellar disk */
+  double dVelDispSolar;     /**< Velocity dispersion in solar neighborhood */
+  double dHostApexVelMag;   /**< Magnitude of host star apex velocity */
+  double *daHostApexVel;    /**< Host star apex velocity vector */
+  double *daRelativeVel;    /**< Relative velocity b/w passing star and orbiter */
+  double *daRelativePos;    /**< Distance b/w passing star and orbiter */
+  double dRelativeVelRad;   /**< Radial component of velocity b/w passing star & orbiter */
+  double dRelativeVelMag;   /**< Magnitude relative velocity b/w passing star & orbiter */
+  double *daGSNumberDens;   /**< Number density of stars in solar neighborhood */
+  double *daGSBinMag;       /**< Magnitude bins of stars in solar neighborhood */
+  double *daEncounterRateMV;/**< Encounter rate of passing stars */
+  int iSeed;                /**< RNG seed for stellar encounters */
+  double dGalaxyAge;        /**< present day age of galaxy */
+  int bStellarEnc;          /**< model stellar encounters? */
+  int bTimeEvolVelDisp;     /**< scale velocity dispersion of passing stars w/ sqrt(t)?*/
+  int bOutputEnc;           /**< output stell encounter info (beware large output!) */
+  double dEncDT;            /**< time b/w stell encounter impulses on primary/2ndary */
+  double dTStart;           /**< time that encounter begins relative to time step */
+
+  int **iaResIndex;    /**< j values for resonance (-1 deactivates the resonance) */
+  int *iaResOrder;     /**< order of resonance */
+  int bResAvg;        /**< Average over resonant arguments (suitable for circulation) */
+  double **daLibrFreq2;/**< Libration frequency of exact resonance via linear theory */
+  double **daCircFreq; /**< Circulation frequency of near resonance */
+  double **daDistCos;  /**< Cosine prefactors of disturbing fxn resonant terms */
+  double **daDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
+  double **daDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
 
 } SYSTEM;
 
@@ -1075,8 +1072,8 @@ typedef struct {
   int iNumMass;
 
   /* These are the variables that the update matrix modifies */
-  // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
-  // Obliquity is now split into Xobl, Yobl and Zobl to accomedate Laskar
+  // Eccentricity is now split into Hecc and Kecc to accomodate Distorb
+  // Obliquity is now split into Xobl, Yobl and Zobl to accommodate Distrot
   int iRot;             /**< Variable # Corresponding to Rotation Rate */
   double dDRotDt;       /**< Total Rotation Rate Derivative */
   int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
@@ -1296,42 +1293,54 @@ typedef struct {
   double **padDZoblDtDistRot;
 
   /* GALHABIT */
-  int iNumEccX;
-  int iNumEccY;
-  int iNumEccZ;
+  int iNumEccX;       /**< Number of equations for x eccentricity */
+  int iNumEccY;       /**< Number of equations for y eccentricity */
+  int iNumEccZ;       /**< Number of equations for z eccentricity */
 
-  int iEccX;
-  int iEccY;
-  int iEccZ;
-  double dDEccXDt;
-  double dDEccYDt;
-  double dDEccZDt;
+  int iEccX;          /**< Variable # for x eccentricity */
+  int iEccY;          /**< Variable # for y eccentricity */
+  int iEccZ;          /**< Variable # for z eccentricity */
+  double dDEccXDt;    /**< Derivative for ecc x */
+  double dDEccYDt;    /**< Derivative for ecc y */
+  double dDEccZDt;    /**< Derivative for ecc z */
 
-  int *iaEccXGalHabit;
-  int *iaEccYGalHabit;
-  int *iaEccZGalHabit;
+  int *iaEccXGalHabit; /**< Equation # for GalHabit's change in x ecc */
+  int *iaEccYGalHabit; /**< Equation # for GalHabit's change in y ecc */
+  int *iaEccZGalHabit; /**< Equation # for GalHabit's change in z ecc */
 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      x component of ecc derivative due to GALHABIT */
   double **padDEccXDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      y component of ecc derivative due to GALHABIT */
   double **padDEccYDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      z component of ecc derivative due to GALHABIT */
   double **padDEccZDtGalHabit;
 
-  int iNumAngMX;
-  int iNumAngMY;
-  int iNumAngMZ;
+  int iNumAngMX;     /**< Number of equations for x angular momentum*/
+  int iNumAngMY;     /**< Number of equations for y angular momentum*/
+  int iNumAngMZ;     /**< Number of equations for z angular momentum*/
 
-  int iAngMX;
-  int iAngMY;
-  int iAngMZ;
-  double dDAngMXDt;
-  double dDAngMYDt;
-  double dDAngMZDt;
+  int iAngMX;        /**< Variable # for x angular momentum */
+  int iAngMY;        /**< Variable # for y angular momentum */
+  int iAngMZ;        /**< Variable # for z angular momentum */
+  double dDAngMXDt;  /**< Derivative for angular mom x */
+  double dDAngMYDt;  /**< Derivative for angular mom y */
+  double dDAngMZDt;  /**< Derivative for angular mom z */
 
-  int *iaAngMXGalHabit;
-  int *iaAngMYGalHabit;
-  int *iaAngMZGalHabit;
+  int *iaAngMXGalHabit; /**< Equation # for GalHabit's change in x ang mom */
+  int *iaAngMYGalHabit; /**< Equation # for GalHabit's change in y ang mom */
+  int *iaAngMZGalHabit; /**< Equation # for GalHabit's change in z ang mom */
 
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      x component of angular mom derivative due to GALHABIT */
   double **padDAngMXDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      y component of angular mom derivative due to GALHABIT */
   double **padDAngMYDtGalHabit;
+  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
+      z component of angular mom derivative due to GALHABIT */
   double **padDAngMZDtGalHabit;
 
   /* DISTRES */
@@ -1420,14 +1429,6 @@ typedef struct {
   double *pdRotRateStellar;
   double *pdLostAngMomStellar;
   double *pdLostEngStellar;
-
-  /* POISE */
-  int *iaIceMass;  /**< Variable number of ice mass of each latitude */
-  int iNumIceMass; /**< Number of equations in Poise that affect each latitudes' ice */
-  double ***padDIceMassDtPoise;
-  int *iaIceMassDepMelt;
-  int *iaIceMassFlow;
-  int iIceMass;
 
   /* FLARE */
   int iLXUV;
@@ -1918,17 +1919,24 @@ typedef struct {
   /*! Function pointers to finalize dynamical ellipticity */
   fnFinalizeUpdateDynEllipModule **fnFinalizeUpdateDynEllip;
 
+  /*! These functions assign Equation and Module information regarding
+      GalHabit's ecc and angm variables in the UPDATE struct. */
+  /*! Function pointers to finalize galhabit's eccx */
   fnFinalizeUpdateEccXModule **fnFinalizeUpdateEccX;
+  /*! Function pointers to finalize galhabit's eccy */
   fnFinalizeUpdateEccYModule **fnFinalizeUpdateEccY;
+  /*! Function pointers to finalize galhabit's eccz */
   fnFinalizeUpdateEccZModule **fnFinalizeUpdateEccZ;
+  /*! Function pointers to finalize galhabit's angmx */
   fnFinalizeUpdateAngMXModule **fnFinalizeUpdateAngMX;
+  /*! Function pointers to finalize galhabit's angmy */
   fnFinalizeUpdateAngMYModule **fnFinalizeUpdateAngMY;
+  /*! Function pointers to finalize galhabit's angmz */
   fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
 
+  /*! Function pointers to finalize mean longitude in distres */
   fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
 
-
-  fnFinalizeUpdateIceMassModule **fnFinalizeUpdateIceMass;
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
   /*! These functions log module-specific data. */

@@ -43,4 +43,4 @@ double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, do
 void BodyCopy(BODY*,BODY*,EVOLVE*);
 
 void CalcXYZobl(BODY*,int);
-double CalcDynEllipEq(BODY*,int);
+double fndCalcDynEllipEq(BODY*,int);

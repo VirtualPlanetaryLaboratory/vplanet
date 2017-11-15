@@ -1706,7 +1706,7 @@ double fdMeanAnomaly(double dMeanMotion, double dTime, double dPhi)
 
 //Below are functions russell already defined in distorb that i'll reuse
 //double fdLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS)
-//double fdDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double dIndexS)
+//double fndDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double dIndexS)
 // Note: for Laplace Coeff functions, they go as b^J_s(alpha) where J is an int, S is a half int double !!
 
 /*
@@ -1724,11 +1724,11 @@ double fdMeanMotionBinary(BODY *body, int iBody)
 
   double N0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
-  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
-  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
+  double tmp1 = body[0].dMass*fndLaplaceCoeff(alphaa,0,0.5)/M;
+  tmp1 += body[1].dMass*fndLaplaceCoeff(alphab,0,0.5)/M;
 
   double tmp2 = body[0].dMass*body[1].dMass*body[1].dSemi/(M*M*body[iBody].dR0);
-  tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
+  tmp2 *= (fndDerivLaplaceCoeff(1,alphaa,0,0.5) + fndDerivLaplaceCoeff(1,alphab,0,0.5));
 
   return sqrt(N0*(tmp1 + tmp2));
 }
@@ -1743,16 +1743,16 @@ double fdEpiFreqK(BODY *body, int iBody)
 
   double K0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
-  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,0.5)/M;
-  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,0.5)/M;
+  double tmp1 = body[0].dMass*fndLaplaceCoeff(alphaa,0,0.5)/M;
+  tmp1 += body[1].dMass*fndLaplaceCoeff(alphab,0,0.5)/M;
 
   double tmp2 = body[0].dMass*body[1].dMass*body[1].dSemi/(M*M*body[iBody].dR0);
-  tmp2 *= (fdDerivLaplaceCoeff(1,alphaa,0,0.5) + fdDerivLaplaceCoeff(1,alphab,0,0.5));
+  tmp2 *= (fndDerivLaplaceCoeff(1,alphaa,0,0.5) + fndDerivLaplaceCoeff(1,alphab,0,0.5));
 
   double tmp3 = body[0].dMass*body[1].dMass*body[1].dSemi*body[1].dSemi/(M*M*body[iBody].dR0*body[iBody].dR0);
 
-  double tmp4 = body[1].dMass*fdDerivLaplaceCoeff(2,alphaa,0,0.5)/M;
-  tmp4 += body[0].dMass*fdDerivLaplaceCoeff(2,alphab,0,0.5)/M;
+  double tmp4 = body[1].dMass*fndDerivLaplaceCoeff(2,alphaa,0,0.5)/M;
+  tmp4 += body[0].dMass*fndDerivLaplaceCoeff(2,alphab,0,0.5)/M;
   tmp3 *= tmp4;
 
   K0 *= (tmp1 - tmp2 - tmp3);
@@ -1769,8 +1769,8 @@ double fdEpiFreqV(BODY *body, int iBody)
 
   double V0 = body[iBody].dMeanMotion*body[iBody].dMeanMotion/2.;
 
-  double tmp1 = body[0].dMass*fdLaplaceCoeff(alphaa,0,1.5)/M;
-  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,0,1.5)/M;
+  double tmp1 = body[0].dMass*fndLaplaceCoeff(alphaa,0,1.5)/M;
+  tmp1 += body[1].dMass*fndLaplaceCoeff(alphab,0,1.5)/M;
   return sqrt(V0 * tmp1);
 }
 
@@ -1801,8 +1801,8 @@ double fdPot0(int j, int k, double R, BODY *body)
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
-  double tmp1 = pow(-1.,k)*body[0].dMass*fdLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
-  tmp1 += body[1].dMass*fdLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
+  double tmp1 = pow(-1.,k)*body[0].dMass*fndLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
+  tmp1 += body[1].dMass*fndLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
 
   return coeff*tmp1;
 
@@ -1822,13 +1822,13 @@ double fdPot0dR(int j, int k, double R, BODY *body)
 
   double coeff = -(2. - fiDelta(k,0))/2.;
 
-  double f = pow(-1.,k)*body[0].dMass*fdLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
-  f += body[1].dMass*fdLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
+  double f = pow(-1.,k)*body[0].dMass*fndLaplaceCoeff(alphaa,k,(j+1.)/2.)/M;
+  f += body[1].dMass*fndLaplaceCoeff(alphab,k,(j+1.)/2.)/M;
   double g = BIGG*(body[0].dMass + body[1].dMass)/R;
 
   double g_prime = -g/R;
-  double f_prime = -pow(-1.,k)*body[0].dMass*alphaa*R*fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/(R*R*M);
-  f_prime += -body[1].dMass*alphab*R*fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/(R*R*M);
+  double f_prime = -pow(-1.,k)*body[0].dMass*alphaa*R*fndDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/(R*R*M);
+  f_prime += -body[1].dMass*alphab*R*fndDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/(R*R*M);
 
   return coeff*(f_prime*g + g_prime*f);
 }
@@ -1848,8 +1848,8 @@ double fdPot1(int j, int k, double R, BODY *body)
   double coeff = -(2. - fiDelta(k,0))/2.;
   coeff *= BIGG*(body[0].dMass + body[1].dMass)/R;
 
-  double tmp1 = pow(-1.,k)*body[0].dMass*alphaa*fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/M;
-  tmp1 += body[1].dMass*alphab*fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/M;
+  double tmp1 = pow(-1.,k)*body[0].dMass*alphaa*fndDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.)/M;
+  tmp1 += body[1].dMass*alphab*fndDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.)/M;
 
   return coeff*tmp1;
 }
@@ -1870,16 +1870,16 @@ double fdPot1dR(int j, int k, double R, BODY * body)
 
   // Break up big terms into multiple terms: x
   double f = pow(-1.,k)*body[0].dMass*alphaa/M;
-  double g = fdDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.);
+  double g = fndDerivLaplaceCoeff(1,alphaa,k,(j+1.)/2.);
   double h = body[1].dMass*alphab/M;
-  double i = fdDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.);
+  double i = fndDerivLaplaceCoeff(1,alphab,k,(j+1.)/2.);
   double l = BIGG*(body[0].dMass + body[1].dMass)/R;
 
   // Derivatives of the above terms w.r.t. R (and hence, alphas): xp
   double fp = -pow(-1.,k)*body[0].dMass*alphaa/(R*M);
-  double gp = -alphaa*fdDerivLaplaceCoeff(2,alphaa,k,(j+1.)/2.)/R;
+  double gp = -alphaa*fndDerivLaplaceCoeff(2,alphaa,k,(j+1.)/2.)/R;
   double hp = -body[1].dMass*alphab/(R*M);
-  double ip = -alphab*fdDerivLaplaceCoeff(2,alphab,k,(j+1.)/2.)/R;
+  double ip = -alphab*fndDerivLaplaceCoeff(2,alphab,k,(j+1.)/2.)/R;
   double lp = -BIGG*(body[0].dMass + body[1].dMass)/(R*R);
 
   return coeff*((fp*g + gp*f + hp*i + ip*h)*l + lp*(f*g + h*i));

@@ -2839,7 +2839,7 @@ void Snowball(BODY *body, int iBody) {
 void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {  
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
-      body[iBody].dDynEllip = fndCalcDynEllipEq(body, iBody);
+      body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
     }
   }
   

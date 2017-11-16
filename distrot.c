@@ -1111,7 +1111,7 @@ void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     CalcDynEllip(body, iBody);
   }
     */
-    body[iBody].dDynEllip = fndCalcDynEllipEq(body, iBody);
+    body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
   }
   
   if (body[iBody].bReadOrbitData) {
@@ -1302,7 +1302,7 @@ double fndDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -EDMAN*EDMAN/body[iaBody[0]].dViscUMan*\
-          (body[iaBody[0]].dDynEllip-fndCalcDynEllipEq(body,iaBody[0]));
+          (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
 }
 
 double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {

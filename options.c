@@ -1182,14 +1182,7 @@ void ReadBodyType(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     } else
       if (iFile > 0)
-      {
-        if(iFile == 1) {
-          body[iFile-1].iBodyType = 1; // Body 1 defaults to star type (1)
-        }
-        else {
-          body[iFile-1].iBodyType = 0; // Body > 1 defaults to planet type (0)
-        }
-      }
+        AssignDefaultInt(options,&body[iFile-1].iBodyType,files->iNumInputs);
 }
 
 /*
@@ -1944,7 +1937,6 @@ void ReadMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
 }
 
 /* Mass-Radius relationship */
-
 void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with Radius, Density and Mass */
@@ -1957,16 +1949,16 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     if (memcmp(sLower(cTmp),"r",1) == 0) {
       /* Reid & Hawley 2000 */
       // XXX Should change number to #define'd variables!
-      control->iMassRad[iFile-1]=0;
+      control->iMassRad[iFile-1]=REIDHAWLEY;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
-      control->iMassRad[iFile-1]=1;
+      control->iMassRad[iFile-1]=GORDASVECH99;
     } else if (memcmp(sLower(cTmp),"b",1) == 0) {
       /* Bayless & Orosz 2006 */
-      control->iMassRad[iFile-1]=2;
+      control->iMassRad[iFile-1]=BAYLESSOROSZ06;
     } else if (memcmp(sLower(cTmp),"s",1) == 0) {
       /* Sotin et al 2007 */
-      control->iMassRad[iFile-1]=3;
+      control->iMassRad[iFile-1]=SOTIN07;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: Unknown argument to %s: %s.\n",options->cName,cTmp);
@@ -2616,25 +2608,6 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   } else
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
-}
-
-void ReadSpecMomInertia(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* Cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    /* Option was found */
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    
-    body[iFile-1].dSpecMomInertia = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dSpecMomInertia = options->dDefault;
-//     AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
-    
 }
 
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
@@ -3308,15 +3281,6 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROTVEL].dNeg = 1e5;
   sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   fnRead[OPT_ROTVEL] = &ReadRotVel;
-  
-    
-  sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
-  sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
-  sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
-  options[OPT_SPECMOMINERTIA].dDefault = 0.33;
-  options[OPT_SPECMOMINERTIA].iType = 2;  
-  options[OPT_SPECMOMINERTIA].iMultiFile = 1;   
-  fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
 
   /*
    *
@@ -3444,9 +3408,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);
   InitializeOptionsBinary(options,fnRead);
-  InitializeOptionsFlare(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
-  InitializeOptionsDistRes(options,fnRead);
-  InitializeOptionsSpiNBody(options,fnRead);
-
 }

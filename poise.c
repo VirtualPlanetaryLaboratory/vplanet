@@ -2950,8 +2950,14 @@ void AreaIceCovered(BODY *body, int iBody) {
   
   body[iBody].dAreaIceCov = 0; 
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    if (body[iBody].daIceMass[iLat] > 0 || body[iBody].daTempMaxLand[iLat] <= -2.0) {
-      body[iBody].dAreaIceCov += body[iBody].daLandFrac[iLat];
+    if (body[iBody].bClimateModel == SEA) {
+      if (body[iBody].daIceMass[iLat] > 0 || body[iBody].daTempMaxLand[iLat] <= -2.0) {
+        body[iBody].dAreaIceCov += body[iBody].daLandFrac[iLat];
+      }
+    } else {
+      if (body[iBody].daTempMaxLand[iLat] <= -10.0) {
+        body[iBody].dAreaIceCov += body[iBody].daLandFrac[iLat];
+      }
     }
     if (body[iBody].daTempMaxWater[iLat] < -2) {
       body[iBody].dAreaIceCov += body[iBody].daWaterFrac[iLat];
@@ -4671,7 +4677,7 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
         if (iLat == 0) {
           body[iBody].daIceFlowMid[iLat] = 0;
           body[iBody].daBasalFlowMid[iLat] = 0;
-        } else if (iLat == body[iBody].iNumLats) {
+        } else if (iLat == body[iBody].iNumLats-1) {
           body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
              body[iBody].daIceFlow[iLat-1])/2.0;
           body[iBody].daIceFlowMid[iLat+1] = 0;

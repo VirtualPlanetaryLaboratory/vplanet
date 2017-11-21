@@ -1556,7 +1556,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       fprintf(fp,"\n");
       fclose(fp);
     }
-    // XXX Module-specific output should NOT be present in this file
+    // XXX Pizza should NOT be present in this file
 
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
@@ -1680,8 +1680,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       }
   }
   
-  if (control->bOutputEigen) {
-    if (body[1].bDistOrb) {
+  if (body[1].bDistOrb) {
+    if (control->bOutputEigen) {
       if (control->Evolve.iDistOrbModel == RD4) {
          SolveEigenVal(body,&control->Evolve,system);
       }

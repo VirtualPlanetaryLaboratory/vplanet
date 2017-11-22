@@ -1,17 +1,21 @@
 default:
-	-gcc -o vplanet *.c -lm
+	-gcc -o vplanet src/*.c -lm
 
 debug:
-	-gcc -g -o vplanet *.c -lm -Wno-div-by-zero
+	-gcc -g -D DEBUG -o vplanet src/*.c -lm -Wno-div-by-zero
 
 opt:
-	-gcc -o vplanet *.c -lm -O3
+	-gcc -o vplanet src/*.c -lm -O3
 
 profile:
-	-gcc -pg -o vplanet *.c -lm
+	-gcc -pg -o vplanet src/*.c -lm
 
 test:
 	@echo 'Compiling vplanet...'
-	-gcc -o vplanet *.c -lm
+	-gcc -o vplanet src/*.c -lm
 	@echo 'Running vtest...'
-	@vtest
+	@if nosetests -s -v -w tests; then\
+		tests/certificate --pass;\
+	else\
+		tests/certificate --fail;\
+	fi

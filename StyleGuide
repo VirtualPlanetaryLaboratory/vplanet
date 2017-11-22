@@ -1,7 +1,14 @@
 VPLANET Style Guide
 
-Variable and funtion names use a "Hungarian style."
+Variable and function names use a "Hungarian style."
 
+All files should begin with a doxygen-style docstring:
+/**
+    @file filename.c
+    @brief Brief description of what this file is and what it does.
+
+    A more detailed description of the file and its intricacies.
+*/
 
 Subroutine names can begin with a prefix that describes the returned parameter
 "" = void function
@@ -16,11 +23,19 @@ fnsa = String Array Function (returns char[][])
 
 Subroutines should be written as:
 
+/**
+This comment describes the point of this function, any potential gotchas or future
+improvements. Single line comments with // are OK. The argument list should be
+alphabetical, starting with vplanet structs, then any function pointers, then doubles,
+then integers, then Booleans.
+
+@param body This describes what the body parameter is all about
+@param control This describes what the control parameter is all about
+...
+@param iB This describes what the iB parameter is all about
+@return If the function isn't void, describe what it returns.
+*/
 void ThisIsAFunction(BODY *body,CONTROL *control,...,fnUpdate, double dA,double dB,...,int iA,int iB) {
-  /* This comment describes the point of this function, any potential gotchas or future 
-     improvements. Single line comments with // are OK. The argument list should be 
-     alphabetical, starting with vplanet structs, then any function pointers, then doubles, 
-     then integers, then Booleans. */
 
   Use spaces instead of tabs to indent code. Tabs can cause conflicts. You should be able
   to modify your text editor to do this. Two spaces per logic level.
@@ -42,7 +57,7 @@ void ThisIsAFunction(BODY *body,CONTROL *control,...,fnUpdate, double dA,double 
   da = Double Array
   sa = String Array
   pb = Pointer to Boolean
-  pi = Pointer to Integer 
+  pi = Pointer to Integer
   pd = Pointer to Double
   pab = Pointer to Boolean Array
   pai = Pointer to Integer Array
@@ -90,9 +105,9 @@ Single line comment:
 double dAge;           /**< Body's Age */
 
 Multi-line comment:
-/*! Points to the element in UPDATE's daDerivProc matrix that contains the 
+/*! Points to the element in UPDATE's daDerivProc matrix that contains the
     semi-major axis' derivative due to EQTIDE. */
-double *pdDsemiDtEqtide;    
+double *pdDsemiDtEqtide;
 
 ---- Auxiliary Python Code -----
 

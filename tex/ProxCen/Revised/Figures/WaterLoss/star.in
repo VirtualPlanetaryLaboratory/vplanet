@@ -4,7 +4,7 @@ saModules	    stellar                     # Modules to apply, exact spelling req
 cColor        000000
 
 # Output
-saOutputOrder Time -Luminosity -LXUVStellar
+saOutputOrder Time -Luminosity -LXUVStellar Temperature Radius
 
 # Physical Parameters
 dAge          1e6

@@ -4,7 +4,20 @@
 from __future__ import division, print_function, absolute_import
 from setuptools import setup
 from setuptools.command.install import install
+from setuptools.command.develop import develop
 import warnings
+import os, shutil
+import subprocess
+import matplotlib as mpl
+
+# Font config file
+fontconfig = \
+'''<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<!-- ~/.fonts.conf for per-user font configuration -->
+<fontconfig>
+<dir>~/.fonts</dir>
+</fontconfig>'''
 
 # Hackishly inject a constant into builtins to enable importing of the
 # module. Stolen from `kplr`
@@ -21,30 +34,13 @@ def readme():
   with open('README.rst') as f:
     return f.read()
 
-class move_ttf(install):
-  '''
-  Sets up the machinery to install custom fonts.  Subclasses the setup tools install 
-  class in order to run custom commands during installation.  
-  
-  Taken from http://stackoverflow.com/a/34304823
-  
-  '''
-  
-  def run(self):
+def InstallFont():
     '''
-    Performs the usual install process and then copies the True Type fonts 
-    into matplotlib's True Type font directory, and deletes the matplotlib 
-    fontList.cache 
-    
+
     '''
-    
-    # Perform the usual install process
-    install.run(self)
-    
-    # Try to install custom fonts
+
+    # Try to install custom fonts in matplotlib source directory
     try:
-      import os, shutil
-      import matplotlib as mpl
 
       # Find where matplotlib stores its True Type fonts
       mpl_data_dir = os.path.dirname(mpl.matplotlib_fname())
@@ -69,9 +65,81 @@ class move_ttf(install):
           fontList_path = os.path.join(mpl_cache_dir, file)
           os.remove(fontList_path)
           print("Deleted %s." % fontList_path)
-          
+
     except:
-      warnings.warn("WARNING: An issue occured while installing the custom fonts for vplot.")
+      # Install them locally
+      # https://gist.github.com/pastewka/2293b6ec8998fc36c684
+      if not os.path.exists(os.path.join(os.path.expanduser('~'), '.fonts')):
+          os.makedirs(os.path.join(os.path.expanduser('~'), '.fonts'))
+      cp_ttf_dir = os.path.join(os.path.dirname(vplot.__file__), 'fonts')
+      for file_name in os.listdir(cp_ttf_dir):
+        if file_name[-4:] == '.ttf':
+          old_path = os.path.join(cp_ttf_dir, file_name)
+          new_path = os.path.join(os.path.expanduser('~'), '.fonts', file_name)
+          shutil.copyfile(old_path, new_path)
+          print("Copying " + old_path + " -> " + new_path)
+      # Tell matplotlib where to find them
+      dir = os.path.join(os.path.expanduser('~'), '.config', 'fontconfig')
+      file = os.path.join(dir, 'fonts.conf')
+      if not os.path.exists(dir):
+          os.makedirs(dir)
+      if os.path.exists(file):
+          print("Unable to install Palatino Linotype font.")
+          print("You may have to do it manually.")
+      else:
+          # Create the font config file
+          with open(file, 'w') as f:
+              print(fontconfig, file = f)
+          # Clear the cache
+          print("Clearing the matplotlib cache. This might take a minute or two...")
+          subprocess.call(["fc-cache", "--force"])
+          shutil.rmtree(mpl.get_cachedir())
+
+class move_ttf_install(install):
+  '''
+  Sets up the machinery to install custom fonts.  Subclasses the setup tools install
+  class in order to run custom commands during installation.
+
+  Taken from http://stackoverflow.com/a/34304823
+
+  '''
+
+  def run(self):
+    '''
+    Performs the usual install process and then copies the True Type fonts
+    into matplotlib's True Type font directory, and deletes the matplotlib
+    fontList.cache
+
+    '''
+
+    # Perform the usual install process
+    install.run(self)
+
+    # Install the font
+    InstallFont()
+
+class move_ttf_develop(develop):
+  '''
+  Sets up the machinery to install custom fonts.  Subclasses the setup tools
+  develop class in order to run custom commands during installation.
+
+  Taken from http://stackoverflow.com/a/34304823
+
+  '''
+
+  def run(self):
+    '''
+    Performs the usual install process and then copies the True Type fonts
+    into matplotlib's True Type font directory, and deletes the matplotlib
+    fontList.cache
+
+    '''
+
+    # Perform the usual install process
+    develop.run(self)
+
+    # Install the font
+    InstallFont()
 
 # Setup!
 setup(name = 'vplot',
@@ -96,6 +164,6 @@ setup(name = 'vplot',
                          ],
       include_package_data = True,
       package_data = {'vplot' : ['fonts/*.ttf']},
-      cmdclass={'install' : move_ttf},
-      scripts=['bin/vplot', 'bin/vtest'],
+      cmdclass={'install' : move_ttf_install, 'develop': move_ttf_develop},
+      scripts=['bin/vplot'],
       zip_safe = False)

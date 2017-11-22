@@ -1,3 +1,6 @@
+bigplanet/bigplanet/vabc.py
+bigplanet/bigplanet/big_ml.py
+bigplanet/bigplanet/bootstrap_utils.py
 *.txt
 .#thermint.h
 Integr.iNumBodies

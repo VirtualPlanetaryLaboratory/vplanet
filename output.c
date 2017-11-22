@@ -274,12 +274,12 @@ void WriteOrbAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   char cTmp;
   double *pdOrbMom;
   if (body[iBody].bSpiNBody){
-    pdOrbMom = fdOrbAngMom(body,iBody);
+    pdOrbMom = fdOrbAngMom(body,control,iBody);
     *dTmp = sqrt(pdOrbMom[0]*pdOrbMom[0]+pdOrbMom[1]*pdOrbMom[1]+pdOrbMom[2]*pdOrbMom[2]);
     free(pdOrbMom);
   }
   else {
-    pdOrbMom = fdOrbAngMom(body,iBody);
+    pdOrbMom = fdOrbAngMom(body,control,iBody);
     *dTmp = *pdOrbMom;
     free(pdOrbMom);
   }
@@ -1679,7 +1679,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
-  
+
   if (control->bOutputEigen) {
     if (body[1].bDistOrb) {
       if (control->Evolve.iDistOrbModel == RD4) {
@@ -1688,7 +1688,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       WriteEigen(control,system);
     }
   }
-      
+
 }
 
 void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {

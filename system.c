@@ -42,7 +42,7 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 /*! Compute the orbital angular momentum of the iBodyth body
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
-double * fdOrbAngMom(BODY *body, int iBody) {
+double * fdOrbAngMom(BODY *body, CONTROL *control, int iBody) {
 
   double dMass, mu; // Mass of central body or bodies if using binary and not secondary star
 
@@ -62,7 +62,7 @@ double * fdOrbAngMom(BODY *body, int iBody) {
     double * pdNetOrbMom = malloc(sizeof(double));
 
     // Central body (or primary binary star) doesn't orbit itself
-    if(iBody < 1)
+    if(iBody < 1 || !control->bOrbiters)
     {
       *pdNetOrbMom = 0.0;
       return pdNetOrbMom;
@@ -106,7 +106,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
     //SpiNBody has direct x,y,z components for position and velocity
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
     if (body[iBody].bSpiNBody){
-      pdaTmp = fdOrbAngMom(body,iBody);
+      pdaTmp = fdOrbAngMom(body,control,iBody);
       for (i=0; i<3; i++){
         daOrbTot[i] += *(pdaTmp+i);
       }
@@ -117,7 +117,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
     }
     else {
       for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-        pdaTmp = fdOrbAngMom(body,iBody);
+        pdaTmp = fdOrbAngMom(body,control,iBody);
         dTot += *pdaTmp;
         dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
         dTot += body[iBody].dLostAngMom;
@@ -139,7 +139,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
   int i;
-  
+
   if (body[iBody].bSpiNBody && iBody>0){
     double PotEnergy = 0;
     //For SpiNBody, find the heliocentric distance then return the potential.
@@ -154,9 +154,8 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
     }
     return(PotEnergy);
   }
-  // Ignore central body or other stars if not using binary
-  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
-  {
+  // Ignore for central body or if there's no orbiting bodies
+  if(iBody < 1 || !control->bOrbiters) {
     return 0.0;
   }
 
@@ -192,9 +191,8 @@ double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
         +(body[iBody].dVelZ)*(body[iBody].dVelZ);
     return 0.5*body[iBody].dMass*Velocity2;
   }
-  // Ignore central body or other stars if not using binary
-  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
-  {
+  // Ignore for central body or if there's no orbiting bodies
+  if(iBody < 1 || !control->bOrbiters) {
     return 0.0;
   }
 

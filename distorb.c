@@ -3073,54 +3073,184 @@ double fndDSemiF26Dalpha(double dAxRatio, int iIndexJ) {
 
 //----------------Disturbing function h k p q----------------------------------------------
 //--------dR/dh-----------(inner body)------------------------------------------------------
+
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dHecc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][1] + 2*(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][3] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][4] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][6] );
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dHecc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][9] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][11] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][12] ) + (2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dKecc + 3*body[iBody].dHecc*body[iBody].dHecc*body[jBody].dHecc+body[jBody].dHecc*body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][10];
 } 
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][14];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir04(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return (2*body[iBody].dHecc*(body[jBody].dHecc*body[jBody].dHecc-body[jBody].dKecc*body[jBody].dKecc)+4*body[jBody].dHecc*body[iBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][16];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir05(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return (2*body[iBody].dHecc*(body[iBody].dPinc*body[iBody].dPinc-body[iBody].dQinc*body[iBody].dQinc)+4*body[iBody].dPinc*body[iBody].dQinc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return (body[jBody].dHecc*(body[iBody].dPinc*body[iBody].dPinc-body[iBody].dQinc*body[iBody].dQinc)+2*body[jBody].dKecc*body[iBody].dPinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*(body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc-body[iBody].dQinc*body[jBody].dQinc) + body[iBody].dKecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc))*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][20];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) + body[jBody].dKecc*(body[iBody].dPinc*body[jBody].dQinc-body[iBody].dQinc*body[jBody].dPinc) )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][21];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) + body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc) )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][22];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc-body[iBody].dQinc*body[jBody].dQinc) + body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc+body[iBody].dPinc*body[jBody].dQinc) )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][23];
 }
-  
+
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/ 
 double fndDdistDhDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {  
   return ( 2*body[iBody].dHecc*(body[jBody].dPinc*body[jBody].dPinc-body[jBody].dQinc*body[jBody].dQinc) + 4*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
-  
+
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dh term for interior body 
+*/  
 double fndDdistDhDir014(BODY *body, SYSTEM *system, int iBody, int jBody) { 
   return ( body[jBody].dHecc*(body[jBody].dPinc*body[jBody].dPinc-body[jBody].dQinc*body[jBody].dQinc) + 2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Sums over secular dR/dh terms of disturbing function for interior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dh for interior body 
+*/
 double fndDdisturbDHecc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3142,54 +3272,183 @@ double fndDdisturbDHecc(BODY *body, SYSTEM *system, int *iaBody) {
 
 //---------dR/dh'------------------------------------------------------------------
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dHecc*(system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][1] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][4] + 2*(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][5] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc + body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][6]);
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dHecc*(system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][9] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][10] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][12]) + (2*body[iBody].dHecc*body[jBody].dKecc*body[iBody].dKecc + 3*body[iBody].dHecc*body[iBody].dHecc*body[jBody].dHecc + body[jBody].dHecc*body[iBody].dKecc*body[iBody].dKecc) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][11];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][14];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir04(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return (2*body[iBody].dHecc*(body[jBody].dHecc*body[jBody].dHecc-body[jBody].dKecc*body[jBody].dKecc) + 4*body[jBody].dHecc*body[jBody].dKecc*body[iBody].dKecc) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][16];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[jBody].dPinc*body[jBody].dPinc-body[jBody].dQinc*body[jBody].dQinc) + 2*body[jBody].dKecc*body[jBody].dPinc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir07(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( 2*body[iBody].dHecc*(body[jBody].dPinc*body[jBody].dPinc-body[jBody].dQinc*body[jBody].dQinc) + 4*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dKecc ) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) + body[jBody].dKecc*(body[iBody].dPinc*body[jBody].dQinc-body[iBody].dQinc*body[jBody].dPinc) ) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][21];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) + body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc) ) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][22];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(-body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) + body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dPinc+body[iBody].dPinc*body[jBody].dQinc) )* system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][23];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dPinc-body[iBody].dQinc*body[jBody].dQinc) + body[iBody].dKecc*(body[iBody].dPinc*body[jBody].dQinc+body[iBody].dQinc*body[jBody].dPinc) )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][24];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dHecc*(body[iBody].dPinc*body[iBody].dPinc-body[iBody].dQinc*body[iBody].dQinc) + 2*body[jBody].dKecc*body[iBody].dPinc*body[iBody].dQinc ) *system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dh of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dh term for exterior body 
+*/
 double fndDdistDhPrmDir015(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dHecc*(body[iBody].dPinc*body[iBody].dPinc-body[iBody].dQinc*body[iBody].dQinc) + 2*body[iBody].dPinc*body[iBody].dQinc*body[iBody].dKecc ) * system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Sums over secular dR/dh terms of disturbing function for exterior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dh for exterior body 
+*/
 double fndDdisturbDHeccPrime(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3211,54 +3470,183 @@ double fndDdisturbDHeccPrime(BODY *body, SYSTEM *system, int *iaBody) {
 
 //------------dR/dk--------------------------------------------------------------
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dKecc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][1] + 2*(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][3] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][4] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc + body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][6] );
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dKecc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][9] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][11] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][12] ) + (3*body[iBody].dKecc*body[iBody].dKecc*body[jBody].dKecc+body[jBody].dKecc*body[iBody].dHecc*body[iBody].dHecc+2*body[iBody].dKecc*body[iBody].dHecc*body[jBody].dHecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][10];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dKecc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][14];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir04(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( 2*body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc) + 4*body[iBody].dHecc*body[jBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][16];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir05(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( 2*body[iBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc) + 4*body[iBody].dPinc*body[iBody].dQinc*body[iBody].dHecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc) + 2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc )* system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc - body[jBody].dPinc*body[iBody].dPinc) + body[iBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc + body[jBody].dQinc*body[iBody].dPinc) ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][20];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc + body[jBody].dPinc*body[iBody].dPinc) + body[jBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc - body[jBody].dQinc*body[iBody].dPinc) ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][21];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc + body[jBody].dPinc*body[iBody].dPinc) + body[jBody].dHecc*(body[jBody].dQinc*body[iBody].dPinc - body[jBody].dPinc*body[iBody].dQinc) ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][22];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc) + body[jBody].dHecc*(body[jBody].dPinc*body[iBody].dQinc+body[jBody].dQinc*body[iBody].dPinc) ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][23];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( 2*body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc) + 4*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dHecc ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dk term for interior body 
+*/
 double fndDdistDkDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc) + 2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc ) * system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Sums over secular dR/dk terms of disturbing function for interior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dk for interior body 
+*/
 double fndDdisturbDKecc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3279,54 +3667,184 @@ double fndDdisturbDKecc(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //----------dR/dk'------------------------------------------------------------
+
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dKecc*(system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][1] + (body[jBody].dHecc*body[jBody].dHecc + body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][4] + 2*(body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][5] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc + body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][6]);
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dKecc*(system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][9] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][10] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc + body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][12]) + (body[iBody].dHecc*body[iBody].dHecc*body[jBody].dKecc+3*body[jBody].dKecc*body[iBody].dKecc*body[iBody].dKecc+2*body[iBody].dKecc*body[jBody].dHecc*body[iBody].dHecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][11];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dKecc*(body[jBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][14];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir04(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dKecc*(body[jBody].dKecc*body[jBody].dKecc-body[jBody].dHecc*body[jBody].dHecc) + 2*body[jBody].dHecc*body[iBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][16];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc - body[jBody].dPinc*body[jBody].dPinc) + 2*body[jBody].dHecc*body[jBody].dPinc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir07(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dKecc*(body[jBody].dQinc*body[jBody].dQinc-body[jBody].dPinc*body[jBody].dPinc) + 2*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dHecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[jBody].dPinc) - body[jBody].dHecc*(body[iBody].dPinc*body[jBody].dQinc-body[iBody].dQinc*body[jBody].dPinc) )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][21];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc + body[iBody].dPinc*body[jBody].dPinc) - body[jBody].dHecc*(body[iBody].dQinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc) )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][22];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[jBody].dQinc*body[iBody].dQinc-body[jBody].dPinc*body[iBody].dPinc) + body[jBody].dHecc*(body[iBody].dPinc*body[jBody].dQinc+body[iBody].dQinc*body[jBody].dPinc) )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][23];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dKecc*(body[iBody].dQinc*body[jBody].dQinc-body[iBody].dPinc*body[jBody].dPinc) + body[iBody].dHecc*(body[iBody].dPinc*body[jBody].dQinc+body[iBody].dQinc*body[jBody].dPinc) )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][24];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc) + 2*body[jBody].dHecc*body[iBody].dPinc*body[iBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dk of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dk term for exterior body 
+*/
 double fndDdistDkPrmDir015(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dKecc*(body[iBody].dQinc*body[iBody].dQinc-body[iBody].dPinc*body[iBody].dPinc) + 2*body[iBody].dPinc*body[iBody].dQinc*body[iBody].dHecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Sums over secular dR/dk terms of disturbing function for exterior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dk for exterior body 
+*/
 double fndDdisturbDKeccPrime(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3347,54 +3865,184 @@ double fndDdisturbDKeccPrime(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //------------dR/dp---------------------------------------------------------//
+
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/
 double fndDdistDpDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dPinc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][2] + (body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc+body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][6] + 2*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][7] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][8] );
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dPinc*(body[iBody].dHecc*body[jBody].dHecc + body[iBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][12];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dPinc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][13] + (body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc+body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][14] + (body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc+body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][15] ) + 2*body[iBody].dPinc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][15];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir05(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dPinc*body[iBody].dHecc*body[iBody].dHecc-body[iBody].dPinc*body[iBody].dKecc*body[iBody].dKecc+2*body[iBody].dQinc*body[iBody].dHecc*body[iBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dHecc*body[jBody].dHecc*body[iBody].dPinc - body[iBody].dKecc*body[jBody].dKecc*body[iBody].dPinc + body[jBody].dHecc*body[iBody].dKecc*body[iBody].dQinc + body[jBody].dKecc*body[iBody].dHecc*body[iBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir07(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*(body[iBody].dPinc*body[jBody].dHecc*body[jBody].dHecc - body[iBody].dPinc*body[jBody].dKecc*body[jBody].dKecc + 2*body[iBody].dQinc*body[jBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][19];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dPinc*body[iBody].dHecc*body[iBody].dHecc-body[jBody].dPinc*body[iBody].dKecc*body[iBody].dKecc+2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][20];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[iBody].dKecc*body[jBody].dPinc + body[jBody].dHecc*body[iBody].dHecc*body[jBody].dPinc - body[jBody].dHecc*body[iBody].dKecc*body[jBody].dQinc + body[jBody].dKecc*body[iBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][21];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[iBody].dKecc*body[jBody].dPinc + body[jBody].dHecc*body[iBody].dHecc*body[jBody].dPinc + body[jBody].dHecc*body[iBody].dKecc*body[jBody].dQinc - body[jBody].dKecc*body[iBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][22];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( -body[jBody].dKecc*body[iBody].dKecc*body[jBody].dPinc + body[jBody].dHecc*body[iBody].dHecc*body[jBody].dPinc + body[jBody].dHecc*body[iBody].dKecc*body[jBody].dQinc + body[jBody].dKecc*body[iBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][23];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( -body[jBody].dKecc*body[jBody].dKecc*body[jBody].dPinc + body[jBody].dHecc*body[jBody].dHecc*body[jBody].dPinc + 2*body[jBody].dHecc*body[jBody].dKecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][24];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dp term for interior body 
+*/ 
 double fndDdistDpDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*(body[iBody].dPinc*body[jBody].dPinc*body[jBody].dPinc-body[iBody].dPinc*body[jBody].dQinc*body[jBody].dQinc+2*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][25];
 }
 
+/**
+Sums over secular dR/dp terms of disturbing function for interior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dp for interior body 
+*/
 double fndDdisturbDPinc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3415,54 +4063,184 @@ double fndDdisturbDPinc(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //-------dR/dp'------------------------------------------------------------//
+
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dPinc*( system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][2] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][6] + 2*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][7] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][8] );
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dPinc*(body[jBody].dHecc*body[iBody].dHecc+body[jBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][12];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dPinc*( system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][13] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][14] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][15] ) + 2*body[iBody].dPinc*(body[jBody].dPinc*body[iBody].dPinc+body[jBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][15];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( -body[jBody].dKecc*body[jBody].dKecc*body[jBody].dPinc+body[jBody].dHecc*body[jBody].dHecc*body[jBody].dPinc+2*body[jBody].dHecc*body[jBody].dKecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][20];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[jBody].dKecc*body[jBody].dPinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dPinc + body[iBody].dHecc*body[jBody].dKecc*body[jBody].dQinc - body[iBody].dKecc*body[jBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][21];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[jBody].dKecc*body[jBody].dPinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dPinc - body[iBody].dHecc*body[jBody].dKecc*body[jBody].dQinc + body[iBody].dKecc*body[jBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][22];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( -body[iBody].dKecc*body[jBody].dKecc*body[jBody].dPinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dPinc + body[iBody].dHecc*body[jBody].dKecc*body[jBody].dQinc + body[iBody].dKecc*body[jBody].dHecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][23];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( -body[iBody].dKecc*body[iBody].dKecc*body[jBody].dPinc + body[iBody].dHecc*body[iBody].dHecc*body[jBody].dPinc + 2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][24];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( -body[iBody].dPinc*body[jBody].dKecc*body[jBody].dKecc + body[iBody].dPinc*body[jBody].dHecc*body[jBody].dHecc + 2*body[iBody].dQinc*body[jBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][17];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( -body[iBody].dKecc*body[jBody].dKecc*body[iBody].dPinc + body[iBody].dHecc*body[jBody].dHecc*body[iBody].dPinc + body[iBody].dHecc*body[jBody].dKecc*body[iBody].dQinc + body[iBody].dKecc*body[jBody].dHecc*body[iBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir015(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( -body[iBody].dPinc*body[iBody].dKecc*body[iBody].dKecc + body[iBody].dPinc*body[iBody].dHecc*body[iBody].dHecc + 2*body[iBody].dQinc*body[iBody].dHecc*body[iBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Derivative in d/dp of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dp term for exterior body 
+*/
 double fndDdistDpPrmDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( -body[iBody].dPinc*body[jBody].dQinc*body[jBody].dQinc + body[jBody].dPinc*body[jBody].dPinc*body[iBody].dPinc + 2*body[iBody].dQinc*body[jBody].dPinc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][25];
 }
 
+/**
+Sums over secular dR/dp terms of disturbing function for exterior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dp for exterior body 
+*/
 double fndDdisturbDPincPrime(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3483,55 +4261,184 @@ double fndDdisturbDPincPrime(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //--------------dR/dq-------------------------------------------------------//
+
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dQinc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][2] + (body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc+body[jBody].dKecc*body[jBody].dKecc+body[jBody].dHecc*body[jBody].dHecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][6] + 2*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][7] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][8] );
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dQinc*(body[iBody].dHecc*body[jBody].dHecc+body[iBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][12];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dQinc*( system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][13] + (body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc+body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][14] + (body[iBody].dPinc*body[iBody].dPinc + body[iBody].dQinc*body[iBody].dQinc + body[jBody].dPinc*body[jBody].dPinc + body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][15] ) + 2*body[iBody].dQinc*(body[iBody].dPinc*body[jBody].dPinc+body[iBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][15];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir05(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[iBody].dKecc*body[iBody].dKecc - body[iBody].dQinc*body[iBody].dHecc*body[iBody].dHecc + 2*body[iBody].dPinc*body[iBody].dHecc*body[iBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][17];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[jBody].dKecc*body[iBody].dKecc*body[iBody].dQinc - body[jBody].dHecc*body[iBody].dHecc*body[iBody].dQinc + body[jBody].dHecc*body[iBody].dKecc*body[iBody].dPinc + body[jBody].dKecc*body[iBody].dHecc*body[iBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][18];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir07(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dKecc*body[jBody].dKecc - body[iBody].dQinc*body[jBody].dHecc*body[jBody].dHecc + 2*body[iBody].dPinc*body[jBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][19];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[iBody].dKecc*body[jBody].dQinc - body[iBody].dHecc*body[iBody].dHecc*body[jBody].dQinc + 2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][20];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[iBody].dKecc*body[jBody].dQinc + body[jBody].dHecc*body[iBody].dHecc*body[jBody].dQinc + body[jBody].dHecc*body[iBody].dKecc*body[jBody].dPinc - body[jBody].dKecc*body[iBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][21];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[iBody].dKecc*body[jBody].dQinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dQinc - body[jBody].dHecc*body[iBody].dKecc*body[jBody].dPinc + body[jBody].dKecc*body[iBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][22];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[iBody].dKecc*body[jBody].dQinc - body[jBody].dHecc*body[iBody].dHecc*body[jBody].dQinc + body[jBody].dHecc*body[iBody].dKecc*body[jBody].dPinc + body[jBody].dKecc*body[iBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][23];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[jBody].dKecc*body[jBody].dQinc - body[jBody].dHecc*body[jBody].dHecc*body[jBody].dQinc + 2*body[jBody].dHecc*body[jBody].dKecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][24];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of interior body
+@param jBody Index of exterior body
+
+@return dR/dq term for interior body 
+*/ 
 double fndDdistDqDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dQinc*body[jBody].dQinc - body[iBody].dQinc*body[jBody].dPinc*body[jBody].dPinc + 2*body[jBody].dPinc*body[jBody].dQinc*body[iBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][25];
 }
 
+/**
+Sums over secular dR/dq terms of disturbing function for interior body
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dq for interior body 
+*/ 
 double fndDdisturbDQinc(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3552,54 +4459,184 @@ double fndDdisturbDQinc(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //------dR/dq'--------------------------------------------------------------//
+
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dQinc*( system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][2] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][6] + 2*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][7] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][8] );
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*body[iBody].dQinc*(body[jBody].dHecc*body[iBody].dHecc+body[jBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][12];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return body[jBody].dQinc*( system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][13] + (body[jBody].dHecc*body[jBody].dHecc+body[jBody].dKecc*body[jBody].dKecc+body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][14] + (body[jBody].dPinc*body[jBody].dPinc+body[jBody].dQinc*body[jBody].dQinc+body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][15] ) + 2*body[iBody].dQinc*(body[jBody].dPinc*body[iBody].dPinc+body[jBody].dQinc*body[iBody].dQinc)*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][15];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[jBody].dKecc*body[jBody].dKecc*body[jBody].dQinc - body[jBody].dHecc*body[jBody].dHecc*body[jBody].dQinc + 2*body[jBody].dHecc*body[jBody].dKecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][20];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[jBody].dKecc*body[jBody].dQinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dQinc - body[iBody].dHecc*body[jBody].dKecc*body[jBody].dPinc + body[iBody].dKecc*body[jBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][21];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[jBody].dKecc*body[jBody].dQinc + body[iBody].dHecc*body[jBody].dHecc*body[jBody].dQinc + body[iBody].dHecc*body[jBody].dKecc*body[jBody].dPinc - body[iBody].dKecc*body[jBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][22];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[jBody].dKecc*body[jBody].dQinc - body[iBody].dHecc*body[jBody].dHecc*body[jBody].dQinc + body[iBody].dHecc*body[jBody].dKecc*body[jBody].dPinc + body[iBody].dKecc*body[jBody].dHecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][23];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return ( body[iBody].dKecc*body[iBody].dKecc*body[jBody].dQinc - body[iBody].dHecc*body[iBody].dHecc*body[jBody].dQinc + 2*body[iBody].dHecc*body[iBody].dKecc*body[jBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][24];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dKecc*body[jBody].dKecc - body[iBody].dQinc*body[jBody].dHecc*body[jBody].dHecc + 2*body[iBody].dPinc*body[jBody].dHecc*body[jBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][17];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[jBody].dKecc*body[iBody].dKecc - body[iBody].dQinc*body[jBody].dHecc*body[iBody].dHecc + body[iBody].dHecc*body[jBody].dKecc*body[iBody].dPinc + body[iBody].dKecc*body[jBody].dHecc*body[iBody].dPinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][18];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir015(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[iBody].dQinc*body[iBody].dKecc*body[iBody].dKecc - body[iBody].dQinc*body[iBody].dHecc*body[iBody].dHecc + 2*body[iBody].dPinc*body[iBody].dHecc*body[iBody].dKecc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][19];
 }
 
+/**
+Derivative in d/dq of disturbing function term
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iBody Index of exterior body
+@param jBody Index of interior body
+
+@return dR/dq term for exterior body 
+*/ 
 double fndDdistDqPrmDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
   return 2*( body[jBody].dQinc*body[jBody].dQinc*body[iBody].dQinc - body[jBody].dPinc*body[jBody].dPinc*body[iBody].dQinc + 2*body[iBody].dPinc*body[jBody].dPinc*body[jBody].dQinc )*system->daLaplaceC[0][system->iaLaplaceN[jBody][iBody]][25];
 } 
     
+/**
+Sums over secular dR/dq terms of disturbing function for exterior body
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Total dR/dq for exterior body 
+*/ 
 double fndDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
   double y, dMfac, dSemiPrm;
   dMfac = KGAUSS*KGAUSS*body[iaBody[1]].dMass/MSUN;
@@ -3620,6 +4657,15 @@ double fndDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //--------Relativistic correction---------------------------------------------------------
+
+/**
+Relativistic precession of periastron
+
+@param body Struct containing all body information and variables
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative d(longp)/dt due to general relativity
+*/
 double fndApsidalGRCorrection(BODY *body, int *iaBody) {
   double n;
   n = KGAUSS*sqrt((body[0].dMass+body[iaBody[0]].dMass)/MSUN/(body[iaBody[0]].dSemi/AUCM*\
@@ -3627,15 +4673,43 @@ double fndApsidalGRCorrection(BODY *body, int *iaBody) {
   return 3*n*n*n*body[iaBody[0]].dSemi/AUCM*body[iaBody[0]].dSemi/AUCM/(cLIGHT/AUCM*DAYSEC*cLIGHT/AUCM*DAYSEC*(1.0-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc))/DAYSEC;
 }
 
+/**
+Relativistic correction to derivative of variable Hecc = e*sin(longp) in RD4 solution
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dh/dt due to general relativity
+*/
 double fndApsidalGRDhDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dKecc*fndApsidalGRCorrection(body,iaBody);
 }
 
+/**
+Relativistic correction to derivative of variable Kecc = e*sin(longp) in RD4 solution
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dk/dt due to general relativity
+*/
 double fndApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -body[iaBody[0]].dHecc*fndApsidalGRCorrection(body,iaBody);
 }
 
 //-------------------DistOrb's equations in h k p q (4th order direct integration RD4)--------------------
+
+/**
+Derivative of variable Hecc = e*sin(longp) in RD4 solution
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dh/dt  
+*/
 double fndDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
   //Here, iaBody[0] = body in question, iaBody[1] = perturber
@@ -3652,6 +4726,15 @@ double fndDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   return sum/DAYSEC;
 }
 
+/**
+Derivative of variable Kecc = e*cos(longp) in RD4 solution
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dk/dt  
+*/
 double fndDistOrbRD4DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
 
@@ -3667,6 +4750,15 @@ double fndDistOrbRD4DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   return sum/DAYSEC;
 }
 
+/**
+Derivative of variable Pinc = sin(inc/2)*sin(longa) in RD4 solution
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dp/dt  
+*/
 double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
 
@@ -3681,7 +4773,15 @@ double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     return sum/DAYSEC;
 }
 
+/**
+Derivative of variable Qinc = sin(inc/2)*cos(longa) in RD4 solution
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dq/dt  
+*/
 double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
 
@@ -3697,35 +4797,113 @@ double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //-------------------DistOrb's equations in h k p q (2nd order Laplace-Lagrange LL2)--------------------
+/**
+Value of variable Hecc = e*sin(longp) at time dAge, in the LL2 solution (not a derivative)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Hecc at time dAge
+*/
 double fndDistOrbLL2Hecc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->daEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*sin(system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[0][iaBody[1]-1]);
 }
 
+/**
+Value of variable Kecc = e*cos(longp) at time dAge, in the LL2 solution (not a derivative)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Kecc at time dAge
+*/
 double fndDistOrbLL2Kecc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->daEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*cos(system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[0][iaBody[1]-1]);
 }
 
+/**
+Value of variable Pinc = sin(inc/2)*sin(longp) at time dAge, in the LL2 solution 
+(not a derivative)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Pinc at time dAge
+*/
 double fndDistOrbLL2Pinc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*sin(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
 }
 
+/**
+Value of variable Qinc = sin(inc/2)*cos(longp) at time dAge, in the LL2 solution 
+(not a derivative)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Qinc at time dAge
+*/
 double fndDistOrbLL2Qinc(BODY *body, SYSTEM *system, int *iaBody) {
   return system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*cos(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
 }
 
+/**
+Provides derivative of variable Hecc = e*sin(longp) to couple eqtide to LL2
+solution.
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dh/dt  
+*/
 double fndDistOrbLL2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   return system->daEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*cos(system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[0][iaBody[1]-1]);
 }
 
+/**
+Provides derivative of variable Kecc = e*sin(longp) to couple eqtide to LL2
+solution.
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dk/dt  
+*/
 double fndDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -system->daEigenVecEcc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*sin(system->daEigenValEcc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[0][iaBody[1]-1]);
 }
 
+/**
+Provides derivative of variable Pinc = sin(inc/2)*sin(longa) to couple distrot to LL2
+solution.
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dp/dt  
+*/
 double fndDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*cos(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
 }
 
+/**
+Provides derivative of variable Qinc = sin(inc/2)*cos(longa) to couple distrot to LL2
+solution.
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+
+@return Derivative dq/dt  
+*/
 double fndDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return -system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);

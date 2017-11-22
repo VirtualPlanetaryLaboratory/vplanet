@@ -22,4 +22,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sMagBrakingModel skumanich
 
-saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal Obli

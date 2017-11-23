@@ -2715,7 +2715,7 @@ void PropsAuxOrbiter(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   // PrecA is needed for Xobl,Yobl,Zobl calculations
 
-  body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
+  body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -3079,7 +3079,7 @@ iaBody[0] = central body */
    XXX This should get moved to PropsAux. Then create a generic EqtideDHeccDt
    with body.dEccDt set by model ID in PropsAux. */
 
-double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
+double fdCPLDeccDt(BODY *body,int *iaBody) {
   double dSum;
   int iB0=iaBody[0],iB1=iaBody[1];
 

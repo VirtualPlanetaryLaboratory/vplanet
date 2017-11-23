@@ -312,6 +312,7 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 {
   double adot = 0.0;
   double Jdot = 0.0;
+  double edot = 0.0;
   double R1dot, R2dot, Rdot;
   double num, denom, tmp;
   double M = body[0].dMass + body[1].dMass;
@@ -321,11 +322,11 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   SYSTEM *system; // Dummy system struct
 
   // Both tidally locked
-  if(iNumLocked > 1)
-  {
+  if(iNumLocked > 1) {
     // Compute change in angular momentum due to magnetic braking for both stars
     // and compute star's change in radii
 
+    /*
     int iaBody[1] = {0};
     Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
     R1dot = fdDRadiusDtStellar(body,system,iaBody);
@@ -343,12 +344,36 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
     tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
     denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
+    */
+
+    int iaBody[1] = {0};
+
+    edot = fdCPLDeccDt(body,iaBody);
+
+    Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
+    R1dot = fdDRadiusDtStellar(body,system,iaBody);
+
+    iaBody[0] = 1;
+    edot += fdCPLDeccDt(body,iaBody);
+
+    Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
+    R2dot = fdDRadiusDtStellar(body,system,iaBody);
+
+    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
+    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
+
+    num = -Jdot - 2.0*body[0].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
+
+    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
+    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
+    tmp *= 1.5*body[0].dRotRate/body[1].dSemi;
+    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
 
     adot = num/denom;
   }
   // Just one (body[iBody]) is tidally locked
-  else if(iNumLocked == 1)
-  {
+  else if(iNumLocked == 1) {
+    /*
     int iaBody[1] = {iBody};
     Jdot = -fdDJDtMagBrakingStellar(body,system,iaBody);
     Rdot = fdDRadiusDtStellar(body,system,iaBody);
@@ -360,11 +385,26 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
     tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
     denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
+    */
+
+    int iaBody[1] = {iBody};
+    
+    edot = fdCPLDeccDt(body,iaBody);
+
+    Jdot = fdDJDtMagBrakingStellar(body,system,iaBody);
+    Rdot = fdDRadiusDtStellar(body,system,iaBody);
+
+    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
+
+    num = -Jdot - 2.0*body[iBody].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
+
+    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
+    tmp *= 1.5*body[iBody].dRotRate/body[1].dSemi;
+    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
 
     adot = num/denom;
   }
-  else
-  {
+  else {
     adot = 0.0;
   }
 

@@ -10,7 +10,7 @@ dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
 dOrbPeriod  -4.0
-dEcc        0.15
+dEcc        0.3
 
 # EQTIDE Parameters
 dTidalQ		1.0e6		# Tidal phase lag
@@ -22,4 +22,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sMagBrakingModel skumanich
 
-saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal Obli
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal 

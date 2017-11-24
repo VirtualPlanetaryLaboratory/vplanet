@@ -348,13 +348,13 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 
     int iaBody[1] = {0};
 
-    edot = fdCPLDeccDt(body,iaBody);
+    edot = 0.0; //fdCPLDeccDt(body,iaBody);
 
     Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
     R1dot = fdDRadiusDtStellar(body,system,iaBody);
 
     iaBody[0] = 1;
-    edot += fdCPLDeccDt(body,iaBody);
+    edot += 0.0; //fdCPLDeccDt(body,iaBody);
 
     Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
     R2dot = fdDRadiusDtStellar(body,system,iaBody);
@@ -388,8 +388,8 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     */
 
     int iaBody[1] = {iBody};
-    
-    edot = fdCPLDeccDt(body,iaBody);
+
+    edot = 0.0; //fdCPLDeccDt(body,iaBody);
 
     Jdot = fdDJDtMagBrakingStellar(body,system,iaBody);
     Rdot = fdDRadiusDtStellar(body,system,iaBody);

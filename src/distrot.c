@@ -1145,6 +1145,13 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
 
 /* Equations used to calculate obliquity/spin evolution */
 
+/**
+Correction to axial precession rate for eccentricity (and possible additional effects)
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return Correction to precession rate
+*/
 double fndCentralTorqueSfac(BODY *body, int iBody) {
   return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*body[iBody].dKecc),-1.5) - S0;
 }

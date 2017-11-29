@@ -805,14 +805,6 @@ void RecalcLaplaceDistRes(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose)
   }
 }
 
-#define A(iIndexJ) dAxRatio,iIndexJ,0.5
-#define B(iIndexJ) dAxRatio,iIndexJ,1.5
-#define C(iIndexJ) dAxRatio,iIndexJ,2.5
-
-// A -> s = 1/2
-// B -> s = 3/2
-// C -> s = 5/2
-
 /*--------- second derivs of secular terms ----*/
 double fdDSemiF1D2alpha(double dAxRatio, int iIndexJ) {
   return 0.5*fndDerivLaplaceCoeff(2,A(iIndexJ));  //fill in soon!!

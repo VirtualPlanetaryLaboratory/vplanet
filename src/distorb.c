@@ -1628,6 +1628,7 @@ void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
                           body[iBody].dSemi;
 }
 
+
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
@@ -1643,7 +1644,13 @@ unsigned long int fniFactorial(unsigned int n)
   return result;
 }
 
-/* Number of combinations of k in N */
+/**
+Number of combinations of k in N 
+
+@param N Size of set
+@param k Size of desired subset
+@return Binomial coefficient N choose k
+*/
 int fniNchoosek(int N, int k) {
   if (N < 0 || k < 0 || N > 10 || k > N) {
     printf("Error: received N = %d, k = %d\n",N,k);
@@ -1651,15 +1658,17 @@ int fniNchoosek(int N, int k) {
   return fniFactorial(N) / (fniFactorial(k)*fniFactorial(N-k));
 }
 
-/* Gives the index of a pair of values in N choose 2.
-* For example, for 4 planets, the index for the pair
-* (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */
+/**
+Gives the index of a pair of values in N choose 2.
+For example, for 4 planets, the index for the pair
+(1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. 
+
+@param x Index of first planet
+@param y Index of second planet
+@param N Number of planets in system
+@return Index corresponding to planet pair (x,y)
+*/
 int fniCombCount(int x, int y, int N) {
-  /* Russell's not sure if this is necessary. XXX
-  if (x == 0) {
-    x = 1.3;
-  }
-  */
   if (x < y) {
     return N*(x-1) + (y-1) - fniNchoosek(x+1, 2);
   } else {
@@ -1667,6 +1676,15 @@ int fniCombCount(int x, int y, int N) {
   }
 }
 
+/**
+Calculates components AB matrices to find eigenvalues in LL2 problem
+
+@param body Struct containing all body information and variables
+@param j Index j in Laplace coefficients
+@param jBody Index of perturbed body
+@param kBody Index of perturbing body
+@return Component of A or B matrix in rad/year
+*/
 double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   double AB, alpha, abar, b, n;
 
@@ -1686,11 +1704,27 @@ double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   return AB*365.25;  //returns in units of rad/year
 }
 
+/**
+Calculates mutual hill radii between two bodies 
+
+@param body Struct containing all body information and variables
+@param iBody Index of interior body
+@param jBody Index of exterior body
+@return Mutual hill radii in meters
+*/
 double fndMutualHillRad(BODY *body, int iBody, int jBody) {
   return 0.5*pow((body[iBody].dMass+body[jBody].dMass)/body[0].dMass,1./3)*\
           (body[iBody].dSemi+body[jBody].dSemi);
 }
 
+/**
+Post-Newtonian correction to AB matrix in LL2 solution
+
+@param body Struct containing all body information and variables
+@param jBody Index of perturbed body
+@param kBody Index of perturbing body
+@return Correction to component of AB matrix (added to A and B) in rad/year
+*/
 double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   double n, GRC;
   
@@ -1707,12 +1741,15 @@ double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   }
 }
 
-/* XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (1992)
-Cannot release code with these functions as they are proprietary.
-They will need to be phased out as my new routines are tested and confirmed to work ok. HessEigen has variables renamed from "hqr" but is not fully replaced yet. */
+/**
+Finds all eigenvalues of an upper Hess. matrix amat
 
+@param amat Matrix to find eigenvalues of
+@param origsize Size of original matrix
+@param real The real components of the eigenvalues
+@param imag The imaginary components of the eigenvalues (usually ~ 0)
+*/
 void HessEigen(double **amat, int origsize, double real[], double imag[])
-/*Finds all eigenvalues of an upper Hess. matrix amat */
 {
   int size, m, smallsub, k, j, iterations, i, mmin;
   double radic, ulcorner, lrcorner, hhvector, v, u, exshift, s, r, q, p, anorm, cond, value;
@@ -1844,6 +1881,14 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
   }
 }
 
+/**
+Swaps two rows in a matrix
+
+@param matrix Matrix in question
+@param size The number of rows/columns in matrix (square)
+@param i One of the rows to be swapped
+@param j The other row to be swapped
+*/
 void RowSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
@@ -1856,6 +1901,14 @@ void RowSwap(double **matrix, int size, int i, int j) {
   }
 }
 
+/**
+Swaps two columns in a matrix
+
+@param matrix Matrix in question
+@param size The number of rows/columns in matrix (square)
+@param i One of the columns to be swapped
+@param j The other column to be swapped
+*/
 void ColSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
@@ -1868,6 +1921,12 @@ void ColSwap(double **matrix, int size, int i, int j) {
   }
 }
 
+/**
+Reduces a matrix to Upper Hessenberg form
+
+@param a Matrix in question
+@param size The number of rows/columns in matrix a (square)
+*/
 void HessReduce(double **a, int size) {
   int r, rp, rmax, i, j;
   double max, n;
@@ -1897,6 +1956,13 @@ void HessReduce(double **a, int size) {
     }
   }
 }
+
+/**
+Balances a matrix
+
+@param a Matrix to be balanced
+@param size The number of rows/columns in matrix a (square)
+*/
 
 void BalanceMatrix(double **a, int size) {
   int i, j, end = 0;

@@ -326,35 +326,15 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     // Compute change in angular momentum due to magnetic braking for both stars
     // and compute star's change in radii
 
-    /*
-    int iaBody[1] = {0};
-    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
-    R1dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    iaBody[0] = 1;
-    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
-    R2dot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
-    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
-
-    num = Jdot - 2.0*dMeanMotion*tmp;
-
-    tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
-    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
-    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
-    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
-    */
-
     int iaBody[1] = {0};
 
-    edot = 0.0; //fdCPLDeccDt(body,iaBody);
+    edot = 0.0; // No effect produces a de/dt term
 
     Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
     R1dot = fdDRadiusDtStellar(body,system,iaBody);
 
     iaBody[0] = 1;
-    edot += 0.0; //fdCPLDeccDt(body,iaBody);
+    edot += 0.0; // No effect produces a de/dt term
 
     Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
     R2dot = fdDRadiusDtStellar(body,system,iaBody);
@@ -373,23 +353,10 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   }
   // Just one (body[iBody]) is tidally locked
   else if(iNumLocked == 1) {
-    /*
-    int iaBody[1] = {iBody};
-    Jdot = -fdDJDtMagBrakingStellar(body,system,iaBody);
-    Rdot = fdDRadiusDtStellar(body,system,iaBody);
-
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
-
-    num = Jdot - 2.0*dMeanMotion*tmp;
-
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
-    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
-    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
-    */
 
     int iaBody[1] = {iBody};
 
-    edot = 0.0; //fdCPLDeccDt(body,iaBody);
+    edot = 0.0; // No effect produces a de/dt term
 
     Jdot = fdDJDtMagBrakingStellar(body,system,iaBody);
     Rdot = fdDRadiusDtStellar(body,system,iaBody);

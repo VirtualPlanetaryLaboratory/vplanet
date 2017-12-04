@@ -109,6 +109,8 @@ Multi-line comment:
     semi-major axis' derivative due to EQTIDE. */
 double *pdDsemiDtEqtide;
 
+Do not use the pound sign "#" in comments, as this refers to a link in doxygen.
+
 ---- Auxiliary Python Code -----
 
 vplot, vspace, bigplanet, more?

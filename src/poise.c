@@ -3101,17 +3101,18 @@ void DailyInsolation(BODY *body, int iBody, int iDay) {
           
 void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
-  double LongP, TrueA, EccA, MeanL;
+  double LongP, TrueA, EccA, MeanL, Ecc;
   
-  LongP = body[iBody].dLongP+body[iBody].dPrecA; //Pericenter, relative to direction of planet at spring equinox
+  LongP = body[iBody].dLongP+body[iBody].dPrecA + PI; //Pericenter, relative to direction of planet at spring equinox
+  Ecc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice
   TrueA = body[iBody].dTrueL - LongP;
   while (TrueA < 0.0) TrueA += 2*PI;
 //   body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
   body[iBody].dObliquity = atan2(sqrt((body[iBody].dXobl*body[iBody].dXobl)+(body[iBody].dYobl*body[iBody].dYobl)),body[iBody].dZobl);
-  EccA = true2eccA(TrueA, body[iBody].dEcc);
-  MeanL = EccA - body[iBody].dEcc*sin(EccA) + LongP;
+  EccA = true2eccA(TrueA, Ecc);
+  MeanL = EccA - Ecc*sin(EccA) + LongP;
   
   for (j=0;j<body[iBody].iNumLats;j++) {
     body[iBody].daAnnualInsol[j] = 0.0;
@@ -3129,9 +3130,9 @@ void AnnualInsolation(BODY *body, int iBody) {
       while (EccA >= 2*PI) EccA -= 2*PI;
       while (EccA < 0.0) EccA += 2*PI;
       if (EccA > PI) {
-        TrueA = 2*PI - acos((cos(EccA) - body[iBody].dEcc)/(1.0 - body[iBody].dEcc*cos(EccA)));
+        TrueA = 2*PI - acos((cos(EccA) - Ecc)/(1.0 - Ecc*cos(EccA)));
       } else {
-        TrueA = acos((cos(EccA) - body[iBody].dEcc)/(1.0 - body[iBody].dEcc*cos(EccA)));
+        TrueA = acos((cos(EccA) - Ecc)/(1.0 - Ecc*cos(EccA)));
       }      
       body[iBody].dTrueL = TrueA + LongP;     
     }
@@ -3140,11 +3141,10 @@ void AnnualInsolation(BODY *body, int iBody) {
     while (body[iBody].dTrueL < 0.0) body[iBody].dTrueL += 2*PI;
           
     // planet-star distance (units of semi-major axis):  
-    body[iBody].dAstroDist = (1.0 - (body[iBody].dEcc*body[iBody].dEcc))/(1.0+body[iBody].dEcc*cos(TrueA)); 
+    body[iBody].dAstroDist = (1.0 - (Ecc*Ecc))/(1.0+Ecc*cos(TrueA)); 
     
     DailyInsolation(body, iBody, i);
 //     printf("truel = %f, day = %d, dist = %f, decl = %f\n",body[iBody].dTrueL,i,body[iBody].dAstroDist, body[iBody].daDeclination[i]);
-
     
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);

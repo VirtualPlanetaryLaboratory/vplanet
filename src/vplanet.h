@@ -1048,9 +1048,9 @@ typedef struct {
   double *dVar;
   double dZero;         /**< Sometimes you need a pointer to zero */
 
-  /*! The body #s to calculate the derivative. First dimension is
-      the Primary Variable #, second is the process #, third is the
-      list body #s.
+  /*! The body numbers to calculate the derivative. First dimension is
+      the Primary variable number, second is the process #, third is the
+      list body numbers.
   */
   int ***iaBody;
   int **iNumBodies;     /**< Number of Bodies Affecting a Process */
@@ -1058,9 +1058,9 @@ typedef struct {
   /* These keep track of the variable and modules */
   int iNumModules;      /**< Number of Modules Affecting a Body */
   int *iNumEqns;        /**< Number of Equations That Modify a Primary Variable */
-  int *iaVar;           /**< Primary Variable # */
-  /*! The Module # responsible for a given process. The first dimension
-    is the Primary Variable #. Second is the Equation. */
+  int *iaVar;           /**< Primary variable number */
+  /*! The Module number responsible for a given process. The first dimension
+    is the Primary variable number. Second is the Equation. */
   int **iaModule;
 
 
@@ -1071,11 +1071,12 @@ typedef struct {
   int iNumMass;
 
   /* These are the variables that the update matrix modifies */
-  // Eccentricity is now split into Hecc and Kecc to accomodate Distorb
-  // Obliquity is now split into Xobl, Yobl and Zobl to accommodate Distrot
-  int iRot;             /**< Variable # Corresponding to Rotation Rate */
+
+  // Eccentricity is now split into Hecc and Kecc to accomodate Lagrange
+  // Obliquity is now split into Xobl, Yobl and Zobl to accomedate Laskar
+  int iRot;             /**< variable number Corresponding to Rotation Rate */
   double dDRotDt;       /**< Total Rotation Rate Derivative */
-  int iSemi;            /**< Variable # Corresponding to Semi-major Axis */
+  int iSemi;            /**< variable number Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
   int iRadius;
   int iMass;
@@ -1111,15 +1112,15 @@ typedef struct {
   double *pdDPositionZ;
 
   /* EQTIDE */
-  //  int iEccEqtide;       /**< Equation # Corresponding to EQTIDE's Change to Eccentricity */
-  int iHeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's h */
-  int iKeccEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Poincare's k */
-  int *iaXoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's X */
-  int *iaYoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Y */
-  int *iaZoblEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Laskar's Z */
-  int *iaRotEqtide;     /**< Equation #s Corresponding to EQTIDE's Change to Rotation Rate */
-  int iSemiEqtide;      /**< Equation # Corresponding to EQTIDE's Change to Semi-major Axis */
-  int iLostEngEqtide;    /**< Equation # Corresponding to EQTIDE's lost energy [tidal heating] */
+  //  int iEccEqtide;       /**< equation number Corresponding to EQTIDE's Change to Eccentricity */
+  int iHeccEqtide;      /**< equation number Corresponding to EQTIDE's Change to Poincare's h */
+  int iKeccEqtide;      /**< equation number Corresponding to EQTIDE's Change to Poincare's k */
+  int *iaXoblEqtide;     /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's X */
+  int *iaYoblEqtide;     /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's Y */
+  int *iaZoblEqtide;     /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's Z */
+  int *iaRotEqtide;     /**< Equation numbers Corresponding to EQTIDE's Change to Rotation Rate */
+  int iSemiEqtide;      /**< equation number Corresponding to EQTIDE's Change to Semi-major Axis */
+  int iLostEngEqtide;    /**< equation number Corresponding to EQTIDE's lost energy [tidal heating] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       semi-major axis' derivative due to EQTIDE. */
@@ -1154,10 +1155,10 @@ typedef struct {
   double *pdLostEngEqtide;
 
   /* RADHEAT Mantle */
-  int i26AlMan;            /**< Variable # Corresponding to Aluminum-26 */
-  int i40KMan;             /**< Variable # Corresponding to Potassium-40 */
-  int i232ThMan;           /**< Variable # Corresponding to Thorium-232 */
-  int i238UMan;            /**< Variable # Corresponding to Uranium-238 */
+  int i26AlMan;            /**< variable number Corresponding to Aluminum-26 */
+  int i40KMan;             /**< variable number Corresponding to Potassium-40 */
+  int i232ThMan;           /**< variable number Corresponding to Thorium-232 */
+  int i238UMan;            /**< variable number Corresponding to Uranium-238 */
   int i235UMan;
   int iNum26AlMan;         /**< Number of Equations Affecting Aluminum-26 [1] */
   int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
@@ -1216,11 +1217,11 @@ typedef struct {
   double *pdD235UNumCrustDt;
 
   /* THERMINT */
-  int iTMan;          /**< Variable # Corresponding to Tman */
+  int iTMan;          /**< variable number Corresponding to Tman */
   int iNumTMan;       /**< Number of Equations Affecting TMan */
   double dTDotMan;    /**< TMan time Derivative */
   double *pdTDotMan;
-  int iTCore;          /**< Variable # Corresponding to Tman */
+  int iTCore;          /**< variable number Corresponding to Tman */
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
@@ -1232,18 +1233,18 @@ typedef struct {
   int iNumPinc;          /**< Number of Equations Affecting p = s*sin(longa) */
   int iNumQinc;         /**< Number of Equations Affecting q = s*cos(longa) */
 
-  int iHecc;             /**< Variable # Corresponding to h = e*sin(longp) */
+  int iHecc;             /**< Variable number Corresponding to h = e*sin(longp) */
   double dDHeccDt;       /**< Total h Derivative */
-  int iKecc;             /**< Variable # Corresponding to k = e*cos(longp) */
+  int iKecc;             /**< Variable number Corresponding to k = e*cos(longp) */
   double dDKeccDt;       /**< Total k Derivative */
-  int iPinc;             /**< Variable # Corresponding to p = s*sin(longa) */
+  int iPinc;             /**< Variable number Corresponding to p = s*sin(longa) */
   double dDPincDt;       /**< Total p Derivative */
-  int iQinc;             /**< Variable # Corresponding to q = s*cos(longa) */
+  int iQinc;             /**< Variable number Corresponding to q = s*cos(longa) */
   double dDQincDt;       /**< Total q Derivative */
-  int *iaHeccDistOrb;       /**< Equation # Corresponding to DistOrb's change to h = e*sin(longp) */
-  int *iaKeccDistOrb;     /**< Equation #s Corresponding to DistOrb's change to k = e*cos(longp) */
-  int *iaPincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  p = s*sin(longa) */
-  int *iaQincDistOrb;     /**< Equation #s Corresponding to DistOrb's change to  q = s*cos(longa) */
+  int *iaHeccDistOrb;       /**< equation number Corresponding to DistOrb's change to h = e*sin(longp) */
+  int *iaKeccDistOrb;     /**< Equation numbers Corresponding to DistOrb's change to k = e*cos(longp) */
+  int *iaPincDistOrb;     /**< Equation numbers Corresponding to DistOrb's change to  p = s*sin(longa) */
+  int *iaQincDistOrb;     /**< Equation numbers Corresponding to DistOrb's change to  q = s*cos(longa) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       h = e*sin(varpi) derivative due to DistOrb. */
@@ -1267,17 +1268,17 @@ typedef struct {
   int iNumZobl;          /**< Number of Equations Affecting z = cos(obl) */
   int iNumDynEllip;      /**< Number of Equations Affecting Dynamical Ellipticity */
 
-  int iXobl;             /**< Variable # Corresponding to x = sin(obl)*cos(pA) */
+  int iXobl;             /**< variable number Corresponding to x = sin(obl)*cos(pA) */
   double dDXoblDt;       /**< Total x Derivative */
-  int iYobl;             /**< Variable # Corresponding to y = sin(obl)*sin(pA) */
+  int iYobl;             /**< variable number Corresponding to y = sin(obl)*sin(pA) */
   double dDYoblDt;       /**< Total y Derivative */
-  int iZobl;             /**< Variable # Corresponding to z = cos(obl) */
+  int iZobl;             /**< variable number Corresponding to z = cos(obl) */
   double dDZoblDt;       /**< Total z Derivative */
-  int iDynEllip;         /**< Variable # Corresponding to dynamical ellipticity */
+  int iDynEllip;         /**< variable number Corresponding to dynamical ellipticity */
   double dDDynEllipDt;   /**< Dynamical Ellipticity Derivative */
-  int *iaXoblDistRot;     /**< Equation # Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
-  int *iaYoblDistRot;     /**< Equation #s Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
-  int *iaZoblDistRot;     /**< Equation #s Corresponding to DistRot's change to z = cos(obl) */
+  int *iaXoblDistRot;     /**< equation number Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
+  int *iaYoblDistRot;     /**< Equation numbers Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
+  int *iaZoblDistRot;     /**< Equation numbers Corresponding to DistRot's change to z = cos(obl) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       xi = sin(obliq)*sin(pA) derivative due to DISTROT. */
@@ -1365,13 +1366,13 @@ typedef struct {
   double **padDQincDtDistRes;
 
   /* ATMESC */
-  int iSurfaceWaterMass;     /**< Variable # Corresponding to the surface water mass */
+  int iSurfaceWaterMass;     /**< variable number Corresponding to the surface water mass */
   int iNumSurfaceWaterMass;  /**< Number of Equations Affecting surface water [1] */
-  int iEnvelopeMass;     /**< Variable # Corresponding to the envelope mass */
+  int iEnvelopeMass;     /**< variable number Corresponding to the envelope mass */
   int iNumEnvelopeMass;  /**< Number of Equations Affecting envelope mass [1] */
-  int iOxygenMass;     /**< Variable # Corresponding to the oxygen mass */
+  int iOxygenMass;     /**< variable number Corresponding to the oxygen mass */
   int iNumOxygenMass;  /**< Number of Equations Affecting oxygen [1] */
-  int iOxygenMantleMass;     /**< Variable # Corresponding to the oxygen mass in the mantle */
+  int iOxygenMantleMass;     /**< variable number Corresponding to the oxygen mass in the mantle */
   int iNumOxygenMantleMass;  /**< Number of Equations Affecting oxygen mantle mass [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
@@ -1384,17 +1385,17 @@ typedef struct {
   double *pdRadiusAtmesc;
 
   /* BINARY */
-  int iCBPR; /**< Variable # Corresponding to the CBP's orbital radius */
+  int iCBPR; /**< variable number Corresponding to the CBP's orbital radius */
   int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */
-  int iCBPZ; /**< Variable # corresponding to the CBP's cylindrical Z positions */
+  int iCBPZ; /**< variable number corresponding to the CBP's cylindrical Z positions */
   int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
-  int iCBPPhi; /**< Variable # Corresponding to the CBP's orbital azimuthal angle */
+  int iCBPPhi; /**< variable number Corresponding to the CBP's orbital azimuthal angle */
   int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
-  int iCBPRDot; /**< Variable # Corresponding to the CBP's radial velocity */
+  int iCBPRDot; /**< variable number Corresponding to the CBP's radial velocity */
   int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
-  int iCBPZDot; /** < Variable # Corresponding to the CBP's Z orbital velocity */
+  int iCBPZDot; /** < variable number Corresponding to the CBP's Z orbital velocity */
   int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1] */
-  int iCBPPhiDot; /** < Variable # Corresponding to the CBP's Phi orbital angular velocity */
+  int iCBPPhiDot; /** < variable number Corresponding to the CBP's Phi orbital angular velocity */
   int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
 
   /* Points to the element in UPDATE's daDerivProc matrix that contains the
@@ -1407,7 +1408,7 @@ typedef struct {
   double *pdCBPPhiDotBinary; // Equation that governs CBP phi orbital velocity
 
   /* STELLAR */
-  int iLuminosity;           /**< Variable # Corresponding to the luminosity */
+  int iLuminosity;           /**< variable number Corresponding to the luminosity */
   int iNumLuminosity;        /**< Number of Equations Affecting luminosity [1] */
   int iTemperature;
   int iNumTemperature;
@@ -1435,7 +1436,7 @@ typedef struct {
   double *pdDLXUVFlareDt;
 
  /* EQTIDE + STELLAR */
- int iSemiEqSt;      /**< Equation # Corresponding to EQ+ST's Change to Semi-major Axis */
+ int iSemiEqSt;      /**< equation number Corresponding to EQ+ST's Change to Semi-major Axis */
 
  /*! Points to the element in UPDATE's daDerivProc matrix that contains the
      semi-major axis derivatives due to EQTIDE+STELLAR. */
@@ -1526,19 +1527,19 @@ typedef struct {
   double dMinValue;      /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
-  int iOneStep;          /**< Integration Method # */
+  int iOneStep;          /**< Integration Method number */
   double dCurrentDt;
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */
   UPDATE *tmpUpdate;     /**< Temporary UPDATE struct */
-  double ***daDeriv;     /**< The Matrix of Time Derivatives. First dimension is Body #, second is the Primary Variable #, third is the Equation #.  */
+  double ***daDeriv;     /**< The Matrix of Time Derivatives. First dimension is Body #, second is the Primary variable number, third is the equation number.  */
 
   // Module-specific parameters
   int *iNumModules;      /**< Number of Modules per Primary Variable */
 
   /* EQTIDE */
-  int iEqtideModel;      /**< EQTIDE Model # */
+  int iEqtideModel;      /**< EQTIDE Model number */
   int bDiscreteRot;	 /**< Use Discrete Rotation Model (CPL)? */
   int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
   int *bFixOrbit;        /**< Fix Orbit? */
@@ -1616,7 +1617,7 @@ typedef struct {
 
 typedef struct {
   char cIn[NAMELEN];       /**< File Name */
-  int *bLineOK;            /**< Line # Format OK? */
+  int *bLineOK;            /**< Line number Format OK? */
   int iNumLines;           /**< Number of Input Lines */
   /* Species file for PHOTOCHEM */
   char cSpecies[NAMELEN];  /**< Name of Chemical Species N/I */
@@ -1664,7 +1665,7 @@ typedef struct {
   double dDefault;             /**< Default Value */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
-  int *iLine;                  /**< Option's Line # in Input File */
+  int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
@@ -1793,7 +1794,7 @@ typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 
 typedef struct {
   int *iNumModules; /**< Number of Modules per Body */
-  int **iaModule; /**< Module #s that Apply to the Body */
+  int **iaModule; /**< Module numbers that Apply to the Body */
   int *iBitSum;
 
   /*! These functions count the number of applicable halts for each body. */

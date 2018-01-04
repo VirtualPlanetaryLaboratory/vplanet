@@ -1,3 +1,5 @@
+.PHONY: docs test
+
 default:
 	-gcc -o vplanet src/*.c -lm
 
@@ -19,3 +21,6 @@ test:
 	else\
 		tests/certificate --fail;\
 	fi
+
+docs:
+	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

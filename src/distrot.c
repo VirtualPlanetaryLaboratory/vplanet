@@ -1086,6 +1086,8 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
   body[iBody].dPinc = body[iBody].daPincSeries[body[iBody].iCurrentStep];
   body[iBody].dQinc = body[iBody].daQincSeries[body[iBody].iCurrentStep];
+  body[iBody].dEcc = sqrt(body[iBody].dHecc*body[iBody].dHecc+\
+    body[iBody].dKecc*body[iBody].dKecc);
 
   /* numerical derivatives of p and q */
   if (body[iBody].iCurrentStep == 0) {

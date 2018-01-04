@@ -5,7 +5,7 @@ saModules       stellar eqtide
 # Physical Parameters
 iBodyType     1 # Star!
 dMass         1.0                         # Mass, solar masses
-dRotPeriod    -0.5
+dRotPeriod    -0.2
 dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.

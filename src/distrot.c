@@ -1146,81 +1146,186 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
 }
 
 /* Equations used to calculate obliquity/spin evolution */
+
+/**
+Correction to axial precession rate for eccentricity (and possible additional effects)
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return Correction to precession rate
+*/
 double fndCentralTorqueSfac(BODY *body, int iBody) {
   return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*body[iBody].dKecc),-1.5) - S0;
 }
-  
+
+/**
+Natural axial precession rate due to host star (alpha*cos(obliquity))
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return Axial precession rate (rad/sec)
+*/
 double fndCentralTorqueR(BODY *body, int iBody) {
   double obliq, tmp;
- //  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-//   ztmp = cos(obliq);
-//   tmp = 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
-  
+
   return 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/((body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fndCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
-/* THE FOLLOWING FXNS WILL NEED TO CHANGE IF DISTRES IS USED XXX */
+/**
+C(p,q) function in obliquity evol equations if RD4 orbital model is used
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
 double fndObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
-//   double tmp;
-//   tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
-
   return body[iaBody[0]].dQinc*fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbRD4DqDt(body,system,iaBody);
 }
 
-double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
-  // double tmp;
-//   tmp = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
+/**
+A(p,q) function in obliquity evol equations if RD4 orbital model is used
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
+double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCRD4(body,system,iaBody) );
 }
 
-double fndObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
-//   double tmp;
-//   tmp = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+/**
+B(p,q) function in obliquity evol equations if RD4 orbital model is used
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
+double fndObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fndObliquityCRD4(body,system,iaBody) );
 }
 
+/**
+C(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
 double fndObliquityCLL2(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dQinc*fndDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbLL2DqDt(body,system,iaBody);
 }
 
+/**
+A(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
 double fndObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbLL2DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCLL2(body,system,iaBody) );
 }
 
+/**
+B(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
 double fndObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fndObliquityCLL2(body,system,iaBody) );
 }
 
+/**
+C(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
 double fndObliquityCExt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dQinc*body[iaBody[0]].dPdot - body[iaBody[0]].dPinc*body[iaBody[0]].dQdot;
 }
 
+/**
+A(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
 double fndObliquityAExt(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dQdot + body[iaBody[0]].dPinc*fndObliquityCExt(body,system,iaBody) );
 }
 
+/**
+B(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
 double fndObliquityBExt(BODY *body, SYSTEM *system, int *iaBody) {
   return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dPdot - body[iaBody[0]].dQinc*fndObliquityCExt(body,system,iaBody) );
 }
 
 //----------Relativistic correction-------------------------------------
+
+/**
+GR correction to axial precession rate
+
+@param body Struct containing all body information and variables
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to axial precession rate d(PrecA)/dt
+*/
 double fndAxialGRCorrection(BODY *body, int *iaBody) {
   return fndApsidalGRCorrection(body, iaBody)/2.;
 }
 
+/**
+GR correction to derivative of x = sin(obliquity)*cos(preca)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to derivative dx/dt
+*/
 double fndAxialGRDxDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fndAxialGRCorrection(body,iaBody);
 }
 
+/**
+GR correction to derivative of y = sin(obliquity)*sin(preca)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to derivative dy/dt
+*/
 double fndAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -body[iaBody[0]].dXobl*fndAxialGRCorrection(body,iaBody);
 }
 
 //--------------Obliquity/spin evolution--------------------------------------------------------------
 
+/**
+Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
 double fndDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
@@ -1231,19 +1336,21 @@ double fndDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
       return body[iaBody[0]].dXobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
       return -fndObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fndObliquityCRD4(body,system,iaBody);
-    // } else {
-//       return cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA) * \
-//         (-fndObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-//         fndObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-//     }
   }
   assert(0);
   return 0;
 }
 
+/**
+Derivative of x = sin(obliquity)*cos(preca) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
 double fndDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
@@ -1254,24 +1361,33 @@ double fndDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
       return -body[iaBody[0]].dYobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
       return fndObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fndObliquityCRD4(body,system,iaBody);
-    // } else {
-//       return cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dPrecA) * \
-//         (-fndObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-//         fndObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-//     }
   }
   assert(0);
   return 0;
 }
 
+/**
+Derivative of z = cos(obliquity) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
 double fndDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fndObliquityBRD4(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityARD4(body,system,iaBody);
 }
 
+/**
+Derivative of y = sin(obliquity)*sin(preca) when LL2 orbital model is used
 
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
 double fndDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
@@ -1285,6 +1401,14 @@ double fndDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   return 0;
 }
 
+/**
+Derivative of x = sin(obliquity)*cos(preca) when LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
 double fndDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
@@ -1298,15 +1422,39 @@ double fndDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   return 0;
 }
 
+/**
+Derivative of z = cos(obliquity) when LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
 double fndDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fndObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityALL2(body,system,iaBody);
 }
 
+/**
+Derivative of dynamical ellipticity when coupled to eqtide and thermint
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative d(dynellip)/dt
+*/
 double fndDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -EDMAN*EDMAN/body[iaBody[0]].dViscUMan*\
           (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
 }
 
+/**
+Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
 double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
@@ -1315,6 +1463,14 @@ double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
           body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
 }
 
+/**
+Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
 double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
@@ -1323,6 +1479,14 @@ double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
           body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
 }
 
+/**
+Derivative of z = cos(obliquity) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
 double fndDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dYobl*fndObliquityBExt(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityAExt(body,system,iaBody);
 }

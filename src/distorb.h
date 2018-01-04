@@ -13,9 +13,17 @@
 #define TEENY				1e-20 // Already a TINY in vplanet.h! XXX
 #define MAXECCDISTORB 0.6627434
 
-
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
+
+#define A(iIndexJ) dAxRatio,iIndexJ,0.5
+#define B(iIndexJ) dAxRatio,iIndexJ,1.5
+#define C(iIndexJ) dAxRatio,iIndexJ,2.5
+
+// A -> s = 1/2
+// B -> s = 3/2
+// C -> s = 5/2
+
 
 void AddModuleDistOrb(MODULE*,int,int);
 void BodyCopyDistOrb(BODY*,BODY*,int,int,int);

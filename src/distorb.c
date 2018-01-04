@@ -12,7 +12,7 @@
 #include <string.h>
 #include "vplanet.h"
 #include "options.h"
-#include "output.h"
+#include "output.h" 
 
 void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
@@ -47,9 +47,6 @@ void InitializeUpdateTmpBodyDistOrb(BODY *body,CONTROL *control,UPDATE *update,i
 }
 
 /**************** DISTORB options ********************/
-
-
-
 
 void ReadDfCrit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -1628,6 +1625,7 @@ void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
                           body[iBody].dSemi;
 }
 
+
 void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
@@ -1643,7 +1641,13 @@ unsigned long int fniFactorial(unsigned int n)
   return result;
 }
 
-/* Number of combinations of k in N */
+/**
+Number of combinations of k in N 
+
+@param N Size of set
+@param k Size of desired subset
+@return Binomial coefficient N choose k
+*/
 int fniNchoosek(int N, int k) {
   if (N < 0 || k < 0 || N > 10 || k > N) {
     printf("Error: received N = %d, k = %d\n",N,k);
@@ -1651,15 +1655,17 @@ int fniNchoosek(int N, int k) {
   return fniFactorial(N) / (fniFactorial(k)*fniFactorial(N-k));
 }
 
-/* Gives the index of a pair of values in N choose 2.
-* For example, for 4 planets, the index for the pair
-* (1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. */
+/**
+Gives the index of a pair of values in N choose 2.
+For example, for 4 planets, the index for the pair
+(1,2) -> 0, (1,3) -> 1, (1,4) -> 2, (2,3) -> 3, etc. 
+
+@param x Index of first planet
+@param y Index of second planet
+@param N Number of planets in system
+@return Index corresponding to planet pair (x,y)
+*/
 int fniCombCount(int x, int y, int N) {
-  /* Russell's not sure if this is necessary. XXX
-  if (x == 0) {
-    x = 1.3;
-  }
-  */
   if (x < y) {
     return N*(x-1) + (y-1) - fniNchoosek(x+1, 2);
   } else {
@@ -1667,6 +1673,15 @@ int fniCombCount(int x, int y, int N) {
   }
 }
 
+/**
+Calculates components AB matrices to find eigenvalues in LL2 problem
+
+@param body Struct containing all body information and variables
+@param j Index j in Laplace coefficients
+@param jBody Index of perturbed body
+@param kBody Index of perturbing body
+@return Component of A or B matrix in rad/year
+*/
 double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   double AB, alpha, abar, b, n;
 
@@ -1686,11 +1701,27 @@ double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   return AB*365.25;  //returns in units of rad/year
 }
 
+/**
+Calculates mutual hill radii between two bodies 
+
+@param body Struct containing all body information and variables
+@param iBody Index of interior body
+@param jBody Index of exterior body
+@return Mutual hill radii in meters
+*/
 double fndMutualHillRad(BODY *body, int iBody, int jBody) {
   return 0.5*pow((body[iBody].dMass+body[jBody].dMass)/body[0].dMass,1./3)*\
           (body[iBody].dSemi+body[jBody].dSemi);
 }
 
+/**
+Post-Newtonian correction to AB matrix in LL2 solution
+
+@param body Struct containing all body information and variables
+@param jBody Index of perturbed body
+@param kBody Index of perturbing body
+@return Correction to component of AB matrix (added to A and B) in rad/year
+*/
 double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   double n, GRC;
   
@@ -1707,12 +1738,15 @@ double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   }
 }
 
-/* XXX HessEigen, ElmHess, BalanceM, ludcmp, lukskb are from Numerical Recipes, Press et al. (1992)
-Cannot release code with these functions as they are proprietary.
-They will need to be phased out as my new routines are tested and confirmed to work ok. HessEigen has variables renamed from "hqr" but is not fully replaced yet. */
+/**
+Finds all eigenvalues of an upper Hess. matrix amat
 
+@param amat Matrix to find eigenvalues of
+@param origsize Size of original matrix
+@param real The real components of the eigenvalues
+@param imag The imaginary components of the eigenvalues (usually ~ 0)
+*/
 void HessEigen(double **amat, int origsize, double real[], double imag[])
-/*Finds all eigenvalues of an upper Hess. matrix amat */
 {
   int size, m, smallsub, k, j, iterations, i, mmin;
   double radic, ulcorner, lrcorner, hhvector, v, u, exshift, s, r, q, p, anorm, cond, value;
@@ -1844,6 +1878,14 @@ void HessEigen(double **amat, int origsize, double real[], double imag[])
   }
 }
 
+/**
+Swaps two rows in a matrix
+
+@param matrix Matrix in question
+@param size The number of rows/columns in matrix (square)
+@param i One of the rows to be swapped
+@param j The other row to be swapped
+*/
 void RowSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
@@ -1856,6 +1898,14 @@ void RowSwap(double **matrix, int size, int i, int j) {
   }
 }
 
+/**
+Swaps two columns in a matrix
+
+@param matrix Matrix in question
+@param size The number of rows/columns in matrix (square)
+@param i One of the columns to be swapped
+@param j The other column to be swapped
+*/
 void ColSwap(double **matrix, int size, int i, int j) {
   /* swap the ith and jth rows in matrix of size size*/
   int k;
@@ -1868,6 +1918,12 @@ void ColSwap(double **matrix, int size, int i, int j) {
   }
 }
 
+/**
+Reduces a matrix to Upper Hessenberg form
+
+@param a Matrix in question
+@param size The number of rows/columns in matrix a (square)
+*/
 void HessReduce(double **a, int size) {
   int r, rp, rmax, i, j;
   double max, n;
@@ -1897,6 +1953,13 @@ void HessReduce(double **a, int size) {
     }
   }
 }
+
+/**
+Balances a matrix
+
+@param a Matrix to be balanced
+@param size The number of rows/columns in matrix a (square)
+*/
 
 void BalanceMatrix(double **a, int size) {
   int i, j, end = 0;
@@ -2750,13 +2813,6 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
  * Semi-major axis functions
  */
 
-#define A(iIndexJ) dAxRatio,iIndexJ,0.5
-#define B(iIndexJ) dAxRatio,iIndexJ,1.5
-#define C(iIndexJ) dAxRatio,iIndexJ,2.5
-
-// A -> s = 1/2
-// B -> s = 3/2
-// C -> s = 5/2
 
 /** 
 Laplace coefficient used in disturbing function 
@@ -4823,7 +4879,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4837,7 +4892,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4865,7 +4919,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir05(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4879,7 +4932,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir06(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4893,7 +4945,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir07(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4907,7 +4958,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4921,7 +4971,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4935,7 +4984,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4949,7 +4997,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4963,7 +5010,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4977,7 +5023,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of interior body
 @param jBody Index of exterior body
-
 @return dR/dq term for interior body 
 */ 
 double fndDdistDqDir016(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -4990,7 +5035,6 @@ Sums over secular dR/dq terms of disturbing function for interior body
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Total dR/dq for interior body 
 */ 
 double fndDdisturbDQinc(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5021,7 +5065,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir01(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5035,7 +5078,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir02(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5049,7 +5091,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir03(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5063,7 +5104,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir08(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5077,7 +5117,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir09(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5091,7 +5130,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir010(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5105,7 +5143,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir011(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5119,7 +5156,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir012(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5133,7 +5169,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir013(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5147,7 +5182,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir014(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5161,7 +5195,6 @@ Derivative in d/dq of disturbing function term
 @param system Struct containing system information
 @param iBody Index of exterior body
 @param jBody Index of interior body
-
 @return dR/dq term for exterior body 
 */ 
 double fndDdistDqPrmDir015(BODY *body, SYSTEM *system, int iBody, int jBody) {
@@ -5188,7 +5221,6 @@ Sums over secular dR/dq terms of disturbing function for exterior body
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Total dR/dq for exterior body 
 */ 
 double fndDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5217,7 +5249,6 @@ Relativistic precession of periastron
 
 @param body Struct containing all body information and variables
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative d(longp)/dt due to general relativity
 */
 double fndApsidalGRCorrection(BODY *body, int *iaBody) {
@@ -5233,7 +5264,6 @@ Relativistic correction to derivative of variable Hecc = e*sin(longp) in RD4 sol
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dh/dt due to general relativity
 */
 double fndApsidalGRDhDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5246,7 +5276,6 @@ Relativistic correction to derivative of variable Kecc = e*sin(longp) in RD4 sol
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dk/dt due to general relativity
 */
 double fndApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5261,7 +5290,6 @@ Derivative of variable Hecc = e*sin(longp) in RD4 solution
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dh/dt  
 */
 double fndDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5286,7 +5314,6 @@ Derivative of variable Kecc = e*cos(longp) in RD4 solution
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dk/dt  
 */
 double fndDistOrbRD4DkDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5310,7 +5337,6 @@ Derivative of variable Pinc = sin(inc/2)*sin(longa) in RD4 solution
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dp/dt  
 */
 double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5333,7 +5359,6 @@ Derivative of variable Qinc = sin(inc/2)*cos(longa) in RD4 solution
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dq/dt  
 */
 double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5357,7 +5382,6 @@ Value of variable Hecc = e*sin(longp) at time dAge, in the LL2 solution (not a d
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Hecc at time dAge
 */
 double fndDistOrbLL2Hecc(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5370,7 +5394,6 @@ Value of variable Kecc = e*cos(longp) at time dAge, in the LL2 solution (not a d
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Kecc at time dAge
 */
 double fndDistOrbLL2Kecc(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5384,7 +5407,6 @@ Value of variable Pinc = sin(inc/2)*sin(longp) at time dAge, in the LL2 solution
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Pinc at time dAge
 */
 double fndDistOrbLL2Pinc(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5412,7 +5434,6 @@ solution.
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dh/dt  
 */
 double fndDistOrbLL2DhDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5426,7 +5447,6 @@ solution.
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dk/dt  
 */
 double fndDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5440,7 +5460,6 @@ solution.
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dp/dt  
 */
 double fndDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
@@ -5455,7 +5474,6 @@ solution.
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
-
 @return Derivative dq/dt  
 */
 double fndDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {

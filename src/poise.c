@@ -1229,9 +1229,26 @@ void InitializeLandWater(BODY *body, int iBody) {
   }
 }
 
+void DampTemp(BODY *body, double dTGlobalTmp, int iBody) {
+  int iLat;
+  double deltaT = (dTGlobalTmp-body[iBody].dTGlobal)/5.0;
+  
+  body[iBody].dAlbedoGlobal = 0.0;
+  
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    body[iBody].daTempLand[iLat]+= deltaT;
+    body[iBody].daTempWater[iLat] += deltaT;
+  }
+  AlbedoSeasonal(body,iBody,0); /* since this is executed only once, we need to multiply
+                                    dAlbedoGlobal by iNStepInYear below */
+  body[iBody].dAlbedoGlobal = body[iBody].dAlbedoGlobal*body[iBody].iNStepInYear;;
+}
+
+
 void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
-  int i, j, count;
-  double Toffset, xboundary, TGlobalTmp;
+  int i, j, count, iRun;
+  double Toffset, xboundary, RunningMeanTmp;
+  double *daRunningMean, TotalMean;
   
   body[iBody].dIceMassTot = 0.0;
   body[iBody].daInsol = malloc(body[iBody].iNumLats*sizeof(double*));
@@ -1597,7 +1614,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       }
     
       /* "burn in" to a quasi equilibrium */
-      TGlobalTmp = 0;
+      //TGlobalTmp = 0;
       /* This was old code -- Is it needed?
       while (fabs(TGlobalTmp - body[iBody].dTGlobal) > 0.01) {
         TGlobalTmp = body[iBody].dTGlobal; 
@@ -1605,15 +1622,39 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         printf("TGlobal = %f\n",TGlobalTmp);
       */
       count = 0;
-      while (fabs(TGlobalTmp - body[iBody].dTGlobal) > 0.01 || count < 3) {
-        TGlobalTmp = body[iBody].dTGlobal; 
+      int RunLen = 5;
+      daRunningMean = malloc((RunLen+1)*sizeof(double));
+      daRunningMean[RunLen] = 0;
+      TotalMean = 0;
+      while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > 0.1 || count <= 2*RunLen) {
+        RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body,iBody); 
         MatrixSeasonal(body,iBody);
         Snowball(body,iBody);
-        if (iVerbose >= VERBINPUT) 
-          printf("TGlobal = %f\n",TGlobalTmp);
+        
+        if (count < RunLen) {
+          daRunningMean[count] = body[iBody].dTGlobal;
+          if (iVerbose >= VERBINPUT) 
+            printf("TGlobal = %f\n",daRunningMean[count]);
+        } else {
+//           DampTemp(body,RunningMeanTmp,iBody);
+          daRunningMean[RunLen] = 0;
+          for (iRun = 0; iRun < RunLen-1; iRun++) {
+            daRunningMean[iRun] = daRunningMean[iRun+1];
+            daRunningMean[RunLen] += daRunningMean[iRun];
+          }
+          daRunningMean[RunLen-1] = body[iBody].dTGlobal;
+          daRunningMean[RunLen] += daRunningMean[RunLen-1];
+          daRunningMean[RunLen] /= RunLen;
+//           TotalMean *= (float)(count-RunLen)/(count-RunLen+1);
+//           TotalMean += daRunningMean[RunLen-1]/(count-RunLen+1);
+          if (iVerbose >= VERBINPUT)
+            printf("TGlobal = %f; Prev RunningMean = %f; Curr RunningMean = %f \n",daRunningMean[RunLen-1],RunningMeanTmp,daRunningMean[RunLen]);
+        }  
         count += 1;
       }
+      free(daRunningMean);
+      
     } else if (body[iBody].bSkipSeas == 1) {
       printf("Planet started in RGH or snowball, skipping Seasonal model\n");
     }
@@ -2791,6 +2832,15 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 }
 
 /************* POISE Functions ***********/
+
+/**
+Calculates flow at base of ice sheet
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@param iLat Index of current latitude cell
+@return Flow rate at base of ice sheet (velocity*height -> m^2/s)
+*/
 double BasalFlow(BODY *body, int iBody, int iLat){
   double ased, bsed, dTmp, m = 1.25, minv, grav;
   
@@ -2807,13 +2857,20 @@ double BasalFlow(BODY *body, int iBody, int iLat){
       minv = 1 - bsed/fabs(ased)*SEDH;
     }
   
-    dTmp = 2*(SEDD0*RHOICE*grav*(body[iBody].daIceHeight[iLat]*body[iBody].daIceHeight[iLat]))/((m+1)*bsed)*\
+    dTmp = 2*(SEDD0*RHOICE*grav*(body[iBody].daIceHeight[iLat]\
+        *body[iBody].daIceHeight[iLat]))/((m+1)*bsed)*\
         pow(fabs(ased)/(2*SEDD0*SEDMU),m) * (1.0-pow(minv,m+1));
 
     return dTmp;
   }
 }
 
+/**
+Determines if planet has entered snowball state
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void Snowball(BODY *body, int iBody) {
   int iLat, iNum=0;
   
@@ -3103,7 +3160,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL, Ecc;
   
-  LongP = body[iBody].dLongP+body[iBody].dPrecA + PI; //Pericenter, relative to direction of planet at spring equinox
+  LongP = body[iBody].dLongP+body[iBody].dPrecA;// + PI; //Pericenter, relative to direction of planet at spring equinox
   Ecc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice

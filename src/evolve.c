@@ -1,3 +1,11 @@
+/********************** EVOLVE.C ***********************/
+/*
+ * Rory Barnes, May 2014
+ *
+ * This file contains all the core VPLANET integration routines including the
+ * timestepping algorithm and the Runge-Kutta Integration scheme.
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -5,7 +13,8 @@
 #include "vplanet.h"
 
 void PropsAuxGeneral(BODY *body,CONTROL *control) {
-  int iBody;
+/* Recompute the mean motion, necessary for most modules */
+  int iBody; // Dummy counting variable
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (iBody != 0 && body[iBody].bBinary == 0) {
@@ -15,7 +24,10 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
 }
 
 void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
-  int iBody,iModule;
+/* Evaluate single and multi-module auxialliary functions to update parameters
+ * of interest such as mean motion.
+ */
+  int iBody,iModule; // Dummy counter variables
 
   PropsAuxGeneral(body,control);
 
@@ -36,7 +48,8 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
  */
 
 double AssignDt(double dMin,double dNextOutput,double dEta) {
-  int i;
+/* Compute the next timestep, dt, making sure it's not larger than the output
+ * cadence */
 
   dMin = dEta * dMin;
   if (dNextOutput < dMin)
@@ -47,7 +60,8 @@ double AssignDt(double dMin,double dNextOutput,double dEta) {
 }
 
 double fdNextOutput(double dTime,double dOutputInterval) {
-  int nSteps;
+/* Compute when the next timestep occurs. */
+  int nSteps; // Number of outputs so far
 
   /* Number of output so far */
   nSteps = (int)(dTime/dOutputInterval);
@@ -55,28 +69,27 @@ double fdNextOutput(double dTime,double dOutputInterval) {
   return (nSteps+1.0)*dOutputInterval;
 }
 
-/* fdGetUpdateInfo fills the Update arrays with the derivatives
- * or new values. It returns the smallest timescale for use
- * in variable timestepping. Probably should have a different
- * version for rigid time-stepping, but that should probably
- * never be used anyway.
-*/
 
 double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
+/* Fills the Update arrays with the derivatives
+ * or new values. It returns the smallest timescale for use
+ * in variable timestepping. Uses either a 4th order Runge-Kutte integrator or
+ * an Euler step.
+ */
 
-  int iBody,iVar,iEqn;
-  EVOLVE integr;
-  double dVarNow,dMinNow,dMin=HUGE,dVarTotal;
+  int iBody,iVar,iEqn; // Dummy counting variables
+  EVOLVE integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
+  double dVarNow,dMinNow,dMin=HUGE,dVarTotal; // Intermediate storage variables
 
   integr = control->Evolve;
 
-  // XXXX Change Eqn to Proc?
+  // XXX Change Eqn to Proc?
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
       for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
 
-        // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+  // The parameter does not require a derivative, but is calculated explicitly as a function of age.
 	if (update[iBody].iaType[iVar][0] == 0) {
 	  dVarNow = *update[iBody].pdVar[iVar];
 	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
@@ -178,8 +191,8 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 		  dMin = dMinNow;
 	      }
 	    }
- 
-	    /* unique to POISE, used for ice sheets to prevent small amounts 
+
+	    /* unique to POISE, used for ice sheets to prevent small amounts XXX
 	       of ice -> dDt -> 0 **DEPRECATED** */
 
 	    else if (update[iBody].iaType[iVar][iEqn] == 4) {
@@ -199,7 +212,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	    }
 
 	    // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast
-
 	    else if (update[iBody].iaType[iVar][iEqn] == 9) {
 	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
 	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
@@ -215,12 +227,11 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	      }
 	    }
 
-      // SpiNBody timestep: semi-temporary hack
+      // SpiNBody timestep: semi-temporary hack XXX
       // dt = r^2/v^2
       // r: Position vector
       // v: Velocity vector
       // Inefficient?
-
       else if (update[iBody].iaType[iVar][iEqn] == 7) {
         update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
         dMinNow = sqrt((body[iBody].dPositionX*body[iBody].dPositionX+body[iBody].dPositionY*body[iBody].dPositionY+body[iBody].dPositionZ*body[iBody].dPositionZ)
@@ -248,6 +259,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 }
 
 void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
+/* Compute and apply an Euler update step to a given parameter (x = dx/dt * dt) */
   int iBody,iVar,iEqn;
   double dTimeOut;
 
@@ -275,6 +287,7 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 }
 
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
+/* Compute and apply a 4th order Runge-Kutta update step a given parameter. */
   int iBody,iVar,iEqn,iSubStep;
   double dTimeOut,dFoo,dDelta;
 
@@ -284,6 +297,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Verify that rotation angles behave correctly in an eqtide-only run
   if (control->Evolve.tmpBody[1].dPrecA != 0)
     printf("PrecA = %e\n",control->Evolve.tmpBody[1].dPrecA);
+  XXX
   */
 
 //   RecalcLaplaceDistRes(body,control,system);
@@ -355,7 +369,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Second midpoint derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
-  
+
 //   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
 
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
@@ -381,7 +395,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
   /* Full step derivative */
   PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
-  
+
 //   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
 
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
@@ -420,10 +434,11 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
  */
 
 void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
-  int iDir,iBody,iModule,nSteps;
-  double dTimeOut;
-  double dDt,dFoo;
-  double dEqSpinRate;
+/* Master evolution routine that controls the simulation integration. */
+  int iDir,iBody,iModule,nSteps; // Dummy counting variables
+  double dTimeOut; // When to output next
+  double dDt,dFoo; // Next timestep, dummy variable
+  double dEqSpinRate; // Store the equilibrium spin rate
 
   control->Evolve.nSteps=0;
   nSteps=0;

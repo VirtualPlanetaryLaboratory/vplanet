@@ -12,7 +12,9 @@
 #include "vplanet.h"
 
 int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
-  int iModule,iNumHalts=0;
+/* Count the number of halts VPLANET will check for during the integration */
+  int iModule; // Dummy variable iterating over modules
+  int iNumHalts=0; // Counts number of halts
 
   /* Multi-module halts */
   if (halt->bMerge)
@@ -39,6 +41,7 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
 }
 
 void InitializeHalts(CONTROL *control,MODULE *module) {
+// Malloc memory for halt function pointers
 
   control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
 
@@ -46,8 +49,8 @@ void InitializeHalts(CONTROL *control,MODULE *module) {
 
 /****************** HALTS *********************/
 
-/* Minimum obliquity? */
 int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+/* Halt simulation if body reaches minimum obliquity. */
   if (body[iBody].dObliquity < halt->dMinObl) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: Body %s's Obliquity = ",body[iBody].cName);
@@ -62,9 +65,8 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-/* Maximum Eccentricity? */
 int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  // XXX is EccSq defined here
+/* Halt simulation if body reaches maximum orbital eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e[%d] = ",iBody);
@@ -79,9 +81,8 @@ int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-/* Minimum Eccentricity? */
 int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  //XXX Is dEccSq defined here?
+/* Halt simulation if body reaches minimum eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) <= halt->dMinEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e = ");
@@ -96,8 +97,8 @@ int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-/* Minimum Semi-Major Axis? */
 int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+/* Halt simulation if body reaches minimum Semi-Major Axis? */
   if (body[iBody].dSemi <= halt->dMinSemi) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: a = ");
@@ -146,8 +147,8 @@ int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   return 0;
 }
 
-/* Merge? */
 int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+/* Halt if two bodies, i.e. planet and star, merge? */
 
   /* Sometimes integration overshoots and dSemi becomes NaN -> merger */
   if(body[iBody].dSemi != body[iBody].dSemi)
@@ -200,7 +201,11 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 /******************* Verify *************************/
 
 void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
-  int iBody,iModule,iHalt,iHalt0,iHaltNow,iHaltMaxEcc=0,iNumMaxEcc=0;
+/* Verify halt functions to ensure they are valid and make sense given the
+ * enabled modules and the system architecture */
+  int iBody,iModule,iHalt,iHalt0,iHaltNow; // Dummy counting variables
+  int iHaltMaxEcc=0;  // Counts number of halt max eccentricity
+  int iNumMaxEcc=0; // Counts number of max eccentricity occurences
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // First calculate how many halts for this body
@@ -261,7 +266,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);
 
-    /* This needs to become VerifyMultiBodyHalts, as should only
+    /* XXX This needs to become VerifyMultiBodyHalts, as should only
      be applied if DISTORB called. This problem is hard! */
 
     if (iHaltMaxEcc) {
@@ -271,76 +276,12 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
       }
     }
   }
-
-
-
-
-  /*    Now make sure all set halts apply to the selected modules
-     XXX This sounds nice, but for now, it is left out
-  if (control->Halt.bMerge) {
-    if (!module->iEqtide) {
-      if (control->Io.iVerbose > 3)
-        fprintf(stderr,"WARNING: %s set to 1, but no selected module allows merging.\n",options[OPT_HALTMERGE].cName);
-    }
-  }
-
-  if (control->Halt.bDblSync >= 0) {
-    if (!module->iEqtide) {
-      if (control->Io.iVerbose > 3)
-        fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMAXECC].cName);
-    }
-  }
-
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    if (control->Halt.bTideLock[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName,body[iBody].cName);
-      }
-    }
-
-    if (control->Halt.bSync[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTSYNC].cName,body[iBody].cName);
-      }
-    }
-
-    if (control->Halt.bPosDeDt[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows eccentricity evolution.\n",options[OPT_HALTPOSDEDT].cName,body[iBody].cName);
-      }
-    }
-
-    if (control->Halt.bMinEcc[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-          fprintf(stderr,"WARNING: %s set to 1 for %s, but no selected module allows rotational damping.\n",options[OPT_HALTMINECC].cName,body[iBody].cName);
-      }
-    }
-
-    if (control->Halt.dMinObl[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-          fprintf(stderr,"WARNING: %s set to 1, but no selected module allows rotational damping.\n",options[OPT_HALTMINOBL].cName);
-      }
-    }
-
-    if (control->Halt.dMaxEcc[iBody] >= 0) {
-      if (!module->iEqtide) {
-        if (control->Io.iVerbose > 3)
-
-          fprintf(stderr,"WARNING: %s set to 1, but no selected module allows eccentricity evolution.\n",options[OPT_HALTMAXECC].cName);
-      }
-    }
-  }
-  */
 }
 
 /************** Check for Halts *********************/
 
 int fbCheckHalt(BODY *body,CONTROL *control,UPDATE *update) {
+/* Check to see if any body has a halt associated with it? */
   int iBody,iHalt;
   //double dMeanMotion;
 

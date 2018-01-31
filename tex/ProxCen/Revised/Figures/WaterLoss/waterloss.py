@@ -258,7 +258,7 @@ def GetEvol(x, **kwargs):
   dMass, dSatXUVFrac, dSatXUVTime, dStopTime, dXUVBeta = x
   dSatXUVFrac = 10 ** dSatXUVFrac
   dStopTime *= 1.e9
-  dOutputTime = 1.e6
+  dOutputTime = 3.e5
   dSatXUVTime = 10 ** dSatXUVTime
   dSatXUVTime *= -1
   dXUVBeta *= -1
@@ -596,6 +596,8 @@ def RunEvol(name = 'w5h0m0', nsamples = 1000, pool = None, **kwargs):
            Time = [o.star.Time for o in outputs],
            Luminosity = [o.star.Luminosity for o in outputs],
            LXUVStellar = [o.star.LXUVStellar for o in outputs],
+           Temperature = [o.star.Temperature for o in outputs],
+           Radius = [o.star.Radius for o in outputs],
            EnvelopeMass = [o.planet.EnvelopeMass for o in outputs],
            SurfWaterMass = [o.planet.SurfWaterMass for o in outputs],
            OxygenMass = [o.planet.OxygenMantleMass + o.planet.OxygenMass for o in outputs])
@@ -646,6 +648,66 @@ def PlotEvol(name = 'w5h0m0', **kwargs):
   fig_star.savefig(os.path.join(PATH, 'output', '%s.star.pdf' % name), bbox_inches = 'tight')
   fig_planet.savefig(os.path.join(PATH, 'output', '%s.planet.pdf' % name), bbox_inches = 'tight')
 
+def PlotStellarEvol(name = 'w5h0m0', **kwargs):
+  '''
+  
+  '''
+  
+  print("Plotting evolution...")
+  
+  # Load
+  data = np.load(os.path.join(PATH, 'output', '%s.evol.npz' % name))
+  Time = data['Time']
+  Luminosity = data['Luminosity']
+  LXUVStellar = data['LXUVStellar']
+  Temperature = data['Temperature']
+  Radius = data['Radius']
+  
+  # Get mean evolution
+  Mean = GetEvol([0.123, -3, 0, 4.78, -1.23], star_in = open('star.in', 'r').read(), 
+                  planet_in = open('planet.in', 'r').read(), vpl_in = open('vpl.in', 'r').read(),
+                  L = L, sigL = sigL, logLXUV = logLXUV, siglogLXUV = siglogLXUV, InitH2O = -5, InitH = 0,
+                  EpsH2O = 0.15, EpsH = 0.15, InstantO2Sink = 0)
+  
+  # Plot
+  fig, ax = pl.subplots(1,3, figsize = (14, 4))
+  fig.subplots_adjust(bottom = 0.15, wspace = 0.3)
+  for i in range(len(Time)):
+    ax[0].plot(Time[i], Luminosity[i], lw = 1, alpha = 0.1, color = 'k')
+    ax[1].plot(Time[i], LXUVStellar[i], lw = 1, alpha = 0.3, color = 'k')
+    ax[2].plot(Time[i], Radius[i], lw = 1, alpha = 0.1, color = 'k')
+  
+  ax[0].plot(Mean.star.Time, Mean.star.Luminosity, color = 'r')
+  ax[1].plot(Mean.star.Time, Mean.star.LXUVStellar, color = 'r')
+  ax[2].plot(Mean.star.Time, Mean.star.Radius * 215.09, color = 'r')
+  
+  # Luminosity
+  ax[0].axhline(0.00165, color = 'r', ls = '--')
+  ax[0].axhspan(0.00165 - 0.00015, 0.00165 + 0.00015, color = 'r', alpha = 0.3)
+  ax[0].set_yscale('log')
+  ax[0].set_ylabel('Luminosity (L$_\odot$)')
+  ax[0].set_xlabel('Time (years)')
+  ax[0].set_xscale('log')
+  ax[0].set_ylim(0.9e-3,1.1e-1)
+
+  # XUV Luminosity
+  ax[1].axhline(10 ** (-6.4), color = 'r', ls = '--')
+  ax[1].axhspan(10 ** (-6.4 - 0.3), 10 ** (-6.4 + 0.3), color = 'r', alpha = 0.3)
+  ax[1].set_yscale('log')
+  ax[1].set_ylabel('XUV Luminosity (L$_\odot$)')
+  ax[1].set_xlabel('Time (years)')
+  ax[1].set_xscale('log')
+
+  # Radius
+  ax[2].axhline(0.1410, color = 'r', ls = '--')
+  ax[2].axhspan(0.1410 - 0.0070, 0.1410 + 0.0070, color = 'r', alpha = 0.3)
+  ax[2].set_ylabel('Radius (R$_\odot$)')
+  ax[2].set_xlabel('Time (years)')
+  ax[2].set_xscale('log')
+
+  # Save
+  fig.savefig(os.path.join(PATH, 'stellarevol.pdf'), bbox_inches = 'tight')
+  
 def Submit(name = 'w5h0m0', nsteps = 5000, nwalk = 40, nburn = 500, nsamples = 1000,
            oceans = 5., hydrogen = 0., epsilon = 0.15, magma = False, 
            walltime = 10, nodes = 2, ppn = 16, mpn = 250):
@@ -1020,29 +1082,33 @@ def PlotFigures():
   '''
   
   # Plot the stellar posteriors
-  print("Plotting figure 1/6...")
+  print("Plotting figure 1/7...")
   Posteriors('w5h0m0')
   
   # Plot the planet posteriors varying over epsilon
-  print("Plotting figure 2/6...")
+  print("Plotting figure 2/7...")
   Outputs(['w5h0m0', 'w5h0m0e05', 'w5h0m0e01'], labels = ['a', 'b', 'c'], figname = 'planet_epsilon')
   
   # Plot the planet posteriors varying over hydrogen
-  print("Plotting figure 3/6...")
+  print("Plotting figure 3/7...")
   Outputs(['w5h01m0', 'w5h001m0', 'w5h0001m0'], labels = ['a', 'b', 'c'], figname = 'planet_hydrogen', 
           wsplit = [True, True, False], osplit = [True, True, False])
   
   # Plot the planet posteriors for instant O2 absorption
-  print("Plotting figure 4/6...")
+  print("Plotting figure 4/7...")
   Outputs(['w5h0m1'], figname = 'planet_magma', wsplit = True, osplit = False)
   
   # Plot the planet posteriors varying epsilon for 10 oceans
-  print("Plotting figure 5/6...")
+  print("Plotting figure 5/7...")
   Outputs(['w10h0m0', 'w10h0m0e05', 'w10h0m0e01'], labels = ['a', 'b', 'c'], figname = 'planet_epsilon10', omax = 2000)
   
   # Plot the big corner plot
-  print("Plotting figure 6/6...")
+  print("Plotting figure 6/7...")
   PlotXUVCorner('w5h0m0e01')
+  
+  # Plot the stellar evolution
+  print("Plotting figure 7/7...")
+  PlotStellarEvol('w5h0m0')
   
 if __name__ == '__main__':
   '''

@@ -666,6 +666,21 @@ void ReadRefHeight(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dRefHeight = options->dDefault;
 }
 
+void ReadSpinUpTol(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dSpinUpTol = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSpinUpTol = options->dDefault;
+}
+
 void ReadAblateFF(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -1097,6 +1112,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ABLATEFF].iType = 2;  
   options[OPT_ABLATEFF].iMultiFile = 1;   
   fnRead[OPT_ABLATEFF] = &ReadAblateFF;
+  
+  sprintf(options[OPT_SPINUPTOL].cName,"dSpinUpTol");
+  sprintf(options[OPT_SPINUPTOL].cDescr,"Tolerance for spin up phase");
+  sprintf(options[OPT_SPINUPTOL].cDefault,"0.1 deg C");
+  options[OPT_SPINUPTOL].dDefault = 0.1;
+  options[OPT_SPINUPTOL].iType = 2;  
+  options[OPT_SPINUPTOL].iMultiFile = 1;   
+  fnRead[OPT_SPINUPTOL] = &ReadSpinUpTol;
   
 }
 
@@ -1626,7 +1649,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       daRunningMean = malloc((RunLen+1)*sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean = 0;
-      while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > 0.1 || count <= 2*RunLen) {
+      while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > body[iBody].dSpinUpTol || count <= 2*RunLen) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body,iBody); 
         MatrixSeasonal(body,iBody);

@@ -54,6 +54,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICEDEPRATE      1920
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT         1922
+#define OPT_SPINUPTOL       1923
+
 
 //#define OPT_LANDGEOM      1940
 #define OPT_HEATCAPLAND     1942

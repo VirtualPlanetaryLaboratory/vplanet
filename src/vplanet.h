@@ -739,6 +739,7 @@ typedef struct {
   int bSkipSeas;             /**< Ann model will be used if in snowball state */
   int bSkipSeasEnabled;      /**< Allow ann model to be used if in snowball state? */
   int bSnowball;             /**< Is planet in snowball state (oceans are frozen)? */
+  double dSpinUpTol;         /**< Tolerance for mean global temp change during spin up */
   double dSurfAlbedo;        /**< Base surface albedo used in ann model */
   double dTGlobal;           /**< Global mean temperature at surface */
   double dTGlobalInit;       /**< Initial estimate of global surface temperature */

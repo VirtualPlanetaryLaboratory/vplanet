@@ -343,7 +343,7 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 
     // Is body 1 a star? If not, not undergoing stellar evolution
     if(body[1].bStellar) {
-      
+
       iaBody[0] = 1;
       edot += 0.0; // No effect produces a de/dt term
 

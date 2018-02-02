@@ -13,7 +13,7 @@ dRadGyra      0.45             # Radius of gyration (moment of inertia constant)
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
-dTidalQ		1.0e5   	# Tidal phase lag
+dTidalQ		1.0e6   	# Tidal phase lag
 dK2		0.5		# Love number of degree 2
 dMaxLockDiff    0.01
 sTideModel	p2		# Tidal model, p2=CPL, t8=CTL

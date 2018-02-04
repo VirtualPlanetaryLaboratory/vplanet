@@ -9,12 +9,13 @@ dRotPeriod    -0.5
 dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
-dOrbPeriod  -4.0
-dEcc        0.15
+dOrbPeriod  -7.0
+dEcc        0.6
 
 # EQTIDE Parameters
-dTidalQ		1.0e6		# Tidal phase lag
-dK2		0.5		# Love number of degree 2
+dTidalTau       3.17e-10
+#dTidalQ		1.0e6		# Tidal phase lag
+#dK2		0.5		# Love number of degree 2
 dMaxLockDiff    0.01
 saTidePerts	primary   	# Body name(s) of tidal perturbers
 

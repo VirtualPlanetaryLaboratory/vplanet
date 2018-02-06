@@ -2666,7 +2666,6 @@ double fdEqRotRate(BODY body,double dMeanMotion,double dEcc,int iTideModel,int b
   assert(0);
 }
 
-// dflemin3: dRadius -> dTidalRadius
 void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
@@ -2922,7 +2921,6 @@ double fdTidePowerOcean(BODY *body, int iBody) {
 }
 
 /* Surface Energy Flux due to Ocean Tides */
-// dflemin3: dRadius -> dTidalRadius
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
   // Total Ocean Tide power / surface area of body
   return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
@@ -2947,7 +2945,6 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
   iEpsilon[9]=fiSign(dRotRate);
 }
 
-// dflemin3: dRadius -> dTidalRadius
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
   /* Note that this is different from Heller et al (2011) because
@@ -3124,11 +3121,9 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
      rate and override this derivative. XXX This derivative should
      be removed from the update matrix in that case*/
 
-// dflemin3: dRadius -> dTidalRadius
   return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dTidalRadius*body[iB0].dTidalRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
 }
 
-// dflemin3: dRadius -> dTidalRadius
 double fdCPLDoblDt(BODY *body,int *iaBody) {
   int iOrbiter,iB0=iaBody[0],iB1=iaBody[1];
   double foo;
@@ -3199,7 +3194,7 @@ double fdCTLTidePower(BODY *body,int iBody) {
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     if (iBody == 0)
-      iOrbiter = iPert;
+      iOrbiter = body[iBody].iaTidePerts[iPert];
     else
       iOrbiter = iBody;
     iIndex = body[iBody].iaTidePerts[iPert];
@@ -3231,7 +3226,7 @@ double fdCTLEqRotRate(double dEcc,double dObliquity,double dMeanMotion) {
 }
 
 void fdaCTLZ(BODY *body,double dSemi,int iBody,int iPert) {
-  body[iBody].dTidalZ[iPert] = 3*BIGG*BIGG*body[iBody].dK2*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dRadius,5)*body[iBody].dTidalTau/pow(dSemi,9);
+  body[iBody].dTidalZ[iPert] = 3*BIGG*BIGG*body[iBody].dK2*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dTidalRadius,5)*body[iBody].dTidalTau/pow(dSemi,9);
  }
 
 /*
@@ -3278,7 +3273,7 @@ double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   dSum += body[iaBody[1]].dTidalZ[iaBody[0]]*(cos(body[iaBody[1]].dObliquity)*body[iaBody[0]].dTidalF[iaBody[1]][1]*body[iaBody[1]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],12)*body[iaBody[0]].dMeanMotion) - body[iaBody[0]].dTidalF[iaBody[1]][0]/pow(body[iaBody[0]].dTidalBeta[iaBody[1]],15));
 
 
-  return 2*body[iaBody[0]].dSemi*body[iaBody[1]].dSemi/(BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
+  return 2*body[iaBody[0]].dSemi*body[iaBody[0]].dSemi/(BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }
 
 double fdCTLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
@@ -3304,7 +3299,7 @@ double fdCTLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
   else
     iOrbiter = iaBody[0];
 
-  double tmp = body[iaBody[0]].dTidalZ[iaBody[1]]/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion);
+  double tmp = body[iaBody[0]].dTidalZ[iaBody[1]]/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dTidalRadius*body[iaBody[0]].dTidalRadius*body[iOrbiter].dMeanMotion);
   tmp *= (2*cos(body[iaBody[0]].dObliquity)*body[iaBody[0]].dTidalF[iaBody[1]][1]/pow(body[iaBody[0]].dTidalBeta[iaBody[1]],12) - (1+cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dObliquity))*body[iaBody[0]].dTidalF[iaBody[1]][4]*body[iaBody[0]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],9)*body[iOrbiter].dMeanMotion));
   return tmp;
 }
@@ -3321,7 +3316,7 @@ double fdCTLDoblDt(BODY *body ,int *iaBody) {
 
   int iBody=iaBody[0];
 
-  double tmp = (body[iaBody[0]].dTidalZ[iaBody[1]]*sin(body[iaBody[0]].dObliquity))/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius*body[iOrbiter].dMeanMotion*body[iaBody[0]].dRotRate);
+  double tmp = (body[iaBody[0]].dTidalZ[iaBody[1]]*sin(body[iaBody[0]].dObliquity))/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dTidalRadius*body[iaBody[0]].dTidalRadius*body[iOrbiter].dMeanMotion*body[iaBody[0]].dRotRate);
   tmp *= ((cos(body[iaBody[0]].dObliquity) - body[iaBody[0]].dTidalChi[iaBody[1]]/body[iaBody[0]].dTidalBeta[iaBody[1]])*body[iaBody[0]].dTidalF[iaBody[1]][4]*body[iaBody[0]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],9)*body[iOrbiter].dMeanMotion) - 2*body[iaBody[0]].dTidalF[iaBody[1]][1]/pow(body[iaBody[0]].dTidalBeta[iaBody[1]],12));
   return tmp;
 }

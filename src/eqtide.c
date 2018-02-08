@@ -852,11 +852,9 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *
       iOrbiter = iBody;
 
     dMeanMotion=fdSemiToMeanMotion(body[iOrbiter].dSemi,body[iBody].dMass+body[body[iBody].iaTidePerts[0]].dMass);
-    //XXX Is dEccSq set here??
     body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
   }
-  else // Not tidally locked to begin with
-  {
+  else { // Not tidally locked to begin with
     body[iBody].bTideLock = 0;
   }
   CalcXYZobl(body,iBody);
@@ -1988,7 +1986,11 @@ void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-  *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
+  // To CPL, or to CTL? That is the question
+  if(control->Evolve.iEqtideModel == CPL)
+    *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
+  else
+    *dTmp = fdFreqToPer(fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2008,7 +2010,13 @@ void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-  *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
+  if (control->Evolve.iEqtideModel == CPL) {
+    *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
+  }
+  else {
+    fprintf(stderr,"ERROR: Can only use discrete rotation for CPL model!\n");
+    exit(1);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2048,8 +2056,11 @@ void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-
-  *dTmp = fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
+    // To CPL, or to CTL? That is the question
+    if(control->Evolve.iEqtideModel == CPL)
+      *dTmp = fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
+    else
+      *dTmp = fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2069,7 +2080,13 @@ void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-  *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
+  if(control->Evolve.iEqtideModel == CPL) {
+    *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
+  }
+  else {
+    fprintf(stderr,"ERROR: Can only use discrete rotations with the CPL model!\n");
+    exit(1);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2767,16 +2784,6 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     if (evolve->bForceEqSpin[iBody])
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
-    /*
-    fdaCTLF(body,body[iOrbiter].dEcc,iBody,iPert);
-    fdaCTLZ(body,body[iOrbiter].dSemi,iBody,iPert);
-    body[iBody].dTidalBeta[iPert] = fdCTLBeta(body[iOrbiter].dEcc);
-    fdaChi(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iPert);
-    */
-
-    // body[iBody].dTidalF[iPert][0]
-    // BODY *body,double dEcc,int iBody,int iPert
-
     if (iBody > 0)
       PropsAuxOrbiterCTL(body,update,iBody);
   }
@@ -2859,8 +2866,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
         iOrbiter = body[iBody].iaTidePerts[0];
 
     /* If tidally locked, assign equilibrium rotational frequency? */
-    if (evolve->bForceEqSpin[iBody])
-    {
+    if (evolve->bForceEqSpin[iBody]) {
       body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
     }
     /* Tidally Locked? */
@@ -3222,6 +3228,7 @@ double fdCTLTidePowerEq(BODY body,double dEcc) {
 double fdCTLEqRotRate(double dEccSq ,double dObliquity,double dMeanMotion) {
   double dBeta,f2,f5;
 
+  // This model likes e, but CPL/other equations take e^2, so sqrt here
   double dEcc = sqrt(dEccSq);
 
   dBeta=fdCTLBeta(dEcc);

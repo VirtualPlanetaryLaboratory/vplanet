@@ -852,7 +852,7 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *
       iOrbiter = iBody;
 
     dMeanMotion=fdSemiToMeanMotion(body[iOrbiter].dSemi,body[iBody].dMass+body[body[iBody].iaTidePerts[0]].dMass);
-    body[iBody].dRotRate = fdEqRotRate(body[iBody],dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+    body[iBody].dRotRate = fdEqRotRate(body,iBody,dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
   }
   else { // Not tidally locked to begin with
     body[iBody].bTideLock = 0;
@@ -1966,7 +1966,7 @@ void WriteEqRotPer(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-  *dTmp = fdFreqToPer(fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
+  *dTmp = fdFreqToPer(fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1990,7 +1990,7 @@ void WriteEqRotPerCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   if(control->Evolve.iEqtideModel == CPL)
     *dTmp = fdFreqToPer(fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
   else
-    *dTmp = fdFreqToPer(fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
+    *dTmp = fdFreqToPer(fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iBody].dObliquity,body[iOrbiter].dEccSq));
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2036,7 +2036,7 @@ void WriteEqRotRate(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
 
-  *dTmp = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
+  *dTmp = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,control->Evolve.iEqtideModel,control->Evolve.bDiscreteRot);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2060,7 +2060,7 @@ void WriteEqRotRateCont(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     if(control->Evolve.iEqtideModel == CPL)
       *dTmp = fdCPLEqRotRateCont(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
     else
-      *dTmp = fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
+      *dTmp = fdCTLEqRotRate(body[iOrbiter].dMeanMotion,body[iBody].dObliquity,body[iOrbiter].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2672,12 +2672,12 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
 
 /************* EQTIDE Functions ************/
 
-double fdEqRotRate(BODY body,double dMeanMotion,double dEccSq ,int iTideModel,int bDiscreteRot) {
+double fdEqRotRate(BODY *body, int iBody, double dMeanMotion,double dEccSq ,int iTideModel,int bDiscreteRot) {
 
   if (iTideModel == CPL)
     return fdCPLEqRotRate(dEccSq,dMeanMotion,bDiscreteRot);
   else if (iTideModel == CTL)
-    return fdCTLEqRotRate(dEccSq,body.dObliquity,dMeanMotion);
+    return fdCTLEqRotRate(dEccSq,body[iBody].dObliquity,dMeanMotion);
 
   /* Whoops! */
   assert(0);
@@ -2690,7 +2690,7 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdateVariable*** fnUpdate, UPDATE *update) {
   double dEqRate,dDiff;
 
-  dEqRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+  dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
   dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
 
@@ -2749,7 +2749,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody])
-      body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+      body[iBody].dRotRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     fiaCPLEpsilon(body[iBody].dRotRate,body[iOrbiter].dMeanMotion,body[iBody].iTidalEpsilon[iIndex]);
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
@@ -2782,7 +2782,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody])
-      body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+      body[iBody].dRotRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
     if (iBody > 0)
       PropsAuxOrbiterCTL(body,update,iBody);
@@ -2867,7 +2867,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody]) {
-      body[iBody].dRotRate = fdEqRotRate(body[iBody],body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+      body[iBody].dRotRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
     }
     /* Tidally Locked? */
     else {

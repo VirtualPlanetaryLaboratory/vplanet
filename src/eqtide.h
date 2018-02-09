@@ -208,7 +208,7 @@ void LogBodyEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 void PropertiesEqtide(BODY*,int);
 void fdaChi(BODY*,double,double,int,int);
-double fdEqRotRate(BODY,double,double,int,int);
+double fdEqRotRate(BODY*,int,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

@@ -380,7 +380,7 @@ double fdRadToMass_Sotin07(double dRadius) {
 
  @return Body's radius as provided by appropriate relationship
 */
-double fdMassToRad(double dMass,double iRelation) {
+double fdMassToRad(double dMass, int iRelation) {
 
   if (iRelation == REIDHAWLEY)
     return fdMassToRad_ReidHawley(dMass);
@@ -394,8 +394,8 @@ double fdMassToRad(double dMass,double iRelation) {
   /* Need to add more! */
 
   /* Whoops! */
-  fprintf(stderr,"ERROR: Unknown mass-radius relationship.\n")
-  fprintf(stderr,"Mass: %.3e, Relationship: %d\n",dMass,iRelation)
+  fprintf(stderr,"ERROR: Unknown mass-radius relationship.\n");
+  fprintf(stderr,"Mass: %.3e, Relationship: %d\n",dMass,iRelation);
   exit(EXIT_UNITS);
 }
 

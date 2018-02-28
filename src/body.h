@@ -68,8 +68,8 @@ double fdRotKinEnergy(double,double,double,double);
 
 double fdDensityMassToRadius(double,double);
 double fdMassFromRadiusDensity(double,double);
-double fdMassToRad(double,double);
-double fdRadToMass(double,double);
+double fdMassToRad(double,int);
+double fdRadToMass(double,int);
 double fdRadiusFreqToRotVel(double,double);
 double fdRadiusRotVelToFreq(double,double);
 double fdDensityMassToRadius(double,double);

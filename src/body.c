@@ -514,29 +514,30 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 
    @param dMassEnv Envelope's mass
    @param dGravAccel Body's gravitational acceleration
-   @param dRadSurf ???
-   @param dPressXUV ???
+   @param dRadSurf Surface Radius of rocky core
+   @param dPresXUV Pressure at base of thermosphere
    @param dScaleHeight Atmospheric scale height
-   @param iToggle ???
-   @param P pressure at surface due to envelope
-   @param Rxuv radius from center of planet where optical depth of XUV is unity
+   @param dPresSurf pressure at surface due to envelope
+   @param dRadXUV radius from center of planet where optical depth of XUV is unity
 
    */
-double fdLehmerRadius(double dMassEnv,double dGravAccel,double dRadSurf,double dPressXUV,double dScaleHeight,int iToggle) {
-	double P;
-	double Rxuv;
 
-	P = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
-	Rxuv = dRadSurf * dRadSurf / (dScaleHeight * log(dPressXUV/P) + dRadSurf);
-	if (Rxuv <= dRadSurf) {
-		Rxuv = dRadSurf;
+
+double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
+	double dRadXUV;
+
+	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
+	if (dRadXUV <= dRadSurf) {
+		dRadXUV = dRadSurf;
 	}
-	if (iToggle == 1) {
-		return P;
-	}
-	else {
-		return Rxuv;
-  }
+  return dRadXUV;
+}
+
+double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
+	double dPresSurf;
+
+	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+  return dPresSurf;
 }
 
 /**

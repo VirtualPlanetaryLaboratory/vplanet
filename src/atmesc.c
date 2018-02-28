@@ -1527,9 +1527,9 @@ double fdInsolation(BODY *body, int iBody, int iXUV) {
 
     // Body orbits two stars
     if (iXUV)
-      flux = fdFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
+      flux = fndFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
     else
-      flux = fdFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
+      flux = fndFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
 
   } else {
 

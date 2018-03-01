@@ -691,13 +691,11 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
 
-  // For circumbinary planets, assume no Ktide enhancement (ehhhhh sketchy)
-  if(body[iBody].bBinary && body[iBody].iBodyType == 0)
-  {
+  // For circumbinary planets, assume no Ktide enhancement
+  if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
   }
-  else
-  {
+  else {
       if (xi > 1)
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       else

@@ -342,7 +342,7 @@ typedef struct {
   double dZobl;          /**< cos(obliq) */
   double *daLRot;        /**< Spin angular momentum vector */
   double *daLRotTmp;     /**< Temp copy of spin angular momentum vector */
-  int bForcePrecRate;    /**< Set precession rate to a fixed value */ 
+  int bForcePrecRate;    /**< Set precession rate to a fixed value */
   double dPrecRate;      /**< Value to set fixed precession rate to */
   int bCalcDynEllip;     /**< Calc dyn ellipticity from spin, radius, mass, inertia? */
   int bRelaxDynEllip;    /**< shape of planet relaxes when spun down */
@@ -672,7 +672,7 @@ typedef struct {
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
- 
+
   double dAblateFF;          /**< Scaling factor for ice ablation rate */
   int bAccuracyMode;         /**< This forces EBM to re-invert matrix every time step */
   double dAlbedoGlobal;      /**< Global average albedo (Bond albedo) */
@@ -695,6 +695,7 @@ typedef struct {
   double dFluxOutGlobal;     /**< Global mean of outgoing flux */
   double dFluxOutGlobalTmp;  /**< Copy of global mean outgoing flux */
   int bForceObliq;           /**< Force obliquity to evolve sinusoidally */
+  int bForceEcc;           /**< Force eccentricity to evolve sinusoidally */
   double dFrzTSeaIce;        /**< Freezing temperature of sea water */
   int iGeography;            /**< Type of geography to use (uni3 or modn) */
   int bHadley;               /**< Use Hadley circ in tropics when calc'ing diffusion? */
@@ -723,6 +724,9 @@ typedef struct {
   double dObliqAmp;          /**< Amplitude of forced obliquity oscillation */
   double dObliqPer;          /**< Period of force obliquity oscillation */
   double dObliq0;            /**< Start obliquity for forced oscillation */
+  double dEccAmp;            /**< Amplitude of forced eccentricity oscillation */
+  double dEccPer;            /**< Period of force eccentricity oscillation */
+  double dEcc0;              /**< Start eccentricity for forced oscillation */
   int iOLRModel;             /**< OLR fit (use with bCalcAB=1) from Kasting or Spiegel */
   double dpCO2;              /**< Partial pressure of CO2 (only if bCalcAB = 1) */
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
@@ -796,7 +800,7 @@ typedef struct {
   double *daDIceHeightDy;    /**< Gradient of ice height */
   double *daDiffusionSea;    /**< Diffusion coefficient for seasonal model */
   double *daDivFluxAvg;      /**< Divergence of flux averaged over orbit */
-  double **daDivFluxDaily;   /**< Daily values of divergence of flux */ 
+  double **daDivFluxDaily;   /**< Daily values of divergence of flux */
   double *daEnergyResL;      /**< Energy residuals on land */
   double *daEnergyResW;      /**< Energy residuals over water */
   double *daEnerResLAnn;     /**< Annually averaged energy residuals on land */
@@ -966,7 +970,7 @@ typedef struct {
   double *daT;            /**< Scaling factor for inc eigenvectors */
   int *iaRowswap;         /**< Row interchange array used in eigenvector routine */
   double **daAcopy;       /**< Copy of eigenvalue matrix for eccentricity */
-  double *daScale;        /**< Used in matrix inversion */ 
+  double *daScale;        /**< Used in matrix inversion */
   double *daLOrb;         /**< Total angular momentum of system */
 
   double dTotEnInit;      /**< System's Initial Energy */

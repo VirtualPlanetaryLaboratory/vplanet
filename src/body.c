@@ -1,14 +1,15 @@
-/******************* BODY.C ***********************/
-/*
- * Rory Barnes, Wed May  7 14:40:51 PDT 2014
- *
- * This file contains subroutines that describe
- * physical properties of any body. This include
- * conversions between the option parameter (a property
- * that may be used at input) and the system parameter
- * (the property in the BODY struct that is always
- * up-to-date). If unsure between here and orbit.c, put
- * here. Also includes mathemtatical relationships
+/**
+  @file body.c
+
+  @brief Relationships between parameters associated with individual bodies.
+
+  This file contains subroutines that describe physical properties of
+  any body. This include conversions between the option parameter (a property
+  that may be used at input) and the system parameter (the property in the BODY
+  struct that is always up-to-date). If unsure between here and orbit.c, put
+  here. Also includes mathemtatical relationships.
+
+  Rory Barnes, Wed May  7 14:40:51 PDT 2014
 */
 
 #include <stdio.h>
@@ -23,8 +24,14 @@
  * Mathematical Relationships
  */
 
+/**
+  Calculate the sign of a number
 
-// Return the sign (-1,0, or 1).
+  @param dValue The number whose sign is to be calculated
+  @param iSign The sign of the number
+
+  @return the sign (-1,0, or 1).
+*/
 int fiSign(double dValue) {
   int iSign;
 
@@ -36,12 +43,28 @@ int fiSign(double dValue) {
   return iSign;
 }
 
-// Covnert a rotation rate derivative to a period derivative
+/**
+  Calcaulte the derivative of a period.
+
+  @param dRotRate The rotational frequency
+  @param dDrotrateDt The time derivative of the rotational frequency
+
+  @return The time derivative of the rotational frequency
+*/
 double fdDPerDt(double dRotRate,double dDrotrateDt) {
     return -2*PI*dDrotrateDt/(dRotRate*dRotRate);
 }
 
-// Caclulate the characteristic timescale of a variable (x/(dx/dt))
+/**
+  Caclulate the characteristic timescale for a variable to change that is
+  controlled by only 1 module.
+
+  @param dVar The value of the variable
+  @param dDeriv The value of the variable's time derivative
+
+  @return The timescale of the variable's change: |x/(dx/dt)|. If the
+  derivative is 0, return 0.
+*/
 double fdTimescale(double dVar,double dDeriv) {
   if (dDeriv != 0)
     return fabs(dVar/dDeriv);
@@ -49,7 +72,18 @@ double fdTimescale(double dVar,double dDeriv) {
     return 0;
 }
 
-// Timescale for multi-module process (x/Sum(dx/dt))
+/**
+Caclulate the characteristic timescale for a variable to change that is
+controlled by multiple processes.
+
+@param dVar The value of the variable
+@param dDeriv Array of the values of the variable's time derivatives
+@param iNum The number of derivatives
+@param dTime Dummy variable to keep track of the sum of the derivative
+@param iPert Index of the perturbing process
+
+@return The timescale of the variable's change: |x/Sum(dx/dt)|
+*/
 double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
   double dTime;
   int iPert;
@@ -63,12 +97,22 @@ double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
   return dTime;
 }
 
-/* Convert an angular frequency to a period */
+/**
+ Convert an angular frequency to a period
+
+ @param dFreq The frequency
+ @return The period
+*/
 double fdFreqToPer(double dFreq) {
   return 2*PI/dFreq;
 }
 
-/* Convert a period to an angular frequency */
+/**
+  Convert a period to an angular frequency
+
+  @param dPeriod The period
+  @return The frequency
+*/
 double fdPerToFreq(double dPeriod) {
   return 2*PI/dPeriod;
 }
@@ -77,49 +121,116 @@ double fdPerToFreq(double dPeriod) {
  * Physical Relationships
  */
 
-// A body's gravitational potential energy
+/**
+  Calculate a body's gravitational potential energy
+
+  @param dMass The body's mass
+  @param dRadius The body's radius
+
+  @return The body's potential energy
+*/
 double fdBodyPotEnergy(double dMass, double dRadius) {
   /* ALPHA_STRUCT  is structural constant for spherical mass distribution
      potential energy (E_pot = -ALPHA*BIGG*M^2/R = 0.6), see vplanet.h. */
   return -ALPHA_STRUCT*BIGG*dMass*dMass/dRadius;
 }
 
-// A body's rotational angular momentum
+/**
+  Calculate a body's rotational angular momentum
+
+  @param dRadGyra Body's radius of gyration
+  @param dMass Body's mass
+  @param dRad Body's radius
+  @param dOmega Body's rotational frequency
+
+  @return Body's rotational angular momentum
+*/
 double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
   return dRadGyra*dRadGyra*dMass*dRad*dRad*dOmega;
 }
 
-// A body's rotational kinetic energy
+/**
+  Calculate a body's rotational kinetic energy
+
+  @param dMass Body's mass
+  @param dRadius Body's radius
+  @param dRadyGyra Body's radius of gyration
+  @param dOmega Body's rotational frequency
+
+  @return Body's rotational jinetic energy
+*/
 double fdRotKinEnergy(double dMass,double dRadius,double dRadGyra,double dOmega) {
   return 0.5*dRadGyra*dRadGyra*dMass*dRadius*dRadius*dOmega*dOmega;
 }
 
-// Convert a rotational frequency to a rotational velocity
+/**
+  Convert a rotational frequency to a rotational velocity
+
+  @param dRadius Body's radius
+  @param dFreq Body's rotational frequency
+
+  @return Body's rotational velocity
+*/
 double fdRadiusFreqToRotVel(double dRadius,double dFreq) {
   return dRadius*dFreq;
 }
 
-// Convert a rotational velocity to a frequency
+/**
+  Convert rotational velocity to rotational frequency
+
+  @param dRotVel Body's rotational velocity
+  @param dRadius Body's radius
+
+  @return Body's rotational frequency
+*/
 double fdRadiusRotVelToFreq(double dRotVel,double dRadius){
   return dRotVel/dRadius;
 }
 
-// Calculate radius from density and mass
+/**
+  Calculate radius from density and mass
+
+  @param dDensity Body's bulk density
+  @param dMass Body's mass
+
+  @return Body's Radius
+*/
 double fdDensityMassToRadius(double dDensity,double dMass) {
   return pow( (3*dDensity/(4*PI*dMass)), (1./3) );
 }
 
-// Calculate Mass from Radius and density
+/**
+  Calculate Mass from Radius and density
+
+  @param dRadius Body's radius
+  @param dDensity Body's bulk density
+
+  @return Body's mass
+*/
 double fdMassFromRadiusDensity(double dRadius,double dDensity){
   return 4*PI*pow(dRadius,3)/(3*dDensity);
 }
 
-// Calculate rotational velocity from radius and rotation frequency
+/**
+  Calculate rotational velocity from radius and rotation frequency
+
+  @param dRadius Body's radius
+  @param dRotRate Body's rotational frequency
+
+  @return Body's rotational velocity
+*/
 double fdRotVel(double dRadius,double dRotRate) {
   return dRadius*dRotRate;
 }
 
-// Calculate density for a uniform sphere
+/**
+ Calculate density for a uniform sphere
+
+ @param dMass Body's mass
+ @param Body's radius
+
+ @return Body's bulk density
+*/
 double fdSphereDensity(double dMass,double dRadius) {
   return 4*PI*dMass/pow(dRadius,3)/3;
 }
@@ -128,10 +239,16 @@ double fdSphereDensity(double dMass,double dRadius) {
  * Published Mass - Radius Relationships
  */
 
-/* Stellar mass-radius relationships from New Light on
- * Dark Stars, Table 4.1.
- * See Barnes et al. (2013) Astrobiology 13:225-250.  */
+/**
+  Stellar mass-radius relationship from New Light on Dark Stars, Table 4.1.
+  See Barnes et al. (2013) Astrobiology 13:225-250.
 
+  @param dRadius Stellar radius
+  @param x Log base-10 of the stellar radius in solar units
+  @param y Log base-10 of the stellar mass in solar units
+
+  @return Stellar Mass
+*/
 double fdRadToMass_ReidHawley(double dRadius) {
   double x,y;
 
@@ -141,6 +258,16 @@ double fdRadToMass_ReidHawley(double dRadius) {
     return pow(10,y)*MSUN;
 }
 
+/**
+  Stellar mass-radius relationship from New Light on Dark Stars, Table 4.1.
+  See Barnes et al. (2013) Astrobiology 13:225-250.
+
+  @param dMass Stellar mass
+  @param x Log base-10 of the stellar radius in solar units
+  @param y Log base-10 of the stellar mass in solar units
+
+  @return Stellar Radius
+*/
 double fdMassToRad_ReidHawley(double dMass) {
   double x,y;
 
@@ -150,10 +277,13 @@ double fdMassToRad_ReidHawley(double dMass) {
   return pow(10,y)*RSUN;
 }
 
-/* Stellar mass-radius relationship from
- * Gorda, S. Yu. & Svechnikov, M. A. 1999, Astronomy
- * Reports, 43, 521-525 */
+/**
+  Stellar mass-radius relationship from Gorda, S. Yu. & Svechnikov, M. A. 1999,
+  Astronomy Reports, 43, 521-525.
 
+  @param dMass Stellar Mass
+  @return Stellar radius
+*/
 double fdMassToRad_GordaSvech99(double dMass) {
   dMass = log10(dMass/MSUN);
 
@@ -163,9 +293,16 @@ double fdMassToRad_GordaSvech99(double dMass) {
     return pow(10,(0.1 + 1.03*log10(dMass)))*RSUN;
 }
 
-/* Reverse fit from
- * Barnes et al. (2013) Astrobiology 13:225-250.  */
+/**
+  Stellar mass-radius relationship from Gorda, S. Yu. & Svechnikov, M. A. 1999,
+  Astronomy Reports, 43, 521-525. Reverse fit from Barnes et al. (2013)
+  Astrobiology 13:225-250.
 
+  @param dRadius Stellar Radius
+  @param x Log base-10 of the stellar radius in solar units
+  @param y Log base-10 of the stellar mass in solar units
+  @return Stellar mass
+*/
 double fdRadToMass_GordaSvech99(double dRadius) {
     double x,y;
 
@@ -176,9 +313,15 @@ double fdRadToMass_GordaSvech99(double dRadius) {
 }
 
 
-/* Stellar mass-radius relationships from
- * Bayless, A.J. & Orosz, J.A. 2006, ApJ, 651, 1155-1165 */
+/**
+  Stellar mass-radius relationship from Bayless, A.J. & Orosz, J.A. 2006,
+  ApJ, 651, 1155-1165.
 
+  @param dMass Stellar Mass
+  @param dRadius Stellar radius is solar units
+
+  @return Stellar radius
+*/
 double fdMassToRad_BaylessOrosz06(double dMass) {
     double dRadius;
 
@@ -188,6 +331,15 @@ double fdMassToRad_BaylessOrosz06(double dMass) {
     return dRadius*RSUN;
 }
 
+/**
+  Stellar mass-radius relationship from Bayless, A.J. & Orosz, J.A. 2006,
+  ApJ, 651, 1155-1165.
+
+  @param dRadius Stellar Radius
+  @param dMasss Stellar masss is solar units
+
+  @return Stellar masss
+*/
 double fdRadToMass_BaylessOrosz06(double dRadius) {
     double dMass;
 
@@ -198,19 +350,37 @@ double fdRadToMass_BaylessOrosz06(double dRadius) {
 }
 
 
-/* Terrestrial planet mass-radius relationships from
- * Sotin et al 2007, Icarus, 191, 337-351. */
+/**
+  Terrestrial planet mass-radius relationship from Sotin et al 2007, Icarus,
+  191, 337-351.
 
+  @param dMass Planetary mass
+  @return Planetary radius
+*/
 double fdMassToRad_Sotin07(double dMass) {
     return pow(dMass/MEARTH,0.272)*REARTH;
 }
 
+/**
+  Terrestrial planet mass-radius relationship from Sotin et al 2007, Icarus,
+  191, 337-351.
+
+  @param dRadius Planetary radius
+  @return Planetary mass
+*/
 double fdRadToMass_Sotin07(double dRadius) {
     return pow(dRadius/REARTH,3.6765)*MEARTH;
 }
 
-// Assign Radius based on mass and published relationship
-double fdMassToRad(double dMass,double iRelation) {
+/**
+ Assign Radius based on mass and published relationship
+
+ @param dMass Body's mass
+ @param iRelation ID of mass-radius relationship to use
+
+ @return Body's radius as provided by appropriate relationship
+*/
+double fdMassToRad(double dMass,int iRelation) {
 
   if (iRelation == REIDHAWLEY)
     return fdMassToRad_ReidHawley(dMass);
@@ -224,11 +394,13 @@ double fdMassToRad(double dMass,double iRelation) {
   /* Need to add more! */
 
   /* Whoops! */
-  return 1./0;
+  fprintf(stderr,"ERROR: Unknown mass-radius relationship.\n");
+  fprintf(stderr,"Mass: %.3e, Relationship: %d\n",dMass,iRelation);
+  exit(EXIT_UNITS);
 }
 
 // Assign mass from radius and published relationship
-double fdRadToMass(double dMass,double iRelation) {
+double fdRadToMass(double dMass,int iRelation) {
 
   if (iRelation == REIDHAWLEY)
     return fdRadToMass_ReidHawley(dMass);
@@ -245,7 +417,12 @@ double fdRadToMass(double dMass,double iRelation) {
   return 1./0;
 }
 
-// Copy the body struct from src to dest
+/**
+ Copy the body struct from src to dest
+
+ @param dest Struct to receive the src
+ @param src Struct that contains original information
+ */
 void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   int iBody,iModule;
 
@@ -283,15 +460,36 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   }
 }
 
-// Calculate rotational variables from obliquity and precession angle
+/**
+ Calculate rotational variables from obliquity and precession angle
+
+ @param body Body struct
+ @param iBody Index of the body struct for the body's whose rotational spins
+  is to be calculated.
+  */
 void CalcXYZobl(BODY *body, int iBody) {
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
 }
 
-/* Calculate equilibrium shape of planet using scaling laws and solar system
-   values. If the value is less then Venus', return Venus'. */
+/**
+ Calculate equilibrium shape of planet using scaling laws and solar system
+   values. If the value is less then Venus', return Venus'.
+
+   @param body BODY struct
+   @param iBody Index of the body struct for the body's whose equilibrium shape
+    is to be calculated.
+   @param J2Earth Earth's current oblateness
+   @param J2Venus Venus' current oblateness
+   @param CEarth Earth's current moment of inertia?
+   @param nuEarth ???
+   @param EdEarth ???
+   @param dTmp ???
+   @param dDynEllip Dynamical ellipticity
+
+   @return Dynamical elliptiticy
+   */
 double CalcDynEllipEq(BODY *body, int iBody) {
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
   double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
@@ -310,42 +508,64 @@ double CalcDynEllipEq(BODY *body, int iBody) {
   return dDynEllip;
 }
 
-/* Lehmer+ (2017)'s model for the radius of a planet losing its atmopshere
-   due to XUV radiation. */
-double fdLehmerRadius(double dMassEnv,double dGravAccel,double dRadSurf,double dPressXUV,double dScaleHeight,int iToggle) {
-	double P;		  // pressure at surface due to envelope
-	double Rxuv;	// radius from center of planet where optical depth of XUV is unity
+/**
+  Lehmer+ (2017)'s model for the radius of a planet losing its atmopshere
+   due to XUV radiation.
 
-	P = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
-	Rxuv = dRadSurf * dRadSurf / (dScaleHeight * log(dPressXUV/P) + dRadSurf);
-	if (Rxuv <= dRadSurf) {
-		Rxuv = dRadSurf;
+   @param dMassEnv Envelope's mass
+   @param dGravAccel Body's gravitational acceleration
+   @param dRadSurf Surface Radius of rocky core
+   @param dPresXUV Pressure at base of thermosphere
+   @param dScaleHeight Atmospheric scale height
+   @param dPresSurf pressure at surface due to envelope
+   @param dRadXUV radius from center of planet where optical depth of XUV is unity
+
+   */
+
+
+double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
+	double dRadXUV;
+
+	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
+	if (dRadXUV <= dRadSurf) {
+		dRadXUV = dRadSurf;
 	}
-	if (iToggle == 1) {
-		return P;
-	}
-	else {
-		return Rxuv;
-  }
+  return dRadXUV;
+}
+
+double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
+	double dPresSurf;
+
+	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+  return dPresSurf;
 }
 
 /**
-For use with `fdProximaCenStellar()` to interpolate stellar properties
-(temperature, radius, luminosity) from a grid.
+  For use with `fdProximaCenStellar()` to interpolate stellar properties
+  (temperature, radius, luminosity) from a grid.
+
+  @param dVal Value of (temperature, radius, luminosity)
+  @param daArr Array of values from Yonsei-Yale tracks
+  @param iDim Length of array
+  @param iIndex Index of dArr correpoinding to the value
+
+  @return iIndex
 */
-int fiGetLowerBoundProximaCen(double val, const double *arr, int dim){
-	int i;
-	for (i=0;i<dim-2;i++){
-	  if (val < arr[i+1]) break;
+int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
+	int iIndex;
+	for (iIndex=0;iIndex<iDim-2;iIndex++){
+	  if (dVal < daArr[iIndex+1]) break;
   }
-	return i;
+	return iIndex;
 }
 
 /**
-For use with `fdProximaCenStellar()` to interpolate stellar properties
-(temperature, radius, luminosity) from a grid. This function
-linearly interpolates over data, given indices of lower bounds on grid xi, yi
-and normalized distances to the interpolation point dx, dy.
+  For use with `fdProximaCenStellar()` to interpolate stellar properties
+  (temperature, radius, luminosity) from a grid. This function
+  linearly interpolates over data, given indices of lower bounds on grid xi, yi
+  and normalized distances to the interpolation point dx, dy.
+
+  XXX What are these arguments?
 */
 double fdProximaCenBiLinear(int iALEN, double const data_lo[iALEN], double const data_hi[iALEN], int xi, int yi, double dx, double dy) {
 	double C0, C1, C;
@@ -366,6 +586,8 @@ double fdProximaCenBiLinear(int iALEN, double const data_lo[iALEN], double const
 /**
 For use with `fdProximaCenStellar()` to interpolate stellar properties
 (temperature, radius, luminosity) from a grid.
+
+  XXX What are these arguments?
 */
 double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[iALEN], double const yarr[iMLEN], double const data_lo[iALEN], double const data_hi[iALEN], double A, double M, int *iError){
   double dx,dy;
@@ -438,6 +660,8 @@ DATA FROM Boyajian+12; SECOND ROW FROM Demory+09 (direct measurements)
 # 0.19      0.1410 ± 0.0070   0.00155 ± 0.00002     3054 ± 79     0.118           2.83E−04
                               0.00165 ± 0.00015     3098 ± 56     0.123 ± 0.006
 
+  XXX What are these arguments?
+
 */
 double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
 	double res;
@@ -470,13 +694,20 @@ double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
 /**
 For use with `fdProximaCenBRadius()` to interpolate the radius of
 Proxima Cen b from a grid, assuming it has a gaseous composition
+
+@param dVal Value of (temperature, radius, luminosity)
+@param daArr Array of values from Yonsei-Yale tracks
+@param iDim Length of array
+@param iIndex Index of dArr correpoinding to the value
+
+@return iIndex
 */
-int fiGetLowerBoundProximaCenB(double val, const double *arr, int dim){
-	int i;
-	for (i=0;i<dim-2;i++){
-	  if (val < arr[i+1]) break;
+int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim){
+	int iIndex;
+	for (iIndex=0;iIndex<iDim-2;iIndex++){
+	  if (dVal < daArr[iIndex+1]) break;
   }
-	return i;
+	return iIndex;
 }
 
 /**
@@ -646,7 +877,7 @@ double fdDotProduct(const int *x, const double *y){
 Matrix-vector multiplication
 
 */
-void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result){ 
+void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result){
 	// in matrix form: result = mat * vec;
 	int i;
 	for (i = 0; i < 16; i++){
@@ -685,13 +916,13 @@ Helper function for interpolating Baraffe grid
 double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
 	// and normalized distances to the interpolation point dx, dy.
-	double C0, C1, C;	
+	double C0, C1, C;
 	if (dx == 0) {
 	  C0 = data[xi][yi];
 	  C1 = data[xi][yi+1];
 	} else {
 	  C0 = data[xi][yi]*(1-dx) + data[xi+1][yi]*dx;
-	  C1 = data[xi][yi+1]*(1-dx) + data[xi+1][yi+1]*dx;	
+	  C1 = data[xi][yi+1]*(1-dx) + data[xi+1][yi+1]*dx;
 	}
 	if (dy == 0)
 	  C = C0;
@@ -710,7 +941,7 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], i
 	int ijkn = 0;
   double dypow = 1;
   double result = 0;
-  
+
 	// Linear algebra time!
 	// Adapted from http://en.wikipedia.org/wiki/Bicubic_interpolation
 	double dvDeriv[16] = {
@@ -719,26 +950,26 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], i
 										data[xi+1][yi],
 										data[xi][yi+1],
 										data[xi+1][yi+1],
-										
+
 										// values of df/dx at each corner.
 										0.5*(data[xi+1][yi]-data[xi-1][yi]),
 										0.5*(data[xi+2][yi]-data[xi][yi]),
 										0.5*(data[xi+1][yi+1]-data[xi-1][yi+1]),
 										0.5*(data[xi+2][yi+1]-data[xi][yi+1]),
-										
+
 										// values of df/dy at each corner.
 										0.5*(data[xi][yi+1]-data[xi][yi-1]),
 										0.5*(data[xi+1][yi+1]-data[xi+1][yi-1]),
 										0.5*(data[xi][yi+2]-data[xi][yi]),
 										0.5*(data[xi+1][yi+2]-data[xi+1][yi]),
-										
+
 										// values of d2f/dxdy at each corner.
 										0.25*(data[xi+1][yi+1]-data[xi-1][yi+1]-data[xi+1][yi-1]+data[xi-1][yi-1]),
 										0.25*(data[xi+2][yi+1]-data[xi][yi+1]-data[xi+2][yi-1]+data[xi][yi-1]),
 										0.25*(data[xi+1][yi+2]-data[xi-1][yi+2]-data[xi+1][yi]+data[xi-1][yi]),
 										0.25*(data[xi+2][yi+2]-data[xi][yi+2]-data[xi+2][yi]+data[xi][yi])
 										};
-										
+
 	fvMatrixVectorMult(STELLAR_BICUBIC_MATRIX,dvDeriv,dvCoeff);
 	dypow = 1;
 	for(j = 0; j < 4; ++j) {
@@ -765,7 +996,7 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 	// since planets typically form after this time, but this issue needs to be
 	// revisited eventually.
 	if (A < 0.001) A = 0.001;
-		
+
 	// Get bounds on grid
 	*iError = 0;
 	xi = fiGetLowerBound(M,xarr,iMLEN);
@@ -842,13 +1073,13 @@ using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
 double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 	double res;
 
-  if (iParam == STELLAR_T) {			
+  if (iParam == STELLAR_T) {
       res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGT, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
       return pow(10., res);
   } else if (iParam == STELLAR_L) {
       res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGL, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
       return LSUN * pow(10., res);
-  } else if (iParam == STELLAR_R) {	
+  } else if (iParam == STELLAR_R) {
       res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RADIUS, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
       return RSUN * res;
   } else {

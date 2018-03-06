@@ -684,7 +684,8 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
   }
 
   // Ktide (due to body zero only). WARNING: not suited for binary...
@@ -814,7 +815,8 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,0);
+    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
+    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
   }
 
   if (body[iBody].dSurfaceWaterMass > 0) {
@@ -1498,8 +1500,8 @@ double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,0);
-    body[iaBody[0]].dPresSurf = fdLehmerRadius(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,1);
+    body[iaBody[0]].dPresSurf = fdLehmerPres(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid);
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,body[iaBody[0]].dPresSurf);
   }
 
   double foo;

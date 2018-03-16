@@ -1160,21 +1160,21 @@ typedef struct {
   double *pdLostEngEqtide;
 
   /* RADHEAT Mantle */
-  int i26AlMan;            /**< variable number Corresponding to Aluminum-26 */
-  int i40KMan;             /**< variable number Corresponding to Potassium-40 */
-  int i232ThMan;           /**< variable number Corresponding to Thorium-232 */
-  int i238UMan;            /**< variable number Corresponding to Uranium-238 */
-  int i235UMan;
-  int iNum26AlMan;         /**< Number of Equations Affecting Aluminum-26 [1] */
-  int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
-  int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
-  int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
-  int iNum235UMan;
-  double dD26AlNumManDt;   /**< Total Aluminum-26 Derivative */
-  double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
-  double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
-  double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
-  double dD235UNumManDt;
+  int i26AlMan;            /**< variable number Corresponding to Mantle Aluminum-26 */
+  int i40KMan;             /**< variable number Corresponding to Mantle Potassium-40 */
+  int i232ThMan;           /**< variable number Corresponding to Mantle Thorium-232 */
+  int i238UMan;            /**< variable number Corresponding to Mantle Uranium-238 */
+  int i235UMan;            /**< variable number Corresponding to Mantle Uranium-235 */
+  int iNum26AlMan;         /**< Number of Equations Affecting Mantle Aluminum-26 [1] */
+  int iNum40KMan;          /**< Number of Equations Affecting Mantle Potassium-40 [1] */
+  int iNum232ThMan;        /**< Number of Equations Affecting Mantle Thorium-232 [1] */
+  int iNum238UMan;         /**< Number of Equations Affecting Mantle Uranium-238 [1] */
+  int iNum235UMan;         /**< Number of Equations Affecting Mantle Uranium-235 [1] */
+  double dD26AlNumManDt;   /**< Mantle Aluminum-26 Derivative */
+  double dD40KNumManDt;	   /**< Mantle Potassium-40 Derivative */
+  double dD232ThNumManDt;  /**< Mantle Thorium-232 Derivative */
+  double dD238UNumManDt;   /**< Mantle Uranium-238 Derivative */
+  double dD235UNumManDt;   /**< Mantle Uranium-235 Derivative */
   double *pdD26AlNumManDt;
   double *pdD40KNumManDt;
   double *pdD232ThNumManDt;
@@ -1182,21 +1182,21 @@ typedef struct {
   double *pdD235UNumManDt;
 
   /* RADHEAT Core */
-  int i26AlCore;
-  int i40KCore;
-  int i232ThCore;
-  int i238UCore;
-  int i235UCore;
-  int iNum26AlCore;
-  int iNum40KCore;
-  int iNum232ThCore;
-  int iNum238UCore;
-  int iNum235UCore;
-  double dD26AlNumCoreDt;
-  double dD40KNumCoreDt;
-  double dD232ThNumCoreDt;
-  double dD238UNumCoreDt;
-  double dD235UNumCoreDt;
+  int i26AlCore;            /**< variable number Corresponding to Core Aluminum-26 */
+  int i40KCore;             /**< variable number Corresponding to Core Potassium-40 */
+  int i232ThCore;           /**< variable number Corresponding to Core Thorium-232 */ 
+  int i238UCore;            /**< variable number Corresponding to Core Uranium-238 */ 
+  int i235UCore;            /**< variable number Corresponding to Core Uranium-235 */ 
+  int iNum26AlCore;         /**< Number of Equations Affecting Core Aluminum-26 [1] */  
+  int iNum40KCore;	    /**< Number of Equations Affecting Core Potassium-40 [1] */ 
+  int iNum232ThCore;	    /**< Number of Equations Affecting Core Thorium-232 [1] */  
+  int iNum238UCore;	    /**< Number of Equations Affecting Core Uranium-238 [1] */  
+  int iNum235UCore;	    /**< Number of Equations Affecting Core Uranium-235 [1] */  
+  double dD26AlNumCoreDt;   /**< Core Aluminum-26 Derivative */ 
+  double dD40KNumCoreDt;    /**< Core Potassium-40 Derivative */
+  double dD232ThNumCoreDt;  /**< Core Thorium-232 Derivative */ 
+  double dD238UNumCoreDt;   /**< Core Uranium-238 Derivative */ 
+  double dD235UNumCoreDt;   /**< Core Uranium-235 Derivative */ 
   double *pdD26AlNumCoreDt;
   double *pdD40KNumCoreDt;
   double *pdD232ThNumCoreDt;
@@ -1204,19 +1204,22 @@ typedef struct {
   double *pdD235UNumCoreDt;
 
   /* RADHEAT CRUST */
-  int i40KCrust;
-  int i232ThCrust;
-  int i238UCrust;
-  int i235UCrust;
-  int iNum40KCrust;
-  int iNum232ThCrust;
-  int iNum238UCrust;
-  int iNum235UCrust;
-  double dD40KNumCrustDt;
-  double dD232ThNumCrustDt;
-  double dD238UNumCrustDt;
-  double dD235UNumCrustDt;
-  double *pdD40KNumCrustDt;
+  int i26AlCrust;	     /**< variable number Corresponding to Crust Aluminum-26 */
+  int i40KCrust;	     /**< variable number Corresponding to Crust Potassium-40 */
+  int i232ThCrust;	     /**< variable number Corresponding to Crust Thorium-232 */ 
+  int i238UCrust;	     /**< variable number Corresponding to Crust Uranium-238 */ 
+  int i235UCrust;	     /**< variable number Corresponding to Crust Uranium-235 */
+  int iNum26AlCrust;         /**< Number of Equations Affecting Crust Aluminum-26 [1] */  
+  int iNum40KCrust;	     /**< Number of Equations Affecting Crust Potassium-40 [1] */ 
+  int iNum232ThCrust;	     /**< Number of Equations Affecting Crust Thorium-232 [1] */  
+  int iNum238UCrust;	     /**< Number of Equations Affecting Crust Uranium-238 [1] */  
+  int iNum235UCrust;	     /**< Number of Equations Affecting Crust Uranium-235 [1] */  
+  double dD26AlNumCrustDt;   /**< Crust Aluminum-26 Derivative */
+  double dD40KNumCrustDt;    /**< Crust Potassium-40 Derivative */
+  double dD232ThNumCrustDt;  /**< Crust Thorium-232 Derivative */ 
+  double dD238UNumCrustDt;   /**< Crust Uranium-238 Derivative */ 
+  double dD235UNumCrustDt;   /**< Crust Uranium-235 Derivative */ 
+  double *pdD40KNumCrustDt;  
   double *pdD232ThNumCrustDt;
   double *pdD238UNumCrustDt;
   double *pdD235UNumCrustDt;

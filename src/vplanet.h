@@ -1467,8 +1467,8 @@ typedef struct {
   double dMin40KPower;     /**< Halt at this Potassium-40 Power */
   double dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   double dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  double dMin235UPower;
-  double dMinRadPower;
+  double dMin235UPower;    /**< Halt at this Uranium-235 Power */
+  double dMinRadPower;     /**< Halt at this total Power */
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/
@@ -1478,7 +1478,7 @@ typedef struct {
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
-  double dMinTMan;     /**< Halt at this TMan */
+  double dMinTMan;      /**< Halt at this TMan */
   double dMinTCore;     /**< Halt at this TCore */
 
   /* DISTORB */

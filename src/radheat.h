@@ -24,95 +24,95 @@
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
 /* 26Al -- Masses, numbers and powers from Wikipedia XXX Check! */
-#define ENERGY26AL        6.4153392709791e-13 /**< [J] Decay Energy of Aluminum-26 */
-#define MASS26AL          26*ATOMMASS         /**< [kg] Mass of a 26Al atom */
-#define HALFLIFE26AL      2.26267992e13       /**< [s] Half-life of 26Al */
+#define ENERGY26AL        6.4153392709791e-13 /**< [J] Decay energy of Aluminum-26 */ 
+#define MASS26AL          26*ATOMMASS         /**< [kg] Mass of a 26Al atom */        
+#define HALFLIFE26AL      2.26267992e13       /**< [s] Half-life of 26Al */           
 /* Mantle */
-#define EMASSMAN26AL      4.6e18      //9.9866e22   //9.854e22  //[kg]  mass of 26Mg on Earth
-#define ENUMMAN26AL       1.0654e41   //2.31311e45  //2.2824e48  //[num] number of 26Mg atoms on Earth
-#define EPOWERMAN26AL     2.0944e15   //4.54700e19  //1.009e35  //[W]  Power from 26Al if all Earth's 26Mg was 26Al
+#define EMASSMAN26AL      4.6e18               /**< [kg]  Default mantle mass of 26Al */                              
+#define ENUMMAN26AL       1.0654e41            /**< [num] Default mantle number of 26Al atoms */                      
+#define EPOWERMAN26AL     2.0944e15            /**< [W] Default mantle power from 26Al if all 26Mg from 26Al decay */ 
 /* Core */
-#define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  //2.1417e20  //9.854e19  //[kg]
-#define ENUMCORE26AL      1e-2*(ENUMMAN26AL)  //4.9606e42  //2.2824e45  //[num] 
-#define EPOWERCORE26AL    1e-2*(EPOWERMAN26AL)  //9.7513e16  //1.009e35  //[W] 
+#define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  /**< [kg]  Default core mass of 26Al */                              
+#define ENUMCORE26AL	  1e-2*(ENUMMAN26AL)   /**< [num] Default core number of 26Al atoms */                      
+#define EPOWERCORE26AL	  1e-2*(EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg from 26Al decay */ 
 
-// 40K
-#define ENERGY40K        2.13371243669e-13 // [J?] -- weighting both Ar and Ca decay chains
-#define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
-#define HALFLIFE40K      5.736527e+16  //3.9762576e+16  //[s] 
-/* Mantle */
-#define EMASSMAN40K      1.11075e+18  //[kg]  mass in Earths mantle of 40K at 4.5 Ga (t=0)
-#define ENUMMAN40K       8.8692227e+42  //[num] number of 40K atoms in E mantle at 4.5Ga
-#define EPOWERMAN40K     3.29892e+13  //[W]  Power from 40K in Earths Mantle at 4.5 Ga 
-/* Core */
-#define EMASSCORE40K     3.90916e+17  //[kg]
-#define ENUMCORE40K      3.1214255e+42  //[num] 
-#define EPOWERCORE40K    1.16102e+13  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST40K    4.67540e+17  //[kg]
-#define ENUMCRUST40K     3.7332574e+42  //[num] 
-#define EPOWERCRUST40K   1.38859e+13  //[W]  
+/* 40K */
+#define ENERGY40K        2.13371243669e-13      /**< [J] Decay energy of Potassium-40 */        
+#define MASS40K		 39.96399848*ATOMMASS	/**< [kg] Mass of a 40K atom */                 
+#define HALFLIFE40K	 5.736527e+16		/**< [s] Half-life of 40K */                    
+/* Mantle */					                                                
+#define EMASSMAN40K	 1.11075e+18		/**< [kg]  Default mantle mass of 40K */        		      
+#define ENUMMAN40K	 8.8692227e+42		/**< [num] Default mantle number of 40K atoms */		      
+#define EPOWERMAN40K	 3.29892e+13		/**< [W] Default mantle power from 40K decay */ 
+/* Core */					                                                
+#define EMASSCORE40K	 3.90916e+17		/**< [kg]  Default core mass of 40K */          		     
+#define ENUMCORE40K	 3.1214255e+42		/**< [num] Default core number of 40K atoms */  		     
+#define EPOWERCORE40K	 1.16102e+13		/**< [W] Default core power from 40K decay */   
+/* Crust (assuming crustal mass constant) */	                                                
+#define EMASSCRUST40K	 4.67540e+17		/**< [kg]  Default crust mass of 40K */         		      
+#define ENUMCRUST40K	 3.7332574e+42		/**< [num] Default crust number of 40K atoms */ 		      
+#define EPOWERCRUST40K	 1.38859e+13		/**< [W] Default crust power from 40K decay */   
 
-//232TH
-#define HALFLIFE232TH    6.3752726e+17 //4.4338428e17   // seconds
-#define MASS232TH        232.0377*ATOMMASS
-#define ENERGY232TH      6.833606619959e-12 // W
-/* Mantle */
-#define EMASSMAN232TH    2.31439e+17  //[kg]
-#define ENUMMAN232TH     5.5262845e+41  //[num] 
-#define EPOWERMAN232TH   5.92484e+12  //[W] 
-/* Core */
-#define EMASSCORE232TH   1.92682e+15  //[kg]
-#define ENUMCORE232TH    4.6008515e+39  //[num]
-#define EPOWERCORE232TH  4.93267e+10  //[W] 
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST232TH  1.49638e+17  //[kg]
-#define ENUMCRUST232TH   3.5730363e+41  //[num]
-#define EPOWERCRUST232TH 3.83072e+12  //[W] 
+/* 232TH */
+#define ENERGY232TH      6.833606619959e-12     /**< [J] Decay energy of 232Th */                 
+#define MASS232TH	 232.0377*ATOMMASS	/**< [kg] Mass of a 232Th atom */                 
+#define HALFLIFE232TH	 6.3752726e+17		/**< [s] Half-life of 232Th */                    
+/* Mantle */					                                                  
+#define EMASSMAN232TH	 2.31439e+17		/**< [kg]  Default mantle mass of 232Th */        
+#define ENUMMAN232TH	 5.5262845e+41		/**< [num] Default mantle number of 232Th atoms */
+#define EPOWERMAN232TH	 5.92484e+12		/**< [W] Default mantle power from 232Th decay */ 
+/* Core */					                                                  
+#define EMASSCORE232TH	 1.92682e+15		/**< [kg]  Default core mass of 232Th */          
+#define ENUMCORE232TH	 4.6008515e+39		/**< [num] Default core number of 232Th atoms */  
+#define EPOWERCORE232TH	 4.93267e+10		/**< [W] Default core power from 232Th decay */   
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST232TH	 1.49638e+17		/**< [kg]  Default crust mass of 232Th */         
+#define ENUMCRUST232TH	 3.5730363e+41		/**< [num] Default crust number of 232Th atoms */ 
+#define EPOWERCRUST232TH 3.83072e+12		/**< [W] Default crust power from 232Th decay */  
 
-//238U
-#define HALFLIFE238U     2.0359742e+17  //1.409993568e17 // seconds
-#define MASS238U         238.050788268*ATOMMASS
-#define ENERGY238U       8.28293620554e-12 // [J]
-/* Mantle */
-#define EMASSMAN238U     1.16*1.00111e+17  //[kg]
-#define ENUMMAN238U      1.16*2.2505054e+41  //[num] 
-#define EPOWERMAN238U    1.16*9.18017e+12  //[W] 
-/* Core */
-#define EMASSCORE238U    7.83780e+14  //[kg]
-#define ENUMCORE238U     1.7619456e+39  //[num]
-#define EPOWERCORE238U   7.18726e+10  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST238U  5.64467e+16  //[kg]
-#define ENUMCRUST238U   1.2689272e+41  //[num]
-#define EPOWERCRUST238U  5.17616e+12  //[W]
+/* 238U */
+#define ENERGY238U       8.28293620554e-12      /**< [J] Decay energy of 238U */                 
+#define MASS238U         238.050788268*ATOMMASS	/**< [kg] Mass of a 238U atom */                 
+#define HALFLIFE238U     2.0359742e+17  	/**< [s] Half-life of 238U */                    
+/* Mantle */					                                                  
+#define EMASSMAN238U     1.16*1.00111e+17  	/**< [kg]  Default mantle mass of 238U */        
+#define ENUMMAN238U	 1.16*2.2505054e+41 	/**< [num] Default mantle number of 238U atoms */
+#define EPOWERMAN238U	 1.16*9.18017e+12  	/**< [W] Default mantle power from 238U decay */ 
+/* Core */					                                                  
+#define EMASSCORE238U    7.83780e+14  		/**< [kg]  Default core mass of 238U */          
+#define ENUMCORE238U	 1.7619456e+39		/**< [num] Default core number of 238U atoms */  
+#define EPOWERCORE238U	 7.18726e+10  		/**< [W] Default core power from 238U decay */   
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST238U  5.64467e+16  		/**< [kg]  Default crust mass of 238U */         
+#define ENUMCRUST238U	1.2689272e+41		/**< [num] Default crust number of 238U atoms */ 
+#define EPOWERCRUST238U	 5.17616e+12 		/**< [W] Default crust power from 238U decay */  
 
-//235U
-#define HALFLIFE235U     3.2038174e+16  // seconds
-#define MASS235U         235.0439299*ATOMMASS
-#define ENERGY235U       6.55516e-12    // J
-/* Mantle */
-#define EMASSMAN235U     3.20325e+16  //[kg]
-#define ENUMMAN235U      9.0058843e+40  //[num] 
-#define EPOWERMAN235U    1.84187e+13  //[W]
-/* Core */
-#define EMASSCORE235U    2.50786e+14  //[kg]
-#define ENUMCORE235U     7.0508058e+38  //[num]
-#define EPOWERCORE235U   1.44202e+11  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST235U   1.80612e+16  //[kg]
-#define ENUMCRUST235U    5.0778866e+40  //[num]
-#define EPOWERCRUST235U  1.03852e+13  //[W] 
+/* 235U */
+#define HALFLIFE235U     3.2038174e+16          /**< [J] Decay energy of 235U */                  
+#define MASS235U         235.0439299*ATOMMASS	/**< [kg] Mass of a 235U atom */                  
+#define ENERGY235U       6.55516e-12    	/**< [s] Half-life of 235U */                     
+/* Mantle */					                                                  
+#define EMASSMAN235U     3.20325e+16  		/**< [kg]  Default mantle mass of 235U */         
+#define ENUMMAN235U	 9.0058843e+40 		/**< [num] Default mantle number of 235U atoms */ 
+#define EPOWERMAN235U	 1.84187e+13  		/**< [W] Default mantle power from 235U decay */  
+/* Core */					                                                  
+#define EMASSCORE235U    2.50786e+14  		/**< [kg]  Default core mass of 235U */           
+#define ENUMCORE235U	 7.0508058e+38		/**< [num] Default core number of 235U atoms */   
+#define EPOWERCORE235U	 1.44202e+11  		/**< [W] Default core power from 235U decay */    
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST235U   1.80612e+16  		/**< [kg]  Default crust mass of 235U */          
+#define ENUMCRUST235U    5.0778866e+40		/**< [num] Default crust number of 235U atoms */  
+#define EPOWERCRUST235U  1.03852e+13  		/**< [W] Default crust power from 235U decay */   
 
-//Continental Crust Mass Earth today.  Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust".
-#define EPOWERCRUSTTOTAL 7e12  //[W] 7 TW (Jaupart et al 2007)  or 6.8 TW (Huang 2013)
-#define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  //[W/kg] crustal heat production density.
+/* Continental Crust Mass Earth today */
+/* Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust". */
+#define EPOWERCRUSTTOTAL 7e12  /**< [W] Earth's modern crustal radiogenic power, 7 TW (Jaupart et al 2007) */
+#define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  /**< [W/kg] Earth's modern crustal heat production density */
 
 void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 
 /* Options Info */
-
 #define OPTSTARTRADHEAT            1100 /* Start of RADHEAT options */
 #define OPTENDRADHEAT              1200 /* End of RADHEAT options */
 
@@ -177,59 +177,59 @@ void BodyCopyRadheat(BODY*,BODY*,int,int,int);
 
 /* Options Functions */
 void HelpOptionsRadheat(OPTIONS*);
-void Read40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 
-void Read26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
-void Read40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
-void Read235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 // XXX Need to add 26Al
-void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
-void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void fvReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
+void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
 #define RADHEATHALTSYSEND       5
@@ -245,7 +245,7 @@ void CountHaltsRadHeat(HALT*,int*);
 
 
 /* Verify Functions */
-
+void fvNotMassAndNum(OPTIONS*,int,int,int);
 void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetRadheat(CONTROL*,MODULE*);

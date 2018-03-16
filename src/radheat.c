@@ -14,7 +14,16 @@
 #include <string.h>
 #include "vplanet.h"
 
-void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
+
+/**
+   Copy body elements to dest
+
+   @param dest The destination body
+   @param src The body source
+   @param iNumBodies Number of bodies
+   @param iBody Index of body to copy
+*/
+void fvBodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].d26AlNumMan = src[iBody].d26AlNumMan;
   dest[iBody].d26AlConstMan = src[iBody].d26AlConstMan;
   dest[iBody].d26AlNumCore = src[iBody].d26AlNumCore;
@@ -57,8 +66,17 @@ void BodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 /**************** RADHEAT options ********************/
 
 /* Aluminum-26 */
+/**
+   Read initial 26Al power in mantle
 
-void Read26AlPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 26AlMass and 26AlNum */
   int lTmp=-1;
@@ -78,7 +96,17 @@ void Read26AlPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d26AlPowerMan = options->dDefault;
 }
-void Read26AlPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 26Al power in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -93,8 +121,17 @@ void Read26AlPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d26AlPowerCore = options->dDefault;
 }
+/**
+   Read initial 26Al mass in mantle
 
-void Read26AlMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 26AlPower and 26AlNum */
   int lTmp=-1;
@@ -112,8 +149,17 @@ void Read26AlMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d26AlMassMan = options->dDefault;
 }
+/**
+   Read initial 26Al mass in core
 
-void Read26AlMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -128,8 +174,17 @@ void Read26AlMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d26AlMassCore = options->dDefault;
 }
+/**
+   Read initial 26Al number in mantle
 
-void Read26AlNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 26AlPower and 26AlNum */
   int lTmp=-1;
@@ -148,8 +203,17 @@ void Read26AlNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (iFile > 0)
       body[iFile-1].d26AlNumMan = options->dDefault;
 }
+/**
+   Read initial 26Al number in core
 
-void Read26AlNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead26AlNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
 
@@ -168,8 +232,17 @@ void Read26AlNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 }
 
 /* Potassium */
+/**
+   Read initial 40K power in mantle
 
-void Read40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KMass and 40KNum */
   int lTmp=-1;
@@ -189,7 +262,17 @@ void Read40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d40KPowerMan = options->dDefault;
 }
-void Read40KPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 40K power in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -204,8 +287,17 @@ void Read40KPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d40KPowerCore = options->dDefault;
 }
+/**
+   Read initial 40K mass in mantle
 
-void Read40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KPower and 40KNum */
   int lTmp=-1;
@@ -223,8 +315,17 @@ void Read40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (iFile > 0)
       body[iFile-1].d40KMassMan = options->dDefault;
 }
+/**
+   Read initial 40K mass in core
 
-void Read40KMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -239,8 +340,17 @@ void Read40KMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d40KMassCore = options->dDefault;
 }
+/**
+   Read initial 40K number in mantle
 
-void Read40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 40KPower and 40KNum */
   int lTmp=-1;
@@ -259,7 +369,17 @@ void Read40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     if (iFile > 0)
       body[iFile-1].d40KNumMan = options->dDefault;
 }
-void Read40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 40K number in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -274,7 +394,17 @@ void Read40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (iFile > 0)
       body[iFile-1].d40KNumCore = options->dDefault;
 }
-void Read40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 40K power in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -289,7 +419,17 @@ void Read40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].d40KPowerCrust = options->dDefault;
 }
-void Read40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 40K mass in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -304,7 +444,17 @@ void Read40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d40KMassCrust = options->dDefault;
 }
-void Read40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 40K number in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
@@ -321,8 +471,17 @@ void Read40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 }
 
 /* Thorium */
+/**
+   Read initial 232Th power in mantle
 
-void Read232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThMass and 232ThNum */
   int lTmp=-1;
@@ -341,7 +500,17 @@ void Read232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d232ThPowerMan = options->dDefault;
 }
-void Read232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th power in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThMass and 232ThNum */
   int lTmp=-1;
@@ -360,7 +529,17 @@ void Read232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (iFile > 0)
       body[iFile-1].d232ThPowerCore = options->dDefault;
 }
-void Read232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th mass in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
   int lTmp=-1;
@@ -377,7 +556,17 @@ void Read232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d232ThMassMan = options->dDefault;
 }
-void Read232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th mass in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
   int lTmp=-1;
@@ -394,7 +583,17 @@ void Read232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d232ThMassCore = options->dDefault;
 }
-void Read232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th number in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
   int lTmp=-1;
@@ -411,7 +610,17 @@ void Read232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d232ThNumMan = options->dDefault;
 }
-void Read232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th number in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
   int lTmp=-1;
@@ -428,7 +637,17 @@ void Read232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d232ThNumCore = options->dDefault;
 }
-void Read232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th power in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThMass and 232ThNum */
   int lTmp=-1;
@@ -446,7 +665,17 @@ void Read232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
     if (iFile > 0)
       body[iFile-1].d232ThPowerCrust = options->dDefault;
 }
-void Read232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th mass in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThNum */
   int lTmp=-1;
@@ -463,7 +692,17 @@ void Read232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (iFile > 0)
       body[iFile-1].d232ThMassCrust = options->dDefault;
 }
-void Read232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 232Th number in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 232ThPower and 232ThMass */
   int lTmp=-1;
@@ -482,8 +721,17 @@ void Read232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 }
 
 /* Uranium 238 */
+/**
+   Read initial 238U power in mantle
 
-void Read238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UMass and 232UNum */
   int lTmp=-1;
@@ -501,7 +749,17 @@ void Read238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d238UPowerMan = options->dDefault;
 }
-void Read238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U mass in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
   int lTmp=-1;
@@ -518,7 +776,17 @@ void Read238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d238UMassMan = options->dDefault;
 }
-void Read238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U number in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
   int lTmp=-1;
@@ -537,7 +805,17 @@ void Read238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 }
 
 /* Core */
-void Read238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U power in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UMass and 232UNum */
   int lTmp=-1;
@@ -555,7 +833,17 @@ void Read238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d238UPowerCore = options->dDefault;
 }
-void Read238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U mass in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
   int lTmp=-1;
@@ -572,8 +860,17 @@ void Read238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d238UMassCore = options->dDefault;
 }
+/**
+   Read initial 238U number in core
 
-void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
   int lTmp=-1;
@@ -592,7 +889,17 @@ void Read238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 }
 
 /* Crust */
-void Read238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U power in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UMass and 232UNum */
   int lTmp=-1;
@@ -609,7 +916,17 @@ void Read238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (iFile > 0)
       body[iFile-1].d238UPowerCrust = options->dDefault;
 }
-void Read238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 238U mass in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UNum */
   int lTmp=-1;
@@ -626,8 +943,17 @@ void Read238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d238UMassCrust = options->dDefault;
 }
+/**
+   Read initial 238U number in crust
 
-void Read238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 238UPower and 238UMass */
   int lTmp=-1;
@@ -645,8 +971,18 @@ void Read238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].d238UNumCrust = options->dDefault;
 }
 
-/* Uranium 235 PED */
-void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* Uranium 235 */
+/**
+   Read initial 235U power in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
   int lTmp=-1;
@@ -664,7 +1000,17 @@ void Read235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d235UPowerMan = options->dDefault;
 }
-void Read235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U mass in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
   int lTmp=-1;
@@ -681,7 +1027,17 @@ void Read235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].d235UMassMan = options->dDefault;
 }
-void Read235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U number in mantle
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -698,8 +1054,17 @@ void Read235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     if (iFile > 0)
       body[iFile-1].d235UNumMan = options->dDefault;
 }
+/**
+   Read initial 235U power in core
 
-void Read235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
   int lTmp=-1;
@@ -717,7 +1082,17 @@ void Read235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d235UPowerCore = options->dDefault;
 }
-void Read235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U mass in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
   int lTmp=-1;
@@ -734,7 +1109,17 @@ void Read235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     if (iFile > 0)
       body[iFile-1].d235UMassCore = options->dDefault;
 }
-void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U number in core
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -751,8 +1136,17 @@ void Read235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       if (iFile > 0)
         body[iFile-1].d235UNumCore = options->dDefault;
 }
+/**
+   Read initial 235U power in crust
 
-void Read235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UMass and 232UNum */
   int lTmp=-1;
@@ -770,7 +1164,17 @@ void Read235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     if (iFile > 0)
       body[iFile-1].d235UPowerCrust = options->dDefault;
 }
-void Read235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U mass in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UNum */
   int lTmp=-1;
@@ -787,7 +1191,17 @@ void Read235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     if (iFile > 0)
       body[iFile-1].d235UMassCrust = options->dDefault;
 }
-void Read235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read initial 235U number in crust
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvRead235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -806,7 +1220,17 @@ void Read235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 }
 
 /* Halts */
-void ReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/**
+   Read halt 40K power
+
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -824,8 +1248,17 @@ void ReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (iFile > 0)
        control->Halt[iFile-1].dMin40KPower = options->dDefault;
 }
+/**
+   Read halt 235U power
 
-void ReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -843,8 +1276,17 @@ void ReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       if (iFile > 0)
        control->Halt[iFile-1].dMin235UPower = options->dDefault;
 }
+/**
+   Read halt 238U power
 
-void ReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -862,8 +1304,17 @@ void ReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       if (iFile > 0)
        control->Halt[iFile-1].dMin238UPower = options->dDefault;
 }
+/**
+   Read halt 232Th power
 
-void ReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -881,8 +1332,17 @@ void ReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (iFile > 0)
        control->Halt[iFile-1].dMin232ThPower = options->dDefault;
 }
+/**
+   Read halt total radiogenic power
 
-void ReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param iFile
+*/
+void fvReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   /* Must verify in conjuction with 235UPower and 235UMass */
   int lTmp=-1;
@@ -902,8 +1362,13 @@ void ReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 }
 
 /* Initiatlize Input Options */
+/**
+   Initialize input options to default values
 
-void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
+   @param Options
+   @param Function to read in options
+*/
+void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* 26Al */
   sprintf(options[OPT_26ALMASSMAN].cName,"d26AlMassMan");
@@ -1384,8 +1849,18 @@ void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTRADPOWER] = &ReadHaltRadPower;
 
 }
+/**
+   Read input option
 
-void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
+   @param Body
+   @param Control
+   @param Files
+   @param Options
+   @param System
+   @param Function to read option
+   @param iBody
+*/
+void fvReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
   for (iOpt=OPTSTARTRADHEAT;iOpt<OPTENDRADHEAT;iOpt++) {
@@ -1396,7 +1871,7 @@ void ReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     
 /******************* Verify RADHEAT ******************/
 
-void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
+void fvNotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
   if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",options[iMass].cName,options[iNum].cName);
     DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);

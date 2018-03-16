@@ -402,84 +402,86 @@ typedef struct {
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;          /**< Apply Module RADHEAT? */
-  double d26AlConstMan;  /**< Body's Mantle 26Al Decay Constant */
+  double d26AlConstMan;  /**< Body's Mantle 26Al Decay Coefficient */
   double d26AlMassMan;   /**< Body's Mantle Mass of 26Al */
   double d26AlNumMan;    /**< Body's Mantle Number of 26Al Atoms */
   double d26AlPowerMan;  /**< Body's Mantle Internal Power Due to 26Al Decay */
-  double d26AlConstCore; /**< Body's Core 26Al Decay Constant */
+  double d26AlConstCore; /**< Body's Core 26Al Decay Coefficient */
   double d26AlMassCore;  /**< Body's Core Mass in 26Al */
   double d26AlNumCore;   /**< Body's Core Number of 26Al Atoms */
   double d26AlPowerCore; /**< Body's Core Power from 26Al */
 
-  double d40KConstMan;   /**< Body's Mantle 40K Decay Constant */
+  double d40KConstMan;   /**< Body's Mantle 40K Decay Coefficient */
   double d40KMassMan;    /**< Body's Mantle Mass of 40K */
   double d40KNumMan;     /**< Body's Mantle Number of 40K Atoms */
   double d40KPowerMan;   /**< Body's Mantle Internal Power Due to 40K Decay */
-  double d40KConstCore;  /**< Body's Core 40K Decay Constant */
+  double d40KConstCore;  /**< Body's Core 40K Decay Coefficient */
   double d40KNumCore;    /**< Body's Core Number of 40K Atoms */
   double d40KPowerCore;  /**< Body's Core Power due to 40K */
   double d40KMassCore;   /**< Body's Core Mass of 40K */
-  double d40KConstCrust; /**< Body's Crust 40K Decay Constant */
+  double d40KConstCrust; /**< Body's Crust 40K Decay Coefficient */
   double d40KNumCrust;   /**< Body's Crust Number of 40K Atoms */
   double d40KPowerCrust; /**< Body's Crust Power due to 40K */
   double d40KMassCrust;  /**< Body's Crust Mass of 40K */
 
-  double d232ThConstMan;    /**< Body's Mantle Thorium-232 Decay Constant */
+  double d232ThConstMan;    /**< Body's Mantle Thorium-232 Decay Coefficient */
   double d232ThNumMan;      /**< Body's Mantle Number of Thorium-232 Atoms */
   double d232ThPowerMan;    /**< Body's Mantle Internal Power Due to Thorium-232 Decay */
   double d232ThMassMan;     /**< Body's Mantle Mass of Thorium-232 Atoms */
-  double d232ThConstCore;   /**< Body's Core Thorium-232 Decay Constant */
+  double d232ThConstCore;   /**< Body's Core Thorium-232 Decay Coefficient */
   double d232ThNumCore;      /**< Body's Core Number of Thorium-232 Atoms */
   double d232ThPowerCore;    /**< Body's Core Internal Power Due to Thorium-232 Decay */
   double d232ThMassCore;     /**< Body's Core Mass of Thorium-232 Atoms */
-  double d232ThConstCrust;
-  double d232ThNumCrust;
-  double d232ThPowerCrust;
-  double d232ThMassCrust;
-  double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
-  double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
-  double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
-  double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
-  double d238UConstCore;
-  double d238UNumCore;
-  double d238UPowerCore;
-  double d238UMassCore;
-  double d238UConstCrust;
-  double d238UNumCrust;
-  double d238UPowerCrust;
-  double d238UMassCrust;
-  double d235UConstMan;
-  double d235UNumMan;
-  double d235UPowerMan;
-  double d235UMassMan;
-  double d235UConstCore;
-  double d235UNumCore;
-  double d235UPowerCore;
-  double d235UMassCore;
-  double d235UConstCrust;
-  double d235UNumCrust;
-  double d235UPowerCrust;
-  double d235UMassCrust;
+  double d232ThConstCrust;   /**< Body's Crust Thorium-232 Decay Coefficient */
+  double d232ThNumCrust;      /**< Body's Crust Number of Thorium-232 Atoms */
+  double d232ThPowerCrust;    /**< Body's Crust Internal Power Due to Thorium-232 Decay */
+  double d232ThMassCrust;     /**< Body's Crust Mass of Thorium-232 Atoms */
+
+  double d238UConstMan;     /**< Body's Mantle Uranium-238 Decay Coefficient */
+  double d238UNumMan;       /**< Body's Mantle Number of Uranium-238 Atoms */
+  double d238UPowerMan;     /**< Body's Mantle Internal Power Due to Uranium-238 Decay */
+  double d238UMassMan;      /**< Body's Mantle Mass of Uranium-238 Atoms */
+  double d238UConstCore;     /**< Body's Core Uranium-238 Decay Coefficient */
+  double d238UNumCore;       /**< Body's Core Number of Uranium-238 Atoms */
+  double d238UPowerCore;     /**< Body's Core Internal Power Due to Uranium-238 Decay */
+  double d238UMassCore;      /**< Body's Core Mass of Uranium-238 Atoms */
+  double d238UConstCrust;     /**< Body's Crust Uranium-238 Decay Coefficient */
+  double d238UNumCrust;       /**< Body's Crust  Number of Uranium-238 Atoms */
+  double d238UPowerCrust;     /**< Body's Crust Internal Power Due to Uranium-238 Decay */
+  double d238UMassCrust;      /**< Body's Crust Mass of Uranium-238 Atoms */
+  double d235UConstMan;     /**< Body's Mantle Uranium-235 Decay Coefficient */
+  double d235UNumMan;       /**< Body's Mantle Number of Uranium-235 Atoms */
+  double d235UPowerMan;     /**< Body's Mantle Internal Power Due to Uranium-235 Decay */
+  double d235UMassMan;      /**< Body's Mantle Mass of Uranium-235 Atoms */
+  double d235UConstCore;     /**< Body's Core Uranium-235 Decay Coefficient */
+  double d235UNumCore;       /**< Body's Core Number of Uranium-235 Atoms */
+  double d235UPowerCore;     /**< Body's Core Internal Power Due to Uranium-235 Decay */
+  double d235UMassCore;      /**< Body's Core Mass of Uranium-235 Atoms */
+  double d235UConstCrust;     /**< Body's Crust Uranium-235 Decay Coefficient */
+  double d235UNumCrust;       /**< Body's Crust Number of Uranium-235 Atoms */
+  double d235UPowerCrust;     /**< Body's Crust Internal Power Due to Uranium-235 Decay */
+  double d235UMassCrust;      /**< Body's Crust Mass of Uranium-235 Atoms */
+
   double dRadPowerTotal;   /**< Total planet Radiogenic Power */
-  double dRadPowerMan;   /**< Total Mantle Radiogenic Power */
-  double dRadPowerCore;   /**< Total Core Radiogenic Power */
+  double dRadPowerMan;     /**< Total Mantle Radiogenic Power */
+  double dRadPowerCore;    /**< Total Core Radiogenic Power */
   double dRadPowerCrust;   /**< Total Crust Radiogenic Power */
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
-  double dTUMan;           /**< Temperature UMTBL */
-  double dTLMan;           /**< Temperature LMTBL */
-  double dTCMB;            /**< Temperature CMB */
-  double dTICB;            /**< Temperature ICB */
-  double dBLUMan;          /**< UM TBL thickness */
-  double dBLLMan;          /**< LM TBL thickness */
-  double dTJumpUMan;       /**< Abs Temperature Jump across UMTBL */
-  double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
+  double dTUMan;           /**< Temperature Upper Mantle (UM) */
+  double dTLMan;           /**< Temperature Lower Mantle (LM) */
+  double dTCMB;            /**< Temperature Core-Mantle Boundary (CMB) */
+  double dTICB;            /**< Temperature Inner Core Boundary (ICB) */
+  double dBLUMan;          /**< Thermal Boundary Layer (TBL) Thickness in Upper Mantle */
+  double dBLLMan;          /**< Thermal Boundary Layer Thickness (TBL) in Lower Mantle */
+  double dTJumpUMan;       /**< Absolute value of Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Absolute value of Temperature Jump across LMTBL */
   double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
   double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
-  double dViscUManArr;     /**< Viscosity UMTBL Arrhenius Law */
+  double dViscUManArr;     /**< Viscosity UMTBL from Arrhenius Law */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dViscMMan;        /**< Viscosity Mid (ave) mantle */
@@ -501,78 +503,78 @@ typedef struct {
   double dViscMeltXi;      /**< Viscosity Melt Factor Xi */
   double dViscMeltPhis;    /**< Viscosity Melt Factor Phis */
   double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
-  double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
-  double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
+  double dTDepthMeltMan;   /**< Temperature at base of UM Melt layer */
+  double dTJumpMeltMan;    /**< Temperature Jump to base of UM Melt layer */
   double dMeltMassFluxMan; /**< Mantle upwelling melt mass flux */
-  double dK2Man;           /**< Mantle k2 love number */
-  double dImk2Man;         /**< Mantle Im(k2) love number */
+  double dK2Man;           /**< Mantle k2 Love number */
+  double dImk2Man;         /**< Mantle Im(k2) Love number */
   double dRayleighMan;     /**< Mantle Rayleigh Number */
   /* Time Derivatives & Gradients */
-  double dTDotMan;         /**< Time deriv of mean mantle temp */
-  double dTDotCore;        /**< time deriv of mean core temp */
-  double dHfluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
-  double dHflowUMan;       /**< hflow UMTBL */
-  double dHfluxLMan;       /**< hflux lower mantle thermal boundary layer (UMTBL) */
-  double dHflowLMan;       /**< hflow LMTBL */
-  double dHfluxCMB;        /**< hflux CMB */
-  double dHflowCMB;        /**< hflow CMB */
-  double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
-  double dHflowTidalCore;  /**< hflow tidal dissipation in core */
-  double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
-  double dHflowMeltMan;    /**< Eruptive Melt Hflow from mantle */
+  double dTDotMan;         /**< Time derivative of mean mantle temperature */
+  double dTDotCore;        /**< Time derivative of mean core temperature */
+  double dHfluxUMan;       /**< Heat flux (Hflux) upper mantle thermal boundary layer (UMTBL) */
+  double dHflowUMan;       /**< Heat flow (Hflow) UMTBL */
+  double dHfluxLMan;       /**< Heat flux (Hflux) lower mantle thermal boundary layer (LMTBL) */
+  double dHflowLMan;       /**< Heat flow (Hflow) LMTBL */
+  double dHfluxCMB;        /**< Heat flux across CMB */
+  double dHflowCMB;        /**< Heat flow across CMB */
+  double dHflowTidalMan;   /**< Heat flow generated by tidal dissipation in mantle */
+  double dHflowTidalCore;  /**< Heat flow generated by tidal dissipation in core */
+  double dHflowLatentMan;  /**< Latent heat flow from solidification of mantle */
+  double dHflowMeltMan;    /**< Eruptive Melt heat flow from mantle */
   double dHflowSecMan;     /**< Mantle Secular Heat flow */
-  double dMassICDot;       /**< Mass Growth Rate of IC */
-  double dHflowLatentIC;   /**< latent hflow from solidification of IC */
-  double dPowerGravIC;     /**< latent hflow from solidification of IC */
-  double dHflowICB;        /**< hflow across ICB */
-  double dHfluxSurf;       /**< hflux surface of mantle */
-  double dHflowSurf;       /**< hflow surface of mantle */
+  double dMassICDot;       /**< Mass Growth Rate of Inner core (IC) */
+  double dHflowLatentIC;   /**< Latent heat flow from solidification of IC */
+  double dPowerGravIC;     /**< Gravitational power released from solidification of IC */
+  double dHflowICB;        /**< Heat flow across ICB */
+  double dHfluxSurf;       /**< Heat flux across surface of mantle */
+  double dHflowSurf;       /**< Heat flow across surface of mantle */
   double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
   /* Core Variables */
-  double dRIC;             /**< IC radius */
-  double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
-  double dDOC;             /**< OC shell thickness */
-  double dThermConductOC;  /**< Thermal conductivity OC */
-  double dThermConductIC;  /**< Thermal conductivity IC */
-  double dChiOC;           /**< OC light element concentration chi. */
-  double dChiIC;           /**< IC light element concentration chi. */
-  double dMassOC;          /**< OC Mass. */
-  double dMassIC;          /**< IC Mass. */
-  double dMassChiOC;       /**< OC Chi Mass. */
-  double dMassChiIC;       /**< IC Chi Mass. */
-  double dDTChi;           /**< Core Liquidus Depression */
-  double dHfluxCMBAd;      /**< CMB Adiabatic Heat flux. */
-  double dHfluxCMBConv;    /**< CMB Convective (super-adiabatic) Heat flux. */
-  double dCoreBuoyTherm;   /**< Core Thermal buoyancy flux */
-  double dCoreBuoyCompo;   /**< Core Compositional buoyancy flux */
-  double dCoreBuoyTotal;   /**< Core total (therm+compo) buoyancy flux */
+  double dRIC;             /**< Inner core radius */
+  double dDRICDTCMB;       /**< Derivative of RIC wrt T_CMB: d(R_ic)/d(T_cmb) */
+  double dDOC;             /**< Outer core shell thickness */
+  double dThermConductOC;  /**< Thermal conductivity Outer core */
+  double dThermConductIC;  /**< Thermal conductivity Inner core */
+  double dChiOC;           /**< Outer core light element concentration chi. */
+  double dChiIC;           /**< Inner core light element concentration chi. */
+  double dMassOC;          /**< Outer core mass. */
+  double dMassIC;          /**< Inner core mass. */
+  double dMassChiOC;       /**< Outer core light element (Chi) mass. */
+  double dMassChiIC;       /**< Inner core light element (Chi) mass. */
+  double dDTChi;           /**< Core liquidus depression */
+  double dHfluxCMBAd;      /**< CMB adiabatic heat flux. */
+  double dHfluxCMBConv;    /**< CMB convective (super-adiabatic) heat flux. */
+  double dCoreBuoyTherm;   /**< Core thermal buoyancy flux */
+  double dCoreBuoyCompo;   /**< Core compositional buoyancy flux */
+  double dCoreBuoyTotal;   /**< Core total buoyancy flux */
   double dGravICB;         /**< Gravity at ICB */
   double dDensAnomICB;     /**< Density anomaly across ICB (Delta rho_chi in DB14). */
   double dRICDot;          /**< Inner core growth rate */
   /* Magnetic Field */
-  double dMagMom;          /**< Core Dynamo Magnetic Moment scaling law. */
-  double dMagMomCoef;      /**< Dynamo magnetic moment scaling law dipolarity coefficient (gamma_d in DB14) */
+  double dMagMom;          /**< Core dynamo dipole magnetic moment */
+  double dMagMomCoef;      /**< Dipole magnetic moment coefficient */
   double dPresSWind;       /**< Stellar wind pressure at planets orbit. */
   double dMagPauseRad;     /**< Magnetopause stand-off radius from center of planet */
   /* Constants */
-  double dViscRatioMan;    /**< Viscosity Ratio Man */
-  double dEruptEff;        /**< Mantle melt eruption efficiency */
-  double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
-  double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
-  double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
-  double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
-  double dManHFlowPref;    /**< Mantle Hflow Prefix */
+  double dViscRatioMan;    /**< Viscosity ratio across mantle */
+  double dEruptEff;        /**< Mantle melt extrusive eruption efficiency */
+  double dViscRef;         /**< Mantle viscosity reference coefficient */
+  double dTrefLind;         /**< Core liquidus Lindemann reference coefficient */
+  double dDTChiRef;        /**< Core liquidus depression reference */
+  double dStagLid;         /**< Stagnant lid heat flow switch (0 or 1)*/
+  double dManHFlowPref;    /**< Mantle heat flow prefix coefficient */
 
   /* vemcee parameters */
   double dActViscMan;      /**< Mantle viscosity activation energy */
-  double dShModRef;        /**< reference kinematic mantle shear modulus */
-  double dStiffness;       /**< effective stiffness of mantle */
-  double dDLind;           /**< lindemann's law length scale for iron liquidus*/
-  double dDAdCore;         /**< liq iron core adiabatic length scale */
-  double dAdJumpM2UM;      /**< adiabatic temp jump from ave mantle to UM */
-  double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
-  double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
-  double dElecCondCore;    /**< electrical conductivity of core */
+  double dShModRef;        /**< Reference kinematic mantle shear modulus */
+  double dStiffness;       /**< Effective stiffness of mantle */
+  double dDLind;           /**< Lindemann's law length scale for iron liquidus*/
+  double dDAdCore;         /**< Liquid iron core adiabatic length scale */
+  double dAdJumpM2UM;      /**< Adiabatic temperature jump from average mantle to UM */
+  double dAdJumpM2LM;      /**< Adiabatic temperature jump from average mantle to LM */
+  double dAdJumpC2CMB;     /**< Adiabatic temperature jump from average core to CMB */
+  double dElecCondCore;    /**< Electrical conductivity of core at CMB */
   /* end vemcee parameters */
 
   /* ATMESC Parameters */

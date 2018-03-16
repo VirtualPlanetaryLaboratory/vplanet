@@ -424,14 +424,14 @@ typedef struct {
   double d40KPowerCrust; /**< Body's Crust Power due to 40K */
   double d40KMassCrust;  /**< Body's Crust Mass of 40K */
 
-  double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
-  double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
-  double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
-  double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
-  double d232ThConstCore;
-  double d232ThNumCore;
-  double d232ThPowerCore;
-  double d232ThMassCore;
+  double d232ThConstMan;    /**< Body's Mantle Thorium-232 Decay Constant */
+  double d232ThNumMan;      /**< Body's Mantle Number of Thorium-232 Atoms */
+  double d232ThPowerMan;    /**< Body's Mantle Internal Power Due to Thorium-232 Decay */
+  double d232ThMassMan;     /**< Body's Mantle Mass of Thorium-232 Atoms */
+  double d232ThConstCore;   /**< Body's Core Thorium-232 Decay Constant */
+  double d232ThNumCore;      /**< Body's Core Number of Thorium-232 Atoms */
+  double d232ThPowerCore;    /**< Body's Core Internal Power Due to Thorium-232 Decay */
+  double d232ThMassCore;     /**< Body's Core Mass of Thorium-232 Atoms */
   double d232ThConstCrust;
   double d232ThNumCrust;
   double d232ThPowerCrust;

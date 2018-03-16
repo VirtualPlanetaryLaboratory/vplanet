@@ -23,10 +23,10 @@
 // M=N*m ,[N]=number, [m]=kg/1 atom
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
-// 26Al -- Masses, numbers and powers from Wikipedia XXX Check!
-#define ENERGY26AL        6.4153392709791e-13 // [J]
-#define MASS26AL          26*ATOMMASS // [kg]  Mass of a 26Al atom.
-#define HALFLIFE26AL      2.26267992e13  // [s] 
+/* 26Al -- Masses, numbers and powers from Wikipedia XXX Check! */
+#define ENERGY26AL        6.4153392709791e-13 /**< [J] Decay Energy of Aluminum-26 */
+#define MASS26AL          26*ATOMMASS         /**< [kg] Mass of a 26Al atom */
+#define HALFLIFE26AL      2.26267992e13       /**< [s] Half-life of 26Al */
 /* Mantle */
 #define EMASSMAN26AL      4.6e18      //9.9866e22   //9.854e22  //[kg]  mass of 26Mg on Earth
 #define ENUMMAN26AL       1.0654e41   //2.31311e45  //2.2824e48  //[num] number of 26Mg atoms on Earth

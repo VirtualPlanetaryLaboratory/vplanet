@@ -435,12 +435,13 @@ void fvHelpOutputRadheat(OUTPUT*);
 void fvInitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
-void LogOptionsRadheat(CONTROL*,FILE*);
-void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void fvLogOptionsRadheat(CONTROL*,FILE*);
+void fvLogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void fvLogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+
+void fvAddModuleRadheat(MODULE*,int,int);
 
 /* RadHeat functions */
-
 double fd26AlConstant(double,double);
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);

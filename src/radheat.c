@@ -2549,64 +2549,171 @@ void fvFinalizeUpdate26AlNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iV
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum26AlMan = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum40KMan = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThMan = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate26AlNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum26AlCore = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
     update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
     update[iBody].iNum40KCore = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThCore = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UCore = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UCore = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate40KNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
     update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
     update[iBody].iNum40KCrust = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
+
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate232ThNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThCrust = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
+
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate238UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UCrust = (*iEqn)++;
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
+
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
 void fvFinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UCrust = (*iEqn)++;
@@ -2614,7 +2721,16 @@ void fvFinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int 
 
 /***************** RADHEAT Halts *****************/
 
-/* Minimum 40K Powering? */
+/**
+   Halt if minimum power reached.
+
+   @param body Body struct
+   @param evolve Evolve struct
+   @param halt Halt struct
+   @param io IO struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd40KPower(update,iBody) < halt->dMin40KPower) {
@@ -2629,9 +2745,16 @@ int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
   }
   return 0;
 }        
+/**
+   Halt if minimum power reached.
 
-/* Minimum 232Th Powering? */
-
+   @param body Body struct
+   @param evolve Evolve struct
+   @param halt Halt struct
+   @param io IO struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd232ThPower(update,iBody) < halt->dMin232ThPower) {
@@ -2646,9 +2769,16 @@ int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upda
   }
   return 0;
 }        
+/**
+   Halt if minimum power reached.
 
-/* Minimum 238U Powering? */
-
+   @param body Body struct
+   @param evolve Evolve struct
+   @param halt Halt struct
+   @param io IO struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd238UPower(update,iBody) < halt->dMin238UPower) {
@@ -2663,7 +2793,16 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   }
   return 0;
 }        
+/**
+   Halt if minimum power reached.
 
+   @param body Body struct
+   @param evolve Evolve struct
+   @param halt Halt struct
+   @param io IO struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (fd235UPower(update,iBody) < halt->dMin235UPower) {
@@ -2678,9 +2817,16 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   }
   return 0;
 }        
+/**
+   Halt if minimum power reached.
 
-/* Minimum Radiogenic Power */
-
+   @param body Body struct
+   @param evolve Evolve struct
+   @param halt Halt struct
+   @param io IO struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   int iFoo;
   iFoo = fdRadPowerTotal(body,iBody);
@@ -2697,22 +2843,34 @@ int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
   }
   return 0;
 }        
+/**
+   Count halts if minimum power reached.
 
-
-void CountHaltsRadHeat(HALT *halt,int *iNumHalts) {
+   @param halt Halt struct
+   @param iNumHalts Index of number of halts
+*/
+void fvCountHaltsRadHeat(HALT *halt,int *iNumHalts) {
   if (halt->dMin40KPower > 0)
     (*iNumHalts)++;
   if (halt->dMin232ThPower > 0)
     (*iNumHalts)++;
   if (halt->dMin238UPower > 0)
     (*iNumHalts)++;
-  if (halt->dMin235UPower > 0)  //PED
+  if (halt->dMin235UPower > 0)
     (*iNumHalts)++;
   if (halt->dMinRadPower > 0)
     (*iNumHalts)++;
 }
+/**
+   Add link to halt function in control struct.
 
-void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
+   @param body Body struct
+   @param control Control struct
+   @param options Options struct
+   @param iHalt Index of halt
+   @param iBody Index of body
+*/
+void fvVerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
 
   if (control->Halt[iBody].dMin40KPower > 0)
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMin40KPower;
@@ -2732,8 +2890,20 @@ void VerifyHaltRadheat(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
    block of initialization in InitializeOutputRadheat below */
 
 /* Aluminum */
+/**
+   Write radiogenic 26Al mantle power.
 
-void Write26AlPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 26Al
   *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
   *dTmp = fd26AlPowerMan(update,iBody);
@@ -2745,8 +2915,20 @@ void Write26AlPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
+/**
+   Write radiogenic 26Al surface heat flux.
 
-void Write26AlEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 26Al */
   *dTmp = fd26AlEnFlux(body,update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -2757,8 +2939,20 @@ void Write26AlEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
+/**
+   Write radiogenic 26Al mantle DNum/Dt.
 
-void WriteD26AlNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD26AlNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD26AlNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2768,12 +2962,36 @@ void WriteD26AlNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsRate(units->iTime,cUnit);
   }
 }
+/**
+   Write radiogenic 26Al decay time?
 
-void Write26AlTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
+/**
+   Write radiogenic 26Al mantle mass.
 
-void Write26AlMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d26AlNumMan*MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2783,13 +3001,36 @@ void Write26AlMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
+/**
+   Write radiogenic 26Al DPower/Dt.
 
-//PED: this subr is not finished?
-void WriteD26AlPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD26AlPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = -1;
 }
+/**
+   Write radiogenic 26Al mantle number.
 
-void Write26AlNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d26AlNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2799,7 +3040,20 @@ void Write26AlNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 /* Core */
-void Write26AlPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 26Al core power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 26Al */
   *dTmp = fd26AlPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -2810,7 +3064,20 @@ void Write26AlPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
-void Write26AlMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 26Al core mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d26AlNumCore*MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2820,7 +3087,20 @@ void Write26AlMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write26AlNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 26Al core number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite26AlNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d26AlNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2830,8 +3110,20 @@ void Write26AlNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Potassium */
+/**
+   Write radiogenic 40K mantle power.
 
-void Write40KPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 40K
   *dTmp = -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;  */
   *dTmp = fd40KPowerMan(update,iBody);
@@ -2843,8 +3135,20 @@ void Write40KPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsPower(units,cUnit);
   }
 }
+/**
+   Write radiogenic 40K surface heat flux.
 
-void Write40KEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 40K */
   *dTmp = fd40KEnFlux(body,update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -2855,8 +3159,20 @@ void Write40KEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
+/**
+   Write radiogenic 40K mantle DNum/Dt.
 
-void WriteD40KNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD40KNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD40KNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2866,12 +3182,36 @@ void WriteD40KNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     fsUnitsRate(units->iTime,cUnit);
   }
 }
+/**
+   Write radiogenic 40K decay time?
 
-void Write40KTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
+/**
+   Write radiogenic 40K mantle mass.
 
-void Write40KMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumMan*MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2882,12 +3222,36 @@ void Write40KMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
-//PED: this subr is not finished?
-void WriteD40KPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K DPower/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD40KPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = -1;
 }
+/**
+   Write radiogenic 40K mantle number.
 
-void Write40KNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2897,7 +3261,20 @@ void Write40KNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 /* Core */
-void Write40KPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K core power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 40K */
   *dTmp = fd40KPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -2908,7 +3285,20 @@ void Write40KPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
-void Write40KMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K core mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumCore*MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2918,7 +3308,20 @@ void Write40KMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write40KNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K core number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2928,7 +3331,20 @@ void Write40KNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 /* Crust */
-void Write40KPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K crust power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 40K */
   *dTmp = fd40KPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -2939,7 +3355,20 @@ void Write40KPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
-void Write40KMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K crust mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumCrust*MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2949,7 +3378,20 @@ void Write40KMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write40KNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 40K crust number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite40KNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d40KNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2959,7 +3401,20 @@ void Write40KNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Thorium */
-void Write232ThEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th surface heat flux.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 232Th */
   *dTmp = fd232ThEnFlux(body,update,iBody);
 
@@ -2971,7 +3426,20 @@ void Write232ThEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-void WriteD232ThNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th mantle DNum/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD232ThNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD232ThNumManDt);
 
   if (output->bDoNeg[iBody]) {
@@ -2982,14 +3450,52 @@ void WriteD232ThNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-void WritedD232ThPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp=-1;
-}
-void Write232ThTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp=-1;
-}
+/**
+   Write radiogenic 232Th DPower/Dt.
 
-void Write232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWritedD232ThPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp=-1;
+}
+/**
+   Write radiogenic 232Th decay time?
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp=-1;
+}
+/**
+   Write radiogenic 232Th mantle power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerMan(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3000,7 +3506,20 @@ void Write232ThPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
-void Write232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th mantle mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan*MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3010,7 +3529,20 @@ void Write232ThMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write232ThNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th mantle number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3020,7 +3552,20 @@ void Write232ThNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Core */
-void Write232ThPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th core power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3031,7 +3576,20 @@ void Write232ThPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     fsUnitsPower(units,cUnit);
   }
 }
-void Write232ThMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th core mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCore*MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3041,7 +3599,20 @@ void Write232ThMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write232ThNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th core number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3051,7 +3622,20 @@ void Write232ThNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 /* Crust */
-void Write232ThPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th crust power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3062,7 +3646,20 @@ void Write232ThPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     fsUnitsPower(units,cUnit);
   }
 }
-void Write232ThMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th crust mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCrust*MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3072,7 +3669,20 @@ void Write232ThMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write232ThNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 232Th crust number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite232ThNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d232ThNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3082,7 +3692,20 @@ void Write232ThNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 /* Uranium 238 */
-void Write238UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U surface heat flux.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 238U */
   *dTmp = fd238UEnFlux(body,update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3093,7 +3716,20 @@ void Write238UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-void WriteD238UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U mantle DNum/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD238UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD238UNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3103,15 +3739,54 @@ void WriteD238UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-void WritedD238UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U DPower/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWritedD238UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
-void Write238UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U decay time?
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
 
 /* Mantle */
-void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U mantle power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerMan(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3122,7 +3797,20 @@ void Write238UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
-void Write238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U mantle mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan*MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3132,7 +3820,20 @@ void Write238UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write238UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U mantle number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3142,7 +3843,20 @@ void Write238UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 /* Core */
-void Write238UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U core power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3153,7 +3867,20 @@ void Write238UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
-void Write238UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U core mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumCore*MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3163,7 +3890,20 @@ void Write238UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write238UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U core number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3173,7 +3913,20 @@ void Write238UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Crust */
-void Write238UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U crust power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3184,7 +3937,20 @@ void Write238UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     fsUnitsPower(units,cUnit);
   }
 }
-void Write238UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U crust mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumCrust*MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3194,7 +3960,20 @@ void Write238UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write238UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 238U crust number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite238UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d238UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3203,8 +3982,21 @@ void Write238UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   /* else nothing, as it is a number */
 }
 
-/* Uranium 235 PED */
-void Write235UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/* Uranium 235 */
+/**
+   Write radiogenic 235U surface heat flux.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get surface heat flux from 235U */
   *dTmp = fd235UEnFlux(body,update,iBody);
 
@@ -3216,7 +4008,20 @@ void Write235UEnFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsEnergyFlux(units,cUnit);
   }
 }
-void WriteD235UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U mantle DNum/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteD235UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = *(update[iBody].pdD235UNumManDt);
 
   if (output->bDoNeg[iBody]) {
@@ -3227,15 +4032,54 @@ void WriteD235UNumDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     fsUnitsRate(units->iTime,cUnit);
   }
 }
-void WritedD235UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U DPower/Dt.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWritedD235UPowerDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
-void Write235UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U decay time?
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UTimescale(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp=-1;
 }
 
 /* Mantle */
-void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U mantle power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 235U */
   *dTmp = -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
   if (output->bDoNeg[iBody]) {
@@ -3246,7 +4090,20 @@ void Write235UPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
-void Write235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U mantle mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan*MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3256,7 +4113,20 @@ void Write235UMassMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write235UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U mantle number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3266,7 +4136,20 @@ void Write235UNumMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 /* Core */
-void Write235UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U core power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 235U */
   *dTmp = fd235UPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3277,7 +4160,20 @@ void Write235UPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
-void Write235UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U core mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumCore*MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3287,7 +4183,20 @@ void Write235UMassCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U core number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3297,7 +4206,20 @@ void Write235UNumCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 }
 
 /* Crust */
-void Write235UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U crust power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total power from 235U */
   *dTmp = fd235UPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3308,7 +4230,20 @@ void Write235UPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     fsUnitsPower(units,cUnit);
   }
 }
-void Write235UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U crust mass.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumCrust*MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3318,7 +4253,20 @@ void Write235UMassCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsMass(units->iMass,cUnit);
   }
 }
-void Write235UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write radiogenic 235U crust number.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWrite235UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].d235UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3328,7 +4276,20 @@ void Write235UNumCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 /* Totals */
-void WriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write total radiogenic power in crust.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Power Production in crust*/
   *dTmp = fdRadPowerCrust(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3339,8 +4300,20 @@ void WriteRadPowerCrust(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
+/**
+   Write total radiogenic power in mantle.
 
-void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Power Production in mantle*/
   *dTmp = fdRadPowerMan(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3351,8 +4324,20 @@ void WriteRadPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsPower(units,cUnit);
   }
 }
+/**
+   Write total radiogenic power in core.
 
-void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production in core*/
   *dTmp = fdRadPowerCore(update,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3363,7 +4348,20 @@ void WriteRadPowerCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     fsUnitsPower(units,cUnit);
   }
 }
-void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/**
+   Write total radiogenic power.
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Total Radiogenic Power Production */
   *dTmp = body[iBody].dRadPowerTotal;
   if (output->bDoNeg[iBody]) {
@@ -3374,8 +4372,20 @@ void WriteRadPowerTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsPower(units,cUnit);
   }
 }
+/**
+   Write total radiogenic surface heat flux.
 
-void WriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void fvWriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Radiogenic Surface Energy Flux */
   *dTmp = fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   if (output->bDoNeg[iBody]) {
@@ -3387,10 +4397,14 @@ void WriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
   }
 }
 
-void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
+/**
+   Initialize output for each variable: name, description, default units, and write function.
 
+   @param output Output struct
+   @param fnWrite fnWriteOutput
+*/
+void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /* Aluminum */
-    //  PED:  Do these default numbers matter??  If so they need to be changed.
   sprintf(output[OUT_26ALPOWERMAN].cName,"26AlPowerMan");
   sprintf(output[OUT_26ALPOWERMAN].cDescr,"Total Power Generated by 26Al");
   sprintf(output[OUT_26ALPOWERMAN].cNeg,"TW");
@@ -3413,16 +4427,16 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALDPOWERDT].cDescr,"Time Rate of Change of 26Al Power Generation");
   sprintf(output[OUT_26ALDPOWERDT].cNeg,"TW/Gyr");
   output[OUT_26ALDPOWERDT].bNeg = 1;
-  output[OUT_26ALDPOWERDT].dNeg = 1e12/1e9; /* XXX */
+  output[OUT_26ALDPOWERDT].dNeg = 1e9/1e12; //[yr/Gyr*TW/W] //1e12/1e9; /* XXX */
   output[OUT_26ALDPOWERDT].iNum = 1;
   output[OUT_26ALDPOWERDT].iModuleBit = RADHEAT;
-  fnWrite[OUT_26ALDPOWERDT] = &WriteD26AlPowerDt;  //PED: that subr is not written yet?
+  fnWrite[OUT_26ALDPOWERDT] = &WriteD26AlPowerDt; 
   
   sprintf(output[OUT_26ALDNUMDT].cName,"D26AlNumManDt");
   sprintf(output[OUT_26ALDNUMDT].cDescr,"Time Rate of Change of 26Al Heat Generation");
   sprintf(output[OUT_26ALDNUMDT].cNeg,"/Gyr");
   output[OUT_26ALDNUMDT].bNeg = 1;
-  output[OUT_26ALDNUMDT].dNeg = YEARSEC*1e9; 
+  output[OUT_26ALDNUMDT].dNeg = YEARSEC*1e9; //[s/Gyr]
   output[OUT_26ALDNUMDT].iNum = 1;
   output[OUT_26ALDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALDNUMDT] = &WriteD26AlNumDt;
@@ -3431,7 +4445,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALTIME].cDescr,"Timescale for 26Al Power Generation");
   sprintf(output[OUT_26ALTIME].cNeg,"Gyr");
   output[OUT_26ALTIME].bNeg = 1;
-  output[OUT_26ALTIME].dNeg = YEARSEC*1e9;
+  output[OUT_26ALTIME].dNeg = 1/(YEARSEC*1e9); //[Gyr/s] //YEARSEC*1e9;
   output[OUT_26ALTIME].iNum = 1;
   output[OUT_26ALTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALTIME] = &Write26AlTimescale;
@@ -3440,7 +4454,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALMASSMAN].cDescr,"Mass of Mantle in 26Al");
   sprintf(output[OUT_26ALMASSMAN].cNeg,"Earth Masses");
   output[OUT_26ALMASSMAN].bNeg = 1;
-  output[OUT_26ALMASSMAN].dNeg = 1./MEARTH;
+  output[OUT_26ALMASSMAN].dNeg = 1./MEARTH;  //[EMass/kg]
   output[OUT_26ALMASSMAN].iNum = 1;
   output[OUT_26ALMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALMASSMAN] = &Write26AlMassMan;
@@ -3449,7 +4463,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALNUMMAN].cDescr,"Total Number of 26Al Atoms");
   sprintf(output[OUT_26ALNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_26ALNUMMAN].bNeg = 1;
-  output[OUT_26ALNUMMAN].dNeg = 1;
+  output[OUT_26ALNUMMAN].dNeg = EMASSMAN26AL/MASS26AL;
   output[OUT_26ALNUMMAN].iNum = 1;
   output[OUT_26ALNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALNUMMAN] = &Write26AlNumMan;
@@ -3459,7 +4473,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_26ALPOWERCORE].cDescr,"Core Power Generated by 26Al");
   sprintf(output[OUT_26ALPOWERCORE].cNeg,"TW");
   output[OUT_26ALPOWERCORE].bNeg = 1;
-  output[OUT_26ALPOWERCORE].dNeg = 1e-12; // ergs/s -> TW 
+  output[OUT_26ALPOWERCORE].dNeg = 1/1e12; //[TW/W]
   output[OUT_26ALPOWERCORE].iNum = 1;
   output[OUT_26ALPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALPOWERCORE] = &Write26AlPowerCore;
@@ -3483,7 +4497,6 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALNUMCORE] = &Write26AlNumCore;
   
   /* Potassium */
-    //  PED:  Do these default numbers matter??  If so they need to be changed.
   sprintf(output[OUT_40KENFLUX].cName,"40KEnFlux");
   sprintf(output[OUT_40KENFLUX].cDescr,"Surface Energy Flux from 40K");
   sprintf(output[OUT_40KENFLUX].cNeg,"W/m^2");
@@ -3497,10 +4510,10 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KDPOWERDT].cDescr,"Time Rate of Change of 40K Power Generation");
   sprintf(output[OUT_40KDPOWERDT].cNeg,"TW/Gyr");
   output[OUT_40KDPOWERDT].bNeg = 1;
-  output[OUT_40KDPOWERDT].dNeg = 1e12/1e9; /* XXX */
+  output[OUT_40KDPOWERDT].dNeg = 1e9/1e12; /* XXX */
   output[OUT_40KDPOWERDT].iNum = 1;
   output[OUT_40KDPOWERDT].iModuleBit = RADHEAT;
-  fnWrite[OUT_40KDPOWERDT] = &WriteD40KPowerDt;  //PED: that subr is not written yet?
+  fnWrite[OUT_40KDPOWERDT] = &WriteD40KPowerDt;
   
   sprintf(output[OUT_40KDNUMDT].cName,"D40KNumManDt");
   sprintf(output[OUT_40KDNUMDT].cDescr,"Time Rate of Change of 40K Heat Generation");
@@ -3515,7 +4528,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KTIME].cDescr,"Timescale for 40K Power Generation");
   sprintf(output[OUT_40KTIME].cNeg,"Gyr");
   output[OUT_40KTIME].bNeg = 1;
-  output[OUT_40KTIME].dNeg = YEARSEC*1e9;
+  output[OUT_40KTIME].dNeg = 1/(YEARSEC*1e9);
   output[OUT_40KTIME].iNum = 1;
   output[OUT_40KTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_40KTIME] = &Write40KTimescale;
@@ -3533,7 +4546,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KMASSMAN].cDescr,"Total Mass of 40K");
   sprintf(output[OUT_40KMASSMAN].cNeg,"Earth Masses");
   output[OUT_40KMASSMAN].bNeg = 1;
-  output[OUT_40KMASSMAN].dNeg = MEARTH;
+  output[OUT_40KMASSMAN].dNeg = 1./MEARTH;
   output[OUT_40KMASSMAN].iNum = 1;
   output[OUT_40KMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSMAN] = &Write40KMassMan;
@@ -3561,7 +4574,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KMASSCORE].cDescr,"Total Core Mass of 40K");
   sprintf(output[OUT_40KMASSCORE].cNeg,"Earth Masses");
   output[OUT_40KMASSCORE].bNeg = 1;
-  output[OUT_40KMASSCORE].dNeg = MEARTH;
+  output[OUT_40KMASSCORE].dNeg = 1./MEARTH;
   output[OUT_40KMASSCORE].iNum = 1;
   output[OUT_40KMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSCORE] = &Write40KMassCore;
@@ -3589,7 +4602,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KMASSCRUST].cDescr,"Total Crust Mass of 40K");
   sprintf(output[OUT_40KMASSCRUST].cNeg,"Earth Masses");
   output[OUT_40KMASSCRUST].bNeg = 1;
-  output[OUT_40KMASSCRUST].dNeg = MEARTH;
+  output[OUT_40KMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_40KMASSCRUST].iNum = 1;
   output[OUT_40KMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSCRUST] = &Write40KMassCrust;
@@ -3635,7 +4648,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THTIME].cDescr,"Timescale for 232Th Power Generation");
   sprintf(output[OUT_232THTIME].cNeg,"Gyr");
   output[OUT_232THTIME].bNeg = 1;
-  output[OUT_232THTIME].dNeg = YEARSEC*1e9;
+  output[OUT_232THTIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_232THTIME].iNum = 1;
   output[OUT_232THTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_232THTIME] = &Write232ThTimescale;
@@ -3644,7 +4657,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THMASSMAN].cDescr,"Total Mass of 232Th");
   sprintf(output[OUT_232THMASSMAN].cNeg,"Earth Masses");
   output[OUT_232THMASSMAN].bNeg = 1;
-  output[OUT_232THMASSMAN].dNeg = MEARTH;
+  output[OUT_232THMASSMAN].dNeg = 1./MEARTH;
   output[OUT_232THMASSMAN].iNum = 1;
   output[OUT_232THMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSMAN] = &Write232ThMassMan;
@@ -3672,7 +4685,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THMASSCORE].cDescr,"Total Mass of 232Th");
   sprintf(output[OUT_232THMASSCORE].cNeg,"Earth Masses");
   output[OUT_232THMASSCORE].bNeg = 1;
-  output[OUT_232THMASSCORE].dNeg = MEARTH;
+  output[OUT_232THMASSCORE].dNeg = 1./MEARTH;
   output[OUT_232THMASSCORE].iNum = 1;
   output[OUT_232THMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSCORE] = &Write232ThMassCore;
@@ -3700,7 +4713,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_232THMASSCRUST].cDescr,"Total Mass of 232Th");
   sprintf(output[OUT_232THMASSCRUST].cNeg,"Earth Masses");
   output[OUT_232THMASSCRUST].bNeg = 1;
-  output[OUT_232THMASSCRUST].dNeg = MEARTH;
+  output[OUT_232THMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_232THMASSCRUST].iNum = 1;
   output[OUT_232THMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSCRUST] = &Write232ThMassCrust;
@@ -3736,7 +4749,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_238UDNUMDT].cName,"D238UNumManDt");
   sprintf(output[OUT_238UDNUMDT].cDescr,"Time Rate of Change of the Number of 238U Nuclei");
-  sprintf(output[OUT_238UDNUMDT].cNeg,"Gyr");
+  sprintf(output[OUT_238UDNUMDT].cNeg,"/Gyr");
   output[OUT_238UDNUMDT].bNeg = 1;
   output[OUT_238UDNUMDT].dNeg = YEARSEC*1e9;
   output[OUT_238UDNUMDT].iNum = 1;
@@ -3747,7 +4760,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UTIME].cDescr,"Timescale for 238U Power Generation");
   sprintf(output[OUT_238UTIME].cNeg,"Gyr");
   output[OUT_238UTIME].bNeg = 1;
-  output[OUT_238UTIME].dNeg = YEARSEC*1e9;
+  output[OUT_238UTIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_238UTIME].iNum = 1;
   output[OUT_238UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_238UTIME] = &Write238UTimescale;
@@ -3756,7 +4769,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UMASSMAN].cDescr,"Total Mass of 238U");
   sprintf(output[OUT_238UMASSMAN].cNeg,"Earth Masses");
   output[OUT_238UMASSMAN].bNeg = 1;
-  output[OUT_238UMASSMAN].dNeg = MEARTH;
+  output[OUT_238UMASSMAN].dNeg = 1./MEARTH;
   output[OUT_238UMASSMAN].iNum = 1;
   output[OUT_238UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSMAN] = &Write238UMassMan;
@@ -3765,7 +4778,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UNUMMAN].cDescr,"Total Number of 238U Atoms");
   sprintf(output[OUT_238UNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_238UNUMMAN].bNeg = 1;
-  output[OUT_238UNUMMAN].dNeg = 1;
+  output[OUT_238UNUMMAN].dNeg = EMASSMAN238U/MASS238U;
   output[OUT_238UNUMMAN].iNum = 1;
   output[OUT_238UNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMMAN] = &Write238UNumMan;
@@ -3784,7 +4797,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UMASSCORE].cDescr,"Total Core Mass of 238U");
   sprintf(output[OUT_238UMASSCORE].cNeg,"Earth Masses");
   output[OUT_238UMASSCORE].bNeg = 1;
-  output[OUT_238UMASSCORE].dNeg = MEARTH;
+  output[OUT_238UMASSCORE].dNeg = 1./MEARTH;
   output[OUT_238UMASSCORE].iNum = 1;
   output[OUT_238UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSCORE] = &Write238UMassCore;
@@ -3793,7 +4806,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UNUMCORE].cDescr,"Total Core Number of 238U Atoms");
   sprintf(output[OUT_238UNUMCORE].cNeg,"Initial Primordial Earth Number");
   output[OUT_238UNUMCORE].bNeg = 1;
-  output[OUT_238UNUMCORE].dNeg = 1;
+  output[OUT_238UNUMCORE].dNeg = EMASSCORE238U/MASS238U;
   output[OUT_238UNUMCORE].iNum = 1;
   output[OUT_238UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMCORE] = &Write238UNumCore;
@@ -3812,7 +4825,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UMASSCRUST].cDescr,"Total Crust Mass of 238U");
   sprintf(output[OUT_238UMASSCRUST].cNeg,"Earth Masses");
   output[OUT_238UMASSCRUST].bNeg = 1;
-  output[OUT_238UMASSCRUST].dNeg = MEARTH;
+  output[OUT_238UMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_238UMASSCRUST].iNum = 1;
   output[OUT_238UMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSCRUST] = &Write238UMassCrust;
@@ -3821,7 +4834,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_238UNUMCRUST].cDescr,"Total Crust Number of 238U Atoms");
   sprintf(output[OUT_238UNUMCRUST].cNeg,"Initial Primordial Earth Number");
   output[OUT_238UNUMCRUST].bNeg = 1;
-  output[OUT_238UNUMCRUST].dNeg = 1;
+  output[OUT_238UNUMCRUST].dNeg = EMASSCRUST238U/MASS238U;
   output[OUT_238UNUMCRUST].iNum = 1;
   output[OUT_238UNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMCRUST] = &Write238UNumCrust;
@@ -3841,14 +4854,14 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UENFLUX].cDescr,"Surface Energy Flux due to 235U");
   sprintf(output[OUT_235UENFLUX].cNeg,"W/m^2");
   output[OUT_235UENFLUX].bNeg = 1;
-  output[OUT_235UENFLUX].dNeg = 1e-3;
+  output[OUT_235UENFLUX].dNeg = 1;
   output[OUT_235UENFLUX].iNum = 1;
   output[OUT_235UENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_235UENFLUX] = &Write235UEnFlux;
 
   sprintf(output[OUT_235UDNUMDT].cName,"D235UNumManDt");
   sprintf(output[OUT_235UDNUMDT].cDescr,"Time Rate of Change of the Number of 235U Nuclei");
-  sprintf(output[OUT_235UDNUMDT].cNeg,"Gyr");
+  sprintf(output[OUT_235UDNUMDT].cNeg,"/Gyr");
   output[OUT_235UDNUMDT].bNeg = 1;
   output[OUT_235UDNUMDT].dNeg = YEARSEC*1e9;
   output[OUT_235UDNUMDT].iNum = 1;
@@ -3859,7 +4872,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UTIME].cDescr,"Timescale for 235U Power Generation");
   sprintf(output[OUT_235UTIME].cNeg,"Gyr");
   output[OUT_235UTIME].bNeg = 1;
-  output[OUT_235UTIME].dNeg = YEARSEC*1e9;
+  output[OUT_235UTIME].dNeg = 1./(YEARSEC*1e9);
   output[OUT_235UTIME].iNum = 1;
   output[OUT_235UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_235UTIME] = &Write235UTimescale;
@@ -3868,7 +4881,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UMASSMAN].cDescr,"Total Mass of 235U");
   sprintf(output[OUT_235UMASSMAN].cNeg,"Earth Masses");
   output[OUT_235UMASSMAN].bNeg = 1;
-  output[OUT_235UMASSMAN].dNeg = MEARTH;
+  output[OUT_235UMASSMAN].dNeg = 1./MEARTH;
   output[OUT_235UMASSMAN].iNum = 1;
   output[OUT_235UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSMAN] = &Write235UMassMan;
@@ -3877,7 +4890,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UNUMMAN].cDescr,"Total Number of 235U Atoms");
   sprintf(output[OUT_235UNUMMAN].cNeg,"Initial Primordial Earth Number");
   output[OUT_235UNUMMAN].bNeg = 1;
-  output[OUT_235UNUMMAN].dNeg = 1;
+  output[OUT_235UNUMMAN].dNeg = EMASSMAN235U/MASS235U;
   output[OUT_235UNUMMAN].iNum = 1;
   output[OUT_235UNUMMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMMAN] = &Write235UNumMan;
@@ -3896,7 +4909,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UMASSCORE].cDescr,"Total Core Mass of 235U");
   sprintf(output[OUT_235UMASSCORE].cNeg,"Earth Masses");
   output[OUT_235UMASSCORE].bNeg = 1;
-  output[OUT_235UMASSCORE].dNeg = MEARTH;
+  output[OUT_235UMASSCORE].dNeg = 1./MEARTH;
   output[OUT_235UMASSCORE].iNum = 1;
   output[OUT_235UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSCORE] = &Write235UMassCore;
@@ -3905,7 +4918,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UNUMCORE].cDescr,"Total Core Number of 235U Atoms");
   sprintf(output[OUT_235UNUMCORE].cNeg,"Initial Primordial Earth Number");
   output[OUT_235UNUMCORE].bNeg = 1;
-  output[OUT_235UNUMCORE].dNeg = 1;
+  output[OUT_235UNUMCORE].dNeg = EMASSCORE235U/MASS235U;
   output[OUT_235UNUMCORE].iNum = 1;
   output[OUT_235UNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMCORE] = &Write235UNumCore;
@@ -3924,7 +4937,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UMASSCRUST].cDescr,"Total Crust Mass of 235U");
   sprintf(output[OUT_235UMASSCRUST].cNeg,"Earth Masses");
   output[OUT_235UMASSCRUST].bNeg = 1;
-  output[OUT_235UMASSCRUST].dNeg = MEARTH;
+  output[OUT_235UMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_235UMASSCRUST].iNum = 1;
   output[OUT_235UMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSCRUST] = &Write235UMassCrust;
@@ -3933,7 +4946,7 @@ void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_235UNUMCRUST].cDescr,"Total Crust Number of 235U Atoms");
   sprintf(output[OUT_235UNUMCRUST].cNeg,"Initial Primordial Earth Number");
   output[OUT_235UNUMCRUST].bNeg = 1;
-  output[OUT_235UNUMCRUST].dNeg = 1;
+  output[OUT_235UNUMCRUST].dNeg = EMASSCRUST235U/MASS235U;
   output[OUT_235UNUMCRUST].iNum = 1;
   output[OUT_235UNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMCRUST] = &Write235UNumCrust;

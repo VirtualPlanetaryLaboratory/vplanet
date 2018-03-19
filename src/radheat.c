@@ -2126,8 +2126,18 @@ void fvVerify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doub
     update[iBody].pdD26AlNumCoreDt = &update[iBody].dZero;
 
 }
+/**
+   Verify 40K is initialized
 
-void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param system System struct
+   @param update Update struct
+   @param Age
+   @param Function to update variable
+   @param iBody Index of body
+*/
+void fvVerify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign40KNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i40KMan >= 0) {
@@ -2168,8 +2178,18 @@ void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double 
     update[iBody].pdD40KNumCrustDt = &update[iBody].dZero;
 
 }
+/**
+   Verify 232Th is initialized
 
-void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param system System struct
+   @param update Update struct
+   @param Age
+   @param Function to update variable
+   @param iBody Index of body
+*/
+void fvVerify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign232ThNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i232ThMan >= 0) {
@@ -2208,8 +2228,18 @@ void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doubl
   } else
     update[iBody].pdD232ThNumCrustDt = &update[iBody].dZero;
 }
+/**
+   Verify 238U is initialized
 
-void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param system System struct
+   @param update Update struct
+   @param Age
+   @param Function to update variable
+   @param iBody Index of body
+*/
+void fvVerify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign238UNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i238UMan >= 0) {
@@ -2248,8 +2278,18 @@ void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
   } else
     update[iBody].pdD238UNumCrustDt = &update[iBody].dZero;
 }
+/**
+   Verify 235U is initialized
 
-void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param system System struct
+   @param update Update struct
+   @param Age
+   @param Function to update variable
+   @param iBody Index of body
+*/
+void fvVerify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign235UNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i235UMan >= 0) {
@@ -2288,16 +2328,33 @@ void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
   } else
     update[iBody].pdD235UNumCrustDt = &update[iBody].dZero;
 }
+/**
+   Define auxiliary radheat body properties.
 
+   @param body Body struct
+   @param evolve Evolve struct
+   @param update Update struct
+   @param iBody Index of body
+*/
 /* Auxs Props */
-void PropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void fvPropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerMan=fdRadPowerMan(update,iBody);
   body[iBody].dRadPowerCore=fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust=fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerTotal=fdRadPowerTotal(body,iBody);
 }
+/**
+   Force behavior in radheat: Set number of radiogenic elements to zero if < 0.5.
 
-void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+   @param body Body struct
+   @param evolve Evolve struct
+   @param io IO struct
+   @param system System struct
+   @param update Update struct
+   @param fnUpdate fnUpdateVariable
+   @param iBody Index of body
+*/
+void fvForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   if (body[iBody].d26AlNumMan < 0.5)
     body[iBody].d26AlNumMan = 0;
   if (body[iBody].d26AlNumCore < 0.5)
@@ -2332,13 +2389,33 @@ void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDA
     body[iBody].d235UNumCrust = 0;
 }
 
-void RadheatExit(FILES *files,char cSpecies[16],int iFile) {
+/**
+   Exit radheat error statements
+
+   @param files Files struct
+   @param cSpecies char
+   @param iFile Index of file
+*/
+void fvRadheatExit(FILES *files,char cSpecies[16],int iFile) {
   fprintf(stderr,"ERROR: Radheat called, but no %s option provided.\n",cSpecies);
   fprintf(stderr,"\tFile: %s\n",files->Infile[iFile].cIn);
   exit(EXIT_INPUT);
 }
+/**
+   Verify radheat is initialized: that both man and core initialize and not both mass and number specified.
 
-void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param output Output struct
+   @param system System struct
+   @param update Update struct
+   @param fnUpdate fnUpdateVariable
+   @param iBody Index of body
+   @param iModule Index of module
+*/
+void fvVerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iFile=iBody+1;
 
   /* Cannot set 2 or more of Power, Mass and Number for any isotope */
@@ -2347,39 +2424,28 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
   // XXX This looks like it's insufficient to capture all the permutations
   NotMassAndNum(options,OPT_26ALMASSMAN,OPT_26ALNUMMAN,iBody);
-
   // 26Al set properly
   Verify26Al(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
-
   // XXX This looks like it's insufficient to capture all the permutations
   NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody);
-
   // 40K set properly
   Verify40K(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
-
   // 232Th
-  // XXX Also insufficient?
   NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iFile);
-
   // 232Th set corectly
   Verify232Th(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
-
   // 238U
   NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iFile);
-
   // 238U set correctly
   Verify238U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
-
   // 235U
   NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iFile);
-
   // 235U set correctly
   Verify235U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
   control->fnPropsAux[iBody][iModule] = &PropsAuxRadheat;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyRadheat;
-  //  output[OUT_SURFENFLUXRADTOTAL].fnOutput[iBody][iModule] = &fdSurfEnFluxRadTotal;   //PD: Is this right?
 }
 
 

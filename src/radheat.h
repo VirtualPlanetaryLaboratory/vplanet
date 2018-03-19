@@ -248,11 +248,18 @@ void fvAssign232ThNum(BODY*,OPTIONS*,double,int);
 void fvAssign238UNum(BODY*,OPTIONS*,double,int);
 void fvAssign235UNum(BODY*,OPTIONS*,double,int);
 void fvVerify26Al(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerify40K(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerify232Th(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerify238U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
 
-void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
+void fvForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fvRadheatExit(FILES*,char,int);
+void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetRadheat(CONTROL*,MODULE*);
-void PropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
+
 void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 
@@ -432,7 +439,6 @@ void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* RadHeat functions */
-void fnForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 double fd26AlConstant(double,double);
 double fd40KConstant(double,double);

@@ -69,12 +69,12 @@ void fvBodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 /**
    Read initial 26Al power in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -99,12 +99,12 @@ void fvRead26AlPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 26Al power in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -124,12 +124,12 @@ void fvRead26AlPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 26Al mass in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -152,12 +152,12 @@ void fvRead26AlMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 26Al mass in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -177,12 +177,12 @@ void fvRead26AlMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 26Al number in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -206,12 +206,12 @@ void fvRead26AlNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 /**
    Read initial 26Al number in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead26AlNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -235,12 +235,12 @@ void fvRead26AlNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 40K power in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -265,12 +265,12 @@ void fvRead40KPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 40K power in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -290,12 +290,12 @@ void fvRead40KPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 40K mass in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -318,12 +318,12 @@ void fvRead40KMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 /**
    Read initial 40K mass in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -343,12 +343,12 @@ void fvRead40KMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 40K number in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -372,12 +372,12 @@ void fvRead40KNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 /**
    Read initial 40K number in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -397,12 +397,12 @@ void fvRead40KNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 /**
    Read initial 40K power in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -422,12 +422,12 @@ void fvRead40KPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 40K mass in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -447,12 +447,12 @@ void fvRead40KMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 40K number in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
@@ -474,12 +474,12 @@ void fvRead40KNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 232Th power in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -503,12 +503,12 @@ void fvRead232ThPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 232Th power in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -532,12 +532,12 @@ void fvRead232ThPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 /**
    Read initial 232Th mass in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -559,12 +559,12 @@ void fvRead232ThMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 232Th mass in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -586,12 +586,12 @@ void fvRead232ThMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 232Th number in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -613,12 +613,12 @@ void fvRead232ThNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 232Th number in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -640,12 +640,12 @@ void fvRead232ThNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 232Th power in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -668,12 +668,12 @@ void fvRead232ThPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
 /**
    Read initial 232Th mass in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -695,12 +695,12 @@ void fvRead232ThMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 /**
    Read initial 232Th number in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -724,12 +724,12 @@ void fvRead232ThNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 238U power in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -752,12 +752,12 @@ void fvRead238UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 238U mass in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -779,12 +779,12 @@ void fvRead238UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 238U number in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -808,12 +808,12 @@ void fvRead238UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 /**
    Read initial 238U power in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -836,12 +836,12 @@ void fvRead238UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 238U mass in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -863,12 +863,12 @@ void fvRead238UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 238U number in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -892,12 +892,12 @@ void fvRead238UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 238U power in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -919,12 +919,12 @@ void fvRead238UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 /**
    Read initial 238U mass in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -946,12 +946,12 @@ void fvRead238UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 238U number in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -975,12 +975,12 @@ void fvRead238UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 235U power in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1003,12 +1003,12 @@ void fvRead235UPowerMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 235U mass in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1030,12 +1030,12 @@ void fvRead235UMassMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 235U number in mantle
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1057,12 +1057,12 @@ void fvRead235UNumMan(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 /**
    Read initial 235U power in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1085,12 +1085,12 @@ void fvRead235UPowerCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 235U mass in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1112,12 +1112,12 @@ void fvRead235UMassCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read initial 235U number in core
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1139,12 +1139,12 @@ void fvRead235UNumCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 /**
    Read initial 235U power in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1167,12 +1167,12 @@ void fvRead235UPowerCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 /**
    Read initial 235U mass in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1194,12 +1194,12 @@ void fvRead235UMassCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read initial 235U number in crust
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvRead235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1223,12 +1223,12 @@ void fvRead235UNumCrust(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read halt 40K power
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1251,12 +1251,12 @@ void fvReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Read halt 235U power
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1279,12 +1279,12 @@ void fvReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read halt 238U power
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1307,12 +1307,12 @@ void fvReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 /**
    Read halt 232Th power
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1335,12 +1335,12 @@ void fvReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 /**
    Read halt total radiogenic power
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
-   @param iFile
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
+   @param iFile Index of file
 */
 void fvReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1365,7 +1365,7 @@ void fvReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 /**
    Initialize input options to default values
 
-   @param Options
+   @param options Options struct
    @param Function to read in options
 */
 void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
@@ -1852,13 +1852,13 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 /**
    Read input option
 
-   @param Body
-   @param Control
-   @param Files
-   @param Options
-   @param System
+   @param body Body struct
+   @param control Control struct
+   @param files Files struct
+   @param options Options struct
+   @param system System struct
    @param Function to read option
-   @param iBody
+   @param iBody Index of body
 */
 void fvReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
@@ -1870,18 +1870,30 @@ void fvReadOptionsRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 }
     
 /******************* Verify RADHEAT ******************/
+/**
+   Verify that mass and number are not both input
 
+   @param options Options struct
+   @param iMass Index of mass
+   @param iNum Index of number
+   @param iBody Index of body
+*/
 void fvNotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
   if (options[iMass].iLine[iBody] >= 0 && options[iNum].iLine[iBody] >= 0) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",options[iMass].cName,options[iNum].cName);
     DoubleLineExit(options[iMass].cFile[iBody],options[iNum].cFile[iBody],options[iMass].iLine[iBody],options[iNum].iLine[iBody]);
   }
 }
+/**
+   Assign 26Al number to body
 
+   @param body Body struct
+   @param options Options struct
+   @param Age
+   @param iBody Index of body
+*/
 /* Assign Nums */
-void Assign26AlNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
-  // Add an int iFile=iBody+1?XXX
-  
+void fvAssign26AlNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   /* Mantle */
   if (options[OPT_26ALMASSMAN].iLine[iBody+1] >= 0) {
     body[iBody].d26AlNumMan=body[iBody].d26AlMassMan/(MASS26AL);
@@ -1905,25 +1917,24 @@ void Assign26AlNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   }  
   body[iBody].d26AlConstCore = fd26AlConstant(body[iBody].d26AlNumCore,dAge);
 }
+/**
+   Assign 40K number to body
 
-void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
-  // Add an int iFile=iBody+1?XXX
-  
+   @param body Body struct
+   @param options Options struct
+   @param Age
+   @param iBody Index of body
+*/
+void fvAssign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   /* Mantle */
   if (options[OPT_40KMASSMAN].iLine[iBody+1] >= 0) {
-    //  I think here you need to define body.40KNum bc only the default value of 40Kmass has been chosen by user and set.
-    //      printf("40KMass=%e, MASS40K=%e, 40KNum=%e\n",body[iBody].d40KMass,MASS40K,body[iBody].d40KNum);
     body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
-    //printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
   }
   if (options[OPT_40KNUMMAN].iLine[iBody+1] >= 0) {
     // Do nothing bc default Num set.
-    //printf("40KNumMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
   }
   if (options[OPT_40KPOWERMAN].iLine[iBody+1] >= 0) {
     body[iBody].d40KNumMan=body[iBody].d40KPowerMan/(ENERGY40K)*(HALFLIFE40K);
-    //printf("40KPowerMan set, .d40KPowerMan=%e, .d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KPowerMan,body[iBody].d40KNumMan,ENUMMAN40K);
-    //      exit(1);
   }  
   body[iBody].d40KConstMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the constant given num and age.
   
@@ -1950,8 +1961,15 @@ void Assign40KNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
   body[iBody].d40KConstCrust = fd40KConstant(body[iBody].d40KNumCrust,dAge);
   
 }
+/**
+   Assign 232Th number to body
 
-void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param Age
+   @param iBody Index of body
+*/
+void fvAssign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_232THMASSMAN].iLine[iBody+1] >= 0) {
       body[iBody].d232ThNumMan=body[iBody].d232ThMassMan/(MASS232TH);
@@ -1985,8 +2003,15 @@ void Assign232ThNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     }
     body[iBody].d232ThConstCrust = fd232ThConstant(body[iBody].d232ThNumCrust,dAge);
 }
+/**
+   Assign 238U number to body
 
-void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
+   @param body Body struct
+   @param options Options struct
+   @param Age
+   @param iBody Index of body
+*/
+void fvAssign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     /* Mantle */
     if (options[OPT_238UMASSMAN].iLine[iBody+1] >= 0) {
       body[iBody].d238UNumMan=body[iBody].d238UMassMan/(MASS238U);
@@ -2018,8 +2043,15 @@ void Assign238UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
     }
     body[iBody].d238UConstCrust = fd238UConstant(body[iBody].d238UNumCrust,dAge);    
 }
+/**
+   Assign 235U number to body
 
-void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
+   @param body Body struct
+   @param options Options struct
+   @param Age
+   @param iBody Index of body
+*/
+void fvAssign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
     /* Mantle */
   if (options[OPT_235UMASSMAN].iLine[iBody+1] >= 0) {
       body[iBody].d235UNumMan=body[iBody].d235UMassMan/(MASS235U);
@@ -2051,9 +2083,19 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
   }
   body[iBody].d235UConstCrust = fd235UConstant(body[iBody].d235UNumCrust,dAge);
 }
+/**
+   Verify 26Al is initialized
 
+   @param body Body struct
+   @param options Options struct
+   @param system System struct
+   @param update Update struct
+   @param Age
+   @param Function to update variable
+   @param iBody Index of body
+*/
 /* Verify */
-void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void fvVerify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
   Assign26AlNum(body,options,dAge,iBody);
 
   /* Mantle */

@@ -235,17 +235,20 @@ void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],
 #define RADHEATHALTSYSEND       5
 #define RADHEATHALTBODYEND      5
 
-//int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
-int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int); 
 int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsRadHeat(HALT*,int*);
 
-
 /* Verify Functions */
 void fvNotMassAndNum(OPTIONS*,int,int,int);
+void fvAssign26AlNum(BODY*,OPTIONS*,double,int);
+void fvAssign40KNum(BODY*,OPTIONS*,double,int);
+void fvAssign232ThNum(BODY*,OPTIONS*,double,int);
+void fvAssign238UNum(BODY*,OPTIONS*,double,int);
+void fvAssign235UNum(BODY*,OPTIONS*,double,int);
+void fvVerify26Al(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+
 void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetRadheat(CONTROL*,MODULE*);

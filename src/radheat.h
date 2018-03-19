@@ -257,23 +257,27 @@ void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
 void fvForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 void fvRadheatExit(FILES*,char,int);
 void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetRadheat(CONTROL*,MODULE*);
 
 void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
-void InitializeUpdateRadheat(BODY*,UPDATE*,int);
-void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvInitializeUpdateRadheat(BODY*,UPDATE*,int);
+void fvFinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate26AlNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate26AlNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 

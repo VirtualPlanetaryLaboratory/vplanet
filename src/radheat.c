@@ -2450,8 +2450,14 @@ void fvVerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,O
 
 
 /**************** RADHEAT update ****************/
+/**
+   Initialize or update iNumVars and iNumSpecies in update struct.
 
-void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+*/
+void fvInitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
   /* Initially allow all radiogenic heat sources to be present. If any are 0, 
      or < dMinRadPower, they will me removed from update[iBody] in 
      ForceBehavior.
@@ -2530,71 +2536,78 @@ void InitializeUpdateRadheat(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNum235UCrust++;
   }
 }
+/**
+   Finalize update: update struct for this variable and equation gets module index and equation number.
 
-//PED: Combine these into ..HeatMan?  and ..HeatCore?
-void FinalizeUpdate26AlNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+   @param body Body struct
+   @param update Update struct
+   @param iEqn Index of equation
+   @param iVar Index of variable
+   @param iBody Index of body
+*/
+void fvFinalizeUpdate26AlNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum26AlMan = (*iEqn)++;
 }
 
-void FinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate40KNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum40KMan = (*iEqn)++;
 }
 
-void FinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate232ThNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThMan = (*iEqn)++;
 }
 
-void FinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate238UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UMan = (*iEqn)++;
 }
 
-void FinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
+void fvFinalizeUpdate235UNumManRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UMan = (*iEqn)++;
 }
 
-void FinalizeUpdate26AlNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate26AlNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum26AlCore = (*iEqn)++;
 }
 
-void FinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate40KNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
     update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
     update[iBody].iNum40KCore = (*iEqn)++;
 }
 
-void FinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate232ThNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThCore = (*iEqn)++;
 }
 
-void FinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate238UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UCore = (*iEqn)++;
 }
 
-void FinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
+void fvFinalizeUpdate235UNumCoreRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {  //PED
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UCore = (*iEqn)++;
 }
 
-void FinalizeUpdate40KNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate40KNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
     update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
     update[iBody].iNum40KCrust = (*iEqn)++;
 }
-void FinalizeUpdate232ThNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate232ThNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum232ThCrust = (*iEqn)++;
 }
-void FinalizeUpdate238UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate238UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum238UCrust = (*iEqn)++;
 }
-void FinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+void fvFinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = RADHEAT;
   update[iBody].iNum235UCrust = (*iEqn)++;
 }

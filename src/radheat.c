@@ -5109,208 +5109,584 @@ void fvAddModuleRadheat(MODULE *module,int iBody,int iModule) {
 // N = N_0 * exp(-t/lambda)
 // dN/dt = -(N_0/lambda) * exp(-t/lambda)
 
+/**
+   Total mantle radiogenic power.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total mantle radiogenic power
+*/
 double fdRadPowerMan(UPDATE *update,int iBody) {
-  /*  return -(*(update[iBody].pdD238UNumManDt))*ENERGY238U - (*(update[iBody].pdD235UNumManDt))*ENERGY235U - (*(update[iBody].pdD232ThNumManDt))*ENERGY232TH - (*(update[iBody].pdD40KNumManDt))*ENERGY40K;
-   */
   return fd26AlPowerMan(update,iBody) + fd40KPowerMan(update,iBody) + fd232ThPowerMan(update,iBody) + fd238UPowerMan(update,iBody) + fd235UPowerMan(update,iBody);
 }
+/**
+   Total core radiogenic power.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total core radiogenic power
+*/
 double fdRadPowerCore(UPDATE *update,int iBody) {
-  /*
-  return -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U - (*(update[iBody].pdD235UNumCoreDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
-  */
   return fd26AlPowerCore(update,iBody) + fd40KPowerCore(update,iBody) + fd232ThPowerCore(update,iBody) + fd238UPowerCore(update,iBody) + fd235UPowerCore(update,iBody);
 }
+/**
+   Total crust radiogenic power.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total crust radiogenic power
+*/
 double fdRadPowerCrust(UPDATE *update,int iBody) {
-  /*
-  return -(*(update[iBody].pdD238UNumCrustDt))*ENERGY238U - (*(update[iBody].pdD235UNumCrustDt))*ENERGY235U - (*(update[iBody].pdD232ThNumCrustDt))*ENERGY232TH - (*(update[iBody].pdD40KNumCrustDt))*ENERGY40K;
-  */
   return fd40KPowerCrust(update,iBody) + fd232ThPowerCrust(update,iBody) + fd238UPowerCrust(update,iBody) + fd235UPowerCrust(update,iBody);
 }
+/**
+   Total body radiogenic power.
 
-//PD: Note total doesn't need 'update', only 'body', which has the reservoir powers.
+   @param body Body struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power
+*/
 double fdRadPowerTotal(BODY *body,int iBody) {
   return body[iBody].dRadPowerMan + body[iBody].dRadPowerCore + body[iBody].dRadPowerCrust;
 }
 
-/* This is part of output[OUT_SURFENFLUX].fnOutput */
+/**
+   Total surface radiogenic energy (heat) flux.
+
+   @param body Body struct
+   @param system System struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total surface radiogenic energy (heat) flux
+*/
 double fdSurfEnFluxRadTotal(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  //  return (fdRadPowerCrust(update,iBody) + fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
-  // PD: why does above say crust+radpowertotal when radpowertotal already includes crust?
-  //    return (fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
   return (body[iBody].dRadPowerTotal)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
+/**
+   Radiogenic heat production coefficient.
 
+   @param dNum Number of species
+   @param dAge Age
+   @param dHalflife Decay halflife
+
+   @return Radiogenic heat production coefficient
+*/
 double fdRadheatConst(double dNum,double dAge,double dHalfLife) {
   return dNum/(exp(-dAge/dHalfLife));
 }
+/**
+   Time derivative of number of radiogenic species.
 
+   @param dConst Constant coefficient
+   @param dAge Age
+   @param dHalflife Decay halflife
+
+   @return Time derivative of number of radiogenic species
+*/
 double fdDNumRadDt(double dConst,double dHalfLife,double dAge) {  //dN/dt, can be used by any radioactive system?
   return -dConst/dHalfLife*exp(-dAge/dHalfLife);
 }
 
-//SECOND batch of subroutines are for individual variables of species.
-/* Constant coefficients */
+/**
+   Radiogenic heat production coefficient for 26Al.
+
+   @param dNum Number of species
+   @param dAge Age
+
+   @return Radiogenic heat production coefficient for 26Al
+*/
 double fd26AlConstant(double dNum,double dAge) {  
     return fdRadheatConst(dNum,dAge,HALFLIFE26AL);   //redirects to fdRadheatConst
 }
+/**
+   Radiogenic heat production coefficient for 40K.
 
+   @param dNum Number of species
+   @param dAge Age
+
+   @return Radiogenic heat production coefficient for 40K
+*/
 double fd40KConstant(double dNum,double dAge) {  
     return fdRadheatConst(dNum,dAge,HALFLIFE40K);   //redirects to fdRadheatConst
 }
+/**
+   Radiogenic heat production coefficient for 232Th.
+
+   @param dNum Number of species
+   @param dAge Age
+
+   @return Radiogenic heat production coefficient for 232Th
+*/
 double fd232ThConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE232TH);  //redirects to fdRadheatConst
 }
+/**
+   Radiogenic heat production coefficient for 238U.
+
+   @param dNum Number of species
+   @param dAge Age
+
+   @return Radiogenic heat production coefficient for 238U
+*/
 double fd238UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE238U);  //redirects to fdRadheatConst
 }
+/**
+   Radiogenic heat production coefficient for 235U.
+
+   @param dNum Number of species
+   @param dAge Age
+
+   @return Radiogenic heat production coefficient for 235U
+*/
 double fd235UConstant(double dNum,double dAge) {  //PED: changed dPower to dNum.
   return fdRadheatConst(dNum,dAge,HALFLIFE235U);  //redirects to fdRadheatConst
 }
+/**
+   Mantle radiogenic power for 26Al.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Mantle radiogenic power for 26Al
+*/
 double fd26AlPowerMan(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD26AlNumManDt))*ENERGY26AL;
 }
+/**
+   Mantle radiogenic power for 40K.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Mantle radiogenic power for 40K
+*/
 double fd40KPowerMan(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;
 }
+/**
+   Mantle radiogenic power for 232Th.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Mantle radiogenic power for 232Th
+*/
 double fd232ThPowerMan(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD232ThNumManDt))*ENERGY232TH;
 }
+/**
+   Mantle radiogenic power for 238U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Mantle radiogenic power for 238U
+*/
 double fd238UPowerMan(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD238UNumManDt))*ENERGY238U;
 }
+/**
+   Mantle radiogenic power for 235U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Mantle radiogenic power for 235U
+*/
 double fd235UPowerMan(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD235UNumManDt))*ENERGY235U;
 }
+/**
+   Core radiogenic power for 26Al.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Core radiogenic power for 26Al
+*/
 double fd26AlPowerCore(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD26AlNumCoreDt))*ENERGY26AL;
 }
+/**
+   Core radiogenic power for 40K.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Core radiogenic power for 40K
+*/
 double fd40KPowerCore(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD40KNumCoreDt))*ENERGY40K;
 }
+/**
+   Core radiogenic power for 232Th.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Core radiogenic power for 232Th
+*/
 double fd232ThPowerCore(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD232ThNumCoreDt))*ENERGY232TH;
 }
+/**
+   Core radiogenic power for 238U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Core radiogenic power for 238U
+*/
 double fd238UPowerCore(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD238UNumCoreDt))*ENERGY238U;
 }
+/**
+   Core radiogenic power for 235U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Core radiogenic power for 235U
+*/
 double fd235UPowerCore(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD235UNumCoreDt))*ENERGY235U;
 }
+/**
+   Crust radiogenic power for 40K.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Crust radiogenic power for 40K
+*/
 double fd40KPowerCrust(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD40KNumCrustDt))*ENERGY40K;
 }
+/**
+   Crust radiogenic power for 232Th.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Crust radiogenic power for 232Th
+*/
 double fd232ThPowerCrust(UPDATE *update,int iBody) {
   return -(*(update[iBody].pdD232ThNumCrustDt))*ENERGY232TH;
 }
+/**
+   Crust radiogenic power for 238U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Crust radiogenic power for 238U
+*/
 double fd238UPowerCrust(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD238UNumCrustDt))*ENERGY238U;
 }
+/**
+   Crust radiogenic power for 235U.
+
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Crust radiogenic power for 235U
+*/
 double fd235UPowerCrust(UPDATE *update,int iBody) {
   return  -(*(update[iBody].pdD235UNumCrustDt))*ENERGY235U;
 }
+/**
+   Total body (mantle+core) radiogenic power for 26Al.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power for 26Al
+*/
 double fd26AlPower(UPDATE *update,int iBody) {
-  return fd26AlPowerMan(update,iBody) + fd40KPowerCore(update,iBody);
+  return fd26AlPowerMan(update,iBody) + fd26AlPowerCore(update,iBody);  // + fd26AlPowerCrust(update,iBody);
 }
+/**
+   Total body (mantle+core+crust) radiogenic power for 40K.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power for 40K
+*/
 double fd40KPower(UPDATE *update,int iBody) {
   return fd40KPowerMan(update,iBody) + fd40KPowerCore(update,iBody) + fd40KPowerCrust(update,iBody);
 }
+/**
+   Total body (mantle+core+crust) radiogenic power for 232Th.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power for 232Th
+*/
 double fd232ThPower(UPDATE *update,int iBody) {
   return fd232ThPowerMan(update,iBody) + fd232ThPowerCore(update,iBody) + fd232ThPowerCrust(update,iBody);
 }
+/**
+   Total body (mantle+core+crust) radiogenic power for 238U.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power for 238U
+*/
 double fd238UPower(UPDATE *update,int iBody) {
   return fd238UPowerMan(update,iBody) + fd238UPowerCore(update,iBody) + fd238UPowerCrust(update,iBody);
 }
+/**
+   Total body (mantle+core+crust) radiogenic power for 235U.
 
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Total body radiogenic power for 235U
+*/
 double fd235UPower(UPDATE *update,int iBody) {
   return fd235UPowerMan(update,iBody) + fd235UPowerCore(update,iBody) + fd235UPowerCrust(update,iBody);
 }
 
 /* Energy Flux */
-double fd26AlEnFlux(BODY *body,UPDATE *update,int iBody) {
-  return fd40KPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
-}
+/**
+   Surface radiogenic energy (heat) flux for 26Al.
 
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Surface radiogenic energy (heat) flux for 26Al
+*/
+double fd26AlEnFlux(BODY *body,UPDATE *update,int iBody) {
+  return fd26AlPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
+}
+/**
+   Surface radiogenic energy (heat) flux for 40K.
+
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Surface radiogenic energy (heat) flux for 40K
+*/
 double fd40KEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd40KPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
+/**
+   Surface radiogenic energy (heat) flux for 232Th.
+
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Surface radiogenic energy (heat) flux for 232Th
+*/
 double fd232ThEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd232ThPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
+/**
+   Surface radiogenic energy (heat) flux for 238U.
+
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Surface radiogenic energy (heat) flux for 238U
+*/
 double fd238UEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd238UPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
+/**
+   Surface radiogenic energy (heat) flux for 235U.
+
+   @param body Body struct
+   @param update Update struct
+   @param iBody Index of body
+
+   @return Surface radiogenic energy (heat) flux for 235U
+*/
 double fd235UEnFlux(BODY *body,UPDATE *update,int iBody) {
   return fd235UPower(update,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
 
 /* DN/Dt */
+/**
+   Time derivative of number of 26Al in mantle.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 26Al in mantle
+*/
 double fdD26AlNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d26AlConstMan,HALFLIFE26AL,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 40K in mantle.
 
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 40K in mantle
+*/
 double fdD40KNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstMan,HALFLIFE40K,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 232Th in mantle.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 232Th in mantle
+*/
 double fdD232ThNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d232ThConstMan,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 238U in mantle.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 238U in mantle
+*/
 double fdD238UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d238UConstMan,HALFLIFE238U,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 235U in mantle.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 235U in mantle
+*/
 double fdD235UNumManDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstMan,HALFLIFE235U,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 26Al in mantle.
 
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 26Al in mantle
+*/
 double fdD26AlNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d26AlConstCore,HALFLIFE26AL,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 40K in mantle.
 
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 40K in mantle
+*/
 double fdD40KNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstCore,HALFLIFE40K,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 232Th in core.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 232Th in core
+*/
 double fdD232ThNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d232ThConstCore,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 238U in core.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 238U in core
+*/
 double fdD238UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d238UConstCore,HALFLIFE238U,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 235U in core.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 235U in core
+*/
 double fdD235UNumCoreDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstCore,HALFLIFE235U,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 40K in crust.
 
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 40K in crust
+*/
 double fdD40KNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d40KConstCrust,HALFLIFE40K,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 232Th in crust.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 232Th in crust
+*/
 double fdD232ThNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d232ThConstCrust,HALFLIFE232TH,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 238U in crust.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 238U in crust
+*/
 double fdD238UNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d238UConstCrust,HALFLIFE238U,body[iaBody[0]].dAge);
 }
+/**
+   Time derivative of number of 235U in crust.
+
+   @param body Body struct
+   @param system System struct
+   @param iaBody Index of abody
+
+   @return Time derivative of number of 235U in crust
+*/
 double fdD235UNumCrustDt(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDNumRadDt(body[iaBody[0]].d235UConstCrust,HALFLIFE235U,body[iaBody[0]].dAge);
 }
 
 
-//double fdRadPowerCrust(UPDATE *update,int iBody) {
-  /* This is a fudge to get SurfEnFluxTot to behave. The current Earth 
-     produces 7 TW of of radiogenic power in the crust. I will wave my hands
-     and say that since Earth's crust has been growing with time, while at
-     the same time radioactive decay is decreasing, the two magically
-     cancel out and throughout Earth's history, the crust has always produced
-     7 TW of power. */
-/*
-  return 7e12;
-}
-*/

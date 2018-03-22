@@ -142,14 +142,14 @@ void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 #define OPTENDTHERMINT      1900                /**< End of THERMINT options indexes */
 
 /* Scalar Properties */
-#define OPT_TMAN	    1710                /**< Average mantle temperature */
-#define OPT_TUMAN	    1711		/**< Temperature base of upper mantle boundary layer */
-#define OPT_TLMAN	    1712		/**< Temperature top of lower mantle boundary layer */
-#define OPT_TCORE	    1713		/**< Average core temperature */
-#define OPT_TCMB	    1714		/**< Temperature core-mantle boundary (CMB) */
-#define OPT_TICB	    1715		/**< Temperature inner core boundary (ICB) */
-#define OPT_BLUMAN	    1716		/**< Upper mantle thermal boundary layer thickness */
-#define OPT_BLLMAN	    1717		/**< Lower mantle thermal boundary layer thickness */
+#define OPT_TMAN	    1710		/**< Average mantle temperature */                                 
+#define OPT_TUMAN	    1711		/**< Temperature base of upper mantle boundary layer */            
+#define OPT_TLMAN	    1712		/**< Temperature top of lower mantle boundary layer */             
+#define OPT_TCORE	    1713		/**< Average core temperature */                                   
+#define OPT_TCMB	    1714		/**< Temperature core-mantle boundary (CMB) */                     
+#define OPT_TICB	    1715		/**< Temperature inner core boundary (ICB) */                      
+#define OPT_BLUMAN	    1716		/**< Upper mantle thermal boundary layer thickness */              
+#define OPT_BLLMAN	    1717		/**< Lower mantle thermal boundary layer thickness */              
 #define OPT_TJUMPUMAN	    1718		/**< Temperature jump across upper mantle thermal boundary layer */
 #define OPT_TJUMPLMAN	    1719		/**< Temperature jump across lower mantle thermal boundary layer */
 #define OPT_VISCLMAN	    1721		/**< Viscosity of lower mantle thermal boundary layer */
@@ -187,87 +187,87 @@ void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 #define OPT_HFLOWSURF	    1761	        /**< Heat flow across surface of mantle */
 #define OPT_TIDALPOWMAN	    1762                /**< Mantle tidal dissipation power */
 /* Halts */			           							   
-#define OPT_HALTMINTMAN	    1763                /**< Minimum mantle temperature			   */
-#define OPT_HALTMINTCORE    1764                /**< Minimum core temperature			   */
+#define OPT_HALTMINTMAN	    1763                /**< Halt at a minimum mantle temperature */
+#define OPT_HALTMINTCORE    1764                /**< Halt at a minimum core temperature */
 /* Stagnant Lid */		                 							   
-#define OPT_STAGLID	    1765                /**< Stagnant lid switch				   */
-#define OPT_MANHFLOWPREF    1766                /**< Stagnant lid switch				   */
+#define OPT_STAGLID	    1765                /**< Stagnant lid switch for mantle surface heat flow */
+#define OPT_MANHFLOWPREF    1766                /**< Mantle surface heat flow prefix coefficient */
 /* Stellar Wind */		                 							   
-#define OPT_PRESSWIND	    1767                /**< Stellar wind pressure				   */
+#define OPT_PRESSWIND	    1767                /**< Stellar wind pressure, used to compute magneopause radius */
 /* Core Variables */		                 							   
-#define OPT_RIC		    1770                /**< IC radius					   */
-#define OPT_DOC		    1771                /**< OC shell thickness				   */
-#define OPT_CHIOC	    1780                /**< OC light element concentration chi.		   */
-#define OPT_CHIIC	    1781                /**< IC light element concentration chi.		   */
-#define OPT_THERMCONDUCTOC  1782                /**< Thermal conductivity OC				   */
-#define OPT_THERMCONDUCTIC  1783                /**< Thermal conductivity IC				   */
-#define OPT_MASSOC	    1784                /**< OC Mass						   */
-#define OPT_MASSIC	    1785                /**< IC Mass						   */
-#define OPT_MASSCHIOC	    1786                /**< OC chi Mass					   */
-#define OPT_MASSCHIIC	    1787                /**< IC chi Mass					   */
-#define OPT_DTCHI	    1788                /**< Core Liquidus Depression			   */
+#define OPT_RIC		    1770                /**< Inner core radius */
+#define OPT_DOC		    1771                /**< Outer core shell thickness */
+#define OPT_CHIOC	    1780                /**< Outer core light element concentration "chi" */
+#define OPT_CHIIC	    1781                /**< Inner core light element concentration "chi" */
+#define OPT_THERMCONDUCTOC  1782                /**< Thermal conductivity of outer core */
+#define OPT_THERMCONDUCTIC  1783                /**< Thermal conductivity of inner core */
+#define OPT_MASSOC	    1784                /**< Outer core mass */
+#define OPT_MASSIC	    1785                /**< Inner core mass */
+#define OPT_MASSCHIOC	    1786                /**< Outer core light element "chi" mass */
+#define OPT_MASSCHIIC	    1787                /**< Inner core light element "chi" mass */
+#define OPT_DTCHI	    1788                /**< Core liquidus depression */
 /* Dynamo Parameters */		                 							   
-#define OPT_MAGMOMCOEF	    1789                /**< Magnetic Moment Scaling Coef (gamma_dip)	   */
+#define OPT_MAGMOMCOEF	    1789                /**< Magnetic dipole moment scaling coefficient "gamma_dip" */
 /* Constants */			                 							   
-#define OPT_VISCJUMPMAN	    1790                /**< Viscosity ratio UM 2 LM				   */
-#define OPT_ERUPTEFF	    1791                /**< Mantle Melt Eruption Efficiency			   */
-#define OPT_VISCREF	    1792                /**< Reference Viscosity				   */
-#define OPT_TREFLIND	    1793                /**< Reference Temperature Lindemann Core Liquidus	   */
-#define OPT_DTCHIREF	    1794                /**< Reference Core Liquidus Depression		   */
-#define OPT_VISCMELTB       1795                /**< Viscosity Melt Factor B    */
-#define OPT_VISCMELTPHIS    1796                /**< Viscosity Melt Factor Phi*   */
-#define OPT_VISCMELTXI      1797                /**< Viscosity Melt Factor Xi   */
-#define OPT_VISCMELTGAMMA   1798                /**< Viscosity Melt Factor Gamma   */
-#define OPT_VISCMELTDELTA   1799                /**< Viscosity Melt Factor Delta   */
+#define OPT_VISCJUMPMAN	    1790                /**< Viscosity ratio of lower to upper mantle */
+#define OPT_ERUPTEFF	    1791                /**< Mantle melt eruption efficiency */
+#define OPT_VISCREF	    1792                /**< Reference viscosity */
+#define OPT_TREFLIND	    1793                /**< Reference Lindemann temperature of core liquidus */
+#define OPT_DTCHIREF	    1794                /**< Reference core liquidus depression */
+#define OPT_VISCMELTB       1795                /**< Viscosity melt factor B */
+#define OPT_VISCMELTPHIS    1796                /**< Viscosity melt factor Phi* */
+#define OPT_VISCMELTXI      1797                /**< Viscosity melt factor Xi */
+#define OPT_VISCMELTGAMMA   1798                /**< Viscosity melt factor Gamma */
+#define OPT_VISCMELTDELTA   1799                /**< Viscosity melt factor Delta */
 
 /* New Parameters for vemcee */
-#define OPT_ACTVISCMAN      1800  /**< [J/mol] viscosity activation energy mantle */
-#define OPT_SHMODREF        1801  /**< [Pa] reference kinematic mantle shear modulus */
-#define OPT_STIFFNESS       1802  /**< [Pa] effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define OPT_DLIND           1803  /**< [m] lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
-#define OPT_DADCORE         1804  /**< [m] liq iron core adiabatic length scale (DB15 eq A22) */
-#define OPT_ADJUMPM2UM      1805  /**< [nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM" */
-#define OPT_ADJUMPM2LM      1806  /**< [nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM" */
-#define OPT_ADJUMPC2CMB     1807  /**< [nd] adiabatic temp jump from ave core to CMB. "epsilon_c" */
-#define OPT_ELECCONDCORE    1808  /**< [S/m]  electrical conductivity of core.    */
+#define OPT_ACTVISCMAN      1800                /**< [J/mol] Viscosity activation energy of mantle */
+#define OPT_SHMODREF        1801                /**< [Pa] Reference kinematic mantle shear modulus */
+#define OPT_STIFFNESS       1802                /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define OPT_DLIND           1803                /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
+#define OPT_DADCORE         1804                /**< [m] Liquid iron core adiabatic length scale (DB15 eq A22) */
+#define OPT_ADJUMPM2UM      1805                /**< [nd] Adiabatic temperature jump from average mantle to base of upper mantle thermal boundary layer: "epsilon_UM" */
+#define OPT_ADJUMPM2LM      1806                /**< [nd] Adiabatic temperature jump from average mantle to top of lower mantle thermal boundary layer: "epsilon_LM" */
+#define OPT_ADJUMPC2CMB     1807                /**< [nd] Adiabatic temperature jump from average core to core-mantle boundary: "epsilon_c" */
+#define OPT_ELECCONDCORE    1808                /**< [S/m] Electrical conductivity of core */
 /* End vemcee parameters */
 
 /* Options Functions */
-void HelpOptionsThermint(OPTIONS*);
-void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltPhis(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMelGamma(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltXi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltDelta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadFixMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvHelpOptionsThermint(OPTIONS*);
+void fvReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscMeltB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscMeltPhis(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscMelGamma(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscMeltXi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadViscMeltDelta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadFixMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* vemcee parameters */
-void ReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* end vemcee parameters */
 
-void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
-void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void fvInitializeOptionsThermint(OPTIONS*,fnReadOption[]);
+void fvReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
 #define THERMINTHALTSYSEND       6
@@ -275,23 +275,23 @@ void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],i
 
 int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  /**< syntax now is same as fnHaltModule in vplanet.h    */
 int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsThermint(HALT*,int*);
+void fvCountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */
 
-void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetThermint(CONTROL*,MODULE*);
-void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+void fvVerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+void fvInitializeVplanetThermint(CONTROL*,MODULE*);
+void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
+void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
-void InitializeUpdateThermint(BODY*,UPDATE*,int);
+void fvInitializeUpdateThermint(BODY*,UPDATE*,int);
 
 /* Auxiliary Properties */
-void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
+void fvPropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
-/* Output Functinos */
+/* Output Functions */
 
 /* THERMINT */
 #define OUTSTARTTHERMINT         1700
@@ -299,154 +299,153 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Output Body Properties */
 /* Scalar Properties */
-#define OUT_TMAN            1710   /**< Temperature Mantle AVE                                
-#define OUT_TUMAN           1711   /**< Temperature UMTBL				      */
-#define OUT_TLMAN           1712   /**< Temperature LMTBL				      */
-#define OUT_TCORE           1713   /**< Temperature Core AVE				      */
-#define OUT_TCMB            1714   /**< Temperature CMB					      */
-#define OUT_TICB            1715   /**< Temperature ICB					      */
-#define OUT_BLUMAN          1716   /**< UM TBL thickness				      */
-#define OUT_BLLMAN          1717   /**< LM TBL thickness				      */
-#define OUT_TJUMPUMAN       1718   /**< Temperature Jump across UMTBL			      */
-#define OUT_TJUMPLMAN       1719   /**< Temperature Jump across LMTBL			      */
-#define OUT_SIGNTJUMPUMAN   1720   /**< Temperature Jump across UMTBL			      */
-#define OUT_SIGNTJUMPLMAN   1721   /**< Temperature Jump across LMTBL			      */
-#define OUT_VISCLMAN        1723   /**< Viscosity LMTBL					      */
-#define OUT_SHMODUMAN       1725   /**< Shear modulus UMTBL				      */
-#define OUT_SHMODLMAN       1726   /**< Shear modulus LMTBL				      */
-#define OUT_FMELTUMAN       1727   /**< Melt fraction UMTBL				      */
-#define OUT_FMELTLMAN       1728   /**< Melt fraction LMTBL				      */
-#define OUT_MELTFACTORUMAN  1729   /**< Melt factor UMTBL				      */
-#define OUT_MELTFACTORLMAN  1730   /**< Melt factor LMTBL				      */
-#define OUT_DEPTHMELTMAN    1731   /**< Depth to base of UM melt region.		      */
-#define OUT_TDEPTHMELTMAN   1732   /**< Temp at base of UM melt region.			      */
-#define OUT_TJUMPMELTMAN    1733   /**< Temp jump across UM melt region.		      */
-#define OUT_MELTMASSFLUXMAN 1734   /**< Mantle melt mass flux.				      */
-#define OUT_VISCUMANARR     1737   /**< Viscosity UM Arrhenius				      */
-#define OUT_RAYLEIGHMAN     1738   /**< Mantle Rayleigh Number				      */
-#define OUT_VISCMMAN        1739   /**< Viscosity Mid (ave) mantle.			      */
-/* Time Derivatives & Gradients */							      
-#define OUT_TDOTMAN         1740   /**< Time deriv of mean mantle temp			      */
-#define OUT_TDOTCORE        1741   /**< time deriv of mean core temp			      */
-#define OUT_HFLUXUMAN       1742   /**< hflux upper mantle thermal boundary layer (UMTBL)     */
-#define OUT_HFLOWUMAN       1743   /**< heat flow UMTBL                                           */
-#define OUT_HFLUXLMAN       1744   /**< hflux upper mantle thermal boundary layer (UMTBL)     */
-#define OUT_HFLOWLMAN       1745   /**< heat flow UMTBL					      */
-#define OUT_HFLUXCMB        1746   /**< hflux lower mantle TBL = CMB			      */
-#define OUT_HFLOWCMB        1747   /**< heat flow LMTBL=CMB					      */
-#define OUT_HFLOWTIDALMAN   1748   /**< heat flow tidal dissipation in mantle		      */
-#define OUT_HFLOWTIDALCORE  1749   /**< heat flow tidal dissipation in core			      */
-#define OUT_HFLOWLATENTMAN  1750   /**< latent heat flow from solidification of mantl	      */
-#define OUT_HFLOWMELTMAN    1751   /**< Melt heat flow from mantle				      */
-#define OUT_HFLOWLATENTIC   1752   /**< latent heat flow from solidification of IC		      */
-#define OUT_POWERGRAVIC     1753   /**< Gravitation Power release from solidification of IC   */
-#define OUT_HFLOWICB        1754   /**< heat flow across ICB				      */
-#define OUT_HFLUXSURF       1760   /**< hflux surface of mantle				      */
-#define OUT_HFLOWSURF       1761   /**< heat flow surface of mantle				      */
-#define OUT_TIDALPOWMAN     1762   /**< Tidal Power Mantle				      */
-#define OUT_HFLOWSECMAN     1763   /**< Mantle Secular cooling rate.			      */
-#define OUT_HFLUXCMBAD      1764   /**< CMB Adiabatic heat flux.			      */
-#define OUT_HFLUXCMBCONV    1765   /**< CMB Super-Adiabatic (convective) heat flux.	      */
-/* Core Variables */									      
-#define OUT_RIC             1770   /**< IC radius					      */
-#define OUT_DOC             1771   /**< OC shell thickness				      */
-#define OUT_DRICDTCMB       1772   /**< d(R_ic)/d(T_cmb)				      */
-#define OUT_RICDOT          1773   /**< d(R_ic)/d(t)					      */
-#define OUT_CHIOC           1774   /**< OC light element concentration chi.		      */
-#define OUT_CHIIC           1775   /**< IC light element concentration chi.		      */
-#define OUT_THERMCONDUCTOC  1776   /**< Thermal conductivity OC				      */
-#define OUT_THERMCONDUCTIC  1777   /**< Thermal conductivity IC				      */
-#define OUT_MASSOC          1778   /**< OC Mass						      */
-#define OUT_MASSIC          1779   /**< IC Mass						      */
-#define OUT_MASSCHIOC       1780   /**< OC chi Mass					      */
-#define OUT_MASSCHIIC       1781   /**< IC chi Mass                                           */
-#define OUT_DTCHI           1782   /**< Core Liquidus Depression			      */
-#define OUT_COREBUOYTHERM   1783   /**< Core Thermal buoyancy flux			      */
-#define OUT_COREBUOYCOMPO   1784   /**< Core Compositional buoyancy flux		      */
-#define OUT_COREBUOYTOTAL   1785   /**< Core total buoyancy flux			      */
-#define OUT_GRAVICB         1786   /**< Core ICB gravity				      */
-#define OUT_MAGMOM          1787   /**< Core dynamo magnetic moment			      */
-#define OUT_PRESSWIND       1788   /**< Stellar wind pressure at planet			      */
-#define OUT_MAGPAUSERAD     1789   /**< Magnetopause Radius				      */
-/* Constants */										      
-#define OUT_VISCJUMPMAN     1795   /**< Viscosity ratio UM 2 LM				      */
-#define OUT_ERUPTEFF        1796   /**< Mantle Melt Eruption Efficiency			      */
-#define OUT_VISCREF         1797   /**< Reference Viscosity				      */
-#define OUT_TREFLIND        1798   /**< Reference Lindeman Temperature			      */
-#define OUT_DTCHIREF        1799   /**< Reference Liquidus Depression			      */
+#define OUT_TMAN            1710                /**< [K] Average mantle temperature */				   
+#define OUT_TUMAN	    1711		/**< [K] Temperature base of upper mantle boundary layer */		   
+#define OUT_TLMAN	    1712		/**< [K] Temperature top of lower mantle boundary layer */	      
+#define OUT_TCORE	    1713		/**< [K] Average core temperature */				      
+#define OUT_TCMB	    1714		/**< [K] Temperature core-mantle boundary (CMB) */		      
+#define OUT_TICB	    1715		/**< [K] Temperature inner core boundary (ICB) */		      
+#define OUT_BLUMAN	    1716		/**< [m] Upper mantle thermal boundary layer thickness */              
+#define OUT_BLLMAN	    1717		/**< [m] Lower mantle thermal boundary layer thickness */              
+#define OUT_TJUMPUMAN	    1718		/**< [K] Temperature jump across upper mantle thermal boundary layer */
+#define OUT_TJUMPLMAN	    1719		/**< [K] Temperature jump across lower mantle thermal boundary layer */
+#define OUT_SIGNTJUMPUMAN   1720                /**< [K] Temperature Jump across upper mantle thermal boundary layer */
+#define OUT_SIGNTJUMPLMAN   1721                /**< [K] Temperature Jump across lower mantle thermal boundary layer */
+#define OUT_VISCLMAN        1723                /**< [m^2/s] Viscosity lower mantle thermal boundary layer */
+#define OUT_SHMODUMAN       1725                /**< [m^2/s] Shear modulus of upper mantle boundary layer */   
+#define OUT_SHMODLMAN	    1726		/**< [m^2/s] Shear modulus of lower mantle boundary layer */   
+#define OUT_FMELTUMAN	    1727		/**< [nd] Melt fraction in upper mantle boundary layer */   
+#define OUT_FMELTLMAN	    1728		/**< [nd] Melt fraction in lower mantle boundary layer */   
+#define OUT_MELTFACTORUMAN  1729		/**< [nd] Melt viscosity reduction factor in upper mantle */
+#define OUT_MELTFACTORLMAN  1730                /**< [nd] Melt viscosity reduction factor in lower mantle */
+#define OUT_DEPTHMELTMAN    1731		/**< [m] Depth to base of upper mantle melting */           
+#define OUT_TDEPTHMELTMAN   1732		/**< [K] Temperature at base of upper mantle melting */     
+#define OUT_TJUMPMELTMAN    1733		/**< [K] Temperature jump across upper mantle melt region */
+#define OUT_MELTMASSFLUXMAN 1734                /**< [kg/s] Mantle melt mass flux */
+#define OUT_VISCUMANARR     1737                /**< [m^2/s] Arrhenius viscosity in upper mantle */
+#define OUT_RAYLEIGHMAN     1738                /**< [nd] Mantle Rayleigh Number */
+#define OUT_VISCMMAN        1739                /**< [m^2/s] Viscosity of mid (average) mantle */
+/* Time Derivatives & Gradients */               							      
+#define OUT_TDOTMAN	    1740	        /**< [K/s] Time derivative of average mantle temperature */               
+#define OUT_TDOTCORE	    1741		/**< [K/s] Time derivative of average core temperature */                 
+#define OUT_HFLUXUMAN	    1742		/**< [W/m^2] Heat flux across upper mantle thermal boundary layer */        
+#define OUT_HFLOWUMAN	    1743		/**< [W] Heat flow across upper mantle thermal boundary layer */        
+#define OUT_HFLUXLMAN	    1744		/**< [W/m^2] Heat flux across upper mantle thermal boundary layer */        
+#define OUT_HFLOWLMAN	    1745		/**< [W] Heat flow across upper mantle thermal boundary layer */        
+#define OUT_HFLUXCMB	    1746		/**< [W/m^2] Heat flux across core-mantle boundary and lower mantle */      
+#define OUT_HFLOWCMB	    1747		/**< [W] Heat flow across core-mantle boundary and lower mantle */      
+#define OUT_HFLOWTIDALMAN   1748		/**< [W] Tidal dissipation heat flow in mantle */                       
+#define OUT_HFLOWTIDALCORE  1749	    	/**< [W] Tidal dissipation heat flow in core */                         
+#define OUT_HFLOWLATENTMAN  1750		/**< [W] Latent heat flow from solidification of mantle */              
+#define OUT_HFLOWMELTMAN    1751		/**< [W] Melt heat flow from mantle */                                  
+#define OUT_HFLOWLATENTIC   1752		/**< [W] Latent heat flow from solidification of inner core */          
+#define OUT_POWERGRAVIC	    1753		/**< [W] Gravitation power released from solidification of inner core */
+#define OUT_HFLOWICB	    1754		/**< [W] Heat flow across inner core boundary */                        
+#define OUT_HFLUXSURF	    1760		/**< [W/m^2] Heat flux across surface of mantle */                          
+#define OUT_HFLOWSURF	    1761		/**< [W] Heat flow across surface of mantle */                          
+#define OUT_TIDALPOWMAN	    1762		/**< [W] Mantle tidal dissipation power */                              
+#define OUT_HFLOWSECMAN     1763                /**< [W] Mantle secular cooling power */
+#define OUT_HFLUXCMBAD      1764                /**< [W/m^2] Adiabatic heat flux at top of core */
+#define OUT_HFLUXCMBCONV    1765                /**< [W/m^2] Super-adiabatic (convective) heat flux at top of core */
+/* Core Variables */		                 							      
+#define OUT_RIC             1770                /**< [m] Inner core radius */
+#define OUT_DOC             1771                /**< [m] Outer core shell thickness */
+#define OUT_DRICDTCMB       1772                /**< [m/K] Change in inner core radius with CMB temperature: d(R_ic)/d(T_cmb) */
+#define OUT_RICDOT          1773                /**< [m/s] Change in inner core radius with time: d(R_ic)/d(t) */
+#define OUT_CHIOC           1774                /**< [nd] Outer core light element concentration chi */
+#define OUT_CHIIC           1775                /**< [nd] Inner core light element concentration chi */
+#define OUT_THERMCONDUCTOC  1776                /**< [W/m/K] Thermal conductivity at top of outer core */
+#define OUT_THERMCONDUCTIC  1777                /**< [W/m/K] Thermal conductivity of inner core */
+#define OUT_MASSOC          1778                /**< [kg] Outer core mass */
+#define OUT_MASSIC          1779                /**< [kg] Inner core mass */
+#define OUT_MASSCHIOC       1780                /**< [kg] Outer core light element chi mass */
+#define OUT_MASSCHIIC       1781                /**< [kg] Inner core light element chi mass */
+#define OUT_DTCHI           1782                /**< [K] Core Liquidus Depression */
+#define OUT_COREBUOYTHERM   1783                /**< [m^2/s^3] Core thermal buoyancy flux */
+#define OUT_COREBUOYCOMPO   1784                /**< [m^2/s^3] Core compositional buoyancy flux */
+#define OUT_COREBUOYTOTAL   1785                /**< [m^2/s^3] Core total buoyancy flux */
+#define OUT_GRAVICB         1786                /**< [m/s^2] Inner core boundary gravity */
+#define OUT_MAGMOM          1787                /**< [Am^2] Core dynamo dipole magnetic moment */
+#define OUT_PRESSWIND       1788                /**< [kg/m/s^2] Stellar wind pressure at planet */
+#define OUT_MAGPAUSERAD     1789                /**< [m] Magnetopause radius from center of planet */
+/* Constants */			                 							      
+#define OUT_VISCJUMPMAN     1795                /**< [nd] Viscosity ratio of lower to upper mantle */ 
+#define OUT_ERUPTEFF	    1796		/**< [nd] Mantle melt eruption efficiency */    
+#define OUT_VISCREF	    1797		/**< [m^2/s] Reference viscosity */                      
+#define OUT_TREFLIND	    1798		/**< [K] Reference Lindemann temperature of core liquidus */
+#define OUT_DTCHIREF	    1799		/**< [K] Reference core liquidus depression */       
+#define OUT_DYNVISC         1800                /**< [Pa/s] Dynamic viscosity of upper mantle */
 											      
-#define OUT_DYNVISC         1800   /**<  Dynamic viscosity of upper mantle		      */
+void fvHelpOutputThermint(OUTPUT*);							      
+void fvInitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
+void fvInitializeOutputFunctionThermint(OUTPUT*,int,int);					      
+void fvFinalizeOutputFunctionThermint(OUTPUT*,int,int);					      
 											      
-void HelpOutputThermint(OUTPUT*);							      
-void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
-void InitializeOutputFunctionThermint(OUTPUT*,int,int);					      
-void FinalizeOutputFunctionThermint(OUTPUT*,int,int);					      
-											      
-void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
-void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
-void WriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
-void WriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
-void WriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
-void WriteSignTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
-void WriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
-void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteViscUManArr(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteViscMMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteFMeltLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMeltfactorUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMeltfactorLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTJumpMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMeltMassFluxMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRayleighMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowSecMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHfluxLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowTidalMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowTidalCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowLatentMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowLatentIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WritePowerGravIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHflowSurf(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTidalPowMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteDRICDTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMassOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMassIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMassChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMassChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteDTChi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteThermConductOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHfluxCMBAd(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteHfluxCMBConv(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteCoreBuoyTherm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteCoreBuoyCompo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteCoreBuoyTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteGravICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRICDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMagMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WritePresSWind(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteMagPauseRad(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void fvWriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void fvWriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void fvWriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void fvWriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void fvWriteSignTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
+void fvWriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
+void fvWriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteViscUManArr(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteViscUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteViscLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteViscMMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteShmodUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteShmodLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteFMeltUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteFMeltLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMeltfactorUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMeltfactorLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTDepthMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTJumpMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMeltMassFluxMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRayleighMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTDotMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTDotCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHfluxUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowSecMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHfluxLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowTidalMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowTidalCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowLatentMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowMeltMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowLatentIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWritePowerGravIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHflowSurf(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteTidalPowMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteDRICDTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMassOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMassIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMassChiOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMassChiIC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteDTChi(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteThermConductOC(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHfluxCMBAd(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteHfluxCMBConv(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteCoreBuoyTherm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteCoreBuoyCompo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteCoreBuoyTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteGravICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRICDot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMagMom(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWritePresSWind(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteMagPauseRad(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 /* Logging Functions */
-void LogOptionsThermint(CONTROL*,FILE*);
-void LogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void fvLogOptionsThermint(CONTROL*,FILE*);
+void fvLogThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void fvLogBodyThermint(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Thermal Functions */
 double fdTDotMan(BODY*,SYSTEM*,int*);
@@ -523,7 +522,7 @@ double fdMagMom(BODY*,int);
 double fdPresSWind(BODY*,int);
 double fdMagPauseRad(BODY*,int);
 
-void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fvForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
 
 

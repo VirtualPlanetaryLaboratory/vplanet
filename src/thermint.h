@@ -130,95 +130,95 @@
 #define EPRESSWIND       2.6761e-9              /**< [N/m^2] Earth's solar wind pressure: Psw=m_proton*n_sw*v_sw^2 (DB13) */
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
 
-void InitializeControlThermint(CONTROL*);
-void AddModuleThermint(MODULE*,int,int);
-void BodyCopyThermint(BODY*,BODY*,int,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
+//void InitializeControlThermint(CONTROL*);
+void fvAddModuleThermint(MODULE*,int,int);
+void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
+//void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+//void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
-#define OPTSTARTTHERMINT    1700 /* Start of THERMINT options */
-#define OPTENDTHERMINT      1900 /* End of THERMINT options */
+#define OPTSTARTTHERMINT    1700                /**< Start of THERMINT option indexes */
+#define OPTENDTHERMINT      1900                /**< End of THERMINT options indexes */
 
 /* Scalar Properties */
-#define OPT_TMAN            1710   //Temperature Mantle AVE
-#define OPT_TUMAN           1711   //Temperature UMTBL
-#define OPT_TLMAN           1712   //Temperature LMTBL
-#define OPT_TCORE           1713   //Temperature Core AVE
-#define OPT_TCMB            1714   //Temperature CMB
-#define OPT_TICB            1715   //Temperature ICB
-#define OPT_BLUMAN          1716   //UM TBL thickness
-#define OPT_BLLMAN          1717   //LM TBL thickness
-#define OPT_TJUMPUMAN       1718   //Temperature Jump across UMTBL
-#define OPT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
-#define OPT_VISCLMAN        1721   //Viscosity LMTBL
-#define OPT_SHMODUMAN       1722   //Shear modulus UMTBL
-#define OPT_SHMODLMAN       1723   //Shear modulus LMTBL
-#define OPT_FMELTUMAN       1724   //Melt fraction UMTBL
-#define OPT_FMELTLMAN       1725   //Melt fraction LMTBL
-#define OPT_MELTFACTORUMAN  1726   //Melt fraction UMTB
-#define OPT_FIXMELTFACTORUMAN 1727   //Option to Fix Melt fraction UMTBLL
-#define OPT_MELTFACTORLMAN  1728   //Melt fraction LMTBL
-#define OPT_DEPTHMELTMAN    1729   //Depth to base of UM melt region.
-#define OPT_TDEPTHMELTMAN   1730   //Temp at base of UM melt region.
-#define OPT_TJUMPMELTMAN    1731   //Temp jump across UM melt region.
-#define OPT_K2MAN           1732   //Mantle k2 love number
-#define OPT_IMK2MAN         1733   //Mantle Im(k2) love number
-#define OPT_VISCUMANARR     1736   //Viscosity UM Arrhenius
-#define OPT_VISCMMAN        1737   //Viscosity Mid (ave) mantle.
-/* Time Derivatives & Gradients */
-#define OPT_TDOTMAN         1740   //Time deriv of mean mantle temp
-#define OPT_TDOTCORE        1741   //time deriv of mean core temp
-#define OPT_HFLUXUMAN       1742   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OPT_HFLOWUMAN       1743   //hflow UMTBL
-#define OPT_HFLUXLMAN       1744   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OPT_HFLOWLMAN       1745   //hflow UMTBL
-#define OPT_HFLUXCMB        1746   //hflux lower mantle TBL = CMB
-#define OPT_HFLOWCMB        1747   //hflow LMTBL=CMB
-#define OPT_HFLOWTIDALMAN   1748   //hflow tidal dissipation in mantle
-#define OPT_HFLOWTIDALCORE  1749   //hflow tidal dissipation in core
-#define OPT_HFLOWLATENTMAN  1750   //latent hflow from solidification of mantle
-#define OPT_HFLOWMELTMAN    1751   //Melt hflow from mantle
-#define OPT_HFLOWLATENTIC   1752   //latent hflow from solidification of IC
-#define OPT_POWERGRAVIC     1753   //Gravitation Power release from solidification of IC
-#define OPT_HFLOWICB        1754   //hflow across ICB
-#define OPT_HFLUXSURF       1760   //hflux surface of mantle
-#define OPT_HFLOWSURF       1761   //hflow surface of mantle
-#define OPT_TIDALPOWMAN     1762   //Tidal Power Mantle
-/* Halts */
-#define OPT_HALTMINTMAN     1763   //Minimum mantle temperature
-#define OPT_HALTMINTCORE    1764   //Minimum core temperature
-/* Stagnant Lid */
-#define OPT_STAGLID         1765   //Stagnant lid switch
-#define OPT_MANHFLOWPREF    1766   //Stagnant lid switch
-/* Stellar Wind */
-#define OPT_PRESSWIND       1767   //Stellar wind pressure
-/* Core Variables */
-#define OPT_RIC             1770   //IC radius
-#define OPT_DOC             1771   //OC shell thickness
-#define OPT_CHIOC           1780   //OC light element concentration chi.
-#define OPT_CHIIC           1781   //IC light element concentration chi.
-#define OPT_THERMCONDUCTOC  1782   //Thermal conductivity OC
-#define OPT_THERMCONDUCTIC  1783   //Thermal conductivity IC
-#define OPT_MASSOC          1784   //OC Mass
-#define OPT_MASSIC          1785   //IC Mass
-#define OPT_MASSCHIOC       1786   //OC chi Mass
-#define OPT_MASSCHIIC       1787   //IC chi Mass
-#define OPT_DTCHI           1788   //Core Liquidus Depression
-/* Dynamo Parameters */
-#define OPT_MAGMOMCOEF      1789   //Magnetic Moment Scaling Coef (gamma_dip)
-/* Constants */
-#define OPT_VISCJUMPMAN     1790   //Viscosity ratio UM 2 LM
-#define OPT_ERUPTEFF        1791   //Mantle Melt Eruption Efficiency
-#define OPT_VISCREF         1792   //Reference Viscosity
-#define OPT_TREFLIND        1793   //Reference Temperature Lindemann Core Liquidus
-#define OPT_DTCHIREF        1794   //Reference Core Liquidus Depression
-#define OPT_VISCMELTB       1795   //Viscosity Melt Factor B
-#define OPT_VISCMELTPHIS    1796   //Viscosity Melt Factor Phi*
-#define OPT_VISCMELTXI      1797   //Viscosity Melt Factor Xi
-#define OPT_VISCMELTGAMMA   1798   //Viscosity Melt Factor Gamma
-#define OPT_VISCMELTDELTA   1799   //Viscosity Melt Factor Delta
+#define OPT_TMAN	    1710                /**< Average mantle temperature */
+#define OPT_TUMAN	    1711		/**< Temperature base of upper mantle boundary layer */
+#define OPT_TLMAN	    1712		/**< Temperature top of lower mantle boundary layer */
+#define OPT_TCORE	    1713		/**< Average core temperature */
+#define OPT_TCMB	    1714		/**< Temperature core-mantle boundary (CMB) */
+#define OPT_TICB	    1715		/**< Temperature inner core boundary (ICB) */
+#define OPT_BLUMAN	    1716		/**< Upper mantle thermal boundary layer thickness */
+#define OPT_BLLMAN	    1717		/**< Lower mantle thermal boundary layer thickness */
+#define OPT_TJUMPUMAN	    1718		/**< Temperature jump across upper mantle thermal boundary layer */
+#define OPT_TJUMPLMAN	    1719		/**< Temperature jump across lower mantle thermal boundary layer */
+#define OPT_VISCLMAN	    1721		/**< Viscosity of lower mantle thermal boundary layer */
+#define OPT_SHMODUMAN	    1722		/**< Shear modulus of upper mantle boundary layer */
+#define OPT_SHMODLMAN	    1723		/**< Shear modulus of lower mantle boundary layer */
+#define OPT_FMELTUMAN	    1724		/**< Melt fraction in upper mantle boundary layer */
+#define OPT_FMELTLMAN	    1725		/**< Melt fraction in lower mantle boundary layer */
+#define OPT_MELTFACTORUMAN  1726		/**< Melt viscosity reduction factor in upper mantle */
+#define OPT_FIXMELTFACTORUMAN 1727		/**< Option to fix melt viscosity reduction in upper mantle */
+#define OPT_MELTFACTORLMAN  1728		/**< Melt viscosity reduction factor in lower mantle */
+#define OPT_DEPTHMELTMAN    1729		/**< Depth to base of upper mantle melting */
+#define OPT_TDEPTHMELTMAN   1730		/**< Temperature at base of upper mantle melting */
+#define OPT_TJUMPMELTMAN    1731		/**< Temperature jump across upper mantle melt region */
+#define OPT_K2MAN	    1732		/**< Mantle k2 Love number */
+#define OPT_IMK2MAN	    1733		/**< Mantle imaginary part of the k2 Love number */
+#define OPT_VISCUMANARR	    1736		/**< Arrhenius viscosity in upper mantle */
+#define OPT_VISCMMAN	    1737		/**< Viscosity of mid (average) mantle */
+/* Time Derivatives & Gradients */		 						   
+#define OPT_TDOTMAN	    1740		/**< Time derivative of average mantle temperature */
+#define OPT_TDOTCORE	    1741		/**< Time derivative of average core temperature */
+#define OPT_HFLUXUMAN	    1742		/**< Heat flux across upper mantle thermal boundary layer */
+#define OPT_HFLOWUMAN	    1743		/**< Heat flow across upper mantle thermal boundary layer */
+#define OPT_HFLUXLMAN	    1744		/**< Heat flux across upper mantle thermal boundary layer */
+#define OPT_HFLOWLMAN	    1745		/**< Heat flow across upper mantle thermal boundary layer */
+#define OPT_HFLUXCMB	    1746		/**< Heat flux across core-mantle boundary and lower mantle */
+#define OPT_HFLOWCMB	    1747		/**< Heat flow across core-mantle boundary and lower mantle */
+#define OPT_HFLOWTIDALMAN   1748		/**< Tidal dissipation heat flow in mantle */
+#define OPT_HFLOWTIDALCORE  1749		/**< Tidal dissipation heat flow in core */
+#define OPT_HFLOWLATENTMAN  1750		/**< Latent heat flow from solidification of mantle */
+#define OPT_HFLOWMELTMAN    1751		/**< Melt heat flow from mantle */
+#define OPT_HFLOWLATENTIC   1752		/**< Latent heat flow from solidification of inner core */
+#define OPT_POWERGRAVIC	    1753		/**< Gravitation power released from solidification of inner core */
+#define OPT_HFLOWICB	    1754		/**< Heat flow across inner core boundary */
+#define OPT_HFLUXSURF	    1760		/**< Heat flux across surface of mantle */
+#define OPT_HFLOWSURF	    1761	        /**< Heat flow across surface of mantle */
+#define OPT_TIDALPOWMAN	    1762                /**< Mantle tidal dissipation power */
+/* Halts */			           							   
+#define OPT_HALTMINTMAN	    1763                /**< Minimum mantle temperature			   */
+#define OPT_HALTMINTCORE    1764                /**< Minimum core temperature			   */
+/* Stagnant Lid */		                 							   
+#define OPT_STAGLID	    1765                /**< Stagnant lid switch				   */
+#define OPT_MANHFLOWPREF    1766                /**< Stagnant lid switch				   */
+/* Stellar Wind */		                 							   
+#define OPT_PRESSWIND	    1767                /**< Stellar wind pressure				   */
+/* Core Variables */		                 							   
+#define OPT_RIC		    1770                /**< IC radius					   */
+#define OPT_DOC		    1771                /**< OC shell thickness				   */
+#define OPT_CHIOC	    1780                /**< OC light element concentration chi.		   */
+#define OPT_CHIIC	    1781                /**< IC light element concentration chi.		   */
+#define OPT_THERMCONDUCTOC  1782                /**< Thermal conductivity OC				   */
+#define OPT_THERMCONDUCTIC  1783                /**< Thermal conductivity IC				   */
+#define OPT_MASSOC	    1784                /**< OC Mass						   */
+#define OPT_MASSIC	    1785                /**< IC Mass						   */
+#define OPT_MASSCHIOC	    1786                /**< OC chi Mass					   */
+#define OPT_MASSCHIIC	    1787                /**< IC chi Mass					   */
+#define OPT_DTCHI	    1788                /**< Core Liquidus Depression			   */
+/* Dynamo Parameters */		                 							   
+#define OPT_MAGMOMCOEF	    1789                /**< Magnetic Moment Scaling Coef (gamma_dip)	   */
+/* Constants */			                 							   
+#define OPT_VISCJUMPMAN	    1790                /**< Viscosity ratio UM 2 LM				   */
+#define OPT_ERUPTEFF	    1791                /**< Mantle Melt Eruption Efficiency			   */
+#define OPT_VISCREF	    1792                /**< Reference Viscosity				   */
+#define OPT_TREFLIND	    1793                /**< Reference Temperature Lindemann Core Liquidus	   */
+#define OPT_DTCHIREF	    1794                /**< Reference Core Liquidus Depression		   */
+#define OPT_VISCMELTB       1795                /**< Viscosity Melt Factor B    */
+#define OPT_VISCMELTPHIS    1796                /**< Viscosity Melt Factor Phi*   */
+#define OPT_VISCMELTXI      1797                /**< Viscosity Melt Factor Xi   */
+#define OPT_VISCMELTGAMMA   1798                /**< Viscosity Melt Factor Gamma   */
+#define OPT_VISCMELTDELTA   1799                /**< Viscosity Melt Factor Delta   */
 
 /* New Parameters for vemcee */
 #define OPT_ACTVISCMAN      1800  /**< [J/mol] viscosity activation energy mantle */
@@ -229,7 +229,7 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ADJUMPM2UM      1805  /**< [nd] adiabatic temp jump from ave mantle to UM. "epsilon_UM" */
 #define OPT_ADJUMPM2LM      1806  /**< [nd] adiabatic temp jump from ave mantle to LM. "epsilon_LM" */
 #define OPT_ADJUMPC2CMB     1807  /**< [nd] adiabatic temp jump from ave core to CMB. "epsilon_c" */
-#define OPT_ELECCONDCORE    1808  /**< [S/m]  electrical conductivity of core.
+#define OPT_ELECCONDCORE    1808  /**< [S/m]  electrical conductivity of core.    */
 /* End vemcee parameters */
 
 /* Options Functions */
@@ -273,7 +273,7 @@ void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],i
 #define THERMINTHALTSYSEND       6
 #define THERMINTHALTBODYEND      6
 
-int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
+int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  /**< syntax now is same as fnHaltModule in vplanet.h    */
 int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsThermint(HALT*,int*);
 
@@ -299,96 +299,96 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Output Body Properties */
 /* Scalar Properties */
-#define OUT_TMAN            1710   //Temperature Mantle AVE
-#define OUT_TUMAN           1711   //Temperature UMTBL
-#define OUT_TLMAN           1712   //Temperature LMTBL
-#define OUT_TCORE           1713   //Temperature Core AVE
-#define OUT_TCMB            1714   //Temperature CMB
-#define OUT_TICB            1715   //Temperature ICB
-#define OUT_BLUMAN          1716   //UM TBL thickness
-#define OUT_BLLMAN          1717   //LM TBL thickness
-#define OUT_TJUMPUMAN       1718   //Temperature Jump across UMTBL
-#define OUT_TJUMPLMAN       1719   //Temperature Jump across LMTBL
-#define OUT_SIGNTJUMPUMAN   1720   //Temperature Jump across UMTBL
-#define OUT_SIGNTJUMPLMAN   1721   //Temperature Jump across LMTBL
-#define OUT_VISCLMAN        1723   //Viscosity LMTBL
-#define OUT_SHMODUMAN       1725   //Shear modulus UMTBL
-#define OUT_SHMODLMAN       1726   //Shear modulus LMTBL
-#define OUT_FMELTUMAN       1727   //Melt fraction UMTBL
-#define OUT_FMELTLMAN       1728   //Melt fraction LMTBL
-#define OUT_MELTFACTORUMAN  1729   //Melt factor UMTBL
-#define OUT_MELTFACTORLMAN  1730   //Melt factor LMTBL
-#define OUT_DEPTHMELTMAN    1731   //Depth to base of UM melt region.
-#define OUT_TDEPTHMELTMAN   1732   //Temp at base of UM melt region.
-#define OUT_TJUMPMELTMAN    1733   //Temp jump across UM melt region.
-#define OUT_MELTMASSFLUXMAN 1734   //Mantle melt mass flux.
-#define OUT_VISCUMANARR     1737   //Viscosity UM Arrhenius
-#define OUT_RAYLEIGHMAN     1738   //Mantle Rayleigh Number
-#define OUT_VISCMMAN        1739   //Viscosity Mid (ave) mantle.
-/* Time Derivatives & Gradients */
-#define OUT_TDOTMAN         1740   //Time deriv of mean mantle temp
-#define OUT_TDOTCORE        1741   //time deriv of mean core temp
-#define OUT_HFLUXUMAN       1742   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OUT_HFLOWUMAN       1743   //hflow UMTBL
-#define OUT_HFLUXLMAN       1744   //hflux upper mantle thermal boundary layer (UMTBL)
-#define OUT_HFLOWLMAN       1745   //hflow UMTBL
-#define OUT_HFLUXCMB        1746   //hflux lower mantle TBL = CMB
-#define OUT_HFLOWCMB        1747   //hflow LMTBL=CMB
-#define OUT_HFLOWTIDALMAN   1748   //hflow tidal dissipation in mantle
-#define OUT_HFLOWTIDALCORE  1749   //hflow tidal dissipation in core
-#define OUT_HFLOWLATENTMAN  1750   //latent hflow from solidification of mantl
-#define OUT_HFLOWMELTMAN    1751   //Melt hflow from mantle
-#define OUT_HFLOWLATENTIC   1752   //latent hflow from solidification of IC
-#define OUT_POWERGRAVIC     1753   //Gravitation Power release from solidification of IC
-#define OUT_HFLOWICB        1754   //hflow across ICB
-#define OUT_HFLUXSURF       1760   //hflux surface of mantle
-#define OUT_HFLOWSURF       1761   //hflow surface of mantle
-#define OUT_TIDALPOWMAN     1762   //Tidal Power Mantle
-#define OUT_HFLOWSECMAN     1763   //Mantle Secular cooling rate.
-#define OUT_HFLUXCMBAD      1764   //CMB Adiabatic heat flux.
-#define OUT_HFLUXCMBCONV    1765   //CMB Super-Adiabatic (convective) heat flux.
-/* Core Variables */
-#define OUT_RIC             1770   //IC radius
-#define OUT_DOC             1771   //OC shell thickness
-#define OUT_DRICDTCMB       1772   //d(R_ic)/d(T_cmb)
-#define OUT_RICDOT          1773   //d(R_ic)/d(t)
-#define OUT_CHIOC           1774   //OC light element concentration chi.
-#define OUT_CHIIC           1775   //IC light element concentration chi.
-#define OUT_THERMCONDUCTOC  1776   //Thermal conductivity OC
-#define OUT_THERMCONDUCTIC  1777   //Thermal conductivity IC
-#define OUT_MASSOC          1778   //OC Mass
-#define OUT_MASSIC          1779   //IC Mass
-#define OUT_MASSCHIOC       1780   //OC chi Mass
-#define OUT_MASSCHIIC       1781   //IC chi Mass
-#define OUT_DTCHI           1782   //Core Liquidus Depression
-#define OUT_COREBUOYTHERM   1783   //Core Thermal buoyancy flux
-#define OUT_COREBUOYCOMPO   1784   //Core Compositional buoyancy flux
-#define OUT_COREBUOYTOTAL   1785   //Core total buoyancy flux
-#define OUT_GRAVICB         1786   //Core ICB gravity
-#define OUT_MAGMOM          1787   //Core dynamo magnetic moment
-#define OUT_PRESSWIND       1788   //Stellar wind pressure at planet
-#define OUT_MAGPAUSERAD     1789   //Magnetopause Radius
-/* Constants */
-#define OUT_VISCJUMPMAN     1795   //Viscosity ratio UM 2 LM
-#define OUT_ERUPTEFF        1796   //Mantle Melt Eruption Efficiency
-#define OUT_VISCREF         1797   //Reference Viscosity
-#define OUT_TREFLIND        1798   //Reference Lindeman Temperature
-#define OUT_DTCHIREF        1799   //Reference Liquidus Depression
-
-#define OUT_DYNVISC         1800   // Dynamic viscosity of upper mantle
-
-void HelpOutputThermint(OUTPUT*);
-void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
-void InitializeOutputFunctionThermint(OUTPUT*,int,int);
-void FinalizeOutputFunctionThermint(OUTPUT*,int,int);
-
-void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteSignTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+#define OUT_TMAN            1710   /**< Temperature Mantle AVE                                
+#define OUT_TUMAN           1711   /**< Temperature UMTBL				      */
+#define OUT_TLMAN           1712   /**< Temperature LMTBL				      */
+#define OUT_TCORE           1713   /**< Temperature Core AVE				      */
+#define OUT_TCMB            1714   /**< Temperature CMB					      */
+#define OUT_TICB            1715   /**< Temperature ICB					      */
+#define OUT_BLUMAN          1716   /**< UM TBL thickness				      */
+#define OUT_BLLMAN          1717   /**< LM TBL thickness				      */
+#define OUT_TJUMPUMAN       1718   /**< Temperature Jump across UMTBL			      */
+#define OUT_TJUMPLMAN       1719   /**< Temperature Jump across LMTBL			      */
+#define OUT_SIGNTJUMPUMAN   1720   /**< Temperature Jump across UMTBL			      */
+#define OUT_SIGNTJUMPLMAN   1721   /**< Temperature Jump across LMTBL			      */
+#define OUT_VISCLMAN        1723   /**< Viscosity LMTBL					      */
+#define OUT_SHMODUMAN       1725   /**< Shear modulus UMTBL				      */
+#define OUT_SHMODLMAN       1726   /**< Shear modulus LMTBL				      */
+#define OUT_FMELTUMAN       1727   /**< Melt fraction UMTBL				      */
+#define OUT_FMELTLMAN       1728   /**< Melt fraction LMTBL				      */
+#define OUT_MELTFACTORUMAN  1729   /**< Melt factor UMTBL				      */
+#define OUT_MELTFACTORLMAN  1730   /**< Melt factor LMTBL				      */
+#define OUT_DEPTHMELTMAN    1731   /**< Depth to base of UM melt region.		      */
+#define OUT_TDEPTHMELTMAN   1732   /**< Temp at base of UM melt region.			      */
+#define OUT_TJUMPMELTMAN    1733   /**< Temp jump across UM melt region.		      */
+#define OUT_MELTMASSFLUXMAN 1734   /**< Mantle melt mass flux.				      */
+#define OUT_VISCUMANARR     1737   /**< Viscosity UM Arrhenius				      */
+#define OUT_RAYLEIGHMAN     1738   /**< Mantle Rayleigh Number				      */
+#define OUT_VISCMMAN        1739   /**< Viscosity Mid (ave) mantle.			      */
+/* Time Derivatives & Gradients */							      
+#define OUT_TDOTMAN         1740   /**< Time deriv of mean mantle temp			      */
+#define OUT_TDOTCORE        1741   /**< time deriv of mean core temp			      */
+#define OUT_HFLUXUMAN       1742   /**< hflux upper mantle thermal boundary layer (UMTBL)     */
+#define OUT_HFLOWUMAN       1743   /**< heat flow UMTBL                                           */
+#define OUT_HFLUXLMAN       1744   /**< hflux upper mantle thermal boundary layer (UMTBL)     */
+#define OUT_HFLOWLMAN       1745   /**< heat flow UMTBL					      */
+#define OUT_HFLUXCMB        1746   /**< hflux lower mantle TBL = CMB			      */
+#define OUT_HFLOWCMB        1747   /**< heat flow LMTBL=CMB					      */
+#define OUT_HFLOWTIDALMAN   1748   /**< heat flow tidal dissipation in mantle		      */
+#define OUT_HFLOWTIDALCORE  1749   /**< heat flow tidal dissipation in core			      */
+#define OUT_HFLOWLATENTMAN  1750   /**< latent heat flow from solidification of mantl	      */
+#define OUT_HFLOWMELTMAN    1751   /**< Melt heat flow from mantle				      */
+#define OUT_HFLOWLATENTIC   1752   /**< latent heat flow from solidification of IC		      */
+#define OUT_POWERGRAVIC     1753   /**< Gravitation Power release from solidification of IC   */
+#define OUT_HFLOWICB        1754   /**< heat flow across ICB				      */
+#define OUT_HFLUXSURF       1760   /**< hflux surface of mantle				      */
+#define OUT_HFLOWSURF       1761   /**< heat flow surface of mantle				      */
+#define OUT_TIDALPOWMAN     1762   /**< Tidal Power Mantle				      */
+#define OUT_HFLOWSECMAN     1763   /**< Mantle Secular cooling rate.			      */
+#define OUT_HFLUXCMBAD      1764   /**< CMB Adiabatic heat flux.			      */
+#define OUT_HFLUXCMBCONV    1765   /**< CMB Super-Adiabatic (convective) heat flux.	      */
+/* Core Variables */									      
+#define OUT_RIC             1770   /**< IC radius					      */
+#define OUT_DOC             1771   /**< OC shell thickness				      */
+#define OUT_DRICDTCMB       1772   /**< d(R_ic)/d(T_cmb)				      */
+#define OUT_RICDOT          1773   /**< d(R_ic)/d(t)					      */
+#define OUT_CHIOC           1774   /**< OC light element concentration chi.		      */
+#define OUT_CHIIC           1775   /**< IC light element concentration chi.		      */
+#define OUT_THERMCONDUCTOC  1776   /**< Thermal conductivity OC				      */
+#define OUT_THERMCONDUCTIC  1777   /**< Thermal conductivity IC				      */
+#define OUT_MASSOC          1778   /**< OC Mass						      */
+#define OUT_MASSIC          1779   /**< IC Mass						      */
+#define OUT_MASSCHIOC       1780   /**< OC chi Mass					      */
+#define OUT_MASSCHIIC       1781   /**< IC chi Mass                                           */
+#define OUT_DTCHI           1782   /**< Core Liquidus Depression			      */
+#define OUT_COREBUOYTHERM   1783   /**< Core Thermal buoyancy flux			      */
+#define OUT_COREBUOYCOMPO   1784   /**< Core Compositional buoyancy flux		      */
+#define OUT_COREBUOYTOTAL   1785   /**< Core total buoyancy flux			      */
+#define OUT_GRAVICB         1786   /**< Core ICB gravity				      */
+#define OUT_MAGMOM          1787   /**< Core dynamo magnetic moment			      */
+#define OUT_PRESSWIND       1788   /**< Stellar wind pressure at planet			      */
+#define OUT_MAGPAUSERAD     1789   /**< Magnetopause Radius				      */
+/* Constants */										      
+#define OUT_VISCJUMPMAN     1795   /**< Viscosity ratio UM 2 LM				      */
+#define OUT_ERUPTEFF        1796   /**< Mantle Melt Eruption Efficiency			      */
+#define OUT_VISCREF         1797   /**< Reference Viscosity				      */
+#define OUT_TREFLIND        1798   /**< Reference Lindeman Temperature			      */
+#define OUT_DTCHIREF        1799   /**< Reference Liquidus Depression			      */
+											      
+#define OUT_DYNVISC         1800   /**<  Dynamic viscosity of upper mantle		      */
+											      
+void HelpOutputThermint(OUTPUT*);							      
+void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
+void InitializeOutputFunctionThermint(OUTPUT*,int,int);					      
+void FinalizeOutputFunctionThermint(OUTPUT*,int,int);					      
+											      
+void WriteTMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void WriteTUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void WriteTLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void WriteTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void WriteTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);	      
+void WriteSignTJumpUMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
+void WriteSignTJumpLMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);    
 void WriteTCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTCMB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTICB(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -472,16 +472,16 @@ double fdFMeltUMan(BODY*,int);
 double fdFMeltLMan(BODY*,int);
 double fdMeltfactorUMan(BODY*,int);
 double fdMeltfactorLMan(BODY*,int);
-double fdTsolUMan(BODY*,int);  //solidus temp at UMBL
-double fdTliqUMan(BODY*,int);  //liquidus at UMBL
+double fdTsolUMan(BODY*,int);  /**< solidus temp at UMBL   */
+double fdTliqUMan(BODY*,int);  /**< liquidus at UMBL   */
 double fdTsolLMan(BODY*,int);
 double fdTliqLMan(BODY*,int);
-double fdDepthMeltMan(BODY*,int);  //depth to bottom of UM melt region (where solidus and geother intersect).
-double fdTDepthMeltMan(BODY*,int);  //T at bottom of UM melt region.
-double fdSolTempDiffMan(double,BODY*,int);  //difference between solidus and geotherm at a given depth.
-double fdSolidusMan(double);   //solidus at a given depth.
-double fdTJumpMeltMan(BODY*,int);  //temp jump across UM melt region.
-double fdMeltMassFluxMan(BODY*,int);  //upwelling mantle melt mass flux.
+double fdDepthMeltMan(BODY*,int);  /**< depth to bottom of UM melt region (where solidus and geother intersect).   */
+double fdTDepthMeltMan(BODY*,int);  /**< T at bottom of UM melt region.   */
+double fdSolTempDiffMan(double,BODY*,int);  /**< difference between solidus and geotherm at a given depth.   */
+double fdSolidusMan(double);   /**< solidus at a given depth.   */
+double fdTJumpMeltMan(BODY*,int);  /**< temp jump across UM melt region.   */
+double fdMeltMassFluxMan(BODY*,int);  /**< upwelling mantle melt mass flux.   */
 double fdDynamicViscosity(BODY*,int);
 double fdImk2Man(BODY*,int);
 double fdK2Man(BODY*,int);

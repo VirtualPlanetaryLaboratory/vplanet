@@ -29,7 +29,7 @@ void InitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody
 }
 
 
-void BodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
+void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTMan = src[iBody].dTMan;
   dest[iBody].dTCore = src[iBody].dTCore;
   /* Constants */
@@ -2402,7 +2402,7 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   fprintf(fp,"body.dMagMomCoef=%f body.dPresSWind=%e \n",body[iBody].dMagMomCoef,body[iBody].dPresSWind);
 }
 
-void AddModuleThermint(MODULE *module,int iBody,int iModule) {
+void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = THERMINT;
 

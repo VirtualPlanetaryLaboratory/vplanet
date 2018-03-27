@@ -133,6 +133,7 @@
 //void InitializeControlThermint(CONTROL*);
 void fvAddModuleThermint(MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
+void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
@@ -278,21 +279,22 @@ int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void fvCountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */
-
 void fvVerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
-void fvInitializeVplanetThermint(CONTROL*,MODULE*);
-void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
-void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+void fvVerifyTMan(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerifyTCore(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+//void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+//void fvInitializeVplanetThermint(CONTROL*,MODULE*);
+//void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
 
 /* Update functions */
 void fvInitializeUpdateThermint(BODY*,UPDATE*,int);
 
 /* Auxiliary Properties */
 void fvPropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
+/* Force Behavior */
+void fvForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 /* Output Functions */
-
 /* THERMINT */
 #define OUTSTARTTHERMINT         1700
 #define OUTENDTHERMINT           1900
@@ -521,8 +523,6 @@ double fdRICDot(BODY*,UPDATE*,int);
 double fdMagMom(BODY*,int);
 double fdPresSWind(BODY*,int);
 double fdMagPauseRad(BODY*,int);
-
-void fvForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
 
 

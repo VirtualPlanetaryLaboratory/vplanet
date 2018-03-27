@@ -65,7 +65,9 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+/* Maximum Eccentricity? */
+int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  // XXX is EccSq defined here
 /* Halt simulation if body reaches maximum orbital eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
@@ -251,7 +253,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (control->Halt[iBody].dMinObl >= 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
     if (control->Halt[iBody].dMaxEcc < 1)
-      control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+      control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
     if (control->Halt[iBody].dMinSemi > 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
     if (control->Halt[iBody].dMinEcc > 0)
@@ -272,7 +274,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (iHaltMaxEcc) {
       if (iBody != iHaltMaxEcc) {
 	control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
-	control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+	control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
       }
     }
   }

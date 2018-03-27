@@ -1,12 +1,13 @@
 # -*- coding: iso-8859-1 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+import vplot 
 
 # inner solar system
 th, eh, inch, argph, longah = np.loadtxt('solarsys.Mercury.forward',unpack = True)
 tv, ev, incv, argpv, longav, oblv, pAv = np.loadtxt('solarsys.Venus.forward',unpack = True)
-te, ee, ince, argpe, longae, oble, pAe = np.loadtxt('solarsys.Earth.forward',unpack = True)
-tm, em, incm, argpm, longam, oblm, pAm = np.loadtxt('solarsys.Mars.forward',unpack = True)
+te, ee, ince, argpe, longae, oble, pAe, totEn, totMom = np.loadtxt('solarsys.Earth.forward',unpack = True)
+tm, em, incm, argpm, longam, oblm, pAm, precf = np.loadtxt('solarsys.Mars.forward',unpack = True)
 
 #outer
 tj, ej, incj, argpj, longaj = np.loadtxt('solarsys.Jupiter.forward',unpack = True)
@@ -57,4 +58,20 @@ plt.ylabel('obliquity (degrees)')
 plt.xlabel('time [kyr]')
 plt.legend(fontsize=10, loc=(0.8,0.1))
 
-plt.show()
+plt.close()
+
+plt.figure(figsize=(5,3))
+plt.plot(tv/1000.0, oble, 'k-')
+plt.ylim(19,25)
+plt.ylabel('Obliquity ($^{\circ}$)')
+plt.xlabel('Time (kyr)')
+plt.savefig('earthobl1.pdf')
+plt.close()
+
+plt.figure(figsize=(5,3))
+plt.plot(tv/1000.0, oblm, 'k-')
+plt.ylim(10,50)
+plt.ylabel('Obliquity ($^{\circ}$)')
+plt.xlabel('Time (kyr)')
+plt.savefig('marsobl1.pdf')
+plt.close()

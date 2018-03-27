@@ -38,7 +38,7 @@ dEta		0.01		# Coefficient for variable timestepping
 
 dTimeStep	1000
 dStopTime	7.0e9		# Stop time for evolution
-dOutputTime	1e3		# Output timesteps (assuming in body files)
+dOutputTime	1e6		# Output timesteps (assuming in body files)
 #dStopTime	4.5e9		# Stop time for evolution
 #dOutputTime	1e6		# Output timesteps (assuming in body files)
 

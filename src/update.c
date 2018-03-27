@@ -92,7 +92,6 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumDynEllip=0;
     update[iBody].iNumEnvelopeMass=0;
     update[iBody].iNumHecc=0;
-    update[iBody].iNumIceMass=0;
     update[iBody].iNumKecc=0;
     update[iBody].iNumLuminosity=0;
     update[iBody].iNumLXUV=0;

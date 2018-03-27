@@ -1455,6 +1455,18 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     AssignDefaultInt(options,&control->Evolve.bDoForward,files->iNumInputs);
 }
 
+void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bGRCorr = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    body[iFile-1].bGRCorr = atoi(options->cDefault);
+}
+
 /*
  *
  *   HALT
@@ -2885,6 +2897,14 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FORW].cDefault,"0");
   options[OPT_FORW].iType = 0;
   fnRead[OPT_FORW] = &ReadDoForward;
+
+  sprintf(options[OPT_GRCORR].cName,"bGRCorr");
+  sprintf(options[OPT_GRCORR].cDescr,"Use general relativity correction");
+  sprintf(options[OPT_GRCORR].cDefault,"0");
+  options[OPT_GRCORR].dDefault = 0;
+  options[OPT_GRCORR].iType = 0;
+  options[OPT_GRCORR].iMultiFile = 1;
+  fnRead[OPT_GRCORR] = &ReadGRCorr;
 
   /*
    *

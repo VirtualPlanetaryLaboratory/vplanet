@@ -192,27 +192,6 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	      }
 	    }
 
-
-	    /* unique to POISE, used for ice sheets to prevent small amounts XXX
-	       of ice -> dDt -> 0 **DEPRECATED**
-
-	    else if (update[iBody].iaType[iVar][iEqn] == 4) {
-	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-	      if (update[iBody].daDerivProc[iVar][iEqn] != 0 && iVar != update[iBody].iIceMass) {
-		dMinNow = fabs(pow(body[iBody].dRadius*2.0/body[iBody].iNumLats,2)/ \
-			       (2*(body[iBody].daIceFlowMid[iVar-update[iBody].iIceMass+1]+ \
-				   body[iBody].daBasalFlowMid[iVar-update[iBody].iIceMass+1])));
-		if (dMinNow < dMin) {
-		  if (dMinNow < control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta) {
-		    dMin = control->Halt[iBody].iMinIceDt*(2*PI/body[iBody].dMeanMotion)/control->Evolve.dEta;
-		  } else {
-		    dMin = dMinNow;
-		  }
-		}
-	      }
-	    }
-*/
-
 	    // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast
 	    else if (update[iBody].iaType[iVar][iEqn] == 9) {
 	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);

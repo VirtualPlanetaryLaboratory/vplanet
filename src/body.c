@@ -509,20 +509,16 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 }
 
 /**
-  Lehmer+ (2017)'s model for the radius of a planet losing its atmopshere
+  Lehmer+ (2017)'s model for the radius of a planet where it's losing its atmopshere
    due to XUV radiation.
 
    @param dMassEnv Envelope's mass
    @param dGravAccel Body's gravitational acceleration
    @param dRadSurf Surface Radius of rocky core
-   @param dPresXUV Pressure at base of thermosphere
    @param dScaleHeight Atmospheric scale height
    @param dPresSurf pressure at surface due to envelope
    @param dRadXUV radius from center of planet where optical depth of XUV is unity
-
    */
-
-
 double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
 	double dRadXUV;
 
@@ -533,6 +529,17 @@ double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, dou
   return dRadXUV;
 }
 
+/**
+  Lehmer+ (2017)'s model for the pressure of a planet where it's losing its atmopshere
+   due to XUV radiation.
+
+   @param dMassEnv Envelope's mass
+   @param dGravAccel Body's gravitational acceleration
+   @param dRadSurf Surface Radius of rocky core
+   @param dPresXUV Pressure at base of thermosphere
+   @param dScaleHeight Atmospheric scale height
+   @param dPresSurf pressure at surface due to envelope
+   */
 double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 	double dPresSurf;
 
@@ -711,8 +718,10 @@ int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim){
 }
 
 /**
-For use with `fdProximaCenBRadius()` to interpolate the radius of
-Proxima Cen b from a grid, assuming it has a gaseous composition
+  For use with `fdProximaCenBRadius()` to interpolate the radius of
+  Proxima Cen b from a grid, assuming it has a gaseous composition
+
+  XXX What are the arguments?
 */
 double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -741,6 +750,7 @@ Here I'm assuming a mass of 1.27 MEARTH and a solid body radius of 1.074 REARTH.
 I'm using the Lopez+12 grids from Luger et al. (2015)
 and smoothing over sharp (presumably) numerical features.
 
+  XXX What are the arguments?
 */
 double fdProximaCenBRadius(double C, double A, double M){
 	double dx, dy;
@@ -771,7 +781,9 @@ double fdProximaCenBRadius(double C, double A, double M){
 }
 
 /**
-Planet radius evolution from the Lopez et al. (2012) evolution grids.
+  Planet radius evolution from the Lopez et al. (2012) evolution grids.
+
+  XXX What are the arguments?
 
 */
 double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal){
@@ -861,8 +873,12 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 }
 
 /**
-Dot product of two vectors
+  Dot product of two vectors
 
+  @param x First array
+  @param y Second array
+  @param res dot product
+  @return dot product of arrays x and y
 */
 double fdDotProduct(const int *x, const double *y){
 	double res = 0.0;
@@ -874,7 +890,11 @@ double fdDotProduct(const int *x, const double *y){
 }
 
 /**
-Matrix-vector multiplication
+  Matrix-vector multiplication
+
+  @param mat Matrix
+  @param vec Vector
+  @param result Resultant vector
 
 */
 void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result){
@@ -886,7 +906,9 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
+
+  XXX What are the arguments?
 
 */
 int fiGetLowerBound(double val, const double *arr, int dim){
@@ -910,8 +932,9 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
 
+  XXX What are the arguments?
 */
 double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -932,8 +955,9 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], 
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
 
+  XXX What are the arguments?
 */
 double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	double dvCoeff[16];
@@ -981,7 +1005,9 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], i
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
+
+  XXX What are the arguments?
 
 */
 double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], double const yarr[iALEN], double const data[iMLEN][iALEN], double M, double A, int iOrder, int *iError){
@@ -1067,8 +1093,10 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 }
 
 /**
-Returns the stellar T, L, or R by interpolating over the Baraffe grid
-using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
+  Returns the stellar T, L, or R by interpolating over the Baraffe grid
+  using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
+
+  XXX What are the arguments?
 */
 double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 	double res;

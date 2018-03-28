@@ -4006,43 +4006,107 @@ double fdTJumpMeltMan(BODY *body,int iBody) {
 double fdRayleighMan(BODY *body,int iBody) {
   return body[iBody].dSignTJumpUMan*(THERMEXPANMAN)*(GRAVUMAN)*(body[iBody].dTJumpUMan+body[iBody].dTJumpLMan)*pow(EDMAN,3.)/((THERMDIFFUMAN)*body[iBody].dViscMMan);  //Mantle Rayleigh number defined in terms of ViscMMan and SignTJumpUMan.
 }
+/**
+  Function compute upper mantle k2 Love number
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle k2 Love number
+*/
 double fdK2Man(BODY *body,int iBody) {
   return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
 }
+/**
+  Function compute upper mantle dynamic viscosity: ViscUMan*EDENSMAN.
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle dynamic viscosity
+*/
 double fdDynamicViscosity(BODY *body,int iBody) {
   return body[iBody].dViscUMan*(EDENSMAN);
 }
-  
-double fdImk2Man(BODY *body,int iBody) {
-  double viscdyn=fdDynamicViscosity(body,iBody); //dynamic viscosity.
+/**
+  Function compute upper mantle imaginary component of k2 Love number
 
-  /* Peter's version. I think dRotRate should be dMeanMotion
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dRotRate/body[iBody].dShmodUMan),2.);
-  double imk2=(57./4)*viscdyn*body[iBody].dRotRate/( (body[iBody].dStiffness)*(1.0+ denom2) );
-  */
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Imaginary component of k2 Love number
+*/
+double fdImk2Man(BODY *body,int iBody) {
+  double viscdyn=fdDynamicViscosity(body,iBody);
   double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
   double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
   return imk2;
 }
 
 /* Core Chemistry */
+/**
+  Function compute mass of inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Mass of inner core
+*/
 double fdMassIC(BODY *body, int iBody) {
   return 4./3*PI*pow(body[iBody].dRIC,3.)*(EDENSIC);
 }
+/**
+  Function compute mass of outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Mass of outer core
+*/
 double fdMassOC(BODY *body, int iBody) {
   return EMASSCORE-body[iBody].dMassIC;
 }
+/**
+  Function compute light element mass in outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in outer core
+*/
 double fdMassChiOC(BODY *body, int iBody) {
   return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
 }
+/**
+  Function compute light element mass in inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in inner core
+*/
 double fdMassChiIC(BODY *body, int iBody) {
   return EMASSCORE_CHI-body[iBody].dMassChiOC;
 }
+/**
+  Function compute light element concentration in outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element concentration in outer core
+*/
 double fdChiOC(BODY *body, int iBody) {
   return body[iBody].dMassChiOC/body[iBody].dMassOC;
 }
+/**
+  Function compute light element concentration in inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element concentration in inner core
+*/
 double fdChiIC(BODY *body, int iBody) {
   if (body[iBody].dRIC>0.) {
     return body[iBody].dMassChiIC/body[iBody].dMassIC;
@@ -4050,24 +4114,30 @@ double fdChiIC(BODY *body, int iBody) {
     return 0.;
   }
 }
+/**
+  Function compute core liquidus depression due to light element concentration
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Core liquidus depression due to light element concentration
+*/
 double fdDTChi(BODY *body, int iBody) {
   return body[iBody].dDTChiRef*body[iBody].dChiOC/(CHI_OC_E);
 }
+/**
+  Function compute inner core radius RIC
 
+  @param body Body struct
+  @param iBody Index of body
 
-/* Inner Core Size */
+  @return Inner core radius
+*/
 double fdRIC(BODY *body,int iBody) {
   double dRIC;
-
-  /*  OLD VERSION without light element depression.
-    double numerator=pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(body[iBody].dTrefLind/body[iBody].dTCMB)-1.0;
-    if (numerator>0) {    //IC Found.
-        return (ERCORE)*sqrt( numerator/(2.0*(1.0-1.0/3.0/(GRUNEISEN))*pow((body[iBody].dDAdCore)/(body[iBody].dDLind),2.0)-1.0) );
-  */
   /* NEW VERSION with light element liquidus depression  */
-
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
-  double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+  double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi); //Liquidus@CMB
   double numerator=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
   double denom=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
@@ -4075,28 +4145,62 @@ double fdRIC(BODY *body,int iBody) {
   } else {
     dRIC = 0;        //no IC.
   }
-
   if (dRIC > ERCORE)
     dRIC = ERCORE;
-
   return dRIC;
 }
+/**
+  Function compute thermal conductivity at top of outer core: ElecCondCore*LORENTZNUM*TCMB
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Thermal conductivity at top of outer core
+*/
 double fdThermConductOC(BODY *body, int iBody) {
   return (body[iBody].dElecCondCore)*(LORENTZNUM)*body[iBody].dTCMB;
 }
+/**
+  Function compute adiabatic heat flux at top of outer core: ThermConductOC*TCMB*ERCORE/DAdCore^2
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Adiabatic heat flux at top of outer core
+*/
 double fdHfluxCMBAd(BODY *body, int iBody) {
   return body[iBody].dThermConductOC*body[iBody].dTCMB*(ERCORE)/pow(body[iBody].dDAdCore,2.);
 }
+/**
+  Function compute convective heat flux at top of outer core: HfluxCMB-HfluxCMBAd
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Convective heat flux at top of outer core
+*/
 double fdHfluxCMBConv(BODY *body, int iBody) {
   return body[iBody].dHfluxCMB-body[iBody].dHfluxCMBAd;
 }
+/**
+  Function compute gravity at inner core boundary ICB
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Gravity at inner core boundary ICB
+*/
 double fdGravICB(BODY *body, int iBody) {
   return (GRAVCMB)*body[iBody].dRIC/(ERCORE);
 }
+/**
+  Function compute inner core radius growth rate
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Inner core radius growth rate
+*/
 double fdRICDot(BODY *body,UPDATE *update, int iBody) {
   double denom=(2*body[iBody].dRIC*(2.*(1.-1/(3.*GRUNEISEN))*pow((body[iBody].dDAdCore)/(body[iBody].dDLind),2)-1.));
   if (body[iBody].dRIC > 0.) {
@@ -4104,123 +4208,260 @@ double fdRICDot(BODY *body,UPDATE *update, int iBody) {
   } else {
     return 0.;
   }
-  //  return 1/denom;
 }
+/**
+  Function compute outer core thermal buoyancy flux
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Outer core thermal buoyancy flux
+*/
 double fdCoreBuoyTherm(BODY *body, int iBody) {
   return (THERMEXPANCORE)*(GRAVCMB)*body[iBody].dHfluxCMBConv/((EDENSCORE)*(SPECHEATCORE));
 }
+/**
+  Function compute outer core compositional buoyancy flux
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Outer core compositional buoyancy flux
+*/
 double fdCoreBuoyCompo(BODY *body, int iBody) {
   return body[iBody].dGravICB*(DENSANOMICB)/(EDENSCORE)*pow(body[iBody].dRIC/(ERCORE),2)*body[iBody].dRICDot;
 }
+/**
+  Function compute outer core total buoyancy flux
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Outer core total buoyancy flux
+*/
 double fdCoreBuoyTotal(BODY *body, int iBody) {
-  /*
-  double dCoreBuoyTotal;
-  //PD: Why do we need this if statement?
-  // RB: I dunno. It looks like all these lines amount to the same as the return statement below.
-  if (body[iBody].dRIC > 0.) {
-    dCoreBuoyTotal = (body[iBody].dCoreBuoyTherm+body[iBody].dCoreBuoyCompo);
-  } else {
-    dCoreBuoyTotal = body[iBody].dCoreBuoyTherm;
-  }
-
-  if (dCoreBuoyTotal > 0) 
-    return dCoreBuoyTotal;
-  else
-    return 0;
-  */
   return body[iBody].dCoreBuoyTherm + body[iBody].dCoreBuoyCompo;
 }
+/**
+  Function compute dipole magnetic moment
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Dipole magnetic moment
+*/
 double fdMagMom(BODY *body, int iBody) {
   return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
 }
+/**
+  Function compute solar wind pressure
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Solar wind pressure
+*/
 double fdPresSWind(BODY *body, int iBody) {
   return body[iBody].dPresSWind;   //Place holder for a proper equation later.       //(EPRESSWIND);
 }
+/**
+  Function compute magnetopause stand-off radius from center of planet
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Magnetopause stand-off radius from center of planet
+*/
 double fdMagPauseRad(BODY *body, int iBody) {
   return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);
 }
 
-/* All tidal phenomena should exist exclusively in eqtide.c.   Heat Flows 
+/* All tidal phenomena should exist exclusively in eqtide.c.*/
+/* Heat Flows */
+/**
+  Function compute tidal power in solid mantle
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Tidal power in solid mantle
 */
-// dflemin3: dRadius -> dTidalRadius
 double fdTidalPowMan(BODY *body,int iBody) {
-//   Peter's version. I think dRotRate should be dMeanMotion.
- // return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dRadius,5.)*body[iBody].dRotRate*pow(body[iBody].dEcc,2.);
+  // dflemin3: dRadius -> dTidalRadius
+  // PD: Should this use dTidalRadius or dRadius??
   return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
 }
 
 /* Heat Fluxes/flows */
+/**
+  Function compute heat flux across upper mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flux across upper mantle thermal boundary layer
+*/
 double fdHfluxUMan(BODY *body,int iBody) {
   return (THERMCONDUMAN)*body[iBody].dSignTJumpUMan*body[iBody].dTJumpUMan/body[iBody].dBLUMan;
 }
+/**
+  Function compute heat flux across lower mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flux across lower mantle thermal boundary layer
+*/
 double fdHfluxLMan(BODY *body,int iBody) {
   return (THERMCONDLMAN)*body[iBody].dSignTJumpLMan*body[iBody].dTJumpLMan/body[iBody].dBLLMan;
 }
+/**
+  Function compute heat flux across core-mantle boundary: same as across lower mantle
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flux across core-mantle boundary
+*/
 double fdHfluxCMB(BODY *body,int iBody) {
   return fdHfluxLMan(body,iBody);
 }
+/**
+  Function compute heat flow across upper mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow across upper mantle thermal boundary layer
+*/
 double fdHflowUMan(BODY *body,int iBody) {
   return body[iBody].dManHFlowPref*(EAREASURF)*fdHfluxUMan(body,iBody);
 }
+/**
+  Function compute heat flow across surface of mantle
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow across surface of mantle
+*/
 double fdHflowSurf(BODY *body,int iBody) {
   return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan;
 }
+/**
+  Function compute heat flow across lower mantle boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow across lower mantle boundary layer
+*/
 double fdHflowLMan(BODY *body,int iBody) {
   return (EAREACMB)*fdHfluxLMan(body,iBody);
 }
+/**
+  Function compute heat flow across core-mantle boundary (same as lower mantle)
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow across core-mantle boundary (same as lower mantle)
+*/
 double fdHflowCMB(BODY *body,int iBody) {
   return fdHflowLMan(body,iBody);
 }
+/**
+  Function compute latent heat flow from mantle solidification
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Latent heat flow from mantle solidification
+*/
 double fdHflowLatentMan(BODY *body,UPDATE *update,int iBody) {
   double HflowLatentMan;
 
   // During the first WriteLog, pdTDotMan is not yet initialized! XXX
 
   HflowLatentMan = (-DVLIQDTEMP)*(*(update[iBody].pdTDotMan))*(EDENSMAN)*(SPECLATENTMAN);  //which structure has dTDotMan??
-    HflowLatentMan=max(HflowLatentMan,0);   //ensure positive.
-    return HflowLatentMan;
+  HflowLatentMan=max(HflowLatentMan,0);   //ensure positive.
+  return HflowLatentMan;
 }
+/**
+  Function compute mass flux of mantle melt
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Mass flux of mantle melt
+*/
 double fdMeltMassFluxMan(BODY *body,int iBody) {
   //Should crustmass be an ODE?  Or aux prop?
   return 1.16*(THERMDIFFUMAN)*(EAREASURF)/body[iBody].dBLUMan*(EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)  =dot(M)_melt
-}  
-double fdHflowMeltMan(BODY *body,int iBody) {
-  //    double MeltMassDot=1.16*(THERMDIFFUMAN)*(EAREASURF)/body[iBody].dBLUMan*(EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)   
-  //    return body[iBody].dEruptEff*MeltMassDot*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
-  return body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
 }
+/**
+  Function compute heat flow of erupted mantle melt
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow of erupted mantle melt
+*/
+double fdHflowMeltMan(BODY *body,int iBody) {
+  //  return body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
+  // PD: only specific heat lost contributes to mantle heat balance (latent heat comes from melting)
+  return body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECHEATMAN)*body[iBody].dTJumpMeltMan);
+}
+/**
+  Function compute secular mantle heat flow: heat sinks - sources
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow of erupted mantle melt
+*/
 double fdHflowSecMan(BODY *body,int iBody) {
   return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dTidalPowMan-body[iBody].dRadPowerMan;
 }
+/**
+  Function compute heat flux across surface of mantle
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flux across surface of mantle
+*/
 double fdHfluxSurf(BODY *body,int iBody) {
   return fdHflowSurf(body,iBody)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
+/**
+  Function compute derivative of RIC wrt TCMB if IC exists.  Otherwise zero.
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Derivative of RIC wrt TCMB if IC exists.  Otherwise zero.
+*/
 double fdDRICDTCMB(BODY *body,int iBody) {            //=d(R_ic)/d(T_cmb)
   if (body[iBody].dRIC>0) {   //If IC exists.
     /* Old Version: from DB14 equations */
     double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
-    double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi);//Liquidus@CMB
+    double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi);  //Liquidus@CMB
     double denom=pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(T_fe_cmb/T_fe_cen)+1.;
     return (1./2)*pow((body[iBody].dDAdCore),2.)/body[iBody].dRIC/body[iBody].dTCMB/denom;   //NOTES 3/16/16 -5-
-
-    /* Newer Version: From notes on 4/23/15 */
-    /*    double gamma_core2=2.*(1-1./(3.*GRUNEISEN));
-    double a_drdt=-2.*gamma_core2*body[iBody].dRIC/pow(body[iBody].dDLind,2)*body[iBody].dTrefLind*exp(-gamma_core2*pow(body[iBody].dRIC/dl,2));
-b_drdt=3.*dt_fe/chi_oc_e*mass_ic*mass_chi_total*(core_partition-1.)/(mass_core+mass_ic*(core_partition-1.))^2*(1./r_ic) ;coef
-dri_dTcmb2=t_icb/t_cmb/(a_drdt+b_drdt+2.*r_ic*t_icb/dn^2)  ;notes 4/23/15.
-    */
   } else {                    //If no IC.
     return 0;
   }
 }
+/**
+  Function compute time derivative of IC mass
+
+  @param body Body struct
+  @param update Update struct
+  @param iBody Index of body
+
+  @return Time derivative of IC mass if IC exists.  Otherwise zero.
+*/
 double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
       double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
@@ -4229,7 +4470,15 @@ double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
       return 0;
     }
 }
+/**
+  Function compute latent heat flow from inner core solidification
 
+  @param body Body struct
+  @param update Update struct
+  @param iBody Index of body
+
+  @return Latent heat flow from inner core solidification
+*/
 double fdHflowLatentIC(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
       return body[iBody].dMassICDot*(SPECLATENTICB);  //DB14 (26)
@@ -4237,6 +4486,15 @@ double fdHflowLatentIC(BODY *body,UPDATE *update,int iBody) {
       return 0;
     }
 }
+/**
+  Function compute gravitational energy release from inner core solidification
+
+  @param body Body struct
+  @param update Update struct
+  @param iBody Index of body
+
+  @return Gravitational energy release from inner core solidification
+*/
 double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].dRIC>0) {   //If IC exists.
       return body[iBody].dMassICDot*(SPECPOWGRAVIC);  //DB14 (26)
@@ -4246,28 +4504,34 @@ double fdPowerGravIC(BODY *body,UPDATE *update,int iBody) {
 }
 
 /*** These derivatives are called from the udpate matrix, format is fixed. ***/
-/* Get TDotMan */
+/**
+  Function compute time derivative of average mantle temperature
+
+  @param body Body struct
+  @param system System struct
+  @param iaBody Index of body
+
+  @return Time derivative of average mantle temperature
+*/
 double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody=iaBody[0];
-//    return (body[iBody].dHflowCMB+body[iBody].dRadPowerMan+body[iBody].dHflowLatentMan+body[iBody].dTidalPowMan-body[iBody].dHflowUMan-body[iBody].dHflowMeltMan)/((EMASSMAN)*(SPECHEATMAN));
   return -body[iBody].dHflowSecMan/((EMASSMAN)*(SPECHEATMAN));
 }
+/**
+  Function compute time derivative of average core temperature
 
-/* Get TDotCore */
+  @param body Body struct
+  @param system System struct
+  @param iaBody Index of body
+
+  @return Time derivative of average core temperature
+*/
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
-  int iBody=iaBody[0];   //Is this correct?
+  int iBody=iaBody[0]; 
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
   foo= (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
-
-  /*
-  if (foo > 0)
-    printf("TDotCore > 0!\n");
-  */
   return foo;
-
-  //return (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
- 
 }
 
 
@@ -4278,9 +4542,29 @@ double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
 /*********************************   MATH   *********************************/
 /****************************************************************************/
 /* MATH FUNCTIONS */
+/**
+  Function compute cube of quantity
+
+  @param x Quantity
+
+  @return Quantity cubed
+*/
 double cube(double x) {
   return pow(x,3);
 }
+/**
+  Function compute root of intersection of two equations using bisection method.
+
+  @param type Type of root to compute
+  @param body Body struct
+  @param iBody Index of body
+  @param guess1 First guess of root
+  @param guess2 Second guess of root
+  @param tol Tolerance of root finding
+  @param nmax Maximum iteration
+
+  @return Root
+*/
 double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol,int nmax) {
     double mid=0.0;  //current midpoint or root.
     double fmid=0.0;  //current value of f(mid).
@@ -4302,7 +4586,15 @@ double root(int type,BODY *body,int iBody,double guess1,double guess2,double tol
     printf("method failed (nmax exceeded)\n");
     return 0;
 }
+/**
+  Function compute cubic roots of intersection between mantle adiabat and solidus.
 
+  @param type Type of root to compute
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Depth to solidus-adiabat intersection (melt layer)
+*/
 double cubicroot(int type,BODY *body,int iBody) {
     double a=0,b=0,c=0,d=0;  //coefficients of cubic polynomial.    
     if (type==0){     //type=0 is melt intersection in adiabatic part of mantle, away from TBL's.
@@ -4328,28 +4620,51 @@ double cubicroot(int type,BODY *body,int iBody) {
     double root=-1.0/(3.0*a)*(b+croot+delta0/croot);                              //real cubic root, radius of layer.
     return ERMAN-root;                                                            //Return depth.
 }
+/**
+  Function compute mantle solidus at a given depth
+
+  @param depth
+
+  @return Mantle solidus temperature at this depth
+*/
 double fdSolidusMan(double depth) {
     double r=(ERMAN)-depth;  //radius to bottom of region.
     double aterm=(ASOLIDUS)*pow(r,3.);
     double bterm=(BSOLIDUS)*pow(r,2.);
     double cterm=(CSOLIDUS)*r;
     return (ASOLIDUS)*pow(r,3.)+(BSOLIDUS)*pow(r,2.)+(CSOLIDUS)*r+(DSOLIDUS);
-}    
+}
+/**
+  Function compute temperature difference between solidus and geotherm at a given depth
+
+  @param depth
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Temperature difference between solidus and geotherm at a given depth
+*/
 double fdSolTempDiffMan(double depth,BODY *body,int iBody) { //Given a depth and BODY, return the difference between the solidus and geotherm at that depth.
     double solidus=fdSolidusMan(depth);
     double geotherm=TSURF+body[iBody].dSignTJumpUMan*body[iBody].dTJumpUMan*erf(2.0*depth/body[iBody].dBLUMan); //DB14 (16)
     return solidus-geotherm;
 }
+/**
+  Function compute surface energy flux including crustal radiogenic power: hflowUMan+RadPowerCrust
 
+  @param body Body struct
+  @param update Update struct
+  @param system System struct
+  @param iBody Index of body
+  @param iFoo
+
+  @return Surface energy flux including crustal radiogenic power
+*/
 double fdSurfEnFlux(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
 
   /* dHFlowUMan is the energy flux at the top of the mantle, but includes 
      radiogenic heating. Therefore we must subtract off the radiogenic
      heating from the core and mantle, but not the crust, which is not
      part of thermint. */
-
-  //return (body[iBody].dHflowUMan - (fdRadPowerMan(update,iBody)+fdRadPowerCore(update,iBody)))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
-  //  return (body[iBody].dHflowUMan - fdRadPowerTot(update,iBody))/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 
   // PD: SurfEnFlux should be Total surface power/area.  HflowUMan contains all of mantle, +crust makes it total.
   return (body[iBody].dHflowUMan+body[iBody].dRadPowerCrust)/(4*PI*body[iBody].dRadius*body[iBody].dRadius);

@@ -1620,7 +1620,11 @@ void fvVerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody
 }
 
 /************* THERMINT Outputs ******************/
+/**
+  Help information on output parameters
 
+  @param output Output struct
+*/
 void fvHelpOutputThermint(OUTPUT *output) {
   int iOut;
 
@@ -1631,7 +1635,19 @@ void fvHelpOutputThermint(OUTPUT *output) {
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate 
    block of initialization in InitializeOutputThermint below */
+/**
+  Write TMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TMan */
   *dTmp = body[iBody].dTMan;
@@ -1644,6 +1660,19 @@ void fvWriteTMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
       */
   }
 }
+/**
+  Write TUMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TUMan */
     *dTmp = body[iBody].dTUMan;
@@ -1652,6 +1681,19 @@ void fvWriteTUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TLMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dTLMan;
@@ -1660,6 +1702,19 @@ void fvWriteTLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TJumpUMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTJumpUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dTJumpUMan;
@@ -1668,6 +1723,19 @@ void fvWriteTJumpUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TJumpLMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dTJumpLMan;
@@ -1676,6 +1744,19 @@ void fvWriteTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write Sign of TJumpUMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteSignTJumpUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dSignTJumpUMan;
@@ -1684,6 +1765,19 @@ void fvWriteSignTJumpUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write Sign of TJumpUMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteSignTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dSignTJumpLMan;
@@ -1692,7 +1786,19 @@ void fvWriteSignTJumpLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TCMB output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TCore */
   *dTmp = body[iBody].dTCMB;
@@ -1701,6 +1807,19 @@ void fvWriteTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TCore output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TCore */
   *dTmp = body[iBody].dTCore;
@@ -1709,7 +1828,19 @@ void fvWriteTCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write viscosity UMan from Arrhenius law output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteViscUManArr(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get ViscUManArr */
     *dTmp = body[iBody].dViscUManArr;
@@ -1721,7 +1852,19 @@ void fvWriteViscUManArr(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
   }
 }
+/**
+  Write viscosity UMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteViscUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dViscUMan;
 
@@ -1733,7 +1876,19 @@ void fvWriteViscUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
   }
 }
+/**
+  Write dynamic mantle viscosity output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteDynamicViscosity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = fdDynamicViscosity(body,iBody);
 
@@ -1745,7 +1900,19 @@ void fvWriteDynamicViscosity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
   }
 }
+/**
+  Write viscosity LMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteViscLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dViscLMan;
 
@@ -1757,7 +1924,19 @@ void fvWriteViscLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
   }
 }
+/**
+  Write viscosity MMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteViscMMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dViscMMan;
 
@@ -1769,7 +1948,19 @@ void fvWriteViscMMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     *dTmp /= fdUnitsTime(units->iTime)/(fdUnitsLength(units->iLength)*fdUnitsLength(units->iLength)); 
   }
 }
+/**
+  Write viscosity jump across mantle output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteViscJumpMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TLMan */
     *dTmp = body[iBody].dViscJumpMan;
@@ -1778,6 +1969,19 @@ void fvWriteViscJumpMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write UMan boundary layer thickness output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteBLUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dBLUMan;
   if (output->bDoNeg[iBody]) {
@@ -1785,6 +1989,19 @@ void fvWriteBLUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write LMan boundary layer thickness output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteBLLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dBLLMan;
   if (output->bDoNeg[iBody]) {
@@ -1792,6 +2009,19 @@ void fvWriteBLLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write UMan shear modulus output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteShmodUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dShmodUMan;
   if (output->bDoNeg[iBody]) {
@@ -1799,6 +2029,19 @@ void fvWriteShmodUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write UMan melt fraction output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteFMeltUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dFMeltUMan;
   if (output->bDoNeg[iBody]) {
@@ -1806,6 +2049,19 @@ void fvWriteFMeltUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write LMan melt fraction output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteFMeltLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dFMeltLMan;
   if (output->bDoNeg[iBody]) {
@@ -1813,6 +2069,19 @@ void fvWriteFMeltLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write UMan viscosity melt reduction output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMeltfactorUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMeltfactorUMan;
   if (output->bDoNeg[iBody]) {
@@ -1820,6 +2089,19 @@ void fvWriteMeltfactorUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write LMan viscosity melt reduction output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMeltfactorLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMeltfactorLMan;
   if (output->bDoNeg[iBody]) {
@@ -1827,6 +2109,19 @@ void fvWriteMeltfactorLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write depth of mantle melting output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dDepthMeltMan;
   if (output->bDoNeg[iBody]) {
@@ -1834,6 +2129,19 @@ void fvWriteDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write T at depth of mantle melting output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTDepthMeltMan;
   if (output->bDoNeg[iBody]) {
@@ -1841,6 +2149,19 @@ void fvWriteTDepthMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write TJump across depth of mantle melting output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTJumpMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTJumpMeltMan;
   if (output->bDoNeg[iBody]) {
@@ -1848,6 +2169,19 @@ void fvWriteTJumpMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write mass flux of mantle melt output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMeltMassFluxMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMeltMassFluxMan;
   if (output->bDoNeg[iBody]) {
@@ -1855,6 +2189,19 @@ void fvWriteMeltMassFluxMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write mantle Rayleigh number output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteRayleighMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRayleighMan;
   if (output->bDoNeg[iBody]) {
@@ -1862,6 +2209,19 @@ void fvWriteRayleighMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write mantle melt eruption efficiency output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dEruptEff;
   if (output->bDoNeg[iBody]) {
@@ -1887,7 +2247,19 @@ void fvWriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   } else { }
 }
 */
+/**
+  Write inner core radius RIC output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRIC;
 
@@ -1896,7 +2268,19 @@ void fvWriteRIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write derivative of RIC wrt TCMB output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dDRICDTCMB;
   if (output->bDoNeg[iBody]) {
@@ -1904,7 +2288,19 @@ void fvWriteDRICDTCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write outer core "OC" light element concentration "chi" output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dChiOC;
   //  *dTmp = body[iBody].dRIC;
@@ -1913,7 +2309,19 @@ void fvWriteChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write inner core "IC" light element concentration "chi" output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dChiIC;
   if (output->bDoNeg[iBody]) {
@@ -1921,7 +2329,19 @@ void fvWriteChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC mass output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMassOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassOC;
   if (output->bDoNeg[iBody]) {
@@ -1929,7 +2349,19 @@ void fvWriteMassOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write IC mass output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMassIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassIC;
   if (output->bDoNeg[iBody]) {
@@ -1937,7 +2369,19 @@ void fvWriteMassIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC light element mass output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMassChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassChiOC;
   if (output->bDoNeg[iBody]) {
@@ -1945,7 +2389,19 @@ void fvWriteMassChiOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write IC light element mass output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMassChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMassChiIC;
   if (output->bDoNeg[iBody]) {
@@ -1953,7 +2409,19 @@ void fvWriteMassChiIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write core liquidus depression due to light elements output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dDTChi;
   if (output->bDoNeg[iBody]) {
@@ -1961,7 +2429,19 @@ void fvWriteDTChi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write thermal conductivity at top of OC output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteThermConductOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dThermConductOC;
   if (output->bDoNeg[iBody]) {
@@ -1969,7 +2449,19 @@ void fvWriteThermConductOC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC thermal buoyancy flux output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteCoreBuoyTherm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyTherm;
   if (output->bDoNeg[iBody]) {
@@ -1977,7 +2469,19 @@ void fvWriteCoreBuoyTherm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC compositional buoyancy flux output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteCoreBuoyCompo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyCompo;
   if (output->bDoNeg[iBody]) {
@@ -1985,7 +2489,19 @@ void fvWriteCoreBuoyCompo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC total buoyancy flux output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteCoreBuoyTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dCoreBuoyTotal;
   if (output->bDoNeg[iBody]) {
@@ -1993,7 +2509,19 @@ void fvWriteCoreBuoyTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write inner core boundary (ICB) gravitational energy release output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteGravICB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dGravICB;
   if (output->bDoNeg[iBody]) {
@@ -2001,7 +2529,19 @@ void fvWriteGravICB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write OC dipolar magnetic moment output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMagMom;
   if (output->bDoNeg[iBody]) {
@@ -2009,7 +2549,19 @@ void fvWriteMagMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write RIC growth rate output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dRICDot;
   if (output->bDoNeg[iBody]) {
@@ -2017,7 +2569,19 @@ void fvWriteRICDot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write solar wind pressure at planet output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWritePresSWind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dPresSWind;
   if (output->bDoNeg[iBody]) {
@@ -2025,7 +2589,19 @@ void fvWritePresSWind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write magnetopause radius output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteMagPauseRad(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dMagPauseRad;
   if (output->bDoNeg[iBody]) {
@@ -2035,6 +2611,19 @@ void fvWriteMagPauseRad(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 /* Heat Flows/Fluxes */
+/**
+  Write heat flux across UMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHfluxUMan;
   if (output->bDoNeg[iBody]) {
@@ -2042,6 +2631,19 @@ void fvWriteHfluxUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flux across LMan (same as CMB) output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHfluxLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHfluxLMan;
   if (output->bDoNeg[iBody]) {
@@ -2049,6 +2651,19 @@ void fvWriteHfluxLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flux across CMB (same as LMan) output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHfluxCMB;
   if (output->bDoNeg[iBody]) {
@@ -2056,6 +2671,19 @@ void fvWriteHfluxCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write adiabatic heat flux at top of OC output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHfluxCMBAd(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHfluxCMBAd;
   if (output->bDoNeg[iBody]) {
@@ -2063,6 +2691,19 @@ void fvWriteHfluxCMBAd(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write convective heat flux at top of OC output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHfluxCMBConv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHfluxCMBConv;
   if (output->bDoNeg[iBody]) {
@@ -2070,7 +2711,19 @@ void fvWriteHfluxCMBConv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flow across UMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
@@ -2078,6 +2731,19 @@ void fvWriteHflowUMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flow across surface of body output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowSurf;
   if (output->bDoNeg[iBody]) {
@@ -2085,7 +2751,19 @@ void fvWriteHflowSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flow across LMan output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
@@ -2093,6 +2771,19 @@ void fvWriteHflowLMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write heat flow across CMB output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowCMB;
   if (output->bDoNeg[iBody]) {
@@ -2100,6 +2791,19 @@ void fvWriteHflowCMB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write latent heat flow from mantle solidification output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowLatentMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLatentMan;
   if (output->bDoNeg[iBody]) {
@@ -2107,6 +2811,19 @@ void fvWriteHflowLatentMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write erupted melt heat flow from UMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowMeltMan;
   if (output->bDoNeg[iBody]) {
@@ -2114,7 +2831,19 @@ void fvWriteHflowMeltMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write mantle secular cooling heat flow output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowSecMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dHflowSecMan;
   if (output->bDoNeg[iBody]) {
@@ -2132,7 +2861,19 @@ void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { }
 }
 */
+/**
+  Write latent heat flow from ICB output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteHflowLatentIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dHflowLatentIC;
   if (output->bDoNeg[iBody]) {
@@ -2140,6 +2881,19 @@ void fvWriteHflowLatentIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write gravitational power from ICB output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWritePowerGravIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dPowerGravIC;
   if (output->bDoNeg[iBody]) {
@@ -2147,7 +2901,19 @@ void fvWritePowerGravIC(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+/**
+  Write mantle temperature cooling rate output
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TDotMan */
   *dTmp = (*(update[iBody].pdTDotMan));
@@ -2161,6 +2927,19 @@ void fvWriteTDotMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
       */
   }
 }
+/**
+  Write core temperature cooling rate output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get TDotCore */
   *dTmp = (*(update[iBody].pdTDotCore));
@@ -2175,6 +2954,19 @@ void fvWriteTDotCore(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 /** Write Constants. */
+/**
+  Write core liquidus Lindemann reference temperature output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
 void fvWriteTrefLind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTrefLind;
   if (output->bDoNeg[iBody]) {
@@ -2183,7 +2975,12 @@ void fvWriteTrefLind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   } else { }
 }
 
+/**
+  Initialize output, set variable names, descriptions, default units, default scalings, and write functions.
 
+  @param output Output struct
+  @param fnWrite fnWriteOutput
+*/
 
 void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -2191,7 +2988,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TMAN].cDescr,"Mantle Temperature");
   sprintf(output[OUT_TMAN].cNeg,"K");
   output[OUT_TMAN].bNeg = 1;
-  output[OUT_TMAN].dNeg = 1; // default units are K. 
+  output[OUT_TMAN].dNeg = 1;
   output[OUT_TMAN].iNum = 1;
   output[OUT_TMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TMAN] = &WriteTMan;
@@ -2200,7 +2997,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TUMAN].cDescr,"Upper Mantle Temperature");
   sprintf(output[OUT_TUMAN].cNeg,"K");
   output[OUT_TUMAN].bNeg = 1;
-  output[OUT_TUMAN].dNeg = 1; // default units are K. 
+  output[OUT_TUMAN].dNeg = 1;
   output[OUT_TUMAN].iNum = 1;
   output[OUT_TUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TUMAN] = &WriteTUMan;
@@ -2209,7 +3006,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TLMAN].cDescr,"Lower Mantle Temperature");
   sprintf(output[OUT_TLMAN].cNeg,"K");
   output[OUT_TLMAN].bNeg = 1;
-  output[OUT_TLMAN].dNeg = 1; // default units are K. 
+  output[OUT_TLMAN].dNeg = 1;
   output[OUT_TLMAN].iNum = 1;
   output[OUT_TLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TLMAN] = &WriteTLMan;
@@ -2218,7 +3015,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TJUMPUMAN].cDescr,"Upper Mantle Temperature Jump");
   sprintf(output[OUT_TJUMPUMAN].cNeg,"K");
   output[OUT_TJUMPUMAN].bNeg = 1;
-  output[OUT_TJUMPUMAN].dNeg = 1; // default units are K. 
+  output[OUT_TJUMPUMAN].dNeg = 1;
   output[OUT_TJUMPUMAN].iNum = 1;
   output[OUT_TJUMPUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TJUMPUMAN] = &WriteTJumpUMan;
@@ -2227,7 +3024,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TJUMPLMAN].cDescr,"Lower Mantle Temperature Jump");
   sprintf(output[OUT_TJUMPLMAN].cNeg,"K");
   output[OUT_TJUMPLMAN].bNeg = 1;
-  output[OUT_TJUMPLMAN].dNeg = 1; // default units are K. 
+  output[OUT_TJUMPLMAN].dNeg = 1;
   output[OUT_TJUMPLMAN].iNum = 1;
   output[OUT_TJUMPLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TJUMPLMAN] = &WriteTJumpLMan;
@@ -2236,7 +3033,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SIGNTJUMPUMAN].cDescr,"Sign of Upper Mantle Temperature Jump");
   sprintf(output[OUT_SIGNTJUMPUMAN].cNeg,"K");
   output[OUT_SIGNTJUMPUMAN].bNeg = 1;
-  output[OUT_SIGNTJUMPUMAN].dNeg = 1; // default units are K. 
+  output[OUT_SIGNTJUMPUMAN].dNeg = 1;
   output[OUT_SIGNTJUMPUMAN].iNum = 1;
   output[OUT_SIGNTJUMPUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SIGNTJUMPUMAN] = &WriteSignTJumpUMan;
@@ -2245,7 +3042,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SIGNTJUMPLMAN].cDescr,"Sign of Lower Mantle Temperature Jump");
   sprintf(output[OUT_SIGNTJUMPLMAN].cNeg,"K");
   output[OUT_SIGNTJUMPLMAN].bNeg = 1;
-  output[OUT_SIGNTJUMPLMAN].dNeg = 1; // default units are K. 
+  output[OUT_SIGNTJUMPLMAN].dNeg = 1; 
   output[OUT_SIGNTJUMPLMAN].iNum = 1;
   output[OUT_SIGNTJUMPLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SIGNTJUMPLMAN] = &WriteSignTJumpLMan;
@@ -2254,7 +3051,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
   sprintf(output[OUT_TCMB].cNeg,"K");
   output[OUT_TCMB].bNeg = 1;
-  output[OUT_TCMB].dNeg = 1; // default units are K. 
+  output[OUT_TCMB].dNeg = 1; 
   output[OUT_TCMB].iNum = 1;
   output[OUT_TCMB].iModuleBit = THERMINT;
   fnWrite[OUT_TCMB] = &WriteTCMB;
@@ -2263,7 +3060,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
   sprintf(output[OUT_TCORE].cNeg,"K");
   output[OUT_TCORE].bNeg = 1;
-  output[OUT_TCORE].dNeg = 1; // default units are K. 
+  output[OUT_TCORE].dNeg = 1; 
   output[OUT_TCORE].iNum = 1;
   output[OUT_TCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TCORE] = &WriteTCore;
@@ -2754,7 +3551,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
   sprintf(output[OUT_TDOTMAN].cNeg,"K/s");
   output[OUT_TDOTMAN].bNeg = 1;
-  output[OUT_TDOTMAN].dNeg = 1; // default units are K. 
+  output[OUT_TDOTMAN].dNeg = 1; 
   output[OUT_TDOTMAN].iNum = 1;
   output[OUT_TDOTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTMAN] = &WriteTDotMan;
@@ -2763,7 +3560,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTCORE].cDescr,"Change in Core Temperature");
   sprintf(output[OUT_TDOTCORE].cNeg,"K/s");
   output[OUT_TDOTCORE].bNeg = 1;
-  output[OUT_TDOTCORE].dNeg = 1; // default units are K. 
+  output[OUT_TDOTCORE].dNeg = 1; 
   output[OUT_TDOTCORE].iNum = 1;
   output[OUT_TDOTCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTCORE] = &WriteTDotCore;
@@ -2781,7 +3578,12 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 }
 
 /************ THERMINT Logging Functions **************/
+/**
+  Log options
 
+  @param control Control struct
+  @param fp File struct
+*/
 void fvLogOptionsThermint(CONTROL *control, FILE *fp) {
   /* Anything here?
   fprintf(fp,"-------- RADHEAT Options -----\n\n");
@@ -2789,6 +3591,17 @@ void fvLogOptionsThermint(CONTROL *control, FILE *fp) {
 }
 
 //PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
+/**
+  Log of thermint
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param update Update struct
+  @param fnWrite fnWriteOutput
+  @param fp File
+*/
 void fvLogThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   /* Anything here? 
   int iOut;
@@ -2799,7 +3612,17 @@ void fvLogThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   }
   */
 }
+/**
+  Log of body from thermint
 
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param update Update struct
+  @param fnWrite fnWriteOutput
+  @param fp File
+*/
 void fvLogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
 
@@ -2820,7 +3643,13 @@ void fvLogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   fprintf(fp,"body.dStagLid=%f dManHFlowPref=%f \n",body[iBody].dStagLid,body[iBody].dManHFlowPref);
   fprintf(fp,"body.dMagMomCoef=%f body.dPresSWind=%e \n",body[iBody].dMagMomCoef,body[iBody].dPresSWind);
 }
+/**
+  Add thermint module
 
+  @param module Module struct
+  @param iBody Index of body
+  @param iModule Index of module
+*/
 void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule] = THERMINT;
@@ -2842,79 +3671,241 @@ void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
 /************* THERMINT Functions ************/
 /* Scalar Properties */
 /* Get TUMan */
+/**
+  Function compute upper mantle temperature
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle temperature
+*/
 double fdTUMan(BODY *body,int iBody) {
   return body[iBody].dAdJumpM2UM*body[iBody].dTMan;
 }
 /* Get TLMan */
+/**
+  Function compute lower mantle temperature
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Lower mantle temperature
+*/
 double fdTLMan(BODY *body,int iBody) {
     return body[iBody].dAdJumpM2LM*body[iBody].dTMan;
 }
 /* Get TCMB */
+/**
+  Function compute core-mantle boundary temperature
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Core-mantle boundary temperature
+*/
 double fdTCMB(BODY *body,int iBody) {
     return body[iBody].dAdJumpC2CMB*body[iBody].dTCore;
 }
-/* Get TJumpUMan */ 
+/* Get TJumpUMan */
+/**
+  Function compute absolute value of upper mantle temperature jump: TUman-TSURF
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Absolute value of upper mantle temperature jump
+*/
 double fdTJumpUMan(BODY *body,int iBody) {
     return fabs(body[iBody].dTUMan-TSURF);
 }
 /* Get TJumpLMan */
+/**
+  Function compute absolute value of lower mantle temperature jump: TCMB-TLman
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Absolute value of lower mantle temperature jump
+*/
 double fdTJumpLMan(BODY *body,int iBody) {
     return fabs(body[iBody].dTCMB-body[iBody].dTLMan);
 }
-/* Get SignTJumpUMan */ 
+/**
+  Function compute sign of upper mantle temperature jump
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Sign of upper mantle temperature jump
+*/
 double fdSignTJumpUMan(BODY *body,int iBody) {
     return (body[iBody].dTUMan-TSURF)/fabs(body[iBody].dTUMan-TSURF);
 }
-/* Get SignTJumpLMan */
+/**
+  Function compute sign of lower mantle temperature jump
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Sign of lower mantle temperature jump
+*/
 double fdSignTJumpLMan(BODY *body,int iBody) {
     return (body[iBody].dTCMB-body[iBody].dTLMan)/fabs(body[iBody].dTCMB-body[iBody].dTLMan);
 }
-/* Get ViscUManArr Arrhenius law only */
+/**
+  Function compute Arrhenius component of upper mantle viscosity
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Arrhenius component of upper mantle viscosity
+*/
 double fdViscUManArr(BODY *body,int iBody) {  
   return body[iBody].dViscRef*exp(body[iBody].dActViscMan/(GASCONSTANT*body[iBody].dTUMan));
 }
-/* Get ViscUMan */
+/**
+  Function compute full upper mantle viscosity
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Full upper mantle viscosity
+*/
 double fdViscUMan(BODY *body,int iBody) {
   return body[iBody].dViscUManArr/body[iBody].dMeltfactorUMan;
 }
+/**
+  Function compute full lower mantle viscosity
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Full lower mantle viscosity
+*/
 double fdViscLMan(BODY *body,int iBody) {
   return body[iBody].dViscUManArr*body[iBody].dViscJumpMan/body[iBody].dMeltfactorLMan;   //w/ meltfactorLMan
 }
+/**
+  Function compute full mid-mantle viscosity
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Full mid-mantle viscosity
+*/
 double fdViscMMan(BODY *body,int iBody) {
   return body[iBody].dViscUMan*(VISCJUMPMMAN);
 }
-/* Get ViscJumpMan */
+/**
+  Function compute mantle viscosity jump
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Mantle viscosity jump
+*/
 double fdViscJumpMan(BODY *body,int iBody) {
     return body[iBody].dViscJumpMan;
 }
-/* Get Boundary Layer Thicknesses */
+/**
+  Function compute upper mantle thermal boundary layer thickness
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle thermal boundary layer thickness
+*/
 double fdBLUMan(BODY *body,int iBody) {
   return (EDMAN)*pow((RACRIT)*body[iBody].dViscUMan*(THERMDIFFUMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
+/**
+  Function compute lower mantle thermal boundary layer thickness
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Lower mantle thermal boundary layer thickness
+*/
 double fdBLLMan(BODY *body,int iBody) {
   return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
+/**
+  Function compute upper mantle shear modulus
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle shear modulus
+*/
 double fdShmodUMan(BODY *body,int iBody) {
     return (body[iBody].dShModRef)*exp((ACTSHMODMAN)/(GASCONSTANT*body[iBody].dTUMan))/body[iBody].dMeltfactorUMan;
 }
+/**
+  Function compute solidus at bottom of upper mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Solidus at bottom of upper mantle thermal boundary layer
+*/
 double fdTsolUMan(BODY *body,int iBody) {
     return fdSolidusMan(body[iBody].dBLUMan);
 }
+/**
+  Function compute solidus at top of lower mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Solidus at top of lower mantle thermal boundary layer
+*/
 double fdTsolLMan(BODY *body,int iBody) {
   return fdSolidusMan(ERADIUS-ERCORE-body[iBody].dBLLMan);  //Solidus fn of depth: z_LM=R-R_c-delta_LM
 }
+/**
+  Function compute liquidus at bottom of upper mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Liquidus at bottom of upper mantle thermal boundary layer
+*/
 double fdTliqUMan(BODY *body,int iBody) {
     return body[iBody].dTsolUMan+DTLIQMAN;  //approx constant offset btwn sol and liq.
 }
+/**
+  Function compute liquidus at top of lower mantle thermal boundary layer
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Liquidus at top of lower mantle thermal boundary layer
+*/
 double fdTliqLMan(BODY *body,int iBody) {
     return body[iBody].dTsolLMan+DTLIQMAN;  //approx constant offset btwn sol and liq.
 }
+/**
+  Function compute upper mantle melt fraction
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle melt fraction
+*/
 double fdFMeltUMan(BODY *body,int iBody) {
     double fmelt=(body[iBody].dTUMan-body[iBody].dTsolUMan)/(body[iBody].dTliqUMan-body[iBody].dTsolUMan);
     double fmelt2=min(fmelt,1.0);  //require fmelt<1
     fmelt2=max(fmelt2,0.0);        //require fmelt>0
     return fmelt2;
 }
+/**
+  Function compute lower mantle melt fraction
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Lower mantle melt fraction
+*/
 double fdFMeltLMan(BODY *body,int iBody) {
     double fmelt=(body[iBody].dTLMan-body[iBody].dTsolLMan)/(body[iBody].dTliqLMan-body[iBody].dTsolLMan);
     double fmelt2=min(fmelt,1.0);  //require fmelt<1
@@ -2923,6 +3914,14 @@ double fdFMeltLMan(BODY *body,int iBody) {
     double max1=max(1.0,2.0);  //test max
     return fmelt2;
 }
+/**
+  Function compute upper mantle viscosity reduction factor due to melt.  If dFixMeltfactorUMan=1 then return dMeltfactorUMan.  Else compute it.
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle viscosity reduction factor due to melt
+*/
 double fdMeltfactorUMan(BODY *body,int iBody) {
     /* Melt factor used in viscosity and shmod.  For fmelt=1, this should give 1.20428. */
     if (body[iBody].dFixMeltfactorUMan==1) {   //if FixMeltFactorUMan=1 then return the initialized value.
@@ -2934,6 +3933,14 @@ double fdMeltfactorUMan(BODY *body,int iBody) {
       return (1.0+pow(bigphi,body[iBody].dViscMeltDelta))/pow(1.0-bigf,meltexp);
   }
 }
+/**
+  Function compute lower mantle viscosity reduction factor due to melt.  Always compute it.  Only applied if ViscJumpMan is not set.
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Lower mantle viscosity reduction factor due to melt
+*/
 double fdMeltfactorLMan(BODY *body,int iBody) {
     /* Melt factor used in viscosity and shmod.  For fmelt=1, this should give 1.20428. */
     double bigphi=body[iBody].dFMeltLMan/body[iBody].dViscMeltPhis;
@@ -2941,8 +3948,14 @@ double fdMeltfactorLMan(BODY *body,int iBody) {
     double meltexp=body[iBody].dViscMeltB*body[iBody].dViscMeltPhis;
     return (1.0+pow(bigphi,body[iBody].dViscMeltDelta))/pow(1.0-bigf,meltexp);
 }
+/**
+  Function compute depth of upper mantle melting.  Use cubic root to find intersection of mantle adiabat and solidus.
 
-/* Get DepthMeltMan */ 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Depth of upper mantle melting
+*/
 double fdDepthMeltMan(BODY *body,int iBody) {
     //    double guess1=body[iBody].dBLUMan;  //lower bound of depth to bottom of UM melt layer.
     //    double guess2=1.445e6;  //(EDMAN)/2.0;  //mid-mantle= upper bound to depth of melt layer.
@@ -2956,8 +3969,14 @@ double fdDepthMeltMan(BODY *body,int iBody) {
     }
     return depthmeltman;
 }
+/**
+  Function compute solidus temperature at depth of upper mantle melting.
 
-/* Get TDepthMeltMan */
+  @param body Body struct
+  @param iBody Index of body
+
+  @return solidus temperature at depth of upper mantle melting
+*/
 double fdTDepthMeltMan(BODY *body,int iBody) {
     if (body[iBody].dDepthMeltMan==0) {    //if no melt layer found.
           return 0;
@@ -2965,12 +3984,25 @@ double fdTDepthMeltMan(BODY *body,int iBody) {
           return fdSolidusMan(body[iBody].dDepthMeltMan);
       }
 }
+/**
+  Function compute temperature jump across upper mantle melt region, excluding the adiabatic component (i.e. just the advective component): TDepthMeltMan-TSURF-ADGRADMAN*DepthMeltMan
 
-/* Get TJumpMeltMan */ 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Temperature jump across upper mantle melt region
+*/
 double fdTJumpMeltMan(BODY *body,int iBody) {
   return body[iBody].dTDepthMeltMan-TSURF-(ADGRADMAN)*body[iBody].dDepthMeltMan;  //Temp jump across entire UM melt region.
 }
+/**
+  Function compute mantle Rayleigh number, where temperature jump is the total convective temperature jump across mantle (UMan+LMan) and viscosity is ViscMMan.
 
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Mantle Rayleigh number
+*/
 double fdRayleighMan(BODY *body,int iBody) {
   return body[iBody].dSignTJumpUMan*(THERMEXPANMAN)*(GRAVUMAN)*(body[iBody].dTJumpUMan+body[iBody].dTJumpLMan)*pow(EDMAN,3.)/((THERMDIFFUMAN)*body[iBody].dViscMMan);  //Mantle Rayleigh number defined in terms of ViscMMan and SignTJumpUMan.
 }

@@ -222,13 +222,13 @@ void fvRead235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvRead235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
-void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
+void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int); 
 int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsRadHeat(HALT*,int*);
+//void CountHaltsRadheat(HALT*,int*);
 
 /* Verify Functions */
 void fvNotMassAndNum(OPTIONS*,int,int,int);
@@ -275,7 +275,7 @@ void fvReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void fvCountHaltsRadHeat(HALT*,int);
+void fvCountHaltsRadheat(HALT*,int*);
 void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 
 /* Output Functions */
@@ -432,7 +432,7 @@ void fvWriteRadPowerTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doub
 void fvWriteRadEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void fvHelpOutputRadheat(OUTPUT*);
-void fvInitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
+void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
 void fvLogOptionsRadheat(CONTROL*,FILE*);

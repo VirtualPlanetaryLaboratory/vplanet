@@ -131,7 +131,7 @@
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
 
 //void InitializeControlThermint(CONTROL*);
-void fvAddModuleThermint(MODULE*,int,int);
+void AddModuleThermint(MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
@@ -267,7 +267,7 @@ void fvReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* end vemcee parameters */
 
-void fvInitializeOptionsThermint(OPTIONS*,fnReadOption[]);
+void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void fvReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
@@ -379,7 +379,7 @@ void fvForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable 
 #define OUT_DYNVISC         1800                /**< [Pa/s] Dynamic viscosity of upper mantle */
 											      
 void fvHelpOutputThermint(OUTPUT*);							      
-void fvInitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
+void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
 void fvInitializeOutputFunctionThermint(OUTPUT*,int,int);					      
 void fvFinalizeOutputFunctionThermint(OUTPUT*,int,int);					      
 											      

@@ -350,7 +350,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
-    AddModuleRadheat(module,iBody,iModule);
+    fvAddModuleRadheat(module,iBody,iModule);
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {

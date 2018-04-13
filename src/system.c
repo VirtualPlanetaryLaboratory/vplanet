@@ -139,7 +139,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
   int i;
-  
+
   if (body[iBody].bSpiNBody && iBody>0){
     double PotEnergy = 0;
     //For SpiNBody, find the heliocentric distance then return the potential.

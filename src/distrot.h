@@ -94,18 +94,18 @@ void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,
 void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */
-double fdCentralTorqueR(BODY*, int);
+double fndCentralTorqueR(BODY*, int);
 
-double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);
-double fdDistRotRD4DyDt(BODY*, SYSTEM*, int*);
-double fdDistRotRD4DzDt(BODY*, SYSTEM*, int*);
-double fdAxialGRDyDt(BODY*, SYSTEM*, int*);
-double fdAxialGRDxDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DxDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DyDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DzDt(BODY*, SYSTEM*, int*);
+double fndAxialGRDyDt(BODY*, SYSTEM*, int*);
+double fndAxialGRDxDt(BODY*, SYSTEM*, int*);
 
-double fdDistRotLL2DxDt(BODY*, SYSTEM*, int*);
-double fdDistRotLL2DyDt(BODY*, SYSTEM*, int*);
-double fdDistRotLL2DzDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DxDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DyDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DzDt(BODY*, SYSTEM*, int*);
 
-double fdDistRotExtDxDt(BODY*, SYSTEM*, int*);
-double fdDistRotExtDyDt(BODY*, SYSTEM*, int*);
-double fdDistRotExtDzDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDxDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDyDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDzDt(BODY*, SYSTEM*, int*);

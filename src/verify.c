@@ -50,6 +50,7 @@ void OverwriteExit(char cName[],char cFile[]) {
   exit(EXIT_INPUT);
 }
 
+/* XXX Should these be iLine+1? */
 void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
   fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
   fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);

@@ -25,6 +25,11 @@ vplot_config.py
 *.txt
 proxcen.pdf
 
+# Documentation
+docs/.build
+docs/rst
+docs/source.rst
+
 # The executable
 vplanet
 

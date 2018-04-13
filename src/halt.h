@@ -1,4 +1,4 @@
-/********************* HALT.H **********************/ 
+/********************* HALT.H **********************/
 /*
  * Rory Barnes, Wed May  7 13:50:14 PDT 2014
  *
@@ -15,4 +15,4 @@
 int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
 void InitializeHalts(CONTROL*,MODULE*);
 void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*);
-int HaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  
+int fniHaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);

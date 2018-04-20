@@ -280,6 +280,7 @@ typedef struct {
   double dPositionZ;     /**< z Component of the body's position */
   double bUseOrbParams;  /**< Boolean flag to use orbital parameters as inputs */
   double *dDistance3;    /**< Distance cubed to different perturbers */
+  double dGM;            /**< GM for the star */
 
   /* DISTORB parameters */
   int bDistOrb;          /**< Has module DISTORB been implemented */

@@ -69,7 +69,7 @@ double fdRotKinEnergy(double,double,double,double);
 double fdDensityMassToRadius(double,double);
 double fdMassFromRadiusDensity(double,double);
 double fdMassToRad(double,int);
-double fdRadToMass(double,double);
+double fdRadToMass(double,int);
 double fdRadiusFreqToRotVel(double,double);
 double fdRadiusRotVelToFreq(double,double);
 double fdDensityMassToRadius(double,double);
@@ -84,8 +84,8 @@ double fdRadToMass_BaylessOrosz06(double);
 double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
-double fdLehmerRadius(double Menv, double lil_g, double RadSurf, double Pxuv, double H, int toggle);
-
+double fdLehmerRadius(double RadSurf, double Pxuv, double H, double PresSurf);
+double fdLehmerPres(double Menv, double lil_g, double RadSurf);
 void BodyCopy(BODY*,BODY*,EVOLVE*);
 
 void CalcXYZobl(BODY*,int);

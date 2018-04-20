@@ -380,7 +380,7 @@ double fdRadToMass_Sotin07(double dRadius) {
 
  @return Body's radius as provided by appropriate relationship
 */
-double fdMassToRad(double dMass, int iRelation) {
+double fdMassToRad(double dMass,int iRelation) {
 
   if (iRelation == REIDHAWLEY)
     return fdMassToRad_ReidHawley(dMass);
@@ -400,7 +400,7 @@ double fdMassToRad(double dMass, int iRelation) {
 }
 
 // Assign mass from radius and published relationship
-double fdRadToMass(double dMass,double iRelation) {
+double fdRadToMass(double dMass,int iRelation) {
 
   if (iRelation == REIDHAWLEY)
     return fdRadToMass_ReidHawley(dMass);
@@ -460,15 +460,36 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   }
 }
 
-// Calculate rotational variables from obliquity and precession angle
+/**
+ Calculate rotational variables from obliquity and precession angle
+
+ @param body Body struct
+ @param iBody Index of the body struct for the body's whose rotational spins
+  is to be calculated.
+  */
 void CalcXYZobl(BODY *body, int iBody) {
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
 }
 
-/* Calculate equilibrium shape of planet using scaling laws and solar system
-   values. If the value is less then Venus', return Venus'. */
+/**
+ Calculate equilibrium shape of planet using scaling laws and solar system
+   values. If the value is less then Venus', return Venus'.
+
+   @param body BODY struct
+   @param iBody Index of the body struct for the body's whose equilibrium shape
+    is to be calculated.
+   @param J2Earth Earth's current oblateness
+   @param J2Venus Venus' current oblateness
+   @param CEarth Earth's current moment of inertia?
+   @param nuEarth ???
+   @param EdEarth ???
+   @param dTmp ???
+   @param dDynEllip Dynamical ellipticity
+
+   @return Dynamical elliptiticy
+   */
 double CalcDynEllipEq(BODY *body, int iBody) {
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
   double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
@@ -487,42 +508,71 @@ double CalcDynEllipEq(BODY *body, int iBody) {
   return dDynEllip;
 }
 
-/* Lehmer+ (2017)'s model for the radius of a planet losing its atmopshere
-   due to XUV radiation. */
-double fdLehmerRadius(double dMassEnv,double dGravAccel,double dRadSurf,double dPressXUV,double dScaleHeight,int iToggle) {
-	double P;		  // pressure at surface due to envelope
-	double Rxuv;	// radius from center of planet where optical depth of XUV is unity
+/**
+  Lehmer+ (2017)'s model for the radius of a planet where it's losing its atmopshere
+   due to XUV radiation.
 
-	P = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
-	Rxuv = dRadSurf * dRadSurf / (dScaleHeight * log(dPressXUV/P) + dRadSurf);
-	if (Rxuv <= dRadSurf) {
-		Rxuv = dRadSurf;
+   @param dMassEnv Envelope's mass
+   @param dGravAccel Body's gravitational acceleration
+   @param dRadSurf Surface Radius of rocky core
+   @param dScaleHeight Atmospheric scale height
+   @param dPresSurf pressure at surface due to envelope
+   @param dRadXUV radius from center of planet where optical depth of XUV is unity
+   */
+double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
+	double dRadXUV;
+
+	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
+	if (dRadXUV <= dRadSurf) {
+		dRadXUV = dRadSurf;
 	}
-	if (iToggle == 1) {
-		return P;
-	}
-	else {
-		return Rxuv;
-  }
+  return dRadXUV;
 }
 
 /**
-For use with `fdProximaCenStellar()` to interpolate stellar properties
-(temperature, radius, luminosity) from a grid.
+  Lehmer+ (2017)'s model for the pressure of a planet where it's losing its atmopshere
+   due to XUV radiation.
+
+   @param dMassEnv Envelope's mass
+   @param dGravAccel Body's gravitational acceleration
+   @param dRadSurf Surface Radius of rocky core
+   @param dPresXUV Pressure at base of thermosphere
+   @param dScaleHeight Atmospheric scale height
+   @param dPresSurf pressure at surface due to envelope
+   */
+double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
+	double dPresSurf;
+
+	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+  return dPresSurf;
+}
+
+/**
+  For use with `fdProximaCenStellar()` to interpolate stellar properties
+  (temperature, radius, luminosity) from a grid.
+
+  @param dVal Value of (temperature, radius, luminosity)
+  @param daArr Array of values from Yonsei-Yale tracks
+  @param iDim Length of array
+  @param iIndex Index of dArr correpoinding to the value
+
+  @return iIndex
 */
-int fiGetLowerBoundProximaCen(double val, const double *arr, int dim){
-	int i;
-	for (i=0;i<dim-2;i++){
-	  if (val < arr[i+1]) break;
+int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
+	int iIndex;
+	for (iIndex=0;iIndex<iDim-2;iIndex++){
+	  if (dVal < daArr[iIndex+1]) break;
   }
-	return i;
+	return iIndex;
 }
 
 /**
-For use with `fdProximaCenStellar()` to interpolate stellar properties
-(temperature, radius, luminosity) from a grid. This function
-linearly interpolates over data, given indices of lower bounds on grid xi, yi
-and normalized distances to the interpolation point dx, dy.
+  For use with `fdProximaCenStellar()` to interpolate stellar properties
+  (temperature, radius, luminosity) from a grid. This function
+  linearly interpolates over data, given indices of lower bounds on grid xi, yi
+  and normalized distances to the interpolation point dx, dy.
+
+  XXX What are these arguments?
 */
 double fdProximaCenBiLinear(int iALEN, double const data_lo[iALEN], double const data_hi[iALEN], int xi, int yi, double dx, double dy) {
 	double C0, C1, C;
@@ -543,6 +593,8 @@ double fdProximaCenBiLinear(int iALEN, double const data_lo[iALEN], double const
 /**
 For use with `fdProximaCenStellar()` to interpolate stellar properties
 (temperature, radius, luminosity) from a grid.
+
+  XXX What are these arguments?
 */
 double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[iALEN], double const yarr[iMLEN], double const data_lo[iALEN], double const data_hi[iALEN], double A, double M, int *iError){
   double dx,dy;
@@ -615,6 +667,8 @@ DATA FROM Boyajian+12; SECOND ROW FROM Demory+09 (direct measurements)
 # 0.19      0.1410 ± 0.0070   0.00155 ± 0.00002     3054 ± 79     0.118           2.83E−04
                               0.00165 ± 0.00015     3098 ± 56     0.123 ± 0.006
 
+  XXX What are these arguments?
+
 */
 double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
 	double res;
@@ -647,18 +701,27 @@ double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
 /**
 For use with `fdProximaCenBRadius()` to interpolate the radius of
 Proxima Cen b from a grid, assuming it has a gaseous composition
+
+@param dVal Value of (temperature, radius, luminosity)
+@param daArr Array of values from Yonsei-Yale tracks
+@param iDim Length of array
+@param iIndex Index of dArr correpoinding to the value
+
+@return iIndex
 */
-int fiGetLowerBoundProximaCenB(double val, const double *arr, int dim){
-	int i;
-	for (i=0;i<dim-2;i++){
-	  if (val < arr[i+1]) break;
+int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim){
+	int iIndex;
+	for (iIndex=0;iIndex<iDim-2;iIndex++){
+	  if (dVal < daArr[iIndex+1]) break;
   }
-	return i;
+	return iIndex;
 }
 
 /**
-For use with `fdProximaCenBRadius()` to interpolate the radius of
-Proxima Cen b from a grid, assuming it has a gaseous composition
+  For use with `fdProximaCenBRadius()` to interpolate the radius of
+  Proxima Cen b from a grid, assuming it has a gaseous composition
+
+  XXX What are the arguments?
 */
 double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -687,6 +750,7 @@ Here I'm assuming a mass of 1.27 MEARTH and a solid body radius of 1.074 REARTH.
 I'm using the Lopez+12 grids from Luger et al. (2015)
 and smoothing over sharp (presumably) numerical features.
 
+  XXX What are the arguments?
 */
 double fdProximaCenBRadius(double C, double A, double M){
 	double dx, dy;
@@ -717,7 +781,9 @@ double fdProximaCenBRadius(double C, double A, double M){
 }
 
 /**
-Planet radius evolution from the Lopez et al. (2012) evolution grids.
+  Planet radius evolution from the Lopez et al. (2012) evolution grids.
+
+  XXX What are the arguments?
 
 */
 double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal){
@@ -807,8 +873,12 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 }
 
 /**
-Dot product of two vectors
+  Dot product of two vectors
 
+  @param x First array
+  @param y Second array
+  @param res dot product
+  @return dot product of arrays x and y
 */
 double fdDotProduct(const int *x, const double *y){
 	double res = 0.0;
@@ -820,7 +890,11 @@ double fdDotProduct(const int *x, const double *y){
 }
 
 /**
-Matrix-vector multiplication
+  Matrix-vector multiplication
+
+  @param mat Matrix
+  @param vec Vector
+  @param result Resultant vector
 
 */
 void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result){
@@ -832,7 +906,9 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
+
+  XXX What are the arguments?
 
 */
 int fiGetLowerBound(double val, const double *arr, int dim){
@@ -856,8 +932,9 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
 
+  XXX What are the arguments?
 */
 double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -878,8 +955,9 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], 
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
 
+  XXX What are the arguments?
 */
 double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
 	double dvCoeff[16];
@@ -927,7 +1005,9 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], i
 }
 
 /**
-Helper function for interpolating Baraffe grid
+  Helper function for interpolating Baraffe grid
+
+  XXX What are the arguments?
 
 */
 double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], double const yarr[iALEN], double const data[iMLEN][iALEN], double M, double A, int iOrder, int *iError){
@@ -1013,8 +1093,10 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], doub
 }
 
 /**
-Returns the stellar T, L, or R by interpolating over the Baraffe grid
-using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
+  Returns the stellar T, L, or R by interpolating over the Baraffe grid
+  using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
+
+  XXX What are the arguments?
 */
 double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 	double res;

@@ -299,9 +299,16 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       fprintf(stderr,"ERROR: Cannot use variable time step (%s = 1) if %s = 1\n",options[OPT_VARDT].cName,options[OPT_READORBITDATA].cName);
       exit(EXIT_INPUT);
     }
-    if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
-      fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
-      exit(EXIT_INPUT);
+    if (control->Evolve.bDoForward) {
+      if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
+    } else if (control->Evolve.bDoBackward) {
+      if (body[iBody].daTimeSeries[1] != -1*control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
     }
     if (iNLines < (control->Evolve.dStopTime/control->Evolve.dTimeStep+1) ) {
       fprintf(stderr,"ERROR: Input orbit data must at least as long as vplanet integration (%f years)\n",control->Evolve.dStopTime/YEARSEC);
@@ -322,26 +329,27 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     control->fnPropsAux[iBody][iModule] = &PropertiesDistRot;
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     
-    CalcXYZobl(body, iBody);
-    
     if (body[iBody].bReadOrbitData) {
-      system->dLOrb = malloc(3*sizeof(double)); //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
-      body[iBody].dLOrb = malloc(3*sizeof(double));
-      body[iBody].dLOrbTmp = malloc(3*sizeof(double));
+      //body[iBody].dPrecA -= body[iBody].daLongASeries[0]; //needed to account possibly different reference location for dPrecA and dLongA
+      system->daLOrb = malloc(3*sizeof(double)); //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
+      body[iBody].daLOrb = malloc(3*sizeof(double));
+      body[iBody].daLOrbTmp = malloc(3*sizeof(double));
     }
+    
+    CalcXYZobl(body, iBody);
       
-    body[iBody].dLRot = malloc(3*sizeof(double));
-    body[iBody].dLRotTmp = malloc(3*sizeof(double));
+    body[iBody].daLRot = malloc(3*sizeof(double));
+    body[iBody].daLRotTmp = malloc(3*sizeof(double));
     
     if (body[iBody].bReadOrbitData) {
       InitializeXoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fdDistRotExtDxDt;
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fndDistRotExtDxDt;
       
       InitializeYoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fdDistRotExtDyDt;
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fndDistRotExtDyDt;
       
       InitializeZoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fdDistRotExtDzDt;
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fndDistRotExtDzDt;
       
     } else {
       if (control->Evolve.iDistOrbModel==RD4) {
@@ -349,58 +357,58 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
           InitializeXoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotRD4DxDt;
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotRD4DxDt;
         
           /* y = sin(obl)*sin(pA) */
           InitializeYoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotRD4DyDt;
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotRD4DyDt;
         
           /* z = cos(obl) */
           InitializeZoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotRD4DzDt;
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotRD4DzDt;
           
         }
         /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DxDt;
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DxDt;
         
         /* y = sin(obl)*sin(pA) */
         InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotRD4DyDt;
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DyDt;
       
       } else if (control->Evolve.iDistOrbModel==LL2) {
         /* Body updates */
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
           InitializeXoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fdDistRotLL2DxDt;
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotLL2DxDt;
         
           /* y = sin(obl)*sin(pA) */
           InitializeYoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fdDistRotLL2DyDt;
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotLL2DyDt;
         
           /* z = cos(obl) */
           InitializeZoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fdDistRotLL2DzDt;
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotLL2DzDt;
           
         }
         /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DxDt;
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DxDt;
         
         /* y = sin(obl)*sin(pA) */
         InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fdDistRotLL2DyDt;
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DyDt;
       }
     }
     if (body[iBody].bGRCorr) {
     InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDxDt;
+    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDxDt;
 
     InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fdAxialGRDyDt;
+    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDyDt;
     }
   }
   
@@ -510,11 +518,17 @@ void VerifyHaltDistRot(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
-
-  dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
-  dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) > 0) {
+    dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+    dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+      
+  } else {
+    dObldx = 0.0;
+    dObldy = 0.0;
+  }
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
     
@@ -541,10 +555,16 @@ void WriteOblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
-  dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
-  dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
-    (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) > 0) {
+    dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+    dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
+      (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
+  } else {
+    dObldx = 0.0;
+    dObldy = 0.0;
+  }    
+    
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
     
@@ -571,8 +591,13 @@ void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
-  dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
-  dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) != 0) {
+    dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+    dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  } else {
+    dpAdx = 0.0;
+    dpAdy = 0.0;
+  }
   
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
@@ -596,8 +621,13 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
-  dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
-  dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) != 0) {
+    dpAdx = - body[iBody].dYobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+    dpAdy = body[iBody].dXobl/(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl);
+  } else {
+    dpAdx = 0.0;
+    dpAdy = 0.0;
+  }
   
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
@@ -605,7 +635,7 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     dDeriv += dpAdx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dpAdy*(*(update[iBody].padDYoblDtDistRot[iPert]));
 
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -737,127 +767,123 @@ void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
   }
 }
 
-/* Conflict -- also exists in output.c
-void WriteBodyPrecA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = atan2(body[iBody].dYobl,body[iBody].dXobl);  
-   XXX Is this right???
-  *dTmp = fabs(1./dDeriv);
-    
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime,cUnit);
-  }
-}  
-*/
 
 void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
   
-  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  if (body[iBody].bDistOrb) {
+    for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
   
-  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
-    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-        body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
-    body[jBody].dLOrb[0] = 0.0;
-    body[jBody].dLOrb[1] = 0.0;
-    body[jBody].dLOrb[2] = h;
+    for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+      h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+      body[jBody].daLOrb[0] = 0.0;
+      body[jBody].daLOrb[1] = 0.0;
+      body[jBody].daLOrb[2] = h;
   
-    inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
-    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
-    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
-    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
-    for (i=0;i<3;i++)
-      system->dLOrb[i] += body[jBody].dLOrb[i];
+      inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
+      RotateVector(body[jBody].daLOrb,body[jBody].daLOrbTmp,inc,0); //rotate about x by inc angle
+      longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+      RotateVector(body[jBody].daLOrbTmp,body[jBody].daLOrb,longa,2); //rotate about z by Omega
+      for (i=0;i<3;i++)
+        system->daLOrb[i] += body[jBody].daLOrb[i];
+    }
+    Lnorm = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+system->daLOrb[2]*system->daLOrb[2]);
+    for (i=0;i<3;i++) system->daLOrb[i] /= Lnorm;
+  
+    Lnorm = sqrt(body[iBody].daLOrb[0]*body[iBody].daLOrb[0]+\
+        body[iBody].daLOrb[1]*body[iBody].daLOrb[1]+body[iBody].daLOrb[2]*body[iBody].daLOrb[2]);
+    for (i=0;i<3;i++) body[iBody].daLOrb[i] /= Lnorm;
+  
+    body[iBody].daLRot[0] = 0.0;
+    body[iBody].daLRot[1] = 0.0;
+    body[iBody].daLRot[2] = 1.0;
+    obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
+
+    inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
+    longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+    RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,-obliq,0);
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,eqnode,2);
+    RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,inc,0);
+    RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,longa,2);
+
+    cross(body[iBody].daLRot,body[iBody].daLOrb,body[iBody].daLRotTmp);
+    Lnorm = sqrt(body[iBody].daLRotTmp[0]*body[iBody].daLRotTmp[0]+\
+        body[iBody].daLRotTmp[1]*body[iBody].daLRotTmp[1]+body[iBody].daLRotTmp[2]*body[iBody].daLRotTmp[2]);
+    if (Lnorm != 0) {
+      for (i=0;i<3;i++) body[iBody].daLRotTmp[i] /= Lnorm;
+    }
+    
+    cross(system->daLOrb,body[iBody].daLOrb,body[iBody].daLOrbTmp);
+    Lnorm = sqrt(body[iBody].daLOrbTmp[0]*body[iBody].daLOrbTmp[0]+\
+        body[iBody].daLOrbTmp[1]*body[iBody].daLOrbTmp[1]+body[iBody].daLOrbTmp[2]*body[iBody].daLOrbTmp[2]);
+    for (i=0;i<3;i++) body[iBody].daLOrbTmp[i] /= Lnorm;
+  
+    cross(body[iBody].daLOrbTmp,body[iBody].daLRotTmp,system->daLOrb);
+    *dTmp = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+\
+        system->daLOrb[2]*system->daLOrb[2]);
+  } else {
+    *dTmp = 0.0;
   }
-  Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
-  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
-  
-  Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+\
-      body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
-  
-  body[iBody].dLRot[0] = 0.0;
-  body[iBody].dLRot[1] = 0.0;
-  body[iBody].dLRot[2] = 1.0;
-  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-
-  inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
-  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
-  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
-
-  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
-  Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+\
-      body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
-  
-  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
-  Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+\
-      body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
-  
-  cross(body[iBody].dLOrbTmp,body[iBody].dLRotTmp,system->dLOrb);
-  *dTmp = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+\
-      system->dLOrb[2]*system->dLOrb[2]);
 }  
   
 void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
   
-  for (i=0;i<3;i++) system->dLOrb[i] = 0.0;
+  if (body[iBody].bDistOrb) {
+    for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
   
-  for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
-    h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-        body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
-    body[jBody].dLOrb[0] = 0.0;
-    body[jBody].dLOrb[1] = 0.0;
-    body[jBody].dLOrb[2] = h;
+    for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
+      h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
+          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+      body[jBody].daLOrb[0] = 0.0;
+      body[jBody].daLOrb[1] = 0.0;
+      body[jBody].daLOrb[2] = h;
   
-    inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
-    RotateVector(body[jBody].dLOrb,body[jBody].dLOrbTmp,inc,0); //rotate about x by inc angle
-    longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
-    RotateVector(body[jBody].dLOrbTmp,body[jBody].dLOrb,longa,2); //rotate about z by Omega
-    for (i=0;i<3;i++)
-      system->dLOrb[i] += body[jBody].dLOrb[i];
+      inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
+      RotateVector(body[jBody].daLOrb,body[jBody].daLOrbTmp,inc,0); //rotate about x by inc angle
+      longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
+      RotateVector(body[jBody].daLOrbTmp,body[jBody].daLOrb,longa,2); //rotate about z by Omega
+      for (i=0;i<3;i++)
+        system->daLOrb[i] += body[jBody].daLOrb[i];
+    }
+    Lnorm = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+system->daLOrb[2]*system->daLOrb[2]);
+    for (i=0;i<3;i++) system->daLOrb[i] /= Lnorm;
+  
+    Lnorm = sqrt(body[iBody].daLOrb[0]*body[iBody].daLOrb[0]+body[iBody].daLOrb[1]*body[iBody].daLOrb[1]+body[iBody].daLOrb[2]*body[iBody].daLOrb[2]);
+    for (i=0;i<3;i++) body[iBody].daLOrb[i] /= Lnorm;
+  
+    body[iBody].daLRot[0] = 0.0;
+    body[iBody].daLRot[1] = 0.0;
+    body[iBody].daLRot[2] = 1.0;
+    obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
+
+    inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
+    longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
+    RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,-obliq,0);
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,eqnode,2);
+    RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,inc,0);
+    RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,longa,2);
+
+    cross(body[iBody].daLRot,body[iBody].daLOrb,body[iBody].daLRotTmp);
+    Lnorm = sqrt(body[iBody].daLRotTmp[0]*body[iBody].daLRotTmp[0]+body[iBody].daLRotTmp[1]*body[iBody].daLRotTmp[1]+body[iBody].daLRotTmp[2]*body[iBody].daLRotTmp[2]);
+    if (Lnorm != 0) {
+      for (i=0;i<3;i++) body[iBody].daLRotTmp[i] /= Lnorm;
+    }
+    
+    cross(system->daLOrb,body[iBody].daLOrb,body[iBody].daLOrbTmp);
+    Lnorm = sqrt(body[iBody].daLOrbTmp[0]*body[iBody].daLOrbTmp[0]+body[iBody].daLOrbTmp[1]*body[iBody].daLOrbTmp[1]+body[iBody].daLOrbTmp[2]*body[iBody].daLOrbTmp[2]);
+    for (i=0;i<3;i++) body[iBody].daLOrbTmp[i] /= Lnorm;
+  
+    *dTmp = 0.0;
+    for (i=0;i<3;i++) *dTmp += body[iBody].daLRotTmp[i]*body[iBody].daLOrbTmp[i];  
+  } else {
+    *dTmp = 0.0;
   }
-  Lnorm = sqrt(system->dLOrb[0]*system->dLOrb[0]+system->dLOrb[1]*system->dLOrb[1]+system->dLOrb[2]*system->dLOrb[2]);
-  for (i=0;i<3;i++) system->dLOrb[i] /= Lnorm;
-  
-  Lnorm = sqrt(body[iBody].dLOrb[0]*body[iBody].dLOrb[0]+body[iBody].dLOrb[1]*body[iBody].dLOrb[1]+body[iBody].dLOrb[2]*body[iBody].dLOrb[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrb[i] /= Lnorm;
-  
-  body[iBody].dLRot[0] = 0.0;
-  body[iBody].dLRot[1] = 0.0;
-  body[iBody].dLRot[2] = 1.0;
-  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-
-  inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
-  longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,-obliq,0);
-  eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,eqnode,2);
-  RotateVector(body[iBody].dLRot,body[iBody].dLRotTmp,inc,0);
-  RotateVector(body[iBody].dLRotTmp,body[iBody].dLRot,longa,2);
-
-  cross(body[iBody].dLRot,body[iBody].dLOrb,body[iBody].dLRotTmp);
-  Lnorm = sqrt(body[iBody].dLRotTmp[0]*body[iBody].dLRotTmp[0]+body[iBody].dLRotTmp[1]*body[iBody].dLRotTmp[1]+body[iBody].dLRotTmp[2]*body[iBody].dLRotTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLRotTmp[i] /= Lnorm;
-  
-  cross(system->dLOrb,body[iBody].dLOrb,body[iBody].dLOrbTmp);
-  Lnorm = sqrt(body[iBody].dLOrbTmp[0]*body[iBody].dLOrbTmp[0]+body[iBody].dLOrbTmp[1]*body[iBody].dLOrbTmp[1]+body[iBody].dLOrbTmp[2]*body[iBody].dLOrbTmp[2]);
-  for (i=0;i<3;i++) body[iBody].dLOrbTmp[i] /= Lnorm;
-  
-  *dTmp = 0.0;
-  for (i=0;i<3;i++) *dTmp += body[iBody].dLRotTmp[i]*body[iBody].dLOrbTmp[i];  
 }  
   
 void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -869,7 +895,7 @@ void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }  
 
 void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdCentralTorqueR(body,iBody);
+  *dTmp = fndCentralTorqueR(body,iBody);
   
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -974,15 +1000,6 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
   
-//   sprintf(output[OUT_PRECA].cName,"PrecA");
-//   sprintf(output[OUT_PRECA].cDescr,"Body's precession parameter in DistRot");
-//   sprintf(output[OUT_PRECA].cNeg,"Deg");
-//   output[OUT_PRECA].bNeg = 1;
-//   output[OUT_PRECA].dNeg = 1./DEGRAD;
-//   output[OUT_PRECA].iNum = 1;
-//   output[OUT_PRECA].iModuleBit = DISTROT;
-//   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
-  
   sprintf(output[OUT_CASS1].cName,"CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg = 0;
@@ -1069,6 +1086,8 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
   body[iBody].dPinc = body[iBody].daPincSeries[body[iBody].iCurrentStep];
   body[iBody].dQinc = body[iBody].daQincSeries[body[iBody].iCurrentStep];
+  body[iBody].dEcc = sqrt(body[iBody].dHecc*body[iBody].dHecc+\
+    body[iBody].dKecc*body[iBody].dKecc);
 
   /* numerical derivatives of p and q */
   if (body[iBody].iCurrentStep == 0) {
@@ -1127,183 +1146,347 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
 }
 
 /* Equations used to calculate obliquity/spin evolution */
-double fdCentralTorqueSfac(BODY *body, int iBody) {
+
+/**
+Correction to axial precession rate for eccentricity (and possible additional effects)
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return Correction to precession rate
+*/
+double fndCentralTorqueSfac(BODY *body, int iBody) {
   return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*body[iBody].dKecc),-1.5) - S0;
 }
-  
-double fdCentralTorqueR(BODY *body, int iBody) {
+
+/**
+Natural axial precession rate due to host star (alpha*cos(obliquity))
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return Axial precession rate (rad/sec)
+*/
+double fndCentralTorqueR(BODY *body, int iBody) {
   double obliq, tmp;
- //  obliq = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
-//   ztmp = cos(obliq);
-//   tmp = 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/(pow(body[iBody].dSemi/AUCM,3)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
-  
-  return 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/((body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fdCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
+
+  return 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/((body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fndCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
-/* THE FOLLOWING FXNS WILL NEED TO CHANGE IF DISTRES IS USED XXX */
+/**
+C(p,q) function in obliquity evol equations if RD4 orbital model is used
 
-double fdObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
-//   double tmp;
-//   tmp = body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
-
-  return body[iaBody[0]].dQinc*fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbRD4DqDt(body,system,iaBody);
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
+double fndObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dQinc*fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbRD4DqDt(body,system,iaBody);
 }
 
-double fdObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
-  // double tmp;
-//   tmp = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
+/**
+A(p,q) function in obliquity evol equations if RD4 orbital model is used
 
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCRD4(body,system,iaBody) );
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
+double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCRD4(body,system,iaBody) );
 }
 
-double fdObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
-//   double tmp;
-//   tmp = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+/**
+B(p,q) function in obliquity evol equations if RD4 orbital model is used
 
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCRD4(body,system,iaBody) );
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
+double fndObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fndObliquityCRD4(body,system,iaBody) );
 }
 
-double fdObliquityCLL2(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dQinc*fdDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fdDistOrbLL2DqDt(body,system,iaBody);
+/**
+C(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
+double fndObliquityCLL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dQinc*fndDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbLL2DqDt(body,system,iaBody);
 }
 
-double fdObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbLL2DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fdObliquityCLL2(body,system,iaBody) );
+/**
+A(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
+double fndObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbLL2DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCLL2(body,system,iaBody) );
 }
 
-double fdObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fdDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fdObliquityCLL2(body,system,iaBody) );
+/**
+B(p,q) function in obliquity evol equations if LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
+double fndObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbLL2DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fndObliquityCLL2(body,system,iaBody) );
 }
 
-double fdObliquityCExt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+C(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return C(p,q) function
+*/
+double fndObliquityCExt(BODY *body, SYSTEM *system, int *iaBody) {
   return body[iaBody[0]].dQinc*body[iaBody[0]].dPdot - body[iaBody[0]].dPinc*body[iaBody[0]].dQdot;
 }
 
-double fdObliquityAExt(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dQdot + body[iaBody[0]].dPinc*fdObliquityCExt(body,system,iaBody) );
+/**
+A(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return A(p,q) function
+*/
+double fndObliquityAExt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dQdot + body[iaBody[0]].dPinc*fndObliquityCExt(body,system,iaBody) );
 }
 
-double fdObliquityBExt(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dPdot - body[iaBody[0]].dQinc*fdObliquityCExt(body,system,iaBody) );
+/**
+B(p,q) function in obliquity evol equations if external orbital data is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return B(p,q) function
+*/
+double fndObliquityBExt(BODY *body, SYSTEM *system, int *iaBody) {
+  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( body[iaBody[0]].dPdot - body[iaBody[0]].dQinc*fndObliquityCExt(body,system,iaBody) );
 }
 
 //----------Relativistic correction-------------------------------------
-double fdAxialGRCorrection(BODY *body, int *iaBody) {
-  return fdApsidalGRCorrection(body, iaBody)/2.;
+
+/**
+GR correction to axial precession rate
+
+@param body Struct containing all body information and variables
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to axial precession rate d(PrecA)/dt
+*/
+double fndAxialGRCorrection(BODY *body, int *iaBody) {
+  return fndApsidalGRCorrection(body, iaBody)/2.;
 }
 
-double fdAxialGRDxDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fdAxialGRCorrection(body,iaBody);
+/**
+GR correction to derivative of x = sin(obliquity)*cos(preca)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to derivative dx/dt
+*/
+double fndAxialGRDxDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fndAxialGRCorrection(body,iaBody);
 }
 
-double fdAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return -body[iaBody[0]].dXobl*fdAxialGRCorrection(body,iaBody);
+/**
+GR correction to derivative of y = sin(obliquity)*sin(preca)
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Correction to derivative dy/dt
+*/
+double fndAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return -body[iaBody[0]].dXobl*fndAxialGRCorrection(body,iaBody);
 }
 
 //--------------Obliquity/spin evolution--------------------------------------------------------------
 
-double fdDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
+double fndDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
     if (body[iaBody[0]].bForcePrecRate == 0) {
-      return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+      return body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
     } else {
       return body[iaBody[0]].dXobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
-      return -fdObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCRD4(body,system,iaBody);
-    // } else {
-//       return cos(body[iaBody[0]].dObliquity)*sin(body[iaBody[0]].dPrecA) * \
-//         (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-//         fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-//     }
+      return -fndObliquityBRD4(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fndObliquityCRD4(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of x = sin(obliquity)*cos(preca) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
+double fndDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
     if (body[iaBody[0]].bForcePrecRate == 0) {
-      return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+      return -body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
     } else {
       return -body[iaBody[0]].dYobl*body[iaBody[0]].dPrecRate;
     }
   } else if (iaBody[1] >= 1) {
-//     if (body[iaBody[0]].bForcePrecRate == 0) {
       y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
-      return fdObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCRD4(body,system,iaBody);
-    // } else {
-//       return cos(body[iaBody[0]].dObliquity)*cos(body[iaBody[0]].dPrecA) * \
-//         (-fdObliquityBRD4(body,system,iaBody)*sin(body[iaBody[0]].dPrecA) + \
-//         fdObliquityARD4(body,system,iaBody)*cos(body[iaBody[0]].dPrecA));
-//     }
+      return fndObliquityARD4(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fndObliquityCRD4(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fdObliquityBRD4(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityARD4(body,system,iaBody);
+/**
+Derivative of z = cos(obliquity) when RD4 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
+double fndDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fndObliquityBRD4(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityARD4(body,system,iaBody);
 }
 
+/**
+Derivative of y = sin(obliquity)*sin(preca) when LL2 orbital model is used
 
-double fdDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
+double fndDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+    return body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
-    return -fdObliquityBLL2(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCLL2(body,system,iaBody);
+    return -fndObliquityBLL2(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fndObliquityCLL2(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of x = sin(obliquity)*cos(preca) when LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
+double fndDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   
   if (iaBody[1] == 0) {
-    return -body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+    return -body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
     y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
-    return fdObliquityALL2(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCLL2(body,system,iaBody);
+    return fndObliquityALL2(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fndObliquityCLL2(body,system,iaBody);
   }
   assert(0);
   return 0;
 }
 
-double fdDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fdObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityALL2(body,system,iaBody);
+/**
+Derivative of z = cos(obliquity) when LL2 orbital model is used
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
+double fndDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fndObliquityBLL2(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityALL2(body,system,iaBody);
 }
 
-double fdDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of dynamical ellipticity when coupled to eqtide and thermint
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative d(dynellip)/dt
+*/
+double fndDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -EDMAN*EDMAN/body[iaBody[0]].dViscUMan*\
           (body[iaBody[0]].dDynEllip-CalcDynEllipEq(body,iaBody[0]));
 }
 
-double fdDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dx/dt
+*/
+double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
 
-  return fdObliquityAExt(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fdObliquityCExt(body,system,iaBody)-\
-          body[iaBody[0]].dYobl*fdCentralTorqueR(body,iaBody[0]);
+  return fndObliquityAExt(body,system,iaBody)*sqrt(y) + body[iaBody[0]].dYobl*2.*fndObliquityCExt(body,system,iaBody)-\
+          body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
 }
 
-double fdDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
+/**
+Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dy/dt
+*/
+double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
   
-  return -fdObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fdObliquityCExt(body,system,iaBody)+\
-          body[iaBody[0]].dXobl*fdCentralTorqueR(body,iaBody[0]);
+  return -fndObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fndObliquityCExt(body,system,iaBody)+\
+          body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
 }
 
-double fdDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fdObliquityBExt(body,system,iaBody) - body[iaBody[0]].dXobl*fdObliquityAExt(body,system,iaBody);
+/**
+Derivative of z = cos(obliquity) when orbital data is input from external model
+
+@param body Struct containing all body information and variables
+@param system Struct containing system information
+@param iaBody Array containing indices of bodies associated with interaction
+@return Derivative dz/dt
+*/
+double fndDistRotExtDzDt(BODY *body, SYSTEM *system, int *iaBody) {
+  return body[iaBody[0]].dYobl*fndObliquityBExt(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityAExt(body,system,iaBody);
 }

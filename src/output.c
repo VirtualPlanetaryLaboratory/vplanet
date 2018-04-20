@@ -1556,7 +1556,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       fprintf(fp,"\n");
       fclose(fp);
     }
-    // XXX Module-specific output should NOT be present in this file
+    // XXX Pizza should NOT be present in this file
 
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
@@ -1635,13 +1635,13 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                   /* output alpha, laplace func, derivatives for each internal/external pair.
                   external/internal pairs are duplicates and so not output. this can create a
                   large amount of data for systems with lots of planets (78 columns/planet pair) */
-                  fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                  fprintd(fp,system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                  fprintd(fp,system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                   fprintf(fp," ");
 
-                  fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                  fprintd(fp,system->daLaplaceD[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                   fprintf(fp," ");
                 }
               }
@@ -1661,13 +1661,13 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
                     /* output alpha, laplace func, derivatives for each internal/external pair.
                     external/internal pairs are duplicates and so not output. this can create a
                     large amount of data for systems with lots of planets (78 columns/planet pair) */
-                    fprintd(fp,system->dmAlpha0[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
+                    fprintd(fp,system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output alpha
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceC[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
+                    fprintd(fp,system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceC
                     fprintf(fp," ");
 
-                    fprintd(fp,system->dmLaplaceD[0][system->imLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
+                    fprintd(fp,system->daLaplaceD[0][system->iaLaplaceN[iBody][jBody]][j], control->Io.iSciNot,control->Io.iDigits); //output LaplaceD
                     fprintf(fp," ");
                   }
                 }
@@ -1679,9 +1679,9 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
-
-  if (control->bOutputEigen) {
-    if (body[1].bDistOrb) {
+  
+  if (body[1].bDistOrb) {
+    if (control->bOutputEigen) {
       if (control->Evolve.iDistOrbModel == RD4) {
          SolveEigenVal(body,&control->Evolve,system);
       }

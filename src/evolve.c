@@ -225,10 +225,10 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 	      // The parameter is controlled by a time derivative
 	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
         if (!bFloatComparison(update[iBody].daDerivProc[iVar][iEqn],0.0) && !bFloatComparison(*(update[iBody].pdVar[iVar]),0.0)) {
-	      //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) { // Obselete float comparison
-		dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
-		if (dMinNow < dMin)
-		  dMin = dMinNow;
+	        //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) { // Obselete float comparison
+	      	dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
+		      if (dMinNow < dMin)
+		        dMin = dMinNow;
 	      }
 	    }
 	  }
@@ -242,7 +242,7 @@ double fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update
 void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
 /* Compute and apply an Euler update step to a given parameter (x = dx/dt * dt) */
   int iBody,iVar,iEqn;
-  double dTimeOut;
+  double dTimeOut,dFoo;
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
@@ -269,7 +269,7 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
 /* Compute and apply a 4th order Runge-Kutta update step a given parameter. */
-  int iBody,iVar,iEqn,iSubStep;
+  int iBody,iVar,iEqn,iSubStep,iNumBodies,iNumVars,iNumEqns;
   double dTimeOut,dFoo,dDelta;
 
   /* Create a copy of BODY array */
@@ -299,10 +299,14 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+  iNumBodies = control->Evolve.iNumBodies;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
+    for (iVar=0;iVar<iNumVars;iVar++) {
       control->Evolve.daDeriv[0][iBody][iVar] = 0;
-      for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+      iNumEqns = update[iBody].iNumEqns[iVar];
+      for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         // XXX Set update.dDxDtModule here?
         control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
@@ -328,10 +332,12 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Don't need this timestep info, so assign output to dFoo */
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
+    for (iVar=0;iVar<iNumVars;iVar++) {
       control->Evolve.daDeriv[1][iBody][iVar] = 0;
-      for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+      iNumEqns = update[iBody].iNumEqns[iVar];
+      for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
 
@@ -355,10 +361,12 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
+    for (iVar=0;iVar<iNumVars;iVar++) {
       control->Evolve.daDeriv[2][iBody][iVar] = 0;
-      for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+      iNumEqns = update[iBody].iNumEqns[iVar];
+      for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
 
@@ -381,22 +389,25 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   dFoo = fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
+    for (iVar=0;iVar<iNumVars;iVar++) {
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // NOTHING!
       } else {
         control->Evolve.daDeriv[3][iBody][iVar] = 0;
-        for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+        iNumEqns = update[iBody].iNumEqns[iVar];
+        for (iEqn=0;iEqn<iNumEqns;iEqn++) {
           control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }
       }
     }
   }
   /* Now do the update -- Note the pointer to the home of the actual variables!!! */
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
+    for (iVar=0;iVar<iNumVars;iVar++) {
       update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] +
       2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
 

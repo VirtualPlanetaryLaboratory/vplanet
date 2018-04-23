@@ -12,6 +12,9 @@ opt:
 profile:
 	-gcc -pg -o vplanet src/*.c -lm
 
+optprof:
+	-gcc -pg -o vplanet src/*.c -lm -O3
+
 test:
 	@echo 'Compiling vplanet...'
 	-gcc -o vplanet src/*.c -lm

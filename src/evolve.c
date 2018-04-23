@@ -241,9 +241,7 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
 void fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
 /* Fills the Update arrays with the derivatives
- * or new values. It returns the smallest timescale for use
- * in variable timestepping. Uses either a 4th order Runge-Kutte integrator or
- * an Euler step.
+ * or new values..
  */
 
   int iBody,iVar,iEqn,iNumBodies,iNumVars,iNumEqns; // Dummy counting variables
@@ -301,122 +299,124 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   int iBody,iVar,iEqn,iSubStep,iNumBodies,iNumVars,iNumEqns;
   double dTimeOut,dFoo,dDelta;
 
+  EVOLVE evolve = control->Evolve; // Save Evolve as a variable for speed and legibility
+
   /* Create a copy of BODY array */
-  BodyCopy(control->Evolve.tmpBody,body,&control->Evolve);
+  BodyCopy(evolve.tmpBody,body,&control->Evolve);
 
   /* Verify that rotation angles behave correctly in an eqtide-only run
-  if (control->Evolve.tmpBody[1].dPrecA != 0)
-    printf("PrecA = %e\n",control->Evolve.tmpBody[1].dPrecA);
+  if (evolve.tmpBody[1].dPrecA != 0)
+    printf("PrecA = %e\n",evolve.tmpBody[1].dPrecA);
   XXX
   */
 
 //   RecalcLaplaceDistRes(body,control,system);
   /* Derivatives at start */
-  *dDt = fdGetTimeStep(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  *dDt = fdGetTimeStep(body,control,system,evolve.tmpUpdate,fnUpdate);
 
   /* Adjust dt? */
-  if (control->Evolve.bVarDt) {
-     dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+  if (evolve.bVarDt) {
+     dTimeOut = fdNextOutput(evolve.dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
-     *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
+     *dDt = AssignDt(*dDt,(dTimeOut - evolve.dTime),evolve.dEta);
   } else
-    *dDt = control->Evolve.dTimeStep;
+    *dDt = evolve.dTimeStep;
 
-  control->Evolve.dCurrentDt = *dDt;
+  evolve.dCurrentDt = *dDt;
 
   /* XXX Should each eqn be updated separately? Each parameter at a
      midpoint is moved by all the modules operating on it together.
      Does RK4 require the equations to be independent over the full step? */
 
-  iNumBodies = control->Evolve.iNumBodies;
+  iNumBodies = evolve.iNumBodies;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      control->Evolve.daDeriv[0][iBody][iVar] = 0;
+      evolve.daDeriv[0][iBody][iVar] = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         // XXX Set update.dDxDtModule here?
-        control->Evolve.daDeriv[0][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        //control->Evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*control->Evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        evolve.daDeriv[0][iBody][iVar] += iDir*evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        //evolve.daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve.tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
         // evaluated with higher accuracy
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = evolve.daDeriv[0][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the midpoint of the timestep */
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[0][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*evolve.daDeriv[0][iBody][iVar];
       }
     }
   }
 
   /* First midpoint derivative.*/
-  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  PropertiesAuxiliary(evolve.tmpBody,control,update);
 
-//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+//   RecalcLaplaceDistRes(evolve.tmpBody,control,system);
 
   /* Don't need this timestep info, so assign output to dFoo */
-  fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  fdGetUpdateInfo(evolve.tmpBody,control,system,evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      control->Evolve.daDeriv[1][iBody][iVar] = 0;
+      evolve.daDeriv[1][iBody][iVar] = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-        control->Evolve.daDeriv[1][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve.daDeriv[1][iBody][iVar] += iDir*evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
         // evaluated with higher accuracy
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[1][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = evolve.daDeriv[1][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the midpoint
         of the timestep based on the midpoint derivative. */
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*control->Evolve.daDeriv[1][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + 0.5*(*dDt)*evolve.daDeriv[1][iBody][iVar];
       }
     }
   }
 
   /* Second midpoint derivative */
-  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  PropertiesAuxiliary(evolve.tmpBody,control,update);
 
-//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+//   RecalcLaplaceDistRes(evolve.tmpBody,control,system);
 
-  fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  fdGetUpdateInfo(evolve.tmpBody,control,system,evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      control->Evolve.daDeriv[2][iBody][iVar] = 0;
+      evolve.daDeriv[2][iBody][iVar] = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-        control->Evolve.daDeriv[2][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve.daDeriv[2][iBody][iVar] += iDir*evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
         // evaluated with higher accuracy
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = control->Evolve.daDeriv[2][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = evolve.daDeriv[2][iBody][iVar];
       } else {
         /* While we're in this loop, move each parameter to the end of
         the timestep based on the second midpoint derivative. */
-        *(control->Evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + *dDt*control->Evolve.daDeriv[2][iBody][iVar];
+        *(evolve.tmpUpdate[iBody].pdVar[iVar]) = *(update[iBody].pdVar[iVar]) + *dDt*evolve.daDeriv[2][iBody][iVar];
       }
     }
   }
   /* Full step derivative */
-  PropertiesAuxiliary(control->Evolve.tmpBody,control,update);
+  PropertiesAuxiliary(evolve.tmpBody,control,update);
 
-//   RecalcLaplaceDistRes(control->Evolve.tmpBody,control,system);
+//   RecalcLaplaceDistRes(evolve.tmpBody,control,system);
 
-  fdGetUpdateInfo(control->Evolve.tmpBody,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  fdGetUpdateInfo(evolve.tmpBody,control,system,evolve.tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
@@ -425,10 +425,10 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // NOTHING!
       } else {
-        control->Evolve.daDeriv[3][iBody][iVar] = 0;
+        evolve.daDeriv[3][iBody][iVar] = 0;
         iNumEqns = update[iBody].iNumEqns[iVar];
         for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-          control->Evolve.daDeriv[3][iBody][iVar] += iDir*control->Evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+          evolve.daDeriv[3][iBody][iVar] += iDir*evolve.tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }
       }
     }
@@ -437,12 +437,12 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      update[iBody].daDeriv[iVar] = 1./6*(control->Evolve.daDeriv[0][iBody][iVar] + 2*control->Evolve.daDeriv[1][iBody][iVar] +
-      2*control->Evolve.daDeriv[2][iBody][iVar] + control->Evolve.daDeriv[3][iBody][iVar]);
+      update[iBody].daDeriv[iVar] = 1./6*(evolve.daDeriv[0][iBody][iVar] + 2*evolve.daDeriv[1][iBody][iVar] +
+      2*evolve.daDeriv[2][iBody][iVar] + evolve.daDeriv[3][iBody][iVar]);
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
-        *(update[iBody].pdVar[iVar]) = control->Evolve.daDeriv[0][iBody][iVar];
+        *(update[iBody].pdVar[iVar]) = evolve.daDeriv[0][iBody][iVar];
       } else {
         *(update[iBody].pdVar[iVar]) += update[iBody].daDeriv[iVar]*(*dDt);
       }

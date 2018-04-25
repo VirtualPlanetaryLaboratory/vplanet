@@ -17,7 +17,7 @@
 
 
 void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
-  int iPert;
+  int jBody, iGravPerts;
   dest[iBody].dVelX = src[iBody].dVelX;
   dest[iBody].dVelY = src[iBody].dVelY;
   dest[iBody].dVelZ = src[iBody].dVelZ;
@@ -26,19 +26,22 @@ void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
   dest[iBody].dPositionZ = src[iBody].dPositionZ;
 
   dest[iBody].iGravPerts = src[iBody].iGravPerts;
-  //dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int)); //Will create a memory leak. Replaced by InitializeUpdateTmpBodySpiNBody
 
-  for (iPert=0;iPert<src[iBody].iGravPerts;iPert++){
-    dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
-    dest[iBody].dDistance3[iPert]  = src[iBody].dDistance3[iPert];
+  iGravPerts = src[iBody].iGravPerts;
+  for (jBody=0;jBody<iGravPerts;jBody++) {
+    dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
   }
 
 }
 
 void InitializeUpdateTmpBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  int jBody;
   //This replaces malloc'ing the destination body in BodyCopySpiNBody
-  control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-  control->Evolve.tmpBody[iBody].dDistance3  = malloc(body[iBody].iGravPerts*sizeof(double));
+  control->Evolve.tmpBody[iBody].dDistance3  = malloc(control->Evolve.iNumBodies*sizeof(double));
+
+  for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
+    body[iBody].dDistance3[jBody] = 0;
+  }
 }
 
 //================================== Read Inputs ===============================
@@ -262,12 +265,14 @@ void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 //============================ End Read Inputs =================================
 
 void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  int iTmpBody = 0;
+  int iTmpBody = 0,jBody;
   if (body[iBody].bSpiNBody){
-    body[iBody].iGravPerts = control->Evolve.iNumBodies-1; //All bodies except the body itself are perturbers
-    body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-    body[iBody].dDistance3 = malloc(body[iBody].iGravPerts*sizeof(double));
+    body[iBody].iGravPerts = control->Evolve.iNumBodies; //All bodies except the body itself are perturbers
+    body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
 
+    for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
+      body[iBody].dDistance3[jBody] = 0;
+    }
 
     //If orbital parameters are defined, then we want to set position and velocity based on those
     if (body[iBody].bUseOrbParams){
@@ -292,9 +297,7 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
        body[iBody].dVelZ      = body[iBody].daCartVel[2]*AUCM/DAYSEC;
     }
 
-  } //elseif (body[iBody].bDistOrb == 0){
-  //  body[iBody].iGravPerts = 0; //Is this already set to zero somewhere?
-  //}
+  }
 }
 
 void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody) {
@@ -392,33 +395,25 @@ void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 }
 
-void VerifyPerturbersSpiNBody(BODY *body,int iNumBodies,int iBody) {
-  int iPert=0, j;
-//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-  for (j=0;j<iNumBodies;j++) {
-    if (j != iBody) {
-      if (body[j].bSpiNBody == 0) {
-        fprintf(stderr,"ERROR: SpiNBody must be the called for all planets\n");
-        exit(EXIT_INPUT);
-      }
-      body[iBody].iaGravPerts[iPert] = j;
-      iPert++;
-    }
+void VerifyGM(BODY *body,CONTROL *control) {
+  int iBody;
+
+  for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
+    body[iBody].dGM = BIGG*body[iBody].dMass;
   }
+
 }
 
 void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
-  VerifyPerturbersSpiNBody(body,control->Evolve.iNumBodies,iBody);
-
-  //VerifyVelX MUST run first, or else distance won't be calculated
-  //Should add a check to see if it's been calculated?
   VerifyVelX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyVelY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyVelZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyPositionX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyPositionY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
   VerifyPositionZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+
+  //VerifyGM(body,control);
 
   control->fnForceBehavior[iBody][iModule] = &ForceBehaviorSpiNBody;
   control->fnPropsAux[iBody][iModule] = &PropertiesSpiNBody;
@@ -579,20 +574,37 @@ void Bary2OrbElems(BODY *body, int iBody){
         f += 2.*PI;
       }
 
-      //Calculate Mean anomaly
+      // Calculate Mean anomaly
       cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
-      if (f <= PI){
-        body[iBody].dEccA = acos(cosE);
+      if (abs(abs(cosE)-1)<1e-12) {
+        /* If there is numerical error such that abs(cosE)>1, then use the small
+           angle approximation to find E */
+        body[iBody].dEccA = (1+(body[iBody].dEccSq-1)*(cosfAngle*cosfAngle)-body[iBody].dEccSq)/(1+body[iBody].dEcc*cosfAngle);
       } else {
-        body[iBody].dEccA = 2.*PI - acos(cosE);
+        body[iBody].dEccA = acos(cosE);
+
+        // If the planet is in the second half of the orbit, we need -acos(cosE) + 2PI
+        // This keeps Mean A in [0, 2PI]
+        if (f > PI) {
+          body[iBody].dEccA = -body[iBody].dEccA + 2*PI;
+        }
+
       }
 
       body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA);
+
       if (body[iBody].dMeanA < 0) {
         body[iBody].dMeanA += 2.*PI;
-      } else if (body[iBody].dMeanA >= 2.*PI){
+      } else if (body[iBody].dMeanA >= 2.*PI) {
         body[iBody].dMeanA -= 2.*PI;
       }
+
+      body[iBody].dOrbPeriod = sqrt(4*PI*PI*body[iBody].dSemi*body[iBody].dSemi*body[iBody].dSemi/mu);
+      body[iBody].dMeanMotion = 2*PI/body[iBody].dOrbPeriod;
+      body[iBody].dPinc = body[iBody].dSinc*sin(body[iBody].dLongA);
+      body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
+      body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+      body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
     }
   }
   free(h);
@@ -827,7 +839,19 @@ void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 }
 
 void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+  int jBody,iNumBodies;
 
+  iNumBodies = evolve->iNumBodies;
+  for (jBody=0; jBody<iNumBodies; jBody++) {
+    // Calculate the cube of the distance to each perturbing body. Used in Vx, Vy, and Vz calculations.
+    if (iBody<jBody) {
+      body[iBody].dDistance3[jBody] = sqrt((body[jBody].dPositionX-body[iBody].dPositionX)*(body[jBody].dPositionX-body[iBody].dPositionX)
+            + (body[jBody].dPositionY-body[iBody].dPositionY)*(body[jBody].dPositionY-body[iBody].dPositionY)
+            + (body[jBody].dPositionZ-body[iBody].dPositionZ)*(body[jBody].dPositionZ-body[iBody].dPositionZ));
+      body[iBody].dDistance3[jBody] = body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody];
+      body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
+    }
+  }
 }
 
 //========================= Finalize Variable Functions ========================
@@ -929,21 +953,13 @@ double fdDPositionZDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumX = 0;        //Double used to calculate the net perturbation
-  int iPertBody = -1;      //Int used to clean up code.
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPerts;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing? Is this fast enough?
-
-    //This is faster than using pow() but not very clean
-    // Calculate the cube of the distance to each perturbing body. Used in Vy and Vz calculations as well.
-    body[iaBody[0]].dDistance3[j] = sqrt((body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)*(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)
-          + (body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)*(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)
-          + (body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ)*(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ));
-    body[iaBody[0]].dDistance3[j] = body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j];
-
-    dSumX = dSumX + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      dSumX = dSumX + BIGG*body[jBody].dMass*(body[jBody].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[jBody];
+    }
   }
 
   return dSumX;
@@ -951,10 +967,13 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumY = 0;        //Double used to calculate the net perturbation
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPerts;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-    dSumY = dSumY + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      dSumY = dSumY + BIGG*body[jBody].dMass*(body[jBody].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[jBody];
+    }
   }
 
   return dSumY;
@@ -962,10 +981,13 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumZ = 0;        //Double used to calculate the net perturbation
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPerts;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-    dSumZ = dSumZ + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      dSumZ = dSumZ + BIGG*body[jBody].dMass*(body[jBody].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[jBody];
+    }
   }
 
   return dSumZ;

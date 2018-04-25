@@ -5,7 +5,7 @@ saModules stellar binary #eqtide
 # Physical Parameters
 iBodyType       1               # 1 -> Star
 dMass		1.04909         # Mass, negative -> Earth masses
-dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
+dRadGyra	0.27		# Radius of gyration (moment of inertia constant)
 dRotPeriod      -1.0            # Rotation period (-1 -> days)
 
 # The first body in the saBodyFiles list must be the central mass.

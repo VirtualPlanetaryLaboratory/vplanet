@@ -5,7 +5,7 @@ saModules stellar binary
 # Physical Parameters
 iBodyType       1           # 1 -> Star
 dMass		1.02162     # Mass, negative -> Earth masses
-dRadGyra	0.5	    # Radius of gyration (moment of inertia constant)
+dRadGyra	0.27	    # Radius of gyration (moment of inertia constant)
 dRotPeriod      -1.0        # Rotation period (-1 -> days)
 
 # Binary Parameters

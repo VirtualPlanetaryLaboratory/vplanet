@@ -4,17 +4,17 @@ saModules       stellar eqtide
 
 # Physical Parameters
 iBodyType     1 # Star!
-dMass         1.0                         # Mass, solar masses
-dAge          1.0e6
+dMass         0.3                         # Mass, solar masses
+#dAge          1.0e6
 dRotPeriod    -1.67
-dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
+dRadGyra      0.45             # Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
 
 # EQTIDE Parameters
 #dTidalTau       3.17e-10
-dTidalQ		1.0e6   	# Tidal phase lag
+dTidalQ		1.25e5   	# Tidal phase lag
 dK2		0.5		# Love number of degree 2
 #dMaxLockDiff    0.01
 #sTideModel      t8

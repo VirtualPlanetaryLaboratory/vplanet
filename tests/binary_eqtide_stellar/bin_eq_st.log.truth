@@ -70,6 +70,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
@@ -111,10 +114,6 @@ Tidal Perturbers: secondary
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 0.000000 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -161,6 +160,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 3.557471e+06 
 (SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
@@ -214,10 +216,6 @@ Tidal Perturbers: primary
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: -1.783901 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -247,15 +245,14 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 2.030909e+07 
 (SemiMajorAxis) Semi-major Axis [m]: 1.071817e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 1.096397 
+(Inc) Body's Inclination [rad]: 0.005504 
+(LongA) Body's Longitude of ascending node [rad]: 4.760796 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
-(BinaryInc) CBP's Inclination in Binary [rad]: 0.005504 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 1.096397 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 4.760796 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 5.857193 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
@@ -267,7 +264,7 @@ Color: 000000
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.370293e-07 
 (R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
 (CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.717213 
-Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
+Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] LongA[deg] Inc[deg] LongP[deg]
 Grid Output Order:
 
 
@@ -316,6 +313,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 8.741280e+30 
@@ -357,10 +357,6 @@ Tidal Perturbers: secondary
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 0.000000 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -407,6 +403,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 3.557471e+06 
 (SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 2.021302e+31 
@@ -460,10 +459,6 @@ Tidal Perturbers: primary
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: -1.783901 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -493,15 +488,14 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 2.009285e+07 
 (SemiMajorAxis) Semi-major Axis [m]: 1.064196e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 1.027141 
+(Inc) Body's Inclination [rad]: 0.005405 
+(LongA) Body's Longitude of ascending node [rad]: 2.520248 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
-(BinaryInc) CBP's Inclination in Binary [rad]: 0.005405 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 1.027141 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 2.520248 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 3.547389 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
@@ -513,7 +507,7 @@ Color: 000000
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.407401e-07 
 (R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
 (CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.780499 
-Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
+Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] LongA[deg] Inc[deg] LongP[deg]
 Grid Output Order:
 
 Runtime = 1.000000 s

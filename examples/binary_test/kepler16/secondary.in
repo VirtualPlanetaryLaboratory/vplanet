@@ -1,7 +1,7 @@
 # Secondary star: Kepler16B
+# Parameters from Leung & Lee (2013)
 sName		secondary		# Body's name
 saModules binary
-#saModules stellar binary eqtide 
 
 # Physical Parameters
 iBodyType       1           # 1 -> Star
@@ -14,18 +14,3 @@ dEcc            0.16048           # Binary eccentricity
 dSemi           0.22405           # Binary semimajor axis 
 dLongP          263.45            # Binary longitude of pericenter
 dLL13PhiAB      129.84            # Initial binary mean anomaly
-
-# EQTIDE Parameters
-#dTidalQ		1.0e6 #5e3		# Tidal phase lag
-#dK2		0.5 #1.5		# Love number of degree 2
-#dMaxLockDiff    0.01
-#saTidePerts	primary		# Body name(s) of tidal perturbers
-
-# STELLAR parameters
-#sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
-#dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
-
-# Some options are allowed to only appear in one file, but it can be primary or body.
-# That should really be documented!
-
-#saOutputOrder Time -TotAngMom -TotEn -Semim Eccentricity

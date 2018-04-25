@@ -106,6 +106,26 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 }
 
 /*
+ * I
+ */
+
+ void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   if (body[iBody].bDistOrb) {
+     *dTmp = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
+   } else {
+     *dTmp = body[iBody].dInc;
+   }
+
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsAngle(units->iAngle);
+     fsUnitsAngle(units->iAngle,cUnit);
+   }
+ }
+
+/*
  * K
  */
 
@@ -137,10 +157,33 @@ void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
  * L
  */
 
+ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   if (body[iBody].bDistOrb) {
+     *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
+   } else {
+     *dTmp = body[iBody].dLongA;
+   }
+
+   while (*dTmp < 0.0) {
+     *dTmp += 2*PI;
+   }
+   while (*dTmp > 2*PI) {
+     *dTmp -= 2*PI;
+   }
+
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsAngle(units->iAngle);
+     fsUnitsAngle(units->iAngle,cUnit);
+   }
+ }
+
 void WriteLongP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
 
-  if (body[iBody].bSpiNBody) {
+  if (body[iBody].bSpiNBody || body[iBody].bBinary) {
     *dTmp = body[iBody].dLongP;
 
     if (output->bDoNeg[iBody]) {
@@ -178,7 +221,7 @@ void WriteBodyArgP(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     varpi = atan2(body[iBody].dHecc, body[iBody].dKecc);
     Omega = atan2(body[iBody].dPinc, body[iBody].dQinc);
     *dTmp = varpi - Omega;
-  } else if (body[iBody].bGalHabit) {
+  } else {
     *dTmp = body[iBody].dArgP;
   }
 
@@ -816,6 +859,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
   fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
 
+  sprintf(output[OUT_INC].cName,"Inc");
+  sprintf(output[OUT_INC].cDescr,"Body's Inclination");
+  sprintf(output[OUT_INC].cNeg,"Deg");
+  output[OUT_INC].bNeg = 1;
+  output[OUT_INC].dNeg = 1./DEGRAD;
+  output[OUT_INC].iNum = 1;
+  output[OUT_INC].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
+  fnWrite[OUT_INC] = &WriteBodyInc;
+
   /*
    * K
    */
@@ -841,6 +893,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    * L
    */
 
+  sprintf(output[OUT_LONGA].cName,"LongA");
+  sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node");
+  sprintf(output[OUT_LONGA].cNeg,"Deg");
+  output[OUT_LONGA].bNeg = 1;
+  output[OUT_LONGA].dNeg = 1./DEGRAD;
+  output[OUT_LONGA].iNum = 1;
+  output[OUT_LONGA].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
+  fnWrite[OUT_LONGA] = &WriteBodyLongA;
+
   sprintf(output[OUT_LONGP].cName,"LongP");
   sprintf(output[OUT_LONGP].cDescr,"Body's Longitude of pericenter");
   sprintf(output[OUT_LONGP].cNeg,"Deg");
@@ -856,7 +917,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ARGP].bNeg = 1;
   output[OUT_ARGP].dNeg = 1./DEGRAD;
   output[OUT_ARGP].iNum = 1;
-  output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT + SPINBODY;
+  output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_ARGP] = &WriteBodyArgP;
 
   sprintf(output[OUT_LXUVTOT].cName,"LXUVTot");

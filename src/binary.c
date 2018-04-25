@@ -907,18 +907,7 @@ void WriteIncBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   }
 }
 
-void WriteArgPBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dArgP;
-
-  if(output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
-
+/*
 void WriteLongABinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dLongA;
 
@@ -930,18 +919,7 @@ void WriteLongABinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     fsUnitsAngle(units->iAngle,cUnit);
   }
 }
-
-void WriteLongPBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dLongP;
-
-  if(output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
+*/
 
 void WriteCBPPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].iBodyType == 0) {
@@ -1114,6 +1092,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeIncBinary;
 
+  /*
   sprintf(output[OUT_BININC].cName,"BinaryInc");
   sprintf(output[OUT_BININC].cDescr,"CBP's Inclination in Binary");
   sprintf(output[OUT_BININC].cNeg,"Deg");
@@ -1123,15 +1102,6 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BININC].iModuleBit = BINARY;
   fnWrite[OUT_BININC] = &WriteIncBinary;
 
-  sprintf(output[OUT_BINARGP].cName,"ArgPBinary");
-  sprintf(output[OUT_BINARGP].cDescr,"CBP's Argument of Perihelion in Binary");
-  sprintf(output[OUT_BINARGP].cNeg,"Deg");
-  output[OUT_BINARGP].bNeg = 1;
-  output[OUT_BINARGP].dNeg = 1./DEGRAD;
-  output[OUT_BINARGP].iNum = 1;
-  output[OUT_BINARGP].iModuleBit = BINARY;
-  fnWrite[OUT_BINARGP] = &WriteArgPBinary;
-
   sprintf(output[OUT_BINLONGA].cName,"BinaryLongA");
   sprintf(output[OUT_BINLONGA].cDescr,"CBP's Longitude of the Ascending Node in Binary");
   sprintf(output[OUT_BINLONGA].cNeg,"Deg");
@@ -1140,15 +1110,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BINLONGA].iNum = 1;
   output[OUT_BINLONGA].iModuleBit = BINARY;
   fnWrite[OUT_BINLONGA] = &WriteLongABinary;
-
-  sprintf(output[OUT_BINLONGP].cName,"BinaryLongP");
-  sprintf(output[OUT_BINLONGP].cDescr,"CBP's Longitude of Perihelion in Binary");
-  sprintf(output[OUT_BINLONGP].cNeg,"Deg");
-  output[OUT_BINLONGP].bNeg = 1;
-  output[OUT_BINLONGP].dNeg = 1./DEGRAD;
-  output[OUT_BINLONGP].iNum = 1;
-  output[OUT_BINLONGP].iModuleBit = BINARY;
-  fnWrite[OUT_BINLONGP] = &WriteLongPBinary;
+  */
 
   sprintf(output[OUT_CBPPHI].cName,"CBPPhi");
   sprintf(output[OUT_CBPPHI].cDescr,"CBP Orbital Azimuthal Angle");
@@ -1914,7 +1876,7 @@ double fndCBPPhiBinary(BODY *body,SYSTEM *system,int *iaBody) {
   // Useful intermediate quantities
   double M = fndBinaryMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
   double phi0 = fndPhi0(dTime,body[iBody].dLL13N0,body[iBody].dCBPM0);
-  double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
+  double varpi = body[1].dLongP;
 
   double phi = phi0 + 2.0*body[iBody].dLL13N0*body[iBody].dFreeEcc*sin(body[iBody].dLL13K0*dTime + dPsi)/body[iBody].dLL13K0;
   phi += body[iBody].dLL13N0*fndD0(body,iBody)*sin(M)/body[1].dMeanMotion;
@@ -1987,7 +1949,7 @@ double fndCBPPhiDotBinary(BODY *body,SYSTEM *system,int *iaBody) {
   double n = body[1].dMeanMotion;
   double M_dot = n;
   double M = fndBinaryMeanAnomaly(body[1].dMeanMotion,dTime,body[1].dLL13PhiAB);
-  double varpi = body[1].dLongP;//body[0].dLongA + body[0].dArgP;
+  double varpi = body[1].dLongP;
 
   double tmp1 = n0 + 2.0*n0*body[iBody].dFreeEcc*cos(k0*dTime + dPsi) + (n0/n)*fndD0(body,iBody)*cos(M)*M_dot;
 

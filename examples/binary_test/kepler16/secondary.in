@@ -11,6 +11,6 @@ dRotPeriod      -1.0        # Rotation period (-1 -> days)
 
 # Binary Parameters
 dEcc            0.16048           # Binary eccentricity
-dSemi           0.22405           # Binary semimajor axis 
-dLongP          263.45            # Binary longitude of pericenter
-dLL13PhiAB      129.84            # Initial binary mean anomaly
+dSemi           0.22405           # Binary semimajor axis [AU] 
+dLongP          263.49            # Binary longitude of pericenter [deg]
+dLL13PhiAB      129.84            # Initial binary mean anomaly [deg]

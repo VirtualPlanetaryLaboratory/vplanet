@@ -891,36 +891,6 @@ void WriteFreeIncBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   }
 }
 
-void WriteIncBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  // Note: Only makes sense for planets (iBodyType == 0)
-  if(body[iBody].iBodyType == 0)
-    *dTmp = body[iBody].dInc;
-  else
-    *dTmp = -1;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
-
-/*
-void WriteLongABinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dLongA;
-
-  if(output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
-*/
-
 void WriteCBPPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dCBPPhi;
@@ -1091,26 +1061,6 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FREEINC].iNum = 1;
   output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC] = &WriteFreeIncBinary;
-
-  /*
-  sprintf(output[OUT_BININC].cName,"BinaryInc");
-  sprintf(output[OUT_BININC].cDescr,"CBP's Inclination in Binary");
-  sprintf(output[OUT_BININC].cNeg,"Deg");
-  output[OUT_BININC].bNeg = 1;
-  output[OUT_BININC].dNeg = 1./DEGRAD;
-  output[OUT_BININC].iNum = 1;
-  output[OUT_BININC].iModuleBit = BINARY;
-  fnWrite[OUT_BININC] = &WriteIncBinary;
-
-  sprintf(output[OUT_BINLONGA].cName,"BinaryLongA");
-  sprintf(output[OUT_BINLONGA].cDescr,"CBP's Longitude of the Ascending Node in Binary");
-  sprintf(output[OUT_BINLONGA].cNeg,"Deg");
-  output[OUT_BINLONGA].bNeg = 1;
-  output[OUT_BINLONGA].dNeg = 1./DEGRAD;
-  output[OUT_BINLONGA].iNum = 1;
-  output[OUT_BINLONGA].iModuleBit = BINARY;
-  fnWrite[OUT_BINLONGA] = &WriteLongABinary;
-  */
 
   sprintf(output[OUT_CBPPHI].cName,"CBPPhi");
   sprintf(output[OUT_CBPPHI].cDescr,"CBP Orbital Azimuthal Angle");
@@ -1347,14 +1297,14 @@ void fnvAssignOrbitalElements(BODY *body, int iBody) {
   body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
 }
 
-/** Compute a body's semi-major axis
+/** Compute CBP's semi-major axis
     a = -mu/(2*eps) */
 double fndComputeSemi(BODY *body, int iBody) {
   // For binary, iBody 0, 1 == stars, 2 == planet
   return -BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass)/(2.0*fndSpecificOrbEng(body,iBody));
 }
 
-/** Compute a body's orbital eccentricity
+/** Compute CBP's orbital eccentricity
     e = sqrt(1 + 2*eps*h*h/(mu*mu)) */
 double fndComputeEcc(BODY *body, int iBody) {
   // For binary, iBody 0, 1 == stars, 2 == planet
@@ -1373,7 +1323,7 @@ double fndComputeEcc(BODY *body, int iBody) {
   return sqrt(1. + (2.*fndSpecificOrbEng(body,iBody)*fndDot(h,h))/(mu*mu));
 }
 
-/** Compute a body's inclincation
+/** Compute CBP's inclincation
     i = arccos(h_z/|h|) */
 double fndComputeInc(BODY *body, int iBody) {
   double h[3];
@@ -1390,7 +1340,7 @@ double fndComputeInc(BODY *body, int iBody) {
   return acos(h[2]/sqrt(fndDot(h,h)));
 }
 
-/** Compute a body's longitude of ascending node
+/** Compute a CBP's longitude of ascending node
     See: https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node */
 double fndComputeLongA(BODY *body, int iBody) {
   double Omega = 0.0;
@@ -1423,6 +1373,7 @@ double fndComputeLongA(BODY *body, int iBody) {
   return Omega;
 }
 
+/** Compute a CBP's eccentricity vector */
 void fnvComputeEccVector(BODY *body, double *evec, int iBody) {
   double mu = BIGG*(body[0].dMass + body[1].dMass + body[iBody].dMass); // Gravitational parameter
   double h[3];
@@ -1447,6 +1398,7 @@ void fnvComputeEccVector(BODY *body, double *evec, int iBody) {
   }
 }
 
+/** Compute a CBP's argument of pericenter */
 double fndComputeArgPeri(BODY *body, int iBody) {
   double evec[3];
   double h[3];
@@ -1513,7 +1465,7 @@ double fndMeanToEccentric(double M, double e) {
 
     count += 1;
 
-    if(count >= MAX_KEPLER_ITERS) { // Stop if too many iterations
+    if(count >= MAX_KEPLER_ITERS) { // Stop if too many iterations (should never happen)
       fprintf(stderr,"ERROR: in fndMeanToEccentric, too many iterations to solve Kepler Equation\n");
       fprintf(stderr,"Iteration number: %d.  Eccentric anomaly: %lf.\n",count,E);
       exit(1);
@@ -1562,14 +1514,13 @@ double fndBinaryMeanAnomaly(double dMeanMotion, double dTime, double dPhi) {
   return dMeanMotion * dTime + dPhi;
 }
 
-//Below are functions russell already defined in distorb that i'll reuse
+//Below are functions Russell Dietrick already defined in distorb that i'll reuse
 //double fdLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS)
 //double fndDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ, double dIndexS)
 // Note: for Laplace Coeff functions, they go as b^J_s(alpha) where J is an int, S is a half int double !!
 
 /*
  * Analytic equations from Leung+Lee 2013 that govern circumbinary planet (cbp) evolution
- * for 1 (!) cbp
  */
 
 /** LL13 N0 */

@@ -13,7 +13,7 @@ bHaltHolmanUnstable   1               # End simulation if the CBP goes within th
 bBinaryUseMatrix      0               # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
-dSemi           1.08617               # CBP semi-major axis
+dSemi           1.0804               # CBP semi-major axis
 dLongP          356.86                # CBP longitude of pericenter
 dCBPM0          17.75                 # CBP mean anomaly
 

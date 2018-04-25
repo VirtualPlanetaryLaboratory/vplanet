@@ -1475,17 +1475,6 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
 
-  /*
-  sprintf(output[OUT_LONGA].cName,"LongA");
-  sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in DistOrb");
-  sprintf(output[OUT_LONGA].cNeg,"Deg");
-  output[OUT_LONGA].bNeg = 1;
-  output[OUT_LONGA].dNeg = 1./DEGRAD;
-  output[OUT_LONGA].iNum = 1;
-  output[OUT_LONGA].iModuleBit = DISTORB+GALHABIT+SPINBODY;
-  fnWrite[OUT_LONGA] = &WriteBodyLongA;
-  */
-
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
   output[OUT_PINC].iNum = 1;

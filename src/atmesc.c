@@ -1105,7 +1105,7 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
+  dDeriv = 0; //*(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;
   *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
 

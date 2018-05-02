@@ -1,0 +1,28 @@
+# Planet a parameters
+sName                     Star               # Body's name
+saModules                 spinbody          # Modules to apply, exact spelling required 
+
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly TotAngMom TotOrbEnergy
+# Physical Properties
+dMass                     -333000.0            # Mass, negative -> Earth masses
+dRadius                   -1000.0            # Radius, negative -> Earth radii
+dRotPeriod                -10             # Rotation period, negative -> days
+dObliquity                23.5            # Obliquity (deg)
+dRadGyra                  0.5             # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+#dPositionXSpiNBody              -4.49e5
+#dPositionYSpiNBody              0.0
+#dPositionZSpiNBody              0.0
+#dVelXSpiNBody                   0.0
+#dVelYSpiNBody                   -0.08959595749457543
+#dVelZSpiNBody                   0.0
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                      0.0          # Semi-major axis, negative -> AU
+dEcc                       0.0          # Eccentricity
+dInc                       0.0          # Inclination
+dLongP                     0.0          # Longitude of pericenter
+dLongA                     0.0          # Longitude of ascending node
+dMeanA                     0.0          # Mean Anomoly

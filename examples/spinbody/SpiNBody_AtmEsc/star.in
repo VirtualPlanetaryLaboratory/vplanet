@@ -23,6 +23,7 @@ dMeanA                     0.0          # Mean Anomoly
 
 # STELLAR parameters
 dAge		1e6
+dSatXUVFrac = 1e-1
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!

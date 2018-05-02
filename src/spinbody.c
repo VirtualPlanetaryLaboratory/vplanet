@@ -29,7 +29,7 @@ void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
 
   iGravPerts = src[iBody].iGravPerts;
   for (jBody=0;jBody<iGravPerts;jBody++) {
-    dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
+    //dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
     dest[iBody].dDistanceX[jBody]  = src[iBody].dDistanceX[jBody];
     dest[iBody].dDistanceY[jBody]  = src[iBody].dDistanceY[jBody];
     dest[iBody].dDistanceZ[jBody]  = src[iBody].dDistanceZ[jBody];
@@ -46,7 +46,7 @@ void InitializeUpdateTmpBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,
   control->Evolve.tmpBody[iBody].dDistanceZ  = malloc(control->Evolve.iNumBodies*sizeof(double));
 
   for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
-    body[iBody].dDistance3[jBody] = 0;
+    //body[iBody].dDistance3[jBody] = 0;
     body[iBody].dDistanceX[jBody] = 0;
     body[iBody].dDistanceY[jBody] = 0;
     body[iBody].dDistanceZ[jBody] = 0;
@@ -277,13 +277,13 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
   int iTmpBody = 0,jBody;
   if (body[iBody].bSpiNBody){
     body[iBody].iGravPerts = control->Evolve.iNumBodies; //All bodies except the body itself are perturbers
-    body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
+    //body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceX = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceY = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceZ = malloc(control->Evolve.iNumBodies*sizeof(double));
 
     for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
-      body[iBody].dDistance3[jBody] = 0;
+      //body[iBody].dDistance3[jBody] = 0;
       body[iBody].dDistanceX[jBody] = 0;
       body[iBody].dDistanceY[jBody] = 0;
       body[iBody].dDistanceZ[jBody] = 0;
@@ -854,9 +854,11 @@ void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDAT
 
 void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   int jBody,iNumBodies;
-  double DistanceX,DistanceY,DistanceZ;
+  double DistanceX,DistanceY,DistanceZ,Distance3;
 
   iNumBodies = evolve->iNumBodies;
+  body[iBody].dGM = BIGG*body[iBody].dMass;
+
   for (jBody=0; jBody<iNumBodies; jBody++) {
     // Calculate the cube of the distance to each perturbing body. Used in Vx, Vy, and Vz calculations.
     if (iBody<jBody) {
@@ -864,15 +866,19 @@ void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       DistanceX = body[jBody].dPositionX-body[iBody].dPositionX;
       DistanceY = body[jBody].dPositionY-body[iBody].dPositionY;
       DistanceZ = body[jBody].dPositionZ-body[iBody].dPositionZ;
-      body[iBody].dDistance3[jBody] = sqrt(DistanceX*DistanceX
+      /* body[iBody].dDistance3[jBody] = sqrt(DistanceX*DistanceX
+            + DistanceY*DistanceY
+            + DistanceZ*DistanceZ); */
+      Distance3 = sqrt(DistanceX*DistanceX
             + DistanceY*DistanceY
             + DistanceZ*DistanceZ);
-      body[iBody].dDistance3[jBody] = body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceX[jBody] = DistanceX/body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceY[jBody] = DistanceY/body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceZ[jBody] = DistanceZ/body[iBody].dDistance3[jBody];
+      // body[iBody].dDistance3[jBody] = 1/(body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]);
+      Distance3 = 1/(Distance3*Distance3*Distance3);
+      body[iBody].dDistanceX[jBody] = DistanceX*Distance3;
+      body[iBody].dDistanceY[jBody] = DistanceY*Distance3;
+      body[iBody].dDistanceZ[jBody] = DistanceZ*Distance3;
 
-      body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
+      //body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
       body[jBody].dDistanceX[iBody] = -body[iBody].dDistanceX[jBody];
       body[jBody].dDistanceY[iBody] = -body[iBody].dDistanceY[jBody];
       body[jBody].dDistanceZ[iBody] = -body[iBody].dDistanceZ[jBody];
@@ -985,7 +991,7 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumX = dSumX + BIGG*body[jBody].dMass*(body[jBody].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[jBody];
-      dSumX = dSumX + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceX[jBody];
+      dSumX = dSumX + body[jBody].dGM*body[iaBody[0]].dDistanceX[jBody];
     }
   }
 
@@ -1000,7 +1006,7 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumY = dSumY + BIGG*body[jBody].dMass*(body[jBody].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[jBody];
-      dSumY = dSumY + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceY[jBody];
+      dSumY = dSumY + body[jBody].dGM*body[iaBody[0]].dDistanceY[jBody];
     }
   }
 
@@ -1015,7 +1021,7 @@ double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumZ = dSumZ + BIGG*body[jBody].dMass*(body[jBody].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[jBody];
-      dSumZ = dSumZ + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceZ[jBody];
+      dSumZ = dSumZ + body[jBody].dGM*body[iaBody[0]].dDistanceZ[jBody];
     }
   }
 

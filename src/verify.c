@@ -554,6 +554,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
+      module->fnVerifyDerivatives[iBody][iModule](body,control,update,*fnUpdate,iBody);
     }
 
     VerifyInterior(body,options,iBody);

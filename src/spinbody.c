@@ -351,7 +351,6 @@ void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionX][0][0] = iBody;
 
   update[iBody].pdDPositionX = &update[iBody].daDerivProc[update[iBody].iPositionX][0];
-  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
 }
 
 void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
@@ -362,7 +361,6 @@ void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionY][0][0] = iBody;
 
   update[iBody].pdDPositionY = &update[iBody].daDerivProc[update[iBody].iPositionY][0];
-  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
 }
 
 void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
@@ -373,7 +371,6 @@ void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionZ][0][0] = iBody;
 
   update[iBody].pdDPositionZ = &update[iBody].daDerivProc[update[iBody].iPositionZ][0];
-  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
 }
 
 void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
@@ -384,7 +381,6 @@ void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelX][0][0] = iBody;
 
   update[iBody].pdDVelX = &update[iBody].daDerivProc[update[iBody].iVelX][0];
-  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
 }
 
 void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
@@ -395,7 +391,6 @@ void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelY][0][0] = iBody;
 
   update[iBody].pdDVelY = &update[iBody].daDerivProc[update[iBody].iVelY][0];
-  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
 }
 
 void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
@@ -406,7 +401,6 @@ void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelZ][0][0] = iBody;
 
   update[iBody].pdDVelZ = &update[iBody].daDerivProc[update[iBody].iVelZ][0];
-  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 }
 
 void VerifyGM(BODY *body,CONTROL *control) {
@@ -415,6 +409,15 @@ void VerifyGM(BODY *body,CONTROL *control) {
   for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
     body[iBody].dGM = BIGG*body[iBody].dMass;
   }
+}
+
+void VerifySpiNBodyDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
+  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
+  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
+  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
+  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
+  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 
 }
 
@@ -954,6 +957,7 @@ void AddModuleSpiNBody(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodySpiNBody;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsSpiNBody;
   module->fnVerify[iBody][iModule] = &VerifySpiNBody;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifySpiNBodyDerivatives;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodySpiNBody;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateSpiNBody;

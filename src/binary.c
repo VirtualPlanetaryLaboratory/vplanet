@@ -496,7 +496,6 @@ void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
 
   update[iBody].pdCBPRBinary = &update[iBody].daDerivProc[update[iBody].iCBPR][0];
-  fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
 }
 
 void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -507,7 +506,6 @@ void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].iaBody[update[iBody].iCBPZ][0][0] = iBody;
 
   update[iBody].pdCBPZBinary = &update[iBody].daDerivProc[update[iBody].iCBPZ][0];
-  fnUpdate[iBody][update[iBody].iCBPZ][0] = &fdCBPZBinary;
 }
 
 void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -518,7 +516,6 @@ void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdat
   update[iBody].iaBody[update[iBody].iCBPPhi][0][0] = iBody;
 
   update[iBody].pdCBPPhiBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhi][0];
-  fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fdCBPPhiBinary;
 }
 
 void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -529,7 +526,6 @@ void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].iaBody[update[iBody].iCBPRDot][0][0] = iBody;
 
   update[iBody].pdCBPRDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPRDot][0];
-  fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fdCBPRDotBinary;
 }
 
 void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -540,7 +536,6 @@ void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].iaBody[update[iBody].iCBPZDot][0][0] = iBody;
 
   update[iBody].pdCBPZDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPZDot][0];
-  fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fdCBPZDotBinary;
 }
 
 void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -551,7 +546,6 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUp
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0][0] = iBody;
 
   update[iBody].pdCBPPhiDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhiDot][0];
-  fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
 }
 
 void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
@@ -592,6 +586,23 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
 
 void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule){
 // Anything here?
+}
+
+void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  if(body[iBody].iBodyType == 0) // Planets are added to matrix
+  {
+    // Add equations to the matrix
+    if(body[iBody].bBinaryUseMatrix)
+    {
+      fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
+      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fdCBPZBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fdCBPPhiBinary;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fdCBPRDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fdCBPZDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
+    }
+  }
 }
 
 void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1339,6 +1350,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsBinary;
   module->fnLogBody[iBody][iModule] = &LogBodyBinary;
   module->fnVerify[iBody][iModule] = &VerifyBinary;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyBinaryDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltBinary;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;

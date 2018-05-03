@@ -1795,6 +1795,7 @@ typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+typedef void (*fnVerifyModuleDerivatives)(BODY*,CONTROL*,UPDATE*,fnUpdateVariable***,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
@@ -1956,6 +1957,9 @@ typedef struct {
 
   /*! These functions verify module-specific options. */
   fnVerifyModule **fnVerify;
+
+  /*! These functions add derivatives to the fnUpdate matrix */
+  fnVerifyModuleDerivatives **fnVerifyDerivatives;
 
   /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;

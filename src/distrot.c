@@ -2,7 +2,7 @@
 /*
  * Russell Deitrick, July 7, 2015
  *
- * Subroutines that control the integration of the obliquity model. 
+ * Subroutines that control the integration of the obliquity model.
 */
 
 /* lines where something like iBody == 0 occurs
@@ -35,12 +35,12 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
 
 void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
   int iLine;
-  
+
   control->Evolve.tmpBody[iBody].daSemiSeries = malloc(body[iBody].iNLines*sizeof(double));
   control->Evolve.tmpBody[iBody].daHeccSeries = malloc(body[iBody].iNLines*sizeof(double));
   control->Evolve.tmpBody[iBody].daKeccSeries = malloc(body[iBody].iNLines*sizeof(double));
   control->Evolve.tmpBody[iBody].daPincSeries = malloc(body[iBody].iNLines*sizeof(double));
-  control->Evolve.tmpBody[iBody].daQincSeries = malloc(body[iBody].iNLines*sizeof(double));      
+  control->Evolve.tmpBody[iBody].daQincSeries = malloc(body[iBody].iNLines*sizeof(double));
 
   for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
     control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = body[iBody].daSemiSeries[iLine];
@@ -74,12 +74,12 @@ void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   if (lTmp >= 0) {
     /* Option was found */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    
+
     body[iFile-1].dPrecRate = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     AssignDefaultDouble(options,&body[iFile-1].dPrecRate,files->iNumInputs);
-    
+
 }
 
 
@@ -113,48 +113,48 @@ void ReadFileOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 }
 
 void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
-  
+
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
   options[OPT_DYNELLIP].dDefault = 0.00328;
-  options[OPT_DYNELLIP].iType = 2;  
-  options[OPT_DYNELLIP].iMultiFile = 1;   
+  options[OPT_DYNELLIP].iType = 2;
+  options[OPT_DYNELLIP].iMultiFile = 1;
   fnRead[OPT_DYNELLIP] = &ReadDynEllip;
-  
+
   sprintf(options[OPT_CALCDYNELLIP].cName,"bCalcDynEllip");
   sprintf(options[OPT_CALCDYNELLIP].cDescr,"Calculate dynamical ellipticity from RotRate");
   sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
   options[OPT_CALCDYNELLIP].dDefault = 0;
-  options[OPT_CALCDYNELLIP].iType = 0;  
-  options[OPT_CALCDYNELLIP].iMultiFile = 1; 
+  options[OPT_CALCDYNELLIP].iType = 0;
+  options[OPT_CALCDYNELLIP].iMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
-  
+
   sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
   sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
   sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
   options[OPT_FORCEPRECRATE].dDefault = 0;
-  options[OPT_FORCEPRECRATE].iType = 0;  
-  options[OPT_FORCEPRECRATE].iMultiFile = 1; 
+  options[OPT_FORCEPRECRATE].iType = 0;
+  options[OPT_FORCEPRECRATE].iMultiFile = 1;
   fnRead[OPT_FORCEPRECRATE] = &ReadForcePrecRate;
-  
+
   sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
   sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (rad/s)");
   sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12");
   options[OPT_PRECRATE].dDefault = 7.7261e-12;
-  options[OPT_PRECRATE].iType = 2;  
-  options[OPT_PRECRATE].iMultiFile = 1;   
+  options[OPT_PRECRATE].iType = 2;
+  options[OPT_PRECRATE].iMultiFile = 1;
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
 
-  
+
   sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
   sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data and use with distrot");
   sprintf(options[OPT_READORBITDATA].cDefault,"0");
   options[OPT_READORBITDATA].dDefault = 0;
-  options[OPT_READORBITDATA].iType = 0;  
-  options[OPT_READORBITDATA].iMultiFile = 1; 
-  fnRead[OPT_READORBITDATA] = &ReadOrbitData; 
-  
+  options[OPT_READORBITDATA].iType = 0;
+  options[OPT_READORBITDATA].iMultiFile = 1;
+  fnRead[OPT_READORBITDATA] = &ReadOrbitData;
+
   sprintf(options[OPT_FILEORBITDATA].cName,"sFileOrbitData");
   sprintf(options[OPT_FILEORBITDATA].cDescr,"Name of file containing orbit time series");
   sprintf(options[OPT_FILEORBITDATA].cDefault,"myass.ass");
@@ -165,13 +165,13 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
 void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
-  for (iOpt=OPTSTARTDISTROT;iOpt<OPTENDDISTROT;iOpt++) { 
+  for (iOpt=OPTSTARTDISTROT;iOpt<OPTENDDISTROT;iOpt++) {
       if (options[iOpt].iType != -1) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iBody+1);
       }
   }
 }
-    
+
 
 /******************* Verify DISTROT ******************/
 
@@ -227,10 +227,10 @@ void InitializeYoblDistRotStar(BODY *body,UPDATE *update,int iBody,int iPert) {
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]][0] = iBody;
   update[iBody].iaBody[update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]][1] = 0;
 }
- 
+
 void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
   int iNLines, iLine, c;
-  double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp; 
+  double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp;
   FILE *fileorb;
 
   if (body[iBody].bReadOrbitData) {
@@ -248,7 +248,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
         if (c == '\n') iNLines++;              //add 1 for each new line
       }
       rewind(fileorb);
-      
+
       body[iBody].iNLines = iNLines;
       body[iBody].daTimeSeries = malloc(iNLines*sizeof(double));
       body[iBody].daSemiSeries = malloc(iNLines*sizeof(double));
@@ -261,7 +261,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       body[iBody].daKeccSeries = malloc(iNLines*sizeof(double));
       body[iBody].daPincSeries = malloc(iNLines*sizeof(double));
       body[iBody].daQincSeries = malloc(iNLines*sizeof(double));
-          
+
       iLine = 0;
       while (feof(fileorb) == 0) {
         fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp, &ditmp, &daptmp, &dlatmp, &dmatmp);
@@ -274,13 +274,13 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
           body[iBody].daArgPSeries[iLine] = daptmp;
           body[iBody].daLongASeries[iLine] = dlatmp;
           body[iBody].daMeanASeries[iLine] = dmatmp;
-        } else { 
+        } else {
           body[iBody].daIncSeries[iLine] = ditmp*DEGRAD;
           body[iBody].daArgPSeries[iLine] = daptmp*DEGRAD;
           body[iBody].daLongASeries[iLine] = dlatmp*DEGRAD;
           body[iBody].daMeanASeries[iLine] = dmatmp*DEGRAD;
         }
-        
+
         body[iBody].daHeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
             sin(body[iBody].daArgPSeries[iLine]+body[iBody].daLongASeries[iLine]);
         body[iBody].daKeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
@@ -288,8 +288,8 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
         body[iBody].daPincSeries[iLine] = sin(0.5*body[iBody].daIncSeries[iLine])*\
             sin(body[iBody].daLongASeries[iLine]);
         body[iBody].daQincSeries[iLine] = sin(0.5*body[iBody].daIncSeries[iLine])*\
-            cos(body[iBody].daLongASeries[iLine]); 
-        
+            cos(body[iBody].daLongASeries[iLine]);
+
         iLine++;
       }
       fclose(fileorb);
@@ -314,104 +314,150 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
       fprintf(stderr,"ERROR: Input orbit data must at least as long as vplanet integration (%f years)\n",control->Evolve.dStopTime/YEARSEC);
       exit(EXIT_INPUT);
     }
-    
+
   }
 }
- 
+
+void VerifyDistRotDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int i, j=0, iPert=0, jBody=0;
+
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+
+  if (iBody >= 1) {
+    if (body[iBody].bReadOrbitData) {
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fndDistRotExtDxDt;
+
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fndDistRotExtDyDt;
+
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fndDistRotExtDzDt;
+    } else {
+      if (control->Evolve.iDistOrbModel==RD4) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotRD4DxDt;
+
+          /* y = sin(obl)*sin(pA) */
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotRD4DyDt;
+
+          /* z = cos(obl) */
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotRD4DzDt;
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* x = sin(obl)*cos(pA) */
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DxDt;
+
+        /* y = sin(obl)*sin(pA) */
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DyDt;
+
+      } else if (control->Evolve.iDistOrbModel==LL2) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotLL2DxDt;
+
+          /* y = sin(obl)*sin(pA) */
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotLL2DyDt;
+
+          /* z = cos(obl) */
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotLL2DzDt;
+
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* x = sin(obl)*cos(pA) */
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DxDt;
+
+        /* y = sin(obl)*sin(pA) */
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DyDt;
+      }
+    }
+    if (body[iBody].bGRCorr) {
+    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDxDt;
+
+    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDyDt;
+    }
+  }
+}
+
 void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
-  
+
   VerifyOrbitData(body, control, options, iBody);
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */  
-    
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+
   if (iBody >= 1) {
     control->fnPropsAux[iBody][iModule] = &PropertiesDistRot;
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
-    
+
     if (body[iBody].bReadOrbitData) {
       //body[iBody].dPrecA -= body[iBody].daLongASeries[0]; //needed to account possibly different reference location for dPrecA and dLongA
       system->daLOrb = malloc(3*sizeof(double)); //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
       body[iBody].daLOrb = malloc(3*sizeof(double));
       body[iBody].daLOrbTmp = malloc(3*sizeof(double));
     }
-    
+
     CalcXYZobl(body, iBody);
-      
+
     body[iBody].daLRot = malloc(3*sizeof(double));
     body[iBody].daLRotTmp = malloc(3*sizeof(double));
-    
+
     if (body[iBody].bReadOrbitData) {
       InitializeXoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fndDistRotExtDxDt;
-      
+
       InitializeYoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fndDistRotExtDyDt;
-      
+
       InitializeZoblDistRot(body,update,iBody,0);
-      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fndDistRotExtDzDt;
-      
+
     } else {
       if (control->Evolve.iDistOrbModel==RD4) {
         /* Body updates */
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
           InitializeXoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotRD4DxDt;
-        
+
           /* y = sin(obl)*sin(pA) */
           InitializeYoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotRD4DyDt;
-        
+
           /* z = cos(obl) */
           InitializeZoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotRD4DzDt;
-          
+
         }
         /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DxDt;
-        
+
         /* y = sin(obl)*sin(pA) */
         InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DyDt;
-      
+
       } else if (control->Evolve.iDistOrbModel==LL2) {
         /* Body updates */
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
           InitializeXoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndDistRotLL2DxDt;
-        
+
           /* y = sin(obl)*sin(pA) */
           InitializeYoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndDistRotLL2DyDt;
-        
+
           /* z = cos(obl) */
           InitializeZoblDistRot(body,update,iBody,iPert);
-          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndDistRotLL2DzDt;
-          
+
         }
         /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DxDt;
-        
+
         /* y = sin(obl)*sin(pA) */
         InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotLL2DyDt;
       }
     }
     if (body[iBody].bGRCorr) {
     InitializeXoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDxDt;
 
     InitializeYoblDistRotStar(body,update,iBody,body[iBody].iGravPerts+1);
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDyDt;
     }
   }
-  
+
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorDistRot;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyDistRot;
 }
@@ -423,9 +469,9 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
     if (body[iBody].bReadOrbitData) {
       body[iBody].iGravPerts = 0;
       body[iBody].iaGravPerts = malloc(1*sizeof(int));
-      body[iBody].iaGravPerts[0] = 0; 
+      body[iBody].iaGravPerts[0] = 0;
     }
-    
+
     if (update[iBody].iNumXobl == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumXobl += body[iBody].iGravPerts+1;
@@ -437,7 +483,7 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumZobl == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumZobl += body[iBody].iGravPerts;
-    
+
     if (body[iBody].bGRCorr) {
       update[iBody].iNumXobl += 1;
       update[iBody].iNumYobl += 1;
@@ -450,9 +496,9 @@ void InitializeUpdateDistRot(BODY *body,UPDATE *update,int iBody) {
 
 void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-  
+
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
-  
+
   if (body[iBody].bGRCorr) {
     update[iBody].padDXoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaXoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
@@ -472,9 +518,9 @@ void FinalizeUpdateXoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-  
+
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
-  
+
   if (body[iBody].bGRCorr) {
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+2)*sizeof(int));
@@ -482,7 +528,7 @@ void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
       update[iBody].iaModule[iVar][*iEqn] = DISTROT;
       update[iBody].iaYoblDistRot[iPert] = (*iEqn)++;
     }
-  } else { 
+  } else {
     update[iBody].padDYoblDtDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(double*));
     update[iBody].iaYoblDistRot = malloc((body[iBody].iGravPerts+1)*sizeof(int));
     for (iPert=0;iPert<body[iBody].iGravPerts+1;iPert++) {
@@ -494,7 +540,7 @@ void FinalizeUpdateYoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 void FinalizeUpdateZoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-  
+
   update[iBody].padDZoblDtDistRot = malloc((body[iBody].iGravPerts)*sizeof(double*));
   update[iBody].iaZoblDistRot = malloc((body[iBody].iGravPerts)*sizeof(int));
   for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
@@ -506,7 +552,7 @@ void FinalizeUpdateZoblDistRot(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 /***************** DISTROT Halts *****************/
 
-void CountHaltsDistRot(HALT *halt,int *iNumHalts) { 
+void CountHaltsDistRot(HALT *halt,int *iNumHalts) {
 }
 
 void VerifyHaltDistRot(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -518,28 +564,28 @@ void VerifyHaltDistRot(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 void WriteBodyDOblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
-  
+
   if ((body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) > 0) {
     dObldx = body[iBody].dXobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
       (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
     dObldy = body[iBody].dYobl*body[iBody].dZobl/(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) * \
       (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl));
-      
+
   } else {
     dObldx = 0.0;
     dObldy = 0.0;
   }
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
-    
+
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
      dDeriv += dObldx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dObldy*(*(update[iBody].padDYoblDtDistRot[iPert]))\
         + dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
- 
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -563,19 +609,19 @@ void WriteOblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   } else {
     dObldx = 0.0;
     dObldy = 0.0;
-  }    
-    
+  }
+
   dObldz = - sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl) / \
     (body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl+body[iBody].dZobl*body[iBody].dZobl);
-    
+
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
      dDeriv += dObldx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dObldy*(*(update[iBody].padDYoblDtDistRot[iPert]))\
         + dObldz*(*(update[iBody].padDZoblDtDistRot[iPert]));
- 
+
   *dTmp = fabs(PI/dDeriv);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -598,14 +644,14 @@ void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     dpAdx = 0.0;
     dpAdy = 0.0;
   }
-  
+
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += dpAdx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dpAdy*(*(update[iBody].padDYoblDtDistRot[iPert]));
 
   *dTmp = fabs(2*PI/dDeriv);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -615,8 +661,8 @@ void WritePrecATimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 //     *dTmp /= fdUnitsAngle(units->iAngle);
 //     fsUnitsAngle(units->iAngle,cUnit);
   }
-}  
-  
+}
+
 void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
@@ -628,10 +674,10 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
     dpAdx = 0.0;
     dpAdy = 0.0;
   }
-  
+
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += dpAdx*(*(update[iBody].padDXoblDtDistRot[iPert])) + dpAdy*(*(update[iBody].padDYoblDtDistRot[iPert]));
 
   *dTmp = dDeriv;
@@ -645,19 +691,19 @@ void WriteBodyDPrecADtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 //     fsUnitsAngle(units->iAngle,cUnit);
     fsUnitsAngRate(units,cUnit);
   }
-}    
-  
+}
+
 void WriteBodyDXoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -665,7 +711,7 @@ void WriteBodyDXoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-}  
+}
 
 void WriteBodyDYoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -673,11 +719,11 @@ void WriteBodyDYoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -685,7 +731,7 @@ void WriteBodyDYoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-} 
+}
 
 void WriteBodyDZoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -693,11 +739,11 @@ void WriteBodyDZoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
-  
+
   *dTmp = dDeriv;
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -705,7 +751,7 @@ void WriteBodyDZoblDtDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-} 
+}
 
 void WriteXoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -713,11 +759,11 @@ void WriteXoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
-  
+
   *dTmp = fabs(1./dDeriv);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -725,7 +771,7 @@ void WriteXoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-}  
+}
 
 void WriteYoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -733,11 +779,11 @@ void WriteYoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<=body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
-  
+
   *dTmp = fabs(1./dDeriv);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -745,7 +791,7 @@ void WriteYoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-} 
+}
 
 void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -753,11 +799,11 @@ void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) 
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
     dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
-  
+
   *dTmp = fabs(1./dDeriv);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -771,17 +817,17 @@ void WriteZoblTimeDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
 void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
-  
+
   if (body[iBody].bDistOrb) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
-  
+
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
       h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
           body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
       body[jBody].daLOrb[0] = 0.0;
       body[jBody].daLOrb[1] = 0.0;
       body[jBody].daLOrb[2] = h;
-  
+
       inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
       RotateVector(body[jBody].daLOrb,body[jBody].daLOrbTmp,inc,0); //rotate about x by inc angle
       longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
@@ -791,11 +837,11 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     }
     Lnorm = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+system->daLOrb[2]*system->daLOrb[2]);
     for (i=0;i<3;i++) system->daLOrb[i] /= Lnorm;
-  
+
     Lnorm = sqrt(body[iBody].daLOrb[0]*body[iBody].daLOrb[0]+\
         body[iBody].daLOrb[1]*body[iBody].daLOrb[1]+body[iBody].daLOrb[2]*body[iBody].daLOrb[2]);
     for (i=0;i<3;i++) body[iBody].daLOrb[i] /= Lnorm;
-  
+
     body[iBody].daLRot[0] = 0.0;
     body[iBody].daLRot[1] = 0.0;
     body[iBody].daLRot[2] = 1.0;
@@ -804,7 +850,7 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
     longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
     RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,-obliq,0);
-    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa;
     RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,eqnode,2);
     RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,inc,0);
     RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,longa,2);
@@ -815,34 +861,34 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     if (Lnorm != 0) {
       for (i=0;i<3;i++) body[iBody].daLRotTmp[i] /= Lnorm;
     }
-    
+
     cross(system->daLOrb,body[iBody].daLOrb,body[iBody].daLOrbTmp);
     Lnorm = sqrt(body[iBody].daLOrbTmp[0]*body[iBody].daLOrbTmp[0]+\
         body[iBody].daLOrbTmp[1]*body[iBody].daLOrbTmp[1]+body[iBody].daLOrbTmp[2]*body[iBody].daLOrbTmp[2]);
     for (i=0;i<3;i++) body[iBody].daLOrbTmp[i] /= Lnorm;
-  
+
     cross(body[iBody].daLOrbTmp,body[iBody].daLRotTmp,system->daLOrb);
     *dTmp = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+\
         system->daLOrb[2]*system->daLOrb[2]);
   } else {
     *dTmp = 0.0;
   }
-}  
-  
+}
+
 void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
-  
+
   if (body[iBody].bDistOrb) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
-  
+
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
       h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
           body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
       body[jBody].daLOrb[0] = 0.0;
       body[jBody].daLOrb[1] = 0.0;
       body[jBody].daLOrb[2] = h;
-  
+
       inc = 2*asin(sqrt((body[jBody].dPinc*body[jBody].dPinc)+(body[jBody].dQinc*body[jBody].dQinc)));
       RotateVector(body[jBody].daLOrb,body[jBody].daLOrbTmp,inc,0); //rotate about x by inc angle
       longa = atan2(body[jBody].dPinc,body[jBody].dQinc);
@@ -852,10 +898,10 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     }
     Lnorm = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+system->daLOrb[2]*system->daLOrb[2]);
     for (i=0;i<3;i++) system->daLOrb[i] /= Lnorm;
-  
+
     Lnorm = sqrt(body[iBody].daLOrb[0]*body[iBody].daLOrb[0]+body[iBody].daLOrb[1]*body[iBody].daLOrb[1]+body[iBody].daLOrb[2]*body[iBody].daLOrb[2]);
     for (i=0;i<3;i++) body[iBody].daLOrb[i] /= Lnorm;
-  
+
     body[iBody].daLRot[0] = 0.0;
     body[iBody].daLRot[1] = 0.0;
     body[iBody].daLRot[2] = 1.0;
@@ -864,7 +910,7 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     inc = 2*asin(sqrt((body[iBody].dPinc*body[iBody].dPinc)+(body[iBody].dQinc*body[iBody].dQinc)));
     longa = atan2(body[iBody].dPinc,body[iBody].dQinc);
     RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,-obliq,0);
-    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa; 
+    eqnode = 2*PI - atan2(body[iBody].dYobl,body[iBody].dXobl) - longa;
     RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,eqnode,2);
     RotateVector(body[iBody].daLRot,body[iBody].daLRotTmp,inc,0);
     RotateVector(body[iBody].daLRotTmp,body[iBody].daLRot,longa,2);
@@ -874,29 +920,29 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     if (Lnorm != 0) {
       for (i=0;i<3;i++) body[iBody].daLRotTmp[i] /= Lnorm;
     }
-    
+
     cross(system->daLOrb,body[iBody].daLOrb,body[iBody].daLOrbTmp);
     Lnorm = sqrt(body[iBody].daLOrbTmp[0]*body[iBody].daLOrbTmp[0]+body[iBody].daLOrbTmp[1]*body[iBody].daLOrbTmp[1]+body[iBody].daLOrbTmp[2]*body[iBody].daLOrbTmp[2]);
     for (i=0;i<3;i++) body[iBody].daLOrbTmp[i] /= Lnorm;
-  
+
     *dTmp = 0.0;
-    for (i=0;i<3;i++) *dTmp += body[iBody].daLRotTmp[i]*body[iBody].daLOrbTmp[i];  
+    for (i=0;i<3;i++) *dTmp += body[iBody].daLRotTmp[i]*body[iBody].daLOrbTmp[i];
   } else {
     *dTmp = 0.0;
   }
-}  
-  
+}
+
 void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (iBody > 0)
     *dTmp = body[iBody].dDynEllip;
   else
     *dTmp = -1;
   sprintf(cUnit,"");
-}  
+}
 
 void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = fndCentralTorqueR(body,iBody);
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -906,8 +952,8 @@ void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 //     fsUnitsAngle(units->iAngle,cUnit);
     fsUnitsAngRate(units,cUnit);
   }
-}  
-  
+}
+
 void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DOBLDTDISTROT].cName,"DOblDtDistRot");
@@ -918,7 +964,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DOBLDTDISTROT].iNum = 1;
   output[OUT_DOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DOBLDTDISTROT] = &WriteBodyDOblDtDistRot;
-  
+
   sprintf(output[OUT_DPRECADTDISTROT].cName,"DPrecADtDistRot");
   sprintf(output[OUT_DPRECADTDISTROT].cDescr,"Body's dpA/dt in DistRot");
   sprintf(output[OUT_DPRECADTDISTROT].cNeg,"deg/year");
@@ -927,7 +973,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DPRECADTDISTROT].iNum = 1;
   output[OUT_DPRECADTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DPRECADTDISTROT] = &WriteBodyDPrecADtDistRot;
- 
+
   sprintf(output[OUT_DXOBLDTDISTROT].cName,"DXoblDtDistRot");
   sprintf(output[OUT_DXOBLDTDISTROT].cDescr,"Body's dXobl/dt in DistRot");
   sprintf(output[OUT_DXOBLDTDISTROT].cNeg,"1/year");
@@ -936,7 +982,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DXOBLDTDISTROT].iNum = 1;
   output[OUT_DXOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DXOBLDTDISTROT] = &WriteBodyDXoblDtDistRot;
-  
+
   sprintf(output[OUT_DYOBLDTDISTROT].cName,"DYoblDtDistRot");
   sprintf(output[OUT_DYOBLDTDISTROT].cDescr,"Body's dYobl/dt in DistRot");
   sprintf(output[OUT_DYOBLDTDISTROT].cNeg,"1/yr");
@@ -945,7 +991,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DYOBLDTDISTROT].iNum = 1;
   output[OUT_DYOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DYOBLDTDISTROT] = &WriteBodyDYoblDtDistRot;
-  
+
   sprintf(output[OUT_DZOBLDTDISTROT].cName,"DZoblDtDistRot");
   sprintf(output[OUT_DZOBLDTDISTROT].cDescr,"Body's dZobl/dt in DistRot");
   sprintf(output[OUT_DZOBLDTDISTROT].cNeg,"1/yr");
@@ -954,7 +1000,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DZOBLDTDISTROT].iNum = 1;
   output[OUT_DZOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DZOBLDTDISTROT] = &WriteBodyDZoblDtDistRot;
-  
+
   sprintf(output[OUT_XOBLTIMEDISTROT].cName,"XoblTimeDistRot");
   sprintf(output[OUT_XOBLTIMEDISTROT].cDescr,"Xobl timescale in DistRot");
   sprintf(output[OUT_XOBLTIMEDISTROT].cNeg,"year");
@@ -972,7 +1018,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_YOBLTIMEDISTROT].iNum = 1;
   output[OUT_YOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_YOBLTIMEDISTROT] = &WriteYoblTimeDistRot;
-  
+
   sprintf(output[OUT_ZOBLTIMEDISTROT].cName,"ZoblTimeDistRot");
   sprintf(output[OUT_ZOBLTIMEDISTROT].cDescr,"Zobl timescale in DistRot");
   sprintf(output[OUT_ZOBLTIMEDISTROT].cNeg,"year");
@@ -981,7 +1027,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ZOBLTIMEDISTROT].iNum = 1;
   output[OUT_ZOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_ZOBLTIMEDISTROT] = &WriteZoblTimeDistRot;
-  
+
   sprintf(output[OUT_OBLTIMEDISTROT].cName,"OblTimeDistRot");
   sprintf(output[OUT_OBLTIMEDISTROT].cDescr,"Obliquity timescale in DistRot");
   sprintf(output[OUT_OBLTIMEDISTROT].cNeg,"year");
@@ -990,7 +1036,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_OBLTIMEDISTROT].iNum = 1;
   output[OUT_OBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_OBLTIMEDISTROT] = &WriteOblTimeDistRot;
-  
+
   sprintf(output[OUT_PRECATIMEDISTROT].cName,"PrecATimeDistRot");
   sprintf(output[OUT_PRECATIMEDISTROT].cDescr,"Axial precession timescale in DistRot");
   sprintf(output[OUT_PRECATIMEDISTROT].cNeg,"year");
@@ -999,28 +1045,28 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECATIMEDISTROT].iNum = 1;
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT] = &WritePrecATimeDistRot;
-  
+
   sprintf(output[OUT_CASS1].cName,"CassiniOne");
   sprintf(output[OUT_CASS1].cDescr,"First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg = 0;
   output[OUT_CASS1].iNum = 1;
   output[OUT_CASS1].iModuleBit = DISTROT;
   fnWrite[OUT_CASS1] = &WriteBodyCassOne;
-  
+
   sprintf(output[OUT_CASS2].cName,"CassiniTwo");
   sprintf(output[OUT_CASS2].cDescr,"Second Cassini parameter (alignment of Cassini state vectors");
   output[OUT_CASS2].bNeg = 0;
   output[OUT_CASS2].iNum = 1;
   output[OUT_CASS2].iModuleBit = DISTROT;
   fnWrite[OUT_CASS2] = &WriteBodyCassTwo;
-  
+
   sprintf(output[OUT_DYNELLIP].cName,"DynEllip");
   sprintf(output[OUT_DYNELLIP].cDescr,"dynamical ellipticity of planet");
   output[OUT_DYNELLIP].bNeg = 0;
   output[OUT_DYNELLIP].iNum = 1;
   output[OUT_DYNELLIP].iModuleBit = DISTROT;
   fnWrite[OUT_DYNELLIP] = &WriteDynEllip;
-  
+
   sprintf(output[OUT_PRECFNAT].cName,"PrecFNat");
   sprintf(output[OUT_PRECFNAT].cDescr,"natural precession freq of planet");
   output[OUT_PRECFNAT].bNeg = 0;
@@ -1034,7 +1080,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 void LogOptionsDistRot(CONTROL *control, FILE *fp) {
 
   fprintf(fp,"-------- DISTROT Options -----\n\n");
-  
+
 }
 
 void LogDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
@@ -1052,7 +1098,7 @@ void LogBodyDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
   fprintf(fp,"-----DISTROT PARAMETERS (%s)------\n",body[iBody].cName);
   for (iOut=OUTBODYSTARTDISTROT;iOut<OUTENDDISTROT;iOut++) {
-    if (output[iOut].iNum > 0) 
+    if (output[iOut].iNum > 0)
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
   }
 }
@@ -1069,6 +1115,7 @@ void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
   module->fnReadOptions[iBody][iModule] = &ReadOptionsDistRot;
   module->fnVerify[iBody][iModule] = &VerifyDistRot;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyDistRotDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistRot;
 
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistRot;
@@ -1100,7 +1147,7 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
         body[iBody].daPincSeries[body[iBody].iCurrentStep-1])/(2*evolve->dTimeStep);
     body[iBody].dQdot = (body[iBody].daQincSeries[body[iBody].iCurrentStep+1]-\
         body[iBody].daQincSeries[body[iBody].iCurrentStep-1])/(2*evolve->dTimeStep);
-  } 
+  }
 }
 
 void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -1115,11 +1162,11 @@ void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     */
     body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
   }
-  
+
   if (body[iBody].bReadOrbitData) {
     UpdateOrbitData(body,evolve,iBody);
   }
-  
+
   body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
 }
 
@@ -1328,7 +1375,7 @@ Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used
 */
 double fndDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
-  
+
   if (iaBody[1] == 0) {
     if (body[iaBody[0]].bForcePrecRate == 0) {
       return body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
@@ -1353,7 +1400,7 @@ Derivative of x = sin(obliquity)*cos(preca) when RD4 orbital model is used
 */
 double fndDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
-  
+
   if (iaBody[1] == 0) {
     if (body[iaBody[0]].bForcePrecRate == 0) {
       return -body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
@@ -1390,7 +1437,7 @@ Derivative of y = sin(obliquity)*sin(preca) when LL2 orbital model is used
 */
 double fndDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
-  
+
   if (iaBody[1] == 0) {
     return body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
@@ -1411,7 +1458,7 @@ Derivative of x = sin(obliquity)*cos(preca) when LL2 orbital model is used
 */
 double fndDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
-  
+
   if (iaBody[1] == 0) {
     return -body[iaBody[0]].dYobl*fndCentralTorqueR(body,iaBody[0]);
   } else if (iaBody[1] >= 1) {
@@ -1474,7 +1521,7 @@ Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from exte
 double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   double y;
   y = fabs(1.0 - (body[iaBody[0]].dXobl*body[iaBody[0]].dXobl) - (body[iaBody[0]].dYobl*body[iaBody[0]].dYobl));
-  
+
   return -fndObliquityBExt(body,system,iaBody)*sqrt(y) - body[iaBody[0]].dXobl*2.*fndObliquityCExt(body,system,iaBody)+\
           body[iaBody[0]].dXobl*fndCentralTorqueR(body,iaBody[0]);
 }

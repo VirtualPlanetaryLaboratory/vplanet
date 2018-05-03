@@ -371,8 +371,6 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar][0] = iBody;
 
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
-  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
-
 }
 
 void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -382,7 +380,6 @@ void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDA
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;
 
   update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
-  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
 }
 
 void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -392,7 +389,6 @@ void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE 
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
 
   update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
-  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
 }
 
 void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -420,7 +416,6 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
 
   update[iBody].pdLuminosityStellar = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
-  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                                 // NOTE: Same here!
 }
 
 void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -448,7 +443,6 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
 
   update[iBody].pdRadiusStellar = &update[iBody].daDerivProc[update[iBody].iRadius][0];  // NOTE: This points to the VALUE of the radius
-  fnUpdate[iBody][update[iBody].iRadius][0] = &fdRadius;                                 // NOTE: Same here!
 }
 
 void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -476,7 +470,6 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   update[iBody].iaBody[update[iBody].iTemperature][0][0] = iBody;
 
   update[iBody].pdTemperatureStellar = &update[iBody].daDerivProc[update[iBody].iTemperature][0];  // NOTE: This points to the VALUE of the temperature
-  fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperature;                                 // NOTE: Same here!
 }
 
 void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
@@ -527,6 +520,17 @@ void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) 
 
 void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
  // Nothing
+}
+
+void VerifyStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
+  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
+  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                         // NOTE: This points to the value of the Luminosity!
+  fnUpdate[iBody][update[iBody].iRadius][0] = &fdRadius;                                 // NOTE: This points to the value of the Radius!
+  fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperature;                       // NOTE: This points to the value of the Temperature!
+
+
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -947,6 +951,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsStellar;
   module->fnLogBody[iBody][iModule] = &LogBodyStellar;
   module->fnVerify[iBody][iModule] = &VerifyStellar;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyStellarDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltStellar;
 
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;

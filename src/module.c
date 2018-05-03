@@ -137,6 +137,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnCountHalts = malloc(iNumBodies*sizeof(fnCountHaltsModule*));
   module->fnReadOptions = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
   module->fnVerify = malloc(iNumBodies*sizeof(fnVerifyModule*));
+  module->fnVerifyDerivatives = malloc(iNumBodies*sizeof(fnVerifyModuleDerivatives*));
   module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
 
   /* Assume no modules per body to start */
@@ -189,6 +190,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnCountHalts[iBody] = malloc(iNumModules*sizeof(fnCountHaltsModule));
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
   module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
+  module->fnVerifyDerivatives[iBody] = malloc(iNumModules*sizeof(fnVerifyModuleDerivatives));
   module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
@@ -1253,7 +1255,7 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
 void ForceBehaviorSpiNBodyAtmEsc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   int iBody;
-  
+
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
     //Need to get orbital elements for AtmEsc to use for escape
     Bary2OrbElems(body, iBody);

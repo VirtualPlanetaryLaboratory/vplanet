@@ -589,7 +589,6 @@ void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0][0] = iBody;
 
   update[iBody].pdDSurfaceWaterMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
-  fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
 }
 
 void VerifyOxygenMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -600,7 +599,6 @@ void VerifyOxygenMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   update[iBody].iaBody[update[iBody].iOxygenMass][0][0] = iBody;
 
   update[iBody].pdDOxygenMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iOxygenMass][0];
-  fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
 }
 
 void VerifyOxygenMantleMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -611,7 +609,6 @@ void VerifyOxygenMantleMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   update[iBody].iaBody[update[iBody].iOxygenMantleMass][0][0] = iBody;
 
   update[iBody].pdDOxygenMantleMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iOxygenMantleMass][0];
-  fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
 }
 
 void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -622,7 +619,6 @@ void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,f
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
 
   update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
-  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
 }
 
 void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -633,7 +629,6 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnU
   update[iBody].iaBody[update[iBody].iMass][0][0] = iBody;
 
   update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
-  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
 }
 
 void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -662,7 +657,6 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
   update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
 
   update[iBody].pdRadiusAtmesc = &update[iBody].daDerivProc[update[iBody].iRadius][0];   // NOTE: This points to the VALUE of the radius
-  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: Same here!
 
 }
 
@@ -796,6 +790,19 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     }
   }
 
+}
+
+void VerifyAtmEscDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  if (body[iBody].dSurfaceWaterMass > 0) {
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
+    fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
+    fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
+  }
+  if (body[iBody].dEnvelopeMass > 0) {
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+  }
+  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: This points to the VALUE of the radius!
 }
 
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
@@ -1105,7 +1112,7 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  dDeriv = 0; //*(update[iBody].pdDEnvelopeMassDtAtmesc);
+  dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;
   *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
 
@@ -1393,6 +1400,7 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
   module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
   module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyAtmEscDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
 
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;

@@ -1,4 +1,4 @@
-/***************** GALHABIT.H *********************** 
+/***************** GALHABIT.H ***********************
  *
  * Russell Deitrick, June 24, 2015
  *
@@ -45,14 +45,14 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_GALACTIDES         2258
 
 // void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-// 
+//
 // void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsGalHabit(OPTIONS*, fnReadOption[]);
 void ReadOptionsGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Verify Functions */
 // void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 

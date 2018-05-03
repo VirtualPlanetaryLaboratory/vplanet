@@ -379,7 +379,7 @@ void VerifyDistRotDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
   }
 }
 
-void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0;
 
   VerifyOrbitData(body, control, options, iBody);

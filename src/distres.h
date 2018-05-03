@@ -1,4 +1,4 @@
-/***************** DISTRES.H *********************** 
+/***************** DISTRES.H ***********************
  *
  * Russell Deitrick, February 2017
  *
@@ -29,7 +29,7 @@ void ReadOptionsDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 void InitializeUpdateTmpBodyDistRes(BODY*,CONTROL*,UPDATE*,int);
 
 /* Verify Functions */
-void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 

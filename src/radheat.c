@@ -1578,7 +1578,7 @@ void Assign235UNum(BODY *body,OPTIONS *options,double dAge,int iBody) {  //PED
 }
 
 /* Verify */
-void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
   Assign26AlNum(body,options,dAge,iBody);
 
   /* Mantle */
@@ -1608,7 +1608,7 @@ void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
 
 }
 
-void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
   Assign40KNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i40KMan >= 0) {
@@ -1647,7 +1647,7 @@ void Verify40K(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double 
 
 }
 
-void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
   Assign232ThNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i232ThMan >= 0) {
@@ -1684,7 +1684,7 @@ void Verify232Th(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doubl
     update[iBody].pdD232ThNumCrustDt = &update[iBody].dZero;
 }
 
-void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
   Assign238UNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i238UMan >= 0) {
@@ -1721,7 +1721,7 @@ void Verify238U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
     update[iBody].pdD238UNumCrustDt = &update[iBody].dZero;
 }
 
-void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void Verify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
   Assign235UNum(body,options,dAge,iBody);
   /* Mantle */
   if (update[iBody].i235UMan >= 0) {
@@ -1875,7 +1875,7 @@ void VerifyRadheatDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
   }
 }
 
-void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iFile=iBody+1;
 
   /* Cannot set 2 or more of Power, Mass and Number for any isotope */
@@ -1886,32 +1886,32 @@ void VerifyRadheat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   NotMassAndNum(options,OPT_26ALMASSMAN,OPT_26ALNUMMAN,iBody);
 
   // 26Al set properly
-  Verify26Al(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
+  Verify26Al(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man and Core.
 
   // XXX This looks like it's insufficient to capture all the permutations
   NotMassAndNum(options,OPT_40KMASSMAN,OPT_40KNUMMAN,iBody);
 
   // 40K set properly
-  Verify40K(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man and Core.
+  Verify40K(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man and Core.
 
   // 232Th
   // XXX Also insufficient?
   NotMassAndNum(options,OPT_232THMASSMAN,OPT_232THNUMMAN,iFile);
 
   // 232Th set corectly
-  Verify232Th(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
+  Verify232Th(body,options,system,update,body[iBody].dAge,iBody);
 
   // 238U
   NotMassAndNum(options,OPT_238UMASSMAN,OPT_238UNUMMAN,iFile);
 
   // 238U set correctly
-  Verify238U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
+  Verify238U(body,options,system,update,body[iBody].dAge,iBody);
 
   // 235U
   NotMassAndNum(options,OPT_235UMASSMAN,OPT_235UNUMMAN,iFile);
 
   // 235U set correctly
-  Verify235U(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);
+  Verify235U(body,options,system,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorRadheat;
   control->fnPropsAux[iBody][iModule] = &PropsAuxRadheat;

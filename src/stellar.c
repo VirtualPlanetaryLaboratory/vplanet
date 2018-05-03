@@ -364,7 +364,7 @@ void ReadOptionsStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 
 /******************* Verify STELLAR ******************/
 
-void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iRot][update[iBody].iRotStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar] = 1;
   update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar] = malloc(update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar]*sizeof(int));
@@ -373,7 +373,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
 }
 
-void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
@@ -382,7 +382,7 @@ void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDA
   update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
 }
 
-void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar]*sizeof(int));
@@ -391,7 +391,7 @@ void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE 
   update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
 }
 
-void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign luminosity
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -418,7 +418,7 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
   update[iBody].pdLuminosityStellar = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
 }
 
-void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign radius
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -445,7 +445,7 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   update[iBody].pdRadiusStellar = &update[iBody].daDerivProc[update[iBody].iRadius][0];  // NOTE: This points to the VALUE of the radius
 }
 
-void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign temperature
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -533,7 +533,7 @@ void VerifyStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
 
 }
 
-void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bStellar=0;
 
   /* Stellar is active for this body if this subroutine is called. */
@@ -543,7 +543,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dLuminosity for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyLuminosity(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLuminosity(body,control,options,update,body[iBody].dAge,iBody);
   bStellar = 1;
 
   if (update[iBody].iNumRadius > 1) {
@@ -551,18 +551,18 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyRadius(body,control,options,update,body[iBody].dAge,iBody);
 
-  VerifyRotRate(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyRotRate(body,control,options,update,body[iBody].dAge,iBody);
 
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dTemperature for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyTemperature(body,control,options,update,body[iBody].dAge,iBody);
+  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,iBody);
+  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;

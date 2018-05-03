@@ -790,7 +790,7 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
   }
 }
 
-void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody, fnUpdateVariable ***fnUpdate) {
+void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
 
   if(control->Evolve.iEqtideModel == CPL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
@@ -814,7 +814,7 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
   }
 }
 
-void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody,fnUpdateVariable*** fnUpdate) {
+void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody) {
   double dMeanMotion;
   int iOrbiter;
 
@@ -952,7 +952,7 @@ void InitializeSemiEqtide(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqtide][1]=0;
 }
 
-void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
   /* CTL model, but Q's set? */
@@ -1095,7 +1095,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   output[OUT_TIDALQ].iNum = 0;
 }
 
-void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
   //XXX Is dEccSq set here?
@@ -1413,7 +1413,7 @@ void VerifyEqtideDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdate
 
 }
 
-void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
   VerifyTideModel(control,files,options);
 
@@ -1421,16 +1421,16 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   VerifyPerturbersEqtide(body,files,options,update,control->Evolve.iNumBodies,iBody);
 
-  VerifyRotationEqtide(body,control,update,options,files->Infile[iBody+1].cIn,iBody, fnUpdate);
+  VerifyRotationEqtide(body,control,update,options,files->Infile[iBody+1].cIn,iBody);
 
   /* Verify input set correctly and assign update functions */
   if (control->Evolve.iEqtideModel == CTL)
-    VerifyCTL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
+    VerifyCTL(body,control,files,options,output,update,iBody,iModule);
 
   if (control->Evolve.iEqtideModel == CPL)
-    VerifyCPL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
+    VerifyCPL(body,control,files,options,output,update,iBody,iModule);
 
-  VerifyLostEngEqtide(body,update,control,options,iBody,fnUpdate);
+  VerifyLostEngEqtide(body,update,control,options,iBody);
 
   body[iBody].dTidalZ=malloc(control->Evolve.iNumBodies*sizeof(double));
   body[iBody].dTidalChi=malloc(control->Evolve.iNumBodies*sizeof(double));
@@ -2719,7 +2719,7 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
 
-int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdateVariable*** fnUpdate, UPDATE *update) {
+int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
   double dEqRate,dDiff;
 
   dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
@@ -2904,7 +2904,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
     /* Tidally Locked? */
     else {
       // Is the body now tidally locked?
-      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,fnUpdate,update);
+      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update);
       // If so, reset the function pointer to return TINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */

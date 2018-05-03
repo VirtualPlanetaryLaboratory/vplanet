@@ -90,13 +90,13 @@ void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 void CountHaltsBinary(HALT*,int*);
 
 /* Verify Functions */
-void VerifyBinary(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void VerifyCBPR(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
-void VerifyCBPZ(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
-void VerifyCBPPhi(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
-void VerifyCBPRDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
-void VerifyCBPZDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
-void VerifyCBPPhiDot(BODY*,OPTIONS*,UPDATE*,double,fnUpdateVariable***,int);
+void VerifyBinary(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void VerifyCBPR(BODY*,OPTIONS*,UPDATE*,double,int);
+void VerifyCBPZ(BODY*,OPTIONS*,UPDATE*,double,int);
+void VerifyCBPPhi(BODY*,OPTIONS*,UPDATE*,double,int);
+void VerifyCBPRDot(BODY*,OPTIONS*,UPDATE*,double,int);
+void VerifyCBPZDot(BODY*,OPTIONS*,UPDATE*,double,int);
+void VerifyCBPPhiDot(BODY*,OPTIONS*,UPDATE*,double,int);
 void InitializeVplanetBinary(CONTROL*,MODULE*);
 
 /* Update functions */

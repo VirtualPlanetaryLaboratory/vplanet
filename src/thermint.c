@@ -989,7 +989,7 @@ void AssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
     */
 }
 
-void VerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
 
   //  AssignTMan(body,options,dAge,iBody);
   /* Mantle */
@@ -1003,7 +1003,7 @@ void VerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double
   update[iBody].daDerivProc[update[iBody].iTMan][0] = 0;
 }
 
-void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyTCore(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
     //  AssignTCore(body,options,dAge,iBody);
     /* Core */
     update[iBody].iaType[update[iBody].iTCore][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
@@ -1118,9 +1118,9 @@ void VerifyThermintDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpda
   fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
 }
 
-void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  VerifyTMan(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
-  VerifyTCore(body,options,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Core.
+void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+  VerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
+  VerifyTCore(body,options,update,body[iBody].dAge,iBody);  //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorThermint;
   control->fnPropsAux[iBody][iModule] = &PropsAuxThermint;

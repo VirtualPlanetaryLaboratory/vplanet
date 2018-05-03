@@ -488,7 +488,7 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
  * to make it more difficult to mess up the binary equations.
  */
 
-void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPR][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
@@ -498,7 +498,7 @@ void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].pdCBPRBinary = &update[iBody].daDerivProc[update[iBody].iCBPR][0];
 }
 
-void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPZ][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPZ][0] = 1;
@@ -508,7 +508,7 @@ void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].pdCBPZBinary = &update[iBody].daDerivProc[update[iBody].iCBPZ][0];
 }
 
-void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPPhi][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPPhi][0] = 1;
@@ -518,7 +518,7 @@ void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdat
   update[iBody].pdCBPPhiBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhi][0];
 }
 
-void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPRDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPRDot][0] = 1;
@@ -528,7 +528,7 @@ void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].pdCBPRDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPRDot][0];
 }
 
-void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPZDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPZDot][0] = 1;
@@ -538,7 +538,7 @@ void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].pdCBPZDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPZDot][0];
 }
 
-void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] = 1;
@@ -605,7 +605,7 @@ void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdate
   }
 }
 
-void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
   // If binary is being used, ALL bodies must have correct type
   if(iBody < 2) // Primary or secondary star
@@ -722,12 +722,12 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     if(body[iBody].bBinaryUseMatrix)
     {
       // Call verifies to properly set up eqns in matrix
-      VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPR(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPZ(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPPhi(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPRDot(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPZDot(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,iBody);
     }
 
     // Init parameters needed for subsequent cbp motion

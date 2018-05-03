@@ -91,8 +91,8 @@ void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
 /* Verify Functions */
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
-void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int,fnUpdateVariable***);
-void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
+void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
 
 /* Update Functions */

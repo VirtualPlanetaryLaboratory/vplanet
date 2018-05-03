@@ -307,7 +307,7 @@ void VerifyDistResDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
   }
 }
 
-void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyDistRes(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iPert, jBody, j, jj, iRes, i;
   double dPerRat;
 

@@ -343,7 +343,7 @@ void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody) {
 }
 
 //======================== Verify Variable Functions ===========================
-void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionX][0] = 1;
@@ -353,7 +353,7 @@ void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].pdDPositionX = &update[iBody].daDerivProc[update[iBody].iPositionX][0];
 }
 
-void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionY][0] = 1;
@@ -363,7 +363,7 @@ void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].pdDPositionY = &update[iBody].daDerivProc[update[iBody].iPositionY][0];
 }
 
-void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionZ][0] = 1;
@@ -373,7 +373,7 @@ void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].pdDPositionZ = &update[iBody].daDerivProc[update[iBody].iPositionZ][0];
 }
 
-void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelX][0] = 1;
@@ -383,7 +383,7 @@ void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].pdDVelX = &update[iBody].daDerivProc[update[iBody].iVelX][0];
 }
 
-void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelY][0] = 1;
@@ -393,7 +393,7 @@ void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].pdDVelY = &update[iBody].daDerivProc[update[iBody].iVelY][0];
 }
 
-void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelZ][0] = 1;
@@ -421,14 +421,14 @@ void VerifySpiNBodyDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpda
 
 }
 
-void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
-  VerifyVelX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyVelX(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelY(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelZ(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionX(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionY(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionZ(body,options,update,body[iBody].dAge,iBody);
 
   //VerifyGM(body,control);
 

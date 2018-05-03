@@ -318,7 +318,7 @@ void fnForceBehaviorFlare(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE
 
 }
 
-void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,int iBody) {
 
   /* This may become useful once flare evolution is included
   update[iBody].iaType[update[iBody].iLXUV][0] = 1;
@@ -337,7 +337,7 @@ void VerifyFlareDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateV
 
 }
 
-void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int iFile=iBody+1;
 
   /* Mass must be in proper range */
@@ -349,7 +349,7 @@ void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
   /* VerifyMultiFlareStellar checks if STELLAR was selected, too. */
 
-  VerifyLXUVFlare(body,options,update,fnUpdate,iBody);
+  VerifyLXUVFlare(body,options,update,iBody);
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorFlare;
   control->fnPropsAux[iBody][iModule] = &PropertiesFlare;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyFlare;

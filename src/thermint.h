@@ -1,4 +1,4 @@
-/***************** THERMINT.H *********************** 
+/***************** THERMINT.H ***********************
  *
  * Peter Driscoll 6/1/15
  *
@@ -12,12 +12,12 @@
 #define TCORE            21                    //index of TCORE variable.
 
 // XXX HACK   Assume a constant surf temp for now.
-#define TSURF  300.0  
+#define TSURF  300.0
 // UNITS CONSTANTS
 #define KM               1e3       //[m] 1 km in m
 
 // FUNDAMENTAL CONSTANTS
-#define GASCONSTANT      8.3144621             //[J/mol/K] gas constant in SI units.      
+#define GASCONSTANT      8.3144621             //[J/mol/K] gas constant in SI units.
 
 // E MASS RESERVOIRS
 #define EMASS            5.9742e24             //[kg] mass of E
@@ -76,7 +76,7 @@
 #define CONVEXPON        1./3          //[nd] convective cooling nusselt exponent "beta"
 #define HFLOWREDUCTSTAG  1./25         //[nd] mantle surface heat flow reduction factor for stagnant lid.
 #define STAGLID          0.            //[nd] switch to turn stagnant lid on.  (def=0, ie mobile lid)
-#define MANHFLOWPREF     1.            //[nd] UM heat flow prefix.  mobile lid=1.  staglid=HFLOWREDUCTSTAG. 
+#define MANHFLOWPREF     1.            //[nd] UM heat flow prefix.  mobile lid=1.  staglid=HFLOWREDUCTSTAG.
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5           //[J/mol] viscosity activation energy mantle
 #define ACTSHMODMAN      2e5           //[J/mol] shear modulus activation energy mantle
@@ -133,7 +133,7 @@
 /* MAGNETIC DYNAMO PROPERTIES */
 #define MAGPERM          4*PI*1e-7     //[H/m] magnetic permeability constant in SI units.
 #define MAGMOMCOEF       0.2           //[nd] saturation constant for fast rot dipolar dynamos (OC2006)
-#define ELECCONDCORE     10e5          //[S/m]  electrical conductivity of core. 
+#define ELECCONDCORE     10e5          //[S/m]  electrical conductivity of core.
 #define LORENTZNUM       2.5e-8        //[W Ohm/K] lorentz number, relates thermal and electrical conductivity.
 #define EMAGMOM          80e21         //[Am2] Earth's present day magnetic moment.
 #define EPRESSWIND       2.6761e-9     //[N/m2] Earth's SW pressure: Psw=m_proton*n_sw*v_sw^2 (DB13)
@@ -288,7 +288,7 @@ void CountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */
 
-void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetThermint(CONTROL*,MODULE*);
 void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);

@@ -773,7 +773,7 @@ void VerifyGalHabitDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpda
   }
 }
 
-void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;

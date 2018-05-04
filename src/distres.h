@@ -56,7 +56,7 @@ void LogBodyDistRes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRes Functions */
 void PropsAuxDistRes(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistRes(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistRes(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fdSemiMajAxF27(double, int);
 double fdSemiMajAxF28(double, int);

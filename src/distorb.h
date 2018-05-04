@@ -160,7 +160,7 @@ void osc2cart(BODY*, int);
 void cart2osc(BODY*, int);
 
 void PropsAuxDistOrb(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fndXinit(BODY*,int);
 double fndYinit(BODY*,int);

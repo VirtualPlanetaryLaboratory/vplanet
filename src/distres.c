@@ -713,7 +713,7 @@ void PropsAuxDistRes(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 //   }
 }
 
-void ForceBehaviorDistRes(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void ForceBehaviorDistRes(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
 void CheckResonance(BODY *body, EVOLVE *evolve, SYSTEM *system) {

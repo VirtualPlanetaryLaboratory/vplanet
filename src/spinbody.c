@@ -432,7 +432,7 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 
   //VerifyGM(body,control);
 
-  control->fnForceBehavior[iBody][iModule]   = &ForceBehaviorSpiNBody;
+  control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorSpiNBody;
   control->fnPropsAux[iBody][iModule]        = &PropertiesSpiNBody;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopySpiNBody;
 }
@@ -851,7 +851,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 //============================ End Writing Functions ===========================
 
-void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
 }
 

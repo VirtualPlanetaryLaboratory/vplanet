@@ -232,15 +232,35 @@
 
 #define MAXSPECIES       100
 
-typedef struct {
+/* Forward declaration of structs.
+This is necessary in order to add pointers to structs into typedef'd functions */
+
+typedef struct PHOTOCHEM PHOTOCHEM;
+typedef struct BODY BODY;
+typedef struct SYSTEM SYSTEM;
+typedef struct UPDATE UPDATE;
+typedef struct HALT HALT;
+typedef struct UNITS UNITS;
+typedef struct EVOLVE EVOLVE;
+typedef struct IO IO;
+typedef struct CONTROL CONTROL;
+typedef struct INFILE INFILE;
+typedef struct OUTFILE OUTFILE;
+typedef struct FILES FILES;
+typedef struct OPTIONS OPTIONS;
+typedef struct OUTPUT OUTPUT;
+typedef struct MODULE MODULE;
+
+
+struct PHOTOCHEM {
   double dInitTimeStep;
   double dMaxSteps;
-} PHOTOCHEM;
+};
 
 /*! \brief BODY contains all the physical parameters for every body.
  *         Members are broken into chunks by module.
  */
-typedef struct {
+struct BODY {
   char cName[NAMELEN];   /**< Body's Name */
   int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
   /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
@@ -929,7 +949,7 @@ typedef struct {
   int bDistRes;             /**< Use distres model (don't use it for god's sake) */
   double dMeanL;            /**< Body's mean longitude */
 
-} BODY;
+};
 
 /* SYSTEM contains properties of the system that pertain to
    every BODY */
@@ -939,7 +959,7 @@ typedef double (*fnLaplaceFunction)(double,int);
 
 
 
-typedef struct {
+struct SYSTEM {
   char cName[NAMELEN];	 /**< System's Name */
 
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
@@ -1032,13 +1052,13 @@ typedef struct {
   double **daDistSin;  /**< Sine prefactors of disturbing fxn resonant terms */
   double **daDistSec;  /**< Pyth sum of prefactors of disturbing fxn resonant terms */
 
-} SYSTEM;
+};
 
 /*
  * Updates: Struct that contains all the variables to be updated and the functions to be called to be updated, fnUpdate.
  */
 
-typedef struct {
+struct UPDATE {
   /* N.B. that pdVar points to the same memory location as
    * body.x, where x=semi, ecc, etc. */
   double **pdVar;       /**< Pointers to Primary Variables */
@@ -1451,9 +1471,9 @@ typedef struct {
      semi-major axis derivatives due to EQTIDE+STELLAR. */
  double *pdDsemiDtEqSt;
 
-} UPDATE;
+};
 
-typedef struct {
+struct HALT {
   int iNumHalts;       /**< Total Number of Halts */
   int bMerge;          /**< Halt for Merge? */
   double dMinSemi;     /**< Halt at this Semi-major Axis */
@@ -1498,7 +1518,7 @@ typedef struct {
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
   int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
-} HALT;
+};
 
 /* Units. These can be different for different bodies. If set
  * in the primary input file, the values are propogated to
@@ -1510,20 +1530,20 @@ typedef struct {
  * but is sure to result in some bugs. Be careful!
  */
 
-typedef struct {
+struct UNITS {
   int iMass;          /**< 0=gm; 1=kg; 2=solar; 3=Earth; 4=Jup; 5=Nep */
   int iLength;        /**< 0=cm; 1=m; 2=km; 3=R_sun; 4=R_earth; 5=R_Jup; 6=AU */
   int iAngle;         /**< 0=rad; 1=deg */
   int iTime;          /**< 0=sec; 1=day; 2=yr; 3=Myr; 4=Gyr */
   int iTemp;
-} UNITS;
+};
 
 /* Note this hack -- the second int is for iEqtideModel. This may
    have to be generalized for other modules. */
 typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
 /* Integration parameters */
-typedef struct {
+struct EVOLVE {
   int bDoForward;	 /**< Perform Forward Integration? */
   int bDoBackward;	 /**< Perform Backward Integration? */
   int iDir;              /**< 1=forward, -1=backward */
@@ -1562,12 +1582,12 @@ typedef struct {
   int iDistOrbModel;
 
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
-} EVOLVE;
+};
 
 /* The CONTROL struct contains all the parameters that
  * control program flow. */
 
-typedef struct {
+struct IO {
   int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
   double dOutputTime;	  /**< Integration Output Interval */
 
@@ -1578,7 +1598,7 @@ typedef struct {
   int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
   int bOverwrite;         /**< Allow files to be overwritten? */
-} IO;
+};
 
 /* The CONTROL struct contains all the parameters that
  * control program flow. */
@@ -1588,13 +1608,13 @@ typedef struct {
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
 typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
-typedef void (*fnForceBehaviorModule)(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
 typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
-typedef struct {
+struct CONTROL {
   EVOLVE Evolve;
   HALT *Halt;
   IO Io;
@@ -1619,12 +1639,12 @@ typedef struct {
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
   int bOutputEigen;      /**< Output eigen values? */
 
-} CONTROL;
+};
 
 /* The INFILE struct contains all the information
  * regarding the files that read in. */
 
-typedef struct {
+struct INFILE{
   char cIn[NAMELEN];       /**< File Name */
   int *bLineOK;            /**< Line number Format OK? */
   int iNumLines;           /**< Number of Input Lines */
@@ -1637,36 +1657,36 @@ typedef struct {
   /* Aqueous file -- add to SpeciesFile? */
   /* Array of Vapor pressure file */
 
-} INFILE;
+};
 
 /* The OUTFILE struct contains all the information
  * regarding the output files. */
 
-typedef struct {
+struct OUTFILE {
   char cOut[NAMELEN];       /**< Output File Name */
   int iNumCols;             /**< Number of Columns in Output File */
   char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
   int bNeg[MODULEOUTEND];         /**< Use Negative Option Units? */
   int iNumGrid;             /**< Number of grid outputs */
   char caGrid[MODULEOUTEND][OPTLEN];  /**< Gridded output name */
-} OUTFILE;
+};
 
 
 /* The FILES struct contains all the information
  * regarding every file. */
 
-typedef struct {
+struct FILES{
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
   INFILE *Infile;
   int iNumInputs;              /**< Number of Input Files */
-} FILES;
+};
 
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-typedef struct {
+struct OPTIONS{
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
@@ -1679,7 +1699,7 @@ typedef struct {
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
   double dNeg;                 /**< Conversion Factor to System Units */
-} OPTIONS;
+};
 
 /* OUTPUT contains the data regarding every output parameters */
 
@@ -1703,7 +1723,7 @@ typedef struct {
 //
 // } GRIDOUTPUT;
 
-typedef struct {
+struct OUTPUT {
   char cName[OPTLEN];    /**< Output Name */
   char cDescr[LINE];     /**< Output Description */
   int bNeg;              /**< Is There a Negative Option? */
@@ -1716,7 +1736,7 @@ typedef struct {
 
 //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
 
-} OUTPUT;
+};
 
 typedef void (*fnReadOption)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 typedef void (*fnWriteOutput)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double *,char []);
@@ -1802,7 +1822,7 @@ typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
 typedef void (*fnLogBodyModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*,int);
 typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,FILE*);
 
-typedef struct {
+struct MODULE {
   int *iNumModules; /**< Number of Modules per Body */
   int **iaModule; /**< Module numbers that Apply to the Body */
   int *iBitSum;
@@ -1964,7 +1984,7 @@ typedef struct {
   /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;
 
-} MODULE;
+};
 
 /* fnIntegrate is a pointer to a function that performs
  * integration. */

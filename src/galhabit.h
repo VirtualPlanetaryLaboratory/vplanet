@@ -108,7 +108,7 @@ void LogBodyGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 
 /* GalHabit Functions */
 void PropertiesGalHabit(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorGalHabit(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 double fndRandom_double();
 void testrand(SYSTEM*);
 double fndNearbyStarDist(double);

@@ -1766,7 +1766,7 @@ void PropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerTotal=fdRadPowerTotal(body,iBody);
 }
 
-void fnForceBehaviorRadheat(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorRadheat(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   if (body[iBody].d26AlNumMan < 0.5)
     body[iBody].d26AlNumMan = 0;
   if (body[iBody].d26AlNumCore < 0.5)

@@ -3151,7 +3151,7 @@ void AreaIceCovered(BODY *body, int iBody) {
   body[iBody].dAreaIceCov /= body[iBody].iNumLats;
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
 
   // XXX Conflicts here. And there should be no reference to pizza in POISE

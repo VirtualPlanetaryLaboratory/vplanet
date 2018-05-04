@@ -1105,7 +1105,7 @@ void PropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMagPauseRad=fdMagPauseRad(body,iBody);
 }
 
-void fnForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   // XXX Reset fnUpdate functions to SetDerivTiny?
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;

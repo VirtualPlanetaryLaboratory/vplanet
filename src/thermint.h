@@ -532,7 +532,7 @@ double fdMagMom(BODY*,int);
 double fdPresSWind(BODY*,int);
 double fdMagPauseRad(BODY*,int);
 
-void fnForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fnForceBehaviorThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
 
 

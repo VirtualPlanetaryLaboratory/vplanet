@@ -1356,32 +1356,37 @@ void VerifyEqtideDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdate
 
     // CTL Model Variables
 
-    // Xobl
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCTLDXoblDt;
-    // Yobl
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCTLDYoblDt;
-    // Zobl
-    fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCTLDZoblDt;
-    /* Rotation Rate */
-    if (control->Evolve.bForceEqSpin[iBody])
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
-    else
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
+    if (control->Evolve.iEqtideModel == CTL) {
 
+      // Xobl
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCTLDXoblDt;
+      // Yobl
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCTLDYoblDt;
+      // Zobl
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCTLDZoblDt;
+      /* Rotation Rate */
+      if (control->Evolve.bForceEqSpin[iBody])
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+      else
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
+    }
 
     // CPL Module Derivatives
 
-    // Xobl
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCPLDXoblDt;
-    // Yobl
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCPLDYoblDt;
-    // Zobl
-    fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCPLDZoblDt;
-    // Rotation Rate
-    if (control->Evolve.bForceEqSpin[iBody])
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
-    else
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
+    if (control->Evolve.iEqtideModel == CPL) {
+
+      // Xobl
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCPLDXoblDt;
+      // Yobl
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCPLDYoblDt;
+      // Zobl
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCPLDZoblDt;
+      // Rotation Rate
+      if (control->Evolve.bForceEqSpin[iBody])
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+      else
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
+    }
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -1389,22 +1394,22 @@ void VerifyEqtideDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdate
     // If the orbit is allowed to evolve, assign derivative functions
     if (!control->Evolve.bFixOrbit[iBody]) {
       // CTL Model Derivatives
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCTLDHeccDt;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCTLDKeccDt;
+      if (control->Evolve.iEqtideModel == CTL) {
+
+        fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCTLDHeccDt;
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCTLDKeccDt;
+      }
 
       // CPL Model Derivatives
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
+      if (control->Evolve.iEqtideModel == CPL) {
+
+        fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
+      }
     } else {
       // If the orbit is fixed, function return TINY
-      // CTL Model
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
-
-      // CPL Model
       fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;

@@ -1824,8 +1824,24 @@ typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 
 struct MODULE {
   int *iNumModules; /**< Number of Modules per Body */
+  int *iNumModuleMulti;
   int **iaModule; /**< Module numbers that Apply to the Body */
   int *iBitSum;
+
+  int *iEqtide;
+  int *iDistOrb;
+  int *iDistRot;
+  int *iRadheat;
+  int *iThermint;
+  int *iAtmEsc;
+  int *iStellar;
+  int *iPoise;
+  int *iBinary;
+  int *iFlare;
+  int *iGalHabit;
+  int *iDistRes;
+  int *iSpiNBody;
+  int *iEqtideStellar;
 
   /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;

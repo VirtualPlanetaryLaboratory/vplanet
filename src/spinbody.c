@@ -593,7 +593,7 @@ void Bary2OrbElems(BODY *body, int iBody){
 
       // Calculate Mean anomaly
       cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
-      if (abs(abs(cosE)-1)<1e-12) {
+      if (fabs(fabs(cosE)-1)<1e-12) {
         /* If there is numerical error such that abs(cosE)>1, then use the small
            angle approximation to find E */
         body[iBody].dEccA = (1+(body[iBody].dEccSq-1)*(cosfAngle*cosfAngle)-body[iBody].dEccSq)/(1+body[iBody].dEcc*cosfAngle);

@@ -1156,9 +1156,9 @@ void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   if(iBody < 2 || body[iBody].iBodyType != 0)
   {
     *dTmp = -1;
+  } else {
+    *dTmp = fdApproxInsol(body,iBody);
   }
-
-  *dTmp = fdApproxInsol(body,iBody);
 
   // Always in units of insolation received by Earth
   strcpy(cUnit,"F/F_Earth");

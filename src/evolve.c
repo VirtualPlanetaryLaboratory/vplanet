@@ -543,6 +543,11 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     /* Get auxiliary properties for next step -- first call
        was prior to loop. */
     PropertiesAuxiliary(body,control,update);
+
+    // If control->Evolve.bFirstStep hasn't been switched off by now, do so.
+    if (control->Evolve.bFirstStep) {
+      control->Evolve.bFirstStep = 0;
+    }
   }
 
   if (control->Io.iVerbose >= VERBPROG)

@@ -318,7 +318,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
   }
 }
 
-void VerifyDistRotDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyDistRotDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int i, j=0, iPert=0, jBody=0;
 
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
@@ -331,7 +331,7 @@ void VerifyDistRotDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
 
       fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fndDistRotExtDzDt;
     } else {
-      if (control->Evolve.iDistOrbModel==RD4) {
+      if (evolve->iDistOrbModel==RD4) {
         /* Body updates */
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
@@ -350,7 +350,7 @@ void VerifyDistRotDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
         /* y = sin(obl)*sin(pA) */
         fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndDistRotRD4DyDt;
 
-      } else if (control->Evolve.iDistOrbModel==LL2) {
+      } else if (evolve->iDistOrbModel==LL2) {
         /* Body updates */
         for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
           /* x = sin(obl)*cos(pA) */
@@ -823,7 +823,7 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
       h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+          body[jBody].dSemi/AUM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
       body[jBody].daLOrb[0] = 0.0;
       body[jBody].daLOrb[1] = 0.0;
       body[jBody].daLOrb[2] = h;
@@ -884,7 +884,7 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
       h = body[jBody].dMass/MSUN*KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN*\
-          body[jBody].dSemi/AUCM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
+          body[jBody].dSemi/AUM* (1.-(body[jBody].dHecc*body[jBody].dHecc)-(body[jBody].dKecc*body[jBody].dKecc)));
       body[jBody].daLOrb[0] = 0.0;
       body[jBody].daLOrb[1] = 0.0;
       body[jBody].daLOrb[2] = h;
@@ -1215,7 +1215,7 @@ Natural axial precession rate due to host star (alpha*cos(obliquity))
 double fndCentralTorqueR(BODY *body, int iBody) {
   double obliq, tmp;
 
-  return 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/((body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM*body[iBody].dSemi/AUCM)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fndCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
+  return 3*(KGAUSS*KGAUSS)*body[0].dMass/MSUN/((body[iBody].dSemi/AUM*body[iBody].dSemi/AUM*body[iBody].dSemi/AUM)*body[iBody].dRotRate*DAYSEC)*body[iBody].dDynEllip*fndCentralTorqueSfac(body, iBody)*body[iBody].dZobl/DAYSEC;
 }
 
 /**

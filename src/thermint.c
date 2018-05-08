@@ -1113,7 +1113,7 @@ void fnForceBehaviorThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
     body[iBody].dTCore = 0;
 }
 
-void VerifyThermintDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
   fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
 }

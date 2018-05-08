@@ -401,3 +401,50 @@ double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
     return 0.0;
   }
 }
+
+double fndUpdateSpiNBodyCoords(BODY *body,EVOLVE *evolve) {
+  int iBody;
+
+  for (iBody = 0; iBody<evolve->iNumBodies; iBody++) {
+    if (iBody != 0) {
+      // If iBody is a planet, then calculate various orbital elements
+      body[iBody].dMu = BIGG*(body[0].dMass+body[iBody].dMass);
+
+      body[iBody].dMeanL += sqrt(body[iBody].dMu/(body[iBody].dSemi*body[iBody].dSemi*body[iBody].dSemi))*evolve->dTime;
+      body[iBody].dMeanL = fmod(body[iBody].dMeanL,2*PI);
+
+      // Convert all bodies w/ orbital elements to Heliocentric
+
+      // First find osc elems from DistOrb primary variables
+      body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+      body[iBody].dLongA = atan2(body[iBody].dPinc,body[iBody].dQinc);
+      body[iBody].dInc = 2*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
+      body[iBody].dEcc = sqrt(body[iBody].dKecc*body[iBody].dKecc+body[iBody].dHecc*body[iBody].dHecc);
+
+      body[iBody].dMeanA = body[iBody].dMeanL - body[iBody].dLongP;
+    } else {
+      // If iBody is the star, zero out everything
+      body[iBody].dMu = 0;
+      body[iBody].dMeanL = 0;
+      body[iBody].dLongP = 0;
+      body[iBody].dLongA = 0;
+      body[iBody].dInc = 0;
+      body[iBody].dEcc = 0;
+      body[iBody].dMeanA = 0;
+    }
+
+    OrbElems2Helio(body, iBody);
+  }
+
+  for (iBody = 0; iBody<evolve->iNumBodies; iBody++) {
+    // Calculate Barycentric Cartesian coords:
+
+    Helio2Bary(body, evolve->iNumBodies, iBody);
+    body[iBody].dPositionX = body[iBody].dBCartPos[0]*AUM;
+    body[iBody].dPositionY = body[iBody].dBCartPos[1]*AUM;
+    body[iBody].dPositionZ = body[iBody].dBCartPos[2]*AUM;
+    body[iBody].dVelX      = body[iBody].dBCartVel[0]*AUM/DAYSEC;
+    body[iBody].dVelY      = body[iBody].dBCartVel[1]*AUM/DAYSEC;
+    body[iBody].dVelZ      = body[iBody].dBCartVel[2]*AUM/DAYSEC;
+  }
+}

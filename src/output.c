@@ -797,7 +797,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_HZLIMITDRYRUNAWAY].cName,"HZLimitDryRunaway");
   sprintf(output[OUT_HZLIMITDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
   output[OUT_HZLIMITDRYRUNAWAY].bNeg = 1;
-  output[OUT_HZLIMITDRYRUNAWAY].dNeg = 1/AUCM;
+  output[OUT_HZLIMITDRYRUNAWAY].dNeg = 1/AUM;
   output[OUT_HZLIMITDRYRUNAWAY].iNum = 1;
   output[OUT_HZLIMITDRYRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMITDRYRUNAWAY] = &WriteHZLimitDryRunaway;
@@ -976,7 +976,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ORBSEMI].cDescr,"Semi-major Axis");
   sprintf(output[OUT_ORBSEMI].cNeg,"AU");
   output[OUT_ORBSEMI].bNeg = 1;
-  output[OUT_ORBSEMI].dNeg = 1./AUCM;
+  output[OUT_ORBSEMI].dNeg = 1./AUM;
   output[OUT_ORBSEMI].iNum = 1;
   output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;

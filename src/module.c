@@ -52,14 +52,47 @@ void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
-  module->iNumModules = malloc(iNumBodies*sizeof(int));
-  module->iNumModuleMulti = malloc(iNumBodies*sizeof(int));
-  module->iaModule = malloc(iNumBodies*sizeof(int*));
-  module->iBitSum = malloc(iNumBodies*sizeof(int*));
+  module->iNumModules       = malloc(iNumBodies*sizeof(int));
+  module->iNumModuleMulti   = malloc(iNumBodies*sizeof(int));
+  module->iaModule          = malloc(iNumBodies*sizeof(int*));
+  module->iBitSum           = malloc(iNumBodies*sizeof(int*));
 
-  // Allow parameters that require no module
-  for (iBody=0;iBody<iNumBodies;iBody++)
+  module->iaEqtide          = malloc(iNumBodies*sizeof(int));
+  module->iaDistOrb         = malloc(iNumBodies*sizeof(int));
+  module->iaDistRot         = malloc(iNumBodies*sizeof(int));
+  module->iaRadheat         = malloc(iNumBodies*sizeof(int));
+  module->iaThermint        = malloc(iNumBodies*sizeof(int));
+  module->iaAtmEsc          = malloc(iNumBodies*sizeof(int));
+  module->iaStellar         = malloc(iNumBodies*sizeof(int));
+  module->iaPoise           = malloc(iNumBodies*sizeof(int));
+  module->iaBinary          = malloc(iNumBodies*sizeof(int));
+  module->iaFlare           = malloc(iNumBodies*sizeof(int));
+  module->iaGalHabit        = malloc(iNumBodies*sizeof(int));
+  module->iaDistRes         = malloc(iNumBodies*sizeof(int));
+  module->iaSpiNBody        = malloc(iNumBodies*sizeof(int));
+  module->iaEqtideStellar   = malloc(iNumBodies*sizeof(int));
+
+  // Initialize some of the recently malloc'd values in module
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    // Allow parameters that require no module
     module->iBitSum[iBody] = 1;
+
+    // Set module numbers to -1. They will be changed in FinalizeModule() if appropriate
+    module->iaEqtide[iBody]         = -1;
+    module->iaDistOrb[iBody]        = -1;
+    module->iaDistRot[iBody]        = -1;
+    module->iaRadheat[iBody]        = -1;
+    module->iaThermint[iBody]       = -1;
+    module->iaAtmEsc[iBody]         = -1;
+    module->iaStellar[iBody]        = -1;
+    module->iaPoise[iBody]          = -1;
+    module->iaBinary[iBody]         = -1;
+    module->iaFlare[iBody]          = -1;
+    module->iaGalHabit[iBody]       = -1;
+    module->iaDistRes[iBody]        = -1;
+    module->iaSpiNBody[iBody]       = -1;
+    module->iaEqtideStellar[iBody]  = -1;
+  }
 
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
@@ -345,72 +378,72 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   iModule = 0;
   if (body[iBody].bEqtide) {
     AddModuleEqtide(module,iBody,iModule);
-    module->iEqtide = &iModule;
+    module->iaEqtide[iBody] = iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
     AddModuleDistOrb(module,iBody,iModule);
-    module->iDistOrb = &iModule;
+    module->iaDistOrb[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
     AddModuleDistRot(module,iBody,iModule);
-    module->iDistRot = &iModule;
+    module->iaDistRot[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
-    module->iRadheat = &iModule;
+    module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
     AddModuleThermint(module,iBody,iModule);
-    module->iThermint = &iModule;
+    module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
     AddModuleAtmEsc(module,iBody,iModule);
-    module->iAtmEsc = &iModule;
+    module->iaAtmEsc[iBody] = iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
     AddModuleStellar(module,iBody,iModule);
-    module->iStellar = &iModule;
+    module->iaStellar[iBody] = iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
     AddModulePoise(module,iBody,iModule);
-    module->iPoise = &iModule;
+    module->iaPoise[iBody] = iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
     AddModuleBinary(module,iBody,iModule);
-    module->iBinary = &iModule;
+    module->iaBinary[iBody] = iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
-    module->iFlare = &iModule;
+    module->iaFlare[iBody] = iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
     AddModuleGalHabit(module,iBody,iModule);
-    module->iGalHabit = &iModule;
+    module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bDistRes) {
     AddModuleDistRes(module,iBody,iModule);
-    module->iDistRes = &iModule;
+    module->iaDistRes[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTRES;
   }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
-    module->iSpiNBody = &iModule;
+    module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     module->fnVerifyDerivatives[iBody][iModule] = &VerifyEqtideStellarDerivatives;
-    module->iEqtideStellar = &iModule;
+    module->iaEqtideStellar[iBody] = iModule;
     iModule++;
   }
 }
@@ -719,7 +752,7 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,F
   }
 }
 
-void VerifyEqtideStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if ((body[iBody].iBodyType == 1) && (iBody==1)) {
     fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fdSemiDtEqSt;
   }
@@ -1110,6 +1143,33 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,F
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
+void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  int iTmpBody;
+  // This gets done repeatedly, but should be only done once
+  control->Evolve.bSpiNBodyDistOrb = 0;
+
+  // Since the star will not have DistOrb called, only check for planets
+  for (iTmpBody = 1; iTmpBody < control->Evolve.iNumBodies; iTmpBody ++) {
+    if (body[iTmpBody].bSpiNBody && body[iTmpBody].bDistOrb) {
+      control->Evolve.bSpiNBodyDistOrb = 1;
+      // Start with DistOrb, not SpiNBody
+      control->Evolve.bUsingDistOrb = 1;
+      control->Evolve.bUsingSpiNBody = 0;
+
+      // This initializes Eqtide to be run with SpiNBody
+      // if (body[iTmpBody].bEqtide) {
+      //  control->Evolve.bStepEqtide = 0; // Initialize Eqtide Step as not yet taken
+      //}
+        // Set Mean Longitude so that Mean Anomaly can be tracked through DistOrb
+        body[iTmpBody].dMeanL = body[iTmpBody].dMeanA  + body[iTmpBody].dLongP;
+    }
+  }
+  if (body[iBody].bSpiNBody && body[iBody].bDistOrb) {
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxSpiNBodyDistOrb;
+    control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorSpiNBodyDistOrb;
+  }
+}
+
 
 void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
 
@@ -1126,7 +1186,9 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
      these functions as some default behavior is set if other modules aren't
      called. */
 
-  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiForce,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1161,8 +1223,12 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpinbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // Nothing to see here...
+
+}
+
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
@@ -1301,6 +1367,134 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 /*
  * Force Behavior for multi-module calculations
  */
+
+ void ForceBehaviorSpiNBodyDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+  int iBody, jBody, bOldUsingDistOrb, bOldUsingSpiNBody;
+  double dMinOrbPeriod, *dDt;
+
+
+  bOldUsingDistOrb = evolve->bUsingDistOrb;
+  bOldUsingSpiNBody = evolve->bUsingSpiNBody;
+
+  // If using DistOrb, check to see if we should be using SpiNBody
+  if (evolve->bUsingDistOrb) {
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      body[iBody].dOrbPeriod = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass));
+    }
+
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if ( (body[iBody].dEcc*body[iBody].dInc)>0.07 || (body[iBody].dEcc>0.25) || (body[iBody].dInc>.3) ) {
+        // If eccentricity and Inclination are too high, switch to SpiNBody
+        // This needs reworked to properly calculate mutual inclination
+        evolve->bUsingDistOrb = 0;
+        evolve->bUsingSpiNBody = 1;
+      }
+      for (jBody=1; jBody<evolve->iNumBodies; jBody++) {
+        if ( (jBody != iBody) && (iBody != 0) ) {
+          // If there is a resonance, use SpiNBody
+          if ( (fmod(body[iBody].dOrbPeriod, body[jBody].dOrbPeriod) < 0.01) || (fmod(body[jBody].dOrbPeriod,body[iBody].dOrbPeriod) < 0.01) ) {
+            evolve->bUsingDistOrb = 0;
+            evolve->bUsingSpiNBody = 1;
+          }
+        }
+      }
+      if ((evolve->dTime/evolve->dStopTime > 0.25) && (evolve->dTime/evolve->dStopTime < 0.75)) {
+        // This is hacked in to test model switching
+        evolve->bUsingDistOrb = 0;
+        evolve->bUsingSpiNBody = 1;
+      }
+    }
+  } else if (evolve->bUsingSpiNBody) {
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if ( evolve->dTime/evolve->dStopTime >= 0.75 ) {
+        // This is hacked in to test model switching
+        evolve->bUsingDistOrb = 1;
+        evolve->bUsingSpiNBody = 0;
+      }
+    }
+  }
+
+  if (evolve->bUsingDistOrb && !(bOldUsingDistOrb)) {
+  // If using DistOrb now, but not earlier, then change derivatives to use DistOrb
+    printf("Switching to DistOrb from SpiNBody at time %f years.\n", (evolve->dTime/YEARSEC));
+
+    // Calculate Orbital Elements:
+    if (!evolve->bFirstStep) {
+      for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+        // Need to convert from Osc Elems into Barycentric
+        Bary2OrbElems(body,iBody);
+      }
+    }
+
+    // Null all derivatives then enable just SpiNBody
+    // XXX Add module-specific NullDerivative functions: e.g. module->fnNullDerivatives[iBody][iModule]
+    fnNullDerivatives(body,evolve,module,update,fnUpdate);
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      // The star will not use DistOrb, so check before re-verifying
+      if (body[iBody].bDistOrb) {
+        module->fnVerifyDerivatives[iBody][module->iaDistOrb[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+    }
+
+  } else if (evolve->bUsingSpiNBody && !(bOldUsingSpiNBody)) {
+  // Else if using SpiNBody now, but not earlier, then change derivatives to use SpiNBody
+    printf("Switching to SpiNBody from DistOrb at time %f years.\n", (evolve->dTime/YEARSEC));
+
+    // Update SpiNBody Coords
+    fndUpdateSpiNBodyCoords(body,evolve);
+
+    fnNullDerivatives(body,evolve,module,update,fnUpdate);
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if (body[iBody].bSpiNBody) {
+        module->fnVerifyDerivatives[iBody][module->iaSpiNBody[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+    }
+  }
+
+  // Check to see if we need to take an EqTide multistep
+  if (evolve->bUsingSpiNBody) {
+    // Is it time to calculate a new Eqtide step?
+  //   if (evolve->bStepEqtide) {
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //       // Need to convert from Osc Elems into Barycentric
+  //       Bary2OrbElems(body,iBody);
+  //     }
+  //
+  //     iSpiNBody = FindFamily(FAMSPINBODY,1,evolve->baFamily,update);
+  //     iDistOrb = FindFamily(FAMDISTORB,1,evolve->baFamily,update);
+  //
+  //     // Null out all functions except EqTide
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //
+  //       // If SpiNBody is running, DistOrb pointers must already be Nulled out
+  //
+  //       // Null out SpiNBody function pointers
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionX][0] = &fdUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionY][0] = &fdUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionZ][0] = &fdUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelX][0] = &fdUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelY][0] = &fdUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fdUpdateFunctionTiny;
+  //     }
+  //
+  //     dMinOrbPeriod = HUGE;
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //       // Calculate the minimum Orbital period
+  //       if (body[iBody].dOrbPeriod < dMinOrbPeriod) {
+  //         dMinOrbPeriod = body[iBody].dOrbPeriod;
+  //       }
+  //     }
+  //
+  //     *dDt = 100*dMinOrbPeriod;
+  //
+  //     // Run a single RK4 step for Eqtide
+  //     SingleRungeKutta4Step(body,evolve,io,system,update,fnUpdate,dDt,1,iDistOrb);
+  //
+  //
+  //     evolve->bStepEqtide = 0;
+  //   }
+  }
+}
 
 void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   int iBody;

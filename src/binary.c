@@ -588,7 +588,7 @@ void fnForceBehaviorBinary(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 // Anything here?
 }
 
-void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
@@ -869,7 +869,7 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
     {
       if(io->iVerbose >= VERBPROG)
       {
-        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,a_crit/AUCM);
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUM,a_crit/AUM);
       }
       return 1;
     }
@@ -890,7 +890,7 @@ int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
     {
       if(io->iVerbose >= VERBPROG)
       {
-        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,r_crit/AUCM);
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUM,r_crit/AUM);
       }
       return 1;
     }
@@ -1258,7 +1258,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPR].cDescr,"CBP's Orbital Radius");
   output[OUT_CBPR].bNeg = 1;
   sprintf(output[OUT_CBPR].cNeg,"AU");
-  output[OUT_CBPR].dNeg = 1.0/AUCM;
+  output[OUT_CBPR].dNeg = 1.0/AUM;
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
@@ -1267,7 +1267,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
   output[OUT_CBPR0].bNeg = 1;
   sprintf(output[OUT_CBPR0].cNeg,"AU");
-  output[OUT_CBPR0].dNeg = 1.0/AUCM;
+  output[OUT_CBPR0].dNeg = 1.0/AUM;
   output[OUT_CBPR0].iNum = 1;
   output[OUT_CBPR0].iModuleBit = BINARY;
   fnWrite[OUT_CBPR0] = &WriteCBPR0Binary;
@@ -1276,7 +1276,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[])
   sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane");
   output[OUT_CBPZ].bNeg = 1;
   sprintf(output[OUT_CBPZ].cNeg,"AU");
-  output[OUT_CBPZ].dNeg = 1.0/AUCM;
+  output[OUT_CBPZ].dNeg = 1.0/AUM;
   output[OUT_CBPZ].iNum = 1;
   output[OUT_CBPZ].iModuleBit = BINARY;
   fnWrite[OUT_CBPZ] = &WriteCBPZBinary;
@@ -2282,7 +2282,7 @@ double fdApproxInsol(BODY *body, int iBody)
 void binaryDebug(BODY * body)
 {
   fprintf(stderr,"binary debug information:\n");
-  fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUCM);
+  fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUM);
   fprintf(stderr,"nk: %lf.\n",body[2].dMeanMotion*YEARSEC);
   fprintf(stderr,"n0: %lf.\n",body[2].dLL13N0*YEARSEC);
   fprintf(stderr,"nAB: %lf.\n",body[1].dMeanMotion*YEARSEC);

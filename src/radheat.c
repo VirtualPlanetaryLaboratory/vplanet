@@ -1807,7 +1807,7 @@ void RadheatExit(FILES *files,char cSpecies[16],int iFile) {
   exit(EXIT_INPUT);
 }
 
-void VerifyRadheatDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyRadheatDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   // 26Al
   // Mantle
   if (update[iBody].i26AlMan >= 0) {

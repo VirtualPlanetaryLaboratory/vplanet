@@ -329,7 +329,7 @@ void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,int iBody) {
   */
 }
 
-void VerifyFlareDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyFlareDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fdDLXUVFlareDt;

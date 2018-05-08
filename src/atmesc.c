@@ -792,7 +792,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
-void VerifyAtmEscDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
@@ -1228,7 +1228,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RGLIMIT].cDescr,"Runaway Greenhouse Semi-Major Axis");
   sprintf(output[OUT_RGLIMIT].cNeg,"AU");
   output[OUT_RGLIMIT].bNeg = 1;
-  output[OUT_RGLIMIT].dNeg = 1. / AUCM;
+  output[OUT_RGLIMIT].dNeg = 1. / AUM;
   output[OUT_RGLIMIT].iNum = 1;
   output[OUT_RGLIMIT].iModuleBit = ATMESC;
   fnWrite[OUT_RGLIMIT] = &WriteRGLimit;
@@ -1631,7 +1631,7 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
-  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUCM * AUCM);
+  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
 }
 
 double fdXUVEfficiencyBolmont2016(double dFXUV) {

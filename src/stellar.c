@@ -522,7 +522,7 @@ void fnForceBehaviorStellar(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYST
  // Nothing
 }
 
-void VerifyStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
   fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
   fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
@@ -1347,6 +1347,6 @@ void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,double *daHZLi
   for (i=0;i<6;i++) {
     seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
     // Limits are in AU, convert to meters
-    daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUCM;
+    daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUM;
   }
 }

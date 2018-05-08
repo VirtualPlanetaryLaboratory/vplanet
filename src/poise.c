@@ -1814,7 +1814,7 @@ void VerifySeasOutputTime(BODY *body,CONTROL *control,OPTIONS *options,char cFil
   }
 }
 
-void VerifyPoiseDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyPoiseDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 //  Nothing here, because entire climate simulation is ran in ForceBehavior
 
 //  if (body[iBody].bIceSheets) {

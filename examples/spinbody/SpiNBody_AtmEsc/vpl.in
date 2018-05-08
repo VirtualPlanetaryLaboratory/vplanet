@@ -9,8 +9,7 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	star.in $	# The host star
-		b.in  $		# Inner mini-Neptune
-		c.in		# Terrestrial planet at OHZ
+		b.in # $		# Inner mini-Neptune c.in		# Terrestrial planet at OHZ
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -28,20 +27,20 @@ sUnitTemp       K
 
 # Input/Output
 bDoLog		1		# Write a log file?
-iDigits		6		# Maximum number of digits to right of decimal
+iDigits		16		# Maximum number of digits to right of decimal
 dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 
 # Option names must be exact in spelling and case.
 
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
-bVarDt		1		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
-#dTimeStep	100
+bVarDt		0		# Use variable timestepping?
+#dEta		0.1		# Coefficient for variable timestepping
+dTimeStep	0.00001
 #dStopTime	2e5		# Stop time for evolution
 #dOutputTime	1e3		# Output timesteps (assuming in body files)
-dStopTime	1e4		# Stop time for evolution
-dOutputTime	1e2		# Output timesteps (assuming in body files)
+dStopTime	1e3		# Stop time for evolution
+dOutputTime	1e0		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden. 
 # That should really be documented!

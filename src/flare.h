@@ -1,4 +1,4 @@
-/***************** FLARE.H *********************** 
+/***************** FLARE.H ***********************
  *
  * Rory Barnes, Fri Mar 25 11:10:52 PDT 2016
  *
@@ -50,7 +50,7 @@ void InitializeOptionsFlare(OPTIONS*,fnReadOption[]);
 void ReadOptionsFlare(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 void PropertiesFlare(BODY*,EVOLVE*,UPDATE*,int);
-void fnForceBehaviorFlare(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fnForceBehaviorFlare(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */
 void HelpOptionsFlare(OPTIONS*);
@@ -59,7 +59,7 @@ void HelpOptionsFlare(OPTIONS*);
 
 /* Verify Functions */
 
-void VerifyFlare(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyFlare(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update functions */
 void InitializeUpdateFlare(BODY*,UPDATE*,int);
@@ -90,4 +90,4 @@ void LogBodyFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 /* FLARE functions */
 double fdLXUVFlare(BODY*,double,int);
 
-double fdDLXUVFlareDt(BODY*,SYSTEM*,int*); 
+double fdDLXUVFlareDt(BODY*,SYSTEM*,int*);

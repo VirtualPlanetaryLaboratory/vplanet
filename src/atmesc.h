@@ -64,7 +64,7 @@ int fbHaltEnvelopeGone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsAtmEsc(HALT*,int*);
 
 /* Verify Functions */
-void VerifyAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationAtmEsc(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetAtmEsc(CONTROL*,MODULE*);
 void VerifyHaltAtmEsc(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -130,7 +130,7 @@ void LogAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* AtmEsc functions */
-void fnForceBehaviorAtmEsc(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void fnPropertiesAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);

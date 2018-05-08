@@ -11,7 +11,7 @@ void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);
 void fdGetUpdateInfo(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 double fdGetTimeStep(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 
-void Evolve(BODY*,CONTROL*,FILES*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,fnIntegrate);
+void Evolve(BODY*,CONTROL*,FILES*,MODULE*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,fnIntegrate);
 
 void EulerStep(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 

@@ -14,8 +14,8 @@ dOrbPeriod  -5.0
 dEcc        0.6 #0.3
 
 # EQTIDE Parameters
-dTidalTau       3.17e-10
-#dTidalQ		1.25e5		# Tidal phase lag
+#dTidalTau       3.17e-10
+dTidalQ		1.0e6 #1.25e5		# Tidal phase lag
 dK2		0.5		# Love number of degree 2
 dMaxLockDiff    0.01
 saTidePerts	primary   	# Body name(s) of tidal perturbers

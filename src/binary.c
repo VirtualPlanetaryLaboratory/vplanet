@@ -488,7 +488,8 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
  * are assured to be stars in binary, hence binary.  This was all done intentionally
  * to make it more difficult to mess up the binary equations.
  */
-void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+
+void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPR][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
@@ -496,10 +497,9 @@ void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
 
   update[iBody].pdCBPRBinary = &update[iBody].daDerivProc[update[iBody].iCBPR][0];
-  fnUpdate[iBody][update[iBody].iCBPR][0] = &fndCBPRBinary;
 }
 
-void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPZ][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPZ][0] = 1;
@@ -507,10 +507,9 @@ void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateV
   update[iBody].iaBody[update[iBody].iCBPZ][0][0] = iBody;
 
   update[iBody].pdCBPZBinary = &update[iBody].daDerivProc[update[iBody].iCBPZ][0];
-  fnUpdate[iBody][update[iBody].iCBPZ][0] = &fndCBPZBinary;
 }
 
-void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPPhi][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPPhi][0] = 1;
@@ -518,10 +517,9 @@ void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdat
   update[iBody].iaBody[update[iBody].iCBPPhi][0][0] = iBody;
 
   update[iBody].pdCBPPhiBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhi][0];
-  fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fndCBPPhiBinary;
 }
 
-void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPRDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPRDot][0] = 1;
@@ -529,10 +527,9 @@ void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].iaBody[update[iBody].iCBPRDot][0][0] = iBody;
 
   update[iBody].pdCBPRDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPRDot][0];
-  fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fndCBPRDotBinary;
 }
 
-void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPZDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPZDot][0] = 1;
@@ -540,10 +537,9 @@ void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpda
   update[iBody].iaBody[update[iBody].iCBPZDot][0][0] = iBody;
 
   update[iBody].pdCBPZDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPZDot][0];
-  fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fndCBPZDotBinary;
 }
 
-void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 0;
   update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] = 1;
@@ -551,7 +547,6 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,fnUp
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0][0] = iBody;
 
   update[iBody].pdCBPPhiDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhiDot][0];
-  fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndCBPPhiDotBinary;
 }
 
 void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
@@ -587,11 +582,28 @@ void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
 
 }
 
-/** Anything here? No! */
-void fnForceBehaviorBinary(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule){
+void fnForceBehaviorBinary(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule){
+// Anything here?
 }
 
-void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  if(body[iBody].iBodyType == 0) // Planets are added to matrix
+  {
+    // Add equations to the matrix
+    if(body[iBody].bBinaryUseMatrix)
+    {
+      fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
+      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fdCBPZBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fdCBPPhiBinary;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fdCBPRDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fdCBPZDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
+    }
+  }
+}
+
+void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
   // If binary is being used, ALL bodies must have correct type
   if(iBody < 2) { // Primary or secondary star
@@ -673,12 +685,12 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     // Add equations to the matrix
     if(body[iBody].bBinaryUseMatrix) {
       // Call verifies to properly set up eqns in matrix
-      VerifyCBPR(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPPhi(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPRDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPZDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+      VerifyCBPR(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPZ(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPPhi(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPRDot(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPZDot(body,options,update,body[iBody].dAge,iBody);
+      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,iBody);
     }
 
     // Init parameters needed for subsequent cbp motion
@@ -1037,9 +1049,8 @@ void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   // Make sure that this is a planet, if not, -1
   if(iBody < 2 || body[iBody].iBodyType != 0) {
     *dTmp = -1;
-  }
-  else{
-    *dTmp = fndApproxInsol(body,iBody);
+  } else {
+    *dTmp = fdApproxInsol(body,iBody);
   }
 
   // Always in units of insolation received by Earth
@@ -1195,6 +1206,7 @@ void AddModuleBinary(MODULE *module,int iBody,int iModule) {
   module->fnReadOptions[iBody][iModule] = &ReadOptionsBinary;
   module->fnLogBody[iBody][iModule] = &LogBodyBinary;
   module->fnVerify[iBody][iModule] = &VerifyBinary;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyBinaryDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltBinary;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;

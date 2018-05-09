@@ -29,7 +29,7 @@ void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
 
   iGravPerts = src[iBody].iGravPerts;
   for (jBody=0;jBody<iGravPerts;jBody++) {
-    dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
+    //dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
     dest[iBody].dDistanceX[jBody]  = src[iBody].dDistanceX[jBody];
     dest[iBody].dDistanceY[jBody]  = src[iBody].dDistanceY[jBody];
     dest[iBody].dDistanceZ[jBody]  = src[iBody].dDistanceZ[jBody];
@@ -46,7 +46,7 @@ void InitializeUpdateTmpBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,
   control->Evolve.tmpBody[iBody].dDistanceZ  = malloc(control->Evolve.iNumBodies*sizeof(double));
 
   for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
-    body[iBody].dDistance3[jBody] = 0;
+    //body[iBody].dDistance3[jBody] = 0;
     body[iBody].dDistanceX[jBody] = 0;
     body[iBody].dDistanceY[jBody] = 0;
     body[iBody].dDistanceZ[jBody] = 0;
@@ -277,13 +277,13 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
   int iTmpBody = 0,jBody;
   if (body[iBody].bSpiNBody){
     body[iBody].iGravPerts = control->Evolve.iNumBodies; //All bodies except the body itself are perturbers
-    body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
+    //body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceX = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceY = malloc(control->Evolve.iNumBodies*sizeof(double));
     body[iBody].dDistanceZ = malloc(control->Evolve.iNumBodies*sizeof(double));
 
     for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
-      body[iBody].dDistance3[jBody] = 0;
+      //body[iBody].dDistance3[jBody] = 0;
       body[iBody].dDistanceX[jBody] = 0;
       body[iBody].dDistanceY[jBody] = 0;
       body[iBody].dDistanceZ[jBody] = 0;
@@ -343,7 +343,7 @@ void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody) {
 }
 
 //======================== Verify Variable Functions ===========================
-void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionX][0] = 1;
@@ -351,10 +351,9 @@ void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionX][0][0] = iBody;
 
   update[iBody].pdDPositionX = &update[iBody].daDerivProc[update[iBody].iPositionX][0];
-  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
 }
 
-void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionY][0] = 1;
@@ -362,10 +361,9 @@ void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionY][0][0] = iBody;
 
   update[iBody].pdDPositionY = &update[iBody].daDerivProc[update[iBody].iPositionY][0];
-  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
 }
 
-void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionZ][0] = 1;
@@ -373,10 +371,9 @@ void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionZ][0][0] = iBody;
 
   update[iBody].pdDPositionZ = &update[iBody].daDerivProc[update[iBody].iPositionZ][0];
-  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
 }
 
-void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelX][0] = 1;
@@ -384,10 +381,9 @@ void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelX][0][0] = iBody;
 
   update[iBody].pdDVelX = &update[iBody].daDerivProc[update[iBody].iVelX][0];
-  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
 }
 
-void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelY][0] = 1;
@@ -395,10 +391,9 @@ void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelY][0][0] = iBody;
 
   update[iBody].pdDVelY = &update[iBody].daDerivProc[update[iBody].iVelY][0];
-  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
 }
 
-void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelZ][0] = 1;
@@ -406,7 +401,6 @@ void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelZ][0][0] = iBody;
 
   update[iBody].pdDVelZ = &update[iBody].daDerivProc[update[iBody].iVelZ][0];
-  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 }
 
 void VerifyGM(BODY *body,CONTROL *control) {
@@ -415,21 +409,30 @@ void VerifyGM(BODY *body,CONTROL *control) {
   for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
     body[iBody].dGM = BIGG*body[iBody].dMass;
   }
+}
+
+void VerifySpiNBodyDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
+  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
+  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
+  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
+  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
+  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 
 }
 
-void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
-  VerifyVelX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyVelX(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelY(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelZ(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionX(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionY(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionZ(body,options,update,body[iBody].dAge,iBody);
 
   //VerifyGM(body,control);
 
-  control->fnForceBehavior[iBody][iModule]   = &ForceBehaviorSpiNBody;
+  control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorSpiNBody;
   control->fnPropsAux[iBody][iModule]        = &PropertiesSpiNBody;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopySpiNBody;
 }
@@ -590,7 +593,7 @@ void Bary2OrbElems(BODY *body, int iBody){
 
       // Calculate Mean anomaly
       cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
-      if (abs(abs(cosE)-1)<1e-12) {
+      if (fabs(fabs(cosE)-1)<1e-12) {
         /* If there is numerical error such that abs(cosE)>1, then use the small
            angle approximation to find E */
         body[iBody].dEccA = (1+(body[iBody].dEccSq-1)*(cosfAngle*cosfAngle)-body[iBody].dEccSq)/(1+body[iBody].dEcc*cosfAngle);
@@ -848,15 +851,17 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 //============================ End Writing Functions ===========================
 
-void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
 }
 
 void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   int jBody,iNumBodies;
-  double DistanceX,DistanceY,DistanceZ;
+  double DistanceX,DistanceY,DistanceZ,Distance3;
 
   iNumBodies = evolve->iNumBodies;
+  body[iBody].dGM = BIGG*body[iBody].dMass;
+
   for (jBody=0; jBody<iNumBodies; jBody++) {
     // Calculate the cube of the distance to each perturbing body. Used in Vx, Vy, and Vz calculations.
     if (iBody<jBody) {
@@ -864,15 +869,19 @@ void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       DistanceX = body[jBody].dPositionX-body[iBody].dPositionX;
       DistanceY = body[jBody].dPositionY-body[iBody].dPositionY;
       DistanceZ = body[jBody].dPositionZ-body[iBody].dPositionZ;
-      body[iBody].dDistance3[jBody] = sqrt(DistanceX*DistanceX
+      /* body[iBody].dDistance3[jBody] = sqrt(DistanceX*DistanceX
+            + DistanceY*DistanceY
+            + DistanceZ*DistanceZ); */
+      Distance3 = sqrt(DistanceX*DistanceX
             + DistanceY*DistanceY
             + DistanceZ*DistanceZ);
-      body[iBody].dDistance3[jBody] = body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceX[jBody] = DistanceX/body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceY[jBody] = DistanceY/body[iBody].dDistance3[jBody];
-      body[iBody].dDistanceZ[jBody] = DistanceZ/body[iBody].dDistance3[jBody];
+      // body[iBody].dDistance3[jBody] = 1/(body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]);
+      Distance3 = 1/(Distance3*Distance3*Distance3);
+      body[iBody].dDistanceX[jBody] = DistanceX*Distance3;
+      body[iBody].dDistanceY[jBody] = DistanceY*Distance3;
+      body[iBody].dDistanceZ[jBody] = DistanceZ*Distance3;
 
-      body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
+      //body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
       body[jBody].dDistanceX[iBody] = -body[iBody].dDistanceX[jBody];
       body[jBody].dDistanceY[iBody] = -body[iBody].dDistanceY[jBody];
       body[jBody].dDistanceZ[iBody] = -body[iBody].dDistanceZ[jBody];
@@ -948,6 +957,7 @@ void AddModuleSpiNBody(MODULE *module,int iBody,int iModule) {
   module->fnLogBody[iBody][iModule] = &LogBodySpiNBody;
   module->fnReadOptions[iBody][iModule] = &ReadOptionsSpiNBody;
   module->fnVerify[iBody][iModule] = &VerifySpiNBody;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifySpiNBodyDerivatives;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodySpiNBody;
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateSpiNBody;
@@ -985,7 +995,7 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumX = dSumX + BIGG*body[jBody].dMass*(body[jBody].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[jBody];
-      dSumX = dSumX + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceX[jBody];
+      dSumX = dSumX + body[jBody].dGM*body[iaBody[0]].dDistanceX[jBody];
     }
   }
 
@@ -1000,7 +1010,7 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumY = dSumY + BIGG*body[jBody].dMass*(body[jBody].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[jBody];
-      dSumY = dSumY + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceY[jBody];
+      dSumY = dSumY + body[jBody].dGM*body[iaBody[0]].dDistanceY[jBody];
     }
   }
 
@@ -1015,7 +1025,7 @@ double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   for(jBody=0; jBody<iGravPerts; jBody++) {
     if (iaBody[0]!=jBody) {
       //dSumZ = dSumZ + BIGG*body[jBody].dMass*(body[jBody].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[jBody];
-      dSumZ = dSumZ + BIGG*body[jBody].dMass*body[iaBody[0]].dDistanceZ[jBody];
+      dSumZ = dSumZ + body[jBody].dGM*body[iaBody[0]].dDistanceZ[jBody];
     }
   }
 

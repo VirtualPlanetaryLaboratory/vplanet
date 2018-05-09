@@ -91,8 +91,8 @@ void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
 /* Verify Functions */
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
-void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int,fnUpdateVariable***);
-void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
+void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
 
 /* Update Functions */
@@ -211,7 +211,7 @@ void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY*,int,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /******************** CPL Functions ********************/
 

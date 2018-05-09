@@ -62,7 +62,7 @@ int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsStellar(HALT*,int*);
 
 /* Verify Functions */
-void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetStellar(CONTROL*,MODULE*);
 void fnPropertiesStellar(BODY*,EVOLVE*,UPDATE*,int);
@@ -114,7 +114,7 @@ void LogStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Stellar functions */
-void fnForceBehaviorStellar(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fnForceBehaviorStellar(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdLuminosity(BODY*,SYSTEM*,int*);
 double fdLuminosityFunctionBaraffe(double, double);
 double fdLuminosityFunctionProximaCen(double,double);

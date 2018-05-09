@@ -1,4 +1,4 @@
-/***************** DISTROT.H *********************** 
+/***************** DISTROT.H ***********************
  *
  * Russell Deitrick, July 7, 2015
  *
@@ -32,7 +32,7 @@ void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
 
 /* Verify Functions */
-void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -90,7 +90,7 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRot Functions */
 void PropertiesDistRot(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistRot(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */

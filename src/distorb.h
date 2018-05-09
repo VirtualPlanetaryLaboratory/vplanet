@@ -57,7 +57,7 @@ void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 
 /* Verify Functions */
 void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -156,7 +156,7 @@ void osc2cart(BODY*, int);
 void cart2osc(BODY*, int);
 
 void PropsAuxDistOrb(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fndXinit(BODY*,int);
 double fndYinit(BODY*,int);

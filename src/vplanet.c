@@ -129,7 +129,7 @@ int main(int argc,char *argv[]) {
   /* Perform evolution */
 
   if (control.Evolve.bDoForward || control.Evolve.bDoBackward) {
-    Evolve(body,&control,&files,output,&system,update,fnUpdate,fnWrite,fnOneStep);
+    Evolve(body,&control,&files,&module,output,&system,update,fnUpdate,fnWrite,fnOneStep);
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {

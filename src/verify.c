@@ -560,12 +560,16 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
+      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,iBody,iModule);
     }
 
     VerifyInterior(body,options,iBody);
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
+
+    for (iModule=0;iModule<module->iNumModuleMulti[iBody];iModule++) {
+      module->fnVerifyDerivatives[iBody][iModule](body,control,update,*fnUpdate,iBody);
+    }
 
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {

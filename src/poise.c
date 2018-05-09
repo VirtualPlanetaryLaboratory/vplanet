@@ -1814,8 +1814,18 @@ void VerifySeasOutputTime(BODY *body,CONTROL *control,OPTIONS *options,char cFil
   }
 }
 
+void VerifyPoiseDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+//  Nothing here, because entire climate simulation is ran in ForceBehavior
 
-void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+//  if (body[iBody].bIceSheets) {
+//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+//       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fdPoiseDIceMassDtDepMelt;
+//       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = &fdPoiseDIceMassDtFlow;
+//     }
+//  }
+}
+
+void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int i, j=0, iLat=0;
 
   VerifyAlbedo(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
@@ -2932,6 +2942,7 @@ void AddModulePoise(MODULE *module,int iBody,int iModule) {
 
   module->fnReadOptions[iBody][iModule] = &ReadOptionsPoise;
   module->fnVerify[iBody][iModule] = &VerifyPoise;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyPoiseDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltPoise;
 
   module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
@@ -3140,7 +3151,7 @@ void AreaIceCovered(BODY *body, int iBody) {
   body[iBody].dAreaIceCov /= body[iBody].iNumLats;
 }
 
-void ForceBehaviorPoise(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
 
   // XXX Conflicts here. And there should be no reference to pizza in POISE

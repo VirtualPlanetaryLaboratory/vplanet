@@ -590,7 +590,57 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
   }
 }
 
-void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyDistOrbDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iPert;
+  if (control->Evolve.iDistOrbModel == RD4) {
+    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+
+    /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
+    if (iBody >= 1) {
+      /* Body updates */
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        /* h = Ecc*sin(LongP) */
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbRD4DhDt;
+
+        /* k = Ecc*cos(LongP) */
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbRD4DkDt;
+
+        /* p = s*sin(LongA) */
+        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndDistOrbRD4DpDt;
+
+        /* q = s*cos(LongA) */
+        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbRD4DqDt;
+      }
+      if (body[iBody].bGRCorr) {
+        /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] = &fndApsidalGRDhDt;
+
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[body[iBody].iGravPerts]] = &fndApsidalGRDkDt;
+      }
+    }
+  } else if (control->Evolve.iDistOrbModel == LL2) {
+    body[iBody].iGravPerts = control->Evolve.iNumBodies - 1;
+    VerifyPerturbersDistOrbLL2(body,control->Evolve.iNumBodies,iBody);
+
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        if (body[iBody].bEqtide) {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbLL2DhDt;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbLL2DkDt;
+        } else {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbLL2Hecc;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbLL2Kecc;
+        }
+
+        /* p = s*sin(LongA) */
+        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndDistOrbLL2Pinc;
+
+        /* q = s*cos(LongA) */
+        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbLL2Qinc;
+    }
+  }
+}
+
+void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int i, j=0, iPert=0, jBody=0,kBody;
 
   VerifyOrbitModel(control,files,options);
@@ -731,19 +781,15 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
         /* h = Ecc*sin(LongP) */
         InitializeHeccDistOrbRD4(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbRD4DhDt;
 
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbRD4(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbRD4DkDt;
 
         /* p = s*sin(LongA) */
         InitializePincDistOrbRD4(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndDistOrbRD4DpDt;
 
         /* q = s*cos(LongA) */
         InitializeQincDistOrbRD4(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbRD4DqDt;
 
         jBody = body[iBody].iaGravPerts[iPert];
 
@@ -774,10 +820,8 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       if (body[iBody].bGRCorr) {
         /* Body updates for general relativistic correction, indexing star as a "perturber"*/
         InitializeHeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] = &fndApsidalGRDhDt;
 
         InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
-        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[body[iBody].iGravPerts]] = &fndApsidalGRDkDt;
       }
     }
   } else if (control->Evolve.iDistOrbModel == LL2) {
@@ -916,21 +960,12 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
         /* k = Ecc*cos(LongP) */
         InitializeKeccDistOrbLL2(body,update,iBody,iPert);
-        if (body[iBody].bEqtide) {
-          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbLL2DhDt;
-          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbLL2DkDt;
-        } else {
-          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndDistOrbLL2Hecc;
-          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndDistOrbLL2Kecc;
-        }
 
         /* p = s*sin(LongA) */
         InitializePincDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndDistOrbLL2Pinc;
 
         /* q = s*cos(LongA) */
         InitializeQincDistOrbLL2(body,update,iBody,iPert);
-        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbLL2Qinc;
     }
 
     // if (body[iBody].bGRCorr) {
@@ -1564,6 +1599,7 @@ void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
   module->fnReadOptions[iBody][iModule] = &ReadOptionsDistOrb;
   module->fnVerify[iBody][iModule] = &VerifyDistOrb;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyDistOrbDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistOrb;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistOrb;
@@ -1594,7 +1630,7 @@ void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 
-void ForceBehaviorDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void ForceBehaviorDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 }
 
 /* Factorial function. Nuff sed. */

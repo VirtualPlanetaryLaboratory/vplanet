@@ -593,12 +593,12 @@ void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdate
     // Add equations to the matrix
     if(body[iBody].bBinaryUseMatrix)
     {
-      fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
-      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fdCBPZBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fdCBPPhiBinary;
-      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fdCBPRDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fdCBPZDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPR][0] = &fndCBPRBinary;
+      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fndCBPZBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fndCBPPhiBinary;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fndCBPRDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fndCBPZDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndCBPPhiDotBinary;
     }
   }
 }
@@ -1050,7 +1050,7 @@ void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   if(iBody < 2 || body[iBody].iBodyType != 0) {
     *dTmp = -1;
   } else {
-    *dTmp = fdApproxInsol(body,iBody);
+    *dTmp = fndApproxInsol(body,iBody);
   }
 
   // Always in units of insolation received by Earth

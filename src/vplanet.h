@@ -1641,7 +1641,7 @@ struct CONTROL {
 
   int bOrbiters; /**< Does this simulation have orbiting bodies? */
 
-} CONTROL;
+};
 
 /* The INFILE struct contains all the information
  * regarding the files that read in. */

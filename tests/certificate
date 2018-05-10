@@ -9,8 +9,8 @@ import sys
 
 certificate = \
 '''
-All tests passed! If you are submitting a pull request, copy and paste
-this certificate into the ``Description`` box:
+\033[1mAll tests passed! If you are submitting a pull request, copy and paste
+this certificate into the ``Description`` box:\033[0m
 
 ![Commit](https://img.shields.io/badge/commit-%s-lightgrey.svg)
 ![Branch](https://img.shields.io/badge/branch-%s-lightgrey.svg)
@@ -19,8 +19,8 @@ this certificate into the ``Description`` box:
 
 certificate_bad = \
 '''
-One ore more tests failed. If you still want to submit a pull request, copy and paste
-this certificate into the ``Description`` box:
+\033[1mOne ore more tests failed. If you still want to submit a pull request, copy and paste
+this certificate into the ``Description`` box:\033[0m
 
 ![Commit](https://img.shields.io/badge/commit-%s-lightgrey.svg)
 ![Branch](https://img.shields.io/badge/branch-%s-lightgrey.svg)

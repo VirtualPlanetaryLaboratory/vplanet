@@ -6,13 +6,14 @@ saModules     atmesc                      # Modules to apply, exact spelling req
 dMass         -10.0                        # Mass, negative -> Earth masses
 dRadius       -1.5                        # Radius, negative -> Earth radii
 dRotPeriod    -10                         # Rotation period, negative -> days
-dObliquity    23.5      
+dObliquity    23.5
 dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)
 
 # ATMESC Properties
 dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-dSurfWaterMass            -10.0           # Initial surface water (Earth oceans) 
+dAtmXAbsEffH  0.1                         # Atmospheric XUV absorption efficiency for H (epsilon)
+dAtmXAbsEffH2O  0.1                       # Atmospheric XUV absorption efficiency for H2O (epsilon)
+dSurfWaterMass            -10.0           # Initial surface water (Earth oceans)
 dEnvelopeMass             -0.0015          # Initial envelope mass (Earth masses)
 bHaltSurfaceDesiccated    0               # Halt when dry?
 bHaltEnvelopeGone         0               # Halt when evaporated?

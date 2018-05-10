@@ -14,6 +14,9 @@ class CustomInstall(install):
     def run(self):
         """Run the install."""
         subprocess.check_call("make", cwd=".", shell=True)
+        shutil.move(os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 'vplanet'),
+            os.path.join(self.script_dir, 'vplanet'))
         super().run()
 
 class CustomDevelop(develop):

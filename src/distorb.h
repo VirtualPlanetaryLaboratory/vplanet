@@ -1,4 +1,4 @@
-/***************** DISTORB.H *********************** 
+/***************** DISTORB.H ***********************
  *
  * Russell Deitrick, June 24, 2015
  *
@@ -57,7 +57,7 @@ void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 
 /* Verify Functions */
 void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -160,7 +160,7 @@ void osc2cart(BODY*, int);
 void cart2osc(BODY*, int);
 
 void PropsAuxDistOrb(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistOrb(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fndXinit(BODY*,int);
 double fndYinit(BODY*,int);
@@ -245,4 +245,3 @@ double fndDistOrbLL2DhDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DkDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DpDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DqDt(BODY*, SYSTEM*, int*);
-

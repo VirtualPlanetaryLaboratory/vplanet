@@ -790,7 +790,7 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
   }
 }
 
-void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody, fnUpdateVariable ***fnUpdate) {
+void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
 
   if(control->Evolve.iEqtideModel == CPL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
@@ -799,7 +799,6 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
 
     update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
   }
   else if(control->Evolve.iEqtideModel == CTL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
@@ -808,7 +807,6 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
 
     update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCTLEqtide;
   }
   else{
     fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
@@ -816,7 +814,7 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
   }
 }
 
-void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody,fnUpdateVariable*** fnUpdate) {
+void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody) {
   double dMeanMotion;
   int iOrbiter;
 
@@ -954,7 +952,7 @@ void InitializeSemiEqtide(BODY *body,UPDATE *update,int iBody) {
   update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqtide][1]=0;
 }
 
-void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
   /* CTL model, but Q's set? */
@@ -1048,22 +1046,15 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
     // Xobl
     InitializeXoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCTLDXoblDt;
 
     // Yobl
     InitializeYoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCTLDYoblDt;
 
     // Zobl
     InitializeZoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCTLDZoblDt;
 
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
-    if (control->Evolve.bForceEqSpin[iBody])
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
-    else
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -1072,19 +1063,6 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     InitializeSemiEqtide(body,update,iBody);
     InitializeHeccEqtide(body,update,iBody);
     InitializeKeccEqtide(body,update,iBody);
-
-    // If the orbit is allowed to evolve, assign derivative functions
-    if (!control->Evolve.bFixOrbit[iBody]) {
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCTLDHeccDt;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCTLDKeccDt;
-
-    } else {
-      // If the orbit is fixed, function return TINY
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
-    }
   }
 
   /* Malloc body memory
@@ -1117,7 +1095,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   output[OUT_TIDALQ].iNum = 0;
 }
 
-void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
   //XXX Is dEccSq set here?
@@ -1166,22 +1144,15 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
     // Xobl
     InitializeXoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCPLDXoblDt;
 
     // Yobl
     InitializeYoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCPLDYoblDt;
 
     // Zobl
     InitializeZoblEqtide(body,update,iBody,iPert);
-    fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCPLDZoblDt;
 
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
-    if (control->Evolve.bForceEqSpin[iBody])
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
-    else
-      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -1190,19 +1161,6 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     InitializeSemiEqtide(body,update,iBody);
     InitializeHeccEqtide(body,update,iBody);
     InitializeKeccEqtide(body,update,iBody);
-
-    // If the orbit is allowed to evolve, assign derivative functions
-    if (!control->Evolve.bFixOrbit[iBody]) {
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
-
-    } else {
-      // If the orbit is fixed, function return TINY
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
-    }
   }
 
   /* Malloc body memory
@@ -1381,8 +1339,86 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
   }
 }
 
+void VerifyEqtideDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iPert;
+  if(control->Evolve.iEqtideModel == CPL) {
+    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
+  }
+  else if(control->Evolve.iEqtideModel == CTL) {
+    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCTLEqtide;
+  }
+  else{
+    fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
+    exit(1);
+  }
 
-void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+
+    // CTL Model Variables
+
+    if (control->Evolve.iEqtideModel == CTL) {
+
+      // Xobl
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCTLDXoblDt;
+      // Yobl
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCTLDYoblDt;
+      // Zobl
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCTLDZoblDt;
+      /* Rotation Rate */
+      if (control->Evolve.bForceEqSpin[iBody])
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+      else
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
+    }
+
+    // CPL Module Derivatives
+
+    if (control->Evolve.iEqtideModel == CPL) {
+
+      // Xobl
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fdCPLDXoblDt;
+      // Yobl
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fdCPLDYoblDt;
+      // Zobl
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCPLDZoblDt;
+      // Rotation Rate
+      if (control->Evolve.bForceEqSpin[iBody])
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+      else
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
+    }
+  }
+
+  /* Is this the secondary body, and hence we assign da/dt and de/dt? */
+  if (!bPrimary(body,iBody)) {
+    // If the orbit is allowed to evolve, assign derivative functions
+    if (!control->Evolve.bFixOrbit[iBody]) {
+      // CTL Model Derivatives
+      if (control->Evolve.iEqtideModel == CTL) {
+
+        fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCTLDsemiDt;
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCTLDHeccDt;
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCTLDKeccDt;
+      }
+
+      // CPL Model Derivatives
+      if (control->Evolve.iEqtideModel == CPL) {
+
+        fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdCPLDsemiDt;
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
+      }
+    } else {
+      // If the orbit is fixed, function return TINY
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
+    }
+  }
+
+}
+
+void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
   VerifyTideModel(control,files,options);
 
@@ -1390,16 +1426,16 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   VerifyPerturbersEqtide(body,files,options,update,control->Evolve.iNumBodies,iBody);
 
-  VerifyRotationEqtide(body,control,update,options,files->Infile[iBody+1].cIn,iBody, fnUpdate);
+  VerifyRotationEqtide(body,control,update,options,files->Infile[iBody+1].cIn,iBody);
 
   /* Verify input set correctly and assign update functions */
   if (control->Evolve.iEqtideModel == CTL)
-    VerifyCTL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
+    VerifyCTL(body,control,files,options,output,update,iBody,iModule);
 
   if (control->Evolve.iEqtideModel == CPL)
-    VerifyCPL(body,control,files,options,output,update,fnUpdate,iBody,iModule);
+    VerifyCPL(body,control,files,options,output,update,iBody,iModule);
 
-  VerifyLostEngEqtide(body,update,control,options,iBody,fnUpdate);
+  VerifyLostEngEqtide(body,update,control,options,iBody);
 
   body[iBody].dTidalZ=malloc(control->Evolve.iNumBodies*sizeof(double));
   body[iBody].dTidalChi=malloc(control->Evolve.iNumBodies*sizeof(double));
@@ -2655,6 +2691,7 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
 
   module->fnReadOptions[iBody][iModule] = &ReadOptionsEqtide;
   module->fnVerify[iBody][iModule] = &VerifyEqtide;
+  module->fnVerifyDerivatives[iBody][iModule] = &VerifyEqtideDerivatives;
   module->fnVerifyHalt[iBody][iModule] = &VerifyHaltEqtide;
 
   module->fnInitializeBody[iBody][iModule] = &InitializeBodyEqtide;
@@ -2687,7 +2724,7 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
 
-int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, fnUpdateVariable*** fnUpdate, UPDATE *update) {
+int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
   double dEqRate,dDiff;
 
   dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
@@ -2855,7 +2892,7 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
  * stored in the CONTROL struct.
 */
 
-void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iOrbiter;
   if (body[iBody].iTidePerts == 1) {
     /* Don't check for tidal locking if more than 1 tidal perturber. Maybe
@@ -2872,7 +2909,7 @@ void ForceBehaviorEqtide(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE 
     /* Tidally Locked? */
     else {
       // Is the body now tidally locked?
-      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,fnUpdate,update);
+      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update);
       // If so, reset the function pointer to return TINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */

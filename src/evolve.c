@@ -454,7 +454,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
  * Evolution Subroutine
  */
 
-void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
+void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
 /* Master evolution routine that controls the simulation integration. */
   int iDir,iBody,iModule,nSteps; // Dummy counting variables
   double dTimeOut; // When to output next
@@ -506,10 +506,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM *syst
 
     for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-        control->fnForceBehavior[iBody][iModule](body,&control->Evolve,&control->Io,system,update,fnUpdate,iBody,iModule);
+        control->fnForceBehavior[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-        control->fnForceBehaviorMulti[iBody][iModule](body,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
     }
 
     /* Halt? */

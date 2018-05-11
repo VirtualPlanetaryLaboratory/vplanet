@@ -16,14 +16,8 @@ optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3
 
 test:
-	@echo 'Compiling vplanet...'
 	-gcc -o vplanet src/*.c -lm
-	@echo 'Running vtest...'
-	@if nosetests -s -v -w tests; then\
-		tests/certificate --pass;\
-	else\
-		tests/certificate --fail;\
-	fi
+	py.test -s tests
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

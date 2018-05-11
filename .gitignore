@@ -24,6 +24,7 @@ vplot_config.py
 *.track1
 *.txt
 proxcen.pdf
+vplanet.egg-info
 
 # Documentation
 docs/.build

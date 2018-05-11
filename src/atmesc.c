@@ -767,9 +767,9 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
         // mcross >= mo
         double num = 1. + (XO / (1. - XO)) * QOH * QOH;
         double den = 1. + (XO / (1. - XO)) * QOH;
-        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * THERMT * body[iBody].dFHRef) / (1 + XO * (QOH - 1) * BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * THERMT * body[iBody].dFHRef) / ((1 + XO * (QOH - 1)) * BDIFF * g);
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-        FH = body[iBody].dFHRef * pow(1. + (XO / (1. + XO)) * QOH * rat, -1);
+        FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
         body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
 
       }
@@ -1112,10 +1112,12 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
+  dTmp = 0;
+  /* BROKEN!!!!
   dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;
   *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
-
+  */
 }
 
 void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1383,8 +1385,9 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
 
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
-    if (output[iOut].iNum > 0)
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
   }
 
   // TODO: Log this the standard way

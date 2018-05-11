@@ -11,7 +11,7 @@ dRadGyra      0.27 #0.45             # Radius of gyration (moment of inertia con
 
 # Orbital properties
 dOrbPeriod  -5.0
-dEcc        0.6 #0.3
+dEcc        0.3 #0.6
 
 # EQTIDE Parameters
 #dTidalTau       3.17e-10

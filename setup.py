@@ -26,15 +26,11 @@ class CustomDevelop(develop):
         """Run the install."""
         try:
             super().run()
-            try:
-                import vplot
-            except ImportError:
-                if os.path.exists("vplot"):
-                    os.rmdir("vplot")
-                    import vplot
-                else:
-                    raise ImportError("Please install `vplot`.")
+            if os.path.exists("vplot"):
+                os.rmdir("vplot")
             subprocess.check_call("make test", cwd=".", shell=True)
+            if os.path.exists(os.path.join(self.script_dir, 'vplanet')):
+                os.remove(os.path.join(self.script_dir, 'vplanet'))
             os.symlink(os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'vplanet'),
                 os.path.join(self.script_dir, 'vplanet'))

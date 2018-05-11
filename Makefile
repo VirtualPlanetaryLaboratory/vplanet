@@ -17,7 +17,7 @@ optprof:
 
 test:
 	-gcc -o vplanet src/*.c -lm
-	nosetests -s -v -w tests
+	py.test -s tests
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

@@ -3,7 +3,6 @@ from setuptools import setup
 from setuptools.command.install import install
 from setuptools.command.develop import develop
 import subprocess
-import shutil
 import os
 __version__ = '0.1.0'
 
@@ -13,11 +12,12 @@ class CustomInstall(install):
 
     def run(self):
         """Run the install."""
+        super().run()
         subprocess.check_call("make", cwd=".", shell=True)
-        shutil.move(os.path.join(
+        os.symlink(os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'vplanet'),
             os.path.join(self.script_dir, 'vplanet'))
-        super().run()
+
 
 class CustomDevelop(develop):
     """Custom handler for the 'develop' command."""
@@ -25,11 +25,19 @@ class CustomDevelop(develop):
     def run(self):
         """Run the install."""
         try:
+            super().run()
+            try:
+                import vplot
+            except ImportError:
+                if os.path.exists("vplot"):
+                    os.rmdir("vplot")
+                    import vplot
+                else:
+                    raise ImportError("Please install `vplot`.")
             subprocess.check_call("make test", cwd=".", shell=True)
-            shutil.move(os.path.join(
+            os.symlink(os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'vplanet'),
                 os.path.join(self.script_dir, 'vplanet'))
-            super().run()
             subprocess.check_call("tests/certificate --pass", cwd=".",
                                   shell=True)
         except subprocess.CalledProcessError:

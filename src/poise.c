@@ -3010,92 +3010,30 @@ void Snowball(BODY *body, int iBody) {
   }
 }
 
+/**
+Standard properties function for POISE. Updates auxiliary quantities
+(currently just the dynamical ellipticity when DistRot is not enabled).
 
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param update Struct containing update information and variables
+@param iBody Body in question
+*/
 void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
     }
   }
-
-  // double deltax, Tice = 270, Aice, grav;
-//   int iLat;
-
-  // if (body[iBody].bEqtide) {
-//     body[iBody].dMeanMotion = \
-//           fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-//     body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion);
-//     if (body[iBody].bClimateModel == SEA) {
-//       VerifyNStepSeasonal(body,iBody);
-//     }
-//   }
-//
-//   /* deformability of ice, dependent on temperature */
-//   if (Tice < 263) {
-//     Aice = a1ICE * exp(-Q1ICE/(RGAS*Tice));
-//   } else {
-//     Aice = a2ICE * exp(-Q2ICE/(RGAS*Tice));
-//   }
-//
-//   grav = BIGG*body[iBody].dMass/pow(body[iBody].dRadius,2);
-//
-//   body[iBody].dIceMassTot = 0.0;
-//   if (body[iBody].bIceSheets) {
-//     deltax = 2.0/body[iBody].iNumLats;
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       if (body[iBody].daIceMass[iLat] < 1e-30) {
-//         body[iBody].daIceMass[iLat] = 0.0;
-//       }
-//       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
-//       body[iBody].dIceMassTot += body[iBody].daIceMass[iLat]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0])))*body[iBody].daLandFrac[iLat];
-//     }
-//
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       /* calculate derivative to 2nd order accuracy */
-//       if (iLat == 0) {
-//         body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) * \
-//             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else if (iLat == (body[iBody].iNumLats-1)) {
-//         body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) * \
-//             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else {
-//         body[iBody].daDIceHeightDy[iLat] = (sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) *\
-//             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
-//             (body[iBody].dRadius*deltax) + sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) *\
-//             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
-//             (body[iBody].dRadius*deltax) )/2.0;
-//       }
-//       body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
-//           pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
-//           pow(body[iBody].daIceHeight[iLat],nGLEN+2);
-//       body[iBody].daSedShear[iLat] = RHOICE*grav*body[iBody].daIceHeight[iLat]*\
-//           body[iBody].daDIceHeightDy[iLat];
-//       body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
-//     }
-//
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       if (iLat == 0) {
-//         body[iBody].daIceFlowMid[iLat] = 0;
-//         body[iBody].daBasalFlowMid[iLat] = 0;
-//       } else if (iLat == body[iBody].iNumLats-1) {
-//         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-//            body[iBody].daIceFlow[iLat-1])/2.0;
-//         body[iBody].daIceFlowMid[iLat+1] = 0;
-//         body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
-//            body[iBody].daBasalFlow[iLat-1])/2.0;
-//         body[iBody].daBasalFlowMid[iLat+1] = 0;
-//       } else {
-//         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-//            body[iBody].daIceFlow[iLat-1])/2.0;
-//         body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
-//            body[iBody].daBasalFlow[iLat-1])/2.0;
-//       }
-//     }
-//   }
 }
 
+/**
+Calculates precession of the spin axis when DistRot is disabled
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
   /* calculates precession angle as an explicit function of time
      for use only when distrot is not called! */
@@ -3108,6 +3046,13 @@ void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
   while (body[iBody].dPrecA < 0) body[iBody].dPrecA += 2*PI;
 }
 
+/**
+Forces obliquity oscillation (bForceObliq = 1).
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
   double A, P, C;
   P = body[iBody].dObliqPer*YEARSEC;
@@ -3118,6 +3063,13 @@ void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
   CalcXYZobl(body,iBody);
 }
 
+/**
+Forces eccentricity oscillation (bForceEcc = 1).
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   double A, P, C;
   P = body[iBody].dEccPer*YEARSEC;
@@ -3128,6 +3080,12 @@ void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   CalcXYZobl(body,iBody);
 }
 
+/**
+Calculates the fractional ice covered area of the planet
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void AreaIceCovered(BODY *body, int iBody) {
 //area permanently ice covered (i.e., all year round)
 

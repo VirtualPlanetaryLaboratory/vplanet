@@ -27,7 +27,7 @@ int main(int argc,char *argv[]) {
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
 #endif
-  
+
   time_t dStartTime;
   dStartTime = time(NULL);
 
@@ -129,7 +129,7 @@ int main(int argc,char *argv[]) {
   /* Perform evolution */
 
   if (control.Evolve.bDoForward || control.Evolve.bDoBackward) {
-    Evolve(body,&control,&files,output,&system,update,fnUpdate,fnWrite,fnOneStep);
+    Evolve(body,&control,&files,&module,output,&system,update,fnUpdate,fnWrite,fnOneStep);
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {

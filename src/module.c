@@ -53,6 +53,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
   module->iNumModules = malloc(iNumBodies*sizeof(int));
+  module->iNumModuleMulti = malloc(iNumBodies*sizeof(int));
   module->iaModule = malloc(iNumBodies*sizeof(int*));
   module->iBitSum = malloc(iNumBodies*sizeof(int*));
 
@@ -137,15 +138,18 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnCountHalts = malloc(iNumBodies*sizeof(fnCountHaltsModule*));
   module->fnReadOptions = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
   module->fnVerify = malloc(iNumBodies*sizeof(fnVerifyModule*));
+  module->fnVerifyDerivatives = malloc(iNumBodies*sizeof(fnVerifyModuleDerivatives*));
   module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
 
   /* Assume no modules per body to start */
-  for (iBody=0;iBody<iNumBodies;iBody++)
+  for (iBody=0;iBody<iNumBodies;iBody++) {
     module->iNumModules[iBody]=0;
+    module->iNumModuleMulti[iBody]=0;
+  }
 }
 
 void FinalizeModule(BODY *body,MODULE *module,int iBody) {
-  int iModule=0,iNumModules = 0;
+  int iModule=0,iNumModules = 0,iNumModuleMulti = 0;
 
   /************************
    * ADD NEW MODULES HERE *
@@ -177,8 +181,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     iNumModules++;
   if (body[iBody].bSpiNBody)
     iNumModules++;
+  if (body[iBody].bEqtide && body[iBody].bStellar) {
+    iNumModuleMulti++;
+  }
 
   module->iNumModules[iBody] = iNumModules;
+  module->iNumModuleMulti[iBody] = iNumModules+iNumModuleMulti;
   module->iaModule[iBody] = malloc(iNumModules*sizeof(int));
 
   module->fnLogBody[iBody] = malloc(iNumModules*sizeof(fnLogBodyModule));
@@ -189,6 +197,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnCountHalts[iBody] = malloc(iNumModules*sizeof(fnCountHaltsModule));
   module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
   module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
+  module->fnVerifyDerivatives[iBody] = malloc((iNumModules+iNumModuleMulti)*sizeof(fnVerifyModuleDerivatives));
   module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
 
   module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
@@ -257,7 +266,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateVelY[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelYModule));
   module->fnFinalizeUpdateVelZ[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelZModule));
 
-  for(iModule = 0; iModule < iNumModules; iModule++) {
+  for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
        NULL function. The modules that need actual function will replace them
        in AddModule. */
@@ -336,55 +345,73 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   iModule = 0;
   if (body[iBody].bEqtide) {
     AddModuleEqtide(module,iBody,iModule);
+    module->iEqtide = &iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
     AddModuleDistOrb(module,iBody,iModule);
+    module->iDistOrb = &iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
     AddModuleDistRot(module,iBody,iModule);
+    module->iDistRot = &iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
+    module->iRadheat = &iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-      AddModuleThermint(module,iBody,iModule);
+    AddModuleThermint(module,iBody,iModule);
+    module->iThermint = &iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
     AddModuleAtmEsc(module,iBody,iModule);
+    module->iAtmEsc = &iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
     AddModuleStellar(module,iBody,iModule);
+    module->iStellar = &iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
     AddModulePoise(module,iBody,iModule);
+    module->iPoise = &iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
     AddModuleBinary(module,iBody,iModule);
+    module->iBinary = &iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
+    module->iFlare = &iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
     AddModuleGalHabit(module,iBody,iModule);
+    module->iGalHabit = &iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bDistRes) {
     AddModuleDistRes(module,iBody,iModule);
+    module->iDistRes = &iModule;
     module->iaModule[iBody][iModule++] = DISTRES;
   }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
+    module->iSpiNBody = &iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
+  }
+  if (body[iBody].bEqtide && body[iBody].bStellar) {
+    module->fnVerifyDerivatives[iBody][iModule] = &VerifyEqtideStellarDerivatives;
+    module->iEqtideStellar = &iModule;
+    iModule++;
   }
 }
 
@@ -525,6 +552,12 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
 /*
  * Verify multi-module dependencies
  */
+
+void VerifyModuleMultiSpiNBodyAtmEsc(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bSpiNBody && body[iBody].bAtmEsc) {
+    control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorSpiNBodyAtmEsc;
+  }
+}
 
 
 void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -686,7 +719,15 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,F
   }
 }
 
+void VerifyEqtideStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  if ((body[iBody].iBodyType == 1) && (iBody==1)) {
+    fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fdSemiDtEqSt;
+  }
+}
+
 void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  int iOtherBody, iEqn;
+
   if (body[iBody].bEqtide) {
     if (body[iBody].bStellar) {
 
@@ -740,6 +781,22 @@ void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,F
       // ALl the options are ok! Add in the necessary AuxProps
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideStellar;
     }
+  }
+
+  // This equation only valid if EQTIDE, and STELLAR used for 2nd body
+  if((body[iBody].iBodyType == 1) && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1) {
+    /* Add change in semi-major axis due to EQTIDE-STELLAR coupling */
+
+    // Other star (primary) can also influence this equation
+    iOtherBody = 0;
+
+    // Add dSemi-major axis dt from Eqtide-Stellar coupling to matrix
+    update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiEqSt] = 1;
+    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt] = 2; // Both stars
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt]*sizeof(int));
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][0] = iBody;
+    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][1] = iOtherBody;
+    update[iBody].pdDsemiDtEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiEqSt];
   }
 }
 
@@ -1069,6 +1126,8 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
      these functions as some default behavior is set if other modules aren't
      called. */
 
+  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiForce,&iNumMultiForce);
+
   VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
@@ -1087,8 +1146,6 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
   VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
-
-  VerifyModuleMultiEqtideDistorb(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1245,7 +1302,16 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
  * Force Behavior for multi-module calculations
  */
 
-void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+  int iBody;
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    //Need to get orbital elements for AtmEsc to use for escape
+    Bary2OrbElems(body, iBody);
+  }
+}
+
+void ForceBehaviorEqtideDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
     if (body[1].bDistRes) {
@@ -1256,7 +1322,7 @@ void ForceBehaviorEqtideDistOrb(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,
   };
 }
 
-void ForceBehaviorEqtideAtmesc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
 
   int iBody;
   // add print statement
@@ -1301,7 +1367,7 @@ void ForceBehaviorEqtideAtmesc(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,U
 }
 
 
-void ForceBehaviorAtmescEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
 
   // Loop over non-star bodies
   int iBody;
@@ -1414,27 +1480,6 @@ void InitializeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *upd
  */
 void FinalizeUpdateMulti(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate,int *iVar, int iBody, int iFoo)
 {
-
-  int iOtherBody, iEqn;
-
-  // This equation only valid if EQTIDE, and STELLAR used for 2nd body
-  if((body[iBody].iBodyType == 1) && body[iBody].bStellar && body[iBody].bEqtide && iBody == 1)
-  {
-    /* Add change in semi-major axis due to EQTIDE-STELLAR coupling */
-
-    // Other star (primary) can also influence this equation
-    iOtherBody = 0;
-
-    // Add dSemi-major axis dt from Eqtide-Stellar coupling to matrix
-    update[iBody].iaType[update[iBody].iSemi][update[iBody].iSemiEqSt] = 1;
-    update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt] = 2; // Both stars
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt] = malloc(update[iBody].iNumBodies[update[iBody].iSemi][update[iBody].iSemiEqSt]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][0] = iBody;
-    update[iBody].iaBody[update[iBody].iSemi][update[iBody].iSemiEqSt][1] = iOtherBody;
-    update[iBody].pdDsemiDtEqSt = &update[iBody].daDerivProc[update[iBody].iSemi][update[iBody].iSemiEqSt];
-    (*fnUpdate)[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fdSemiDtEqSt;
-
-  }
 
 /* Add more equations below! */
 

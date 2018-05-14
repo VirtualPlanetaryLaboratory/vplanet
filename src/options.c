@@ -3409,4 +3409,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsPoise(options,fnRead);
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsSpiNBody(options,fnRead);
 }

@@ -50,6 +50,7 @@ void OverwriteExit(char cName[],char cFile[]) {
   exit(EXIT_INPUT);
 }
 
+/* XXX Should these be iLine+1? */
 void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
   fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
   fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
@@ -552,12 +553,16 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
+      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,iBody,iModule);
     }
 
     VerifyInterior(body,options,iBody);
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
+
+    for (iModule=0;iModule<module->iNumModuleMulti[iBody];iModule++) {
+      module->fnVerifyDerivatives[iBody][iModule](body,control,update,*fnUpdate,iBody);
+    }
 
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {

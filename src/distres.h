@@ -1,4 +1,4 @@
-/***************** DISTRES.H *********************** 
+/***************** DISTRES.H ***********************
  *
  * Russell Deitrick, February 2017
  *
@@ -29,7 +29,7 @@ void ReadOptionsDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],in
 void InitializeUpdateTmpBodyDistRes(BODY*,CONTROL*,UPDATE*,int);
 
 /* Verify Functions */
-void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -56,7 +56,7 @@ void LogBodyDistRes(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRes Functions */
 void PropsAuxDistRes(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistRes(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistRes(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 double fdSemiMajAxF27(double, int);
 double fdSemiMajAxF28(double, int);

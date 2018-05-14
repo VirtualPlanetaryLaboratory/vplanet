@@ -1,4 +1,4 @@
-/***************** POISE.H *********************** 
+/***************** POISE.H ***********************
  *
  * Russell Deitrick, September 10, 2015
  *
@@ -64,9 +64,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 //#define OPT_LATENTHEAT    1945
 #define OPT_ICECONDUCT      1946
 #define OPT_MIXINGDEPTH     1947
-#define OPT_NULANDWATER     1948 
+#define OPT_NULANDWATER     1948
 #define OPT_NSTEPINYEAR     1949
-#define OPT_NUMYEARS        1950 
+#define OPT_NUMYEARS        1950
 #define OPT_SEAICEMODEL     1951
 #define OPT_ALBEDOLAND      1952
 #define OPT_ALBEDOWATER     1953
@@ -83,7 +83,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_LAPSER          1964
 #define OPT_REFHEIGHT       1965
 #define OPT_ABLATEFF        1966
-
+#define OPT_FORCEECC        1967
+#define OPT_ECCAMP          1968
+#define OPT_ECCPER          1969
 
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
@@ -94,7 +96,7 @@ void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Verify Functions */
-void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -109,7 +111,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUTENDPOISE          2000 /* End of POISE options */
 #define OUTBODYSTARTPOISE    1920 /* Start of POISE BODY options */
 
-#define OUT_TGLOBAL          1921 
+#define OUT_TGLOBAL          1921
 #define OUT_ALBEDOGLOBAL     1922
 #define OUT_FLUXINGLOBAL     1923
 #define OUT_FLUXOUTGLOBAL    1924
@@ -181,7 +183,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 
 /* Poise Functions */
 void PropertiesPoise(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);

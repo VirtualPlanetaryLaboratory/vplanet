@@ -1471,7 +1471,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 
   /* Get derivatives */
   PropertiesAuxiliary(body,control,update);
-  dDt=fdGetUpdateInfo(body,control,system,update,fnUpdate);
+  dDt=fdGetTimeStep(body,control,system,update,fnUpdate);
 
   if (iEnd == 0) {
     sprintf(cTime,"Input");
@@ -1679,7 +1679,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         }
       }
   }
-  
+
   if (body[1].bDistOrb) {
     if (control->bOutputEigen) {
       if (control->Evolve.iDistOrbModel == RD4) {
@@ -1688,7 +1688,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       WriteEigen(control,system);
     }
   }
-      
+
 }
 
 void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {

@@ -91,8 +91,8 @@ void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
 /* Verify Functions */
 
 void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
-void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int,fnUpdateVariable***);
-void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
+void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
 
 /* Update Functions */
@@ -208,10 +208,10 @@ void LogBodyEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 void PropertiesEqtide(BODY*,int);
 void fdaChi(BODY*,double,double,int,int);
-double fdEqRotRate(BODY,double,double,int,int);
+double fdEqRotRate(BODY*,int,double,double,int,int);
 double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
-void ForceBehaviorEqtide(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /******************** CPL Functions ********************/
 
@@ -242,7 +242,6 @@ double fdCPLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
 double fdCPLDeccDt(BODY*,UPDATE*,int*);
 double fdDEdTCPLEqtide(BODY*,SYSTEM*,int*);
-double fdCPLDsemiDtLocked(BODY*,SYSTEM*,int*);
 double fdCPLDeccDtLocked(BODY*,UPDATE*,int*);
 
 /******************** CTL Functions ********************/
@@ -266,8 +265,14 @@ double fdCTLTidePowerEq(BODY,double);
 double fdCTLEqRotRate(double,double,double);
 
 double fdCTLDsemiDt(BODY*,SYSTEM*,int*);
-double fdCTLDeccDt(BODY*,SYSTEM*,int*);
+double fdCTLDeccDt(BODY*,UPDATE*,int*);
 double fdCTLDrotrateDt(BODY*,SYSTEM*,int*);
-double fdCTLDobliquityDt(BODY*,SYSTEM*,int*);
+double fdCTLDXoblDt(BODY*,SYSTEM*,int*);
+double fdCTLDYoblDt(BODY*,SYSTEM*,int*);
+double fdCTLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCTLDsemiDtBody(BODY,double,double,double,double,double);
 double fdCTLDeccDtBody(BODY,double,double,double);
+double fdCTLDHeccDt(BODY*,SYSTEM*,int*);
+double fdCTLDKeccDt(BODY*,SYSTEM*,int*);
+double fdDEdTCTLEqtide(BODY*,SYSTEM*,int*);
+double fdCTLDoblDt(BODY*,int*);

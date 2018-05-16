@@ -949,6 +949,8 @@ struct BODY {
   int bDistRes;             /**< Use distres model (don't use it for god's sake) */
   double dMeanL;            /**< Body's mean longitude */
 
+  //MAGMOC
+  double dFeO;              /**< FeO in the magma ocean */
 };
 
 /* SYSTEM contains properties of the system that pertain to

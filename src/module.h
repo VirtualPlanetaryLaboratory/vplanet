@@ -7,7 +7,7 @@ void PropsAuxNULL(BODY*,EVOLVE*,UPDATE*,int);
 
 void PrintModuleList(FILE*,int);
 
-double fdUpdateFunctionTiny(BODY*,SYSTEM*,int*);
+double fndUpdateFunctionTiny(BODY*,SYSTEM*,int*);
 void SetDerivTiny(fnUpdateVariable***,int,int,int);
 
 void InitializeModule(MODULE*,int);
@@ -17,7 +17,8 @@ void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
 
 void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
-void VerifyEqtideStellarDerivatives(BODY*,CONTROL*,UPDATE*,fnUpdateVariable***,int);
+void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
@@ -27,12 +28,14 @@ void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtide(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideDistorb(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideStellar(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxSpinbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxSpiNbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxSpiNBodyDistOrb(BODY*,EVOLVE*,UPDATE*,int);
 
 void ForceBehaviorAtmescEqtideThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideAtmesc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorSpiNBodyAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorSpiNBodyDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 
 void InitializeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int);

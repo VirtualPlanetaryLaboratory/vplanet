@@ -586,19 +586,36 @@ void fnForceBehaviorBinary(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 // Anything here?
 }
 
-void VerifyBinaryDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Add equations to the matrix
     if(body[iBody].bBinaryUseMatrix)
     {
-      fnUpdate[iBody][update[iBody].iCBPR][0] = &fndCBPRBinary;
-      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fndCBPZBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fndCBPPhiBinary;
-      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fndCBPRDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fndCBPZDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndCBPRBinary;
+      fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndCBPZBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndCBPPhiBinary;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndCBPRDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndCBPZDotBinary;
       fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndCBPPhiDotBinary;
+    }
+  }
+}
+
+void NullBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  if(body[iBody].iBodyType == 0) // Planets are added to matrix
+  {
+    // Add equations to the matrix
+    if(body[iBody].bBinaryUseMatrix)
+    {
+      fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -824,7 +841,7 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
   if(body[iBody].iBodyType == 0) {
     if(body[iBody].dSemi <= a_crit) {
       if(io->iVerbose >= VERBPROG) {
-        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,a_crit/AUCM);
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Holman-Wiegert critial a: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUM,a_crit/AUM);
       }
       return 1;
     }
@@ -843,7 +860,7 @@ int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   if(body[iBody].iBodyType == 1 && iBody == 1) {
     if(body[iBody].dSemi <= r_crit) {
       if(io->iVerbose >= VERBPROG) {
-        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUCM,r_crit/AUCM);
+        fprintf(stderr,"HALT: %s's dSemi: %lf AU, Primary Roche Lobe: %lf AU.\n",body[iBody].cName,body[iBody].dSemi/AUM,r_crit/AUM);
       }
       return 1;
     }
@@ -1114,7 +1131,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_CBPR].cDescr,"CBP's Orbital Radius");
   output[OUT_CBPR].bNeg = 1;
   sprintf(output[OUT_CBPR].cNeg,"AU");
-  output[OUT_CBPR].dNeg = 1.0/AUCM;
+  output[OUT_CBPR].dNeg = 1.0/AUM;
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
@@ -1123,7 +1140,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
   output[OUT_CBPR0].bNeg = 1;
   sprintf(output[OUT_CBPR0].cNeg,"AU");
-  output[OUT_CBPR0].dNeg = 1.0/AUCM;
+  output[OUT_CBPR0].dNeg = 1.0/AUM;
   output[OUT_CBPR0].iNum = 1;
   output[OUT_CBPR0].iModuleBit = BINARY;
   fnWrite[OUT_CBPR0] = &WriteCBPR0Binary;
@@ -1132,7 +1149,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane");
   output[OUT_CBPZ].bNeg = 1;
   sprintf(output[OUT_CBPZ].cNeg,"AU");
-  output[OUT_CBPZ].dNeg = 1.0/AUCM;
+  output[OUT_CBPZ].dNeg = 1.0/AUM;
   output[OUT_CBPZ].iNum = 1;
   output[OUT_CBPZ].iModuleBit = BINARY;
   fnWrite[OUT_CBPZ] = &WriteCBPZBinary;
@@ -1198,27 +1215,28 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = BINARY;
+  module->iaModule[iBody][iModule]                  = BINARY;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyBinary;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsBinary;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsBinary;
-  module->fnLogBody[iBody][iModule] = &LogBodyBinary;
-  module->fnVerify[iBody][iModule] = &VerifyBinary;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyBinaryDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltBinary;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsBinary;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsBinary;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyBinary;
+  module->fnVerify[iBody][iModule]                  = &VerifyBinary;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignBinaryDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullBinaryDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltBinary;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodyBinary;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateBinary;
 
   // Update functions
-  module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateCBPRBinary;
-  module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateCBPZBinary;
-  module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateCBPPhiBinary;
+  module->fnFinalizeUpdateCBPR[iBody][iModule]      = &FinalizeUpdateCBPRBinary;
+  module->fnFinalizeUpdateCBPZ[iBody][iModule]      = &FinalizeUpdateCBPZBinary;
+  module->fnFinalizeUpdateCBPPhi[iBody][iModule]    = &FinalizeUpdateCBPPhiBinary;
   module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateCBPPhiDotBinary;
-  module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateCBPRDotBinary;
-  module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateCBPZDotBinary;
+  module->fnFinalizeUpdateCBPRDot[iBody][iModule]   = &FinalizeUpdateCBPRDotBinary;
+  module->fnFinalizeUpdateCBPZDot[iBody][iModule]   = &FinalizeUpdateCBPZDotBinary;
 }
 
 /************* BINARY Functions ************/
@@ -2063,7 +2081,7 @@ double fndApproxInsol(BODY *body, int iBody) {
 void fnvbinaryDebug(BODY * body) {
 
   fprintf(stderr,"binary debug information:\n");
-  fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUCM);
+  fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUM);
   fprintf(stderr,"nk: %lf.\n",body[2].dMeanMotion*YEARSEC);
   fprintf(stderr,"n0: %lf.\n",body[2].dLL13N0*YEARSEC);
   fprintf(stderr,"nAB: %lf.\n",body[1].dMeanMotion*YEARSEC);

@@ -213,11 +213,13 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         // v: Velocity vector
         // Inefficient?
         else if (update[iBody].iaType[iVar][iEqn] == 7) {
-          update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-          dMinNow = sqrt((body[iBody].dPositionX*body[iBody].dPositionX+body[iBody].dPositionY*body[iBody].dPositionY+body[iBody].dPositionZ*body[iBody].dPositionZ)
-                    /(body[iBody].dVelX*body[iBody].dVelX+body[iBody].dVelY*body[iBody].dVelY+body[iBody].dVelZ*body[iBody].dVelZ));
-          if (dMinNow < dMin)
-            dMin = dMinNow;
+          if ( (control->Evolve.bSpiNBodyDistOrb==0) || (control->Evolve.bUsingSpiNBody==1) ) {
+            update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+            dMinNow = sqrt((body[iBody].dPositionX*body[iBody].dPositionX+body[iBody].dPositionY*body[iBody].dPositionY+body[iBody].dPositionZ*body[iBody].dPositionZ)
+                      /(body[iBody].dVelX*body[iBody].dVelX+body[iBody].dVelY*body[iBody].dVelY+body[iBody].dVelZ*body[iBody].dVelZ));
+            if (dMinNow < dMin)
+              dMin = dMinNow;
+          }
         }
 
         else {
@@ -541,6 +543,11 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     /* Get auxiliary properties for next step -- first call
        was prior to loop. */
     PropertiesAuxiliary(body,control,update);
+
+    // If control->Evolve.bFirstStep hasn't been switched off by now, do so.
+    if (control->Evolve.bFirstStep) {
+      control->Evolve.bFirstStep = 0;
+    }
   }
 
   if (control->Io.iVerbose >= VERBPROG)

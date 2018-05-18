@@ -1807,7 +1807,7 @@ void RadheatExit(FILES *files,char cSpecies[16],int iFile) {
   exit(EXIT_INPUT);
 }
 
-void VerifyRadheatDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignRadheatDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   // 26Al
   // Mantle
   if (update[iBody].i26AlMan >= 0) {
@@ -1872,6 +1872,74 @@ void VerifyRadheatDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdat
   // Crust
   if (update[iBody].i235UCrust >= 0) {
     fnUpdate[iBody][update[iBody].i235UCrust][0] = &fdD235UNumCrustDt;
+  }
+}
+
+void NullRadheatDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  // 26Al
+  // Mantle
+  if (update[iBody].i26AlMan >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i26AlCore >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlCore][0] = &fndUpdateFunctionTiny;
+  }
+
+  //40K
+  // Mantle
+  if (update[iBody].i40KMan >= 0) {
+    fnUpdate[iBody][update[iBody].i40KMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i40KCore >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i40KCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 232Th
+  // Mantle
+  if (update[iBody].i232ThMan >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i232ThCore >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i232ThCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 238U
+  // Mantle
+  if (update[iBody].i238UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i238UMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i238UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i238UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 235U
+  // Mantle
+  if (update[iBody].i235UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i235UMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i235UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i235UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCrust][0] = &fndUpdateFunctionTiny;
   }
 }
 
@@ -3490,33 +3558,34 @@ void LogBodyRadheat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleRadheat(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = RADHEAT;
+  module->iaModule[iBody][iModule]                      = RADHEAT;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsRadHeat;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsRadheat;
-  module->fnLogBody[iBody][iModule] = &LogBodyRadheat;
-  module->fnVerify[iBody][iModule] = &VerifyRadheat;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyRadheatDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltRadheat;
+  module->fnCountHalts[iBody][iModule]                  = &CountHaltsRadHeat;
+  module->fnReadOptions[iBody][iModule]                 = &ReadOptionsRadheat;
+  module->fnLogBody[iBody][iModule]                     = &LogBodyRadheat;
+  module->fnVerify[iBody][iModule]                      = &VerifyRadheat;
+  module->fnAssignDerivatives[iBody][iModule]           = &AssignRadheatDerivatives;
+  module->fnNullDerivatives[iBody][iModule]             = &NullRadheatDerivatives;
+  module->fnVerifyHalt[iBody][iModule]                  = &VerifyHaltRadheat;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateRadheat;
+  module->fnInitializeUpdate[iBody][iModule]            = &InitializeUpdateRadheat;
 
-  module->fnFinalizeUpdate26AlNumMan[iBody][iModule] = &FinalizeUpdate26AlNumManRadheat;
-  module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdate40KNumManRadheat;
-  module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdate232ThNumManRadheat;
-  module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdate238UNumManRadheat;
-  module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdate235UNumManRadheat;
+  module->fnFinalizeUpdate26AlNumMan[iBody][iModule]    = &FinalizeUpdate26AlNumManRadheat;
+  module->fnFinalizeUpdate40KNumMan[iBody][iModule]     = &FinalizeUpdate40KNumManRadheat;
+  module->fnFinalizeUpdate232ThNumMan[iBody][iModule]   = &FinalizeUpdate232ThNumManRadheat;
+  module->fnFinalizeUpdate238UNumMan[iBody][iModule]    = &FinalizeUpdate238UNumManRadheat;
+  module->fnFinalizeUpdate235UNumMan[iBody][iModule]    = &FinalizeUpdate235UNumManRadheat;
 
-  module->fnFinalizeUpdate26AlNumCore[iBody][iModule] = &FinalizeUpdate26AlNumCoreRadheat;
-  module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdate40KNumCoreRadheat;
-  module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdate232ThNumCoreRadheat;
-  module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdate238UNumCoreRadheat;
-  module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdate235UNumCoreRadheat;
+  module->fnFinalizeUpdate26AlNumCore[iBody][iModule]   = &FinalizeUpdate26AlNumCoreRadheat;
+  module->fnFinalizeUpdate40KNumCore[iBody][iModule]    = &FinalizeUpdate40KNumCoreRadheat;
+  module->fnFinalizeUpdate232ThNumCore[iBody][iModule]  = &FinalizeUpdate232ThNumCoreRadheat;
+  module->fnFinalizeUpdate238UNumCore[iBody][iModule]   = &FinalizeUpdate238UNumCoreRadheat;
+  module->fnFinalizeUpdate235UNumCore[iBody][iModule]   = &FinalizeUpdate235UNumCoreRadheat;
 
-  module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &FinalizeUpdate40KNumCrustRadheat;
+  module->fnFinalizeUpdate40KNumCrust[iBody][iModule]   = &FinalizeUpdate40KNumCrustRadheat;
   module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &FinalizeUpdate232ThNumCrustRadheat;
-  module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &FinalizeUpdate238UNumCrustRadheat;
-  module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &FinalizeUpdate235UNumCrustRadheat;
+  module->fnFinalizeUpdate238UNumCrust[iBody][iModule]  = &FinalizeUpdate238UNumCrustRadheat;
+  module->fnFinalizeUpdate235UNumCrust[iBody][iModule]  = &FinalizeUpdate235UNumCrustRadheat;
 }
 
 /************* RADHEAT Functions ************/

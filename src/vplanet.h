@@ -62,8 +62,8 @@
 #define cLIGHT        299792458.0
 #define MEARTH        5.972186e24 // Prsa et al. 2016
 #define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUCM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
-//#define AUCM          1.49598e11  // Old AUCM intended to keep tests passing
+#define AUM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
+//#define AUM          1.49598e11  // Old AUM intended to keep tests passing
 #define AUPC          206265.0   // AU in a parsec
 #define RSUN          6.957e8     // Prsa et al. 2016
 #define YEARSEC       3.15576e7   // Seconds per year
@@ -303,7 +303,13 @@ struct BODY {
   double *dDistanceX;    /**< X Distance between two bodies */
   double *dDistanceY;    /**< Y Distance between two bodies */
   double *dDistanceZ;    /**< Z Distance between two bodies */
+  double *dHCartPos;     /**< Heliocentric Cartesian Position used for orbital element calculations */
+  double *dHCartVel;     /**< Heliocentric Cartesian Velocity used for orbital element calculations */
+  double *dBCartPos;     /**< Barycentric Cartesian Position used for orbital element calculations */
+  double *dBCartVel;     /**< Barycentric Cartesian Velocity used for orbital element calculations */
   double dGM;            /**< GM for the star */
+  double dMu;            /**< G(M+m) */
+  int iGravPertsSpiNBody;/**< Number of bodies that are orbitally relevent (equal to for evolve->iNumBodies) */
 
   /* DISTORB parameters */
   int bDistOrb;          /**< Has module DISTORB been implemented */
@@ -1082,6 +1088,7 @@ struct UPDATE {
       list body numbers.
   */
   int ***iaBody;
+  // XXX Should be iaNumBodies
   int **iNumBodies;     /**< Number of Bodies Affecting a Process */
 
   /* These keep track of the variable and modules */
@@ -1580,6 +1587,9 @@ struct EVOLVE {
 
   /* DISTORB */
   int iDistOrbModel;
+  int bSpiNBodyDistOrb;
+  int bUsingDistOrb;
+  int bUsingSpiNBody;
 
   fnBodyCopyModule **fnBodyCopy; /**< Function Pointers to Body Copy */
 };
@@ -1817,7 +1827,7 @@ typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-typedef void (*fnVerifyModuleDerivatives)(BODY*,CONTROL*,UPDATE*,fnUpdateVariable***,int);
+typedef void (*fnManageModuleDerivatives)(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
@@ -1826,24 +1836,24 @@ typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 
 struct MODULE {
   int *iNumModules; /**< Number of Modules per Body */
-  int *iNumModuleMulti;
+  int *iNumManageDerivs;
   int **iaModule; /**< Module numbers that Apply to the Body */
   int *iBitSum;
 
-  int *iEqtide;
-  int *iDistOrb;
-  int *iDistRot;
-  int *iRadheat;
-  int *iThermint;
-  int *iAtmEsc;
-  int *iStellar;
-  int *iPoise;
-  int *iBinary;
-  int *iFlare;
-  int *iGalHabit;
-  int *iDistRes;
-  int *iSpiNBody;
-  int *iEqtideStellar;
+  int *iaEqtide;
+  int *iaDistOrb;
+  int *iaDistRot;
+  int *iaRadheat;
+  int *iaThermint;
+  int *iaAtmEsc;
+  int *iaStellar;
+  int *iaPoise;
+  int *iaBinary;
+  int *iaFlare;
+  int *iaGalHabit;
+  int *iaDistRes;
+  int *iaSpiNBody;
+  int *iaEqtideStellar;
 
   /*! These functions count the number of applicable halts for each body. */
   fnCountHaltsModule **fnCountHalts;
@@ -1997,7 +2007,8 @@ struct MODULE {
   fnVerifyModule **fnVerify;
 
   /*! These functions add derivatives to the fnUpdate matrix */
-  fnVerifyModuleDerivatives **fnVerifyDerivatives;
+  fnManageModuleDerivatives **fnAssignDerivatives;
+  fnManageModuleDerivatives **fnNullDerivatives;
 
   /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;

@@ -2946,7 +2946,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
   options[OPT_HALTMINSEMI].dDefault = 0;
   options[OPT_HALTMINSEMI].iType = 2;
-  options[OPT_HALTMINSEMI].dNeg = AUCM;
+  options[OPT_HALTMINSEMI].dNeg = AUM;
   sprintf(options[OPT_HALTMINSEMI].cNeg,"AU");
   fnRead[OPT_HALTMINSEMI] = &ReadHaltMinSemi;
 
@@ -3124,9 +3124,9 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBSEMI].cName,"dSemi");
   sprintf(options[OPT_ORBSEMI].cDescr,"Semi-Major Axis");
   sprintf(options[OPT_ORBSEMI].cDefault,"1 AU");
-  options[OPT_ORBSEMI].dDefault = AUCM;
+  options[OPT_ORBSEMI].dDefault = AUM;
   options[OPT_ORBSEMI].iType = 2;
-  options[OPT_ORBSEMI].dNeg = AUCM;
+  options[OPT_ORBSEMI].dNeg = AUM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
 

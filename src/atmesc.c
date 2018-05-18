@@ -686,13 +686,11 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
 
-  // For circumbinary planets, assume no Ktide enhancement (ehhhhh sketchy)
-  if(body[iBody].bBinary && body[iBody].iBodyType == 0)
-  {
+  // For circumbinary planets, assume no Ktide enhancement
+  if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
   }
-  else
-  {
+  else {
       if (xi > 1)
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       else
@@ -792,17 +790,30 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
-void VerifyAtmEscDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
-    fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
+    fnUpdate[iBody][update[iBody].iOxygenMass][0]       = &fdDOxygenMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
   }
   if (body[iBody].dEnvelopeMass > 0) {
-  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
+    fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
   }
-  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: This points to the VALUE of the radius!
+  fnUpdate[iBody][update[iBody].iRadius][0]             = &fdPlanetRadius; // NOTE: This points to the VALUE of the radius!
+}
+
+void NullAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  if (body[iBody].dSurfaceWaterMass > 0) {
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iOxygenMass][0]       = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fndUpdateFunctionTiny;
+  }
+  if (body[iBody].dEnvelopeMass > 0) {
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iMass][0]             = &fndUpdateFunctionTiny;
+  }
+  fnUpdate[iBody][update[iBody].iRadius][0]             = &fndUpdateFunctionTiny; // NOTE: This points to the VALUE of the radius!
 }
 
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -1230,7 +1241,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RGLIMIT].cDescr,"Runaway Greenhouse Semi-Major Axis");
   sprintf(output[OUT_RGLIMIT].cNeg,"AU");
   output[OUT_RGLIMIT].bNeg = 1;
-  output[OUT_RGLIMIT].dNeg = 1. / AUCM;
+  output[OUT_RGLIMIT].dNeg = 1. / AUM;
   output[OUT_RGLIMIT].iNum = 1;
   output[OUT_RGLIMIT].iModuleBit = ATMESC;
   fnWrite[OUT_RGLIMIT] = &WriteRGLimit;
@@ -1397,22 +1408,23 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = ATMESC;
+  module->iaModule[iBody][iModule]                         = ATMESC;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsAtmEsc;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
-  module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
-  module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyAtmEscDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
+  module->fnCountHalts[iBody][iModule]                     = &CountHaltsAtmEsc;
+  module->fnReadOptions[iBody][iModule]                    = &ReadOptionsAtmEsc;
+  module->fnLogBody[iBody][iModule]                        = &LogBodyAtmEsc;
+  module->fnVerify[iBody][iModule]                         = &VerifyAtmEsc;
+  module->fnAssignDerivatives[iBody][iModule]              = &AssignAtmEscDerivatives;
+  module->fnNullDerivatives[iBody][iModule]                = &NullAtmEscDerivatives;
+  module->fnVerifyHalt[iBody][iModule]                     = &VerifyHaltAtmEsc;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
+  module->fnInitializeUpdate[iBody][iModule]               = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
-  module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateOxygenMassAtmEsc;
+  module->fnFinalizeUpdateOxygenMass[iBody][iModule]       = &FinalizeUpdateOxygenMassAtmEsc;
   module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] = &FinalizeUpdateOxygenMantleMassAtmEsc;
-  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
-  module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
-  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
+  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule]     = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateMass[iBody][iModule]             = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateRadiusAtmEsc;
 }
 
 /************* ATMESC Functions ************/
@@ -1540,9 +1552,9 @@ double fdInsolation(BODY *body, int iBody, int iXUV) {
 
     // Body orbits two stars
     if (iXUV)
-      flux = fdFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
+      flux = fndFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
     else
-      flux = fdFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
+      flux = fndFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
 
   } else {
 
@@ -1634,7 +1646,7 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
-  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUCM * AUCM);
+  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
 }
 
 double fdXUVEfficiencyBolmont2016(double dFXUV) {

@@ -1,4 +1,4 @@
-# Example primary input file for VPLANET
+# Primary input file for VPLANET
 sSystemName	kepler16		# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
@@ -36,9 +36,9 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
+dEta		0.01		# Coefficient for variable timestepping
 dStopTime	1.0e2   	# Stop time for evolution
-dOutputTime	1.0e-1		# Output timesteps (assuming in body files)
+dOutputTime	1.0e-2		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden. 
 # That should really be documented!

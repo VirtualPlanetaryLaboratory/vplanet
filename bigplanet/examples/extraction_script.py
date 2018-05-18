@@ -33,6 +33,9 @@ skip_body = ["primary.in"]
 # Any parameters not in a body's .forward files that you want?
 var_from_log = {"secondary" : ["Mass"], "cbp" : ["Mass"]}
 
+# Any parameters from the input file?
+var_from_infile = {"secondary" : ["dTidalQ"], "primary" : ["dTidalQ"]}
+
 # An optional kwarg that has extract_data_hdf5 output which simulation it's on
 # every cadence steps for int cadence
 cadence = 100
@@ -41,7 +44,7 @@ cadence = 100
 compression = None # "gzip" is another option
 
 # Use all processors? Best if used on a cluster
-parallel = True
+parallel = False
 
 # Path to HDF5 dataset to make.  In general, doesn't have to be where data
 # lives. cache_dir is where we'll save all the products

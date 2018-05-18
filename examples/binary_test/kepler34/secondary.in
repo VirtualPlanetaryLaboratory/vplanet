@@ -1,11 +1,12 @@
 # Secondary star: Kepler16B
 sName		secondary		# Body's name
-saModules stellar binary 
+#saModules stellar binary 
+saModules binary
 
 # Physical Parameters
 iBodyType       1           # 1 -> Star
 dMass		1.02162     # Mass, negative -> Earth masses
-dRadGyra	0.5	    # Radius of gyration (moment of inertia constant)
+dRadGyra	0.27	    # Radius of gyration (moment of inertia constant)
 dRotPeriod      -1.0        # Rotation period (-1 -> days)
 
 # Binary Parameters
@@ -20,8 +21,8 @@ dLL13PhiAB      52.66             # Initial binary mean anomaly
 #saTidePerts	primary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
-sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
-dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
+#sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
+#dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!

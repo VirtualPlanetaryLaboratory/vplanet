@@ -76,9 +76,7 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 #define OUTENDDISTORB          1400 /* End of DISTORB options */
 #define OUTBODYSTARTDISTORB    1320 /* Start of DISTORB BODY options */
 
-#define OUT_INC                 1321
 #define OUT_SINC                1322
-#define OUT_LONGA               1323
 
 #define OUT_PINC                1333
 #define OUT_QINC                1334
@@ -104,8 +102,6 @@ void WriteBodyDLongPDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
 void WriteBodyDLongADtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyDIncDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodySinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyInc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyLongA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyLongP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyArgP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteBodyHecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

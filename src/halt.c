@@ -179,7 +179,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
         if(io->iVerbose > VERBPROG)
         {
           printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
-          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUCM,body[1].dSemi/AUCM,max_radius/AUCM);
+          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
         }
         return 1;
       }

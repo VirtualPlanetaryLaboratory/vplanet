@@ -2756,7 +2756,7 @@ void PropsAuxOrbiterCPL(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   // PrecA is needed for Xobl,Yobl,Zobl calculations
 
-  body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
+  body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxOrbiterCTL(BODY *body,UPDATE *update,int iBody) {
@@ -3121,7 +3121,7 @@ iaBody[0] = central body */
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. */
 
-double fdCPLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
+double fdCPLDeccDt(BODY *body,int *iaBody) {
   double dSum;
   int iB0=iaBody[0],iB1=iaBody[1];
 

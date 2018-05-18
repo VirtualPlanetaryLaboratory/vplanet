@@ -75,7 +75,6 @@ dPresSWind     -1  #-0.2
 #Output
 saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass $ 
 -TMan -TCore -RIC -EnvelopeMass -OxygenMass
-saOutputOrder
 #		-26AlPowerMan -26AlMassMan -26AlMassCore 
 	    
 #-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $

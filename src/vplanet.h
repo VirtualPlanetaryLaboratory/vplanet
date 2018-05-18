@@ -1639,6 +1639,8 @@ struct CONTROL {
   int bOutputLapl;     /**< 1 = output laplace functions and related data */
   int bOutputEigen;      /**< Output eigen values? */
 
+  int bOrbiters; /**< Does this simulation have orbiting bodies? */
+
 };
 
 /* The INFILE struct contains all the information

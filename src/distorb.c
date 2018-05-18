@@ -1336,22 +1336,7 @@ void WriteBodySinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcpy(cUnit,"");
 }
 
-void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (body[iBody].bDistOrb) {
-    *dTmp = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
-  } else if (body[iBody].bGalHabit || body[iBody].bSpiNBody) {
-    *dTmp = body[iBody].dInc;
-  }
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
-
+/*
 void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if (body[iBody].bDistOrb) {
     *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
@@ -1374,6 +1359,7 @@ void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     fsUnitsAngle(units->iAngle,cUnit);
   }
 }
+*/
 
 void WriteBodyPinc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
@@ -1518,29 +1504,11 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DLONGADTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
 
-  sprintf(output[OUT_INC].cName,"Inc");
-  sprintf(output[OUT_INC].cDescr,"Body's Inclination in DistOrb");
-  sprintf(output[OUT_INC].cNeg,"Deg");
-  output[OUT_INC].bNeg = 1;
-  output[OUT_INC].dNeg = 1./DEGRAD;
-  output[OUT_INC].iNum = 1;
-  output[OUT_INC].iModuleBit = DISTORB+GALHABIT+SPINBODY;
-  fnWrite[OUT_INC] = &WriteBodyInc;
-
   sprintf(output[OUT_SINC].cName,"Sinc");
   sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
   output[OUT_SINC].iNum = 1;
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
-
-  sprintf(output[OUT_LONGA].cName,"LongA");
-  sprintf(output[OUT_LONGA].cDescr,"Body's Longitude of ascending node in DistOrb");
-  sprintf(output[OUT_LONGA].cNeg,"Deg");
-  output[OUT_LONGA].bNeg = 1;
-  output[OUT_LONGA].dNeg = 1./DEGRAD;
-  output[OUT_LONGA].iNum = 1;
-  output[OUT_LONGA].iModuleBit = DISTORB+GALHABIT+SPINBODY;
-  fnWrite[OUT_LONGA] = &WriteBodyLongA;
 
   sprintf(output[OUT_PINC].cName,"Pinc");
   sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");

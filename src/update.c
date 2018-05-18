@@ -1849,8 +1849,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
-    // Mean Longitude (for DistRes) 
+
+    // Mean Longitude (for DistRes)
     update[iBody].iMeanL = -1;
     if (update[iBody].iNumMeanL) {
       update[iBody].iMeanL = iVar;
@@ -1872,9 +1872,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       }
 
       iEqn=0;
-      for (iModule=0;iModule<module->iNumModules[iBody];iModule++) 
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateMeanL[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
-        
+
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;

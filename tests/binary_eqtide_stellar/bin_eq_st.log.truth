@@ -13,7 +13,7 @@ Time Units: Seconds
 Angle Units: Radians
 
 ------- FORMATTING -----
-Verbosity Level: 0
+Verbosity Level: 5
 Crossover Decade for Scientific Notation: 4
 Number of Digits After Decimal: 6
 Integration Method: Runge-Kutta4
@@ -70,12 +70,15 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
 (LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (primary)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE []: 0.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579406e-14 
@@ -111,10 +114,6 @@ Tidal Perturbers: secondary
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 0.000000 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -125,7 +124,7 @@ Tidal Perturbers: secondary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -161,6 +160,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 3.557471e+06 
 (SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 0.000000 
@@ -178,7 +180,7 @@ Color: 000000
 (DXoblDtEqtide) Time Rate of Change of Laskar's X in EQTIDE [/sec]: 0.000000 
 (DYoblDtEqtide) Time Rate of Change of Laskar's Y in EQTIDE [/sec]: 0.000000 
 (DZoblDtEqtide) Time Rate of Change of Laskar's Z in EQTIDE [/sec]: 0.000000 
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE []: 0.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280810e-12 
@@ -214,10 +216,6 @@ Tidal Perturbers: primary
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: -1.783901 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -228,7 +226,7 @@ Tidal Perturbers: primary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -240,34 +238,33 @@ Color: 000000
 (Radius) Radius [m]: 6.378100e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 0.000000 
 (BodyType) Type of Body (0 == planet) []: 0.000000 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399232e+11 
-(Eccentricity) Orbital Eccentricity []: 0.047201 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399265e+11 
+(Eccentricity) Orbital Eccentricity []: 0.047695 
 (OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
-(OrbPeriod) Orbital Period [sec]: 2.029842e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.071442e+11 
+(OrbPeriod) Orbital Period [sec]: 2.030909e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.071817e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 1.096397 
+(Inc) Body's Inclination [rad]: 0.005504 
+(LongA) Body's Longitude of ascending node [rad]: 4.760796 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
-(BinaryInc) CBP's Inclination in Binary [rad]: 0.005506 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 1.116317 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 4.758971 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 5.875288 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
-(CBPR) CBP's Orbital Radius [m]: 1.025977e+11 
+(CBPR) CBP's Orbital Radius [m]: 1.026316e+11 
 (CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 5.647625e+08 
-(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 0.067304 
-(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: 717.023947 
+(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 0.070196 
+(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: 753.810861 
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: -0.000000 
-(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.372007e-07 
+(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.370293e-07 
 (R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.719000 
-Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.717213 
+Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] LongA[deg] Inc[deg] LongP[deg]
 Grid Output Order:
 
 
@@ -316,12 +313,15 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: -1.000000 
 (SemiMajorAxis) Semi-major Axis [m]: -1.000000 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.000000 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 8.741280e+30 
 (LostAngMom) Lost Angular Momentum due to Magnetic Braking [kg*m^2/sec]: 0.000000 
 ----- EQTIDE PARAMETERS (primary)------
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE []: 0.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 8.579406e-14 
@@ -357,10 +357,6 @@ Tidal Perturbers: secondary
 ----- BINARY PARAMETERS (primary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 0.000000 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -371,7 +367,7 @@ Tidal Perturbers: secondary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -407,6 +403,9 @@ Color: 000000
 (OrbPeriod) Orbital Period [sec]: 3.557471e+06 
 (SemiMajorAxis) Semi-major Axis [m]: 3.355480e+10 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 6.091384e+44 
+(ArgP) Body's argument of pericenter [rad]: 0.000000 
+(Inc) Body's Inclination [rad]: 0.000000 
+(LongA) Body's Longitude of ascending node [rad]: 0.000000 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -1.089984e+39 
 (LostEnergy) Body's Total Lost Energy [kg*m^2/sec^2]: 2.021302e+31 
@@ -424,7 +423,7 @@ Color: 000000
 (DXoblDtEqtide) Time Rate of Change of Laskar's X in EQTIDE [/sec]: 0.000000 
 (DYoblDtEqtide) Time Rate of Change of Laskar's Y in EQTIDE [/sec]: 0.000000 
 (DZoblDtEqtide) Time Rate of Change of Laskar's Z in EQTIDE [/sec]: 0.000000 
-(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE [m/sec]: -1.000000 
+(BodyDsemiDtEqtide) Body's Contribution to dSemi/dt in EQTIDE []: 0.000000 
 (BodyDeccDt) Body's Contribution to dEcc/dt in EQTIDE []: -1.000000 
 (DOblDtEqtide) Time Rate of Change of Obliquity in EQTIDE [rad/sec]: 0.000000 
 (DRotPerDtEqtide) Time Rate of Change of Rotation Period in EQTIDE []: 1.280810e-12 
@@ -460,10 +459,6 @@ Tidal Perturbers: primary
 ----- BINARY PARAMETERS (secondary)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: -1.000000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: -1.000000 
-(BinaryInc) CBP's Inclination in Binary [rad]: -1.000000 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.000000 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 0.000000 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: -1.783901 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: -1.000000 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: -1.000000 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: -1.000000 
@@ -474,7 +469,7 @@ Tidal Perturbers: primary
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 0.000000 
 (CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 0.000000 
 (R0) CBP's Orbital Guiding Center Radius [m]: 0.000000 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: -nan 
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: nan 
 Output Order: Time[year]
 Grid Output Order:
 
@@ -486,34 +481,33 @@ Color: 000000
 (Radius) Radius [m]: 6.378100e+06 
 (RotAngMom) Rotational Angular Momentum [kg*m^2/sec]: 0.000000 
 (BodyType) Type of Body (0 == planet) []: 0.000000 
-(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399341e+11 
-(Eccentricity) Orbital Eccentricity []: 0.048829 
+(HZLimitDryRunaway) Semi-major axis of Dry Runaway HZ Limit [m]: 1.399417e+11 
+(Eccentricity) Orbital Eccentricity []: 0.049913 
 (OrbEnergy) Body's Total Orbital Energy [kg*m^2/sec^2]: 0.000000 
 (MeanMotion) Orbital Mean Motion [/sec]: 3.192626e-07 
-(OrbPeriod) Orbital Period [sec]: 2.008981e+07 
-(SemiMajorAxis) Semi-major Axis [m]: 1.064088e+11 
+(OrbPeriod) Orbital Period [sec]: 2.009285e+07 
+(SemiMajorAxis) Semi-major Axis [m]: 1.064196e+11 
 (OrbAngMom) Orbital Angular Momentum [kg*m^2/sec]: 0.000000 
+(ArgP) Body's argument of pericenter [rad]: 1.027141 
+(Inc) Body's Inclination [rad]: 0.005405 
+(LongA) Body's Longitude of ascending node [rad]: 2.520248 
 (TotOrbEnergy) System's Total Orbital Energy [kg*m^2/sec^2]: -5.449920e+38 
 (OrbPotEnergy) Body's Orbital Potential Energy [kg*m^2/sec^2]: -0.000000 
 ----- BINARY PARAMETERS (cbp)------
 (FreeEcc) CBP's Free Eccentricity in Binary []: 0.030000 
 (FreeInc) CBP's Free Inclination in Binary [rad]: 0.005381 
-(BinaryInc) CBP's Inclination in Binary [rad]: 0.005402 
-(ArgPBinary) CBP's Argument of Perihelion in Binary [rad]: 0.999773 
-(BinaryLongA) CBP's Longitude of the Ascending Node in Binary [rad]: 2.523121 
-(BinaryLongP) CBP's Longitude of Perihelion in Binary [rad]: 3.522894 
 (LL13N0) Leung+Lee 2013 Mean Motion [sec]: 3.215087e-07 
 (LL13K0) Leung+Lee 2013 Radial epicyclic frequency [sec]: 3.167793e-07 
 (LL13V0) Leung+Lee 2013 vertical epicyclic frequency [sec]: 3.261695e-07 
-(CBPR) CBP's Orbital Radius [m]: 1.019035e+11 
+(CBPR) CBP's Orbital Radius [m]: 1.018838e+11 
 (CBPZ) CBP's Orbital Cylindrical Height Out of the Orbital Plane [m]: 2.411124e+08 
-(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 2.976446 
-(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: -845.853578 
+(CBPPhi) CBP Orbital Azimuthal Angle [rad]: 2.973406 
+(CBPRDot) CBP's Radial Orbital Velocity [m/sec]: -903.412147 
 (CBPZDot) CBP's Z Orbital Velocity [m/sec]: 166.577012 
-(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.406090e-07 
+(CBPPhiDot) CBP's Phi Angular Orbital Velocity [/sec]: 3.407401e-07 
 (R0) CBP's Orbital Guiding Center Radius [m]: 1.049579e+11 
-(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.779424 
-Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] BinaryLongA[deg] BinaryInc[deg] BinaryLongP[deg]
+(CBPInsol) CBP's binary orbit-averaged Insolation [F/F_Earth]: 2.780499 
+Output Order: Time[year] SemiMajorAxis[AU] Eccentricity[] LongA[deg] Inc[deg] LongP[deg]
 Grid Output Order:
 
 Runtime = 1.000000 s

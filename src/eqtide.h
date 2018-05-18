@@ -240,7 +240,7 @@ double fdCPLDXoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDYoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDZoblDt(BODY*,SYSTEM*,int*);
 double fdCPLDsemiDtBody(BODY,double,double,double);
-double fdCPLDeccDt(BODY*,UPDATE*,int*);
+double fdCPLDeccDt(BODY*,int*);
 double fdDEdTCPLEqtide(BODY*,SYSTEM*,int*);
 double fdCPLDeccDtLocked(BODY*,UPDATE*,int*);
 

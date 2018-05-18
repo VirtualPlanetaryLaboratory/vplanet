@@ -40,10 +40,6 @@
 // Naming convention same as for OPT_* constants
 #define OUT_FREEECC             2110
 #define OUT_FREEINC             2120
-#define OUT_BININC              2125
-#define OUT_BINARGP             2126
-#define OUT_BINLONGA            2127
-#define OUT_BINLONGP            2128
 #define OUT_LL13N0              2130
 #define OUT_LL13K0              2140
 #define OUT_LL13V0              2150
@@ -115,10 +111,6 @@ void InitializeOutputBinary(OUTPUT*,fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT*,int,int);
 void WriteFreeEccBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFreeIncBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteArgPBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteLongABinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteLongPBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteIncBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13N0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13K0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLL13V0Binary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -137,55 +129,55 @@ void LogBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyBinary(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Math Functions */
-int fiDelta(int,int);
-double fdDot(double*,double*);
-void fvCylToCartPos(double*,double*);
-void fvCylToCartVel(double*,double*,double*);
-void fvSpecificAngMom(double*,double*,double*);
-double fdSpecificOrbEng(BODY*,int);
+int fniDelta(int,int);
+double fndDot(double*,double*);
+void fnvCylToCartPos(double*,double*);
+void fnvCylToCartVel(double*,double*,double*);
+void fnvSpecificAngMom(double*,double*,double*);
+double fndSpecificOrbEng(BODY*,int);
 
 /* Orbital Element Functions */
-void fdAssignOrbitalElements(BODY*,int);
-double fdComputeSemi(BODY*,int);
-double fdComputeEcc(BODY*,int);
-double fdComputeInc(BODY*,int);
-double fdComputeLongA(BODY*,int);
-void fdComputeEccVector(BODY*,double*,int);
-double fdComputeArgPeri(BODY*,int);
-double fdHolmanStability(BODY*);
-double fdRocheLobe(BODY*);
-double fdMeanAnomaly(double,double,double);
-double fdMeanToEccentric(double,double);
-double fdEccToTrue(double,double);
+void fnvAssignOrbitalElements(BODY*,int);
+double fndComputeSemi(BODY*,int);
+double fndComputeEcc(BODY*,int);
+double fndComputeInc(BODY*,int);
+double fndComputeLongA(BODY*,int);
+void fnvComputeEccVector(BODY*,double*,int);
+double fndComputeArgPeri(BODY*,int);
+double fndHolmanStability(BODY*);
+double fndRocheLobe(BODY*);
+double fndMeanAnomaly(double,double,double);
+double fndMeanToEccentric(double,double);
+double fndEccToTrue(double,double);
 
 /* Binary functions */
-double fdMeanMotionBinary(BODY*,int);
-double fdEpiFreqK(BODY*,int);
-double fdEpiFreqV(BODY*,int);
-double fdPhi0(double,double,double);
-double fdPot0(int,int,double,BODY*);
-double fdPot0dR(int,int,double,BODY*);
-double fdPot1(int,int,double,BODY*);
-double fdPot1dR(int,int,double,BODY*);
-double fdn(double,BODY*);
-double fdC0(BODY*,int);
-double fdC0k(int,BODY*,int);
-double fdCPk(int,BODY*,int);
-double fdCMk(int,BODY*,int);
-double fdD0(BODY*,int);
-double fdDk0(int,BODY*,int);
-double fdDPk(int,BODY*,int);
-double fdDMk(int,BODY*,int);
-double fdCBPRBinary(BODY*,SYSTEM*,int*);
-double fdCBPPhiBinary(BODY*,SYSTEM*,int*);
-double fdCBPZBinary(BODY*,SYSTEM*,int*);
-double fdCBPRDotBinary(BODY*,SYSTEM*,int*);
-double fdCBPZDotBinary(BODY*,SYSTEM*,int*);
-double fdCBPPhiDotBinary(BODY*,SYSTEM*,int*);
+double fndMeanMotionBinary(BODY*,int);
+double fndEpiFreqK(BODY*,int);
+double fndEpiFreqV(BODY*,int);
+double fndPhi0(double,double,double);
+double fndPot0(int,int,double,BODY*);
+double fndPot0dR(int,int,double,BODY*);
+double fndPot1(int,int,double,BODY*);
+double fndPot1dR(int,int,double,BODY*);
+double fndn(double,BODY*);
+double fndC0(BODY*,int);
+double fndC0k(int,BODY*,int);
+double fndCPk(int,BODY*,int);
+double fndCMk(int,BODY*,int);
+double fndD0(BODY*,int);
+double fndDk0(int,BODY*,int);
+double fndDPk(int,BODY*,int);
+double fndDMk(int,BODY*,int);
+double fndCBPRBinary(BODY*,SYSTEM*,int*);
+double fndCBPPhiBinary(BODY*,SYSTEM*,int*);
+double fndCBPZBinary(BODY*,SYSTEM*,int*);
+double fndCBPRDotBinary(BODY*,SYSTEM*,int*);
+double fndCBPZDotBinary(BODY*,SYSTEM*,int*);
+double fndCBPPhiDotBinary(BODY*,SYSTEM*,int*);
 
 /* Misc functions */
-double fdFluxExactBinary(BODY*,int,double,double);
-double fdFluxApproxBinary(BODY*,int);
-double fdApproxEqTemp(BODY*,int,double);
-double fdApproxInsol(BODY*,int);
-void binaryDebug(BODY*);
+double fndFluxExactBinary(BODY*,int,double,double);
+double fndFluxApproxBinary(BODY*,int);
+double fndApproxEqTemp(BODY*,int,double);
+double fndApproxInsol(BODY*,int);
+void fnvBinaryDebug(BODY*);

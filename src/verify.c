@@ -109,13 +109,12 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
  *
  */
 
-void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose) {
+void VerifyOrbit(BODY *body, FILES files,OPTIONS *options,CONTROL *control, int iBody,int iVerbose) {
   int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
-  // If doing binary and we're looking at the secondary, return
-  // Since the secondary holds all binary orbital information
-  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+  // Body 0 is never an orbiter
+  if(iBody == 0)
     return;
 
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
@@ -536,6 +535,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
 
+  // Default to no orbiting bodies
+  control->bOrbiters = 0;
+
   /* First we must determine all the primary variables. The user may not
      input them, but instead a redundant variable. Yet these need to be
      defined before we can call InitializeUpdate. */
@@ -543,6 +545,11 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
+
+    // If any body has an orbit related module initialized, we have orbiters!
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise) {
+      control->bOrbiters = 1;
+    }
 
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
@@ -554,9 +561,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
-    /* XXX Only module reference in file -- can this be changed? */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (iBody > 0 && body[iBody].bBinary)) {
-      VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
+    // If any bodies orbit, make sure they do so properly!
+    if(control->bOrbiters) {
+      VerifyOrbit(body,*files,options,control,iBody,control->Io.iVerbose);
     }
 
   }

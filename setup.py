@@ -12,7 +12,10 @@ class CustomInstall(install):
 
     def run(self):
         """Run the install."""
-        super().run()
+        try:
+            super(CustomInstall, self).run()
+        except TypeError:
+            install.run(self)
         subprocess.check_call("make", cwd=".", shell=True)
         os.symlink(os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'vplanet'),
@@ -25,7 +28,10 @@ class CustomDevelop(develop):
     def run(self):
         """Run the install."""
         try:
-            super().run()
+            try:
+                super(CustomDevelop, self).run()
+            except TypeError:
+                develop.run(self)
             if os.path.exists("vplot"):
                 os.rmdir("vplot")
             subprocess.check_call("make test", cwd=".", shell=True)

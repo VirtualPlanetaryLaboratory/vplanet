@@ -749,26 +749,50 @@ void VerifyTidesBinary(BODY *body,CONTROL *control,OPTIONS *options,char cFile[]
   }
 }
 
-void VerifyGalHabitDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignGalHabitDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iEqn;
   if (iBody >= 1) {
     iEqn = 0;
     if (body[iBody].bGalacTides) {
-      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = &fndGalHabitDEccXDtTidal;
-      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = &fndGalHabitDEccYDtTidal;
-      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = &fndGalHabitDEccZDtTidal;
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]   = &fndGalHabitDEccXDtTidal;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]   = &fndGalHabitDEccYDtTidal;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]   = &fndGalHabitDEccZDtTidal;
       fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fndGalHabitDAngMXDtTidal;
       fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fndGalHabitDAngMYDtTidal;
       iEqn++;
     }
 
     if (body[iBody].bHostBinary) {
-      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]] = &fndGalHabitDEccXDtBV;
-      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]] = &fndGalHabitDEccYDtBV;
-      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]] = &fndGalHabitDEccZDtBV;
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]   = &fndGalHabitDEccXDtBV;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]   = &fndGalHabitDEccYDtBV;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]   = &fndGalHabitDEccZDtBV;
       fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fndGalHabitDAngMXDtBV;
       fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fndGalHabitDAngMYDtBV;
       fnUpdate[iBody][update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[iEqn]] = &fndGalHabitDAngMZDtBV;
+    }
+  }
+}
+
+void NullGalHabitDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iEqn;
+  if (iBody >= 1) {
+    iEqn = 0;
+    if (body[iBody].bGalacTides) {
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fndUpdateFunctionTiny;
+      iEqn++;
+    }
+
+    if (body[iBody].bHostBinary) {
+      fnUpdate[iBody][update[iBody].iEccX][update[iBody].iaEccXGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iEccY][update[iBody].iaEccYGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iEccZ][update[iBody].iaEccZGalHabit[iEqn]]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iAngMX][update[iBody].iaAngMXGalHabit[iEqn]] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iAngMY][update[iBody].iaAngMYGalHabit[iEqn]] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iAngMZ][update[iBody].iaAngMZGalHabit[iEqn]] = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -1431,21 +1455,22 @@ void LogBodyGalHabit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = GALHABIT;
+  module->iaModule[iBody][iModule]              = GALHABIT;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsGalHabit;
-  module->fnLogBody[iBody][iModule] = &LogBodyGalHabit;
+  module->fnCountHalts[iBody][iModule]          = &CountHaltsGalHabit;
+  module->fnLogBody[iBody][iModule]             = &LogBodyGalHabit;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsGalHabit;
-  module->fnVerify[iBody][iModule] = &VerifyGalHabit;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyGalHabitDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltGalHabit;
+  module->fnReadOptions[iBody][iModule]         = &ReadOptionsGalHabit;
+  module->fnVerify[iBody][iModule]              = &VerifyGalHabit;
+  module->fnAssignDerivatives[iBody][iModule]   = &AssignGalHabitDerivatives;
+  module->fnNullDerivatives[iBody][iModule]     = &NullGalHabitDerivatives;
+  module->fnVerifyHalt[iBody][iModule]          = &VerifyHaltGalHabit;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateGalHabit;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputGalHabit;
-  module->fnFinalizeUpdateEccX[iBody][iModule] = &FinalizeUpdateEccXGalHabit;
-  module->fnFinalizeUpdateEccY[iBody][iModule] = &FinalizeUpdateEccYGalHabit;
-  module->fnFinalizeUpdateEccZ[iBody][iModule] = &FinalizeUpdateEccZGalHabit;
+  module->fnInitializeUpdate[iBody][iModule]    = &InitializeUpdateGalHabit;
+  module->fnInitializeOutput[iBody][iModule]    = &InitializeOutputGalHabit;
+  module->fnFinalizeUpdateEccX[iBody][iModule]  = &FinalizeUpdateEccXGalHabit;
+  module->fnFinalizeUpdateEccY[iBody][iModule]  = &FinalizeUpdateEccYGalHabit;
+  module->fnFinalizeUpdateEccZ[iBody][iModule]  = &FinalizeUpdateEccZGalHabit;
   module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateAngMXGalHabit;
   module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateAngMYGalHabit;
   module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateAngMZGalHabit;

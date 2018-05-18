@@ -423,14 +423,22 @@ void VerifyGM(BODY *body,CONTROL *control) {
   }
 }
 
-void VerifySpiNBodyDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignSpiNBodyDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
   fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
   fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
-  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
-  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
-  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
+  fnUpdate[iBody][update[iBody].iVelX][0]      = &fdDVelXDt;
+  fnUpdate[iBody][update[iBody].iVelY][0]      = &fdDVelYDt;
+  fnUpdate[iBody][update[iBody].iVelZ][0]      = &fdDVelZDt;
+}
 
+void NullSpiNBodyDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPositionX][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iPositionY][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelX][0]      = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelY][0]      = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelZ][0]      = &fndUpdateFunctionTiny;
 }
 
 void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -961,26 +969,27 @@ void LogSpiNBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDAT
 // Add Module Function
 void AddModuleSpiNBody(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = SPINBODY; //Name
+  module->iaModule[iBody][iModule]                  = SPINBODY; //Name
 
   //Halts
-  module->fnCountHalts[iBody][iModule] = &CountHaltsSpiNBody;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltSpiNBody;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsSpiNBody;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltSpiNBody;
 
-  module->fnLogBody[iBody][iModule] = &LogBodySpiNBody;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsSpiNBody;
-  module->fnVerify[iBody][iModule] = &VerifySpiNBody;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifySpiNBodyDerivatives;
+  module->fnLogBody[iBody][iModule]                 = &LogBodySpiNBody;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsSpiNBody;
+  module->fnVerify[iBody][iModule]                  = &VerifySpiNBody;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignSpiNBodyDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullSpiNBodyDerivatives;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodySpiNBody;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateSpiNBody;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputSpiNBody;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodySpiNBody;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateSpiNBody;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputSpiNBody;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodySpiNBody;
 
   //Primary Variable Finalizations
-  module->fnFinalizeUpdateVelX[iBody][iModule] = &FinalizeUpdateVelXSpiNBody;
-  module->fnFinalizeUpdateVelY[iBody][iModule] = &FinalizeUpdateVelYSpiNBody;
-  module->fnFinalizeUpdateVelZ[iBody][iModule] = &FinalizeUpdateVelZSpiNBody;
+  module->fnFinalizeUpdateVelX[iBody][iModule]      = &FinalizeUpdateVelXSpiNBody;
+  module->fnFinalizeUpdateVelY[iBody][iModule]      = &FinalizeUpdateVelYSpiNBody;
+  module->fnFinalizeUpdateVelZ[iBody][iModule]      = &FinalizeUpdateVelZSpiNBody;
   module->fnFinalizeUpdatePositionX[iBody][iModule] = &FinalizeUpdatePositionXSpiNBody;
   module->fnFinalizeUpdatePositionY[iBody][iModule] = &FinalizeUpdatePositionYSpiNBody;
   module->fnFinalizeUpdatePositionZ[iBody][iModule] = &FinalizeUpdatePositionZSpiNBody;

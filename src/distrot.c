@@ -318,7 +318,7 @@ void VerifyOrbitData(BODY *body,CONTROL *control,OPTIONS *options,int iBody) {
   }
 }
 
-void VerifyDistRotDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignDistRotDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int i, j=0, iPert=0, jBody=0;
 
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
@@ -375,6 +375,67 @@ void VerifyDistRotDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateV
     fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDxDt;
 
     fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fndAxialGRDyDt;
+    }
+  }
+}
+
+void NullDistRotDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int i, j=0, iPert=0, jBody=0;
+
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+
+  if (iBody >= 1) {
+    if (body[iBody].bReadOrbitData) {
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[0]] = &fndUpdateFunctionTiny;
+
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[0]] = &fndUpdateFunctionTiny;
+
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[0]] = &fndUpdateFunctionTiny;
+    } else {
+      if (evolve->iDistOrbModel==RD4) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+
+          /* y = sin(obl)*sin(pA) */
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+
+          /* z = cos(obl) */
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* x = sin(obl)*cos(pA) */
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+
+        /* y = sin(obl)*sin(pA) */
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+
+      } else if (evolve->iDistOrbModel==LL2) {
+        /* Body updates */
+        for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+          /* x = sin(obl)*cos(pA) */
+          fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+
+          /* y = sin(obl)*sin(pA) */
+          fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+
+          /* z = cos(obl) */
+          fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblDistRot[iPert]] = &fndUpdateFunctionTiny;
+
+        }
+        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* x = sin(obl)*cos(pA) */
+        fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+
+        /* y = sin(obl)*sin(pA) */
+        fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+      }
+    }
+    if (body[iBody].bGRCorr) {
+    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblDistRot[body[iBody].iGravPerts+1]] = &fndUpdateFunctionTiny;
+
+    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblDistRot[body[iBody].iGravPerts+1]] = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -1107,22 +1168,23 @@ void LogBodyDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = DISTROT;
+  module->iaModule[iBody][iModule]                  = DISTROT;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistRot;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsDistRot;
-  module->fnLogBody[iBody][iModule] = &LogBodyDistRot;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsDistRot;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyDistRot;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsDistRot;
-  module->fnVerify[iBody][iModule] = &VerifyDistRot;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyDistRotDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistRot;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsDistRot;
+  module->fnVerify[iBody][iModule]                  = &VerifyDistRot;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignDistRotDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullDistRotDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltDistRot;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistRot;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistRot;
-  module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblDistRot;
-  module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblDistRot;
-  module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblDistRot;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateDistRot;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputDistRot;
+  module->fnFinalizeUpdateXobl[iBody][iModule]      = &FinalizeUpdateXoblDistRot;
+  module->fnFinalizeUpdateYobl[iBody][iModule]      = &FinalizeUpdateYoblDistRot;
+  module->fnFinalizeUpdateZobl[iBody][iModule]      = &FinalizeUpdateZoblDistRot;
 }
 
 /************* DISTROT Functions ***********/

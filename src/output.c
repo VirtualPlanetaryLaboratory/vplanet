@@ -733,6 +733,26 @@ void WriteMeanAnomaly(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   }
 }
 
+void WriteMeanLongitude(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  if (control->Evolve.bUsingDistOrb && iBody != 0) {
+    *dTmp = body[iBody].dMeanL + sqrt(body[iBody].dMu/(body[iBody].dSemi*body[iBody].dSemi*body[iBody].dSemi))*control->Evolve.dTime;
+    *dTmp = fmod(*dTmp,2*PI);
+  } else if (iBody != 0) {
+    *dTmp = body[iBody].dMeanA + body[iBody].dLongP;
+  } else {
+    *dTmp = -1;
+  }
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+
 /*
  * End individual write functions
  */
@@ -928,6 +948,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MEANA].dNeg = 1/DEGRAD;
   output[OUT_MEANA].iModuleBit = SPINBODY;
   fnWrite[OUT_MEANA] = &WriteMeanAnomaly;
+
+  sprintf(output[OUT_MEANL].cName,"MeanLongitude");
+  sprintf(output[OUT_MEANL].cDescr,"Orbital Mean Longitude");
+  sprintf(output[OUT_MEANL].cNeg,"Deg");
+  output[OUT_MEANL].iNum = 1;
+  output[OUT_MEANL].bNeg = 1;
+  output[OUT_MEANL].dNeg = 1/DEGRAD;
+  output[OUT_MEANL].iModuleBit = SPINBODY + DISTORB;
+  fnWrite[OUT_MEANL] = &WriteMeanLongitude;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
   sprintf(output[OUT_ORBEN].cDescr,"Body's Total Orbital Energy");

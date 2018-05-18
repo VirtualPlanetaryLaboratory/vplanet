@@ -517,7 +517,7 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
       for (iVar=0;iVar<iNumVars;iVar++) {
         iNumEqns = update[iBody].iNumEqns[iVar];
         for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-          fnUpdate[iBody][iVar][iEqn] = &fdUpdateFunctionTiny;
+          fnUpdate[iBody][iVar][iEqn] = &fndUpdateFunctionTiny;
         }
       }
     }
@@ -576,8 +576,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 
-    for (iModule=0;iModule<module->iNumModuleMulti[iBody];iModule++) {
-      module->fnVerifyDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
+    for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
+      module->fnAssignDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
     }
 
     /* Must allocate memory in control struct for all perturbing bodies */

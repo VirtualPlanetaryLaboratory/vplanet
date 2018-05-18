@@ -1339,7 +1339,7 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
   }
 }
 
-void VerifyEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
   if(evolve->iEqtideModel == CPL) {
     fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
@@ -1366,7 +1366,7 @@ void VerifyEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
       fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCTLDZoblDt;
       /* Rotation Rate */
       if (evolve->bForceEqSpin[iBody])
-        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fndUpdateFunctionTiny;
       else
         fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCTLDrotrateDt;
     }
@@ -1383,7 +1383,7 @@ void VerifyEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
       fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fdCPLDZoblDt;
       // Rotation Rate
       if (evolve->bForceEqSpin[iBody])
-        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdUpdateFunctionTiny;
+        fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fndUpdateFunctionTiny;
       else
         fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
     }
@@ -1410,12 +1410,43 @@ void VerifyEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
       }
     } else {
       // If the orbit is fixed, function return TINY
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdUpdateFunctionTiny;
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fndUpdateFunctionTiny;
+    }
+  }
+}
+
+void NullEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iPert;
+
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fndUpdateFunctionTiny;
+
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+
+    // CTL Model Variables
+    // Xobl
+    fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+    // Yobl
+    fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+    // Zobl
+    fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+    /* Rotation Rate */
+    if (evolve->bForceEqSpin[iBody]) {
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fndUpdateFunctionTiny;
+    }
+    else {
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fndUpdateFunctionTiny;
     }
   }
 
+  /* Is this the secondary body, and hence we assign da/dt and de/dt? */
+  if (!bPrimary(body,iBody)) {
+    // If the orbit is allowed to evolve, assign derivative functions
+    fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fndUpdateFunctionTiny;
+  }
 }
 
 void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -2682,29 +2713,30 @@ void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = EQTIDE;
+  module->iaModule[iBody][iModule]                  = EQTIDE;
 
-  module->fnInitializeControl[iBody][iModule] = &InitializeControlEqtide;
+  module->fnInitializeControl[iBody][iModule]       = &InitializeControlEqtide;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyEqtide;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsEqtide;
-  module->fnLogBody[iBody][iModule] = &LogBodyEqtide;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsEqtide;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyEqtide;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsEqtide;
-  module->fnVerify[iBody][iModule] = &VerifyEqtide;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyEqtideDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltEqtide;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsEqtide;
+  module->fnVerify[iBody][iModule]                  = &VerifyEqtide;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignEqtideDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullEqtideDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltEqtide;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyEqtide;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateEqtide;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputEqtide;
-  module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateHeccEqtide;
-  module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccEqtide;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotEqtide;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiEqtide;
-  module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateXoblEqtide;
-  module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateYoblEqtide;
-  module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateZoblEqtide;
-  module->fnFinalizeUpdateLostEng[iBody][iModule] =&FinalizeUpdateLostEngEqtide;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodyEqtide;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateEqtide;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputEqtide;
+  module->fnFinalizeUpdateHecc[iBody][iModule]      = &FinalizeUpdateHeccEqtide;
+  module->fnFinalizeUpdateKecc[iBody][iModule]      = &FinalizeUpdateKeccEqtide;
+  module->fnFinalizeUpdateRot[iBody][iModule]       = &FinalizeUpdateRotEqtide;
+  module->fnFinalizeUpdateSemi[iBody][iModule]      = &FinalizeUpdateSemiEqtide;
+  module->fnFinalizeUpdateXobl[iBody][iModule]      = &FinalizeUpdateXoblEqtide;
+  module->fnFinalizeUpdateYobl[iBody][iModule]      = &FinalizeUpdateYoblEqtide;
+  module->fnFinalizeUpdateZobl[iBody][iModule]      = &FinalizeUpdateZoblEqtide;
+  module->fnFinalizeUpdateLostEng[iBody][iModule]   = &FinalizeUpdateLostEngEqtide;
 }
 
 /************* EQTIDE Functions ************/

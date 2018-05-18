@@ -281,28 +281,54 @@ void CalcDistResFreqs(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   system->bResAvg = 1;
 }
 
-void VerifyDistResDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignDistResDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
 
   if (iBody > 0) {
     for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
       /* semi major axis */
-      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iaSemiDistRes[iPert]] = &fdDistResRD2DaDt;
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iaSemiDistRes[iPert]]   = &fdDistResRD2DaDt;
 
       /* mean longitude */
       fnUpdate[iBody][update[iBody].iMeanL][update[iBody].iaMeanLDistRes[iPert]] = &fdDistResRD2DlDt;
 
       /* h = Ecc*sin(LongP) */
-      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistRes[iPert]] = &fdDistResRD2DhDt;
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistRes[iPert]]   = &fdDistResRD2DhDt;
 
       /* k = Ecc*cos(LongP) */
-      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistRes[iPert]] = &fdDistResRD2DkDt;
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistRes[iPert]]   = &fdDistResRD2DkDt;
 
       /* p = s*sin(LongA) */
-      fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistRes[iPert]] = &fdDistResRD2DpDt;
+      fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistRes[iPert]]   = &fdDistResRD2DpDt;
 
       /* q = s*cos(LongA) */
-      fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistRes[iPert]] = &fdDistResRD2DqDt;
+      fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistRes[iPert]]   = &fdDistResRD2DqDt;
+    }
+  }
+}
+
+void NullDistResDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iPert;
+
+  if (iBody > 0) {
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+      /* semi major axis */
+      fnUpdate[iBody][update[iBody].iSemi][update[iBody].iaSemiDistRes[iPert]]   = &fndUpdateFunctionTiny;
+
+      /* mean longitude */
+      fnUpdate[iBody][update[iBody].iMeanL][update[iBody].iaMeanLDistRes[iPert]] = &fndUpdateFunctionTiny;
+
+      /* h = Ecc*sin(LongP) */
+      fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistRes[iPert]]   = &fndUpdateFunctionTiny;
+
+      /* k = Ecc*cos(LongP) */
+      fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistRes[iPert]]   = &fndUpdateFunctionTiny;
+
+      /* p = s*sin(LongA) */
+      fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistRes[iPert]]   = &fndUpdateFunctionTiny;
+
+      /* q = s*cos(LongA) */
+      fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistRes[iPert]]   = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -591,24 +617,24 @@ void VerifyHaltDistRes(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* DISTRES Outputs ******************/
 
-void WriteMeanL(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dMeanL;
-
-  while (*dTmp < 0.0) {
-    *dTmp += 2*PI;
-  }
-  while (*dTmp > 2*PI) {
-    *dTmp -= 2*PI;
-  }
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle,cUnit);
-  }
-}
+// void WriteMeanL(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+//   *dTmp = body[iBody].dMeanL;
+//
+//   while (*dTmp < 0.0) {
+//     *dTmp += 2*PI;
+//   }
+//   while (*dTmp > 2*PI) {
+//     *dTmp -= 2*PI;
+//   }
+//
+//   if (output->bDoNeg[iBody]) {
+//     *dTmp *= output->dNeg;
+//     strcpy(cUnit,output->cNeg);
+//   } else {
+//     *dTmp /= fdUnitsAngle(units->iAngle);
+//     fsUnitsAngle(units->iAngle,cUnit);
+//   }
+// }
 
 void WriteDMeanLDtDistRes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
@@ -633,14 +659,15 @@ void WriteDMeanLDtDistRes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
 }
 
 void InitializeOutputDistRes(OUTPUT *output,fnWriteOutput fnWrite[]) {
-  sprintf(output[OUT_MEANL].cName,"MeanL");
-  sprintf(output[OUT_MEANL].cDescr,"Body's Mean Longitude");
-  sprintf(output[OUT_MEANL].cNeg,"Deg");
-  output[OUT_MEANL].bNeg = 1;
-  output[OUT_MEANL].dNeg = 1./DEGRAD;
-  output[OUT_MEANL].iNum = 1;
-  output[OUT_MEANL].iModuleBit = DISTRES;
-  fnWrite[OUT_MEANL] = &WriteMeanL;
+  // Moved to output.c
+  // sprintf(output[OUT_MEANL].cName,"MeanL");
+  // sprintf(output[OUT_MEANL].cDescr,"Body's Mean Longitude");
+  // sprintf(output[OUT_MEANL].cNeg,"Deg");
+  // output[OUT_MEANL].bNeg = 1;
+  // output[OUT_MEANL].dNeg = 1./DEGRAD;
+  // output[OUT_MEANL].iNum = 1;
+  // output[OUT_MEANL].iModuleBit = DISTRES;
+  // fnWrite[OUT_MEANL] = &WriteMeanL;
 
   sprintf(output[OUT_DMEANLDTDISTRES].cName,"DMeanLDtDistRes");
   sprintf(output[OUT_DMEANLDTDISTRES].cDescr,"Body's dlambda/dt in DistRes");
@@ -684,26 +711,27 @@ void LogBodyDistRes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleDistRes(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = DISTRES;
+  module->iaModule[iBody][iModule]                  = DISTRES;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistRes;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsDistRes;
-  module->fnLogBody[iBody][iModule] = &LogBodyDistRes;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsDistRes;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyDistRes;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsDistRes;
-  module->fnVerify[iBody][iModule] = &VerifyDistRes;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyDistResDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistRes;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsDistRes;
+  module->fnVerify[iBody][iModule]                  = &VerifyDistRes;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignDistResDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullDistResDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltDistRes;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistRes;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistRes;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistRes;
-  module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateHeccDistRes;
-  module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistRes;
-  module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistRes;
-  module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistRes;
-  module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateSemiDistRes;
-  module->fnFinalizeUpdateMeanL[iBody][iModule] = &FinalizeUpdateMeanLDistRes;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodyDistRes;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateDistRes;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputDistRes;
+  module->fnFinalizeUpdateHecc[iBody][iModule]      = &FinalizeUpdateHeccDistRes;
+  module->fnFinalizeUpdateKecc[iBody][iModule]      = &FinalizeUpdateKeccDistRes;
+  module->fnFinalizeUpdatePinc[iBody][iModule]      = &FinalizeUpdatePincDistRes;
+  module->fnFinalizeUpdateQinc[iBody][iModule]      = &FinalizeUpdateQincDistRes;
+  module->fnFinalizeUpdateSemi[iBody][iModule]      = &FinalizeUpdateSemiDistRes;
+  module->fnFinalizeUpdateMeanL[iBody][iModule]     = &FinalizeUpdateMeanLDistRes;
 }
 
 /************* DistRes Functions ************/

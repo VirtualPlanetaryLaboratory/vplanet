@@ -590,7 +590,7 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
   }
 }
 
-void VerifyDistOrbDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignDistOrbDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
   if (evolve->iDistOrbModel == RD4) {
     body[iBody].iGravPerts = evolve->iNumBodies - 2; //will need to change this for zero mass particles in future
@@ -633,10 +633,61 @@ void VerifyDistOrbDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateV
         }
 
         /* p = s*sin(LongA) */
-        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndDistOrbLL2Pinc;
+        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]]   = &fndDistOrbLL2Pinc;
 
         /* q = s*cos(LongA) */
-        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbLL2Qinc;
+        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]]   = &fndDistOrbLL2Qinc;
+    }
+  }
+}
+
+void NullDistOrbDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  int iPert;
+  if (evolve->iDistOrbModel == RD4) {
+    body[iBody].iGravPerts = evolve->iNumBodies - 2; //will need to change this for zero mass particles in future
+    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+
+    /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
+    if (iBody >= 1) {
+      /* Body updates */
+      for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        /* h = Ecc*sin(LongP) */
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+
+        /* k = Ecc*cos(LongP) */
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+
+        /* p = s*sin(LongA) */
+        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]] = &fndUpdateFunctionTiny;
+
+        /* q = s*cos(LongA) */
+        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]] = &fndUpdateFunctionTiny;
+      }
+      if (body[iBody].bGRCorr) {
+        /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[body[iBody].iGravPerts]] = &fndUpdateFunctionTiny;
+      }
+    }
+  } else if (evolve->iDistOrbModel == LL2) {
+    body[iBody].iGravPerts = evolve->iNumBodies - 1;
+    VerifyPerturbersDistOrbLL2(body,evolve->iNumBodies,iBody);
+
+    for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+        if (body[iBody].bEqtide) {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+        } else {
+          fnUpdate[iBody][update[iBody].iHecc][update[iBody].iaHeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+          fnUpdate[iBody][update[iBody].iKecc][update[iBody].iaKeccDistOrb[iPert]] = &fndUpdateFunctionTiny;
+        }
+
+        /* p = s*sin(LongA) */
+        fnUpdate[iBody][update[iBody].iPinc][update[iBody].iaPincDistOrb[iPert]]   = &fndUpdateFunctionTiny;
+
+        /* q = s*cos(LongA) */
+        fnUpdate[iBody][update[iBody].iQinc][update[iBody].iaQincDistOrb[iPert]]   = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -1624,24 +1675,25 @@ void LogBodyDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = DISTORB;
+  module->iaModule[iBody][iModule]                  = DISTORB;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyDistOrb;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsDistOrb;
-  module->fnLogBody[iBody][iModule] = &LogBodyDistOrb;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsDistOrb;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyDistOrb;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsDistOrb;
-  module->fnVerify[iBody][iModule] = &VerifyDistOrb;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyDistOrbDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltDistOrb;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsDistOrb;
+  module->fnVerify[iBody][iModule]                  = &VerifyDistOrb;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignDistOrbDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullDistOrbDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltDistOrb;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyDistOrb;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateDistOrb;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputDistOrb;
-  module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateHeccDistOrb;
-  module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateKeccDistOrb;
-  module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdatePincDistOrb;
-  module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateQincDistOrb;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodyDistOrb;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateDistOrb;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputDistOrb;
+  module->fnFinalizeUpdateHecc[iBody][iModule]      = &FinalizeUpdateHeccDistOrb;
+  module->fnFinalizeUpdateKecc[iBody][iModule]      = &FinalizeUpdateKeccDistOrb;
+  module->fnFinalizeUpdatePinc[iBody][iModule]      = &FinalizeUpdatePincDistOrb;
+  module->fnFinalizeUpdateQinc[iBody][iModule]      = &FinalizeUpdateQincDistOrb;
 }
 
 /************* DistOrb Functions ************/

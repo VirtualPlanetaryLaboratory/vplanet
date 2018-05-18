@@ -792,17 +792,30 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
-void VerifyAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
-    fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
+    fnUpdate[iBody][update[iBody].iOxygenMass][0]       = &fdDOxygenMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
   }
   if (body[iBody].dEnvelopeMass > 0) {
-  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
+    fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
   }
-  fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;                            // NOTE: This points to the VALUE of the radius!
+  fnUpdate[iBody][update[iBody].iRadius][0]             = &fdPlanetRadius; // NOTE: This points to the VALUE of the radius!
+}
+
+void NullAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  if (body[iBody].dSurfaceWaterMass > 0) {
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iOxygenMass][0]       = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fndUpdateFunctionTiny;
+  }
+  if (body[iBody].dEnvelopeMass > 0) {
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iMass][0]             = &fndUpdateFunctionTiny;
+  }
+  fnUpdate[iBody][update[iBody].iRadius][0]             = &fndUpdateFunctionTiny; // NOTE: This points to the VALUE of the radius!
 }
 
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -1394,22 +1407,23 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = ATMESC;
+  module->iaModule[iBody][iModule]                         = ATMESC;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsAtmEsc;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsAtmEsc;
-  module->fnLogBody[iBody][iModule] = &LogBodyAtmEsc;
-  module->fnVerify[iBody][iModule] = &VerifyAtmEsc;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyAtmEscDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltAtmEsc;
+  module->fnCountHalts[iBody][iModule]                     = &CountHaltsAtmEsc;
+  module->fnReadOptions[iBody][iModule]                    = &ReadOptionsAtmEsc;
+  module->fnLogBody[iBody][iModule]                        = &LogBodyAtmEsc;
+  module->fnVerify[iBody][iModule]                         = &VerifyAtmEsc;
+  module->fnAssignDerivatives[iBody][iModule]              = &AssignAtmEscDerivatives;
+  module->fnNullDerivatives[iBody][iModule]                = &NullAtmEscDerivatives;
+  module->fnVerifyHalt[iBody][iModule]                     = &VerifyHaltAtmEsc;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateAtmEsc;
+  module->fnInitializeUpdate[iBody][iModule]               = &InitializeUpdateAtmEsc;
   module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateSurfaceWaterMassAtmEsc;
-  module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateOxygenMassAtmEsc;
+  module->fnFinalizeUpdateOxygenMass[iBody][iModule]       = &FinalizeUpdateOxygenMassAtmEsc;
   module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] = &FinalizeUpdateOxygenMantleMassAtmEsc;
-  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
-  module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateEnvelopeMassAtmEsc;
-  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusAtmEsc;
+  module->fnFinalizeUpdateEnvelopeMass[iBody][iModule]     = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateMass[iBody][iModule]             = &FinalizeUpdateEnvelopeMassAtmEsc;
+  module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateRadiusAtmEsc;
 }
 
 /************* ATMESC Functions ************/

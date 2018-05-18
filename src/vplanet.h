@@ -1088,6 +1088,7 @@ struct UPDATE {
       list body numbers.
   */
   int ***iaBody;
+  // XXX Should be iaNumBodies
   int **iNumBodies;     /**< Number of Bodies Affecting a Process */
 
   /* These keep track of the variable and modules */
@@ -1824,7 +1825,7 @@ typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-typedef void (*fnVerifyModuleDerivatives)(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+typedef void (*fnManageModuleDerivatives)(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 typedef void (*fnVerifyHaltModule)(BODY*,CONTROL*,OPTIONS*,int,int*);
 typedef void (*fnCountHaltsModule)(HALT*,int*);
 typedef void (*fnInitializeOutputModule)(OUTPUT*,fnWriteOutput*);
@@ -1833,7 +1834,7 @@ typedef void (*fnLogModule)(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput
 
 struct MODULE {
   int *iNumModules; /**< Number of Modules per Body */
-  int *iNumModuleMulti;
+  int *iNumManageDerivs;
   int **iaModule; /**< Module numbers that Apply to the Body */
   int *iBitSum;
 
@@ -2004,7 +2005,8 @@ struct MODULE {
   fnVerifyModule **fnVerify;
 
   /*! These functions add derivatives to the fnUpdate matrix */
-  fnVerifyModuleDerivatives **fnVerifyDerivatives;
+  fnManageModuleDerivatives **fnAssignDerivatives;
+  fnManageModuleDerivatives **fnNullDerivatives;
 
   /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;

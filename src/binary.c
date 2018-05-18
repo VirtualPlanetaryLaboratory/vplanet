@@ -588,19 +588,36 @@ void fnForceBehaviorBinary(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 // Anything here?
 }
 
-void VerifyBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Add equations to the matrix
     if(body[iBody].bBinaryUseMatrix)
     {
-      fnUpdate[iBody][update[iBody].iCBPR][0] = &fdCBPRBinary;
-      fnUpdate[iBody][update[iBody].iCBPZ][0] = &fdCBPZBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhi][0] = &fdCBPPhiBinary;
-      fnUpdate[iBody][update[iBody].iCBPRDot][0] = &fdCBPRDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPZDot][0] = &fdCBPZDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPR][0]      = &fdCBPRBinary;
+      fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fdCBPZBinary;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fdCBPPhiBinary;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fdCBPRDotBinary;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fdCBPZDotBinary;
       fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fdCBPPhiDotBinary;
+    }
+  }
+}
+
+void NullBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  if(body[iBody].iBodyType == 0) // Planets are added to matrix
+  {
+    // Add equations to the matrix
+    if(body[iBody].bBinaryUseMatrix)
+    {
+      fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndUpdateFunctionTiny;
     }
   }
 }
@@ -1342,27 +1359,28 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 void AddModuleBinary(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = BINARY;
+  module->iaModule[iBody][iModule]                  = BINARY;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyBinary;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsBinary;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsBinary;
-  module->fnLogBody[iBody][iModule] = &LogBodyBinary;
-  module->fnVerify[iBody][iModule] = &VerifyBinary;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyBinaryDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltBinary;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsBinary;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsBinary;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyBinary;
+  module->fnVerify[iBody][iModule]                  = &VerifyBinary;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignBinaryDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullBinaryDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltBinary;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyBinary;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateBinary;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodyBinary;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateBinary;
 
   // Update functions
-  module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateCBPRBinary;
-  module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateCBPZBinary;
-  module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateCBPPhiBinary;
+  module->fnFinalizeUpdateCBPR[iBody][iModule]      = &FinalizeUpdateCBPRBinary;
+  module->fnFinalizeUpdateCBPZ[iBody][iModule]      = &FinalizeUpdateCBPZBinary;
+  module->fnFinalizeUpdateCBPPhi[iBody][iModule]    = &FinalizeUpdateCBPPhiBinary;
   module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateCBPPhiDotBinary;
-  module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateCBPRDotBinary;
-  module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateCBPZDotBinary;
+  module->fnFinalizeUpdateCBPRDot[iBody][iModule]   = &FinalizeUpdateCBPRDotBinary;
+  module->fnFinalizeUpdateCBPZDot[iBody][iModule]   = &FinalizeUpdateCBPZDotBinary;
 }
 
 /************* BINARY Functions ************/

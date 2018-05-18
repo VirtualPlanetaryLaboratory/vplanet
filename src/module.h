@@ -7,7 +7,7 @@ void PropsAuxNULL(BODY*,EVOLVE*,UPDATE*,int);
 
 void PrintModuleList(FILE*,int);
 
-double fdUpdateFunctionTiny(BODY*,SYSTEM*,int*);
+double fndUpdateFunctionTiny(BODY*,SYSTEM*,int*);
 void SetDerivTiny(fnUpdateVariable***,int,int,int);
 
 void InitializeModule(MODULE*,int);
@@ -17,7 +17,8 @@ void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
 
 void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
-void VerifyEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);

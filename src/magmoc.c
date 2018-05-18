@@ -72,19 +72,9 @@ void ReadOptionsMagmoc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 /******************* Verify MAGMOC ******************/
 
-void NotMassAndNum(OPTIONS *options,int iMass,int iNum,int iBody) {
 
-}
 
 /* Assign Nums */
-void Assign26AlNum(BODY *body,OPTIONS *options,double dAge,int iBody) {
-
-}
-
-/* Verify */
-void Verify26Al(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
-
-}
 
 
 /* Auxs Props */
@@ -115,17 +105,8 @@ void InitializeUpdateMagmoc(BODY *body,UPDATE *update,int iBody) {
 
 }
 
-//PED: Combine these into ..HeatMan?  and ..HeatCore?
-void FinalizeUpdate26AlNumManMagmoc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-
-}
-
 /***************** MAGMOC Halts *****************/
 
-/* Minimum 40K Powering? */
-int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-
-}
 
 
 void CountHaltsMagmoc(HALT *halt,int *iNumHalts) {
@@ -141,11 +122,6 @@ void VerifyHaltMagmoc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 /* NOTE: If you write a new Write subroutine here you need to add the associate
    block of initialization in InitializeOutputMagmoc below */
 
-/* Aluminum */
-
-void Write26AlPowerMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-}
 
 void InitializeOutputMagmoc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 

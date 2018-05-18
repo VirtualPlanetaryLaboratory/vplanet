@@ -43,6 +43,7 @@
  * FLARE: 2000 - 2100
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
+ * MAGMOC: 2300 - 2400
  */
 #define MODULEOPTEND        2400
 #define MODULEOUTEND        2400
@@ -2041,3 +2042,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "galhabit.h"
 #include "distres.h"
 #include "spinbody.h"
+#include "magmoc.h"

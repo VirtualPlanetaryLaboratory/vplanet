@@ -15,8 +15,10 @@ void AddModuleMagmoc(MODULE*,int,int);
 
 /* Options Info */
 
-#define OPTSTARTMagmoc            1100 /* Start of Magmoc options */
-#define OPTENDMagmoc              1200 /* End of Magmoc options */
+#define OPTSTARTMAGMOC            2300 /* Start of Magmoc options */
+#define OPTENDMAGMOC              2400 /* End of Magmoc options */
+
+#define OPT_FEO                   2310
 
 /* Options Functions */
 void HelpOptionsMagmoc(OPTIONS*);

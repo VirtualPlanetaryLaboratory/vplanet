@@ -9,9 +9,9 @@
 
 
 // 26Al -- Masses, numbers and powers from Wikipedia XXX Check!
-#define ENERGY26AL        6.4153392709791e-13 // [J]
 
-void AddModuleMagmoc(MODULE*,int,int);
+void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
+void AddModuleMagmOc(MODULE*,int,int);
 
 /* Options Info */
 
@@ -19,43 +19,56 @@ void AddModuleMagmoc(MODULE*,int,int);
 #define OPTENDMAGMOC              2400 /* End of Magmoc options */
 
 #define OPT_FEO                   2310
+#define OPT_WATERMASSATM          2311
+#define OPT_SURFTEMP              2312
+#define OPT_MANMELTDENSITY        2313
 
 /* Options Functions */
-void HelpOptionsMagmoc(OPTIONS*);
+void HelpOptionsMagmOc(OPTIONS*);
 void ReadFeO(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 #define MAGMOCHALTSYSEND       5
 #define MAGMOCHALTBODYEND      5
 
 /* Verify Functions */
-void VerifyMagmoc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-void VerifyRotationMagmoc(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetMagmoc(CONTROL*,MODULE*);
-void PropsAuxMagmoc(BODY*,EVOLVE*,UPDATE*,int);
-void VerifyHaltMagmoc(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationMagmoc(BODY*,CONTROL*,OPTIONS*,char[],int);
+void VerifyMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void VerifyRotationMagmOc(BODY*,CONTROL*,OPTIONS*,char[],int);
+void InitializeVplanetMagmOc(CONTROL*,MODULE*);
+void PropsAuxMagmOc(BODY*,EVOLVE*,UPDATE*,int);
+void VerifyHaltMagmOc(BODY*,CONTROL*,OPTIONS*,int,int*);
+void VerifyRotationMagmOc(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
-void InitializeUpdateMagmoc(BODY*,UPDATE*,int);
-void FinalizeUpdateEccMagmoc(BODY*,UPDATE*,int*,int,int,int);
+void InitializeUpdateMagmOc(BODY*,UPDATE*,int);
+void FinalizeUpdateEccMagmOc(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functions */
 
-/* Magmoc 1100 - 1199 */
-#define OUTSTARTMAGMOC         1100
-#define OUTENDMAGMOC           1200
+/* MagmOc 1100 - 1199 */
+#define OUTSTARTMAGMOC         2300
+#define OUTENDMAGMOC           2400
+
+#define OUT_FE2O3              2310
+#define OUT_WATERMASSMOATM     2311
 
 
-void HelpOutputMagmoc(OUTPUT*);
-void InitializeOutputMagmoc(OUTPUT*,fnWriteOutput[]);
-void InitializeOutputFunctionMagmoc(OUTPUT*,int,int);
-void FinalizeOutputFunctionMagmoc(OUTPUT*,int,int);
+void HelpOutputMagmOc(OUTPUT*);
+void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
+void InitializeOutputFunctionMagmOc(OUTPUT*,int,int);
+void FinalizeOutputFunctionMagmOc(OUTPUT*,int,int);
+
+// void WriteFe2O3(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+
 
 /* Logging Functions */
-void LogOptionsMagmoc(CONTROL*,FILE*);
-void LogMagmoc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyMagmoc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void LogOptionsMagmOc(CONTROL*,FILE*);
+void LogMagmOc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void LogBodyMagmOc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
-/* Magmoc functions */
-void fnForceBehaviorMagmoc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+/* MagmOc functions */
+void fnForceBehaviorMagmOc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);

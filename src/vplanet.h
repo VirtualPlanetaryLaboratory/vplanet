@@ -21,6 +21,7 @@
 #define GALHABIT      2048
 #define SPINBODY      4096
 #define DISTRES       8192
+#define MAGMOC        16384
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -79,6 +80,7 @@
 #define YEARDAY       365.25      // Days per year (more precise??)
 #define MSAT          5.6851e26   // Saturns' Mass (ref?)
 #define DEGRAD        0.017453292519444445 // Degrees per radian
+#define TOMASS        1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS      1.660538921e-27 // Atomic Mass
 #define SIGMA         5.670367e-8 // Stefan-Boltzmann Constant
 #define LFICE         3.34e5      // ???
@@ -228,6 +230,10 @@
 
 //DISTRES
 #define VMEANL          2301
+
+//MAGMOC
+#define VWATERMASSMOATM 2310
+
 
 /* Now define the structs */
 
@@ -957,7 +963,12 @@ struct BODY {
   double dMeanL;            /**< Body's mean longitude */
 
   //MAGMOC
+  int bMagmOc;              /**< Use magmoc model */
   double dFeO;              /**< FeO in the magma ocean */
+  double dWaterMassAtm;     /**< Water mass in the atmosphere */
+  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
+  double dSurfTemp;         /**< Potential Temp of the mantle */
+  double dManMeltDensity;   /**< Density of the molten mantle */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1121,6 +1132,14 @@ struct UPDATE {
   int iMass;
 
   /* Next comes the identifiers for the module that modifies a variable */
+
+  /* MAGMOC parameters */
+  int iWaterMassMOAtm;
+  int iNumWaterMassMOAtm;
+
+  double dWaterMassMOAtm;
+
+  double *pdDWaterMassMOAtm;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1827,6 +1846,7 @@ typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -1856,6 +1876,7 @@ struct MODULE {
   int *iaGalHabit;
   int *iaDistRes;
   int *iaSpiNBody;
+  int *iaMagmOc;
   int *iaEqtideStellar;
 
   /*! These functions count the number of applicable halts for each body. */
@@ -1999,6 +2020,8 @@ struct MODULE {
   fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
 
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
+
+  fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

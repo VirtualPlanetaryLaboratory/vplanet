@@ -7,7 +7,6 @@
  *
 */
 
-#define TOMASS                  1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define TOHMASS                 TOMASS/9.   // Hydrogen mass in one TO
 #define ATMESC_LB15             0
 #define ATMESC_LBEXACT          1

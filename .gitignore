@@ -5,6 +5,9 @@
 *.Climate
 *.DailyInsolInit
 
+# Figures
+Manual/Figures/*/*.pdf
+
 # Aux files / build info / garbage
 *.pyc
 */__pycache__

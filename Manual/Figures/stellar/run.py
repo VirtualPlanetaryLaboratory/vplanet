@@ -2,9 +2,9 @@
 import numpy as np
 import subprocess
 import vplot as vpl
-from tqdm import tqdm
 import matplotlib.pyplot as pl
-cmap = pl.get_cmap('jet')
+cmap = pl.get_cmap('inferno')
+
 
 star = """#
 sName	                  s%02d
@@ -14,7 +14,7 @@ dAge                      1e7
 sStellarModel             baraffe
 dSatXUVFrac               1.e-3
 dSatXUVTime               -0.1
-saOutputOrder Luminosity Radius Temperature RotPer LXUVStellar
+saOutputOrder Age -Luminosity -Radius Temperature -RotPer LXUVStellar
 """
 
 system = """#
@@ -54,20 +54,40 @@ def write_in(masses):
 
 def run(masses):
     """Run vplanet and collect the output."""
-    write_in(masses)
-    subprocess.call(['vplanet', 'vpl.in'])
+    #write_in(masses)
+    #subprocess.call(['vplanet', 'vpl.in'])
     output = vpl.GetOutput()
+    age = output.bodies[0].Age
     radius = [output.bodies[n].Radius for n in range(len(masses))]
-    return radius
+    temp = [output.bodies[n].Temperature for n in range(len(masses))]
+    lum = [output.bodies[n].Luminosity for n in range(len(masses))]
+    lxuv = [output.bodies[n].LXUVStellar for n in range(len(masses))]
+    prot = [output.bodies[n].RotPer for n in range(len(masses))]
+    return age, radius, lum, lxuv, temp, prot
 
 
 # Create the figure
-fig, ax = pl.subplots(2, 2, figsize=(8, 6))
-fig.subplots_adjust()
+fig, ax = pl.subplots(2, 2, figsize=(10, 6))
+fig.subplots_adjust(right=0.825, wspace=0.30)
 
 masses = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-radius = run(masses)
+age, radius, lum, lxuv, temp, prot = run(masses)
 
-ax[0].plot(radius)
+for n, m in enumerate(masses):
+    ax[0, 0].plot(age, radius[n], label="%.1f" % m, color=cmap(0.8 * m))
+    ax[0, 1].plot(age, lum[n], label="%.1f" % m, color=cmap(0.8 * m))
+    ax[1, 0].plot(age, temp[n], label="%.1f" % m, color=cmap(0.8 * m))
+    ax[1, 1].plot(age, prot[n], label="%.1f" % m, color=cmap(0.8 * m))
 
-pl.show()
+for axis in ax.flatten():
+    axis.set_xscale('log')
+ax[0, 1].set_yscale('log')
+ax[1, 0].set_xlabel('Time (Gyr)', fontsize=14)
+ax[1, 1].set_xlabel('Time (Gyr)', fontsize=14)
+ax[0, 0].set_ylabel(r'Radius ($\mathrm{R}_\oplus$)', fontsize=14)
+ax[0, 1].set_ylabel(r'Luminosity ($\mathrm{L}_\oplus$)', fontsize=14)
+ax[1, 0].set_ylabel(r'Temperature ($\mathrm{K}$)', fontsize=14)
+ax[1, 1].set_ylabel(r'Rotation Period (days)', fontsize=14)
+leg = ax[1, 1].legend(loc=(1.1, 0.5), title='Mass ($\mathrm{M}_\oplus$)')
+leg.get_title().set_fontweight('bold')
+fig.savefig('stellar.pdf', bbox_inches='tight')

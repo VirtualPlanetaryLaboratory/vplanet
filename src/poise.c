@@ -1814,13 +1814,24 @@ void VerifySeasOutputTime(BODY *body,CONTROL *control,OPTIONS *options,char cFil
   }
 }
 
-void VerifyPoiseDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignPoiseDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 //  Nothing here, because entire climate simulation is ran in ForceBehavior
 
 //  if (body[iBody].bIceSheets) {
 //     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
 //       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fdPoiseDIceMassDtDepMelt;
 //       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = &fdPoiseDIceMassDtFlow;
+//     }
+//  }
+}
+
+void NullPoiseDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+//  Nothing here, because entire climate simulation is ran in ForceBehavior
+
+//  if (body[iBody].bIceSheets) {
+//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+//       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassDepMelt[iLat]] = &fndUpdateFunctionTiny;
+//       fnUpdate[iBody][update[iBody].iaIceMass[iLat]][update[iBody].iaIceMassFlow[iLat]] = &fndUpdateFunctionTiny;
 //     }
 //  }
 }
@@ -2934,19 +2945,20 @@ void LogBodyPoise(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 
 void AddModulePoise(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = POISE;
+  module->iaModule[iBody][iModule]                  = POISE;
 
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyPoise;
-  module->fnCountHalts[iBody][iModule] = &CountHaltsPoise;
-  module->fnLogBody[iBody][iModule] = &LogBodyPoise;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsPoise;
+  module->fnLogBody[iBody][iModule]                 = &LogBodyPoise;
 
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsPoise;
-  module->fnVerify[iBody][iModule] = &VerifyPoise;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyPoiseDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltPoise;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsPoise;
+  module->fnVerify[iBody][iModule]                  = &VerifyPoise;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignPoiseDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullPoiseDerivatives;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltPoise;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdatePoise;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputPoise;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdatePoise;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputPoise;
 }
 
 /************* POISE Functions ***********/

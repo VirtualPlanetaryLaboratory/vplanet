@@ -329,10 +329,18 @@ void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,int iBody) {
   */
 }
 
-void VerifyFlareDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignFlareDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fdDLXUVFlareDt;
+  */
+
+}
+
+void NullFlareDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  /* No derivatives yet for flare.
+  This may become useful once flare evolution is included
+  fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
   */
 
 }
@@ -471,14 +479,15 @@ void LogBodyFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 
 void AddModuleFlare(MODULE *module,int iBody,int iModule) {
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsFlare;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsFlare;
-  module->fnLogBody[iBody][iModule] = &LogBodyFlare;
-  module->fnVerify[iBody][iModule] = &VerifyFlare;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyFlareDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltFlare;
+  module->fnCountHalts[iBody][iModule]         = &CountHaltsFlare;
+  module->fnReadOptions[iBody][iModule]        = &ReadOptionsFlare;
+  module->fnLogBody[iBody][iModule]            = &LogBodyFlare;
+  module->fnVerify[iBody][iModule]             = &VerifyFlare;
+  module->fnAssignDerivatives[iBody][iModule]  = &AssignFlareDerivatives;
+  module->fnNullDerivatives[iBody][iModule]    = &NullFlareDerivatives;
+  module->fnVerifyHalt[iBody][iModule]         = &VerifyHaltFlare;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateFlare;
+  module->fnInitializeUpdate[iBody][iModule]   = &InitializeUpdateFlare;
 
   module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVFlare;
 

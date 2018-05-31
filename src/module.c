@@ -40,26 +40,59 @@ double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
   return 0;
 }
 
-double fdUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
+double fndUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
   return TINY;
 }
 
 // Reset function pointer to return TINY
 void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
-  fnUpdate[iBody][iVar][iEqn] = &fdUpdateFunctionTiny;
+  fnUpdate[iBody][iVar][iEqn] = &fndUpdateFunctionTiny;
 }
 
 void InitializeModule(MODULE *module,int iNumBodies) {
   int iBody;
 
-  module->iNumModules = malloc(iNumBodies*sizeof(int));
-  module->iNumModuleMulti = malloc(iNumBodies*sizeof(int));
-  module->iaModule = malloc(iNumBodies*sizeof(int*));
-  module->iBitSum = malloc(iNumBodies*sizeof(int*));
+  module->iNumModules       = malloc(iNumBodies*sizeof(int));
+  module->iNumManageDerivs   = malloc(iNumBodies*sizeof(int));
+  module->iaModule          = malloc(iNumBodies*sizeof(int*));
+  module->iBitSum           = malloc(iNumBodies*sizeof(int*));
 
-  // Allow parameters that require no module
-  for (iBody=0;iBody<iNumBodies;iBody++)
+  module->iaEqtide          = malloc(iNumBodies*sizeof(int));
+  module->iaDistOrb         = malloc(iNumBodies*sizeof(int));
+  module->iaDistRot         = malloc(iNumBodies*sizeof(int));
+  module->iaRadheat         = malloc(iNumBodies*sizeof(int));
+  module->iaThermint        = malloc(iNumBodies*sizeof(int));
+  module->iaAtmEsc          = malloc(iNumBodies*sizeof(int));
+  module->iaStellar         = malloc(iNumBodies*sizeof(int));
+  module->iaPoise           = malloc(iNumBodies*sizeof(int));
+  module->iaBinary          = malloc(iNumBodies*sizeof(int));
+  module->iaFlare           = malloc(iNumBodies*sizeof(int));
+  module->iaGalHabit        = malloc(iNumBodies*sizeof(int));
+  module->iaDistRes         = malloc(iNumBodies*sizeof(int));
+  module->iaSpiNBody        = malloc(iNumBodies*sizeof(int));
+  module->iaEqtideStellar   = malloc(iNumBodies*sizeof(int));
+
+  // Initialize some of the recently malloc'd values in module
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    // Allow parameters that require no module
     module->iBitSum[iBody] = 1;
+
+    // Set module numbers to -1. They will be changed in FinalizeModule() if appropriate
+    module->iaEqtide[iBody]         = -1;
+    module->iaDistOrb[iBody]        = -1;
+    module->iaDistRot[iBody]        = -1;
+    module->iaRadheat[iBody]        = -1;
+    module->iaThermint[iBody]       = -1;
+    module->iaAtmEsc[iBody]         = -1;
+    module->iaStellar[iBody]        = -1;
+    module->iaPoise[iBody]          = -1;
+    module->iaBinary[iBody]         = -1;
+    module->iaFlare[iBody]          = -1;
+    module->iaGalHabit[iBody]       = -1;
+    module->iaDistRes[iBody]        = -1;
+    module->iaSpiNBody[iBody]       = -1;
+    module->iaEqtideStellar[iBody]  = -1;
+  }
 
   // Function pointer vectors
   module->fnInitializeUpdate = malloc(iNumBodies*sizeof(fnInitializeUpdateModule));
@@ -67,84 +100,85 @@ void InitializeModule(MODULE *module,int iNumBodies) {
 
   // Finalize Primary Variable Functions
   //module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
-  module->fnFinalizeUpdate26AlNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumCoreModule));
-  module->fnFinalizeUpdate26AlNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumManModule));
-  module->fnFinalizeUpdate40KNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
-  module->fnFinalizeUpdate40KNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCrustModule));
-  module->fnFinalizeUpdate40KNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate26AlNumCore   = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumCoreModule));
+  module->fnFinalizeUpdate26AlNumMan    = malloc(iNumBodies*sizeof(fnFinalizeUpdate26AlNumManModule));
+  module->fnFinalizeUpdate40KNumCore    = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumCrust   = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumCrustModule));
+  module->fnFinalizeUpdate40KNumMan     = malloc(iNumBodies*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumCore  = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCoreModule));
   module->fnFinalizeUpdate232ThNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumCrustModule));
-  module->fnFinalizeUpdate232ThNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate235UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCrustModule));
-  module->fnFinalizeUpdate235UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule));
-  module->fnFinalizeUpdate238UNumCore = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate238UNumCrust = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCrustModule));
-  module->fnFinalizeUpdate238UNumMan = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
+  module->fnFinalizeUpdate232ThNumMan   = malloc(iNumBodies*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate235UNumCore   = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCrust  = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumCrustModule));
+  module->fnFinalizeUpdate235UNumMan    = malloc(iNumBodies*sizeof(fnFinalizeUpdate235UNumManModule));
+  module->fnFinalizeUpdate238UNumCore   = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumCrust  = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumCrustModule));
+  module->fnFinalizeUpdate238UNumMan    = malloc(iNumBodies*sizeof(fnFinalizeUpdate238UNumManModule));
 
-  module->fnFinalizeUpdateCBPR = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
-  module->fnFinalizeUpdateCBPZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZModule));
-  module->fnFinalizeUpdateCBPPhi = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiModule));
-  module->fnFinalizeUpdateCBPRDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRDotModule));
-  module->fnFinalizeUpdateCBPZDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZDotModule));
-  module->fnFinalizeUpdateCBPPhiDot = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiDotModule));
+  module->fnFinalizeUpdateCBPR          = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ          = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi        = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot       = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPRDotModule));
+  module->fnFinalizeUpdateCBPZDot       = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPZDotModule));
+  module->fnFinalizeUpdateCBPPhiDot     = malloc(iNumBodies*sizeof(fnFinalizeUpdateCBPPhiDotModule));
 
-  module->fnFinalizeUpdateDynEllip = malloc(iNumBodies*sizeof(fnFinalizeUpdateDynEllipModule));
-  module->fnFinalizeUpdateEnvelopeMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
-  module->fnFinalizeUpdateHecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
-  module->fnFinalizeUpdateKecc = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
-  module->fnFinalizeUpdateLuminosity = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
-  module->fnFinalizeUpdateLXUV = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
+  module->fnFinalizeUpdateDynEllip      = malloc(iNumBodies*sizeof(fnFinalizeUpdateDynEllipModule));
+  module->fnFinalizeUpdateEnvelopeMass  = malloc(iNumBodies*sizeof(fnFinalizeUpdateEnvelopeMassModule));
+  module->fnFinalizeUpdateHecc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateHeccModule));
+  module->fnFinalizeUpdateKecc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateKeccModule));
+  module->fnFinalizeUpdateLuminosity    = malloc(iNumBodies*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateLXUV          = malloc(iNumBodies*sizeof(fnFinalizeUpdateIceMassModule));
 
-  module->fnFinalizeUpdateMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
-  module->fnFinalizeUpdateOxygenMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassModule));
+  module->fnFinalizeUpdateMass          = malloc(iNumBodies*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass    = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdateOxygenMantleMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMantleMassModule));
-  module->fnFinalizeUpdatePinc = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
-  module->fnFinalizeUpdateQinc = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
-  module->fnFinalizeUpdateRadius = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateRot = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
-  module->fnFinalizeUpdateLostAngMom = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
-  module->fnFinalizeUpdateLostEng = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostEngModule));
+  module->fnFinalizeUpdatePinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
+  module->fnFinalizeUpdateQinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
+  module->fnFinalizeUpdateRadius        = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRot           = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi          = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateLostAngMom    = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
+  module->fnFinalizeUpdateLostEng       = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostEngModule));
 
   module->fnFinalizeUpdateSurfaceWaterMass = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
-  module->fnFinalizeUpdateTemperature = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
-  module->fnFinalizeUpdateTMan = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateTCore = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
-  module->fnFinalizeUpdateXobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
-  module->fnFinalizeUpdateYobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
-  module->fnFinalizeUpdateZobl = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateTemperature   = malloc(iNumBodies*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateTMan          = malloc(iNumBodies*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateTCore         = malloc(iNumBodies*sizeof(fnFinalizeUpdateTCoreModule));
+  module->fnFinalizeUpdateXobl          = malloc(iNumBodies*sizeof(fnFinalizeUpdateXoblModule));
+  module->fnFinalizeUpdateYobl          = malloc(iNumBodies*sizeof(fnFinalizeUpdateYoblModule));
+  module->fnFinalizeUpdateZobl          = malloc(iNumBodies*sizeof(fnFinalizeUpdateZoblModule));
 
-  module->fnFinalizeUpdateEccX = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccXModule));
-  module->fnFinalizeUpdateEccY = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccYModule));
-  module->fnFinalizeUpdateEccZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccZModule));
-  module->fnFinalizeUpdateAngMX = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
-  module->fnFinalizeUpdateAngMY = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
-  module->fnFinalizeUpdateAngMZ = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
-  module->fnFinalizeUpdateMeanL = malloc(iNumBodies*sizeof(fnFinalizeUpdateMeanLModule));
+  module->fnFinalizeUpdateEccX          = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccXModule));
+  module->fnFinalizeUpdateEccY          = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccYModule));
+  module->fnFinalizeUpdateEccZ          = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccZModule));
+  module->fnFinalizeUpdateAngMX         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
+  module->fnFinalizeUpdateAngMY         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
+  module->fnFinalizeUpdateAngMZ         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL         = malloc(iNumBodies*sizeof(fnFinalizeUpdateMeanLModule));
 
-  module->fnFinalizeUpdatePositionX = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionXModule));
-  module->fnFinalizeUpdatePositionY = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionYModule));
-  module->fnFinalizeUpdatePositionZ = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionZModule));
-  module->fnFinalizeUpdateVelX      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelXModule));
-  module->fnFinalizeUpdateVelY      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelYModule));
-  module->fnFinalizeUpdateVelZ      = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelZModule));
+  module->fnFinalizeUpdatePositionX     = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionXModule));
+  module->fnFinalizeUpdatePositionY     = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionYModule));
+  module->fnFinalizeUpdatePositionZ     = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionZModule));
+  module->fnFinalizeUpdateVelX          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelXModule));
+  module->fnFinalizeUpdateVelY          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelYModule));
+  module->fnFinalizeUpdateVelZ          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelZModule));
 
   // Function Pointer Matrices
-  module->fnLogBody = malloc(iNumBodies*sizeof(fnLogBodyModule*));
-  module->fnInitializeBody = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
-  module->fnInitializeControl = malloc(iNumBodies*sizeof(fnInitializeControlModule*));
+  module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
+  module->fnInitializeBody          = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
+  module->fnInitializeControl       = malloc(iNumBodies*sizeof(fnInitializeControlModule*));
   module->fnInitializeUpdateTmpBody = malloc(iNumBodies*sizeof(fnInitializeUpdateTmpBodyModule*));
-  module->fnCountHalts = malloc(iNumBodies*sizeof(fnCountHaltsModule*));
-  module->fnReadOptions = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
-  module->fnVerify = malloc(iNumBodies*sizeof(fnVerifyModule*));
-  module->fnVerifyDerivatives = malloc(iNumBodies*sizeof(fnVerifyModuleDerivatives*));
-  module->fnVerifyHalt = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
+  module->fnCountHalts              = malloc(iNumBodies*sizeof(fnCountHaltsModule*));
+  module->fnReadOptions             = malloc(iNumBodies*sizeof(fnReadOptionsModule*));
+  module->fnVerify                  = malloc(iNumBodies*sizeof(fnVerifyModule*));
+  module->fnAssignDerivatives       = malloc(iNumBodies*sizeof(fnManageModuleDerivatives*));
+  module->fnNullDerivatives         = malloc(iNumBodies*sizeof(fnManageModuleDerivatives*));
+  module->fnVerifyHalt              = malloc(iNumBodies*sizeof(fnVerifyHaltModule*));
 
   /* Assume no modules per body to start */
   for (iBody=0;iBody<iNumBodies;iBody++) {
     module->iNumModules[iBody]=0;
-    module->iNumModuleMulti[iBody]=0;
+    module->iNumManageDerivs[iBody]=0;
   }
 }
 
@@ -185,157 +219,158 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     iNumModuleMulti++;
   }
 
-  module->iNumModules[iBody] = iNumModules;
-  module->iNumModuleMulti[iBody] = iNumModules+iNumModuleMulti;
-  module->iaModule[iBody] = malloc(iNumModules*sizeof(int));
+  module->iNumModules[iBody]               = iNumModules;
+  module->iNumManageDerivs[iBody]          = iNumModules+iNumModuleMulti;
+  module->iaModule[iBody]                  = malloc(iNumModules*sizeof(int));
 
-  module->fnLogBody[iBody] = malloc(iNumModules*sizeof(fnLogBodyModule));
-  module->fnInitializeControl[iBody] = malloc(iNumModules*sizeof(fnInitializeControlModule));
-  module->fnInitializeOutput[iBody] = malloc(iNumModules*sizeof(fnInitializeOutputModule));
+  module->fnLogBody[iBody]                 = malloc(iNumModules*sizeof(fnLogBodyModule));
+  module->fnInitializeControl[iBody]       = malloc(iNumModules*sizeof(fnInitializeControlModule));
+  module->fnInitializeOutput[iBody]        = malloc(iNumModules*sizeof(fnInitializeOutputModule));
   module->fnInitializeUpdateTmpBody[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateTmpBodyModule));
 
-  module->fnCountHalts[iBody] = malloc(iNumModules*sizeof(fnCountHaltsModule));
-  module->fnReadOptions[iBody] = malloc(iNumModules*sizeof(fnReadOptionsModule));
-  module->fnVerify[iBody] = malloc(iNumModules*sizeof(fnVerifyModule));
-  module->fnVerifyDerivatives[iBody] = malloc((iNumModules+iNumModuleMulti)*sizeof(fnVerifyModuleDerivatives));
-  module->fnVerifyHalt[iBody] = malloc(iNumModules*sizeof(fnVerifyHaltModule));
+  module->fnCountHalts[iBody]              = malloc(iNumModules*sizeof(fnCountHaltsModule));
+  module->fnReadOptions[iBody]             = malloc(iNumModules*sizeof(fnReadOptionsModule));
+  module->fnVerify[iBody]                  = malloc(iNumModules*sizeof(fnVerifyModule));
+  module->fnAssignDerivatives[iBody]       = malloc((iNumModules+iNumModuleMulti)*sizeof(fnManageModuleDerivatives));
+  module->fnNullDerivatives[iBody]         = malloc((iNumModules+iNumModuleMulti)*sizeof(fnManageModuleDerivatives));
+  module->fnVerifyHalt[iBody]              = malloc(iNumModules*sizeof(fnVerifyHaltModule));
 
-  module->fnInitializeBody[iBody] = malloc(iNumModules*sizeof(fnInitializeBodyModule));
-  module->fnInitializeUpdate[iBody] = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
+  module->fnInitializeBody[iBody]          = malloc(iNumModules*sizeof(fnInitializeBodyModule));
+  module->fnInitializeUpdate[iBody]        = malloc(iNumModules*sizeof(fnInitializeUpdateModule));
 
   // Finalize Primary Variable Functions
-  module->fnFinalizeUpdate26AlNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumCoreModule));
-  module->fnFinalizeUpdate26AlNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumManModule));
-  module->fnFinalizeUpdate40KNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
-  module->fnFinalizeUpdate40KNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCrustModule));
-  module->fnFinalizeUpdate40KNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
-  module->fnFinalizeUpdate232ThNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
-  module->fnFinalizeUpdate232ThNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCrustModule));
-  module->fnFinalizeUpdate232ThNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
-  module->fnFinalizeUpdate235UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
-  module->fnFinalizeUpdate235UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCrustModule));
-  module->fnFinalizeUpdate235UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));
-  module->fnFinalizeUpdate238UNumCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
-  module->fnFinalizeUpdate238UNumCrust[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCrustModule));
-  module->fnFinalizeUpdate238UNumMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
+  module->fnFinalizeUpdate26AlNumCore[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumCoreModule));
+  module->fnFinalizeUpdate26AlNumMan[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdate26AlNumManModule));
+  module->fnFinalizeUpdate40KNumCore[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCoreModule));
+  module->fnFinalizeUpdate40KNumCrust[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumCrustModule));
+  module->fnFinalizeUpdate40KNumMan[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdate40KNumManModule));
+  module->fnFinalizeUpdate232ThNumCore[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCoreModule));
+  module->fnFinalizeUpdate232ThNumCrust[iBody]    = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumCrustModule));
+  module->fnFinalizeUpdate232ThNumMan[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdate232ThNumManModule));
+  module->fnFinalizeUpdate235UNumCore[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCoreModule));
+  module->fnFinalizeUpdate235UNumCrust[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumCrustModule));
+  module->fnFinalizeUpdate235UNumMan[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdate235UNumManModule));
+  module->fnFinalizeUpdate238UNumCore[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCoreModule));
+  module->fnFinalizeUpdate238UNumCrust[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumCrustModule));
+  module->fnFinalizeUpdate238UNumMan[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdate238UNumManModule));
 
-  module->fnFinalizeUpdateCBPR[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
-  module->fnFinalizeUpdateCBPZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZModule));
-  module->fnFinalizeUpdateCBPPhi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiModule));
-  module->fnFinalizeUpdateCBPRDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRDotModule));
-  module->fnFinalizeUpdateCBPZDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZDotModule));
-  module->fnFinalizeUpdateCBPPhiDot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiDotModule));
+  module->fnFinalizeUpdateCBPR[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRModule));
+  module->fnFinalizeUpdateCBPZ[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZModule));
+  module->fnFinalizeUpdateCBPPhi[iBody]           = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiModule));
+  module->fnFinalizeUpdateCBPRDot[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPRDotModule));
+  module->fnFinalizeUpdateCBPZDot[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPZDotModule));
+  module->fnFinalizeUpdateCBPPhiDot[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdateCBPPhiDotModule));
 
-  module->fnFinalizeUpdateDynEllip[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateDynEllipModule));
-  module->fnFinalizeUpdateEnvelopeMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
-  module->fnFinalizeUpdateHecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHeccModule));
-  module->fnFinalizeUpdateKecc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateKeccModule));
-  module->fnFinalizeUpdateLuminosity[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
-  module->fnFinalizeUpdateLXUV[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
-  module->fnFinalizeUpdateMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
-  module->fnFinalizeUpdateOxygenMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassModule));
+  module->fnFinalizeUpdateDynEllip[iBody]         = malloc(iNumModules*sizeof(fnFinalizeUpdateDynEllipModule));
+  module->fnFinalizeUpdateEnvelopeMass[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdateEnvelopeMassModule));
+  module->fnFinalizeUpdateHecc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateHeccModule));
+  module->fnFinalizeUpdateKecc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateKeccModule));
+  module->fnFinalizeUpdateLuminosity[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdateLuminosityModule));
+  module->fnFinalizeUpdateLXUV[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateMass[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateMassModule));
+  module->fnFinalizeUpdateOxygenMass[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdateOxygenMantleMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMantleMassModule));
-  module->fnFinalizeUpdatePinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
-  module->fnFinalizeUpdateQinc[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
+  module->fnFinalizeUpdatePinc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdatePincModule));
+  module->fnFinalizeUpdateQinc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
-  module->fnFinalizeUpdateRadius[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateRot[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
-  module->fnFinalizeUpdateSemi[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
+  module->fnFinalizeUpdateRadius[iBody]           = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRot[iBody]              = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
+  module->fnFinalizeUpdateSemi[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
-  module->fnFinalizeUpdateTCore[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
-  module->fnFinalizeUpdateTMan[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
-  module->fnFinalizeUpdateXobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
-  module->fnFinalizeUpdateYobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
-  module->fnFinalizeUpdateZobl[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
-  module->fnFinalizeUpdateTemperature[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
-  module->fnFinalizeUpdateLostAngMom[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLostAngMomModule));
-  module->fnFinalizeUpdateLostEng[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateLostEngModule));
+  module->fnFinalizeUpdateTCore[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateTCoreModule));
+  module->fnFinalizeUpdateTMan[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateTManModule));
+  module->fnFinalizeUpdateXobl[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateXoblModule));
+  module->fnFinalizeUpdateYobl[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateYoblModule));
+  module->fnFinalizeUpdateZobl[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateZoblModule));
+  module->fnFinalizeUpdateTemperature[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateTemperatureModule));
+  module->fnFinalizeUpdateLostAngMom[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdateLostAngMomModule));
+  module->fnFinalizeUpdateLostEng[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateLostEngModule));
 
-  module->fnFinalizeUpdateEccX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccXModule));
-  module->fnFinalizeUpdateEccY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccYModule));
-  module->fnFinalizeUpdateEccZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateEccZModule));
-  module->fnFinalizeUpdateAngMX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
-  module->fnFinalizeUpdateAngMY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
-  module->fnFinalizeUpdateAngMZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
-  module->fnFinalizeUpdateMeanL[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateMeanLModule));
+  module->fnFinalizeUpdateEccX[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateEccXModule));
+  module->fnFinalizeUpdateEccY[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateEccYModule));
+  module->fnFinalizeUpdateEccZ[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateEccZModule));
+  module->fnFinalizeUpdateAngMX[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
+  module->fnFinalizeUpdateAngMY[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
+  module->fnFinalizeUpdateAngMZ[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
+  module->fnFinalizeUpdateMeanL[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateMeanLModule));
 
-  module->fnFinalizeUpdatePositionX[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionXModule));
-  module->fnFinalizeUpdatePositionY[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionYModule));
-  module->fnFinalizeUpdatePositionZ[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionZModule));
-  module->fnFinalizeUpdateVelX[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelXModule));
-  module->fnFinalizeUpdateVelY[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelYModule));
-  module->fnFinalizeUpdateVelZ[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateVelZModule));
+  module->fnFinalizeUpdatePositionX[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionXModule));
+  module->fnFinalizeUpdatePositionY[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionYModule));
+  module->fnFinalizeUpdatePositionZ[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionZModule));
+  module->fnFinalizeUpdateVelX[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateVelXModule));
+  module->fnFinalizeUpdateVelY[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateVelYModule));
+  module->fnFinalizeUpdateVelZ[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateVelZModule));
 
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
        NULL function. The modules that need actual function will replace them
        in AddModule. */
 
-    module->fnInitializeControl[iBody][iModule] = &InitializeControlNULL;
-    module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyNULL;
-    module->fnInitializeBody[iBody][iModule] = &InitializeBodyNULL;
+    module->fnInitializeControl[iBody][iModule]              = &InitializeControlNULL;
+    module->fnInitializeUpdateTmpBody[iBody][iModule]        = &InitializeUpdateTmpBodyNULL;
+    module->fnInitializeBody[iBody][iModule]                 = &InitializeBodyNULL;
 
-    module->fnFinalizeUpdate26AlNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate26AlNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate26AlNumCore[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate26AlNumMan[iBody][iModule]       = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumCore[iBody][iModule]       = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumCrust[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate40KNumMan[iBody][iModule]        = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumCore[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumCrust[iBody][iModule]    = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate232ThNumMan[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumCore[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumCrust[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate235UNumMan[iBody][iModule]       = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCore[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumCrust[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdate238UNumMan[iBody][iModule]       = &FinalizeUpdateNULL;
 
-    module->fnFinalizeUpdateCBPR[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateCBPZ[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateCBPPhi[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateCBPRDot[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateCBPZDot[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateCBPPhiDot[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPR[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPZ[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPPhi[iBody][iModule]           = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPRDot[iBody][iModule]          = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPZDot[iBody][iModule]          = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCBPPhiDot[iBody][iModule]        = &FinalizeUpdateNULL;
 
-    module->fnFinalizeUpdateDynEllip[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateHecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateKecc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateOxygenMass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateDynEllip[iBody][iModule]         = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEnvelopeMass[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateHecc[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateKecc[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLuminosity[iBody][iModule]       = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLXUV[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMass[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMass[iBody][iModule]       = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePinc[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateQinc[iBody][iModule]             = &FinalizeUpdateNULL;
 
-    module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSemi[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRot[iBody][iModule]              = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSemi[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateXobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateYobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateZobl[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateLostEng[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTemperature[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTMan[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateTCore[iBody][iModule]            = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateXobl[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateYobl[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateZobl[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLostAngMom[iBody][iModule]       = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateLostEng[iBody][iModule]          = &FinalizeUpdateNULL;
 
-    module->fnFinalizeUpdateEccX[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateEccY[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateEccZ[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateAngMX[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateAngMY[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateAngMZ[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateMeanL[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccX[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccY[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateEccZ[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMX[iBody][iModule]            = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMY[iBody][iModule]            = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateAngMZ[iBody][iModule]            = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateMeanL[iBody][iModule]            = &FinalizeUpdateNULL;
 
-    module->fnFinalizeUpdatePositionX[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdatePositionY[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdatePositionZ[iBody][iModule] = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateVelX[iBody][iModule]      = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateVelY[iBody][iModule]      = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateVelZ[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePositionX[iBody][iModule]        = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePositionY[iBody][iModule]        = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePositionZ[iBody][iModule]        = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelX[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelY[iBody][iModule]             = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateVelZ[iBody][iModule]             = &FinalizeUpdateNULL;
   }
 
   /************************
@@ -345,72 +380,73 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   iModule = 0;
   if (body[iBody].bEqtide) {
     AddModuleEqtide(module,iBody,iModule);
-    module->iEqtide = &iModule;
+    module->iaEqtide[iBody] = iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
     AddModuleDistOrb(module,iBody,iModule);
-    module->iDistOrb = &iModule;
+    module->iaDistOrb[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
     AddModuleDistRot(module,iBody,iModule);
-    module->iDistRot = &iModule;
+    module->iaDistRot[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
     AddModuleRadheat(module,iBody,iModule);
-    module->iRadheat = &iModule;
+    module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
     AddModuleThermint(module,iBody,iModule);
-    module->iThermint = &iModule;
+    module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
     AddModuleAtmEsc(module,iBody,iModule);
-    module->iAtmEsc = &iModule;
+    module->iaAtmEsc[iBody] = iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
     AddModuleStellar(module,iBody,iModule);
-    module->iStellar = &iModule;
+    module->iaStellar[iBody] = iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
     AddModulePoise(module,iBody,iModule);
-    module->iPoise = &iModule;
+    module->iaPoise[iBody] = iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
     AddModuleBinary(module,iBody,iModule);
-    module->iBinary = &iModule;
+    module->iaBinary[iBody] = iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
     AddModuleFlare(module,iBody,iModule);
-    module->iFlare = &iModule;
+    module->iaFlare[iBody] = iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
     AddModuleGalHabit(module,iBody,iModule);
-    module->iGalHabit = &iModule;
+    module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bDistRes) {
     AddModuleDistRes(module,iBody,iModule);
-    module->iDistRes = &iModule;
+    module->iaDistRes[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTRES;
   }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
-    module->iSpiNBody = &iModule;
+    module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
-    module->fnVerifyDerivatives[iBody][iModule] = &VerifyEqtideStellarDerivatives;
-    module->iEqtideStellar = &iModule;
+    module->fnAssignDerivatives[iBody][iModule] = &AssignEqtideStellarDerivatives;
+    module->fnNullDerivatives[iBody][iModule]   = &NullEqtideStellarDerivatives;
+    module->iaEqtideStellar[iBody] = iModule;
     iModule++;
   }
 }
@@ -533,18 +569,18 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
   int iBody;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
-      (*body)[iBody].bAtmEsc = 0;
-      (*body)[iBody].bBinary = 0;
-      (*body)[iBody].bDistOrb = 0;
-      (*body)[iBody].bDistRot = 0;
-      (*body)[iBody].bEqtide = 0;
-      (*body)[iBody].bFlare = 0;
+      (*body)[iBody].bAtmEsc   = 0;
+      (*body)[iBody].bBinary   = 0;
+      (*body)[iBody].bDistOrb  = 0;
+      (*body)[iBody].bDistRot  = 0;
+      (*body)[iBody].bEqtide   = 0;
+      (*body)[iBody].bFlare    = 0;
       (*body)[iBody].bGalHabit = 0;
-      (*body)[iBody].bPoise = 0;
-      (*body)[iBody].bRadheat = 0;
-      (*body)[iBody].bStellar = 0;
+      (*body)[iBody].bPoise    = 0;
+      (*body)[iBody].bRadheat  = 0;
+      (*body)[iBody].bStellar  = 0;
       (*body)[iBody].bThermint = 0;
-      (*body)[iBody].bDistRes = 0;
+      (*body)[iBody].bDistRes  = 0;
       (*body)[iBody].bSpiNBody = 0;
   }
 }
@@ -719,12 +755,17 @@ void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,F
   }
 }
 
-void VerifyEqtideStellarDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+void AssignEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if ((body[iBody].iBodyType == 1) && (iBody==1)) {
     fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fdSemiDtEqSt;
   }
 }
 
+void NullEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  if ((body[iBody].iBodyType == 1) && (iBody==1)) {
+    fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fndUpdateFunctionTiny;
+  }
+}
 void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iOtherBody, iEqn;
 
@@ -1110,6 +1151,33 @@ void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,F
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
 }
 
+void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  int iTmpBody;
+  // This gets done repeatedly, but should be only done once
+  control->Evolve.bSpiNBodyDistOrb = 0;
+
+  // Since the star will not have DistOrb called, only check for planets
+  for (iTmpBody = 1; iTmpBody < control->Evolve.iNumBodies; iTmpBody ++) {
+    if (body[iTmpBody].bSpiNBody && body[iTmpBody].bDistOrb) {
+      control->Evolve.bSpiNBodyDistOrb = 1;
+      // Start with DistOrb, not SpiNBody
+      control->Evolve.bUsingDistOrb = 1;
+      control->Evolve.bUsingSpiNBody = 0;
+
+      // This initializes Eqtide to be run with SpiNBody
+      // if (body[iTmpBody].bEqtide) {
+      //  control->Evolve.bStepEqtide = 0; // Initialize Eqtide Step as not yet taken
+      //}
+        // Set Mean Longitude so that Mean Anomaly can be tracked through DistOrb
+        body[iTmpBody].dMeanL = body[iTmpBody].dMeanA  + body[iTmpBody].dLongP;
+    }
+  }
+  if (body[iBody].bSpiNBody && body[iBody].bDistOrb) {
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxSpiNBodyDistOrb;
+    control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorSpiNBodyDistOrb;
+  }
+}
+
 
 void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
 
@@ -1126,7 +1194,9 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
      these functions as some default behavior is set if other modules aren't
      called. */
 
-  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiForce,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1161,8 +1231,12 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpinbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // Nothing to see here...
+
+}
+
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
@@ -1301,6 +1375,137 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 /*
  * Force Behavior for multi-module calculations
  */
+
+ void ForceBehaviorSpiNBodyDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+  int iBody, jBody, bOldUsingDistOrb, bOldUsingSpiNBody;
+  double dMinOrbPeriod, *dDt;
+
+
+  bOldUsingDistOrb = evolve->bUsingDistOrb;
+  bOldUsingSpiNBody = evolve->bUsingSpiNBody;
+
+  // If using DistOrb, check to see if we should be using SpiNBody
+  if (evolve->bUsingDistOrb) {
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      body[iBody].dOrbPeriod = fdSemiToPeriod(body[iBody].dSemi,(body[0].dMass));
+    }
+
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if ( (body[iBody].dEcc*body[iBody].dInc)>0.07 || (body[iBody].dEcc>0.25) || (body[iBody].dInc>.3) ) {
+        // If eccentricity and Inclination are too high, switch to SpiNBody
+        // This needs reworked to properly calculate mutual inclination
+        evolve->bUsingDistOrb = 0;
+        evolve->bUsingSpiNBody = 1;
+      }
+      for (jBody=1; jBody<evolve->iNumBodies; jBody++) {
+        if ( (jBody != iBody) && (iBody != 0) ) {
+          // If there is a resonance, use SpiNBody
+          if ( (fmod(body[iBody].dOrbPeriod, body[jBody].dOrbPeriod) < 0.01) || (fmod(body[jBody].dOrbPeriod,body[iBody].dOrbPeriod) < 0.01) ) {
+            evolve->bUsingDistOrb = 0;
+            evolve->bUsingSpiNBody = 1;
+          }
+        }
+      }
+      if ((evolve->dTime/evolve->dStopTime > 0.25) && (evolve->dTime/evolve->dStopTime < 0.75)) {
+        // This is hacked in to test model switching
+        evolve->bUsingDistOrb = 0;
+        evolve->bUsingSpiNBody = 1;
+      }
+    }
+  } else if (evolve->bUsingSpiNBody) {
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if ( evolve->dTime/evolve->dStopTime >= 0.75 ) {
+        // This is hacked in to test model switching
+        evolve->bUsingDistOrb = 1;
+        evolve->bUsingSpiNBody = 0;
+      }
+    }
+  }
+
+  if (evolve->bUsingDistOrb && !(bOldUsingDistOrb)) {
+  // If using DistOrb now, but not earlier, then change derivatives to use DistOrb
+    printf("Switching to DistOrb from SpiNBody at time %f years.\n", (evolve->dTime/YEARSEC));
+
+    // Calculate Orbital Elements:
+    if (!evolve->bFirstStep) {
+      for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+        // Need to convert from Osc Elems into Barycentric
+        Bary2OrbElems(body,iBody);
+      }
+    }
+
+    // Null all derivatives then enable just SpiNBody
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      // The star will not use DistOrb, so check before re-verifying
+      if (body[iBody].bSpiNBody) {
+        module->fnNullDerivatives[iBody][module->iaSpiNBody[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+      if (body[iBody].bDistOrb) {
+        module->fnAssignDerivatives[iBody][module->iaDistOrb[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+    }
+
+  } else if (evolve->bUsingSpiNBody && !(bOldUsingSpiNBody)) {
+  // Else if using SpiNBody now, but not earlier, then change derivatives to use SpiNBody
+    printf("Switching to SpiNBody from DistOrb at time %f years.\n", (evolve->dTime/YEARSEC));
+
+    // Update SpiNBody Coords
+    fndUpdateSpiNBodyCoords(body,evolve);
+
+    for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+      if (body[iBody].bDistOrb) {
+        module->fnNullDerivatives[iBody][module->iaDistOrb[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+      if (body[iBody].bSpiNBody) {
+        module->fnAssignDerivatives[iBody][module->iaSpiNBody[iBody]](body,evolve,update,fnUpdate,iBody);
+      }
+    }
+  }
+
+  // Check to see if we need to take an EqTide multistep
+  if (evolve->bUsingSpiNBody) {
+    // Is it time to calculate a new Eqtide step?
+  //   if (evolve->bStepEqtide) {
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //       // Need to convert from Osc Elems into Barycentric
+  //       Bary2OrbElems(body,iBody);
+  //     }
+  //
+  //     iSpiNBody = FindFamily(FAMSPINBODY,1,evolve->baFamily,update);
+  //     iDistOrb = FindFamily(FAMDISTORB,1,evolve->baFamily,update);
+  //
+  //     // Null out all functions except EqTide
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //
+  //       // If SpiNBody is running, DistOrb pointers must already be Nulled out
+  //
+  //       // Null out SpiNBody function pointers
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionX][0] = &fndUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionY][0] = &fndUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionZ][0] = &fndUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelX][0] = &fndUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelY][0] = &fndUpdateFunctionTiny;
+  //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fndUpdateFunctionTiny;
+  //     }
+  //
+  //     dMinOrbPeriod = HUGE;
+  //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
+  //       // Calculate the minimum Orbital period
+  //       if (body[iBody].dOrbPeriod < dMinOrbPeriod) {
+  //         dMinOrbPeriod = body[iBody].dOrbPeriod;
+  //       }
+  //     }
+  //
+  //     *dDt = 100*dMinOrbPeriod;
+  //
+  //     // Run a single RK4 step for Eqtide
+  //     SingleRungeKutta4Step(body,evolve,io,system,update,fnUpdate,dDt,1,iDistOrb);
+  //
+  //
+  //     evolve->bStepEqtide = 0;
+  //   }
+  }
+}
 
 void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   int iBody;

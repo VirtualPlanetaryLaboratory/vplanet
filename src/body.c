@@ -799,11 +799,14 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 	z = iMetal;
 
 	// Add a small tolerance
-	if ((dMassEarth/daLopezMass[0] < 1) && (dMassEarth/daLopezMass[0]) > 0.99) dMassEarth = daLopezMass[0];
-
-	if ((dMassEarth/daLopezMass[0] < 1) || (dMassEarth >= daLopezMass[MASSLEN-1])){
-		/* Out of bounds */
-		return 0;
+	if ((dMassEarth/daLopezMass[0] < 1)) {
+        /* Out of bounds, assuming it's OK to use min val */
+        dMassEarth = daLopezMass[0];
+        m = 0;
+    } else if ((dMassEarth/daLopezMass[MASSLEN-1] > 1)) {
+        /* Out of bounds, assuming it's OK to use max val */
+        dMassEarth = daLopezMass[MASSLEN-1];
+        m = MASSLEN-1;
 	} else {
 		/* Get index just below desired mass */
 		for (m = 0; m < MASSLEN-1; m++)
@@ -814,8 +817,9 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 		dComp = daLopezComp[0];
 		c = 0;
 	} else if (dComp >= daLopezComp[COMPLEN-1]){
-		/* Out of bounds */
-		return 0;
+        /* Out of bounds, assuming it's OK to use max val */
+		dComp = daLopezComp[COMPLEN-1];
+		c = COMPLEN - 1;
 	} else {
 		/* Get index just below desired composition */
 		for (c = 0; c < COMPLEN-1; c++)

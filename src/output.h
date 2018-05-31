@@ -68,6 +68,9 @@
 #define OUT_ORBANGMOM		        660
 #define OUT_ARGP                661
 #define OUT_MEANA               662
+#define OUT_INC                 663
+#define OUT_LONGA               664
+#define OUT_MEANL               665
 
 
 #define OUT_ORBKINENERGY        670

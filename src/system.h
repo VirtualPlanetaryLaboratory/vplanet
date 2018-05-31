@@ -13,7 +13,7 @@ double fdSemiToMeanMotion(double,double);
 double fdMeanMotionToSemi(double,double,double);
 double fdMeanMotionToSemi(double,double,double);
 
-double * fdOrbAngMom(BODY*,int);
+double * fdOrbAngMom(BODY*,CONTROL*,int);
 double fdTotAngMom(BODY*,CONTROL*,SYSTEM*);
 
 double fdOrbPotEnergy(BODY*,CONTROL*,SYSTEM*,int);
@@ -36,3 +36,4 @@ double fdJStarDt(BODY*,int);
 double fdJBrakingStarDt(BODY*,int);
 double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
+double fndUpdateSpiNBodyCoords(BODY*,EVOLVE*);

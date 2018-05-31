@@ -1113,9 +1113,14 @@ void fnForceBehaviorThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
     body[iBody].dTCore = 0;
 }
 
-void VerifyThermintDerivatives(BODY *body,CONTROL *control,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
-  fnUpdate[iBody][update[iBody].iTMan][0] = &fdTDotMan;
+void AssignThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iTMan][0]  = &fdTDotMan;
   fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
+}
+
+void NullThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iTMan][0]  = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iTCore][0] = &fndUpdateFunctionTiny;
 }
 
 void VerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -2407,20 +2412,21 @@ void LogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 void AddModuleThermint(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = THERMINT;
+  module->iaModule[iBody][iModule]              = THERMINT;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsThermint;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsThermint;
-  module->fnLogBody[iBody][iModule] = &LogBodyThermint;
-  module->fnVerify[iBody][iModule] = &VerifyThermint;
-  module->fnVerifyDerivatives[iBody][iModule] = &VerifyThermintDerivatives;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltThermint;
+  module->fnCountHalts[iBody][iModule]          = &CountHaltsThermint;
+  module->fnReadOptions[iBody][iModule]         = &ReadOptionsThermint;
+  module->fnLogBody[iBody][iModule]             = &LogBodyThermint;
+  module->fnVerify[iBody][iModule]              = &VerifyThermint;
+  module->fnAssignDerivatives[iBody][iModule]   = &AssignThermintDerivatives;
+  module->fnNullDerivatives[iBody][iModule]     = &NullThermintDerivatives;
+  module->fnVerifyHalt[iBody][iModule]          = &VerifyHaltThermint;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodyThermint;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateThermint;
+  module->fnInitializeBody[iBody][iModule]      = &InitializeBodyThermint;
+  module->fnInitializeUpdate[iBody][iModule]    = &InitializeUpdateThermint;
 
   // NEED TO ADD THERMINT VARIABLES HERE??
-  module->fnFinalizeUpdateTMan[iBody][iModule] = &FinalizeUpdateTManThermint;
+  module->fnFinalizeUpdateTMan[iBody][iModule]  = &FinalizeUpdateTManThermint;
   module->fnFinalizeUpdateTCore[iBody][iModule] = &FinalizeUpdateTCoreThermint;
 }
 

@@ -14,7 +14,7 @@ dEcc            0.1		# Eccentricity
 dSemi           0.05 		# Semi-major axis, negative -> AU
 
 # Eqtide Properties
-dTidalQ         3000              # Tidal phase lag
+dTidalQ         100              # Tidal phase lag
 dK2             0.3                 # Love number of degree 2
 dMaxLockDiff    0.01
 saTidePerts     star

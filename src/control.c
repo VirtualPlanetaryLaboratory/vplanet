@@ -284,7 +284,7 @@ double fdUnitsLength(int iType) {
   else if (iType == 5)
     return RJUP;
   else if (iType == 6)
-    return AUCM;
+    return AUM;
   else {
     fprintf(stderr,"ERROR: Unknown iUnitLength %d.\n",iType);
     exit(EXIT_UNITS);      

@@ -3022,92 +3022,30 @@ void Snowball(BODY *body, int iBody) {
   }
 }
 
+/**
+Standard properties function for POISE. Updates auxiliary quantities
+(currently just the dynamical ellipticity when DistRot is not enabled).
 
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param update Struct containing update information and variables
+@param iBody Body in question
+*/
 void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
     }
   }
-
-  // double deltax, Tice = 270, Aice, grav;
-//   int iLat;
-
-  // if (body[iBody].bEqtide) {
-//     body[iBody].dMeanMotion = \
-//           fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-//     body[iBody].iNDays = (int)floor(body[iBody].dRotRate/body[iBody].dMeanMotion);
-//     if (body[iBody].bClimateModel == SEA) {
-//       VerifyNStepSeasonal(body,iBody);
-//     }
-//   }
-//
-//   /* deformability of ice, dependent on temperature */
-//   if (Tice < 263) {
-//     Aice = a1ICE * exp(-Q1ICE/(RGAS*Tice));
-//   } else {
-//     Aice = a2ICE * exp(-Q2ICE/(RGAS*Tice));
-//   }
-//
-//   grav = BIGG*body[iBody].dMass/pow(body[iBody].dRadius,2);
-//
-//   body[iBody].dIceMassTot = 0.0;
-//   if (body[iBody].bIceSheets) {
-//     deltax = 2.0/body[iBody].iNumLats;
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       if (body[iBody].daIceMass[iLat] < 1e-30) {
-//         body[iBody].daIceMass[iLat] = 0.0;
-//       }
-//       body[iBody].daIceHeight[iLat] = body[iBody].daIceMass[iLat]/RHOICE;
-//       body[iBody].dIceMassTot += body[iBody].daIceMass[iLat]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0])))*body[iBody].daLandFrac[iLat];
-//     }
-//
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       /* calculate derivative to 2nd order accuracy */
-//       if (iLat == 0) {
-//         body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) * \
-//             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else if (iLat == (body[iBody].iNumLats-1)) {
-//         body[iBody].daDIceHeightDy[iLat] = sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) * \
-//             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
-//             (body[iBody].dRadius*deltax);
-//       } else {
-//         body[iBody].daDIceHeightDy[iLat] = (sqrt(1.0-pow(body[iBody].daXBoundary[iLat+1],2)) *\
-//             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat]) / \
-//             (body[iBody].dRadius*deltax) + sqrt(1.0-pow(body[iBody].daXBoundary[iLat],2)) *\
-//             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1]) / \
-//             (body[iBody].dRadius*deltax) )/2.0;
-//       }
-//       body[iBody].daIceFlow[iLat] = 2*Aice*pow(RHOICE*grav,nGLEN)/(nGLEN+2.0) * \
-//           pow(fabs(body[iBody].daDIceHeightDy[iLat]),nGLEN-1) * \
-//           pow(body[iBody].daIceHeight[iLat],nGLEN+2);
-//       body[iBody].daSedShear[iLat] = RHOICE*grav*body[iBody].daIceHeight[iLat]*\
-//           body[iBody].daDIceHeightDy[iLat];
-//       body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
-//     }
-//
-//     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-//       if (iLat == 0) {
-//         body[iBody].daIceFlowMid[iLat] = 0;
-//         body[iBody].daBasalFlowMid[iLat] = 0;
-//       } else if (iLat == body[iBody].iNumLats-1) {
-//         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-//            body[iBody].daIceFlow[iLat-1])/2.0;
-//         body[iBody].daIceFlowMid[iLat+1] = 0;
-//         body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
-//            body[iBody].daBasalFlow[iLat-1])/2.0;
-//         body[iBody].daBasalFlowMid[iLat+1] = 0;
-//       } else {
-//         body[iBody].daIceFlowMid[iLat] = (body[iBody].daIceFlow[iLat] + \
-//            body[iBody].daIceFlow[iLat-1])/2.0;
-//         body[iBody].daBasalFlowMid[iLat] = (body[iBody].daBasalFlow[iLat] + \
-//            body[iBody].daBasalFlow[iLat-1])/2.0;
-//       }
-//     }
-//   }
 }
 
+/**
+Calculates precession of the spin axis when DistRot is disabled
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
   /* calculates precession angle as an explicit function of time
      for use only when distrot is not called! */
@@ -3120,6 +3058,13 @@ void PrecessionExplicit(BODY *body,EVOLVE *evolve,int iBody) {
   while (body[iBody].dPrecA < 0) body[iBody].dPrecA += 2*PI;
 }
 
+/**
+Forces obliquity oscillation (bForceObliq = 1).
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
   double A, P, C;
   P = body[iBody].dObliqPer*YEARSEC;
@@ -3130,6 +3075,13 @@ void ForceObliq(BODY *body, EVOLVE  *evolve, int iBody) {
   CalcXYZobl(body,iBody);
 }
 
+/**
+Forces eccentricity oscillation (bForceEcc = 1).
+
+@param body Struct containing all body information and variables
+@param evolve Struct containing evolve information and variables
+@param iBody Body in question
+*/
 void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   double A, P, C;
   P = body[iBody].dEccPer*YEARSEC;
@@ -3140,6 +3092,12 @@ void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   CalcXYZobl(body,iBody);
 }
 
+/**
+Calculates the fractional ice covered area of the planet
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void AreaIceCovered(BODY *body, int iBody) {
 //area permanently ice covered (i.e., all year round)
 
@@ -3163,6 +3121,22 @@ void AreaIceCovered(BODY *body, int iBody) {
   body[iBody].dAreaIceCov /= body[iBody].iNumLats;
 }
 
+/**
+Force behavior function for POISE. This is where the magic happens--
+POISE works entirely in force behavior because it needs to solve several
+PDEs (not well modeled with RK4). First, the EBM (climate) is run for several
+orbits, then the ice sheet flow. The EBM can be periodically rerun needed.
+
+@param body Struct containing all body information and variables
+@param module Struct containing module/intermodule quantities
+@param evolve Struct containing evolve information and variables
+@param io Struct containing read/write information
+@param system Struct containing system-wide information
+@param update Struct containing update information and variables
+@param fnUpdate Array of function pointers to derivatives
+@param iBody Body in question
+@param iModule Module in question
+*/
 void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   int iLat;
 
@@ -3176,11 +3150,6 @@ void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *
       VerifyNStepSeasonal(body,iBody);
     }
   }
-
-  // hack! test perturbation in q
- //  if (evolve->dTime >= 100000*YEARSEC) {
-//     body[0].dLuminosity = 3.85e26;
-//   }
 
   if (body[iBody].bDistRot == 0) {
     PrecessionExplicit(body,evolve,iBody);
@@ -3230,9 +3199,7 @@ void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         if (body[iBody].daIceMass[iLat] < 0) {
           body[iBody].daIceMass[iLat] = 0.0;
-        }//  else if (body[iBody].daIceMass[iLat] < 10 && update[iBody].daDeriv[update[iBody].iaIceMass[iLat]] < 0) {
-  //         body[iBody].daIceMass[iLat] = 0.0;
-  //       }
+        }
         if (body[iBody].bClimateModel == SEA) {
           body[iBody].dIceMassTot += body[iBody].daIceMass[iLat]*(2*PI*(body[iBody].dRadius*body[iBody].dRadius)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0])))*body[iBody].daLandFrac[iLat];
           body[iBody].dIceBalanceTot += body[iBody].daIceBalanceAvg[iLat];
@@ -3243,6 +3210,14 @@ void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *
   }
 }
 
+
+/**
+Calculates eccentric anomaly from true anomaly
+
+@param TrueA Planet's true anomaly
+@param Ecc Planet's orbital eccentricity
+@return Eccentric anomaly
+*/
 double true2eccA(double TrueA, double Ecc) {
   double cosE;
   cosE = (cos(TrueA) + Ecc) / (1.0 + Ecc*cos(TrueA));
@@ -3254,6 +3229,13 @@ double true2eccA(double TrueA, double Ecc) {
   }
 }
 
+/**
+Calculates insolation at each latitude for a single "day" of the year/orbit
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@param iDay Day of the year
+*/
 void DailyInsolation(BODY *body, int iBody, int iDay) {
   int j;
   double Sconst, sin_delta, cos_delta, tan_delta, delta, HA;
@@ -3299,6 +3281,12 @@ void DailyInsolation(BODY *body, int iBody, int iDay) {
   }
 }
 
+/**
+Calculates insolation at each latitude over the entire year/orbit
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL, Ecc;
@@ -3309,7 +3297,6 @@ void AnnualInsolation(BODY *body, int iBody) {
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice
   TrueA = body[iBody].dTrueL - LongP;
   while (TrueA < 0.0) TrueA += 2*PI;
-//   body[iBody].dEcc = sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2));
   body[iBody].dObliquity = atan2(sqrt((body[iBody].dXobl*body[iBody].dXobl)+(body[iBody].dYobl*body[iBody].dYobl)),body[iBody].dZobl);
   EccA = true2eccA(TrueA, Ecc);
   MeanL = EccA - Ecc*sin(EccA) + LongP;
@@ -3344,7 +3331,6 @@ void AnnualInsolation(BODY *body, int iBody) {
     body[iBody].dAstroDist = (1.0 - (Ecc*Ecc))/(1.0+Ecc*cos(TrueA));
 
     DailyInsolation(body, iBody, i);
-//     printf("truel = %f, day = %d, dist = %f, decl = %f\n",body[iBody].dTrueL,i,body[iBody].dAstroDist, body[iBody].daDeclination[i]);
 
     for (j=0;j<body[iBody].iNumLats;j++) {
       body[iBody].daAnnualInsol[j] += body[iBody].daInsol[j][i]/((double)body[iBody].iNDays);
@@ -3355,6 +3341,12 @@ void AnnualInsolation(BODY *body, int iBody) {
   }
 }
 
+/**
+Calculates/updates the albedo at each latitude for the annual EBM
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void AlbedoAnnual(BODY *body, int iBody) {
  int i;
 
@@ -3380,16 +3372,17 @@ void AlbedoAnnual(BODY *body, int iBody) {
   }
 }
 
+/**
+Inverts the matrix for the annual EBM
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void MatrixInvertAnnual(BODY *body, int iBody) {
   double n = body[iBody].iNumLats;
   int i, j;
   float parity;
 
-  // unitv = malloc(n*sizeof(double));
-//   iaRowswap = malloc(n*sizeof(int));
-//
-
- //ludcmp(body[iBody].dMEuler,n,body[iBody].iaRowswap,&parity);
   LUDecomp(body[iBody].daMEulerAnn,body[iBody].daMEulerCopyAnn,body[iBody].daScaleAnn,body[iBody].iaRowswapAnn,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
@@ -3400,27 +3393,24 @@ void MatrixInvertAnnual(BODY *body, int iBody) {
       }
     }
 
-   // lubksb(body[iBody].dMEuler,n,body[iBody].iaRowswap,body[iBody].daUnitV);
     LUSolve(body[iBody].daMEulerCopyAnn,body[iBody].daUnitVAnn,body[iBody].iaRowswapAnn, n);
     for (j=0;j<n;j++) {
       body[iBody].daInvMAnn[j][i] = body[iBody].daUnitVAnn[j];
     }
   }
-//   free(unitv);
-//   free(iaRowswap);
 }
 
+/**
+Inverts the matrix for the seasonal EBM
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void MatrixInvertSeasonal(BODY *body, int iBody) {
   int n = 2*body[iBody].iNumLats;
   int i, j;
   float parity;
 
-  // unitv = malloc(n*sizeof(double));
-//   iaRowswap = malloc(n*sizeof(int));
-//
-
- //ludcmp(body[iBody].dMEuler,n,body[iBody].iaRowswap,&parity);
-  // MEM: body[iBody].daScaleSea not initialized
   LUDecomp(body[iBody].daMEulerSea,body[iBody].daMEulerCopySea,body[iBody].daScaleSea,body[iBody].iaRowswapSea,n);
   for (i=0;i<n;i++) {
     for (j=0;j<n;j++) {
@@ -3431,16 +3421,20 @@ void MatrixInvertSeasonal(BODY *body, int iBody) {
       }
     }
 
-   // lubksb(body[iBody].daMEuler,n,body[iBody].iaRowswap,body[iBody].daUnitV);
     LUSolve(body[iBody].daMEulerCopySea,body[iBody].daUnitVSea,body[iBody].iaRowswapSea, n);
     for (j=0;j<n;j++) {
       body[iBody].daInvMSea[j][i] = body[iBody].daUnitVSea[j];
     }
   }
-//   free(unitv);
-//   free(iaRowswap);
 }
 
+/**
+Calculates the approximate temperature gradient in latitude for the annual EBM
+
+@param body Struct containing all body information and variables
+@param delta_x Spacing of grid (x = sin(latitude))
+@param iBody Body in question
+*/
 void TempGradientAnn(BODY *body, double delta_x, int iBody) {
   int i;
 
@@ -3452,6 +3446,13 @@ void TempGradientAnn(BODY *body, double delta_x, int iBody) {
                           body[iBody].daTempAnn[body[iBody].iNumLats-2])/(delta_x);
 }
 
+/**
+Calculates the approximate temperature gradient in latitude for the seasonal EBM
+
+@param body Struct containing all body information and variables
+@param delta_x Spacing of grid (x = sin(latitude))
+@param iBody Body in question
+*/
 void TempGradientSea(BODY *body, double delta_x, int iBody) {
   int i;
 
@@ -3463,6 +3464,13 @@ void TempGradientSea(BODY *body, double delta_x, int iBody) {
                           body[iBody].daTempLW[body[iBody].iNumLats-2])/(delta_x);
 }
 
+/**
+Calculates the backwards-Euler matrix that integrates the annual EBM. Each
+operation of the inverse matrix is a "time-step".
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void MatrixAnnual(BODY *body, int iBody) {
   int i, j;
   double delta_t, delta_x;
@@ -3470,7 +3478,6 @@ void MatrixAnnual(BODY *body, int iBody) {
   delta_t = 1.5/body[iBody].iNumLats;
   delta_x = 2.0/body[iBody].iNumLats;
 
-//   body[iBody].dTGlobal = 0.0;
   for (i=0;i<body[iBody].iNumLats;i++) {
     body[iBody].daTempTerms[i] = 0.0;
 
@@ -3498,16 +3505,22 @@ void MatrixAnnual(BODY *body, int iBody) {
     body[iBody].daSourceF[i] = ((1.0-body[iBody].daAlbedoAnn[i])*body[iBody].daAnnualInsol[i] - \
                          body[iBody].daPlanckAAnn[i])/body[iBody].dHeatCapAnn;
     body[iBody].daTempTerms[i] += body[iBody].daSourceF[i];
-//     body[iBody].dTGlobal += body[iBody].daTempAnn[i]/body[iBody].iNumLats;
   }
-
 }
 
+/**
+Runs the annual EBM, called from ForceBehavior. The annual EBM runs to
+steady-state (global temperature change becomes very small), rather than for a
+set number of orbits.
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void PoiseAnnual(BODY *body, int iBody) {
   double delta_t, delta_x, xboundary, Tchange, tmpTglobal;
   int Nmax, i, j, n, k;
 
-  /* Get curent climate parameters */
+  /* Get current climate parameters */
   AlbedoAnnual(body, iBody);
   AnnualInsolation(body, iBody);
   if (body[iBody].bCalcAB) {
@@ -3652,11 +3665,18 @@ void PoiseAnnual(BODY *body, int iBody) {
       body[iBody].daDivFlux[i] += -body[iBody].daMDiffAnn[i][j]*body[iBody].daTempAnn[j];
     }
     body[iBody].dAlbedoGlobal += body[iBody].daAlbedoAnn[i]/body[iBody].iNumLats;
-    //body[iBody].dIceMassTot += body[iBody].daIceMass[i]*(2*PI*pow(body[iBody].dRadius,2)*(sin(body[iBody].daLats[1])-sin(body[iBody].daLats[0]))); //XXX only works if all lat cells are equal area!!
-
   }
 }
 
+/**
+Calculates the OLR from the Haqq-Misra+ 2016 formulae (currently NOT well
+trusted by this developer).
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double OLRhm16(BODY *body, int iBody, int iLat, int bModel) {
   double phi, Int, tmpk, f, dT;
 
@@ -3683,6 +3703,15 @@ double OLRhm16(BODY *body, int iBody, int iLat, int bModel) {
   return Int;
 }
 
+/**
+Calculates the slope of the OLR from the Haqq-Misra+ 2016 formulae (currently
+NOT well trusted by this developer).
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
   double phi, dI, tmpk, f, dT;
 
@@ -3692,7 +3721,6 @@ double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
   } else {
     dT = body[iBody].daTempLW[iLat]+273.15;
   }
-//   if (dT > 150) {
     tmpk = log10(dT);
     f = 4*9.12805643869791438760*(tmpk*tmpk*tmpk)+3*4.58408794768168803557*(tmpk*tmpk)*phi- \
       3*8.47261075643147449910e+01*(tmpk*tmpk)+2*4.35517381112690282752e-01*tmpk*(phi*phi)-\
@@ -3704,16 +3732,19 @@ double dOLRdThm16(BODY *body, int iBody, int iLat, int bModel) {
     if (dI <= 0) {
       dI = dOLRdTwk97(body,iBody,iLat,bModel);
     }
- //  } else {
-//     dI = 3 * SIGMA * dT*dT*dT;
-//   }
   return dI;
 }
 
+/**
+Calculates the OLR from the Spiegel+ 2009 formulae
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double OLRsms09(BODY *body, int iBody, int iLat, int bModel) {
   double tau, Int, T;
-
-  //XXXXX need to figure out how tau scales with co2???
 
   if (bModel == ANN) {
     T = body[iBody].daTempAnn[iLat]+273.15;
@@ -3726,10 +3757,16 @@ double OLRsms09(BODY *body, int iBody, int iLat, int bModel) {
   return Int;
 }
 
+/**
+Calculates the slope of the OLR from the Spiegel+ 2009 formulae
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double dOLRdTsms09(BODY *body, int iBody, int iLat, int bModel) {
   double tau, dtau, dI, T;
-
-  //XXXXX need to figure out how tau scales with co2???
 
   if (bModel == ANN) {
     T = body[iBody].daTempAnn[iLat]+273.15;
@@ -3743,8 +3780,15 @@ double dOLRdTsms09(BODY *body, int iBody, int iLat, int bModel) {
   return dI;
 }
 
+/**
+Calculates the OLR from the Williams & Kasting 1997 formulae (currently NOT well
+trusted by this developer).
 
-
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double OLRwk97(BODY *body, int iBody, int iLat, int bModel){
   double phi, Int, T;
 
@@ -3770,6 +3814,15 @@ double OLRwk97(BODY *body, int iBody, int iLat, int bModel){
   return Int;
 }
 
+/**
+Calculates the slope of the  OLR from the Williams & Kasting 1997 formulae
+ (currently NOT well trusted by this developer).
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude at which you want to calculate the OLR
+@param bModel Type of EBM (annual or seasonal)
+*/
 double dOLRdTwk97(BODY *body, int iBody, int iLat, int bModel){
   double phi, dI, T;
 
@@ -3797,6 +3850,15 @@ double dOLRdTwk97(BODY *body, int iBody, int iLat, int bModel){
   return dI;
 }
 
+/**
+Calculates the "top-of-atmosphere" from the Haqq-Misra+ 2016 formulae
+ (currently NOT well trusted by this developer) at temperatures < 250 K
+
+@param Temp Temperature at grid point
+@param pCO2 Atmospheric partial pressure of CO2
+@param zenith Zenith angle of host star on sky
+@param albsurf Base albedo quantity of surface (ice/water/land)
+*/
 double AlbedoTOA250(double Temp, double phi, double zenith, double albsurf) {
   double mu, tmpk, dTmp;
   mu = cos(zenith);
@@ -3825,6 +3887,15 @@ double AlbedoTOA250(double Temp, double phi, double zenith, double albsurf) {
   return dTmp;
 }
 
+/**
+Calculates the "top-of-atmosphere" from the Haqq-Misra+ 2016 formulae
+ (currently NOT well trusted by this developer) at 250 K < temperatures < 350 K
+
+@param Temp Temperature at grid point
+@param pCO2 Atmospheric partial pressure of CO2
+@param zenith Zenith angle of host star on sky
+@param albsurf Base albedo quantity of surface (ice/water/land)
+*/
 double AlbedoTOA350(double Temp, double phi, double zenith, double albsurf) {
   double mu, tmpk, dTmp;
   mu = cos(zenith);
@@ -3853,6 +3924,15 @@ double AlbedoTOA350(double Temp, double phi, double zenith, double albsurf) {
   return dTmp;
 }
 
+/**
+Calculates the "top-of-atmosphere" from the Williams & Kasting 1997 formulae
+ (currently NOT well trusted by this developer) at temperatures < 280 K
+
+@param Temp Temperature at grid point
+@param pCO2 Atmospheric partial pressure of CO2
+@param zenith Zenith angle of host star on sky
+@param albsurf Base albedo quantity of surface (ice/water/land)
+*/
 double AlbedoTOA280(double Temp, double pCO2, double zenith, double albsurf) {
   double mu, T, dTmp;
   mu = cos(zenith);
@@ -3867,6 +3947,15 @@ double AlbedoTOA280(double Temp, double pCO2, double zenith, double albsurf) {
   return dTmp;
 }
 
+/**
+Calculates the "top-of-atmosphere" from the Williams & Kasting 1997 formulae
+ (currently NOT well trusted by this developer) at 280 K < temperatures < 370 K
+
+@param Temp Temperature at grid point
+@param pCO2 Atmospheric partial pressure of CO2
+@param zenith Zenith angle of host star on sky
+@param albsurf Base albedo quantity of surface (ice/water/land)
+*/
 double AlbedoTOA370(double Temp, double pCO2, double zenith, double albsurf) {
   double mu, T, dTmp;
   mu = cos(zenith);
@@ -3881,20 +3970,12 @@ double AlbedoTOA370(double Temp, double pCO2, double zenith, double albsurf) {
   return dTmp;
 }
 
-double Fresnel(double zenith) {
-  double A, r, n=1.33;
+/**
+Calculates albedo based on zenith angle (tuned to Earth)
 
-  r = asin(sin(zenith)/n);
-  if (zenith == 0) {
-    A = ((n-1)/(n+1)*(n-1)/(n+1));
-  } else {
-    A = 0.5*((sin(zenith-r)/sin(zenith+r)*sin(zenith-r)/sin(zenith+r))+\
-        (tan(zenith-r)/tan(zenith+r)*tan(zenith-r)/tan(zenith+r)));
-  }
-
-  return A;
-}
-
+@param zenith Zenith angle of each latitude in radians
+@return Albedo
+*/
 double AlbedoTaylor(double zenith) {
   double mu = cos(zenith);
 
@@ -3905,7 +3986,15 @@ double AlbedoTaylor(double zenith) {
   }
 }
 
+/**
+Calculates the planetary albedo based on the formulae from Haqq-Misra+ 2016,
+accounting for temperature and surface type.
 
+@param body Struct containing all body information
+@param zenith Zenith angle of latitude iLat
+@param iBody Body in question
+@param iLat Latitude cell in question
+*/
 void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
   double phi = log10(body[iBody].dpCO2), albtmp;
 
@@ -3915,22 +4004,11 @@ void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
     albtmp = body[iBody].dAlbedoLand;
   }
 
-/// hack hack hack
-//   if ((body[iBody].daTempLand[iLat] <= 0) && (body[iBody].daTempLand[iLat] > -10)) {
-//     albtmp = 0.45;
-//   } else if (body[iBody].daTempLand[iLat] <= -10) {
-//     albtmp = 0.7;
-//   } else {
-//     albtmp = 0.2;
-//   }
-
   if (body[iBody].daTempLand[iLat] <= (-23.15)) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA250(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempLand[iLat] <= 76.85) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA350(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else {
-    // fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)\n");
-//     exit(EXIT_INPUT);
     body[iBody].daAlbedoLand[iLat] = 0.18;
   }
 
@@ -3940,33 +4018,28 @@ void AlbedoTOAhm16(BODY *body, double zenith, int iBody, int iLat) {
     albtmp = AlbedoTaylor(zenith);
   }
 
-//   /// hack hack hack
-//   if ((body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) && (body[iBody].daTempWater[iLat] > -10)) {
-//     albtmp = 0.55;
-//   } else if (body[iBody].daTempWater[iLat] <= -10) {
-//     albtmp = 0.7;
-//   } else {
-//     albtmp = Fresnel(zenith);
-//   }
-
   if (body[iBody].daTempWater[iLat] <= (-23.15)) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA250(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempWater[iLat] <= 76.85) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA350(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else {
     body[iBody].daAlbedoWater[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
-//
-//     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (T>350K)");
-//     exit(EXIT_INPUT);
   }
 }
 
 
+/**
+Calculates the planetary albedo based on the formulae from Williams & Kasting
+1997, accounting for temperature and surface type.
 
+@param body Struct containing all body information
+@param zenith Zenith angle of latitude iLat
+@param iBody Body in question
+@param iLat Latitude cell in question
+*/
 void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   double phi = body[iBody].dpCO2, albtmp;
 
-  // MEM: body[iBody].daIceMassTmp[iLat] not initialized!
   if (body[iBody].daTempLand[iLat] <= -10) {
     albtmp = body[iBody].dIceAlbedo;
   } else if (body[iBody].daTempLand[iLat] > -10 && body[iBody].daIceMassTmp[iLat] > 0) {
@@ -3977,15 +4050,6 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
     albtmp = body[iBody].dAlbedoLand;
   }
 
-/// hack hack hack
-  // if ((body[iBody].daTempLand[iLat] <= 0) && (body[iBody].daTempLand[iLat] > -10)) {
-//     albtmp = 0.45;
-//   } else if (body[iBody].daTempLand[iLat] <= -10) {
-//     albtmp = 0.7;
-//   } else {
-//     albtmp = 0.2;
-//   }
-
   if (body[iBody].daTempLand[iLat] >= -83.15 && body[iBody].daTempLand[iLat] <= (6.85)) {
     body[iBody].daAlbedoLand[iLat] = AlbedoTOA280(body[iBody].daTempLand[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempLand[iLat] <= 96.85) {
@@ -3993,9 +4057,7 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   } else if (body[iBody].daTempLand[iLat] < -83.15) {
     body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
   } else {
-//     fprintf(stderr,"Land temperature at surface exceeds range for TOA albedo calculation (190K<T<370K)\n");
     body[iBody].daAlbedoLand[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
-//     exit(EXIT_INPUT);
   }
 
   if (body[iBody].daTempWater[iLat] <= body[iBody].dFrzTSeaIce) {
@@ -4004,15 +4066,6 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
     albtmp = AlbedoTaylor(zenith);
   }
 
-  /// hack hack hack
-  // if ((body[iBody].daTempWater[iLat] <= 0) && (body[iBody].daTempWater[iLat] > -10)) {
-//     albtmp = 0.55;
-//   } else if (body[iBody].daTempWater[iLat] <= -10) {
-//     albtmp = 0.7;
-//   } else {
-//     albtmp = Fresnel(zenith);
-//   }
-
   if (body[iBody].daTempWater[iLat] >= -83.15 && body[iBody].daTempWater[iLat] <= (6.85)) {
     body[iBody].daAlbedoWater[iLat] = AlbedoTOA280(body[iBody].daTempWater[iLat],phi,zenith,albtmp);
   } else if (body[iBody].daTempWater[iLat] <= 96.85) {
@@ -4020,14 +4073,20 @@ void AlbedoTOAwk97(BODY *body, double zenith, int iBody, int iLat) {
   } else if (body[iBody].daTempWater[iLat] < -83.15) {
     body[iBody].daAlbedoWater[iLat] = body[iBody].dIceAlbedo;
   } else {
-//     fprintf(stderr,"Ocean temperature at surface exceeds range for TOA albedo calculation (190<T<370K)\n");
     body[iBody].daAlbedoWater[iLat] = 0.18; //albedo asymptotes to ~0.18 (all surface albedos?)
-//     exit(EXIT_INPUT);
   }
 }
 
+/**
+Calculates the planetary albedo based on the formulae from Spiegel+ 2009,
+ accounting for temperature and surface type.
+
+@param body Struct containing all body information
+@param zenith Zenith angle of latitude iLat
+@param iBody Body in question
+@param iLat Latitude cell in question
+*/
 void AlbedoTOAsms09(BODY *body, double zenith, int iBody, int iLat) {
-  //xxxx may want to adjust zenith angle coefficient!
   body[iBody].daAlbedoLand[iLat] = 0.5*(body[iBody].dIceAlbedo+body[iBody].dAlbedoLand)-\
         0.5*(body[iBody].dIceAlbedo-body[iBody].dAlbedoLand)*\
         tanh((body[iBody].daTempLand[iLat]+5.15)/5.15)\
@@ -4037,16 +4096,17 @@ void AlbedoTOAsms09(BODY *body, double zenith, int iBody, int iLat) {
         tanh((body[iBody].daTempWater[iLat]+5.15)/5.15)\
         +0.04*(3.*sin(zenith)*sin(zenith)-1.);
   if (body[iBody].daIceMassTmp[iLat] > 0 && body[iBody].daAlbedoLand[iLat] < body[iBody].dIceAlbedo) {
-//     if (body[iBody].daTempLand[iLat] < 0) {
       body[iBody].daAlbedoLand[iLat] = body[iBody].dIceAlbedo;
-    // } else if (body[iBody].daAlbedoLand[iLat] < 0.5*(body[iBody].dIceAlbedo+body[iBody].dAlbedoLand)) {
-//       body[iBody].daAlbedoLand[iLat] = 0.5*(body[iBody].dIceAlbedo+body[iBody].dAlbedoLand);
-    // } else {
-
-//     }
   }
 }
 
+/**
+Calculates the planetary albedo for the seasonal EBM at day iDay
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iDay Day of the planet's year
+*/
 void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
   int iLat;
   double zenith;
@@ -4083,6 +4143,13 @@ void AlbedoSeasonal(BODY *body, int iBody, int iDay) {
             body[iBody].dAlbedoGlobalTmp/(body[iBody].iNStepInYear);
 }
 
+/**
+Modifies the ocean component to account for effects of sea ice (seasonal EBM
+only). This slows the EBM considerably so use with caution.
+
+@param body Struc containing all body information
+@param iBody Body in question
+*/
 void SeaIce(BODY *body, int iBody) {
   int i, j;
   double nhicearea=0, shicearea=0, nhtotarea=0, shtotarea=0, nhfw, shfw, nhdW, shdW, Cw_dt;
@@ -4173,11 +4240,16 @@ void SeaIce(BODY *body, int iBody) {
         body[iBody].daTempWater[i] -= shdW;
       }
     }
-
   }
-
 }
 
+/**
+Calculates the backwards-Euler matrix that integrates the seasonal EBM. Each
+operation of the inverse matrix is a "time-step".
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void MatrixSeasonal(BODY *body, int iBody) {
   int i, j;
   double xboundary, nu_fl, nu_fw, Cl_dt, Cw_dt, dt_Lf;
@@ -4186,7 +4258,6 @@ void MatrixSeasonal(BODY *body, int iBody) {
   dt_Lf = body[iBody].dSeasDeltat/body[iBody].dLatentHeatIce;
 
   for (i=0;i<body[iBody].iNumLats+1;i++) {
-//     xboundary = -1.0 + i*2.0/body[iBody].iNumLats;
     body[iBody].daLambdaSea[i] = body[iBody].daDiffusionSea[i]*(1.0-(body[iBody].daXBoundary[i]*body[iBody].daXBoundary[i]))/((body[iBody].dSeasDeltax*body[iBody].dSeasDeltax));
   }
 
@@ -4236,6 +4307,15 @@ void MatrixSeasonal(BODY *body, int iBody) {
   MatrixInvertSeasonal(body,iBody);
 }
 
+/**
+Calculates non-matrix terms in the energy balance equation (I don't remember
+why I called these "SourceF"). These terms are the OLR offset and the
+absorbed radiation (temperature independent quantities).
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param day Day of the planet's year
+*/
 void SourceFSeas(BODY *body, int iBody, int day) {
   int i;
 
@@ -4251,7 +4331,14 @@ void SourceFSeas(BODY *body, int iBody, int day) {
   }
 }
 
+/**
+Calculates average energy residual or "error" over course of the year. This
+should be used as a check on the physics in the EBM (should be ~0).
 
+@param body Struct containing all body information
+@param iBody Body in question
+@param day Day of the planet's year
+*/
 void EnergyResiduals(BODY *body, int iBody, int day) {
   int i;
   double nu_fl, nu_fw, Cl_dt, Cw_dt, dt_Lf;
@@ -4309,7 +4396,14 @@ void EnergyResiduals(BODY *body, int iBody, int day) {
   }
 }
 
+/**
+Runs the seasonal EBM, called from ForceBehavior. The seasonal EBM runs on a
+fixed time-step (of order days) to resolve the seasonal cycle. It can be said
+to be in "equilibrium" though not in "steady-state".
 
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
 void PoiseSeasonal(BODY *body, int iBody) {
   int i, j, nstep, nyear, day;
   double h;
@@ -4576,11 +4670,6 @@ void PoiseSeasonal(BODY *body, int iBody) {
           body[iBody].dTGlobalTmp += body[iBody].daTempLW[i]/body[iBody].iNumLats;
 
           if (body[iBody].bCalcAB) {
-            /* Calculate A and B from Haqq-Misra et al 2016 result */
-            // body[iBody].daPlanckB[i] = dOLRdThm16(body,iBody,i);
-//             body[iBody].daPlanckA[i] = OLRhm16(body,iBody,i) \
-//                - body[iBody].daPlanckB[i]*(body[iBody].daTemp[i]);
-//
             if (body[iBody].iOLRModel == WK97) {
               body[iBody].daPlanckBSea[i] = dOLRdTwk97(body,iBody,i,SEA);
               body[iBody].daPlanckASea[i] = OLRwk97(body,iBody,i,SEA) \
@@ -4682,10 +4771,6 @@ void PoiseSeasonal(BODY *body, int iBody) {
       }
     }
 
-//     printf("%d\n",nyear);
-//     fflush(stdout);
-
-
     if (body[iBody].bIceSheets) {
       for (i=0;i<body[iBody].iNumLats;i++) {
         if (nyear != 0) {
@@ -4709,11 +4794,21 @@ void PoiseSeasonal(BODY *body, int iBody) {
   }
 }
 
+/**
+Calculates the net balance between melting and accumulation of ice on land
+at a given EBM time-step
+
+@param body Struct containing all body information
+@param iBody Body in question
+@param iLat Latitude cell in question
+@return Net gain/loss of ice
+*/
 double IceMassBalance(BODY *body, int iBody, int iLat) {
   double Tice = 273.15, dTmp, dh, dGamma, dTs;
 
   if (body[iBody].bElevFB) {
     //elevation feedback modeled by assuming surface temp is affected by height
+    //Very experimental!
     dGamma = body[iBody].dLapseR; //dry adiabatic lapse rate
     dh = (body[iBody].daIceMassTmp[iLat]/RHOICE - body[iBody].dRefHeight+body[iBody].daBedrockH[iLat]);  //height above or below some ref altitude
     dTs = (body[iBody].daTempLand[iLat]+273.15-dGamma*dh);  //''surface'' temperature of ice
@@ -4721,14 +4816,12 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
     dTs = body[iBody].daTempLand[iLat]+273.15;
   }
   /* first, calculate melting/accumulation */
-  // MEM: body[iBody].daTempLand[iLat] not initialized!
   if (dTs>273.15) {
     /* Ice melting */
-    /* (2.3 is used to match Huybers&Tziperman's ablation rate)*/
+    /* (AblateFF is used to match Huybers&Tziperman's ablation rate)*/
     dTmp = body[iBody].dAblateFF*SIGMA*((Tice*Tice*Tice*Tice) - \
         ((dTs)*(dTs)*(dTs)*(dTs)))/LFICE;
   } else {
-    // MEM: body[iBody].dAlbedoGlobal not initialized!
     if (body[iBody].bSnowball) {
       /* no precip once planet is frozen */
       dTmp = 0.0;
@@ -4745,6 +4838,12 @@ double IceMassBalance(BODY *body, int iBody, int iLat) {
   return dTmp;
 }
 
+/**
+Construct matrix that evolves the ice sheet flow + net balance
+
+@param body Struct containing body information
+@param iBody Body in question
+*/
 void IceSheetTriDiag(BODY *body, int iBody) {
   double bTmp;
   int i, n = body[iBody].iNumLats;
@@ -4766,6 +4865,14 @@ void IceSheetTriDiag(BODY *body, int iBody) {
   }
 }
 
+/**
+Main ice sheet routine. Integrates the ice sheets via Crank-Nicholson method in
+ForceBehavior in the same fashion as Huybers' model.
+
+@param body Struct containing body information
+@param evolve Struct containing evolution information
+@param iBody Body in question
+*/
 void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
   /* integrate ice sheets via Crank-Nicholson method in ForceBehavior
      in the same way Huybers' model works */
@@ -4819,7 +4926,6 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
           body[iBody].daIceBalanceTmp[iLat] = 0;
         } else {
           body[iBody].daIceBalanceTmp[iLat] = body[iBody].daIceBalanceAnnual[iLat]/RHOICE;
-          //body[iBody].daIceBalanceTmp[iLat] = 0;
         }
         if (body[iBody].bSnowball == 1) {
           body[iBody].daIceBalanceTmp[iLat] = 0;
@@ -4857,12 +4963,6 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
             body[iBody].daDIceHeightDy[iLat];
         body[iBody].daBasalFlow[iLat] = BasalFlow(body,iBody,iLat);
       }
-
-      //test
-//       body[iBody].daIceFlow[0] = 0.0;
-//       body[iBody].daBasalFlow[0] = 0.;
-//       body[iBody].daIceFlow[body[iBody].iNumLats] = 0.0;
-//       body[iBody].daBasalFlow[body[iBody].iNumLats] = 0.;
 
       for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
         if (IceTime != evolve->dTime) {
@@ -4959,19 +5059,16 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
           body[iBody].daIceFlowAvg[iLat] += body[iBody].daIceSheetDiff[iLat+1]*\
             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat])/\
             (body[iBody].daYBoundary[iLat+1]*body[iBody].daYBoundary[iLat+1])*IceDt/evolve->dCurrentDt;
-//             body[iBody].daIceFlowAvg[iLat] = body[iBody].daIceSheetDiff[iLat];
         } else if (iLat == body[iBody].iNumLats-1) {
           body[iBody].daIceFlowAvg[iLat] += -body[iBody].daIceSheetDiff[iLat]*\
             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1])\
             /(body[iBody].daYBoundary[iLat]*body[iBody].daYBoundary[iLat])*IceDt/evolve->dCurrentDt;
-//             body[iBody].daIceFlowAvg[iLat] = body[iBody].daIceSheetDiff[iLat];
         } else {
           body[iBody].daIceFlowAvg[iLat] += (body[iBody].daIceSheetDiff[iLat+1]*\
             (body[iBody].daIceHeight[iLat+1]-body[iBody].daIceHeight[iLat])/\
             (body[iBody].daYBoundary[iLat+1]*body[iBody].daYBoundary[iLat+1])-body[iBody].daIceSheetDiff[iLat]*\
             (body[iBody].daIceHeight[iLat]-body[iBody].daIceHeight[iLat-1])\
             /(body[iBody].daYBoundary[iLat]*body[iBody].daYBoundary[iLat]))*IceDt/evolve->dCurrentDt;
-//             body[iBody].daIceFlowAvg[iLat] = body[iBody].daIceSheetDiff[iLat];
         }
         dHdt = 1./(BROCKTIME*YEARSEC) * (body[iBody].daBedrockHEq[iLat]-body[iBody].daBedrockH[iLat] - \
           RHOICE*body[iBody].daIceHeight[iLat]/RHOBROCK);
@@ -4986,90 +5083,4 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
       }
     }
   }
-  //recalc dIceMassTot at end
-}
-
-double fdPoiseDIceMassDtDepMelt(BODY *body, SYSTEM *system, int *iaBody) {
-  double Tice = 273.15, dTmp;
-
-//   if (body[iaBody[0]].daIceMass[iaBody[1]] <= 1e-30) {
-//     body[iaBody[0]].daIceMass[iaBody[1]] = 0;
-//   }
-
-  /* check if snowball state entered */
-  Snowball(body, iaBody[0]);
-
-  if (body[iaBody[0]].bClimateModel == ANN) {
-    /* first, calculate melting/accumulation */
-    if (body[iaBody[0]].daTempAnn[iaBody[1]]>0.0) {
-      if (body[iaBody[0]].daIceMass[iaBody[1]] > 0.0) {
-        /* Ice melting (2.3 is used to match Huybers&Tziperman's ablation rate)*/
-        dTmp = 2.3*SIGMA*((Tice*Tice*Tice*Tice) - \
-          ((body[iaBody[0]].daTempAnn[iaBody[1]]+273.15)*(body[iaBody[0]].daTempAnn[iaBody[1]]+273.15)\
-          *(body[iaBody[0]].daTempAnn[iaBody[1]]+273.15)*(body[iaBody[0]].daTempAnn[iaBody[1]]+273.15)))/LFICE;
-      } else {
-        dTmp = 0.0;
-      }
-    } else {
-      if (body[iaBody[0]].bSnowball == 1) {
-        /* no precip once planet is frozen */
-        dTmp = 0.0;
-      } else {
-        if (body[iaBody[0]].dIceMassTot >= MOCEAN) {
-          /* ice growth limited by mass of water available (really, really stupid) */
-          dTmp = 0.0;
-        } else {
-          /* Ice deposits at fixed rate */
-          dTmp = body[iaBody[0]].dIceDepRate;
-        }
-      }
-    }
-  } else {
-    if (body[iaBody[0]].daIceMass[iaBody[1]] <= 0 && \
-             body[iaBody[0]].daIceBalanceAnnual[iaBody[1]] < 0.0) {
-      //if no ice present and derivative is negative, return 0
-      dTmp = 0.0;
-    } else {
-      //ice derivative is calculated in PoiseSeasonal
-      dTmp = body[iaBody[0]].daIceBalanceAnnual[iaBody[1]];
-    }
-
-    if ((body[iaBody[0]].dIceMassTot >= MOCEAN) && (dTmp > 0)) {
-      dTmp = 0.0;
-    }
-
-    if (body[iaBody[0]].bSnowball == 1) {
-      dTmp = 0.0;
-    }
-  }
-  return 0;
-}
-
-
-
-double fdPoiseDIceMassDtFlow(BODY *body, SYSTEM *system, int *iaBody) {
-  double dTmp, deltax, deltayL, deltayR, dfdy;
-
-  /* get deltay in meters at this latitude's edges */
-  deltax = 2.0/body[iaBody[0]].iNumLats;
-  deltayL = body[iaBody[0]].dRadius*deltax/sqrt(1.0-(body[iaBody[0]].daXBoundary[iaBody[1]]*body[iaBody[0]].daXBoundary[iaBody[1]]));
-  deltayR = body[iaBody[0]].dRadius*deltax/sqrt(1.0-(body[iaBody[0]].daXBoundary[iaBody[1]+1]*body[iaBody[0]].daXBoundary[iaBody[1]+1]));
-
-  if (iaBody[1] == 0) {
-    dfdy =((body[iaBody[0]].daIceFlowMid[iaBody[1]+1]+body[iaBody[0]].daBasalFlowMid[iaBody[1]+1])*\
-      (body[iaBody[0]].daIceHeight[iaBody[1]+1]-body[iaBody[0]].daIceHeight[iaBody[1]]))/(deltayR*deltayR);
-  } else if (iaBody[1] == (body[iaBody[0]].iNumLats-1)) {
-    dfdy = -(body[iaBody[0]].daIceFlowMid[iaBody[1]]+body[iaBody[0]].daBasalFlowMid[iaBody[1]])\
-      *(body[iaBody[0]].daIceHeight[iaBody[1]]-body[iaBody[0]].daIceHeight[iaBody[1]-1])/(deltayL*deltayL);
-  } else {
-    dfdy =(body[iaBody[0]].daIceFlowMid[iaBody[1]+1]+body[iaBody[0]].daBasalFlowMid[iaBody[1]+1])*\
-    (body[iaBody[0]].daIceHeight[iaBody[1]+1]-body[iaBody[0]].daIceHeight[iaBody[1]])/(deltayR*deltayR)-\
-    (body[iaBody[0]].daIceFlowMid[iaBody[1]]+body[iaBody[0]].daBasalFlowMid[iaBody[1]]) *\
-    (body[iaBody[0]].daIceHeight[iaBody[1]]-body[iaBody[0]].daIceHeight[iaBody[1]-1])/(deltayL*deltayL);
-  }
-
-  /* convert to mass */
-  dTmp = dfdy*RHOICE;
-
-  return 0;
 }

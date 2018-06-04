@@ -6,27 +6,27 @@ EQTIDE and STELLAR VPLANET run.
 David P. Fleming, University of Washington, 2018
 """
 
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+from __future__ import division, print_function, absolute_import, \
+    unicode_literals
 import numpy as np
+import os
+import vplot as vpl
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
-#Typical plot parameters that make for pretty plot
-mpl.rc('font',**{'family':'serif','serif':['Palatino Linotype']})
-mpl.rc('text', usetex=True)
 mpl.rcParams['figure.figsize'] = (10,8)
-mpl.rcParams['font.size'] = 20.0
+mpl.rcParams['font.size'] = 18.0
 
 
 # Load data
-data = "Zahn89.secondary.forward"
-data = np.genfromtxt(data,delimiter=" ", dtype=np.float64)
+output = vpl.GetOutput()
+time = output.primary.Time
 
 # Extract important quantities
 # saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal
-Omega = data[:,7] # Rotation rate
-omega = data[:,8] # Mean motion
-e = data[:,6]
-time = data[:,0]
+Omega = output.secondary.RotRate # Rotation Rate
+omega = output.secondary.MeanMotion # Mean Motion
+e = output.secondary.Eccentricity
 period = 2.0*np.pi/omega
 om = Omega/omega
 
@@ -56,7 +56,7 @@ colors = ['#C91111','#642197','#1321D8']
 
 # Plot each quantities, format axes
 for i in range(0,len(axes)):
-    axes[i].plot(time,data[i],lw=3, ls=linestyle[i], color=colors[i])
+    axes[i].plot(time,data[i],lw=3, ls=linestyle[i], color=colors[i], label="")
     axes[i].set_ylabel(labels[i], color=colors[i])
     axes[i].tick_params(axis='y', colors = colors[i])
     axes[i].set_xlim(time[1],time[-1])

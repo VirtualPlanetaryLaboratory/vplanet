@@ -1,6 +1,5 @@
 """
-This notebook produces Figure 15 for the VPLANET ExoEarth paper.
-Figure 15 is a reproduction of Figure 1 of Zahn & Bouchet (1989) using a coupled
+This script produces a reproduction of Figure 1 of Zahn & Bouchet (1989) using a coupled
 EQTIDE and STELLAR VPLANET run.
 
 David P. Fleming, University of Washington, 2018

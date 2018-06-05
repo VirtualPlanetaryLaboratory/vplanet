@@ -14,13 +14,14 @@
 #include <string.h>
 #include "vplanet.h"
 
+// what was this again for? primary variable??
 void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFeO = src[iBody].dFeO;
   dest[iBody].dWaterMassMOAtm = src[iBody].dWaterMassMOAtm;
 }
 
 /**************** MAGMOC options ********************/
-
+// read input: first function with read command
 /* FeO */
 
 void ReadFeO(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -93,20 +94,20 @@ void ReadManMeltDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 }
 
 /* Initiatlize Input Options */
-
+// initialize input = tell code what he is reading in
 void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* FeO */
 
-  sprintf(options[OPT_FEO].cName,"dFeO");
-  sprintf(options[OPT_FEO].cDescr,"Initial Mass Fraction of FeO in the mantle");
-  sprintf(options[OPT_FEO].cDefault,"BSE Earth: 0.08");
-  options[OPT_FEO].iType = 2;
-  options[OPT_FEO].iMultiFile = 1;
-  options[OPT_FEO].dNeg = 1;
-  options[OPT_FEO].dDefault = 0.08;
-  sprintf(options[OPT_FEO].cNeg,"no unit");
-  fnRead[OPT_FEO] = &ReadFeO;
+  sprintf(options[OPT_FEO].cName,"dFeO"); //name of the variable
+  sprintf(options[OPT_FEO].cDescr,"Initial Mass Fraction of FeO in the mantle"); //description that will be shown for vplanet -h
+  sprintf(options[OPT_FEO].cDefault,"BSE Earth: 0.08"); //comment what the default value will be
+  options[OPT_FEO].iType = 2; //type of the variable: double??
+  options[OPT_FEO].iMultiFile = 1; //can it be used in multiple files? 1 = yes
+  options[OPT_FEO].dNeg = 1; //is there a unit other than the SI unit? factor to convert between both units
+  options[OPT_FEO].dDefault = 0.08; // default value
+  sprintf(options[OPT_FEO].cNeg,"no unit"); // specify unit (for help)
+  fnRead[OPT_FEO] = &ReadFeO; //link read function from above
 
   /* Water */
 
@@ -115,7 +116,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERMASSATM].cDefault,"1 Terrestrial Ocean");
   options[OPT_WATERMASSATM].iType = 2;
   options[OPT_WATERMASSATM].iMultiFile = 1;
-  options[OPT_WATERMASSATM].dNeg = TOMASS;
+  options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
   options[OPT_WATERMASSATM].dDefault = 1;
   sprintf(options[OPT_WATERMASSATM].cNeg,"Terrestrial Oceans");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
@@ -146,6 +147,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
 
 }
 
+// ??
 void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
@@ -155,8 +157,9 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   }
 }
 
+// Initilaization of a primary variable
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassAtm;
+  body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
 }
 
 /******************* Verify MAGMOC ******************/
@@ -167,18 +170,28 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
 
 /* Auxs Props */
+/* auxiliarie parameters/variables that need to be calculated in order to calculate the primary variable
+(or at least simplify reading/understanding of the code)
+calculated every quarter step for Runge-Kutta
+if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the 
+end of this equation */
 void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
 }
 
+/* Only updated every full step. Use for check of different behaviors and force parameters to a value,
+e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set albedo to pure rock
+*/
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
 }
 
+// ??
 void MagmOcExit(FILES *files,char cSpecies[16],int iFile) {
 
 }
 
+// ??
 void VerifyWaterMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
   update[iBody].iaType[update[iBody].iWaterMassMOAtm][0] = 1;
   update[iBody].iNumBodies[update[iBody].iWaterMassMOAtm][0] = 1;
@@ -189,14 +202,17 @@ void VerifyWaterMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double d
 
 }
 
+// assign a derivativ to the primary variable
 void AssignMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0] = &fdDWaterMassMOAtm;
 }
 
+// derivative for minimal change??
 void NullMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0] = &fndUpdateFunctionTiny;
 }
 
+// call steps to execute next time step??
 void VerifyMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   VerifyWaterMassMOAtm(body, options, update, body[iBody].dAge, iBody);
 
@@ -207,6 +223,7 @@ void VerifyMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 }
 /**************** MAGMOC update ****************/
 
+// ??
 void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
   if (iBody >= 0) {
     if (update[iBody].iNumWaterMassMOAtm == 0)
@@ -228,6 +245,7 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 }
 
 /************* MAGMOC Outputs ******************/
+// similar to read input
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate
    block of initialization in InitializeOutputMagmOc below */
@@ -258,7 +276,7 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
    }
  }
 
-
+// similar to initialize options
 void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   // sprintf(output[OUT_FE2O3].cName,"Fe2O3");
@@ -274,14 +292,15 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_WATERMASSMOATM].cDescr,"Watermass in magma ocean and atmosphere");
   sprintf(output[OUT_WATERMASSMOATM].cNeg,"Terrestrial Oceans");
   output[OUT_WATERMASSMOATM].bNeg = 1;
-  output[OUT_WATERMASSMOATM].dNeg = 1/TOMASS;
+  output[OUT_WATERMASSMOATM].dNeg = 1/TOMASS; // division factor to get from SI to desired unit
   output[OUT_WATERMASSMOATM].iNum = 1;
-  output[OUT_WATERMASSMOATM].iModuleBit = MAGMOC;
+  output[OUT_WATERMASSMOATM].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_WATERMASSMOATM] = &WriteWaterMassMOAtm;
 
 }
 
 //========================= Finalize Variable Functions ========================
+// ??
 void FinalizeUpdateWaterMassMOAtm(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
   update[iBody].iNumWaterMassMOAtm = (*iEqn)++;
@@ -323,7 +342,7 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 }
 
 /************* MAGMOC Functions ************/
-
+// real physic is happening here: calculation of the derivatives of the primary variable!
 double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
   return 1;
 }

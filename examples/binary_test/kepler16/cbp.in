@@ -18,6 +18,7 @@ dSemi           0.7016                # CBP semi-major axis [AU]
 dLongP          129.75                # CBP longitude of pericenter [deg]
 dCBPM0          358.85               # CBP mean anomaly [deg]
 dCBPPsi         270
+dCBPZeta        0.0
 
 # Outputs
 saOutputOrder Time CBPR CBPZ ArgP LongA Eccentricity Inc LongP

@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import vplot
 
+plt.rcParams["text.usetex"]=True
+plt.rcParams["text.latex.unicode"]=True
+
 out = vplot.GetOutput()
 
 fig = plt.figure(figsize=(8.5,8))
@@ -150,6 +153,7 @@ plt.close()
 
 
 out2 = vplot.GetOutput('womoon')
+# plt.rcParams["mathtext."]
 
 fig = plt.figure(figsize=(8.5,4))
 fig.subplots_adjust(wspace=0.25)
@@ -157,14 +161,14 @@ fig.subplots_adjust(wspace=0.25)
 plt.subplot(1,2,1)
 plt.plot(out.Earth.Time/1e6,out.Earth.Obliquity,'k-',label='Earth with Moon')
 plt.plot(out2.Earth.Time/1e6,out2.Earth.Obliquity,'k--',label='Earth without Moon')
-plt.ylabel('$\epsilon$ ($^{\circ}$)')
+plt.ylabel(r'$\varepsilon$ ($^{\circ}$)')
 plt.xlabel('Time (Myr)')
 plt.xlim(0,1)
 plt.legend(loc='upper right',fontsize=10)
 
 ax=plt.subplot(1,2,2)
 plt.plot(out.Mars.Time/1e6,np.ones_like((out.Mars.Obliquity))*np.nan,'k-',label='Mars')
-plt.ylabel('$\epsilon$ ($^{\circ}$)')
+plt.ylabel(r'$\varepsilon$ ($^{\circ}$)')
 plt.xlabel('Time (Myr)')
 plt.xlim(0,1)
 plt.ylim(0,10)

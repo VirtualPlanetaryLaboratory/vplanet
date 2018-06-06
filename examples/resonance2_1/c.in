@@ -9,6 +9,6 @@ dEcc         0.048
 dInc         1e-5
 dLongP       0.0
 dLongA       0.0
+dMeanL       0.0
 # bGRCorr      0
-saOutputOrder    Time Semim Ecce Inc ArgP LongA MeanL
-dMeanL     0
+saOutputOrder    Time Semim Ecce Inc ArgP LongA dMeanL

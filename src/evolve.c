@@ -325,6 +325,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     *dDt = evolve.dTimeStep;
 
   evolve.dCurrentDt = *dDt;
+  control->Evolve.dCurrentDt = *dDt;
 
   /* XXX Should each eqn be updated separately? Each parameter at a
      midpoint is moved by all the modules operating on it together.

@@ -3089,7 +3089,7 @@ void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   C = body[iBody].dEcc0;
 
   body[iBody].dEcc = (A*sin(2*PI*evolve->dTime/P))+C;
-  CalcXYZobl(body,iBody);
+  CalcHK(body,iBody);
 }
 
 /**

@@ -190,21 +190,21 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
     clb.set_label('Ice Ablation\n(m year$^{-1}$)',fontsize=12)
 
     plt.subplot(7,1,1)
-    plt.plot(body.Time/1e6,obl,linestyle = 'solid',marker='None',color='darkblue',linewidth =2)
+    plt.plot(body.Time/1e6,obl,linestyle = 'solid',marker='None',color=vplot.colors.dark_blue,linewidth =2)
     plt.ylabel('Obliquity')
     plt.xticks(visible=False)
     if xrange:
       plt.xlim(xrange)
 
     plt.subplot(7,1,2)
-    plt.plot(body.Time/1e6,ecc,linestyle = 'solid',marker='None',color='darkblue',linewidth =2)
+    plt.plot(body.Time/1e6,ecc,linestyle = 'solid',marker='None',color=vplot.colors.purple,linewidth =2)
     plt.ylabel('Eccenticity')
     plt.xticks(visible=False)
     if xrange:
       plt.xlim(xrange)
 
     plt.subplot(7,1,3)
-    plt.plot(body.Time/1e6,esinv,linestyle = 'solid',marker='None',color='salmon',linewidth=2)
+    plt.plot(body.Time/1e6,esinv,linestyle = 'solid',marker='None',color=vplot.colors.red,linewidth=2)
     plt.ylabel('CPP')
     plt.xticks(visible=False)
     if xrange:

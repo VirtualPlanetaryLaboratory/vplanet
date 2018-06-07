@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import vplot
 from matplotlib import ticker
-
+import os
+import subprocess
+import re
 
 def comp2huybers(plname,dir='.',xrange=False,show=True):
   """
@@ -220,4 +222,156 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
   else:
     plt.close()
 
+def seasonal_maps(time, dir = '.', show = True):
+  """
+  Creates plots of insolation, temperature, and ice balance
+  over the course of an orbit (4 orbits for temp)
+
+  Parameters
+  ----------
+  time : float
+    The time of the data you want to plot (see SeasonalClimateFiles directory)
+
+  Keyword Arguments
+  -----------------
+  dir : string
+    Directory of vplanet simulation (default = '.')
+  show : bool
+    Show plot in Python (default = True)
+
+  Output
+  ------
+  PDF format plot with name 'surf_seas_<time>.pdf'
+
+  """
+  dirf = dir+'/SeasonalClimateFiles'
+  if not os.path.exists(dirf):
+    raise StandardError('SeasonalClimateFiles directory does not exist')
+  else:
+    check = 0
+    for f in subprocess.check_output('echo '+dirf+'/*.DailyInsol.*',shell=True).split():
+      f1 = re.split('\.',re.split('/',f.decode('ascii'))[-1])  #split apart output file
+
+      if len(f1) == 4:
+        timestamp = f1[3]
+      elif len(f1) == 5:
+        timestamp = f1[3]+'.'+f1[4]
+
+      time0 = np.float(timestamp)
+
+      if time0 == time:
+        #get system and planet names
+        sysname = f1[0]
+        plname = f1[1]
+        insolf = dirf+'/'+sysname+'.'+plname+'.DailyInsol.'+timestamp
+        tempf = dirf+'/'+sysname+'.'+plname+'.SeasonalTemp.'+timestamp
+        icef = dirf+'/'+sysname+'.'+plname+'.SeasonalIceBalance.'+timestamp
+        planckbf = dirf+'/'+sysname+'.'+plname+'.SeasonalFOut.'+timestamp
+        check = 1
+
+    if check == 0:
+      raise StandardError('Climate data not found for time %f'%time)
+
+    insol = np.loadtxt(insolf,unpack=True)
+    temp = np.loadtxt(tempf,unpack=True)
+    ice = np.loadtxt(icef,unpack=True)
+    fluxo = np.loadtxt(planckbf,unpack=True)
+    output = vplot.GetOutput(dir)
+    ctmp = 0
+    for p in range(len(output.bodies)):
+      if output.bodies[p].name == plname:
+        body = output.bodies[p]
+        ctmp = 1
+      else:
+        if p == len(output.bodies)-1 and ctmp == 0:
+          raise Exception("Planet %s not found in folder %s"%(plname,dir))
+
+    lats = body.Latitude[0]
+    try:
+      obl = body.Obliquity[np.where(body.Time==time)[0]]
+    except:
+      obl = getattr(output.log.initial,plname).Obliquity
+      if obl.unit == 'rad':
+        obl *= 180/np.pi
+
+    try:
+      ecc = body.Eccentricity[np.where(body.Time==time)[0]]
+    except:
+      ecc = getattr(output.log.initial,plname).Eccentricity
+
+    try:
+      longp = (body.LongP+body.PrecA)[np.where(body.Time==time)[0]]
+    except:
+      try:
+        longp = getattr(output.log.initial,plname).LongP
+      except:
+        try:
+          longp = (getattr(output.log.initial,plname).LongA+getattr(out.log.initial,plname).ArgP)
+          if longp.unit == 'rad':
+            longp *= 180/np.pi
+          longp = longp%360
+        except:
+          longp = 0
+
+    fig = plt.figure(figsize=(8.5,5))
+    fig.subplots_adjust(wspace=0.3,hspace=0.2)
+    # fig.suptitle('Time = %f, Obl = %f, Ecc = %f, LongP = %f'%(time,obl,ecc,longp),fontsize=20)
+    ax = plt.subplot(2,2,1)
+    ax.set_position(pos=[0.1,0.54,0.3,0.41])
+    pos = ax.figbox.get_points()
+    c1=plt.contourf(np.arange(np.shape(insol)[1]),lats,insol,cmap='plasma')
+    plt.ylim(lats[0],lats[-1])
+    plt.ylabel('Latitude ($^{\circ}$)')
+    plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
+    # plt.xticks(visible=False)
+    clb = plt.colorbar(c1,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    clb.set_label(r'Insolation (W/m$^2$)',fontsize=12)
+
+    scale = 4*np.shape(insol)[1]/np.shape(temp)[1]
+    ax = plt.subplot(2,2,2)
+    ax.set_position(pos=[0.6,0.54,0.3,0.41])
+    pos = ax.figbox.get_points()
+    c2=plt.contourf(np.arange(np.shape(temp)[1])*scale,lats,temp,cmap='plasma')
+    plt.ylim(lats[0],lats[-1])
+    # plt.ylabel('Latitude ($^{\circ}$)')
+    plt.xlim(0,np.shape(temp)[1]*scale/4.)
+    plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
+    # plt.xticks(visible=False)
+    clb=plt.colorbar(c2,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    clb.set_label(r'Surface Temp ($^{\circ}$C)',fontsize=12)
+
+    scale = np.shape(insol)[1]/np.shape(ice)[1]
+    ax = plt.subplot(2,2,3)
+    ax.set_position(pos=[0.1,0.05,0.3,0.41])
+    pos = ax.figbox.get_points()
+    c3=plt.contourf(np.arange(np.shape(ice)[1])*scale,lats,ice*1e3,cmap='Blues_r')
+    plt.ylim(lats[0],lats[-1])
+    plt.ylabel('Latitude ($^{\circ}$)')
+    plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
+    plt.xlabel('Day')
+    clb =plt.colorbar(c3,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    clb.set_label(r'Ice balance (10$^{-3}$ kg/m$^2$/s)',fontsize=12)
+
+
+    scale = 4*np.shape(insol)[1]/np.shape(temp)[1]
+    ax = plt.subplot(2,2,4)
+    ax.set_position(pos=[0.6,0.05,0.3,0.41])
+    pos = ax.figbox.get_points()
+    c2=plt.contourf(np.arange(np.shape(fluxo)[1])*scale,lats,fluxo,cmap='plasma')
+    plt.ylim(lats[0],lats[-1])
+    plt.xlim(0,np.shape(temp)[1]*scale/4.)
+    # plt.ylabel('Latitude ($^{\circ}$)')
+    plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
+    plt.xlabel('Day')
+    clb=plt.colorbar(c2,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    clb.set_label(r'OLR (W m$^{-2}$)',fontsize=12)
+
+    plt.savefig('seasons.pdf')
+    if show:
+      plt.show()
+    else:
+      plt.close()
+
+
 comp2huybers('Earth',show=False)
+seasonal_maps(0,show=False)

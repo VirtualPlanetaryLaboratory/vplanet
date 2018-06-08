@@ -635,6 +635,7 @@ struct BODY {
   double dThermTemp;    //lehmer var
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
+  double dJeansTime;
   int bCalcFXUV;
 
   /* STELLAR Parameters */

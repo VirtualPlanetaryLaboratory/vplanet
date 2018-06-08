@@ -52,7 +52,7 @@ setup(name='vplanet',
       author='Virtual Planet Laboratory',
       url='https://github.com/uwvpl/',
       description='Virtual planet simulator',
-      install_requires=['vplot>=0.3.0',
+      install_requires=['vplot>=0.3.1',
                         'pytest'],
       cmdclass={'install': CustomInstall,
                 'develop': CustomDevelop})

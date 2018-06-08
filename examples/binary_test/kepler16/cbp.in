@@ -17,7 +17,8 @@ bBinaryUseMatrix      0               # Use the matrix to solve for main variabl
 dSemi           0.7016                # CBP semi-major axis [AU]
 dLongP          129.75                # CBP longitude of pericenter [deg]
 dCBPM0          358.85               # CBP mean anomaly [deg]
-dCBPPsi         270
+dCBPPsi         270.0
+dCBPZeta        90.0
 
 # Outputs
 saOutputOrder Time CBPR CBPZ ArgP LongA Eccentricity Inc LongP

@@ -1,0 +1,27 @@
+sudo: required
+
+dist: trusty
+
+language: c
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-4.8
+
+matrix:
+    include:
+        - os: linux
+          env: PYTHON_VERSION=3.4 NUMPY_VERSION=1.11
+
+install:
+    - source .ci/travis.sh
+
+cache:
+    directories:
+        - $HOME/miniconda
+
+script:
+    - py.test -v -s tests

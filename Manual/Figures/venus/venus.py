@@ -21,11 +21,17 @@ for i in range(N):
     ax[1].plot(time, oxygen[i])
 
 # Legend
-leg = ax[0].legend(lines, ('1 TO', '2 TO', '3 TO'),
+leg = ax[0].legend(lines, ('1 TO', '3 TO', '5 TO'),
                    loc=('upper right'),
                    handletextpad = 0.1,
                    title="Initial water")
 pl.setp(leg.get_title(), fontsize=12, fontweight='bold')
+
+# Watson et al (1981) result
+ax[0].axvline(280e6, color='k', lw=1, ls='--')
+ax[0].annotate("Watson+81 timescale", xy=(280e6, 1), xycoords="data",
+               textcoords=("offset points"), xytext=(5, 0),
+               ha="left", va="center", fontsize=12, color='k')
 
 # Tweaks
 ax[0].set_xlabel('Time (years)')

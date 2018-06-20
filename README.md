@@ -1,3 +1,3 @@
 # vplanet
 
-The virtual planet simulator. © 2018 Virtual Planetary Laboratory.
+© 2018 Virtual Planetary Laboratory.

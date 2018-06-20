@@ -10,11 +10,13 @@ if ! command -v conda > /dev/null; then
       conda activate test
       conda install tectonic;
       conda install -c conda-forge numpy=$NUMPY_VERSION scipy matplotlib setuptools pytest pytest-cov pip;
-      pip install git+git://github.com/UWVPL/vplot.git
 fi
 
 # Display some info
 conda info -a
+
+# Install vplot
+pip install git+git://github.com/UWVPL/vplot.git
 
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"

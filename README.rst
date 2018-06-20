@@ -1,6 +1,8 @@
 TIP OF THE DAY
 --------------
 
+We're on github now!
+
 Once a *VPLANET* run is complete, open up Python in the run directory and type
 
 .. code-block:: python

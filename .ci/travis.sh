@@ -16,7 +16,7 @@ fi
 conda info -a
 
 # Install vplot
-pip install git+git://github.com/UWVPL/vplot.git
+pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"

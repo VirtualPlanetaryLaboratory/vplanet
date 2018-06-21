@@ -4,9 +4,14 @@
 *.Laplace
 *.Climate
 *.DailyInsolInit
-
-# Figures
-Manual/Figures/*/*.pdf
+*.inv
+*.pdf
+*.png
+*.zip
+*.ps
+*.gif
+*.npz
+*.dat
 
 # Aux files / build info / garbage
 *.pyc

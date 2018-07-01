@@ -1,0 +1,13 @@
+sName               c
+saModules           distorb distres
+dMass               8.40976978660401e-06        # Solar masses
+dRadius             -1.50                       # Earth
+dRotPeriod          -100                        # Days
+dObliquity          23.5                        # Degrees
+dSemi               0.46599965                  # AU
+dEcc                0.1
+dInc                0.5                         # Degrees
+dLongP              102.94719                   # Degrees
+dLongA              168.73936                   # Degrees
+dMeanL              78.03869654                 # Degrees
+saOutputOrder       Time SemiM Ecce Inc ArgP LongA MeanL DMeanLDt

@@ -12,6 +12,8 @@
 *.gif
 *.npz
 *.dat
+*.Ecc.Eigen
+*.Inc.Eigen
 
 # Aux files / build info / garbage
 *.pyc

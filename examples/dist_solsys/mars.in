@@ -1,0 +1,14 @@
+sName               Mars
+saModules           distorb distrot
+dMass               3.22683626e-07
+dRadius             -0.53202
+dRotPeriod          -1.0259233
+dObliquity          25.189417           # dObliquity, dDynEllip from Armstrong 2004, Bouquillon & Souchay 1999
+dSemi               1.523366231
+dEcc                0.09341233
+dInc                1.85061
+dLongP              336.04084
+dLongA              49.57854
+dDynEllip           5.363e-3
+dPrecA              0.0
+saOutputOrder       Time Ecce Inc ArgP LongA Obliq PrecA PrecFNat

@@ -1,8 +1,21 @@
-GL581
------
+gl581
+=====
 
-*Rory Barnes, Aug. 2015*
+**Date:** 09/01/15
+**Author:** Rory Barnes
+**Modules:** `eqtide`, `stellar`, `distorb`, `distrot`
+**Approximate runtime (single core):** 4 seconds
 
-**Description:** The original fully-coupled M-dwarf planetary system. May be slightly outdated.
+Short description
+-----------------
 
-**Modules:** ``eqtide``, ``stellar``, ``distorb``, ``distrot``, ``atmesc``, ``poise``, ``radheat``, ``thermint``
+The original fully-coupled M-dwarf planetary system.
+
+
+To run this example
+-------------------
+
+``
+vplanet vpl.in
+vplot
+``

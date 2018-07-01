@@ -1,0 +1,7 @@
+- It doesn't look like any ice is forming...
+- Please add a README.rst (copy convention from other examples)
+- Add a python script to plot the SeasonalClimateFiles
+- Clean up input files:
+    - Align the options
+    - Add comments explaining all options
+    - Remove commented lines / disabled inputs

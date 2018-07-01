@@ -1,14 +1,21 @@
-MAIN_SEQ
---------
+main_seq
+========
 
-*Rodrigo Luger, Oct. 19, 2015*
+**Date:** 10/19/15
+**Author:** Rory Barnes
+**Modules:** `stellar`
+**Approximate runtime (single core):** 24 seconds
 
-**Description:** A test of the Baraffe evolution models for a range of stellar masses.
+Short description
+-----------------
 
-**Modules:** ``stellar``
+A test of the Baraffe evolution models for a range of stellar masses.
 
-This example can be used to create a main-sequence-like diagram:
 
-.. image:: vplot.png
-   :alt: vplot
-   :align: center
+To run this example
+-------------------
+
+``
+vplanet vpl.in
+vplot
+``

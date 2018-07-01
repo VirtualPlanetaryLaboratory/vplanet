@@ -1,8 +1,21 @@
-STELLAR_ATMESC
---------------
+stellar_atmesc
+==============
 
-*Rodrigo Luger, Oct. 19, 2015*
+**Date:** 10/19/15
+**Author:** Rodrigo Luger
+**Modules:** `stellar`, `atmesc`
+**Approximate runtime (single core):** 8 seconds
 
-**Description:** An example of the coupling between stellar evolution and atmospheric escape.
+Short description
+-----------------
 
-**Modules:** ``stellar``, ``atmesc``
+An example of the coupling between stellar evolution and atmospheric escape.
+
+
+To run this example
+-------------------
+
+``
+vplanet vpl.in
+vplot
+``

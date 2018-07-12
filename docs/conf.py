@@ -23,12 +23,12 @@
 
 import sys
 import os
-import shlex
+import sphinx_rtd_theme
 import glob
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('.'))
-import sphinx_rtd_theme
+sys.path.insert(0, os.path.abspath('../examples'))
 srcdir = os.path.join(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))), 'src')
 srcfiles = [os.path.basename(x)

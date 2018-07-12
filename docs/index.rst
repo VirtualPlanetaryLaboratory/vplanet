@@ -6,7 +6,8 @@ Automatically generated documentation for VPLANET.
 .. toctree::
    :maxdepth: 3
 
-   source
+   src
+   examples
 
 Indices and tables
 ==================

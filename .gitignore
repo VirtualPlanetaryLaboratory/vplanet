@@ -39,8 +39,10 @@ vplanet.egg-info
 
 # Documentation
 docs/.build
-docs/rst
-docs/source.rst
+docs/src
+docs/src.rst
+docs/examples
+docs/examples.rst
 
 # The executable
 vplanet

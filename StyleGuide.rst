@@ -8,11 +8,8 @@ General remarks
       be part of the unit tests, as the unit tester collects and attempts to run
       any file with `test` in it.
     - Use spaces, not tabs, when indenting!
-    - 
 
-
-Variable and function names use a "Hungarian style."
-
+Variable and function names use a "Hungarian style".
 All files should begin with a doxygen-style docstring:
 
 .. code-block:: C

@@ -9,8 +9,8 @@ srcdir = os.path.join(os.path.dirname(
 srcfiles = [os.path.basename(x)
             for x in glob.glob(os.path.join(srcdir, '*.[ch]'))]
 
-rsttext = '''Source code
-===========
+rsttext = '''C API
+=====
 
 Detailed documentation of C source code.
 
@@ -20,9 +20,12 @@ Detailed documentation of C source code.
 
 '''
 
+# DEBUG
+srcfiles = []
+
 # Create rst file
-if not os.path.exists('rst'):
-    os.makedirs('rst')
+if not os.path.exists('src'):
+    os.makedirs('src')
 
 # Loop through each source file
 for srcfile in srcfiles:
@@ -31,10 +34,10 @@ for srcfile in srcfiles:
     name = os.path.splitext(srcfile)[0]
 
     # Add to the table of contents
-    rsttext += '   rst/%s\n' % srcfile
+    rsttext += '   src/%s\n' % srcfile
 
     # Do we need to generate this file?
-    outfile = os.path.join('rst', '%s.rst' % srcfile)
+    outfile = os.path.join('src', '%s.rst' % srcfile)
     if os.path.exists(outfile):
         continue
 
@@ -45,5 +48,5 @@ for srcfile in srcfiles:
         print("%s\n.. autodoxygenfile:: %s" % (header, srcfile), file=rstfile)
 
 # Create RST index
-with open('source.rst', 'w') as index:
+with open('src.rst', 'w') as index:
     print(rsttext, file=index)

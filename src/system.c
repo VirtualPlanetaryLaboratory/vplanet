@@ -474,4 +474,7 @@ double fndUpdateSpiNBodyCoords(BODY *body,EVOLVE *evolve) {
     body[iBody].dVelY      = body[iBody].dBCartVel[1]*AUM/DAYSEC;
     body[iBody].dVelZ      = body[iBody].dBCartVel[2]*AUM/DAYSEC;
   }
+
+  // TODO: Should this function be *void*?
+  return 0;
 }

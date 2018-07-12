@@ -1,21 +1,34 @@
 xuvevol
 =======
 
-**Date:** 10/19/15
-**Author:** Rodrigo Luger
-**Modules:** `stellar`, `atmesc`
-**Approximate runtime (single core):** 6 seconds
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Date**              10/19/15
+**Author**            Rodrigo Luger
+**Modules**           :doc:`stellar <../src/stellar.c>`
+                      :doc:`atmesc <../src/atmesc.c>`
+**Approx. runtime**   6 seconds
+===================   ============
 
-**Description:** XUV luminosity evolution based on Reiners and Mohanty (2012)
+An example of stellar XUV luminosity evolution.
 
 
 To run this example
 -------------------
 
-``
-vplanet vpl.in
-vplot
-``
+.. code-block:: bash
+
+    vplanet vpl.in
+    vplot
+
+Expected output
+---------------
+
+.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/xuvevol.png
+   :width: 600px
+   :align: center
+
+   Evolution of an evaporating gaseous exoplanet and its star, showing the coupling between
+   atmospheric escape and the evolution of the stellar XUV luminosity.

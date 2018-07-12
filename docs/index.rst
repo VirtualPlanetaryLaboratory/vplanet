@@ -4,10 +4,11 @@ Documentation
 Automatically generated documentation for VPLANET.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
 
    src
    examples
+   bugs
 
 Indices and tables
 ==================

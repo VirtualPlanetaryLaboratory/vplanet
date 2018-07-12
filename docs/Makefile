@@ -20,10 +20,13 @@ help:
 	@if [ $(MAKECMDGOALS) != clean ]; then \
 		python gensrc.py; \
 		python genexamples.py; \
+		python genbugs.py; \
 	else \
 		rm -rf src.rst; \
 		rm -rf src; \
 		rm -rf examples.rst; \
 		rm -rf examples; \
+		rm -rf bugs; \
+		rm -rf bugs.rst; \
 	fi
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

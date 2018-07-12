@@ -1,13 +1,15 @@
 cpl
 ===
 
-**Date:** ??/??/??
-**Author:** ??
-**Modules:** `eqtide`
-**Approximate runtime (single core):** 1 second
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Date**              ??/??/??
+**Author**            ??
+**Modules**           :doc:`eqtide <../src/eqtide.c>`
+**Approx. runtime**   1 second
+===================   ============
 
 A simple example of tidal evolution using the constant phase lag
 (CPL) model for a mildly eccentric planet.
@@ -15,7 +17,21 @@ A simple example of tidal evolution using the constant phase lag
 To run this example
 -------------------
 
-```
-vplanet vpl.in
-vplot
-```
+.. code-block:: bash
+
+    vplanet vpl.in
+    vplot
+
+
+Expected output
+---------------
+
+.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/cpl.png
+   :width: 600px
+   :align: center
+
+   Evolution of several properties of the planet over 7 Gyr. As the planet circularizes due to
+   tidal forces (top left), both its orbital and rotational periods decay (top right and center).
+   As the eccentricity drops, the rate of tidal energy release decreases (bottom left).
+   The plots at bottom center and bottom right show the (approximate) conservation of angular
+   momentum and energy in the star-planet system.

@@ -20,9 +20,6 @@ Detailed documentation of C source code.
 
 '''
 
-# DEBUG
-srcfiles = []
-
 # Create rst file
 if not os.path.exists('src'):
     os.makedirs('src')

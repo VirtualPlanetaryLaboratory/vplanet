@@ -72,7 +72,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'vplanet'
-copyright = '2017, Rory Barnes'
+copyright = '2018, Rory Barnes'
 author = 'Rory Barnes'
 
 # The version info for the project you're documenting, acts as replacement for

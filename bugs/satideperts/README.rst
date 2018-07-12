@@ -1,11 +1,14 @@
 satideperts
 ===========
 
-**Date:** 06/28/18
-**Author:** Rodrigo Luger
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Issue**             `#10 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/10>`_
+**Date**              06/28/18
+**Author**            Rodrigo Luger
+===================   ============
 
 If EQTIDE is present in any of the body .in files, but *not in the primary* .in file,
 a segfault occurs.
@@ -18,7 +21,8 @@ set, in which case an informative error is raised. But even if saTidePerts is se
 (neither of which is the primary), a segfault still occurs. Something in the code implicitly expects the star to always
 have EQTIDE present (and saTidePerts set), so we need to add a check for that.
 
-How to fix it
+
+Suggested fix
 -------------
 
 Not sure yet.

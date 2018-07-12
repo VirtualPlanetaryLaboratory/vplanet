@@ -1,11 +1,14 @@
 period
 ======
 
-**Date:** 06/28/18
-**Author:** Rodrigo Luger
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Issue**             `#14 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/14>`_
+**Date**              06/28/18
+**Author**            Rodrigo Luger
+===================   ============
 
 Setting a planet's orbital period does not automatically set its semi-major axis
 when one of the modules controlling the semi-major axis evolution (BINARY DISTORB EQTIDE GALHABIT POISE SPINBODY)
@@ -17,9 +20,10 @@ Long description
 This was surprisingly hard to debug, since without one of
 (BINARY DISTORB EQTIDE GALHABIT POISE SPINBODY) present, there is no way to output the semi-major axis:
 
-```
-ERROR: Output parameter SemiMajorAxis requires module(s): BINARY DISTORB EQTIDE GALHABIT POISE SPINBODY
-```
+.. code-block:: bash
+
+    ERROR: Output parameter SemiMajorAxis requires module(s): BINARY DISTORB EQTIDE GALHABIT POISE SPINBODY
+
 
 The semi-major axis also does not get recorded anywhere in the log file unless one of these modules
 is present. This should not be the case: the semi-major axis and the eccentricity are important for
@@ -32,7 +36,8 @@ In the example provided, two planets are instantiated with hydrogen envelopes, o
 and one at a period of 999999 days. Both lose the same amount of hydrogen, which is clearly wrong.
 Thanks to Gijs Mulders for finding this bug.
 
-How to fix it
+
+Suggested fix
 -------------
 
 Not sure yet.

@@ -1,13 +1,16 @@
 dist_solsys
 ===========
 
-**Date:** 10/01/15
-**Author:** Russell Deitrick
-**Modules:** `distorb`, `distrot`
-**Approximate runtime (single core):** 58 seconds
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Date**              10/01/15
+**Author**            Russell Deitrick
+**Modules**           :doc:`distorb <../src/distorb.c>`
+                      :doc:`distrot <../src/distrot.c>`
+**Approx. runtime**   58 seconds
+===================   ============
 
 Runs the orbital evolution of the eight planets in the solar system
 and the rotational evolution of Venus, Mars, and the moonless Earth.
@@ -15,18 +18,27 @@ and the rotational evolution of Venus, Mars, and the moonless Earth.
 To run this example
 -------------------
 
-```
-vplanet vpl.in
-```
+.. code-block:: bash
 
-then
-
-```
-vplot
-```
+    vplanet vpl.in
+    vplot
 
 or
 
-```
-python plotsolsys.py
-```
+.. code-block:: bash
+
+    python plotsolsys.py
+
+
+Expected output
+---------------
+
+.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/dist_solsys.png
+   :width: 600px
+   :align: center
+
+   Evolution of the orbital properties of the eight Solar System planets over a timescale of one
+   million years.
+   From left to right, top to bottom: evolution of the argument of pericenter, orbital eccentricity,
+   orbital inclination, longitude of ascending node, obliquity, precession angle, natural precession
+   frequency, total system angular momentum, and total system energy.

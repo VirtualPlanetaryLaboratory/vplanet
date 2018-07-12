@@ -1,21 +1,34 @@
-earth
-=====
+earth_interior
+==============
 
-**Date:** ??/??/??
-**Author:** ??
-**Modules:** `stellar`, `radheat`, `thermint`
-**Approximate runtime (single core):** 1 second
+Overview
+--------
 
-Short description
------------------
+===================   ============
+**Date**              ??/??/??
+**Author**            ??
+**Modules**           :doc:`stellar <../src/stellar.c>`
+                      :doc:`radheat <../src/radheat.c>`
+                      :doc:`thermint <../src/thermint.c>`
+**Approx. runtime**   1 second
+===================   ============
 
-Evolution of several properties of Earth's interior.
-
+Computes and plots the evolution of several properties of the Earth's interior.
 
 To run this example
 -------------------
 
-```
-vplanet vpl.in
-vplot
-```
+.. code-block:: bash
+
+    vplanet vpl.in
+    vplot
+
+Expected output
+---------------
+
+.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/earth_interior.png
+   :width: 600px
+   :align: center
+
+   Evolution of the Earth's interior over the age of the planet due to radiogenic heating and
+   cooling of the Earth's core and mantle.

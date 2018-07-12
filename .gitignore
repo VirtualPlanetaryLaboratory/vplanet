@@ -43,6 +43,8 @@ docs/src
 docs/src.rst
 docs/examples
 docs/examples.rst
+docs/bugs
+docs/bugs.rst
 
 # The executable
 vplanet

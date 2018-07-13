@@ -1,10 +1,9 @@
-/********************** ATMESC.C **********************/
-/*
- * Rodrigo Luger, Tue May 12 11:11:38 PDT 2015
- *
- * Subroutines that control the integration of the
- * atmospheric escape model.
- *
+/**
+    @file atmesc.c
+    @brief Subroutines that control the integration of the
+    atmospheric escape model.
+    @author Rodrigo Luger
+    @date May 12 2015
 */
 
 #include <stdio.h>
@@ -14,6 +13,16 @@
 #include <string.h>
 #include "vplanet.h"
 
+/**
+Create a copy of the body at index \p iBody. Used during integration
+of the differential equations.
+
+@param dest The body copy
+@param src The original body instance
+@param foo Who knows!?
+@param iNumBodies Number of bodies
+@param iBody Current body index
+*/
 void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dSurfaceWaterMass = src[iBody].dSurfaceWaterMass;
   dest[iBody].dOxygenMass = src[iBody].dOxygenMass;

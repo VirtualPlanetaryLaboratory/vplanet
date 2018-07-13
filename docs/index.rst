@@ -8,7 +8,7 @@ Automatically generated documentation for VPLANET.
 
    src
    examples
-   bugs
+   developers
 
 Indices and tables
 ==================

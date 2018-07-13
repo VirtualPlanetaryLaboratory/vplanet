@@ -48,7 +48,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.mathjax',
               'breathe',
-              'matplotlib.sphinxext.plot_directive']
+              'matplotlib.sphinxext.plot_directive',
+              'sphinxcontrib.bibtex']
 
 plot_include_source = False
 plot_html_show_source_link = False
@@ -57,8 +58,6 @@ plot_html_show_formats = False
 # Breathe bridge to Doxygen C docs
 breathe_default_project = "vplanet"
 breathe_projects_source = {"vplanet": (srcdir, srcfiles)}
-breathe_doxygen_config_options = {'CITE_BIB_FILES': 'vplanet.bib'}
-
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']

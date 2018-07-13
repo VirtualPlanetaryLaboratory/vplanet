@@ -5,16 +5,21 @@
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
     @date May 12 2015
 
-    \par Long description
-    This module defines differential equations controlling the evolution
-    of planetary atmospheres under intense extreme ultraviolet (XUV)
-    stellar irradiation. The [atmesc](atmesc.html) module implements energy-limited
-    and diffusion-limited escape for hydrgen/helium atmospheres and water
-    vapor atmospheres following [Luger et al. (2015)](http://adsabs.harvard.edu/abs/2015AsBio..15...57L),
-    [Luger and Barnes (2015)](http://adsabs.harvard.edu/abs/2015AsBio..15..119L),
-    and [Lehmer and Catling (2017)](http://adsabs.harvard.edu/abs/2017ApJ...845..130L).
+    @par Description
+    \rst
+        This module defines differential equations controlling the evolution
+        of planetary atmospheres under intense extreme ultraviolet (XUV)
+        stellar irradiation. The `atmesc <atmesc.html>`_ module implements energy-limited
+        and diffusion-limited escape for hydrgen/helium atmospheres and water
+        vapor atmospheres following
+        :cite:`Luger2015`, :cite:`LugerBarnes2015`, and :cite:`LehmerCatling17`.
+    \endrst
 
-    Test cite: \cite LugerBarnes2015
+    @par References
+    \rst
+        .. bibliography:: ../vplanet.bib
+           :style: unsrt
+    \endrst
 
 */
 
@@ -72,6 +77,16 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 
 /**************** ATMESC options ********************/
 
+/**
+Read the XUV flux from the input file.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadFXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
   int lTmp=-1;
   double dTmp;
@@ -89,7 +104,18 @@ void ReadFXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
       body[iFile-1].dFXUV = options->dDefault;
 }
 
-// Lehmer: Thermosphere temperature
+/**
+\rst
+Read the thermospheric temperature for the :cite:`LehmerCatling17` atmospheric escape model.
+\endrst
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
   int lTmp=-1;
   double dTmp;
@@ -107,7 +133,16 @@ void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dThermTemp = options->dDefault;
 }
 
-// Lehmer: Atmospheric Gas constant
+/**
+Read the atmospheric gas constant the Lehmer and Catling (2017) atmospheric escape model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadAtmGasConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
   int lTmp=-1;
   double dTmp;
@@ -125,6 +160,16 @@ void ReadAtmGasConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].dAtmGasConst = options->dDefault;
 }
 
+/**
+Read the Jeans time, the time at which the flow transitions from hydrodynamic to ballistic.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -143,7 +188,16 @@ void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dJeansTime = options->dDefault;
 }
 
-// Lehmer: Pressure where XUV absorption is unity
+/**
+Read the effective XUV absorption pressure for the Lehmner and Catling (2017) model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadPresXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
   int lTmp=-1;
   double dTmp;
@@ -161,6 +215,16 @@ void ReadPresXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].dPresXUV = options->dDefault;
 }
 
+/**
+Read the water loss model for the Luger and Barnes (2015) atmospheric escape model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -186,6 +250,16 @@ void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].iWaterLossModel = ATMESC_LBEXACT;
 }
 
+/**
+Read the XUV absorption efficiency model for the Luger and Barnes (2015) atmospheric escape model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadAtmXAbsEffH2OModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -209,6 +283,16 @@ void ReadAtmXAbsEffH2OModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *op
       body[iFile-1].iAtmXAbsEffH2OModel = ATMESC_NONE;
 }
 
+/**
+Read the planet radius model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -237,6 +321,16 @@ void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
       body[iFile-1].iPlanetRadiusModel = ATMESC_NONE;
 }
 
+/**
+Read the parameter that controls surface O2 sinks for the Luger and Barnes (2015) model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadInstantO2Sink(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -252,6 +346,16 @@ void ReadInstantO2Sink(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultInt(options,&body[iFile-1].bInstantO2Sink,files->iNumInputs);
 }
 
+/**
+Read the planet's effective XUV radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -272,6 +376,16 @@ void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dXFrac = options->dDefault;
 }
 
+/**
+Read the XUV absorption efficiency for hydrogen.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadAtmXAbsEffH(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -292,6 +406,16 @@ void ReadAtmXAbsEffH(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].dAtmXAbsEffH = options->dDefault;
 }
 
+/**
+Read the XUV absorption efficiency for water.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -312,6 +436,16 @@ void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       body[iFile-1].dAtmXAbsEffH2O = options->dDefault;
 }
 
+/**
+Read the planet's initial gaseous envelope mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -330,6 +464,16 @@ void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].dEnvelopeMass = options->dDefault;
 }
 
+/**
+Read the planet's initial atmospheric oxygen mass (Luger and Barnes 2015 model).
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadOxygenMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -350,6 +494,16 @@ void ReadOxygenMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dOxygenMass = options->dDefault;
 }
 
+/**
+Read the planet's initial mantle oxygen mass (Luger and Barnes 2015 model).
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadOxygenMantleMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -370,6 +524,16 @@ void ReadOxygenMantleMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].dOxygenMantleMass = options->dDefault;
 }
 
+/**
+Read the planet's initial surface water mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -390,6 +554,16 @@ void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
 
 /* Halts */
 
+/**
+Read the parameter that controls whether the code halts when the planet is desiccated.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadHaltMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -406,6 +580,16 @@ void ReadHaltMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTION
   }
 }
 
+/**
+Read the minimum surface water mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -424,6 +608,16 @@ void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
       body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
 }
 
+/**
+Read the parameter that controls whether the code halts when the planet's envelope is fully evaporated.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -440,6 +634,16 @@ void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   }
 }
 
+/**
+Read the minimum envelope mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
 void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -458,6 +662,12 @@ void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
       body[iFile-1].dMinEnvelopeMass = options->dDefault;
 }
 
+/**
+Initialize the user options for the atmospheric escape model.
+
+@param options A pointer to the OPTIONS instance
+@param fnRead Array of pointers to the functions that read in the options
+*/
 void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
@@ -620,6 +830,17 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_FXUV] = &ReadFXUV;
 }
 
+/**
+Loops through the input files and reads all user options for the atmospheric escape model.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param fnRead Array of pointers to the functions that read in the options
+@param iBody The current BODY number
+*/
 void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
   int iOpt;
 
@@ -631,6 +852,15 @@ void ReadOptionsAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 /******************* Verify ATMESC ******************/
 
+/**
+Initializes the differential equation matrix for the surface water mass.
+
+@param body A pointer to the current BODY instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iSurfaceWaterMass][0] = 1;
@@ -641,6 +871,15 @@ void VerifySurfaceWaterMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   update[iBody].pdDSurfaceWaterMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
 }
 
+/**
+Initializes the differential equation matrix for the atmospheric oxygen mass.
+
+@param body A pointer to the current BODY instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifyOxygenMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iOxygenMass][0] = 1;
@@ -651,6 +890,15 @@ void VerifyOxygenMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int
   update[iBody].pdDOxygenMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iOxygenMass][0];
 }
 
+/**
+Initializes the differential equation matrix for the mantle oxygen mass.
+
+@param body A pointer to the current BODY instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifyOxygenMantleMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iOxygenMantleMass][0] = 1;
@@ -661,6 +909,15 @@ void VerifyOxygenMantleMass(BODY *body,OPTIONS *options,UPDATE *update,double dA
   update[iBody].pdDOxygenMantleMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iOxygenMantleMass][0];
 }
 
+/**
+Initializes the differential equation matrix for the gaseous envelope mass.
+
+@param body A pointer to the current BODY instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iEnvelopeMass][0] = 1;
@@ -671,6 +928,15 @@ void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,i
   update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
 }
 
+/**
+Initializes the differential equation matrix for the planet mass.
+
+@param body A pointer to the current BODY instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   update[iBody].iaType[update[iBody].iMass][0] = 1;
@@ -681,6 +947,16 @@ void VerifyMassAtmEsc(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int
   update[iBody].pdDMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iMass][0];
 }
 
+/**
+Initializes the differential equation matrix for the planet radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the CONTROL instance
+@param options A pointer to the OPTIONS instance
+@param update A pointer to the UPDATE instance
+@param dAge The current age of the system
+@param iBody The current BODY number
+*/
 void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign radius
@@ -710,6 +986,20 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
 
 }
 
+/**
+This function is run during every step of the integrator to
+perform checks and force certain non-diffeq behavior.
+
+@param body A pointer to the current BODY instance
+@param module A pointer to the MODULE instance
+@param evolve A pointer to the EVOLVE instance
+@param io A pointer to the IO instance
+@param system A pointer to the SYSTEM instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
 void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   if ((body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) && (body[iBody].dSurfaceWaterMass > 0.)){
@@ -722,6 +1012,15 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 }
 
+
+/**
+Initializes several helper variables and properties used in the integration.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the EVOLVE instance
+@param update A pointer to the UPDATE instance
+@param iBody The current BODY number
+*/
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
@@ -840,6 +1139,17 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
+
+/**
+Assigns functions returning the time-derivatives of each variable
+to the magical matrix of function pointers.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the EVOLVE instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+*/
 void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fdDSurfaceWaterMassDt;
@@ -853,6 +1163,16 @@ void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   fnUpdate[iBody][update[iBody].iRadius][0]             = &fdPlanetRadius; // NOTE: This points to the VALUE of the radius!
 }
 
+/**
+Assigns null functions to the magical matrix of function pointers
+for variables that will not get updated.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the EVOLVE instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+*/
 void NullAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] = &fndUpdateFunctionTiny;
@@ -866,6 +1186,19 @@ void NullAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVari
   fnUpdate[iBody][update[iBody].iRadius][0]             = &fndUpdateFunctionTiny; // NOTE: This points to the VALUE of the radius!
 }
 
+/**
+Verify all the inputs for the atmospheric escape module.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the CONTROL instance
+@param files A pointer to the FILES instance
+@param options A pointer to the OPTIONS instance
+@param output A pointer to the OUTPUT instance
+@param system A pointer to the SYSTEM instance
+@param update A pointer to the UPDATE instance
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bAtmEsc=0;
 
@@ -929,6 +1262,14 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
 /**************** ATMESC update ****************/
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iBody The current BODY number
+*/
 void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     if (update[iBody].iNumSurfaceWaterMass == 0)
@@ -962,47 +1303,157 @@ void InitializeUpdateAtmEsc(BODY *body,UPDATE *update,int iBody) {
 
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateEccAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumSurfaceWaterMass = (*iEqn)++;
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateOxygenMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumOxygenMass = (*iEqn)++;
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateOxygenMantleMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumOxygenMantleMass = (*iEqn)++;
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateEnvelopeMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumEnvelopeMass = (*iEqn)++;
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateMassAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumMass = (*iEqn)++;
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateOblAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateRotAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateSemiAtmEsc(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   /* Nothing */
 }
 
+/**
+Internal housekeeping function that determines
+which variables get updated every time step.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE instance
+@param iEqn The current equation number
+@param iVar The current variable number
+@param iBody The current BODY number
+@param iFoo ?!
+*/
 void FinalizeUpdateRadiusAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumRadius = (*iEqn)++;
@@ -1010,6 +1461,16 @@ void FinalizeUpdateRadiusAtmEsc(BODY *body,UPDATE*update,int *iEqn,int iVar,int 
 
 /***************** ATMESC Halts *****************/
 
+/**
+Checks for surface desiccation and halts if necessary.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current BODY number
+*/
 int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
@@ -1023,6 +1484,16 @@ int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *
   return 0;
 }
 
+/**
+Checks for envelope evaporation and halts if necessary.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current BODY number
+*/
 int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
 
   if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
@@ -1036,6 +1507,12 @@ int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }
 
+/**
+Count the number of halting conditions.
+
+@param halt A pointer to the HALT instance
+@param iHalt The current HALT number
+*/
 void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
   if (halt->bSurfaceDesiccated)
     (*iHalt)++;
@@ -1043,6 +1520,15 @@ void CountHaltsAtmEsc(HALT *halt,int *iHalt) {
     (*iHalt)++;
 }
 
+/**
+Check whether the user wants to halt on certain conditions.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the CONTROL instance
+@param options A pointer to the OPTIONS instance
+@param iBody The current BODY number
+@param iHalt The current HALT number
+*/
 void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
 
   if (control->Halt[iBody].bSurfaceDesiccated)
@@ -1054,6 +1540,11 @@ void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 
 /************* ATMESC Outputs ******************/
 
+/**
+Writes info to the vplanet help.
+
+@param output A pointer to the current OUTPUT instance
+*/
 void HelpOutputAtmEsc(OUTPUT *output) {
   int iOut;
 
@@ -1062,6 +1553,19 @@ void HelpOutputAtmEsc(OUTPUT *output) {
     WriteHelpOutput(&output[iOut]);
 }
 
+/**
+Logs the surface water mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dSurfaceWaterMass;
 
@@ -1075,6 +1579,19 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 }
 
+/**
+Logs the atmospheric oxygen mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteOxygenMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dOxygenMass;
 
@@ -1088,6 +1605,19 @@ void WriteOxygenMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 }
 
+/**
+Logs the mantle oxygen mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteOxygenMantleMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dOxygenMantleMass;
 
@@ -1101,6 +1631,19 @@ void WriteOxygenMantleMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 }
 
+/**
+Logs the planet radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WritePlanetRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadius;
 
@@ -1114,6 +1657,19 @@ void WritePlanetRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 }
 
+/**
+Logs the envelope mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dEnvelopeMass;
 
@@ -1126,6 +1682,19 @@ void WriteEnvelopeMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+/**
+Logs the semi-major axis corresponding to the current runaway greenhouse limit.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Get the RG flux
@@ -1143,21 +1712,73 @@ void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   }
 }
 
+/**
+Logs the oxygen mixing ratio at the base of the hydrodynamic wind.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteOxygenMixingRatio(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass, body[iBody].dOxygenMass);
   strcpy(cUnit,"");
 }
 
+/**
+Logs the oxygen eta parameter from Luger and Barnes (2015).
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteOxygenEta(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dOxygenEta;
   strcpy(cUnit,"");
 }
 
+/**
+Logs the XUV absorption efficiency for water.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteAtmXAbsEffH2O(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dAtmXAbsEffH2O;
   strcpy(cUnit,"");
 }
 
+/**
+Logs the planet's radius in the XUV.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadXUV;
 
@@ -1170,6 +1791,21 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+/**
+Logs the atmospheric mass loss rate.
+
+\warning This routine is currently broken.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
@@ -1181,6 +1817,19 @@ void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   */
 }
 
+/**
+Logs the thermospheric temperature.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
  *dTmp = body[iBody].dThermTemp;
 
@@ -1190,6 +1839,19 @@ void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
  } else { }
 }
 
+/**
+Logs the surface pressure.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dPresSurf;
 
@@ -1199,6 +1861,19 @@ void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   } else { }
 }
 
+/**
+Logs the pressure at the XUV absorption radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dPresXUV;
 
@@ -1208,6 +1883,19 @@ void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   } else { }
 }
 
+/**
+Logs the time at which the flow transitioned to Jeans escape.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteJeansTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dJeansTime;
 
@@ -1217,6 +1905,19 @@ void WriteJeansTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   } else { }
 }
 
+/**
+Logs the atmospheric scale height.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dScaleHeight;
 
@@ -1226,6 +1927,19 @@ void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   } else { }
 }
 
+/**
+Logs the gas constant.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteAtmGasConst(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dAtmGasConst;
 
@@ -1235,6 +1949,19 @@ void WriteAtmGasConst(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   } else { }
 }
 
+/**
+Logs the planet's solid radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadSolid;
 
@@ -1247,6 +1974,19 @@ void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   }
 }
 
+/**
+Logs the XUV flux received by the planet.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
 void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dFXUV;
 
@@ -1258,6 +1998,12 @@ void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   }
 }
 
+/**
+Set up stuff to be logged for atmesc.
+
+@param output A pointer to the current OUTPUT instance
+@param fnWrite A pointer to the function that does the logging
+*/
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
@@ -1344,7 +2090,6 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ENVELOPEMASS].iModuleBit = ATMESC;
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
-
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
   sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escpape and equilibrium");
   sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
@@ -1429,6 +2174,14 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 /************ ATMESC Logging Functions **************/
 
+/**
+Log the global atmesc options.
+
+\warning This routine currently does nothing!
+
+@param control A pointer to the current CONTROL instance
+@param fp A FILE pointer
+*/
 void LogOptionsAtmEsc(CONTROL *control, FILE *fp) {
 
   /* Anything here?
@@ -1437,6 +2190,19 @@ void LogOptionsAtmEsc(CONTROL *control, FILE *fp) {
   */
 }
 
+/**
+Log the global atmesc parameters.
+
+\warning This routine currently does nothing!
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param update A pointer to the current UPDATE instance
+@param fnWrite A pointer to the function doing the logging
+@param fp A FILE pointer
+*/
 void LogAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
 
   /* Anything here?
@@ -1450,6 +2216,18 @@ void LogAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
   */
 }
 
+/**
+Log the body-specific atmesc parameters.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param update A pointer to the current UPDATE instance
+@param fnWrite A pointer to the function doing the logging
+@param fp A FILE pointer
+@param iBody The current BODY number
+*/
 void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
   int iOut;
   fprintf(fp,"----- ATMESC PARAMETERS (%s)------\n",body[iBody].cName);
@@ -1465,6 +2243,13 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 }
 
+/**
+Adds atmesc to the current array of MODULEs.
+
+@param module A pointer to the current array of MODULE instances
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
 void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                         = ATMESC;
@@ -1488,6 +2273,13 @@ void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
 
 /************* ATMESC Functions ************/
 
+/**
+The rate of change of the surface water mass.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
 double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   if ((body[iaBody[0]].bRunaway) && (body[iaBody[0]].dSurfaceWaterMass > 0)) {
@@ -1502,6 +2294,13 @@ double fdDSurfaceWaterMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 }
 
+/**
+The rate of change of the oxygen mass in the atmosphere.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
 double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   if ((body[iaBody[0]].bRunaway) && (!body[iaBody[0]].bInstantO2Sink) && (body[iaBody[0]].dSurfaceWaterMass > 0)) {
@@ -1528,6 +2327,13 @@ double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 }
 
+/**
+The rate of change of the oxygen mass in the mantle.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
 double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   if ((body[iaBody[0]].bRunaway) && (body[iaBody[0]].bInstantO2Sink) && (body[iaBody[0]].dSurfaceWaterMass > 0)) {
@@ -1554,6 +2360,13 @@ double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 }
 
+/**
+The rate of change of the envelope mass.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
@@ -1572,11 +2385,28 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 }
 
+/**
+This function does nothing in atmesc.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body index
+@param iFoo An example of pretty lousy programming
+*/
 double fdSurfEnFluxAtmEsc(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
   // This is silly, but necessary!
   return 0;
 }
 
+
+/**
+Returns the planet radius at the current time.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
 double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
@@ -1601,6 +2431,13 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
 /************* ATMESC Helper Functions ************/
 
+/**
+Computes the insolation.
+
+@param body A pointer to the current BODY instance
+@param iBody The current BODY index
+@param iXUV Integer describing the XUV model
+*/
 double fdInsolation(BODY *body, int iBody, int iXUV) {
 
   double flux;
@@ -1628,6 +2465,12 @@ double fdInsolation(BODY *body, int iBody, int iXUV) {
 
 }
 
+/**
+Computes whether or not water is escaping.
+
+@param body A pointer to the current BODY instance
+@param iBody The current BODY index
+*/
 int fbDoesWaterEscape(BODY *body, int iBody) {
   // TODO: The checks below need to be moved. Ideally we'd
   // just remove this equation from the matrix if the
@@ -1666,6 +2509,12 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
 
 }
 
+/**
+Computes the atomic oxygen mixing ratio in the hydrodynamic flow.
+
+@param dSurfaceWaterMass The amount of water in the atmosphere
+@param dOxygenMass The amount of oxygen in the atmosphere
+*/
 double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   // Mixing ratio X_O of atomic oxygen in the upper atmosphere
   // assuming atmosphere is well-mixed up to the photolysis layer
@@ -1681,6 +2530,17 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   }
 }
 
+/**
+Performs a simple log-linear fit to the Kopparapu et al. (2014) mass-dependent
+runaway greenhouse limit.
+
+\warning  Something is wrong with this linear fit in the first 5 Myr or so, as it diverges.
+
+@param dLuminosity The stellar luminosity
+@param dTeff The stellar effective temperature
+@param dEcc The planet's eccentricity
+@param dPlanetMass The planet mass
+*/
 double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
   // Do a simple log-linear fit to the Kopparapu+14 mass-dependent RG limit
   int i;
@@ -1699,17 +2559,17 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   	seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
   }
 
-  // BUG BUG BUG BUG BUG BUG BUG (August 20, 2016)
-  // Something is wrong with this linear fit in the first ~5 Myr, as it diverges.
-  // This ***does not*** affect ANY calculations for Proxima Cen b, since the planet
-  // remains in the RG for the correct amount of time regardless of this issue.
-  // But I do need to address this soon.
-
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
   return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
 }
 
+/**
+Computes the XUV absorption efficiency for a water vapor atmosphere
+based on a fit to the figure in Bolmont et al. (2017).
+
+@param dFXUV The XUV flux incident on the planet.
+*/
 double fdXUVEfficiencyBolmont2016(double dFXUV) {
 
   // Based on a piecewise polynomial fit to Figure 2
@@ -1746,6 +2606,14 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
 
 }
 
+/**
+Performs a really simple linear least-squares fit on data.
+
+@param x The independent coordinates
+@param y The dependent coordinates
+@param iLen The length of the arrays
+@param daCoeffs The slope and the intercept of the fit
+*/
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 	// Simple least squares linear regression, y(x) = mx + b
 	// from http://en.wikipedia.org/wiki/Simple_linear_regression

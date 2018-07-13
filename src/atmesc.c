@@ -2,8 +2,20 @@
     @file atmesc.c
     @brief Subroutines that control the integration of the
     atmospheric escape model.
-    @author Rodrigo Luger
+    @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
     @date May 12 2015
+
+    \par Long description
+    This module defines differential equations controlling the evolution
+    of planetary atmospheres under intense extreme ultraviolet (XUV)
+    stellar irradiation. The [atmesc](atmesc.html) module implements energy-limited
+    and diffusion-limited escape for hydrgen/helium atmospheres and water
+    vapor atmospheres following [Luger et al. (2015)](http://adsabs.harvard.edu/abs/2015AsBio..15...57L),
+    [Luger and Barnes (2015)](http://adsabs.harvard.edu/abs/2015AsBio..15..119L),
+    and [Lehmer and Catling (2017)](http://adsabs.harvard.edu/abs/2017ApJ...845..130L).
+
+    Test cite: \cite LugerBarnes2015
+
 */
 
 #include <stdio.h>

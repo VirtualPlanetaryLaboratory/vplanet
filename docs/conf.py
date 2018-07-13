@@ -57,6 +57,8 @@ plot_html_show_formats = False
 # Breathe bridge to Doxygen C docs
 breathe_default_project = "vplanet"
 breathe_projects_source = {"vplanet": (srcdir, srcfiles)}
+breathe_doxygen_config_options = {'CITE_BIB_FILES': 'vplanet.bib'}
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']

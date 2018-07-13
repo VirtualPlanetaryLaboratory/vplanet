@@ -6,8 +6,13 @@ import os
 import glob
 srcdir = os.path.join(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))), 'src')
-srcfiles = [os.path.basename(x)
-            for x in glob.glob(os.path.join(srcdir, '*.[ch]'))]
+cfiles = [os.path.basename(x)[:-2]
+          for x in glob.glob(os.path.join(srcdir, '*.c'))]
+hfiles = [os.path.basename(x)[:-2]
+          for x in glob.glob(os.path.join(srcdir, '*.h'))]
+modules = [x for x in cfiles if x in hfiles]
+cmodules = [x for x in hfiles if x not in cfiles]
+hmodules = [x for x in cfiles if x not in hfiles]
 
 rsttext = '''C API
 =====
@@ -15,7 +20,7 @@ rsttext = '''C API
 Detailed documentation of C source code.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
 
 
 '''
@@ -24,25 +29,31 @@ Detailed documentation of C source code.
 if not os.path.exists('src'):
     os.makedirs('src')
 
-# Loop through each source file
-for srcfile in srcfiles:
-
-    # Get module name
-    name = os.path.splitext(srcfile)[0]
+# Loop through each module
+for name in modules:
 
     # Add to the table of contents
-    rsttext += '   src/%s\n' % srcfile
+    rsttext += '   src/%s\n' % name
 
     # Do we need to generate this file?
-    outfile = os.path.join('src', '%s.rst' % srcfile)
+    outfile = os.path.join('src', '%s.rst' % name)
     if os.path.exists(outfile):
         continue
 
     with open(outfile, 'w') as rstfile:
 
         # Create the RST file
-        header = srcfile + '\n' + '=' * len(srcfile)
-        print("%s\n.. autodoxygenfile:: %s" % (header, srcfile), file=rstfile)
+        header = name + '\n' + '=' * len(name)
+        hheader = name + ".h" + '\n' + '-' * (len(name) + 2)
+        cheader = name + ".c" + '\n' + '-' * (len(name) + 2)
+        print(header, file=rstfile)
+        print("", file=rstfile)
+        print(".. contents:: :local:", file=rstfile)
+        print("%s\n.. autodoxygenfile:: %s" % (cheader, name + ".c"),
+              file=rstfile)
+        print("", file=rstfile)
+        print("%s\n.. autodoxygenfile:: %s" % (hheader, name + ".h"),
+              file=rstfile)
 
 # Create RST index
 with open('src.rst', 'w') as index:

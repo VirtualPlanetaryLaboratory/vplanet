@@ -15,6 +15,10 @@ fi
 # Display some info
 conda info -a
 
+# Install docs stuff
+pip install sphinx
+pip install breathe
+
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 

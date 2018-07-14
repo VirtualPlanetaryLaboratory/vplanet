@@ -18,6 +18,7 @@ conda info -a
 # Install docs stuff
 pip install sphinx
 pip install breathe
+pip install sphinxcontrib-bibtex
 
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git

@@ -48,7 +48,8 @@ for name in modules:
         cheader = name + ".c" + '\n' + '-' * (len(name) + 2)
         print(header, file=rstfile)
         print("", file=rstfile)
-        print(".. contents:: :local:", file=rstfile)
+        print("**Contents**\n", file=rstfile)
+        print(".. contents:: :local:\n", file=rstfile)
         print("%s\n.. autodoxygenfile:: %s" % (cheader, name + ".c"),
               file=rstfile)
         print("", file=rstfile)

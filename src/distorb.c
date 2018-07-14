@@ -1,8 +1,12 @@
-/********************** DISTORB.C **********************/
-/*
- * Russell Deitrick, April 28, 2015
- *
- * Subroutines that control the integration of the orbital model.
+/**
+   @file distorb.c
+
+   @brief Subroutines that control the integration of the orbital model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date April 28 2015
+
 */
 
 #include <stdio.h>

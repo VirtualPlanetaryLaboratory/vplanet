@@ -7,7 +7,7 @@ Overview
 ===================   ============
 **Date**              ??/??/??
 **Author**            ??
-**Modules**           :doc:`eqtide <../src/eqtide.c>`
+**Modules**           `eqtide <../src/eqtide.html>`_
 **Approx. runtime**   1 second
 ===================   ============
 

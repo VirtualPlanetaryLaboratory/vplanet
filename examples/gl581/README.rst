@@ -7,10 +7,10 @@ Overview
 ===================   ============
 **Date**              09/01/15
 **Author**            Rory Barnes
-**Modules**           :doc:`eqtide <../src/eqtide.c>`
-                      :doc:`stellar <../src/stellar.c>`
-                      :doc:`distorb <../src/distorb.c>`
-                      :doc:`distrot <../src/distrot.c>`
+**Modules**           `eqtide <../src/eqtide.html>`_
+                      `stellar <../src/stellar.html>`_
+                      `distorb <../src/distorb.html>`_
+                      `distrot <../src/distrot.html>`_
 **Approx. runtime**   4 seconds
 ===================   ============
 

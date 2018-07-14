@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              10/19/15
 **Author**            Rodrigo Luger
-**Modules**           :doc:`stellar <../src/stellar.c>`
-                      :doc:`atmesc <../src/atmesc.c>`
+**Modules**           `stellar <../src/stellar.html>`_
+                      `atmesc <../src/atmesc.html>`_
 **Approx. runtime**   6 seconds
 ===================   ============
 

@@ -1,10 +1,8 @@
-/***************** THERMINT.H ***********************
- *
- * Peter Driscoll 6/1/15
- *
- * This header file contains all the subroutines in
- * file thermint.c.
- *
+/**
+  @file thermint.h
+  @brief Thermal evolution of the planet's interior (mantle + core)
+  @author Peter Driscoll ([peteredriscoll](https://github.com/peteredriscoll/))
+  @date June 1 2015
 */
 
 // GLOBAL VARIABLE INDEXES
@@ -139,12 +137,6 @@
 #define EPRESSWIND       2.6761e-9     //[N/m2] Earth's SW pressure: Psw=m_proton*n_sw*v_sw^2 (DB13)
 #define EMAGPAUSERAD     9.103*(ERADIUS)  //[m] Earth's magnetopause radius (DB13)
 
-void InitializeControlThermint(CONTROL*);
-void AddModuleThermint(MODULE*,int,int);
-void BodyCopyThermint(BODY*,BODY*,int,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
-
 /* Options Info */
 
 #define OPTSTARTTHERMINT    1700 /* Start of THERMINT options */
@@ -241,64 +233,9 @@ void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ELECCONDCORE    1808  //[S/m]  electrical conductivity of core.
 /* End vemcee parameters */
 
-/* Options Functions */
-void HelpOptionsThermint(OPTIONS*);
-void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltPhis(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMelGamma(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltXi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadViscMeltDelta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadFixMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-/* vemcee parameters */
-void ReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void ReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-/* end vemcee parameters */
-
-void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
-void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
 /* Halt Functions */
 #define THERMINTHALTSYSEND       6
 #define THERMINTHALTBODYEND      6
-
-int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
-int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsThermint(HALT*,int*);
-
-/* Verify Functions */
-
-void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetThermint(CONTROL*,MODULE*);
-void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
-
-/* Update functions */
-void InitializeUpdateThermint(BODY*,UPDATE*,int);
-
-/* Auxiliary Properties */
-void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 /* Output Functinos */
 
@@ -385,6 +322,69 @@ void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 #define OUT_DTCHIREF        1799   //Reference Liquidus Depression
 
 #define OUT_DYNVISC         1800   // Dynamic viscosity of upper mantle
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void InitializeControlThermint(CONTROL*);
+void AddModuleThermint(MODULE*,int,int);
+void BodyCopyThermint(BODY*,BODY*,int,int,int);
+void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
+
+/* Options Functions */
+void HelpOptionsThermint(OPTIONS*);
+void ReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltPhis(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMelGamma(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltXi(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadViscMeltDelta(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadFixMeltfactorUMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadTrefLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDTChiRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadEruptEff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadHaltMinTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadHaltMinTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* vemcee parameters */
+void ReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDLind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadDAdCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+/* end vemcee parameters */
+
+void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
+void ReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
+int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+void CountHaltsThermint(HALT*,int*);
+
+/* Verify Functions */
+
+void VerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+void InitializeVplanetThermint(CONTROL*,MODULE*);
+void VerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
+void VerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+
+/* Update functions */
+void InitializeUpdateThermint(BODY*,UPDATE*,int);
+
+/* Auxiliary Properties */
+void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
 void HelpOutputThermint(OUTPUT*);
 void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
@@ -548,3 +548,5 @@ double cubicroot(int,BODY*,int);
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a < _b ? _a : _b; })
+
+/* @endcond */

@@ -1,10 +1,14 @@
-/********************** EVOLVE.C ***********************/
-/*
- * Rory Barnes, May 2014
- *
- * This file contains all the core VPLANET integration routines including the
- * timestepping algorithm and the Runge-Kutta Integration scheme.
- */
+/**
+  @file evolve.c
+
+  @brief This file contains all the core VPLANET integration routines including the
+         timestepping algorithm and the Runge-Kutta Integration scheme.
+
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+  @date May 2014
+
+*/
 
 #include <stdio.h>
 #include <math.h>

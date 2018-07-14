@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              06/28/18
 **Author**            Rodrigo Luger
-**Modules**           :doc:`eqtide <../src/eqtide.c>`
-                      :doc:`stellar <../src/stellar.c>`
+**Modules**           `eqtide <../src/eqtide.html>`_
+                      `stellar <../src/stellar.html>`_
 **Approx. runtime**   4 seconds
 ===================   ============
 

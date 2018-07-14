@@ -1,7 +1,7 @@
 Documentation
 =============
 
-Automatically generated documentation for VPLANET.
+Documentation for the development version of VPLANET.
 
 .. toctree::
    :maxdepth: 1
@@ -9,9 +9,10 @@ Automatically generated documentation for VPLANET.
    src
    examples
    developers
+   zzreferences
+   GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`

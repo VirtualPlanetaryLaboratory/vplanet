@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              10/01/15
 **Author**            Russell Deitrick
-**Modules**           :doc:`distorb <../src/distorb.c>`
-                      :doc:`distrot <../src/distrot.c>`
+**Modules**           `distorb <../src/distorb.html>`_
+                      `distrot <../src/distrot.html>`_
 **Approx. runtime**   58 seconds
 ===================   ============
 

@@ -1,8 +1,9 @@
-/******************** VPLANET.H ***********************/
-/*
- * Rory Barnes, Wed May  7 16:04:27 PDT 2014
- *
- */
+/**
+  @file vplanet.h
+  @brief The main entry point for the code. All the magic starts here.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+*/
 
 
 /*! Top-level declarations */

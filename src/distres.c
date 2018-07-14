@@ -1,8 +1,12 @@
-/********************** DISTRES.C **********************/
-/*
- * Russell Deitrick, February 2017
- *
- * Subroutines that control the integration of the resoanant orbital model.
+/**
+   @file distres.c
+
+   @brief Subroutines that control the integration of the resoanant orbital model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date February 1 2017
+
 */
 
 #include <stdio.h>

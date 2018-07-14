@@ -10,15 +10,9 @@
         This module defines differential equations controlling the evolution
         of planetary atmospheres under intense extreme ultraviolet (XUV)
         stellar irradiation. The `atmesc <atmesc.html>`_ module implements energy-limited
-        and diffusion-limited escape for hydrgen/helium atmospheres and water
+        and diffusion-limited escape for hydrogen/helium atmospheres and water
         vapor atmospheres following
         :cite:`Luger2015`, :cite:`LugerBarnes2015`, and :cite:`LehmerCatling17`.
-    \endrst
-
-    @par References
-    \rst
-        .. bibliography:: ../vplanet.bib
-           :style: unsrt
     \endrst
 
 */

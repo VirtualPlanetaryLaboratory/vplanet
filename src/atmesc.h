@@ -1,10 +1,9 @@
-/***************** ATMESC.H ***********************
- *
- * Rodrigo Luger, Tue Apr 28 11:04:00 PDT 2014
- *
- * This header file contains all the subroutines in
- * file atmesc.c.
- *
+/**
+    @file atmesc.h
+    @brief Subroutines that control the integration of the
+    atmospheric escape model.
+    @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
+    @date May 12 2015
 */
 
 #define TOMASS                  1.39e21     /**< Mass of one terrestrial ocean in kg (TO) */
@@ -22,9 +21,6 @@
 #define THERMT                  400.                          /**< Average thermospheric temperature (K, Venus) */
 #define BDIFF                   4.8e19 * pow(THERMT, 0.75)    /**< Binary diffusion coefficient of H through O (m^-1 s^-1) */
 #define QOH                     16.                           /**< Atomic mass ratio oxygen/hydrogen */
-
-void AddModuleAtmEsc(MODULE*,int,int);
-void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 
 /* Options Info */
 #define OPTSTARTATMESC          1200  /**< Start of AtmEsc options */
@@ -50,6 +46,11 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_FXUV                1227 /**< The value of the XUV flux */
 #define OPT_ATMXABSEFFH2OMODEL  1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME           1229 /**< Time at which flow becomes ballistic (Jeans escape) */
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleAtmEsc(MODULE*,int,int);
+void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);
@@ -147,3 +148,5 @@ double fdXUVEfficiencyBolmont2016(double);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);
+
+/* @endcond */

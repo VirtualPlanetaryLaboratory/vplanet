@@ -1,17 +1,16 @@
-/***************** DISTRES.H ***********************
- *
- * Russell Deitrick, February 2017
- *
- * This header file contains all the subroutines in
- * file distres.c.
- *
+/**
+   @file distres.h
+
+   @brief Subroutines that control the integration of the resoanant orbital model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date February 1 2017
+
 */
 
 #define RESNUM      11
 #define RESMAX      8
-
-void AddModuleDistRes(MODULE*,int,int);
-void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 
 /* Options Info */
 
@@ -22,8 +21,20 @@ void BodyCopyDistRes(BODY*,BODY*,int,int,int);
 #define OPT_RESAVG            2399
 // #define OPT_MEANA             2302
 
-/* Options Functions */
+/* DISTRES 2300 - 2399 */
+#define OUTSTARTDISTRES        2300  /* Start of DISTRES options */
+#define OUTENDDISTRES          2400 /* End of DISTRES options */
+#define OUTBODYSTARTDISTRES    2320 /* Start of DISTRES BODY options */
 
+//#define OUT_MEANL               2320
+#define OUT_DMEANLDTDISTRES     2321
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleDistRes(MODULE*,int,int);
+void BodyCopyDistRes(BODY*,BODY*,int,int,int);
+
+/* Options Functions */
 void InitializeOptionsDistRes(OPTIONS*, fnReadOption[]);
 void ReadOptionsDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 void InitializeUpdateTmpBodyDistRes(BODY*,CONTROL*,UPDATE*,int);
@@ -33,19 +44,9 @@ void VerifyDistRes(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,in
 
 /* Update Functions */
 
-
 /* Output Functinos */
 
-/* DISTRES 2300 - 2399 */
-#define OUTSTARTDISTRES        2300  /* Start of DISTRES options */
-#define OUTENDDISTRES          2400 /* End of DISTRES options */
-#define OUTBODYSTARTDISTRES    2320 /* Start of DISTRES BODY options */
-
-//#define OUT_MEANL               2320
-#define OUT_DMEANLDTDISTRES     2321
-
 void HelpOutputDistRes(OUTPUT*);
-
 
 void InitializeOutputDistRes(OUTPUT*,fnWriteOutput[]);
 
@@ -139,3 +140,5 @@ double fdDistResRD2DlDt(BODY*, SYSTEM*, int*);
 
 void CheckTermsRes1(BODY*,SYSTEM*,int,int,int);
 void CheckTermsRes2(BODY*,SYSTEM*,int,int,int);
+
+/* @endcond */

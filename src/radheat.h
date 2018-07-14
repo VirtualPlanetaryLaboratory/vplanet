@@ -1,10 +1,14 @@
-/***************** RADHEAT.H ***********************
- *
- * Rory Barnes, Sat Jun 28 09:51:13 PDT 2014
- *
- * This header file contains all the subroutines in
- * file radheat.c.
- *
+/**
+ @file radheat.h
+
+ @brief Subroutines that control the integration of the
+        radiogenic heating model. Also includes subroutines
+        that switch between the two models.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Jun 28 2014
+
 */
 
 /*
@@ -108,9 +112,6 @@
 #define EPOWERCRUSTTOTAL 7e12  //[W] 7 TW (Jaupart et al 2007)  or 6.8 TW (Huang 2013)
 #define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  //[W/kg] crustal heat production density.
 
-void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int,int);
-
 /* Options Info */
 
 #define OPTSTARTRADHEAT            1100 /* Start of RADHEAT options */
@@ -175,95 +176,9 @@ void BodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_HALT235UPOWER          1194
 #define OPT_HALTRADPOWER           1195
 
-/* Options Functions */
-void HelpOptionsRadheat(OPTIONS*);
-void Read40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-
-void Read26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-
-void Read40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-
-// XXX Need to add 26Al
-void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
-void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
 /* Halt Functions */
 #define RADHEATHALTSYSEND       5
 #define RADHEATHALTBODYEND      5
-
-//int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
-int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
-int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsRadHeat(HALT*,int*);
-
-
-/* Verify Functions */
-
-void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetRadheat(CONTROL*,MODULE*);
-void PropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
-void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
-
-/* Update functions */
-void InitializeUpdateRadheat(BODY*,UPDATE*,int);
-void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -349,6 +264,97 @@ void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_RADPOWERCRUST       1192
 #define OUT_RADPOWERTOTAL       1193
 #define OUT_SURFENFLUXRADTOTAL  1195
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleRadheat(MODULE*,int,int);
+void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+
+/* Options Functions */
+void HelpOptionsRadheat(OPTIONS*);
+void Read40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+void Read26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+void Read40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void Read40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void Read235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+// XXX Need to add 26Al
+void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
+void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+//int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
+//int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
+//int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
+int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+void CountHaltsRadHeat(HALT*,int*);
+
+
+/* Verify Functions */
+
+void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
+void InitializeVplanetRadheat(CONTROL*,MODULE*);
+void PropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
+void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
+void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
+
+/* Update functions */
+void InitializeUpdateRadheat(BODY*,UPDATE*,int);
+void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 void HelpOutputRadheat(OUTPUT*);
 void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
@@ -488,3 +494,5 @@ double fdD40KNumCrustDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCrustDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCrustDt(BODY*,SYSTEM*,int*);
 double fdD235UNumCrustDt(BODY*,SYSTEM*,int*);
+
+/* @endcond */

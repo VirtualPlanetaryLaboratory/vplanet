@@ -7,7 +7,7 @@ Overview
 ===================   ============
 **Date**              06/28/18
 **Author**            David Fleming and Rodrigo Luger
-**Modules**           :doc:`binary <../src/binary.c>`
+**Modules**           `binary <../src/binary.html>`_
 **Approx. runtime**   3 seconds
 ===================   ============
 

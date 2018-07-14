@@ -7,7 +7,7 @@ Overview
 ===================   ============
 **Date**              10/19/15
 **Author**            Rory Barnes
-**Modules**           :doc:`stellar <../src/stellar.c>`
+**Modules**           `stellar <../src/stellar.html>`_
 **Approx. runtime**   24 seconds
 ===================   ============
 

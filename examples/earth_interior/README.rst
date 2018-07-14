@@ -7,9 +7,9 @@ Overview
 ===================   ============
 **Date**              ??/??/??
 **Author**            ??
-**Modules**           :doc:`stellar <../src/stellar.c>`
-                      :doc:`radheat <../src/radheat.c>`
-                      :doc:`thermint <../src/thermint.c>`
+**Modules**           `stellar <../src/stellar.html>`_
+                      `radheat <../src/radheat.html>`_
+                      `thermint <../src/thermint.html>`_
 **Approx. runtime**   1 second
 ===================   ============
 

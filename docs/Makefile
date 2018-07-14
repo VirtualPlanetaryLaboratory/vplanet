@@ -20,6 +20,7 @@ help:
 	@if [ $(MAKECMDGOALS) != clean ]; then \
 		python gensrc.py; \
 		python genexamples.py; \
+		python ../bugs/bugs.py; \
 		python genbugs.py; \
 	else \
 		rm -rf src.rst; \
@@ -29,4 +30,4 @@ help:
 		rm -rf bugs; \
 		rm -rf bugs.rst; \
 	fi
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) 2>&1 | tee docs.log

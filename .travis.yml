@@ -25,3 +25,7 @@ cache:
 
 script:
     - py.test -v -s tests
+
+after_success:
+    # DEBUG: switch to `master` below
+    - if [ "$TRAVIS_BRANCH" = "dev" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi

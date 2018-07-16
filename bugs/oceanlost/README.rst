@@ -1,9 +1,5 @@
 ❌ oceanlost
-============
-
-Overview
---------
-
+=============
 ===================   ============
 **Issue**             `#13 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/13>`_
 **Date**              06/28/18

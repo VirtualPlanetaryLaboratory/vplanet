@@ -9,6 +9,7 @@ Overview
 **Author**            Rory Barnes
 **Modules**           `stellar <../src/stellar.html>`_
 **Approx. runtime**   24 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/main_seq>`_
 ===================   ============
 
 A test of the Baraffe evolution models for a range of stellar masses.

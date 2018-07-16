@@ -2,7 +2,6 @@ import glob
 import imp
 import os
 import sys
-import shutil
 
 # Colorful output
 BUGGED = '\033[0;31mBUGGED\033[0m'
@@ -19,19 +18,21 @@ for bug in bugs:
     try:
         imp.load_source('bug', 'bug.py')
         print(FIXED)
-        infile = open("README.rst")
-        line = infile.readline()
-        line = "✅" + line[1:]
-        outfile = open("README.rst", mode="w")
-        outfile.write(line)
-        shutil.copyfileobj(infile, outfile)
+        with open("README.rst", "r") as infile:
+            lines = infile.readlines()
+        lines[0] = "✅" + lines[0][1:]
+        lines[1] = '=' * (len(lines[0]) + 1)
+        with open("README.rst", mode="w") as outfile:
+            for line in lines:
+                outfile.write(line)
     except AssertionError:
         print(BUGGED)
-        infile = open("README.rst")
-        line = infile.readline()
-        line = "❌" + line[1:]
-        outfile = open("README.rst", mode="w")
-        outfile.write(line)
-        shutil.copyfileobj(infile, outfile)
+        with open("README.rst", "r") as infile:
+            lines = infile.readlines()
+        lines[0] = "❌" + lines[0][1:]
+        lines[1] = '=' * (len(lines[0]) + 1)
+        with open("README.rst", mode="w") as outfile:
+            for line in lines:
+                outfile.write(line)
 
     os.chdir('..')

@@ -9,6 +9,7 @@ Overview
 **Author**            David Fleming and Rodrigo Luger
 **Modules**           `binary <../src/binary.html>`_
 **Approx. runtime**   32 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/binary_kepler16>`_
 ===================   ============
 
 Example of the evolution of the Kepler-16 binary + circumbinary planet system.

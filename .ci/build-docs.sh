@@ -4,6 +4,7 @@ set -e
 # Make the docs
 cd $TRAVIS_BUILD_DIR/docs
 make html
+python scoreboard.py
 
 # Begin
 branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')

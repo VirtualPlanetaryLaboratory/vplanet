@@ -10,6 +10,7 @@ Overview
 **Modules**           `stellar <../src/stellar.html>`_
                       `atmesc <../src/atmesc.html>`_
 **Approx. runtime**   6 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/xuv_evol>`_
 ===================   ============
 
 An example of stellar XUV luminosity evolution.

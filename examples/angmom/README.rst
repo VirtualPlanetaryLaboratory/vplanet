@@ -10,6 +10,7 @@ Overview
 **Modules**           `eqtide <../src/eqtide.html>`_
                       `stellar <../src/stellar.html>`_
 **Approx. runtime**   4 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/angmom>`_
 ===================   ============
 
 A test of angular momentum conservation for a contracting star.

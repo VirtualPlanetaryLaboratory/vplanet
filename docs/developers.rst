@@ -8,3 +8,4 @@ Information for **vplanet** developers.
 
    Style Guide <StyleGuide>
    Bugs and Issues <bugs>
+   Documentation Scoreboard <scoreboard>

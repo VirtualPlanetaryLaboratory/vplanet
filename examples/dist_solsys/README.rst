@@ -10,6 +10,7 @@ Overview
 **Modules**           `distorb <../src/distorb.html>`_
                       `distrot <../src/distrot.html>`_
 **Approx. runtime**   58 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys>`_
 ===================   ============
 
 Runs the orbital evolution of the eight planets in the solar system

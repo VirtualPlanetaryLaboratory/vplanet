@@ -12,6 +12,7 @@ Overview
                       `distorb <../src/distorb.html>`_
                       `distrot <../src/distrot.html>`_
 **Approx. runtime**   4 seconds
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/gl581>`_
 ===================   ============
 
 The original fully-coupled M-dwarf planetary system.

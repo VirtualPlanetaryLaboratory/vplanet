@@ -9,6 +9,7 @@ Overview
 **Author**            ??
 **Modules**           `eqtide <../src/eqtide.html>`_
 **Approx. runtime**   1 second
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cpl>`_
 ===================   ============
 
 A simple example of tidal evolution using the constant phase lag

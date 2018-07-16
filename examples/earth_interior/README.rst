@@ -11,6 +11,7 @@ Overview
                       `radheat <../src/radheat.html>`_
                       `thermint <../src/thermint.html>`_
 **Approx. runtime**   1 second
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/earth_interior>`_
 ===================   ============
 
 Computes and plots the evolution of several properties of the Earth's interior.

@@ -30,9 +30,9 @@ for bug in bugs:
         with open("README.rst", "r") as infile:
             lines = infile.readlines()
         lines[0] = "❌" + lines[0][1:]
-        lines[1] = '=' * (len(lines[0]) + 1)
+        lines[1] = '=' * (len(lines[0]) + 1) + "\n"
         with open("README.rst", mode="w") as outfile:
             for line in lines:
                 outfile.write(line)
-
+                
     os.chdir('..')

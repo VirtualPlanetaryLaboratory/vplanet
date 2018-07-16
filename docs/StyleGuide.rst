@@ -107,6 +107,45 @@ and
     #define FOOBAR          /**< Inline description of `FOOBAR` */
 
 
+Fancy stuff
+~~~~~~~~~~~
+
+We are currently using `breathe <http://breathe.readthedocs.io/en/latest/>`_ to
+link `DOXYGEN <http://www.doxygen.org>`_ documentation to `sphinx <http://sphinx-doc.org/>`_
+html output. This means you should familiarize yourself with both the
+`DOXYGEN markup <https://www.stack.nl/~dimitri/doxygen/manual/commands.html>`_
+and the `reStructuredText markup <http://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_.
+
+The things you can do with DOXYGEN + breathe fairly limited, so it's useful to
+know that you can always take advantage of reStructuredText commands by escaping
+a paragraph with the :code:`\rst` command. For instance, check out the header in the atmesc
+source:
+
+.. code-block:: C
+
+    /**
+    @file atmesc.c
+    @brief Subroutines that control the integration of the
+    atmospheric escape model.
+    @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
+    @date May 12 2015
+
+    @par Description
+    \rst
+        This module defines differential equations controlling the evolution
+        of planetary atmospheres under intense extreme ultraviolet (XUV)
+        stellar irradiation. The `atmesc <atmesc.html>`_ module implements energy-limited
+        and diffusion-limited escape for hydrogen/helium atmospheres and water
+        vapor atmospheres following
+        :cite:`Luger2015`, :cite:`LugerBarnes2015`, and :cite:`LehmerCatling17`.
+    \endrst
+    */
+
+The DOXYGEN citation functionality is pretty lame, so I'm using rst to add citations
+to papers relevant to this module. The cool thing about this is that it automatically
+adds entries to the `html bibliography <zzreferences.html>`_. Note that in order for
+this to work, the references must be in the :code:`docs/vplanet.bib` file in the repo.
+
 Miscellaneous
 -------------
 

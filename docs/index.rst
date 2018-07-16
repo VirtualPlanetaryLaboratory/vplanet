@@ -6,8 +6,10 @@ Documentation for the development version of VPLANET.
 .. toctree::
    :maxdepth: 1
 
-   src
+   install
+   quickstart
    examples
+   src
    developers
    zzreferences
    GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>

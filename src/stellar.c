@@ -1,11 +1,17 @@
-/********************** STELLAR.C **********************/
-/*
- * Rodrigo Luger, Tue May 12 11:11:38 PDT 2015
- *
- * Subroutines that control the integration of the
- * atmospheric escape model.
+/**
+    @file stellar.c
+    @brief Subroutines that control the evolution of the star.
+    @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
+    @date May 12 2015
+
+    @par Description
+    \rst
+        This module implements the Baraffe stellar evolution tracks
+        :cite:`Baraffe15`, the Ribas XUV evolution model :cite:`Ribas05`,
+        and a simple wind/magnetic braking model.
+    \endrst
+
 */
-// NOTE: Still need to edit module.c, update.c
 
 #include <stdio.h>
 #include <math.h>

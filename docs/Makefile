@@ -17,5 +17,17 @@ help:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	python genrst.py
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@if [ $(MAKECMDGOALS) != clean ]; then \
+		python gensrc.py; \
+		python genexamples.py; \
+		python ../bugs/bugs.py; \
+		python genbugs.py; \
+	else \
+		rm -rf src.rst; \
+		rm -rf src; \
+		rm -rf examples.rst; \
+		rm -rf examples; \
+		rm -rf bugs; \
+		rm -rf bugs.rst; \
+	fi
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) 2>&1 | tee docs.log

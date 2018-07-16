@@ -3,13 +3,16 @@
 
   @brief Relationships between parameters associated with individual bodies.
 
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+  @date May 7 2014
+
   This file contains subroutines that describe physical properties of
   any body. This include conversions between the option parameter (a property
   that may be used at input) and the system parameter (the property in the BODY
   struct that is always up-to-date). If unsure between here and orbit.c, put
   here. Also includes mathemtatical relationships.
 
-  Rory Barnes, Wed May  7 14:40:51 PDT 2014
 */
 
 #include <stdio.h>

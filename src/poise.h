@@ -1,15 +1,13 @@
-/***************** POISE.H ***********************
- *
- * Russell Deitrick, September 10, 2015
- *
- * This header file contains all the subroutines in
- * file poise.c.
- *
-*/
+/**
+   @file poise.h
 
-void AddModulePoise(MODULE*,int,int);
-void BodyCopyPoise(BODY*,BODY*,int,int,int);
-void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
+   @brief Subroutines that control the energy balance model for climate
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date Sep 10 2015
+
+*/
 
 /* Climate model */
 #define ANN         0
@@ -90,20 +88,6 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
 
-/* Options Functions */
-void HelpOptionsPoise(OPTIONS*);
-void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
-void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
-/* Verify Functions */
-void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-
-/* Update Functions */
-
-void InitializeUpdatePoise(BODY*,UPDATE*,int);
-
-/* Output Functinos */
-
 /* POISE 1800 - 1899 */
 /* System properties 1800-1819, body properties 1820-1899 */
 
@@ -150,6 +134,26 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
 #define OUT_PEAKINSOL        1958
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModulePoise(MODULE*,int,int);
+void BodyCopyPoise(BODY*,BODY*,int,int,int);
+void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
+
+/* Options Functions */
+void HelpOptionsPoise(OPTIONS*);
+void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
+void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+/* Verify Functions */
+void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdatePoise(BODY*,UPDATE*,int);
+
+/* Output Functinos */
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -207,3 +211,5 @@ double IceMassBalance(BODY*,int,int);
 
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);
+
+/* @endcond */

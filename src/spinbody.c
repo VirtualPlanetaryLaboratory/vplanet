@@ -1,10 +1,9 @@
-/******************************** SpiNBody.c ***********************************
- *
- * Hayden Smotherman, Tue Feb 21 2017
- *
- * Subroutines that control the integration of the N Body simulation
- *
- ******************************************************************************/
+/**
+  @file spinbody.c
+  @brief Subroutines that control the integration of the N Body simulation
+  @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+  @date Feb 21 2017
+*/
 
 #include <stdio.h>
 #include <math.h>

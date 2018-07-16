@@ -1,10 +1,12 @@
-/***************** DISTORB.H ***********************
- *
- * Russell Deitrick, June 24, 2015
- *
- * This header file contains all the subroutines in
- * file distorb.c.
- *
+/**
+   @file distorb.h
+
+   @brief Subroutines that control the integration of the orbital model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date April 28 2015
+
 */
 
 /* Orbital model */
@@ -24,12 +26,6 @@
 // B -> s = 3/2
 // C -> s = 5/2
 
-
-void AddModuleDistOrb(MODULE*,int,int);
-void BodyCopyDistOrb(BODY*,BODY*,int,int,int);
-void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
-
 /* Options Info */
 
 #define OPTSTARTDISTORB        1300 /* Start of DISTORB options */
@@ -46,26 +42,6 @@ void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_OUTPUTEIGEN        1397
 #define OPT_OUTPUTLAPL         1398
 #define OPT_ORBITMODEL         1399
-
-/* Options Functions */
-void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadLongA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadLongP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsDistOrb(OPTIONS*, fnReadOption[]);
-void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
-/* Verify Functions */
-void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-
-/* Update Functions */
-
-void InitializeUpdateDistOrb(BODY*,UPDATE*,int);
-void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
 
@@ -91,6 +67,34 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DKECCDTDISTORB      1352
 #define OUT_DPINCDTDISTORB      1353
 #define OUT_DQINCDTDISTORB      1354
+
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleDistOrb(MODULE*,int,int);
+void BodyCopyDistOrb(BODY*,BODY*,int,int,int);
+void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);
+
+/* Options Functions */
+void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLongA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadLongP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsDistOrb(OPTIONS*, fnReadOption[]);
+void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+/* Verify Functions */
+void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
+void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdateDistOrb(BODY*,UPDATE*,int);
+void FinalizeUpdateHeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
 int fniHaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fniHaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
@@ -241,3 +245,5 @@ double fndDistOrbLL2DhDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DkDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DpDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DqDt(BODY*, SYSTEM*, int*);
+
+/* @endcond */

@@ -1,0 +1,24 @@
+# Pandora's hypothetical companion's parameters
+sName           c               # Body's name
+saModules       distorb
+
+# Physical Properties
+dMass           -3.129300
+dRadius         -1.5            # Radius, negative -> Earth radii
+
+# Rotational Properties
+dRotPeriod      -1.0            # Rotation period, negative -> days
+dObliquity      23.5
+dRadGyra        0.5             # Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+dEcc            0.2
+dSemi           0.35
+
+# DISTORB Parameters
+dInc            0.001
+dLongA          20.0
+dArgP           336.7
+
+# Output
+saOutputOrder   Time Ecce Inc ArgP LongA

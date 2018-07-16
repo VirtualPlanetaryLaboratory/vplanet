@@ -1,23 +1,19 @@
-/***************** EQTIDE.H ***********************
- *
- * Rory Barnes, Wed May  7 13:57:29 PDT 2014
- *
- * This header file contains all the subroutines in
- * file eqtide.c.
- *
+/**
+   @file eqtide.h
+
+   @brief Subroutines that control the integration of the tidal
+          model. Also includes subroutines that switch between the two models.
+
+   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+   @date May 29 2014
+
 */
 
 /* Tidal Model */
 
 #define CPL           0
 #define CTL           1
-
-void InitializeControlEqtide(CONTROL*,int);
-void AddModuleEqtide(MODULE*,int,int);
-void BodyCopyEqtide(BODY*,BODY*,int,int,int);
-void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
-int fiGetModuleIntEqtide(MODULE*,int);
 
 /* Options Info */
 
@@ -45,66 +41,13 @@ int fiGetModuleIntEqtide(MODULE*,int);
 #define OPT_OCEANTIDES          1052
 #define OPT_TIDALQENV           1053
 #define OPT_ENVTIDES            1054
-
 #define OUT_ECCA                1055
-
 #define OPT_TIDALQROCK          1056
 #define OPT_K2ROCK              1057
-
-
-/* Options Functions */
-void HelpOptionsEqtide(OPTIONS*);
-void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadK2Ocean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadK2Env(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadMaxLockDiff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadSyncEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTidalQOcean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTidalQEnv(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
-void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
 #define EQTIDEHALTBODYEND      5
-
-int HaltDblSync(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int HaltTideLock(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int HaltSyncRot(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsEqtide(HALT*,int*);
-void VerifyHaltEqtide(BODY*,CONTROL*,OPTIONS*,int,int*);
-void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
-
-/* Verify Functions */
-
-void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
-void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
-void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-void InitializeModuleEqtide(CONTROL*,MODULE*);
-
-/* Update Functions */
-
-void InitializeUpdateEqtide(BODY*,UPDATE*,int);
-void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
-
-/* Output Functinos */
 
 /* EQTIDE 1000 - 1999 */
 /* System properties 1000-1049, body properties 1050-1099 */
@@ -161,6 +104,65 @@ void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
 //#define OUT_TIDALQ              1097
 #define OUT_BENV                1098
 #define OUT_BOCEAN              1099
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void InitializeControlEqtide(CONTROL*,int);
+void AddModuleEqtide(MODULE*,int,int);
+void BodyCopyEqtide(BODY*,BODY*,int,int,int);
+void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
+int fiGetModuleIntEqtide(MODULE*,int);
+
+/* Options Functions */
+void HelpOptionsEqtide(OPTIONS*);
+void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadK2Ocean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadK2Env(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadMaxLockDiff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadSyncEcc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTideModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalQ(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalQOcean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalQEnv(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadTidalTau(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsEqtide(OPTIONS*,fnReadOption[]);
+void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+int HaltDblSync(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int HaltTideLock(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int HaltSyncRot(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+void CountHaltsEqtide(HALT*,int*);
+void VerifyHaltEqtide(BODY*,CONTROL*,OPTIONS*,int,int*);
+void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
+
+/* Verify Functions */
+
+void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
+void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
+void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void InitializeModuleEqtide(CONTROL*,MODULE*);
+
+/* Update Functions */
+
+void InitializeUpdateEqtide(BODY*,UPDATE*,int);
+void FinalizeUpdateEccEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIsotopeEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOblEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateRotEqtide(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSemiEqtide(BODY*,UPDATE*,int*,int,int,int);
+
+/* Output Functinos */
 
 void HelpOutputEqtide(OUTPUT*);
 void WriteBodyDsemiDtEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -276,3 +278,5 @@ double fdCTLDHeccDt(BODY*,SYSTEM*,int*);
 double fdCTLDKeccDt(BODY*,SYSTEM*,int*);
 double fdDEdTCTLEqtide(BODY*,SYSTEM*,int*);
 double fdCTLDoblDt(BODY*,int*);
+
+/* @endcond */

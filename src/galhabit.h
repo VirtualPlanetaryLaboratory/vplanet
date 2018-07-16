@@ -1,17 +1,13 @@
-/***************** GALHABIT.H ***********************
- *
- * Russell Deitrick, June 24, 2015
- *
- * This header file contains all the subroutines in
- * file galhabit.c.
- *
+/**
+   @file galhabit.h
+
+   @brief Subroutines that simulate the galactic habitat of a stellar system.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date July 7 2015
+
 */
-
-
-void AddModuleGalHabit(MODULE*,int,int);
-void BodyCopyGalHabit(BODY*,BODY*,int,int,int);
-void InitializeBodyGalHabit(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
@@ -44,24 +40,6 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_MINALLOWED         2257
 #define OPT_GALACTIDES         2258
 
-// void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-//
-// void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsGalHabit(OPTIONS*, fnReadOption[]);
-void ReadOptionsGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
-/* Verify Functions */
-// void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-
-/* Update Functions */
-
-void InitializeUpdateGalHabit(BODY*,UPDATE*,int);
-void FinalizeUpdatePeriQGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateIncGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
-
 /* Output Functinos */
 
 /* GALHABIT 2200-2300 */
@@ -86,6 +64,31 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DINCDTGALHTIDAL     2251
 #define OUT_DLONGADTGALHTIDAL   2252
 #define OUT_DARGPDTGALHTIDAL    2253
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleGalHabit(MODULE*,int,int);
+void BodyCopyGalHabit(BODY*,BODY*,int,int,int);
+void InitializeBodyGalHabit(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
+
+// void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+//
+// void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsGalHabit(OPTIONS*, fnReadOption[]);
+void ReadOptionsGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+/* Verify Functions */
+// void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
+void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdateGalHabit(BODY*,UPDATE*,int);
+void FinalizeUpdatePeriQGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIncGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -186,3 +189,5 @@ void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
 void NextEncounterTime(SYSTEM*,EVOLVE*,double);
 void CalcEncounterRate(SYSTEM*);
+
+/* @endcond */

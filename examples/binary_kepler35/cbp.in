@@ -1,0 +1,21 @@
+# CBP parameters for Kepler 35b from LL13
+sName           cbp                   # Body's name
+saModules       binary                # Modules
+
+# Physical Properties
+iBodyType       0                     # Type of body 0 -> Planet
+dMass           -41.448               # Mass, negative -> Earth masses
+
+# Binary Properties
+dFreeEcc        0.038                 # Free Eccentricity
+dFreeInc        1.0714                # Free Inclination [deg]
+bHaltHolmanUnstable   1               # End simulation if the CBP goes within the critical stability limit
+bBinaryUseMatrix      0               # Use the matrix to solve for main variables or compute them on the fly?
+
+# Orbital Properties
+dSemi           0.5933                # CBP semi-major axis
+dLongP          18.73                 # CBP longitude of pericenter
+dCBPM0          292.17                # CBP mean anomaly
+
+# Outputs
+saOutputOrder Time CBPR CBPZ CBPPhi Ecce Inc LongP CBPInsol

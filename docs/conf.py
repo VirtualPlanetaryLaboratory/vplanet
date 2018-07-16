@@ -23,12 +23,12 @@
 
 import sys
 import os
-import shlex
+import sphinx_rtd_theme
 import glob
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('.'))
-import sphinx_rtd_theme
+sys.path.insert(0, os.path.abspath('../examples'))
 srcdir = os.path.join(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))), 'src')
 srcfiles = [os.path.basename(x)
@@ -48,7 +48,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.mathjax',
               'breathe',
-              'matplotlib.sphinxext.plot_directive']
+              'matplotlib.sphinxext.plot_directive',
+              'sphinxcontrib.bibtex']
 
 plot_include_source = False
 plot_html_show_source_link = False
@@ -72,7 +73,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'vplanet'
-copyright = '2017, Rory Barnes'
+copyright = '2018, Rory Barnes'
 author = 'Rory Barnes'
 
 # The version info for the project you're documenting, acts as replacement for

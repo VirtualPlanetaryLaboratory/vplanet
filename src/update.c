@@ -1,3 +1,10 @@
+/**
+  @file update.c
+  @brief Subroutines controlling the integration
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date A long, long time ago
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

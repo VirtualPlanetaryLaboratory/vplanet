@@ -12,6 +12,8 @@
 *.gif
 *.npz
 *.dat
+*.Ecc.Eigen
+*.Inc.Eigen
 
 # Aux files / build info / garbage
 *.pyc
@@ -37,8 +39,12 @@ vplanet.egg-info
 
 # Documentation
 docs/.build
-docs/rst
-docs/source.rst
+docs/src
+docs/src.rst
+docs/examples
+docs/examples.rst
+docs/bugs
+docs/bugs.rst
 
 # The executable
 vplanet

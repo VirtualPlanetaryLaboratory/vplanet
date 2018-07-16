@@ -1,10 +1,13 @@
-/********************** EQTIDE.C **********************/
-/*
- * Rory Barnes, Wed May 29 14:56:21 PDT 2014
- *
- * Subroutines that control the integration of the tidal
- * model. Also includes subroutines that switch between
- * the two models.
+/**
+   @file eqtide.c
+
+   @brief Subroutines that control the integration of the tidal
+          model. Also includes subroutines that switch between the two models.
+
+   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+   @date May 29 2014
+
 */
 
 #include <stdio.h>

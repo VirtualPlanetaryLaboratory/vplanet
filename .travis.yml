@@ -10,11 +10,12 @@ addons:
             - ubuntu-toolchain-r-test
         packages:
             - gcc-4.8
+            - doxygen
+            - doxygen-doc
 
 matrix:
     include:
         - os: linux
-          env: PYTHON_VERSION=3.4 NUMPY_VERSION=1.11
 
 install:
     - source .ci/travis.sh
@@ -25,3 +26,7 @@ cache:
 
 script:
     - py.test -v -s tests
+
+after_success:
+    # DEBUG: switch to `master` below
+    - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi

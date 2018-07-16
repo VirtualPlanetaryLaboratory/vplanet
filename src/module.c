@@ -1,10 +1,14 @@
-/******************** MODULE.C **************************/
-/*
- * Rory Barnes, Mon Jan 19 13:00:54 PST 2015
- *
- * Functions to manipulate the MODULE struct.
- *
- */
+/**
+ @file module.c
+
+ @brief Functions to manipulate the MODULE struct.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Jan 19 2015
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

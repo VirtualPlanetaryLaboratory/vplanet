@@ -1,13 +1,9 @@
-/******************************** SpiNBody.h ***********************************
- *
- * Hayden Smotherman, Tue Feb 21 2017
- *
- * Header for the subroutines in SpiNBody.c
- *
- ******************************************************************************/
-
- void AddModuleSpiNBody(MODULE*,int,int);
- void BodyCopySpiNBody(BODY*,BODY*,int,int,int);
+/**
+  @file spinbody.h
+  @brief Subroutines that control the integration of the N Body simulation
+  @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+  @date Feb 21 2017
+*/
 
 //Option numbers
 #define OPTSTARTSPINBODY        1600
@@ -40,6 +36,11 @@
 
 #define OUT_INCSPINBODY         1630
 #define OUT_LONGASPINBODY       1631
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleSpiNBody(MODULE*,int,int);
+void BodyCopySpiNBody(BODY*,BODY*,int,int,int);
 
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]);
 void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody);
@@ -120,3 +121,5 @@ double fdDPositionZDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody);
+
+/* @endcond */

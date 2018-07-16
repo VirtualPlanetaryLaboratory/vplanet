@@ -1,10 +1,14 @@
-/********************** HALT.C ***********************/
-/*
- * Rory Barnes, Wed May  7 16:19:48 PDT 2014
- *
- * This file contains all the checks for dynamical states
- * that result in the termination of the program.
- */
+/**
+ @file halt.c
+
+ @brief This file contains all the checks for dynamical states
+        that result in the termination of the program.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Mar 7 2014
+
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

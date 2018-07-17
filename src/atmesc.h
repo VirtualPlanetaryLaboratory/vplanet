@@ -47,7 +47,8 @@ void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 #define OPT_PRESXUV             1225 // Pressure at bottom of thermosphere
 #define OPT_ATMGASCONST         1226 // Atmospheric Gas Constant
 #define OPT_FXUV                1227 //FXUV
-#define OPT_ATMXABSEFFH2OMODEL  1228
+#define OPT_ATMXABSEFFH2OMODEL  1228 // Model for time evolution of epsilon for H2O
+#define OPT_JEANSTIME           1229 // Time at which flow becomes ballistic (Jeans escape)
 
 /* Options Functions */
 void HelpOptionsAtmEsc(OPTIONS*);

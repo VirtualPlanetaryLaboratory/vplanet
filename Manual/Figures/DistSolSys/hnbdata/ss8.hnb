@@ -1,0 +1,43 @@
+# solar system, eight planets
+
+AngleUnit:  deg		# base unit choices: deg, rad
+LengthUnit: AU		# base unit choices: m, AU (or ua), pc
+MassUnit:   Msun	# base unit choices: g, Msun
+TimeUnit:   yr 		# base unit choices: s, h, d, yr
+StepSize:   0.0001	# integration time step       (units of TimeUnit)
+M  =  1.0		# mass of the dominant object (units of MassUnit)
+N  =  9 		# number of objects (including the dominant mass)
+
+#OblateJ2 = 0		# J2 parameter of dominant mass (default is 0).
+#OblateRadius = 0	# J2 radius    of dominant mass (default is 0).
+PostNewtonian: Yes	# Include leading-order post-Newtonian corrections?
+#			  (default is false/no)
+
+Tfinal  =  5e6 		# final integration time (TimeUnit)
+
+OutputFiles: %d.dat	# name of body-specific output files
+OutputOrder: time Semi Ecc Inc LongA ArgP MeanA  	# data columns
+OutputInterval: 100		# time interval to write output (TimeUnit)
+OutputCoord: Bodycentric		# output coordinate system
+OutputHeader: False		# Include column id codes and comments?
+OutputDigits: 8			# precision of numbers in output 
+OutputTypes: HWPs		# particle types to produce files for
+PruneCollisions: True
+
+SaveFiles: save_me.dat
+SaveInterval: 1e5
+#SaveLimit: 2
+
+InputOrder: Mass SemiMajorAxis Eccentricity Inclination \
+		 LongAscendNode ArgP MeanAnomaly
+
+ParticleType: HWP              
+
+1.6592964824e-07 0.38709897 0.20563056 7.004870 48.331670 29.124783 174.794387
+2.4464824121e-06 0.72333377 0.00677478 3.394710 76.680690 54.868380 50.430659
+3.0018090452e-06 1.00000321 0.01671327 0.000050 348.739360 114.209241 357.517621
+3.2253768844e-07 1.52366290 0.09341266 1.850610 49.578540 286.462379 19.412401
+9.5407035176e-04 5.20880408 0.04932699 1.305300 100.566150 274.596150 19.241636
+2.8565829146e-04 9.53999265 0.05434133 2.484460 113.715040 338.478672 312.750934
+4.3634170854e-05 19.19203990 0.04713385 0.769860 74.229880 96.764459 142.237805
+5.1472361809e-05 30.07050641 0.00857659 1.769170 131.721690 272.912182 260.246170

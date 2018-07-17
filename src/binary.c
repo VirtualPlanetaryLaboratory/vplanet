@@ -1539,7 +1539,7 @@ double fndRocheLobe(BODY *body) {
     return rochelobe;
 }
 
-/** Compute the mean anomaly M = n*t + phi where phi is an arbitrary offset
+/** Compute the binary mean anomaly M = n*t + phi where phi is an arbitrary offset
     Note: When used with the binary, dPhi == dLL13PhiAB */
 double fndBinaryMeanAnomaly(double dMeanMotion, double dTime, double dPhi) {
   return dMeanMotion * dTime + dPhi;
@@ -1612,9 +1612,10 @@ double fndEpiFreqV(BODY *body, int iBody) {
 }
 
 /** Circular (azimuthal) motion of the guiding center for a cbp: phi0
-    dPsi here is equal to dCBPM0 */
-double fndPhi0(double dTime, double dMeanMotion, double dPsi) {
-  return dMeanMotion * dTime + dPsi;
+    dVarPhi here is equal to dCBPM0, the initial CBP mean anomaly
+    LL13 Eqn 20 */
+double fndPhi0(double dTime, double dMeanMotion, double dVarPhi) {
+  return dMeanMotion * dTime + dVarPhi;
 }
 
 /*
@@ -1967,7 +1968,7 @@ double fndFluxApproxBinary(BODY *body, int iBody) {
 
   // Compute CBP position in cylindrical coordinates
   double r = sqrt(body[iBody].dCBPR*body[iBody].dCBPR + body[iBody].dCBPZ*body[iBody].dCBPZ);
-  double psi = body[iBody].dCBPPhi;
+  double psi = body[iBody].dCBPPhi; 
 
   // Intermediate quantities
   double mu1, mu2, tmp;

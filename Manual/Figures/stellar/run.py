@@ -54,8 +54,8 @@ def write_in(masses):
 
 def run(masses):
     """Run vplanet and collect the output."""
-    #write_in(masses)
-    #subprocess.call(['vplanet', 'vpl.in'])
+    write_in(masses)
+    subprocess.call(['vplanet', 'vpl.in'])
     output = vpl.GetOutput()
     age = output.bodies[0].Age
     radius = [output.bodies[n].Radius for n in range(len(masses))]

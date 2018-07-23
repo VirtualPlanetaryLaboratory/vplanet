@@ -17,7 +17,11 @@
 // what was this again for? primary variable??
 void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFeO = src[iBody].dFeO;
+  dest[iBody].dSurfTemp = src[iBody].dSurfTemp;
+  dest[iBody].dPotTemp = src[iBody].dPotTemp;
   dest[iBody].dWaterMassMOAtm = src[iBody].dWaterMassMOAtm;
+  dest[iBody].dWaterMassSol = src[iBody].dWaterMassSol;
+  dest[iBody].dSolidRadius = src[iBody].dSolidRadius;
 }
 
 /**************** MAGMOC options ********************/
@@ -160,6 +164,11 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 // Initilaization of a primary variable
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
+  body[iBody].dPotTemp = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
+  body[iBody].dWaterMassSol = 0; // initial water mass in solid = 0
+  body[iBody].dSolidRadius = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
+  body[iBody].dPrefactorA = AHIGHPRESSURE;
+  body[iBody].dPrefactorB = BHIGHPRESSURE;
 }
 
 /******************* Verify MAGMOC ******************/
@@ -173,9 +182,66 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 /* auxiliarie parameters/variables that need to be calculated in order to calculate the primary variable
 (or at least simplify reading/understanding of the code)
 calculated every quarter step for Runge-Kutta
-if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the 
+if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the
 end of this equation */
 void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+
+  // define help variables to calculate melt_frac
+  double radius[101];      // radius
+  double Trad[101];        // radius dep. temperature
+  double melt_frac_r[101]; // radius dep. melt_frac
+  double melt_vol;         // melt volume
+  double r_c;              // core radius
+  double a, b;             // prefactors for linear solidus
+  double Tsol;             // solidus temperature
+  int j;
+
+  r_c = body[iBody].dRadius * RADCOREEARTH / REARTH;
+  melt_vol = 0;
+
+  for (j=0; j<100; j=j+1){
+    radius[j] = j*(body[iBody].dRadius-r_c)/100 +r_c;
+    if (body[iBody].dRadius-radius[j] < 1e5) {
+      a = ALOWPRESSURE;
+      b = BLOWPRESSURE;
+    } else {
+      a = AHIGHPRESSURE;
+      b = BHIGHPRESSURE;
+    }
+    Tsol = a*body[iBody].dManMeltDensity*body[iBody].dGravAccel*(body[iBody].dRadius-radius[j])+b;
+    Trad[j] = body[iBody].dPotTemp*(1+(THERMALEXPANCOEFF*body[iBody].dGravAccel/SILICATEHEATCAP)*body[iBody].dRadius-radius[j]);
+    melt_frac_r[j] = (Trad[j]-Tsol)/600;
+    if (melt_frac_r[j] > 1) {
+      melt_frac_r[j] = 1; // melt fraction can't be larger than 1
+    } else if (melt_frac_r[j] < 0) {
+      melt_frac_r[j] = 0; // melt fraction can't be smaller than 0
+    }
+    melt_vol = melt_vol + melt_frac_r[j]*(pow(radius[j+1],3)-pow(radius[j],3));
+  }
+
+  body[iBody].dSolidRadius = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccel*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
+
+  if (body[iBody].dSolidRadius < r_c) {
+    body[iBody].dSolidRadius = r_c;
+    body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
+  } else if (body[iBody].dSolidRadius >= body[iBody].dRadius) {
+    body[iBody].dSolidRadius = body[iBody].dRadius;
+    body[iBody].dMeltFraction = 0;
+  } else {
+    body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
+  }
+
+  if (body[iBody].dMeltFraction > 1) {
+    body[iBody].dMeltFraction = 1;
+  } else if (body[iBody].dMeltFraction < 0) {
+    body[iBody].dMeltFraction = 0;
+  }
+
+  if (body[iBody].dMeltFraction > CRITMELTFRAC) {
+    body[iBody].dDynamViscos = DYNVISCLIQUID / pow((1-(1-body[iBody].dMeltFraction)/(1-CRITMELTFRAC)),2.5);
+  } else {
+    body[iBody].dDynamViscos = DYNVISCSOLID * exp(-ACTIVENERGY/(IDEALGASCONST*body[iBody].dPotTemp));
+  }
 
 }
 
@@ -183,7 +249,10 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set albedo to pure rock
 */
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-
+  if ( (body[iBody].dRadius-body[iBody].dSolidRadius) < 1e5) {
+    body[iBody].dPrefactorA = ALOWPRESSURE;
+    body[iBody].dPrefactorB = BLOWPRESSURE;
+  }
 }
 
 // ??

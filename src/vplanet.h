@@ -233,6 +233,10 @@
 
 //MAGMOC
 #define VWATERMASSMOATM 2310
+#define VWATERMASSSOL   2311
+#define VSURFTEMP       2312
+#define VPOTTEMP        2313
+#define VSOLIDRADIUS    2314
 
 
 /* Now define the structs */
@@ -968,8 +972,15 @@ struct BODY {
   double dFeO;              /**< FeO in the magma ocean */
   double dWaterMassAtm;     /**< Water mass in the atmosphere */
   double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
-  double dSurfTemp;         /**< Potential Temp of the mantle */
+  double dSurfTemp;         /**< Surface Temp of the planet */
   double dManMeltDensity;   /**< Density of the molten mantle */
+  double dPotTemp;          /**< Potential Temp of the mantle */
+  double dWaterMassSol;     /**< Water mass in the solidified mantle */
+  double dSolidRadius;      /**< Solidification radius of the mantle */
+  double dPrefactorA;       /**< Prefactor for linear solidus */
+  double dPrefactorB;       /**< Prefactor for linear solidus */
+  double dMeltFraction;     /**< Melt fraction of the mantle */
+  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1137,10 +1148,26 @@ struct UPDATE {
   /* MAGMOC parameters */
   int iWaterMassMOAtm;
   int iNumWaterMassMOAtm;
+  int iWaterMassSol;
+  int iNumWaterMassSol;
+  int iSurfTemp;
+  int iNumSurfTemp;
+  int iPotTemp;
+  int iNumPotTemp;
+  int iSolidRadius;
+  int iNumSolidRadius;
 
   double dWaterMassMOAtm;
+  double dWaterMassSol;
+  double dSurfTemp;
+  double dPotTemp;
+  double dSolidRadius;
 
   double *pdDWaterMassMOAtm;
+  double *pdDWaterMassSol;
+  double *pdDSurfTemp;
+  double *pdDPotTemp;
+  double *pdDSolidRadius;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1848,6 +1875,10 @@ typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2022,7 +2053,12 @@ struct MODULE {
 
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
+  /*! Function pointers to finalize magmoc functions */
   fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
+  fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
+  fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
+  fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
+  fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

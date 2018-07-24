@@ -1,12 +1,14 @@
-#!/anaconda3/bin/python
+#!/usr/local/bin/python3.7
 
 # Script to run all vspace runs
 import string
 import subprocess as subp
+import matplotlib.pyplot as plt
+import vplot as vpl
 
 # Number of dimensions
-necc=10
-nobl=10
+necc=30
+nobl=30
 ecc=["" for j in range(necc)]
 obl=["" for j in range(nobl)]
 heat=[["" for j in range(necc)] for k in range(nobl)]
@@ -32,31 +34,40 @@ for dir in dirs:
         # Now search for Io's parameters
         found=0
         for line in log:
-            #print(str(len(line)))
             words=line.split()
             if len(words) > 2:
-                #print(line)
-                #print(words[1],words[2])
-                #print("%d %d\n" % (iEcc,iObl))
                 if (words[1] == "BODY:") and (words[2] == "io"):
                     found=1
-                    #print("Found Io.")
                 if (words[0] == "(Eccentricity)") and (found == 1):
-                    ecc[iEcc] = words[4]
-                    #print("Found e")
+                    ecc[iEcc] = float(words[4])
                 if (words[0] == "(Obliquity)") and (found == 1):
-                    obl[iObl] = words[3]
-                    #print("Found o")
+                    obl[iObl] = float(words[3])*180/3.1415926535
                 if (words[0] == "(SurfEnFluxEqtide)") and (found == 1):
-                    heat[iEcc][iObl] = words[10]
-                    #print("Found h")
-        print(ecc[iEcc],obl[iObl], heat[iEcc][iObl])
-        #exit()
-        print("%d %d\n" % (iEcc,iObl))
+                    heat[iEcc][iObl] = float(words[10])
         iObl += 1
-        if (iObl == 10):
+        if (iObl == nobl):
         # New line in ecc
             iEcc += 1
             iObl = 0
 
 # Arrays ecc,obl,heat now contain the data to make the figure
+
+plt.xlabel('Eccentricity',fontsize=20)
+plt.ylabel('Obliquity ($^\circ$)',fontsize=20)
+plt.tick_params(axis='both', labelsize=20)
+
+plt.xscale('log')
+plt.yscale('log')
+plt.xlim(1e-4,0.1)
+plt.ylim(1e-4,0.1)
+
+ContSet = plt.contour(ecc,obl,heat,5,colors='black',linestyles='solid',
+                  levels=[0.01,0.1,1,10,100],linewidths=3)
+plt.clabel(ContSet,fmt="%.2f",inline=True,fontsize=18)
+plt.tight_layout()
+#plt.show()
+
+x=[0.0041,0.0041]
+y=[1e-4,0.1]
+plt.plot(x,y,linestyle='dashed',color='black')
+plt.savefig('ioheat.pdf')

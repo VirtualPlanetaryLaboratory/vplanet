@@ -4,6 +4,7 @@
 from __future__ import division, print_function, absolute_import
 import os
 import glob
+import shutil
 srcdir = os.path.join(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))), 'examples')
 srcfiles = [x for x in glob.glob(os.path.join(srcdir, '*', 'README.rst'))]
@@ -24,6 +25,10 @@ showcase the various applications of the code.
 if not os.path.exists('examples'):
     os.makedirs('examples')
 
+# Create build dir for images
+if not os.path.exists('.build/html/examples'):
+    os.makedirs('.build/html/examples')
+
 with open('examples.rst', 'w') as index:
     print(rsttext, file=index)
     for filename in srcfiles:
@@ -32,3 +37,8 @@ with open('examples.rst', 'w') as index:
             print(".. include:: ../../examples/%s/README.rst" % shortname,
                   file=incl)
         print('   examples/%s' % shortname, file=index)
+
+        # Copy any output images over to the build directory
+        images = glob.glob(os.path.join(os.path.dirname(filename), '*.png'))
+        for image in images:
+            shutil.copy(image, '.build/html/examples/')

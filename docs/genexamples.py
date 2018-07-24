@@ -26,8 +26,8 @@ if not os.path.exists('examples'):
     os.makedirs('examples')
 
 # Create build dir for images
-if not os.path.exists('.build/html/examples'):
-    os.makedirs('.build/html/examples')
+if not os.path.exists('.build/html/examples/examples'):
+    os.makedirs('.build/html/examples/examples')
 
 with open('examples.rst', 'w') as index:
     print(rsttext, file=index)
@@ -41,4 +41,4 @@ with open('examples.rst', 'w') as index:
         # Copy any output images over to the build directory
         images = glob.glob(os.path.join(os.path.dirname(filename), '*.png'))
         for image in images:
-            shutil.copy(image, '.build/html/examples/')
+            shutil.copy(image, '.build/html/examples/examples/')

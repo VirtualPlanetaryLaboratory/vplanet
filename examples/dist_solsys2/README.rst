@@ -45,16 +45,16 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: /InnerSolOrbs.png
+.. figure:: InnerSolOrbs.png
    :width: 600px
    :align: center
 
 
-.. figure:: /OuterSolOrbs.png
+.. figure:: OuterSolOrbs.png
    :width: 600px
    :align: center
 
 
-.. figure:: /ObliqComp.png
+.. figure:: ObliqComp.png
    :width: 600px
    :align: center

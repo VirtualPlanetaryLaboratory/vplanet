@@ -21,6 +21,17 @@ showcase the various applications of the code.
 
 '''
 
+brokentext = '''Broken
+------
+
+Currently broken examples in need of your help!
+
+.. toctree::
+   :maxdepth: 1
+
+
+'''
+
 # Create rst file
 if not os.path.exists('examples'):
     os.makedirs('examples')
@@ -36,9 +47,20 @@ with open('examples.rst', 'w') as index:
         with open(os.path.join('examples', shortname + '.rst'), 'w') as incl:
             print(".. include:: ../../examples/%s/README.rst" % shortname,
                   file=incl)
-        print('   examples/%s' % shortname, file=index)
+
+        # Check if the example is broken
+        with open('../examples/%s/README.rst' % shortname, 'r') as f:
+            line = f.readline()
+        if "❌" in line:
+            brokentext = brokentext + '   examples/%s' % shortname
+        else:
+            print('   examples/%s' % shortname, file=index)
 
         # Copy any output images over to the build directory
         images = glob.glob(os.path.join(os.path.dirname(filename), '*.png'))
         for image in images:
             shutil.copy(image, '.build/html/examples/examples/')
+
+    print("", file=index)
+    print("", file=index)
+    print(brokentext, file=index)

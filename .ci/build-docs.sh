@@ -5,6 +5,7 @@ set -e
 cd $TRAVIS_BUILD_DIR/docs
 make html
 python scoreboard.py
+mv sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
 
 # Begin
 branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')

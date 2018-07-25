@@ -1,8 +1,5 @@
-IoHeat
-======
-
-
-.. warning:: This example is currently broken.
+❌ IoHeat
+==========
 
 
 Overview

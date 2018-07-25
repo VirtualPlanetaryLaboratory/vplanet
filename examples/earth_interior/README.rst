@@ -1,5 +1,5 @@
-earth_interior
-==============
+Earth Interior Evolution
+========================
 
 Overview
 --------

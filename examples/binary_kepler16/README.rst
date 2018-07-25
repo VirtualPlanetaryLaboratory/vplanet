@@ -1,5 +1,5 @@
-binary_kepler16
-===============
+Kepler-16 circumbinary planet
+=============================
 
 Overview
 --------

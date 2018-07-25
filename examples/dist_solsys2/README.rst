@@ -1,5 +1,5 @@
-dist_solsys2
-============
+Solar System Dynamics II
+========================
 
 Overview
 --------
@@ -15,6 +15,10 @@ Overview
                       | 87 seconds (:code:`marsvpl/vpl.in`)
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys2>`_
 ===================   ============
+
+
+.. todo:: **@rdetrick** Please add a description to the **dist_solsys2** example.
+
 
 To run this example
 -------------------
@@ -44,6 +48,10 @@ To run this example
 
 Expected output
 ---------------
+
+
+.. todo:: **@rdetrick** Please add a caption to the figures in the **dist_solsys2** example.
+
 
 .. figure:: InnerSolOrbs.png
    :width: 600px

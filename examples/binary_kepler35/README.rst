@@ -1,5 +1,5 @@
-binary_kepler35
-===============
+Kepler-35 circumbinary planet
+=============================
 
 Overview
 --------

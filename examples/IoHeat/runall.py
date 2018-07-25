@@ -62,7 +62,7 @@ plt.xlim(1e-4,0.1)
 plt.ylim(1e-4,0.1)
 
 ContSet = plt.contour(ecc,obl,heat,5,colors='black',linestyles='solid',
-                  levels=[0.01,0.1,1,10,100],linewidths=3)
+                      levels=[0.01,0.1,1,10,100],linewidths=3)
 plt.clabel(ContSet,fmt="%.2f",inline=True,fontsize=18)
 plt.tight_layout()
 #plt.show()

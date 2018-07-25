@@ -2,7 +2,6 @@ from __future__ import division, print_function, absolute_import, \
     unicode_literals
 import matplotlib.pyplot as pl
 import numpy as np
-import os
 import vplot as vpl
 
 output = vpl.GetOutput()
@@ -23,7 +22,7 @@ for i in range(N):
 # Legend
 leg = ax[0].legend(lines, ('1 TO', '3 TO', '5 TO'),
                    loc=('upper right'),
-                   handletextpad = 0.1,
+                   handletextpad=0.1,
                    title="Initial water")
 pl.setp(leg.get_title(), fontsize=12, fontweight='bold')
 

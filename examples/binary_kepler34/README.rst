@@ -1,5 +1,5 @@
-binary_kepler34
-===============
+Kepler-34 circumbinary planet
+=============================
 
 Overview
 --------

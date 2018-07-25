@@ -1,5 +1,5 @@
-main_seq
-========
+The Main Sequence
+=================
 
 Overview
 --------

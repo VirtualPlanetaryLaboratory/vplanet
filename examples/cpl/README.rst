@@ -1,5 +1,5 @@
-cpl
-===
+Tidal evolution (CPL)
+=====================
 
 Overview
 --------

@@ -1,5 +1,5 @@
-dist_solsys1
-============
+Solar System Dynamics I
+=======================
 
 Overview
 --------

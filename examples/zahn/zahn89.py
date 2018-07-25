@@ -1,6 +1,6 @@
 """
-This script produces a reproduction of Figure 1 of Zahn & Bouchet (1989) using a coupled
-EQTIDE and STELLAR VPLANET run.
+This script produces a reproduction of Figure 1 of Zahn & Bouchet (1989)
+using a coupled EQTIDE and STELLAR VPLANET run.
 
 David P. Fleming, University of Washington, 2018
 """

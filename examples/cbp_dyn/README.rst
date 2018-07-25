@@ -1,5 +1,5 @@
-cbp_dyn
-=======
+Circumbinary planet
+===================
 
 Overview
 --------
@@ -11,6 +11,10 @@ Overview
 **Approx. runtime**   32 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cbp_dyn>`_
 ===================   ============
+
+
+An example of the orbital evolution of circumbinary planet Kepler-16b.
+
 
 To run this example
 -------------------

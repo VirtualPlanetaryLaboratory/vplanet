@@ -9,4 +9,4 @@ Information for **vplanet** developers.
    Style Guide <StyleGuide>
    Bugs and Issues <bugs>
    To Do List <todo>
-   Documentation Scoreboard <scoreboard>
+   Scoreboards <scoreboard>

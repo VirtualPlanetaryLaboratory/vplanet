@@ -28,7 +28,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/gl581.png
+.. figure:: gl581.png
    :width: 600px
    :align: center
 

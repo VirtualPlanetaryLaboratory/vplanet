@@ -26,7 +26,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/binary_kepler35.png
+.. figure:: binary_kepler35.png
    :width: 600px
    :align: center
 

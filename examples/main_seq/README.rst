@@ -26,7 +26,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/main_seq.png
+.. figure:: main_seq.png
    :width: 300px
    :align: center
 

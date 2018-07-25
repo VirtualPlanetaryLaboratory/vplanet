@@ -34,7 +34,7 @@ or
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/dist_solsys.png
+.. figure:: dist_solsys1.png
    :width: 600px
    :align: center
 

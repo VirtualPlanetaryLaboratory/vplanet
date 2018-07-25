@@ -37,4 +37,4 @@ bVarDt		1		# Use variable timestepping?
 dEta		0.01		# Coefficient for variable timestepping
 #dTimeStep	100
 dStopTime 1e6
-dOutputTime 1e3
+dOutputTime 1e2

@@ -1,5 +1,5 @@
-❌ satideperts
-===============
+satideperts
+===========
 
 ===================   ============
 **Issue**             `#10 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/10>`_

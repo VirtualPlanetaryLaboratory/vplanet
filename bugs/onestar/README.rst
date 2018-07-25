@@ -1,5 +1,6 @@
-✅ onestar
-===========
+onestar
+=======
+
 ===================   ============
 **Issue**             `#12 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/12>`_
 **Date**              06/25/18

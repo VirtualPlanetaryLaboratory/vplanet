@@ -1,5 +1,5 @@
-❌ oceanlost
-=============
+oceanlost
+=========
 
 ===================   ============
 **Issue**             `#13 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/13>`_

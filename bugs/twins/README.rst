@@ -1,5 +1,5 @@
-❌ twins
-=========
+twins
+=====
 
 ===================   ============
 **Issue**             `#15 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/15>`_

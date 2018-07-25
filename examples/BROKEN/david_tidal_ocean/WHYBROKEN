@@ -1,9 +1,0 @@
-- Make each example a top-level directory in `examples/` with a descriptive name
-  *or*, if they are all part of a simulation ensemble, create a Python script that
-  runs and plots the results.
-- Please add a README.rst to each one (copy convention from other examples)
-- Clean up input files:
-    - Align the options
-    - Add comments explaining all options
-    - Remove commented lines / disabled inputs
-    - Convert all tabs to spaces

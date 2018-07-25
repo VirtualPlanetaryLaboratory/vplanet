@@ -1,5 +1,5 @@
-stellar_atmesc
-==============
+❌ Stellar Evolution + Atmospheric Escape
+==========================================
 
 Overview
 --------
@@ -9,10 +9,15 @@ Overview
 **Author**            Rodrigo Luger
 **Modules**           :doc:`stellar <../src/stellar.c>`
                       :doc:`atmesc <../src/atmesc.c>`
-**Approx. runtime**   8 seconds
+**Approx. runtime**   ??
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/stellar_atmesc>`_
 ===================   ============
 
-An example of the coupling between stellar evolution and atmospheric escape.
+
+.. todo::
+
+    **@rodluger** Create a better example for the coupling between
+    **stellar** and **atmesc.**
 
 
 To run this example
@@ -22,6 +27,7 @@ To run this example
 
     vplanet vpl.in
     vplot
+
 
 Expected output
 ---------------

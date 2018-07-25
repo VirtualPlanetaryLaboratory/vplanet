@@ -24,12 +24,12 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/cbp_dyn.png
+.. figure:: cbp_dyn.png
    :width: 600px
    :align: center
 
    Orbital evolution of circumbinary planet Kepler-16b according to
-   VPLANET's *binary* module.  Perturbations from the central binary 
+   VPLANET's *binary* module.  Perturbations from the central binary
    force orbital eccentricity and inclination oscillations for the planet
    (top left and right panels, respectively) and cause appreciable precession
    of the longitude of the periapse and ascending node (bottom left and right

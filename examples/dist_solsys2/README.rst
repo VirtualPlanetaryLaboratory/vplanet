@@ -13,7 +13,7 @@ Overview
                       | 159 seconds (:code:`womoon/vpl.in`)
                       | 9 seconds (:code:`marshnb/vpl.in`)
                       | 87 seconds (:code:`marsvpl/vpl.in`)
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/DistSolSys>`_
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys2>`_
 ===================   ============
 
 To run this example

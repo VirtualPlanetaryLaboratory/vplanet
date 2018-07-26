@@ -10,6 +10,7 @@ Documentation for the development version of VPLANET.
    quickstart
    examples
    src
+   vplot
    developers
    zzreferences
    GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>

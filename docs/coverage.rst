@@ -5,7 +5,9 @@ Code coverage
 
     <!--
     *Very* low security password protection.
-    Based on https://github.com/chrisssycollins/protected-github-pages
+    Based on https://github.com/chrisssycollins/protected-github-pages.
+    The hash corresponding to the correct password is stored in the $COVERAGE_HASH
+    variable on TRAVIS.
     -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -23,6 +23,7 @@ optprof:
 test:
 	-gcc -o vplanet src/*.c -lm
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	py.test
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

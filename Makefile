@@ -25,5 +25,15 @@ test:
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 	py.test
 
+coverage:
+	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
+	-py.test
+	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
+
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'
+
+clean:
+	rm -f vplanet
+	rm -rf gcov
+	rm -rf .pytest_cache

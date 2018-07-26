@@ -10,3 +10,4 @@ Information for **vplanet** developers.
    Bugs and Issues <bugs>
    To Do List <todo>
    Scoreboards <scoreboard>
+   Code coverage <gcov/src/index-sort-l.html>

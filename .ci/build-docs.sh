@@ -7,6 +7,9 @@ make html
 python scoreboard.py
 cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
 
+# Copy coverage stats over
+cp -r $TRAVIS_BUILD_DIR/gcov/html $TRAVIS_BUILD_DIR/docs/.build/html/gcov
+
 # Begin
 branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 echo "Building docs from ${branch} branch..."

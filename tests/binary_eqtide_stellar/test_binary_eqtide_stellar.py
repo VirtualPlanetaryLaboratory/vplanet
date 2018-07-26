@@ -7,7 +7,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_binary_eqtide_stellar():
     """Test the coupling between binary, eqtide, and stellar."""
-    # Run vplanetcle
+    # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
     # Grab the output

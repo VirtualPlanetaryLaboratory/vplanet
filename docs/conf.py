@@ -23,6 +23,7 @@
 
 import sys
 import os
+sys.path.insert(0, os.path.abspath('sphinx_rtd_theme'))
 import sphinx_rtd_theme
 import glob
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
@@ -76,6 +77,11 @@ project = 'vplanet'
 copyright = '2018, Rory Barnes'
 author = 'Rory Barnes'
 
+# Prologue to be included in all .rst files
+# Handy for defining shortcuts / roles!
+rst_prolog = """
+"""
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -103,7 +109,6 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
 
 # -- Options for HTML output ----------------------------------------------
 

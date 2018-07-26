@@ -11,7 +11,7 @@ srcfiles = [x for x in glob.glob(os.path.join(srcdir, '*', 'README.rst'))]
 rsttext = '''Bugs
 ====
 
-Scripts to reproduce current bugs in **vplanet**.
+Scripts to reproduce current major bugs in **vplanet**.
 
 .. toctree::
    :maxdepth: 1

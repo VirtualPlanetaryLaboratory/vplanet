@@ -1,5 +1,5 @@
-earth_interior
-==============
+Earth Interior Evolution
+========================
 
 Overview
 --------
@@ -27,7 +27,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: https://raw.githubusercontent.com/VirtualPlanetaryLaboratory/vplanet/images/examples/earth_interior.png
+.. figure:: earth_interior.png
    :width: 600px
    :align: center
 

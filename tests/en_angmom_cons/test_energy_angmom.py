@@ -14,21 +14,16 @@ def test_energy_angmom():
     output = GetOutput(path=cwd)
 
     # Energy
-    Einit = output.log.initial.system.TotEnergy
-    Efinal = output.log.final.system.TotEnergy
-    logEinit = np.log10(np.abs(Einit))
-    logEfinal = np.log10(np.abs(Efinal))
+    Einit = output.star.TotEnergy[1]
+    Efinal = output.star.TotEnergy[-1]
 
     # Angular momentum
-    Linit = output.log.initial.system.TotAngMom
-    Lfinal = output.log.final.system.TotAngMom
-    logLinit = np.log10(np.abs(Linit))
-    logLfinal = np.log10(np.abs(Lfinal))
+    Linit = output.star.TotAngMom[1]
+    Lfinal = output.star.TotAngMom[-1]
 
     # Check conservation
-    # NOTE: Our tolerance is pretty lax here...
-    assert np.isclose(logEinit, logEfinal, rtol=0.1)
-    assert np.isclose(logLinit, logLfinal, rtol=0.1)
+    assert np.isclose(Einit, Efinal, rtol=1e-4)
+    assert np.isclose(Linit, Lfinal, rtol=1e-4)
 
 
 if __name__ == "__main__":

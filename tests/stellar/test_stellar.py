@@ -24,8 +24,10 @@ def test_stellar():
     assert np.isclose(output.log.final.b.Radius, 1.026571)
     assert np.isclose(output.log.final.b.LostAngMom, 1.648878e+43)
     assert np.isclose(output.log.final.b.RotPer, 23.680862)
-    assert np.isclose(output.log.final.system.TotAngMom, 1.729433e+43)
-    assert np.isclose(output.log.final.system.TotEnergy, -2.468221e+41)
+    assert np.isclose(output.log.final.system.TotAngMom, 1.729433e+43,
+                      rtol=1e-3)
+    assert np.isclose(output.log.final.system.TotEnergy, -2.468221e+41,
+                      rtol=1e-3)
 
 
 if __name__ == "__main__":

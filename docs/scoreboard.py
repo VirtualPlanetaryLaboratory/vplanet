@@ -35,7 +35,10 @@ users = {'rdeitrick': 'Russell Deitrick',
          'dflemin3': 'David Fleming',
          'RoryBarnes': 'Rory Barnes',
          'rodluger': 'Rodrigo Luger',
-         'smotherh': 'Hayden Smotherman'}
+         'smotherh': 'Hayden Smotherman',
+         'peteredriscoll': 'Peter Driscoll',
+         'dm1681': 'Diego McDonald',
+         'trquinn': 'Tom Quinn'}
 
 
 def todo_row(name, errors, parity='even'):

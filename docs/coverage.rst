@@ -1,6 +1,15 @@
 Code coverage
 =============
 
+This page shows the code coverage results for the scripts in the
+:code:`tests/` directory using the
+`gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_ and
+`lcov <http://ltp.sourceforge.net/coverage/lcov.php>`_ tools.
+In a perfect world, the test scripts should hit every line of code.
+If your module has low coverage, you need to write some more test
+scripts!
+
+
 .. raw:: html
 
     <!--
@@ -92,8 +101,8 @@ Code coverage
     <div class="protected">
         <div class="protected__alert" data-id="alert">You entered the wrong password</div>
         <div class="protected__content">
-            <h1 class="protected__content__heading">You need a password to continue</h1>
-            <input class="protected__content__input" data-id="password" type="password" placeholder="password"/>
+            <h1 class="protected__content__heading">You need a password to continue.</h1>
+            <input class="protected__content__input" data-id="password" type="password" placeholder="Hint: Rory's motto"/>
             <button data-id="button" type="button" class="protected__content__btn">Continue</button>
         </div>
     </div>

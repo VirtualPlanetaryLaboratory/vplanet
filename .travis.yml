@@ -12,6 +12,7 @@ addons:
             - gcc-4.8
             - doxygen
             - doxygen-doc
+            - lcov
 
 matrix:
     include:

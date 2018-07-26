@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              10/19/15
 **Author**            Rodrigo Luger
-**Modules**           :doc:`stellar <../src/stellar.html>`
-                      :doc:`atmesc <../src/atmesc.html>`
+**Modules**           `stellar <../src/stellar.html>`_
+                      `atmesc <../src/atmesc.html>`_
 **Approx. runtime**   ??
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/stellar_atmesc>`_
 ===================   ============

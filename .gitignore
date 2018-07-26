@@ -37,6 +37,7 @@ vplot_config.py
 proxcen.pdf
 vplanet.egg-info
 .pytest_cache
+gcov/*
 
 # Documentation
 docs/.build

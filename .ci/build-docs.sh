@@ -8,7 +8,7 @@ python scoreboard.py
 cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
 
 # Copy coverage stats over
-cp -r $TRAVIS_BUILD_DIR/gcov/html $TRAVIS_BUILD_DIR/docs/.build/html/gcov
+cp -r $TRAVIS_BUILD_DIR/gcov/html $TRAVIS_BUILD_DIR/docs/.build/html/d6c434b3c6b1a2ac0f32706269cca6a4aafe99fb
 
 # Begin
 branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')

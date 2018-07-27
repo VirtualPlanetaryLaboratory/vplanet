@@ -1,0 +1,22 @@
+# Planet a parameters
+sName                     Uranus         # Body's name
+saModules                 spinbody       # Modules to apply, exact spelling required
+
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly
+# Physical Properties
+dMass                     -14.536        # Mass, negative -> Earth masses
+dRadius                   -63.08         # Radius, negative -> Earth radii
+dRotPeriod                -1             # Rotation period, negative -> days
+dObliquity                97.77          # Obliquity (deg)
+dRadGyra                  0.5            # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                     -19.19126393  # Semi-major axis, negative -> AU
+dEcc                       0.04716771   # Eccentricity
+dInc                       0.76986      # Inclination (deg)
+dLongP                     170.96424    # Longitude of pericenter (deg)
+dLongA                     74.22988     # Longitude of ascending node (deg)
+dMeanA                     142.26794    # Mean Anomoly (deg)

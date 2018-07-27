@@ -1,8 +1,0 @@
-- This example takes too long to run. Can it be simplified?
-- Consider changing the name from EvapNept to something more accurate.
-  This seems to be an example for habitable planet climate...
-- Please add a README.rst (copy convention from other examples)
-- Clean up input files:
-    - Align the options
-    - Add comments explaining all options
-    - Remove commented lines / disabled inputs

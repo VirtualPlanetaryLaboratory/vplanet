@@ -47,6 +47,7 @@ docs/examples
 docs/examples.rst
 docs/bugs
 docs/bugs.rst
+docs/help.rst
 
 # The executable
 vplanet

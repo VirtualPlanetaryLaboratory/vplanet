@@ -19,11 +19,17 @@ matrix:
         - os: linux
 
 install:
+    - git lfs pull
     - source .ci/travis.sh
 
 cache:
     directories:
         - $HOME/miniconda
+        - .git/lfs
+
+git:
+    # https://github.com/travis-ci/travis-ci/issues/8787#issuecomment-394202791
+    lfs_skip_smudge: true
 
 script:
     - py.test -v -s tests

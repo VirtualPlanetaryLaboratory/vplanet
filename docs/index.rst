@@ -11,6 +11,7 @@ Documentation for the development version of VPLANET.
    help
    examples
    src
+   vplot
    developers
    zzreferences
    GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>

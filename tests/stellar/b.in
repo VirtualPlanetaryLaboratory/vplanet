@@ -1,0 +1,13 @@
+# Star
+sName               b		                  # Body's name
+saModules	    stellar                     # Modules to apply, exact spelling required
+
+# Physical Parameters
+dMass               1.0
+
+# Stellar Parameters
+sStellarModel       baraffe
+sMagBrakingModel    reiners
+
+# Output
+saOutputOrder Time -RotPer -TotEn -TotAngMom -Luminosity -Radius Temperature

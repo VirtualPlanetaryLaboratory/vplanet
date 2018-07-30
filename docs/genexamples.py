@@ -13,7 +13,10 @@ rsttext = '''Examples
 ========
 
 A collection of example input files and scripts using **vplanet** that
-showcase the various applications of the code.
+showcase the various applications of the code. The source files for
+the examples below live in the :code:`examples` folder in the top-level
+directory of the :code:`VPLANET` repository.
+`View them on GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples>`_.
 
 .. toctree::
    :maxdepth: 1

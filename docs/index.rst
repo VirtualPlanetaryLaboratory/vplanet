@@ -8,6 +8,7 @@ Documentation for the development version of VPLANET.
 
    install
    quickstart
+   help
    examples
    src
    developers

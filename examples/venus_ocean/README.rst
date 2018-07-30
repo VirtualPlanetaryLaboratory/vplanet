@@ -1,5 +1,5 @@
-Venus
-=====
+Venus Ocean
+===========
 
 Overview
 --------
@@ -10,7 +10,7 @@ Overview
 **Modules**           `atmesc <../src/atmesc.html>`_
                       `stellar <../src/stellar.html>`_
 **Approx. runtime**   34 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/venus>`_
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/venus_ocean>`_
 ===================   ============
 
 

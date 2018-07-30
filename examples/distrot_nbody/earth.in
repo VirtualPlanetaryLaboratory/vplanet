@@ -17,6 +17,6 @@ dPrecA       0.0
 bForcePrecRate    1
 bCalcDynEllip    1
 bReadOrbitData  1
-sFileOrbitData orbit.dat
+sFileOrbitData orbit.in
 #bOverrideMaxEcc  1
 #dHaltMaxEcc     0.4

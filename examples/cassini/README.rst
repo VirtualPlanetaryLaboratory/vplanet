@@ -15,7 +15,7 @@ Overview
 ===================   ============
 
 
-.. todo:: **@rdeitrick**: Description needed for the **cassini** example.
+.. todo:: **@deitrr**: Description needed for the **cassini** example.
 
 
 To run this example
@@ -31,7 +31,7 @@ Expected output
 ---------------
 
 
-.. todo:: **@rdeitrick**: Captions needed for the **cassini** figures.
+.. todo:: **@deitrr**: Captions needed for the **cassini** figures.
 
 
 .. figure:: cassini_damp.png

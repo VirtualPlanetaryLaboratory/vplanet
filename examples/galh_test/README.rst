@@ -13,7 +13,7 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/galhabit>`_
 ===================   ============
 
-.. todo:: **@rdeitrick**: Description needed for the **galh_test** example.
+.. todo:: **@deitrr**: Description needed for the **galh_test** example.
 
 
 To run this example
@@ -36,7 +36,7 @@ To run this example
 Expected output
 ---------------
 
-.. todo:: **@rdeitrick**: Caption needed for the **galh_test** example figure.
+.. todo:: **@deitrr**: Caption needed for the **galh_test** example figure.
 
 .. figure:: galh_test.png
    :width: 600px

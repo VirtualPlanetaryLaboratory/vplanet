@@ -14,7 +14,7 @@ Documentation for the development version of VPLANET.
    vplot
    developers
    zzreferences
-   GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>
+   GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet>
 
 Indices and tables
 ==================

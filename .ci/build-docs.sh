@@ -28,6 +28,7 @@ git add -f *.html
 git add -f *.js
 git add -f _sources
 git add -f _static
+git add -f _images
 git add -f examples
 git add -f bugs
 git add -f src

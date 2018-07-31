@@ -1,6 +1,13 @@
 Using Git LFS
 =============
 
+.. warning::
+
+    I just disabled Git LFS and returned the example png images to the
+    git tree. As it turns out, LFS doesn't seem like that good of a deal
+    for us. More on this soon...
+
+
 It's bad practice to commit output with **git**, especially if the file is large
 and/or always changing. If for some reason you really need access to
 an output file (say, a large data file that you use as input in a simulation),

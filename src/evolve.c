@@ -1,10 +1,14 @@
-/********************** EVOLVE.C ***********************/
-/*
- * Rory Barnes, May 2014
- *
- * This file contains all the core VPLANET integration routines including the
- * timestepping algorithm and the Runge-Kutta Integration scheme.
- */
+/**
+  @file evolve.c
+
+  @brief This file contains all the core VPLANET integration routines including the
+         timestepping algorithm and the Runge-Kutta Integration scheme.
+
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+  @date May 2014
+
+*/
 
 #include <stdio.h>
 #include <math.h>
@@ -312,7 +316,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   XXX
   */
 
-//   RecalcLaplaceDistRes(body,control,system);
   /* Derivatives at start */
   *dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
 
@@ -358,8 +361,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* First midpoint derivative.*/
   PropertiesAuxiliary(evolve->tmpBody,control,update);
 
-//   RecalcLaplaceDistRes(evolve->tmpBody,control,system);
-
   /* Don't need this timestep info, so assign output to dFoo */
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
@@ -388,8 +389,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Second midpoint derivative */
   PropertiesAuxiliary(evolve->tmpBody,control,update);
 
-//   RecalcLaplaceDistRes(evolve->tmpBody,control,system);
-
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
@@ -415,8 +414,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
   /* Full step derivative */
   PropertiesAuxiliary(evolve->tmpBody,control,update);
-
-//   RecalcLaplaceDistRes(evolve->tmpBody,control,system);
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 

@@ -1,8 +1,12 @@
-/********************** DISTROT.C **********************/
-/*
- * Russell Deitrick, July 7, 2015
- *
- * Subroutines that control the integration of the obliquity model.
+/**
+   @file distrot.c
+
+   @brief Subroutines that control the integration of the obliquity model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date July 7 2015
+
 */
 
 /* lines where something like iBody == 0 occurs

@@ -1,9 +1,8 @@
-/********************** THERMINT.C **********************/
-/*
- * Peter Driscoll 6/1/15
- *
- * Thermal evolution of the interior (mantle+core)
- *
+/**
+  @file thermint.c
+  @brief Thermal evolution of the planet's interior (mantle + core)
+  @author Peter Driscoll ([peteredriscoll](https://github.com/peteredriscoll/))
+  @date June 1 2015
 */
 
 #include <stdio.h>

@@ -1,12 +1,9 @@
-/***************** BINARY.H ***********************
- *
- * David Fleming (dflemin3), Tue Jan 12 10:23am PDT 2016
- *
- * This header file contains all the subroutines in
- * file binary.c.
- *
+/**
+   @file binary.h
+   @brief Subroutines that control the integration of the circumbinary planet orbital dynamics module.
+   @author David Fleming ([dflemin3](https://github.com/dflemin3/))
+   @date Jan 12 2016
 */
-
 
 #define K_MAX                   4   /* Max term to sum to */
 #define FLUX_INT_MAX            20 /* How many CBP positions per orbit to integrate over */
@@ -52,6 +49,8 @@
 #define OUT_CBPPHIDOT           2166
 #define OUT_CBPR0               2167
 #define OUT_CBPINSOL            2168
+
+/* @cond DOXYGEN_OVERRIDE */
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
 void AddModuleBinary(MODULE*,int,int);
@@ -181,3 +180,5 @@ double fndFluxApproxBinary(BODY*,int);
 double fndApproxEqTemp(BODY*,int,double);
 double fndApproxInsol(BODY*,int);
 void fnvBinaryDebug(BODY*);
+
+/* @endcond */

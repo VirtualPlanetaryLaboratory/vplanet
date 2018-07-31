@@ -1,8 +1,8 @@
-/************************ OUTPUT.C **********************/
-/*
- * Rory Barnes, Wed May  7 16:38:28 PDT 2014
- *
- * Subroutines for output and logging.
+/**
+  @file output.c
+  @brief Subroutines for output and logging.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -1824,7 +1824,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
-  InitializeOutputDistRes(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
 
 }

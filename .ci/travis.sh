@@ -15,6 +15,11 @@ fi
 # Display some info
 conda info -a
 
+# Install docs stuff
+pip install sphinx
+pip install breathe
+pip install sphinxcontrib-bibtex
+
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
@@ -22,3 +27,4 @@ pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 export PATH="$TRAVIS_BUILD_DIR:$PATH"
 cd $TRAVIS_BUILD_DIR
 gcc-4.8 -o vplanet src/*.c -lm
+sudo mv vplanet /usr/local/bin/vplanet

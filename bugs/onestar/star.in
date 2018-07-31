@@ -1,0 +1,15 @@
+# The host star
+sName	        star		                    # Body's name
+saModules	    stellar                     # Modules to apply, exact spelling required
+
+# Output
+saOutputOrder Time -Luminosity -Radius -RotRate -RotPer
+
+# Physical Parameters
+dMass         1.0                               # Mass, solar masses
+dObliquity    0
+dRotPeriod    -200.
+dRadGyra      0.5                               # Radius of gyration (moment of inertia constant)
+
+# STELLAR Parameters
+sStellarModel baraffe                           # Stellar evolutin model: `baraffe` or `none`

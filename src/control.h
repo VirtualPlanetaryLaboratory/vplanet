@@ -1,3 +1,16 @@
+/**
+   @file control.h
+
+   @brief These subroutines deal with control, including I/O, units, and files.
+
+   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+   @date Jan 7 2015
+
+ */
+
+/* @cond DOXYGEN_OVERRIDE */
+
 void BodyCopyNULL(BODY*,BODY*,int,int,int);
 
 void InitializeControl(CONTROL*,MODULE*);
@@ -39,3 +52,5 @@ void fsUnitsEnergyFlux(UNITS*,char[]);
 void fsUnitsViscosity(UNITS*,char[]);
 
 void InfileCopy(INFILE*,INFILE*);
+
+/* @endcond */

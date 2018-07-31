@@ -1,7 +1,8 @@
-/*********************** MAIN.C *****************************/
-/*
- * Rory Barnes, Wed May  7 16:22:34 PDT 2014
- *
+/**
+  @file vplanet.c
+  @brief The main entry point for the code. All the magic starts here.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>

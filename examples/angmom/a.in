@@ -1,26 +1,17 @@
 # Planet a parameters
 sName         a                           # Body's name
-saModules     atmesc eqtide              # Modules to apply, exact spelling required
+saModules     eqtide                      # Modules to apply, exact spelling required
 
 # Physical Properties
 dMass         -5.5                        # Mass, negative -> Earth masses
 dRadius       -1.5                        # Radius, negative -> Earth radii
 dRotPeriod    -10                         # Rotation period, negative -> days
-dObliquity    23.5      
+dObliquity    23.5
 dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)
 
-# ATMESC Properties
-dXFrac        1.0                         # X-Ray/XUV absorption radius (fraction of planet radius)
-dAtmXAbsEff   0.3                         # Atmospheric XUV absorption efficiency (epsilon)
-dSurfWaterMass            -1.0            # Initial surface water (Earth oceans) 
-bHaltSurfaceDesiccated    0               # Halt when dry?
-dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
-
 # Orbital Properties
-dSemi         0.03721                     # Semi-major axis, negative -> AU
-dEcc          0.0                        # Eccentricity
+dSemi         0.03721                     # Semi-major axis (AU)
+dEcc          0.0                         # Eccentricity
 
-saTidePerts star
-
-# Output
-saOutputOrder Time -SurfWaterMass
+# Tidal perturbers
+saTidePerts   star                        # The star is perturbing this planet

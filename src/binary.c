@@ -1,12 +1,21 @@
 /**
    @file binary.c
-
    @brief Subroutines that control the integration of the circumbinary planet orbital dynamics module.
+   @author David Fleming ([dflemin3](https://github.com/dflemin3/))
+   @date Jan 12 2016
 
-   David Fleming (dflemin3), Tue Jan 12 10:20am PDT 2016
-   Note: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet(s))
-   Leung & Lee 2013 (LL13) Theory ONLY applies to the restricted 3 body approximation
-   and hence the CBPs are not allowed to graviationally interact.
+   @par Description
+   \rst
+
+       Module to model circumbinary planet dynamics.
+
+       .. note:: body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet(s))
+
+       .. note:: The :cite:`Leung2013` theory ONLY applies to the restricted 3 body approximation \
+                 and hence the CBPs are not allowed to graviationally interact.
+
+   \endrst
+
 */
 
 #include <stdio.h>
@@ -1968,7 +1977,7 @@ double fndFluxApproxBinary(BODY *body, int iBody) {
 
   // Compute CBP position in cylindrical coordinates
   double r = sqrt(body[iBody].dCBPR*body[iBody].dCBPR + body[iBody].dCBPZ*body[iBody].dCBPZ);
-  double psi = body[iBody].dCBPPhi; 
+  double psi = body[iBody].dCBPPhi;
 
   // Intermediate quantities
   double mu1, mu2, tmp;

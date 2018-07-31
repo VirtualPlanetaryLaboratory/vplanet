@@ -1,8 +1,12 @@
-/********************** GALHABIT.C **********************/
-/*
- * Russell Deitrick, July 7, 2015
- *
- * Subroutines that simulate the galactic habitat of a stellar system
+/**
+   @file galhabit.c
+
+   @brief Subroutines that simulate the galactic habitat of a stellar system.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date July 7 2015
+
 */
 
 /* note August 15: system->dScalingF added to NearbyStarDist(), VelocityDisp(), VerifyGalHabit(), ForceBehavior(), CalcEncounterRate */

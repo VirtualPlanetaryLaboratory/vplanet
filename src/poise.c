@@ -1,8 +1,12 @@
-/********************** POISE.C **********************/
-/*
- * Russell Deitrick, September 10, 2015
- *
- * Subroutines that control the energy balance model for climate
+/**
+   @file poise.c
+
+   @brief Subroutines that control the energy balance model for climate
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date Sep 10 2015
+
 */
 
 /* lines where something like iBody == 0 occurs

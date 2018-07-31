@@ -10,18 +10,30 @@ addons:
             - ubuntu-toolchain-r-test
         packages:
             - gcc-4.8
+            - doxygen
+            - doxygen-doc
+            - lcov
 
 matrix:
     include:
         - os: linux
-          env: PYTHON_VERSION=3.4 NUMPY_VERSION=1.11
 
 install:
+    - git lfs pull
     - source .ci/travis.sh
 
 cache:
     directories:
         - $HOME/miniconda
+        - .git/lfs
+
+git:
+    # https://github.com/travis-ci/travis-ci/issues/8787#issuecomment-394202791
+    lfs_skip_smudge: true
 
 script:
     - py.test -v -s tests
+
+after_success:
+    - make coverage
+    - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi

@@ -1,10 +1,14 @@
-/********************** RADHEAT.C **********************/
-/*
- * Rory Barnes, Sat Jun 28 07:07:38 PDT 2014
- *
- * Subroutines that control the integration of the
- * radiogenic heating model. Also includes subroutines
- * that switch between the two models.
+/**
+ @file radheat.c
+
+ @brief Subroutines that control the integration of the
+        radiogenic heating model. Also includes subroutines
+        that switch between the two models.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Jun 28 2014
+
 */
 
 #include <stdio.h>

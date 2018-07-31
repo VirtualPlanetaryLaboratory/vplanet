@@ -1,9 +1,9 @@
-/************************** VERIFY.C ***********************/
-/*
- * Rory Barnes, Wed May  7 16:53:43 PDT 2014
- *
- * Validate the options. This will become a mess!
- */
+/**
+  @file verify.c
+  @brief Validate the options. This will become a mess!
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

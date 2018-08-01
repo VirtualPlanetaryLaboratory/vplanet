@@ -1,14 +1,5 @@
-.. raw:: html
-
-   <div align="center">
-   <img src="_images/vplanet.png" width="600px">
-   </img>
-   <br/>
-   </div>
-   <br/><br/>
-
-Documentation
-=============
+VPLANET Documentation
+=====================
 
 Planetary systems evolve due to a myriad of processes, often non-linearly,
 which complicates simulating exoplanetary systems. The relevant

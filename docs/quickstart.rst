@@ -11,8 +11,8 @@ Let's go over how to use :code:`VPLANET` to simulate the evolution of
 a hypothetical ocean on the surface of early Venus. Isotopic evidence
 suggests Venus may have had a similar amount of water to Earth in the
 past, but because of vigorous hydrodynamic escape it probably lost all
-of it in the first few hundred Myr. Here we're going to use the :code:`stellar`
-and :code:`atmesc` modules of :code:`VPLANET` to jointly model the evolution
+of it in the first few hundred Myr. Here we're going to use the :doc:`stellar </src/stellar>`
+and :doc:`atmesc </src/atmesc>` modules of :code:`VPLANET` to jointly model the evolution
 of the Sun and Venus.
 
 The basic workflow for a :code:`VPLANET` simulation is to create input

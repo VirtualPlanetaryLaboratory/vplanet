@@ -16,6 +16,12 @@ Overview
 
 Computes and plots the evolution of several properties of the Earth's interior.
 
+.. todo::
+
+    **@RoryBarnes:** Verify the author and date for the
+    *earth interior evolution* example and provide some
+    more details in the README.
+
 To run this example
 -------------------
 

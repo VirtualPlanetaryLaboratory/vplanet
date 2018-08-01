@@ -1,5 +1,5 @@
-Galactic Habitable Zone
-=======================
+Galactic Habitat
+================
 
 Overview
 --------

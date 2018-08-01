@@ -74,7 +74,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'vplanet'
-copyright = '2018, Rory Barnes'
+copyright = '2018, Virtual Planetary Laboratory'
 author = 'Rory Barnes'
 
 # Prologue to be included in all .rst files

@@ -31,6 +31,10 @@ Expected output
 
 .. todo:: **@deitrr**: Caption needed for the **Milankovitch** example figure.
 
+.. figure:: seasons.png
+   :width: 600px
+   :align: center
+
 .. figure:: milankovitch.png
    :width: 600px
    :align: center

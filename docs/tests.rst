@@ -178,6 +178,3 @@ since :code:`png` files are in the `.gitignore` by default:
 .. code-block:: bash
 
     git add -f UNIQUE_FIGURE_NAME.png
-
-As described :doc:`here <lfs>`, images are tracked using Git LFS, so they
-don't pollute the git history.

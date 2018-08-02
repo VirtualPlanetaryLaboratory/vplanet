@@ -366,7 +366,7 @@ def seasonal_maps(time, dir = '.', show = True):
     clb=plt.colorbar(c2,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
     clb.set_label(r'OLR (W m$^{-2}$)',fontsize=12)
 
-    plt.savefig('seasons.png')
+    plt.savefig('seasons.png',dpi=300)
     if show:
       plt.show()
     else:

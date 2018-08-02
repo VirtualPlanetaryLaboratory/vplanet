@@ -76,7 +76,7 @@ plt.xlim(0,1)
 plt.ylabel('$i$ ($^{\circ}$)')
 plt.xlabel('Time (Myr)')
 
-plt.savefig('InnerSolOrbs.pdf')
+plt.savefig('InnerSolOrbs.png',dpi=300)
 plt.close()
 
 ######################################################################
@@ -148,7 +148,7 @@ plt.xlim(0,1)
 plt.ylabel('$i$ ($^{\circ}$)')
 plt.xlabel('Time (Myr)')
 
-plt.savefig('OuterSolOrbs.pdf')
+plt.savefig('OuterSolOrbs.png',dpi=300)
 plt.close()
 
 
@@ -180,5 +180,5 @@ plt.legend(loc='upper right', fontsize=10)
 # plt.ylim(0,10)
 #plt.text(0.2,0.5,'Mars evolution here?',transform=ax.transAxes)
 
-plt.savefig('ObliqComp.pdf')
+plt.savefig('ObliqComp.png',dpi=300)
 plt.close()

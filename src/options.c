@@ -154,6 +154,12 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
 
+  if(strlen(cLine) == 0) {
+      *iNumWords = 0;
+      *bContinue = 0;
+      return;
+      }
+
   //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */

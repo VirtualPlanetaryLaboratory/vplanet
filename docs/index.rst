@@ -21,7 +21,7 @@ systems with habitable worlds.
    src
    vplot
    developers
-   GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private>
+   GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet>
 
 Indices and tables
 ==================

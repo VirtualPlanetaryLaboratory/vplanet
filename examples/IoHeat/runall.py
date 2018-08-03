@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3.7
 
 # Script to run all vspace runs
+import sys
 import string
 import subprocess as subp
 import matplotlib.pyplot as plt
@@ -31,6 +32,8 @@ for dir in dirs:
         log=open(logfile,"r")
 
         print(dir)
+        sys.stdout.flush()
+        sys.stderr.flush()
         # Now search for Io's parameters
         found=0
         for line in log:

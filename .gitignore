@@ -1,5 +1,6 @@
 # Output files
 *.forward
+*.backward
 *.log
 *.Laplace
 *.Climate
@@ -36,6 +37,7 @@ vplot_config.py
 proxcen.pdf
 vplanet.egg-info
 .pytest_cache
+gcov/*
 
 # Documentation
 docs/.build
@@ -45,6 +47,7 @@ docs/examples
 docs/examples.rst
 docs/bugs
 docs/bugs.rst
+docs/help.rst
 
 # The executable
 vplanet

@@ -20,8 +20,8 @@ help:
 	@if [ $(MAKECMDGOALS) != clean ]; then \
 		python gensrc.py; \
 		python genexamples.py; \
-		python ../bugs/bugs.py; \
 		python genbugs.py; \
+		python gethelp.py; \
 	else \
 		rm -rf src.rst; \
 		rm -rf src; \
@@ -29,5 +29,9 @@ help:
 		rm -rf examples; \
 		rm -rf bugs; \
 		rm -rf bugs.rst; \
+		rm -rf help.rst; \
 	fi
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) 2>&1 | tee docs.log
+	@if [ $(MAKECMDGOALS) != clean ]; then \
+		cp vplanet.png $(BUILDDIR)/html/_images/vplanet.png; \
+	fi

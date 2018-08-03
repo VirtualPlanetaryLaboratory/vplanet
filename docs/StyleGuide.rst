@@ -146,6 +146,79 @@ to papers relevant to this module. The cool thing about this is that it automati
 adds entries to the `html bibliography <zzreferences.html>`_. Note that in order for
 this to work, the references must be in the :code:`docs/vplanet.bib` file in the repo.
 
+
+Code coverage
+-------------
+
+We use `gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_ and
+`lcov <http://ltp.sourceforge.net/coverage/lcov.php>`_ to check code
+coverage by the test scripts. In general, there will always exist
+lines of code that you don't *want* to have executed -- such as lines
+whose only purpose is to catch an error, print a message to screen, and
+terminate the program. But **gcov** doesn't know that, so if your tests
+don't hit those lines, your coverage goes down. The way around this is to
+use the :code:`LCOV_EXCL_LINE`, :code:`LCOV_EXCL_START`, and
+:code:`LCOV_EXCL_END` commands to explicitly markup lines you don't want
+included in the coverage report. For instance, consider this snippet
+of code inside :code:`ReadXFrac`, a function that reads in the user's value
+for the XUV radius fraction in :code:`atmesc`:
+
+.. code-block:: C
+      :linenos:
+
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      if (lTmp >= 0) {
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                if (control->Io.iVerbose >= VERBERR)
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+                LineExit(files->Infile[iFile].cIn,lTmp);
+        }
+        body[iFile-1].dXFrac = dTmp;
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      }
+
+Lines 5, 6, and 7 are only ever executed if the user provides a negative
+XUV fraction. You *could* in principle add a test that checks whether the
+error handling is working, but that seems silly. It's easiest to just mark
+these lines so that **gcov** and **lcov** know to skip them. You can either
+mark each line:
+
+.. code-block:: C
+      :linenos:
+
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      if (lTmp >= 0) {
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
+                LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
+        }
+        body[iFile-1].dXFrac = dTmp;
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      }
+
+or use a block:
+
+.. code-block:: C
+      :linenos:
+
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      if (lTmp >= 0) {
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                // LCOV_EXCL_START
+                if (control->Io.iVerbose >= VERBERR)
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+                LineExit(files->Infile[iFile].cIn,lTmp);
+                // LCOV_EXCL_STOP
+        }
+        body[iFile-1].dXFrac = dTmp;
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+      }
+
+
 Miscellaneous
 -------------
 

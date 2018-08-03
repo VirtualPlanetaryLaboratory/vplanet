@@ -18,21 +18,6 @@ for bug in bugs:
     try:
         imp.load_source('bug', 'bug.py')
         print(FIXED)
-        with open("README.rst", "r") as infile:
-            lines = infile.readlines()
-        lines[0] = "✅" + lines[0][1:]
-        lines[1] = '=' * (len(lines[0]) + 1)
-        with open("README.rst", mode="w") as outfile:
-            for line in lines:
-                outfile.write(line)
     except AssertionError:
         print(BUGGED)
-        with open("README.rst", "r") as infile:
-            lines = infile.readlines()
-        lines[0] = "❌" + lines[0][1:]
-        lines[1] = '=' * (len(lines[0]) + 1) + "\n"
-        with open("README.rst", mode="w") as outfile:
-            for line in lines:
-                outfile.write(line)
-                
     os.chdir('..')

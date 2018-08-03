@@ -19,6 +19,11 @@ rsttext = '''C API
 
 Detailed documentation of C source code.
 
+.. note ::
+
+    The API documentation is still under development.
+    Some modules may not be very well documented yet!
+
 .. toctree::
    :maxdepth: 1
 

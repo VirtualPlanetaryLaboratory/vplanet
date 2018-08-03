@@ -14,7 +14,7 @@ def SearchAngleUnit(src,flist):
     fread = open(src+'/'+fcurr).read()
     if 'sUnitAngle' in fread:
       angUnit = fread.split()[np.where(np.asarray(fread.split())=='sUnitAngle')[0][0]+1]
-  
+
   return angUnit
 
 if len(sys.argv) < 2:
@@ -78,7 +78,7 @@ for i in range(len(lines)):
       randsize = np.int(lines[i].split()[1])
     else:
       raise IOError("Attempt to pass non-integer value to randsize")
-      
+
 for i in range(len(lines)):
   if lines[i].split() == []:
     pass  #nothing on this line
@@ -99,7 +99,7 @@ for i in range(len(lines)):
 
     for j in range(len(values)):
       values[j] = values[j].strip()  #remove any leading white spaces
-    
+
     if mode == 1:
       if len(values) != 3:
         if values[2][0] == 'g':
@@ -109,19 +109,19 @@ for i in range(len(lines)):
             elif values[3][:3] == 'max':
               max_cutoff = np.float(values[3][3:])
             else:
-              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>, <width>, g, min<value>], [<center>, <width>, g, max<value>],[<center>, <width>, g, min<value>, max<value>], or [<center>, <width>, g, max<value>, min<value>]"%(name,flist[fnum-1])) 
+              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>, <width>, g, min<value>], [<center>, <width>, g, max<value>],[<center>, <width>, g, min<value>, max<value>], or [<center>, <width>, g, max<value>, min<value>]"%(name,flist[fnum-1]))
           if len(values) == 5:
             if values[4][:3] == 'min':
               min_cutoff = np.float(values[4][3:])
             elif values[4][:3] == 'max':
               max_cutoff = np.float(values[4][3:])
             else:
-              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1])) 
+              raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1]))
           if len(values) >= 6:
-             raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1]))         
+             raise IOError("Incorrect syntax in Gaussian/normal distribution cutoff for '%s' for '%s'. Correct syntax is [<center>,<width>,g,min<value>], [<center>,<width>,g,max<value>],[<center>,<width>,g,min<value>,max<value>], or [<center>,<width>,g,max<value>,min<value>]"%(name,flist[fnum-1]))
         else:
           raise IOError("Attempt to draw from uniform distributions of '%s' for '%s', but incorrect number of values provided. Syntax should be [<low>,<high>,<type of distribution>], where valid types of distributions are u (uniform), s (uniform in sine), or c (uniform in cosine)."%(name,flist[fnum-1]))
-    
+
     #user set linear spacing of data
     if values[2][0] == 'n':
       values[2] = values[2][1:]
@@ -129,7 +129,7 @@ for i in range(len(lines)):
         array = np.linspace(np.float(values[0]),np.float(values[1]),np.float(values[2]))
       else:
         raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
-    
+
     #user set log spacing of data
     elif values[2][0] == 'l':
       values[2] = values[2][1:]
@@ -143,7 +143,7 @@ for i in range(len(lines)):
           array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),np.float(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
-          
+
     #user wants to randomly sample a normal/gaussian distribution
     elif values[2][0] == 'g':
       if mode == 1:
@@ -162,14 +162,14 @@ for i in range(len(lines)):
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
-        
-    #user wants to randomly sample a uniform distribution  
+
+    #user wants to randomly sample a uniform distribution
     elif values[2][0] == 'u':
       if mode == 1:
         array = np.random.uniform(low=np.float(values[0]),high=np.float(values[1]),size=np.int(randsize))
       else:
-        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))       
-         
+        raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
+
     #user wants to randomly sample a uniform distribution of the SINE of an angle
     elif values[2][0] == 's':
       if mode == 1:
@@ -180,10 +180,10 @@ for i in range(len(lines)):
         elif angUnit.startswith('r') or angUnit.startswith('R'):
           array = np.arcsin(np.random.uniform(low=np.sin(np.float(values[0])),high=np.sin(np.float(values[1])),size=np.int(randsize)))
         else:
-          raise IOError("Cannot randomly sample sin(%s): improper angle units set"%name) 
+          raise IOError("Cannot randomly sample sin(%s): improper angle units set"%name)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
-      
+
     #user wants to randomly sample a uniform distribution of the COSINE of an angle
     elif values[2][0] == 'c':
       if mode == 1:
@@ -194,18 +194,18 @@ for i in range(len(lines)):
         elif angUnit.startswith('r') or angUnit.startswith('R'):
           array = np.arccos(np.random.uniform(low=np.cos(np.float(values[0])),high=np.cos(np.float(values[1])),size=np.int(randsize)))
         else:
-          raise IOError("Cannot randomly sample cos(%s): improper angle units set"%name) 
+          raise IOError("Cannot randomly sample cos(%s): improper angle units set"%name)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))
-    
-    #user set the spacing size of data    
+
+    #user set the spacing size of data
     else:
       if np.float(values[0]) > np.float(values[1]) and np.float(values[2]) > 0:
         raise IOError("Attempt to iterate over '%s' for '%s', but start value > end value and spacing is positive"%(name,flist[fnum-1]))
       else:
         array = np.arange(np.float(values[0]),np.float(values[1])+np.float(values[2]),np.float(values[2]))
-    
-    #add to iterables    
+
+    #add to iterables
     iter_var.append(array)
     iter_file.append(fnum-1)
     iter_name.append(name)
@@ -224,7 +224,7 @@ if flist == []:
 if mode == 1:
   if randsize == 0:
     raise IOError("Must set randsize > 0 for random sampling mode")
-      
+
 if not os.path.exists(src):
   raise IOError("Source folder '%s' does not exist"%src)
 
@@ -289,7 +289,7 @@ elif numvars >= 1:
     for tup in it.product(*iterables0):
       if count == 0:
         header = 'trial '
-      
+
       current_line = ''
       destfull = os.path.join(dest,trial)  #create directory for this combination
       for ii in range(len(tup)):
@@ -302,14 +302,14 @@ elif numvars >= 1:
         if ii != len(tup)-1:
           destfull += '_'
           current_line += '_'
-        
+
       for ii in range(len(tup)):
         current_line += ' '+'%f'%tup[ii]
 
       if count == 0:
         histf.write(header+'\n')
       histf.write(current_line+'\n')
-      
+
       if not os.path.exists(destfull):
          os.system('mkdir '+destfull)
 
@@ -356,12 +356,18 @@ elif numvars >= 1:
             if slines[k].split()[0] == 'rm':
               raise IOError("No option '%s' to be removed in file %s." % (slines[k].split()[1],flist[i]))
             else:
-              fOut.write('\n'+slines[k])
+              tmp = slines[k]
+              for m in range(len(iter_file)):
+                if iter_file[m] == i and iter_name[m] == slines[k].split()[0]:
+                  tmp = slines[k].split()[0] + ' ' +str(tup[m])
+              if tmp[-1] != '\n':
+                tmp = tmp+'\n'
+              fOut.write('\n'+tmp)
 
       fOut.close()
       count += 1    #move to next combination
     histf.close()
-      
+
   else:
     #random draw, iterate linearly
     n = len(str(randsize-1)) #number of digits to pad directory index
@@ -376,11 +382,11 @@ elif numvars >= 1:
         if count == 0:
           header += flist[iter_file[ii]][:-3]+'/'+iter_name[ii]+' '
         current_line += '%f'%iterables0[ii][count]+' '
-        
+
       if count == 0:
         histf.write(header+'\n')
-      histf.write(current_line+'\n')      
-    
+      histf.write(current_line+'\n')
+
       destfull = os.path.join(dest,trial)  #create directory for this combination
       destfull += 'rand_'+np.str(count).zfill(n)
       if not os.path.exists(destfull):
@@ -432,9 +438,9 @@ elif numvars >= 1:
               fOut.write('\n'+slines[k])
 
       fOut.close()
-    
+
     histf.close()
-    
+
     for ii in np.arange(len(iterables0)):
       plt.figure(figsize=(8,8))
       plt.hist(iterables0[ii],histtype='stepfilled',color='0.5',edgecolor='None')
@@ -442,7 +448,7 @@ elif numvars >= 1:
       plt.ylabel('Number of trials')
       plt.savefig(dest+'/hist_'+flist[iter_file[ii]][:-3]+'_'+iter_name[ii]+'.pdf')
       plt.close()
-    
+
 # Just do this block if you want to
 if(False):
     # Now that all the simulation directories have been populated,

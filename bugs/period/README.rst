@@ -1,5 +1,5 @@
-❌ period
-==========
+period
+======
 
 ===================   ============
 **Issue**             `#14 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/14>`_

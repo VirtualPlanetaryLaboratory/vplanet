@@ -72,7 +72,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->iaBinary          = malloc(iNumBodies*sizeof(int));
   module->iaFlare           = malloc(iNumBodies*sizeof(int));
   module->iaGalHabit        = malloc(iNumBodies*sizeof(int));
-  module->iaDistRes         = malloc(iNumBodies*sizeof(int));
   module->iaSpiNBody        = malloc(iNumBodies*sizeof(int));
   module->iaEqtideStellar   = malloc(iNumBodies*sizeof(int));
 
@@ -93,7 +92,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
     module->iaBinary[iBody]         = -1;
     module->iaFlare[iBody]          = -1;
     module->iaGalHabit[iBody]       = -1;
-    module->iaDistRes[iBody]        = -1;
     module->iaSpiNBody[iBody]       = -1;
     module->iaEqtideStellar[iBody]  = -1;
   }
@@ -158,7 +156,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateAngMX         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ         = malloc(iNumBodies*sizeof(fnFinalizeUpdateAngMZModule));
-  module->fnFinalizeUpdateMeanL         = malloc(iNumBodies*sizeof(fnFinalizeUpdateMeanLModule));
 
   module->fnFinalizeUpdatePositionX     = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionXModule));
   module->fnFinalizeUpdatePositionY     = malloc(iNumBodies*sizeof(fnFinalizeUpdatePositionYModule));
@@ -214,8 +211,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bFlare)
     iNumModules++;
   if (body[iBody].bGalHabit)
-    iNumModules++;
-  if (body[iBody].bDistRes)
     iNumModules++;
   if (body[iBody].bSpiNBody)
     iNumModules++;
@@ -296,7 +291,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateAngMX[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMXModule));
   module->fnFinalizeUpdateAngMY[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMYModule));
   module->fnFinalizeUpdateAngMZ[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateAngMZModule));
-  module->fnFinalizeUpdateMeanL[iBody]            = malloc(iNumModules*sizeof(fnFinalizeUpdateMeanLModule));
 
   module->fnFinalizeUpdatePositionX[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionXModule));
   module->fnFinalizeUpdatePositionY[iBody]        = malloc(iNumModules*sizeof(fnFinalizeUpdatePositionYModule));
@@ -367,7 +361,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateAngMX[iBody][iModule]            = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMY[iBody][iModule]            = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateAngMZ[iBody][iModule]            = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateMeanL[iBody][iModule]            = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdatePositionX[iBody][iModule]        = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePositionY[iBody][iModule]        = &FinalizeUpdateNULL;
@@ -436,11 +429,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleGalHabit(module,iBody,iModule);
     module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
-  }
-  if (body[iBody].bDistRes) {
-    AddModuleDistRes(module,iBody,iModule);
-    module->iaDistRes[iBody] = iModule;
-    module->iaModule[iBody][iModule++] = DISTRES;
   }
   if (body[iBody].bSpiNBody) {
     AddModuleSpiNBody(module,iBody,iModule);
@@ -519,9 +507,6 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
       } else if (memcmp(sLower(saTmp[iModule]),"galhabit",8) == 0) {
 	body[iFile-1].bGalHabit = 1;
 	module->iBitSum[iFile-1] += GALHABIT;
-      } else if (memcmp(sLower(saTmp[iModule]),"distres",7) == 0) {
-        body[iFile-1].bDistRes = 1;
-	module->iBitSum[iFile-1] += DISTRES;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
   body[iFile-1].bSpiNBody = 1;
   module->iBitSum[iFile-1] += SPINBODY;
@@ -584,7 +569,6 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bRadheat  = 0;
       (*body)[iBody].bStellar  = 0;
       (*body)[iBody].bThermint = 0;
-      (*body)[iBody].bDistRes  = 0;
       (*body)[iBody].bSpiNBody = 0;
   }
 }
@@ -1523,9 +1507,6 @@ void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io
 void ForceBehaviorEqtideDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
-    if (body[1].bDistRes) {
-      RecalcLaplaceDistRes(body,evolve,system,io->iVerbose);
-    }
   } else if (evolve->iDistOrbModel == LL2) {
     RecalcEigenVals(body,evolve,system);
   };

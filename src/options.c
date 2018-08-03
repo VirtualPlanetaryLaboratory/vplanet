@@ -1468,8 +1468,10 @@ void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     /* Option was found */
     body[iFile-1].bGRCorr = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    body[iFile-1].bGRCorr = atoi(options->cDefault);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].bGRCorr = atoi(options->cDefault);
+    }
 }
 
 /*

@@ -1706,13 +1706,14 @@ void VerifyHaltEqtide(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
  */
 
 void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  int iPert;
+  /* XXX Broken  int iPert;
 
   if (iBody == 0)
     iPert=1;
   else
     iPert=0;
-  /* XXX Broken
+
+
 
   if (control->Evolve.iEqtideModel == CPL)
     *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
@@ -1727,17 +1728,18 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     fsUnitsVel(units,cUnit);
   }
   */
+
+  *dTmp=-1;
 }
 
 void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  int iPert;
+  /* XXX Broken -- needs to be changed after switch to Hecc + Kecc  int iPert;
 
   if (iBody == 0)
     iPert=1;
   else
     iPert=0;
 
-  /* XXX Broken -- needs to be changed after switch to Hecc + Kecc
 
   if (control->Evolve.iEqtideModel == CPL)
     *dTmp = fdCPLDeccDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);

@@ -1,10 +1,9 @@
-
-/******************** OPTIONS.C *********************/
-/*
- * Rory Barnes, Wed May  7 16:27:19 PDT 2014
- *
- * All subroutines necessary to read in all options. Also
- * monitor input files for mistakes and log all option data.
+/**
+  @file options.c
+  @brief All subroutines necessary to read in all options. Also
+         monitor input files for mistakes and log all option data.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -154,6 +153,12 @@ int GetPos(char cLine[]) {
 void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bContinue) {
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
+
+  if(strlen(cLine) == 0) {
+      *iNumWords = 0;
+      *bContinue = 0;
+      return;
+      }
 
   //iPos0=GetPos(cLine);
   iWord=0;

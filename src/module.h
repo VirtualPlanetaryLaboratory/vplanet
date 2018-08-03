@@ -1,3 +1,16 @@
+/**
+ @file module.h
+
+ @brief Functions to manipulate the MODULE struct.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Jan 19 2015
+
+*/
+
+/* @cond DOXYGEN_OVERRIDE */
+
 void InitializeControlNULL(CONTROL*,int);
 void InitializeBodyNULL(BODY*,CONTROL*,UPDATE*,int,int);
 void FinalizeUpdateNULL(BODY*,UPDATE*,int*,int,int,int);
@@ -43,3 +56,5 @@ void FinalizeUpdateMulti(BODY*,CONTROL*,MODULE*,UPDATE*,fnUpdateVariable****,int
 
 void InitializeUpdateEqStSemi(BODY*,UPDATE*,int);
 void FinalizeUpdateMultiEqStSemi(BODY*,UPDATE*,int*,int,int,int,fnUpdateVariable****);
+
+/* @endcond */

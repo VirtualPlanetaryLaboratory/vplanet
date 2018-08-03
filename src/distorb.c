@@ -1,8 +1,12 @@
-/********************** DISTORB.C **********************/
-/*
- * Russell Deitrick, April 28, 2015
- *
- * Subroutines that control the integration of the orbital model.
+/**
+   @file distorb.c
+
+   @brief Subroutines that control the integration of the orbital model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date April 28 2015
+
 */
 
 #include <stdio.h>
@@ -767,9 +771,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       system->fnLaplaceDeriv[24][0] = &fndDSemiF25Dalpha;
       system->fnLaplaceDeriv[25][0] = &fndDSemiF26Dalpha;
 
-      system->daLaplaceC = malloc((RESMAX+1)*sizeof(double**));
-      system->daLaplaceD = malloc((RESMAX+1)*sizeof(double**));
-      system->daAlpha0 = malloc((RESMAX+1)*sizeof(double**));
+      system->daLaplaceC = malloc((1)*sizeof(double**));
+      system->daLaplaceD = malloc((1)*sizeof(double**));
+      system->daAlpha0 = malloc((1)*sizeof(double**));
 
       system->daLaplaceC[0] = malloc(fniNchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));
       system->daLaplaceD[0] = malloc(fniNchoosek(control->Evolve.iNumBodies-1,2)*sizeof(double*));

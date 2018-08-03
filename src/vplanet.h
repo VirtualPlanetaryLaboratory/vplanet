@@ -1,8 +1,9 @@
-/******************** VPLANET.H ***********************/
-/*
- * Rory Barnes, Wed May  7 16:04:27 PDT 2014
- *
- */
+/**
+  @file vplanet.h
+  @brief The main entry point for the code. All the magic starts here.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+*/
 
 
 /*! Top-level declarations */
@@ -20,7 +21,6 @@
 #define BINARY        1024
 #define GALHABIT      2048
 #define SPINBODY      4096
-#define DISTRES       8192
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -179,8 +179,8 @@
 #define VZOBL              1403 // Detrick's Z
 #define VDYNELLIP          1404 // Dynamical Ellipticity
 
-/* Semi-major axis functions in DistOrb (& DistRes?)*/
-#define LAPLNUM 	      89
+/* Semi-major axis functions in DistOrb */
+#define LAPLNUM 	      26
 
 //SPINBODY 1600-1700
 #define VVELX              1601 // Cartesian X Velocity
@@ -224,9 +224,6 @@
 #define VANGMX          2204
 #define VANGMY          2205
 #define VANGMZ          2206
-
-//DISTRES
-#define VMEANL          2301
 
 /* Now define the structs */
 
@@ -952,8 +949,6 @@ struct BODY {
   double dMassInterior;     /**< Total mass of bodies interior to body */
   int iBadImpulse;          /**< Was there a bad impulse? */
 
-  //DISTRES
-  int bDistRes;             /**< Use distres model (don't use it for god's sake) */
   double dMeanL;            /**< Body's mean longitude */
 
 };
@@ -1379,28 +1374,6 @@ struct UPDATE {
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       z component of angular mom derivative due to GALHABIT */
   double **padDAngMZDtGalHabit;
-
-  /* DISTRES */
-  int iNumMeanL;
-  int iMeanL;
-  double dDMeanLDt;
-  int *iaMeanLDistRes;
-  double **padDMeanLDtDistRes;
-
-  int *iaSemiDistRes;
-  double **padDSemiDtDistRes;
-
-  int *iaHeccDistRes;
-  double **padDHeccDtDistRes;
-
-  int *iaKeccDistRes;
-  double **padDKeccDtDistRes;
-
-  int *iaPincDistRes;
-  double **padDPincDtDistRes;
-
-  int *iaQincDistRes;
-  double **padDQincDtDistRes;
 
   /* ATMESC */
   int iSurfaceWaterMass;     /**< variable number Corresponding to the surface water mass */
@@ -1852,7 +1825,6 @@ struct MODULE {
   int *iaBinary;
   int *iaFlare;
   int *iaGalHabit;
-  int *iaDistRes;
   int *iaSpiNBody;
   int *iaEqtideStellar;
 
@@ -1993,8 +1965,6 @@ struct MODULE {
   /*! Function pointers to finalize galhabit's angmz */
   fnFinalizeUpdateAngMZModule **fnFinalizeUpdateAngMZ;
 
-  /*! Function pointers to finalize mean longitude in distres */
-  fnFinalizeUpdateMeanLModule **fnFinalizeUpdateMeanL;
 
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
@@ -2051,5 +2021,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "binary.h"
 #include "flare.h"
 #include "galhabit.h"
-#include "distres.h"
 #include "spinbody.h"

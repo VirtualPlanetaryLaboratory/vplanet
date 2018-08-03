@@ -1,10 +1,13 @@
-/********************** FLARE.C **********************/
-/*
- * Rory Barnes, Thu Mar 24 15:39:45 PDT 2016
- *
- * Subroutines that control the XUV output of flares.
- *
- */
+/**
+  @file flare.c
+
+  @brief Subroutines that control the output of XUV flares.
+
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+  @date Mar 25 2016
+
+*/
 
 #include <stdio.h>
 #include <math.h>

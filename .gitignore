@@ -1,12 +1,20 @@
 # Output files
 *.forward
+*.backward
 *.log
 *.Laplace
 *.Climate
 *.DailyInsolInit
-
-# Figures
-Manual/Figures/*/*.pdf
+*.inv
+*.pdf
+*.png
+*.zip
+*.ps
+*.gif
+*.npz
+*.dat
+*.Ecc.Eigen
+*.Inc.Eigen
 
 # Aux files / build info / garbage
 *.pyc
@@ -29,11 +37,17 @@ vplot_config.py
 proxcen.pdf
 vplanet.egg-info
 .pytest_cache
+gcov/*
 
 # Documentation
 docs/.build
-docs/rst
-docs/source.rst
+docs/src
+docs/src.rst
+docs/examples
+docs/examples.rst
+docs/bugs
+docs/bugs.rst
+docs/help.rst
 
 # The executable
 vplanet

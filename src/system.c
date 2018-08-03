@@ -1,11 +1,8 @@
-/************************ ORBIT.C *******************/
-/*
- * Rory Barnes, Wed May  7 14:59:37 PDT 2014
- *
- * This file contains subroutines associated with
- * orbital properties. Note that element 1 in the
- * BODY array contains the up-to-date orbital
- * properties.
+/**
+  @file system.c
+  @brief Subroutines that control system-wide properties.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -474,4 +471,7 @@ double fndUpdateSpiNBodyCoords(BODY *body,EVOLVE *evolve) {
     body[iBody].dVelY      = body[iBody].dBCartVel[1]*AUM/DAYSEC;
     body[iBody].dVelZ      = body[iBody].dBCartVel[2]*AUM/DAYSEC;
   }
+
+  // TODO: Should this function be *void*?
+  return 0;
 }

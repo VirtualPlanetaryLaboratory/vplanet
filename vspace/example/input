@@ -1,11 +1,11 @@
-srcfolder  ../../examples/icebelt
+srcfolder  ../../examples/IoHeat
 destfolder test
-trialname  hyak_test
+trialname  trial_
 
-file   sun.in
+file   jupiter.in
 
-file   earth.in
-dEcc  [0.1,0.5,n5] ecc
-dSemi [-0.05,-0.2,n4] semi
+file   io.in
+dEcc  [0.001,0.005,n5] ecc
+dObliquity [0,10,n5] obl
 
 file   vpl.in

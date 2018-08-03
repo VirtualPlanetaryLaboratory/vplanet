@@ -1,5 +1,6 @@
 # vplanet
 [![Build Status](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?branch=master)](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet)
+[![Documentation](https://img.shields.io/badge/read-the_docs-blue.svg?style=flat)](https://VirtualPlanetaryLaboratory.github.io/vplanet)
 
 © 2018 Virtual Planetary Laboratory.
 

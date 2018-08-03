@@ -5,12 +5,11 @@ bOverwrite    1                             # Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles   star.in $                     # The host star
-              a.in $                        # First planet
-              b.in
+              a.in                          # The planet
 
 # Input/Output Units
 sUnitMass      solar                        # Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength    aU                           # Options: cm, m, km, Earth, Jupiter, solar, AU   
+sUnitLength    aU                           # Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime      YEARS                        # Options: sec, day, year, Myr, Gyr
 sUnitAngle     d                            # Options: deg, rad
 
@@ -22,6 +21,6 @@ dMinValue      1e-10                        # Minimum value of eccentricity/obli
 # Evolution Parameters
 bDoForward    1                             # Perform a forward evolution?
 bVarDt        1                             # Use variable timestepping?
-dEta          0.1                           # Coefficient for variable timestepping
+dEta          1                             # Coefficient for variable timestepping
 dStopTime     5e9                           # Stop time for evolution
-dOutputTime   1e9                           # Output timesteps (assuming in body files)
+dOutputTime   1e6                           # Output timesteps (assuming in body files)

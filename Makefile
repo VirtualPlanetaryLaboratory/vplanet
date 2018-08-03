@@ -2,28 +2,38 @@
 
 default:
 	-gcc -o vplanet src/*.c -lm
-	mv vplanet /usr/local/bin/vplanet
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 debug:
 	-gcc -g -D DEBUG -o vplanet src/*.c -lm -Wno-div-by-zero
-	mv vplanet /usr/local/bin/vplanet
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 opt:
 	-gcc -o vplanet src/*.c -lm -O3
-	mv vplanet /usr/local/bin/vplanet
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 profile:
 	-gcc -pg -o vplanet src/*.c -lm
-	mv vplanet /usr/local/bin/vplanet
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3
-	mv vplanet /usr/local/bin/vplanet
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 test:
 	-gcc -o vplanet src/*.c -lm
-	mv vplanet /usr/local/bin/vplanet
-	py.test -s tests
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	py.test
+
+coverage:
+	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
+	-py.test
+	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'
+
+clean:
+	rm -f vplanet
+	rm -rf gcov
+	rm -rf .pytest_cache

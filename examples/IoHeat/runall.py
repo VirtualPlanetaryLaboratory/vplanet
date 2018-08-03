@@ -61,16 +61,25 @@ plt.tick_params(axis='both', labelsize=20)
 
 plt.xscale('log')
 plt.yscale('log')
-plt.xlim(1e-4,0.1)
-plt.ylim(1e-4,0.1)
+plt.xlim(1e-3,0.3)
+plt.ylim(1e-4,0.01)
 
 ContSet = plt.contour(ecc,obl,heat,5,colors='black',linestyles='solid',
                       levels=[0.01,0.1,1,10,100],linewidths=3)
 plt.clabel(ContSet,fmt="%.2f",inline=True,fontsize=18)
+
+# Io's heat flux is 2-3 W/m^2. After some fussing, this choice of contour matches that range.
+plt.contour(ecc,obl,heat,5,colors=vpl.colors.orange,linestyles='solid',
+                      levels=[2.45],linewidths=27)
+
 plt.tight_layout()
-#plt.show()
 
 x=[0.0041,0.0041]
 y=[1e-4,0.1]
 plt.plot(x,y,linestyle='dashed',color='black')
-plt.savefig('ioheat.pdf')
+
+x=[1e-3,0.3]
+y=[0.0023,0.0023]
+plt.plot(x,y,linestyle='dotted',color='black')
+
+plt.savefig('ioheat.png')

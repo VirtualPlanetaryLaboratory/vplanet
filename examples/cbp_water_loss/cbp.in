@@ -21,6 +21,7 @@ dCBPM0          358.85                # CBP mean anomaly
 # ATMESC Parameters
 dXFrac          1.0     # X-Ray/XUV absorption radius in planet radii
 dAtmXAbsEffH2O  0.1     # Water X-ray/XUV absorption efficiency (epsilon)
+dAtmXAbsEffH    0.3
 dSurfWaterMass   	-10  	  # Initial water mass, negative ->Earth oceans
 dEnvelopeMass    -0.1   # Initial envelop mass, negative -> Earth mass
 bHaltSurfaceDesiccated  0 	  # Halt when dry?
@@ -28,4 +29,4 @@ bHaltEnvelopeGone       0	  # Halt when H enevlope evaporated?
 dMinSurfWaterMass      	-1.0e-5    # Planet is desiccated when water content drops below this (Earth oceans)
 dMinEnvelopeMass        -1.0e-5
 
-saOutputOrder 	Time -OxygenMass -EnvelopeMass -SurfWaterMass CBPR CBPZ Radius Eccentricity BinaryInc BinaryLongP CBPInsol
+saOutputOrder 	Time -OxygenMass -EnvelopeMass -SurfWaterMass CBPR CBPZ Radius Eccentricity Inc LongP

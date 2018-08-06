@@ -247,6 +247,10 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   int iFile,iFile1,iFile2;
   char cTmp[OPTLEN];
 
+
+  // Initialize iDir to 0, i.e. assume no integrations requested to start
+  control->Evolve.iDir=0;
+
   /* Were both Forward and Backward Set? */
   if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
     fprintf(stderr,"ERROR: Both %s and %s set. Only one is allowed.\n",options[OPT_BACK].cName,options[OPT_FORW].cName);

@@ -1513,8 +1513,9 @@ void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,SYSTEM 
   fprintf(fp,"SYSTEM PROPERTIES ----\n");
 
   for (iOut=OUTSTART;iOut<OUTBODYSTART;iOut++) {
-    if (output[iOut].iNum > 0)
+    if (output[iOut].iNum > 0) {
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
+    }
   }
 
   /* Log modules? XXX
@@ -1824,7 +1825,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
-  InitializeOutputDistRes(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
 
 }

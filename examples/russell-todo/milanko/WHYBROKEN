@@ -1,6 +1,0 @@
-- ERROR: Unrecognized option "iAlbedoType" in earth.in, line 40.
-- Please add a README.rst (copy convention from other examples)
-- Clean up input files:
-    - Align the options
-    - Add comments explaining all options
-    - Remove commented lines / disabled inputs

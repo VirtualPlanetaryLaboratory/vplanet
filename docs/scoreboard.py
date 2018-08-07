@@ -31,7 +31,7 @@ authors = {'distres': 'Russell Deitrick',
            'atmesc': 'Rodrigo Luger'}
 
 # Username-errors-author keys
-users = {'rdeitrick': 'Russell Deitrick',
+users = {'deitrr': 'Russell Deitrick',
          'dflemin3': 'David Fleming',
          'RoryBarnes': 'Rory Barnes',
          'rodluger': 'Rodrigo Luger',

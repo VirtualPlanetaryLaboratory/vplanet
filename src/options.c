@@ -154,6 +154,12 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
 
+  if(strlen(cLine) == 0) {
+      *iNumWords = 0;
+      *bContinue = 0;
+      return;
+      }
+
   //iPos0=GetPos(cLine);
   iWord=0;
   /* Use GetPos to avoid white space */
@@ -1462,8 +1468,10 @@ void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     /* Option was found */
     body[iFile-1].bGRCorr = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    body[iFile-1].bGRCorr = atoi(options->cDefault);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].bGRCorr = atoi(options->cDefault);
+    }
 }
 
 /*

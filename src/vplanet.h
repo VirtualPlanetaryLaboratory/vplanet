@@ -1677,6 +1677,7 @@ struct OPTIONS{
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
+  char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */

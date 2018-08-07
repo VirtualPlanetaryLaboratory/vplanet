@@ -169,42 +169,88 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
   char ESC=27;
 
   if (memcmp(options->cName,"null",4)) {
-    if (options->bNeg == 1)
-      printf("%c[1m[-]%c[0m",ESC,ESC);
 
-    printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
+    if (bLong == 0) {
 
-    // Cast
-    if (options->iType == 0)
-      printf("Bool");
-    else if (options->iType == 1)
-      printf("Int");
-    else if (options->iType == 2)
-      printf("Double");
-    else if (options->iType == 3)
-      printf("String");
-    else if (options->iType >= 4)
-      printf("Array");
-    printf(") -- %s ",options->cDescr);
+        // ** Short help **
 
-    if (options->bNeg == 1)
-      printf(" [Negative = %s] ",options->cNeg);
+        if (options->bNeg == 1)
+          printf("%c[1m[-]%c[0m",ESC,ESC);
+        printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
 
-    // allowed modules
-    printf("{Modules = ");
-    if (options->iModuleBit)
-      PrintModuleList(stdout,options->iModuleBit);
-    else
-      printf("ALL");
-    printf("} ");
+        // Cast
+        if (options->iType == 0)
+          printf("Bool");
+        else if (options->iType == 1)
+          printf("Int");
+        else if (options->iType == 2)
+          printf("Double");
+        else if (options->iType == 3)
+          printf("String");
+        else if (options->iType >= 4)
+          printf("Array");
+        printf(") -- %s ",options->cDescr);
 
-    // allowed input files
-    printf("<Files = ");
-    PrintFileTypes(options->iFileType);
-    printf("> ");
+        if (options->bNeg == 1)
+          printf(" [Negative = %s] ",options->cNeg);
 
-    // default (always last)
-    printf("(Default = %s).\n",options->cDefault);
+        // allowed modules
+        printf("{Modules = ");
+        if (options->iModuleBit)
+          PrintModuleList(stdout,options->iModuleBit);
+        else
+          printf("ALL");
+        printf("} ");
+
+        // allowed input files
+        printf("<Files = ");
+        PrintFileTypes(options->iFileType);
+        printf("> ");
+
+        // default (always last)
+        printf("(Default = %s).\n",options->cDefault);
+    } else {
+
+        // ** Long help **
+
+        // Header
+        printf("%s\n",options->cName);
+        char* pch = strchr(options->cName, '\0');
+        int sz = (int)(pch - options->cName);
+        int i;
+        for (i = 0; i < sz; i++) printf("^");
+        printf("\n");
+
+        // Properties
+        printf("==================  ====================================\n");
+        printf("**Type**            ");
+        if (options->iType == 0) printf("Bool\n");
+        else if (options->iType == 1) printf("Int\n");
+        else if (options->iType == 2) printf("Double\n");
+        else if (options->iType == 3) printf("String\n");
+        else if (options->iType >= 4) printf("Array\n");
+        if (options->bNeg == 1)
+            printf("**Custom unit**     %s\n", options->cNeg);
+        else
+            printf("**Custom unit**     \n");
+        printf("**Modules**         ");
+        if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
+        else printf("ALL");
+        printf("\n");
+        printf("**Files**           ");
+        PrintFileTypes(options->iFileType);
+        printf("\n");
+        printf("**Default value**   %s\n", options->cDefault);
+        printf("**Allowed values**  %s\n", options->cValues);
+        printf("**Description**     %s\n", options->cDescr);
+        printf("==================  ====================================\n\n");
+
+        // Long description
+        if (memcmp(options->cLongDescr,"null",4)) {
+            printf("%s\n\n",options->cLongDescr);
+        }
+
+    }
   }
 }
 
@@ -228,7 +274,10 @@ void HelpOptions(OPTIONS *options, int bLong) {
   int sorted[MODULEOPTEND];
   sort_options(options, sorted);
 
-  printf("----- Input Options -----\n\n");
+  if (bLong == 0)
+    printf("----- Input Options -----\n\n");
+  else
+    printf("Input Options\n~~~~~~~~~~~~~\n");
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
     WriteHelpOption(&options[sorted[iOpt]], bLong);
 
@@ -285,6 +334,8 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
 
 void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
 
+
+  // TODO: RL still working on this
   HelpOptions(options, 1);
 
   exit(0);

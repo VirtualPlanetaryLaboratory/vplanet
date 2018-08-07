@@ -321,7 +321,17 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_XUVMODEL].cName,"sXUVModel");
   sprintf(options[OPT_XUVMODEL].cDescr,"XUV Evolution Model");
+  sprintf(options[OPT_XUVMODEL].cLongDescr,
+      "This parameter sets the XUV evolution model used in STELLAR. "
+      "Setting this to RIBAS (default) will evolve the XUV luminosity "
+      "according to the saturated power law of Ribas et al (20015), "
+      "while setting it to REINERS will use the empirical relations of "
+      "Reiners, Schussler and Passegger (2014). Please note that the latter "
+      "model has not been fully vetted. Users may also set this parameter to NONE, "
+      "in which case the XUV luminosity will remain constant." 
+  );
   sprintf(options[OPT_XUVMODEL].cDefault,"RIBAS");
+  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
   options[OPT_XUVMODEL].iType = 3;
   options[OPT_XUVMODEL].iMultiFile = 1;
   fnRead[OPT_XUVMODEL] = &ReadXUVModel;

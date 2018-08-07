@@ -3581,10 +3581,12 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
     options[iOpt].iType = -1;
     memset(options[iOpt].cDescr,'\0',OPTDESCR);
     sprintf(options[iOpt].cDescr,"null");
-    memset(options[iOpt].cDescr,'\0',OPTLONDESCR);
-    sprintf(options[iOpt].cDescr,"null");
+    memset(options[iOpt].cLongDescr,'\0',OPTLONDESCR);
+    sprintf(options[iOpt].cLongDescr,"null");
     memset(options[iOpt].cDefault,'\0',OPTDESCR);
     sprintf(options[iOpt].cDefault,"null");
+    memset(options[iOpt].cValues,'\0',OPTDESCR);
+    sprintf(options[iOpt].cValues,"null");
     memset(options[iOpt].cNeg,'\0',OPTDESCR);
     sprintf(options[iOpt].cNeg,"null");
     options[iOpt].dDefault = NAN;

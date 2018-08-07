@@ -124,6 +124,7 @@
 #define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
+#define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define LINE          256   /* Maximum number of characters in a line */
 #define NAMELEN       100
@@ -1675,6 +1676,7 @@ struct FILES{
 struct OPTIONS{
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
+  char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */

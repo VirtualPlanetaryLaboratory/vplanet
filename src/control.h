@@ -21,6 +21,7 @@ void WriteHelpOutput(OUTPUT*);
 void HelpOptions(OPTIONS*);
 void HelpOutput(OUTPUT*);
 void Help(OPTIONS*,OUTPUT*,char[]);
+void LongHelp(OPTIONS*,OUTPUT*,char[]);
 
 void LineExit(char[],int);
 char *sLower(char[]);

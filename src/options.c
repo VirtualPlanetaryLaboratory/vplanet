@@ -3579,9 +3579,23 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
     options[iOpt].iMultiFile=0;
     options[iOpt].iMultiIn=0;
     options[iOpt].iType = -1;
+    memset(options[iOpt].cDescr,'\0',OPTDESCR);
+    sprintf(options[iOpt].cDescr,"null");
+    memset(options[iOpt].cDescr,'\0',OPTLONDESCR);
+    sprintf(options[iOpt].cDescr,"null");
+    memset(options[iOpt].cDefault,'\0',OPTDESCR);
+    sprintf(options[iOpt].cDefault,"null");
+    memset(options[iOpt].cNeg,'\0',OPTDESCR);
+    sprintf(options[iOpt].cNeg,"null");
+    options[iOpt].dDefault = NAN;
+    options[iOpt].iModuleBit = 0;
+    options[iOpt].bNeg = 0;
+    options[iOpt].iFileType = 2;
+    options[iOpt].dNeg = 0;
 
     for (iFile=0;iFile<MAXFILES;iFile++) {
       options[iOpt].iLine[iFile] = -1;
+      memset(options[iOpt].cFile[iFile],'\0',OPTLEN);
       sprintf(options[iOpt].cFile[iFile],"null");
     }
   }

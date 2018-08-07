@@ -22,6 +22,77 @@ void BodyCopyNULL(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   // Nothing
 }
 
+
+/*
+ * SORTING FUNCTIONS
+ */
+
+ //! Case-insensitive `strcmp`
+ int strcicmp(char const *a, char const *b)
+ {
+     for (;; a++, b++) {
+         int d = tolower(*a) - tolower(*b);
+         if (d != 0 || !*a)
+             return d;
+     }
+ }
+
+//! Dummy struct used to sort options
+typedef struct {
+    int index;
+    char name[OPTLEN];
+} SORTED_OPTIONS;
+
+//! Dummy struct used to sort output
+typedef struct {
+    int index;
+    char name[OUTLEN];
+} SORTED_OUTPUT;
+
+//! Comparison function for option names
+int compare_option_names(const void *p, const void *q) {
+    return strcicmp(((SORTED_OPTIONS*)p)->name, ((SORTED_OPTIONS*)q)->name);
+}
+
+//! Comparison function for output names
+int compare_output_names(const void *p, const void *q) {
+    return strcicmp(((SORTED_OUTPUT*)p)->name, ((SORTED_OUTPUT*)q)->name);
+}
+
+//! Sort the OPTIONS struct by name
+void sort_options(OPTIONS *options, int sorted[]) {
+    int iOpt;
+
+    // Sort the options alphabetically by name
+    SORTED_OPTIONS sorted_options[MODULEOPTEND];
+    for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
+        sorted_options[iOpt].index = iOpt;
+        strcpy(sorted_options[iOpt].name, options[iOpt].cName);
+    }
+    qsort(sorted_options, MODULEOPTEND, sizeof(sorted_options[0]), compare_option_names);
+    // Copy over to the array of indices
+    for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
+        sorted[iOpt] = sorted_options[iOpt].index;
+    }
+}
+
+//! Sort the OUTPUT struct by name
+void sort_output(OUTPUT *output, int sorted[]) {
+    int iOpt;
+
+    // Sort the output alphabetically by name
+    SORTED_OUTPUT sorted_output[MODULEOUTEND];
+    for (iOpt=0;iOpt<MODULEOUTEND;iOpt++) {
+        sorted_output[iOpt].index = iOpt;
+        strcpy(sorted_output[iOpt].name, output[iOpt].cName);
+    }
+    qsort(sorted_output, MODULEOUTEND, sizeof(sorted_output[0]), compare_output_names);
+    // Copy over to the array of indices
+    for (iOpt=0;iOpt<MODULEOUTEND;iOpt++) {
+        sorted[iOpt] = sorted_output[iOpt].index;
+    }
+}
+
 /*
  * Struct Initialization
  */
@@ -87,11 +158,11 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
 
 void PrintFileTypes(int iFileType) {
   if (iFileType == 0)
-    printf("Primary Only ");
-  if (iFileType == 1)
-    printf("Body File(s) Only ");
-  if (iFileType == 2)
-    printf("Any File ");
+    printf("Primary Only");
+  else if (iFileType == 1)
+    printf("Body Only");
+  else if (iFileType == 2)
+    printf("Any");
 }
 
 void WriteHelpOption(OPTIONS *options) {
@@ -112,23 +183,23 @@ void WriteHelpOption(OPTIONS *options) {
       printf("Double");
     else if (options->iType == 3)
       printf("String");
-    else if (options->iType == 4)
+    else if (options->iType >= 4)
       printf("Array");
     printf(") -- %s ",options->cDescr);
 
     if (options->bNeg == 1)
-      printf(" [%s] ",options->cNeg);
+      printf(" [Negative = %s] ",options->cNeg);
 
     // allowed modules
-    printf("{ ");
+    printf("{Modules = ");
     if (options->iModuleBit)
       PrintModuleList(stdout,options->iModuleBit);
     else
-      printf("ALL ");
+      printf("ALL");
     printf("} ");
 
     // allowed input files
-    printf("< ");
+    printf("<Files = ");
     PrintFileTypes(options->iFileType);
     printf("> ");
 
@@ -145,27 +216,32 @@ void WriteHelpOutput(OUTPUT *output) {
       printf("%c[1m[-]%c[0m",ESC,ESC);
     printf("%c[1m%s%c[0m -- %s.",ESC,output->cName,ESC,output->cDescr);
     if (output->bNeg == 1)
-      printf(" [%s]",output->cNeg);
+      printf(" [Negative = %s]",output->cNeg);
     printf("\n");
     }
 }
 
 void HelpOptions(OPTIONS *options) {
-  int iOpt,iModule;
 
-  /* XXX Disperse to modules to organize options by module */
+  // Sort the OPTIONS struct
+  int sorted[MODULEOPTEND];
+  sort_options(options, sorted);
 
   printf("----- Input Options -----\n\n");
-  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
-    WriteHelpOption(&options[iOpt]);
+  for (int iOpt=0;iOpt<MODULEOPTEND;iOpt++)
+    WriteHelpOption(&options[sorted[iOpt]]);
 
 }
 
 void HelpOutput(OUTPUT *output) {
-  int iOut,iModule;
+  int iOut;
+
+  // Sort the OUTPUT struct
+  int sorted[MODULEOUTEND];
+  sort_output(output, sorted);
 
   for (iOut=0;iOut<MODULEOUTEND;iOut++)
-    WriteHelpOutput(&output[iOut]);
+    WriteHelpOutput(&output[sorted[iOut]]);
 
 }
 
@@ -201,6 +277,14 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
   printf("\n----- Output Options -----\n\n");
   printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
   HelpOutput(output);
+
+  exit(0);
+
+}
+
+void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
+
+  HelpOptions(options);
 
   exit(0);
 

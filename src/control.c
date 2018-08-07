@@ -165,7 +165,7 @@ void PrintFileTypes(int iFileType) {
     printf("Any");
 }
 
-void WriteHelpOption(OPTIONS *options) {
+void WriteHelpOption(OPTIONS *options, int bLong) {
   char ESC=27;
 
   if (memcmp(options->cName,"null",4)) {
@@ -208,7 +208,7 @@ void WriteHelpOption(OPTIONS *options) {
   }
 }
 
-void WriteHelpOutput(OUTPUT *output) {
+void WriteHelpOutput(OUTPUT *output, int bLong) {
   char ESC=27;
 
   if (memcmp(output->cName,"null",4)) {
@@ -221,19 +221,20 @@ void WriteHelpOutput(OUTPUT *output) {
     }
 }
 
-void HelpOptions(OPTIONS *options) {
+void HelpOptions(OPTIONS *options, int bLong) {
+  int iOpt;
 
   // Sort the OPTIONS struct
   int sorted[MODULEOPTEND];
   sort_options(options, sorted);
 
   printf("----- Input Options -----\n\n");
-  for (int iOpt=0;iOpt<MODULEOPTEND;iOpt++)
-    WriteHelpOption(&options[sorted[iOpt]]);
+  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
+    WriteHelpOption(&options[sorted[iOpt]], bLong);
 
 }
 
-void HelpOutput(OUTPUT *output) {
+void HelpOutput(OUTPUT *output, int bLong) {
   int iOut;
 
   // Sort the OUTPUT struct
@@ -241,7 +242,7 @@ void HelpOutput(OUTPUT *output) {
   sort_output(output, sorted);
 
   for (iOut=0;iOut<MODULEOUTEND;iOut++)
-    WriteHelpOutput(&output[sorted[iOut]]);
+    WriteHelpOutput(&output[sorted[iOut]], bLong);
 
 }
 
@@ -272,11 +273,11 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
   printf("written exactly as listed below.\n");
   printf("Arguments may have any format, and need only be unambiguous.\n\n");
 
-  HelpOptions(options);
+  HelpOptions(options, 0);
 
   printf("\n----- Output Options -----\n\n");
   printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
-  HelpOutput(output);
+  HelpOutput(output, 0);
 
   exit(0);
 
@@ -284,7 +285,7 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
 
 void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
 
-  HelpOptions(options);
+  HelpOptions(options, 1);
 
   exit(0);
 

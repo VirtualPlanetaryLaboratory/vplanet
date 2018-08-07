@@ -386,7 +386,6 @@ void InitializeUpdateThermint(BODY*,UPDATE*,int);
 /* Auxiliary Properties */
 void PropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 
-void HelpOutputThermint(OUTPUT*);
 void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionThermint(OUTPUT*,int,int);
 void FinalizeOutputFunctionThermint(OUTPUT*,int,int);

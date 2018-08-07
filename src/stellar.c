@@ -693,14 +693,6 @@ void VerifyHaltStellar(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* STELLAR Outputs ******************/
 
-void HelpOutputStellar(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ STELLAR output ------\n");
-  for (iOut=OUTSTARTSTELLAR;iOut<OUTENDSTELLAR;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
-
 void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double *dHZLimits;
 

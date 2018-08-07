@@ -16,10 +16,10 @@ void BodyCopyNULL(BODY*,BODY*,int,int,int);
 void InitializeControl(CONTROL*,MODULE*);
 void InitializeControlEvolve(CONTROL*,MODULE*,UPDATE*);
 
-void WriteHelpOption(OPTIONS*);
-void WriteHelpOutput(OUTPUT*);
-void HelpOptions(OPTIONS*);
-void HelpOutput(OUTPUT*);
+void WriteHelpOption(OPTIONS*, int);
+void WriteHelpOutput(OUTPUT*, int);
+void HelpOptions(OPTIONS*, int);
+void HelpOutput(OUTPUT*, int);
 void Help(OPTIONS*,OUTPUT*,char[]);
 void LongHelp(OPTIONS*,OUTPUT*,char[]);
 

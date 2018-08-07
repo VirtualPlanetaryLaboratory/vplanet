@@ -1686,6 +1686,7 @@ struct OPTIONS{
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
   int bNeg;                    /**< Is There a Negative Option? */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
+  int iFileType;               /**< What type of file can option be in? 0 = primary only, 1 = body file only, 2 = any file */
   double dNeg;                 /**< Conversion Factor to System Units */
 };
 

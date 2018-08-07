@@ -85,29 +85,13 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
  * Help functions
  */
 
-void WriteModules(int iModuleBit) {
-  if (iModuleBit & ATMESC)
-    printf(" atmesc ");
-  if (iModuleBit & EQTIDE)
-    printf(" eqtide ");
-  if (iModuleBit & DISTORB)
-    printf(" distorb ");
-  if (iModuleBit & DISTROT)
-    printf(" distrot ");
-  if (iModuleBit & GALHABIT)
-    printf(" galhabit ");
-  if (iModuleBit & POISE)
-    printf(" poise ");
-  if (iModuleBit & RADHEAT)
-    printf(" radheat ");
-  if (iModuleBit & THERMINT)
-    printf(" thermint ");
-  if (iModuleBit & STELLAR)
-    printf(" stellar ");
-  if (iModuleBit & SPINBODY)
-    printf(" spinbody ");
-  if (iModuleBit & BINARY)
-    printf(" binary ");
+void PrintFileTypes(int iFileType) {
+  if (iFileType == 0)
+    printf("Primary Only ");
+  if (iFileType == 1)
+    printf("Body File(s) Only ");
+  if (iFileType == 2)
+    printf("Any File ");
 }
 
 void WriteHelpOption(OPTIONS *options) {
@@ -136,13 +120,17 @@ void WriteHelpOption(OPTIONS *options) {
       printf(" [%s] ",options->cNeg);
 
     // allowed modules
-    printf("{");
+    printf("{ ");
     if (options->iModuleBit)
-//      WriteModules(options->iModuleBit);
       PrintModuleList(stdout,options->iModuleBit);
     else
-      printf(" all ");
+      printf("ALL ");
     printf("} ");
+
+    // allowed input files
+    printf("< ");
+    PrintFileTypes(options->iFileType);
+    printf("> ");
 
     // default (always last)
     printf("(Default = %s).\n",options->cDefault);

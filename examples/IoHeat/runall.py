@@ -82,4 +82,4 @@ x=[1e-3,0.3]
 y=[0.0023,0.0023]
 plt.plot(x,y,linestyle='dotted',color='black')
 
-plt.savefig('ioheat.png')
+plt.savefig('ioheat.pdf')

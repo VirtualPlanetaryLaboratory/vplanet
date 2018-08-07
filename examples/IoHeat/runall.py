@@ -68,9 +68,9 @@ ContSet = plt.contour(ecc,obl,heat,5,colors='black',linestyles='solid',
                       levels=[0.01,0.1,1,10,100],linewidths=3)
 plt.clabel(ContSet,fmt="%.2f",inline=True,fontsize=18)
 
-# Io's heat flux is 2-3 W/m^2. After some fussing, this choice of contour matches that range.
+# Io's heat flux is 1.5-3 W/m^2. After some fussing, this choice of contour matches that range.
 plt.contour(ecc,obl,heat,5,colors=vpl.colors.orange,linestyles='solid',
-                      levels=[2.45],linewidths=27)
+                      levels=[2.1],linewidths=45)
 
 plt.tight_layout()
 
@@ -82,4 +82,4 @@ x=[1e-3,0.3]
 y=[0.0023,0.0023]
 plt.plot(x,y,linestyle='dotted',color='black')
 
-plt.savefig('ioheat.png')
+plt.savefig('ioheat.pdf')

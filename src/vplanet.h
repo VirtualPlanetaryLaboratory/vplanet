@@ -1678,11 +1678,13 @@ struct OPTIONS{
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
+  int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
   int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
+  int bNeg;                    /**< Is There a Negative Option? */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
   double dNeg;                 /**< Conversion Factor to System Units */
 };

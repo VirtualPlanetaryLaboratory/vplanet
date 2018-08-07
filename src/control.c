@@ -85,11 +85,41 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
  * Help functions
  */
 
+void WriteModules(int iModuleBit) {
+  if (iModuleBit & ATMESC)
+    printf(" atmesc ");
+  if (iModuleBit & EQTIDE)
+    printf(" eqtide ");
+  if (iModuleBit & DISTORB)
+    printf(" distorb ");
+  if (iModuleBit & DISTROT)
+    printf(" distrot ");
+  if (iModuleBit & GALHABIT)
+    printf(" galhabit ");
+  if (iModuleBit & POISE)
+    printf(" poise ");
+  if (iModuleBit & RADHEAT)
+    printf(" radheat ");
+  if (iModuleBit & THERMINT)
+    printf(" thermint ");
+  if (iModuleBit & STELLAR)
+    printf(" stellar ");
+  if (iModuleBit & SPINBODY)
+    printf(" spinbody ");
+  if (iModuleBit & BINARY)
+    printf(" binary ");
+}
+
 void WriteHelpOption(OPTIONS *options) {
   char ESC=27;
 
   if (memcmp(options->cName,"null",4)) {
+    if (options->bNeg == 1)
+      printf("%c[1m[-]%c[0m",ESC,ESC);
+
     printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
+
+    // Cast
     if (options->iType == 0)
       printf("Bool");
     else if (options->iType == 1)
@@ -100,7 +130,22 @@ void WriteHelpOption(OPTIONS *options) {
       printf("String");
     else if (options->iType == 4)
       printf("Array");
-    printf(") -- %s (Default = %s).\n",options->cDescr,options->cDefault);
+    printf(") -- %s ",options->cDescr);
+
+    if (options->bNeg == 1)
+      printf(" [%s] ",options->cNeg);
+
+    // allowed modules
+    printf("{");
+    if (options->iModuleBit)
+//      WriteModules(options->iModuleBit);
+      PrintModuleList(stdout,options->iModuleBit);
+    else
+      printf(" all ");
+    printf("} ");
+
+    // default (always last)
+    printf("(Default = %s).\n",options->cDefault);
   }
 }
 

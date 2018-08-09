@@ -26,7 +26,7 @@ sOrbitModel rd4
 #dDfcrit    0.1
 bOutputLapl  0
 bGRCorr    1
-bInvPlane  1
+bInvPlane  0
 
 # DISTROT Parameters
 dPrecA	0

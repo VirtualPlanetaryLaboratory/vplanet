@@ -22,6 +22,7 @@ plt.subplot(2,2,3)
 plt.plot(out.b.Time/1e6,out.b.Obliquity,'k-')
 plt.xlabel('Time (10$^6$ yr)')
 plt.ylabel('Obliquity ($^{\circ}$)')
+plt.yscale('log')
 # plt.xlim(0,5)
 
 plt.subplot(2,2,4)

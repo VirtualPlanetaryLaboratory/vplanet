@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import vplot
 import scipy.signal as sig
-plt.rcParams["text.usetex"]=True
-plt.rcParams["text.latex.unicode"]=True
+#plt.rcParams["text.usetex"]=True
+#plt.rcParams["text.latex.unicode"]=True
 
 out = vplot.GetOutput()
 
@@ -91,15 +91,15 @@ y1 = -np.sin(obl1)
 
 plt.figure(figsize=(8,8))
 plt.contour(Y,X,H.T,50,colors='0.5')
-plt.contour(Y,X,H.T,levels=[1.0067*H4],colors='k')
+plt.contour(Y,X,H.T,levels=[1.00005*H4],colors='k')
 plt.plot(xc,yc,'-',color='0.5')
-plt.plot(xobl[out.b.Time>400e3],yobl[out.b.Time>400e3],'k.')
-plt.plot([y2+0.01,y4+0.025,y1-0.09],[0,0,0],'.',ms=15,color='0.5')
-plt.text(y2,0.05,r'\bf{2}',color='0.5',fontweight='bold')
-plt.text(y4-0.04,0.0,r'\bf{4}',color='0.5',fontweight='bold')
-plt.text(y1-0.04,0.0,r'\bf{1}',color='0.5',fontweight='bold')
-plt.xlabel(r'$\sin{\varepsilon}$ $\cos{(\psi+\Omega)}$')
-plt.ylabel(r'$\sin{\varepsilon}$ $\sin{(\psi+\Omega)}$')
+plt.plot(xobl[out.b.Time>500e3],yobl[out.b.Time>500e3],'k.')
+plt.plot([y2+0.01,y4+0.01,y1-0.025],[0,0,0],'.',ms=15,color='0.5')
+plt.text(y2+0.05,0.0,r'2',color='0.5',fontweight='bold')
+plt.text(y4-0.05,0.0,r'4',color='0.5',fontweight='bold')
+plt.text(y1,0.0,r'1',color='0.5',fontweight='bold')
+plt.xlabel(r'$\sin{\epsilon}$ $\cos{(\psi+\Omega)}$')
+plt.ylabel(r'$\sin{\epsilon}$ $\sin{(\psi+\Omega)}$')
 plt.xlim(-1.1,1.1)
 plt.ylim(-1.1,1.1)
 plt.savefig('cassini_ham.png')

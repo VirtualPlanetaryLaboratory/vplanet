@@ -38,6 +38,8 @@ proxcen.pdf
 vplanet.egg-info
 .pytest_cache
 gcov/*
+*.o
+*.so
 
 # Documentation
 docs/.build

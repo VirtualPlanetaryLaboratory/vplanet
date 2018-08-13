@@ -6,6 +6,7 @@ OPTDESCR = 128
 OPTLONDESCR = 2048
 MAXFILES = 24
 
+MODULEOPTEND = 2400
 
 class OPTIONS(ctypes.Structure):
     """Input options struct."""
@@ -38,7 +39,18 @@ lib = ctypes.CDLL(os.path.join(os.path.dirname(
 
 
 _HelpOptions = lib.HelpOptions
-_HelpOptions.argtypes = [ctypes.POINTER(OPTIONS), ctypes.c_int]
+_HelpOptions.argtypes = [ctypes.POINTER(OPTIONS) * MODULEOPTEND, ctypes.c_int]
 
-options = OPTIONS()
+options = (ctypes.POINTER(OPTIONS) * MODULEOPTEND)()
+
+
+_InitializeOptions = lib.InitializeOptions
+_InitializeOptions.argtypes = [ctypes.POINTER(OPTIONS) * MODULEOPTEND,
+                               fnReadOption]
+
+fnRead = (ctypes.POINTER(fnReadOption) * MODULEOPTEND)()
+
+
+_InitializeOptions(options, fnRead)
+
 _HelpOptions(options, 0)

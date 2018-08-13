@@ -127,6 +127,8 @@
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define LINE          256   /* Maximum number of characters in a line */
+#define OUTDESCR      256   /* Number of characters in output description */
+#define OUTLONDESCR   2048  /* Number of characters in output long description */
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -1717,11 +1719,12 @@ struct OPTIONS{
 
 struct OUTPUT {
   char cName[OPTLEN];    /**< Output Name */
-  char cDescr[LINE];     /**< Output Description */
+  char cDescr[OUTDESCR];     /**< Output Description */
+  char cLongDescr[OUTLONDESCR]; /**< Output Long Description */
   int bNeg;              /**< Is There a Negative Option? */
-  int iModuleBit;              /**< Bit flag for module to check output parameters */
+  int iModuleBit;        /**< Bit flag for module to check output parameters */
   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
-  char cNeg[NAMELEN];    /**< Units of Negative Option */
+  char cNeg[OUTDESCR];   /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
   int iNum;              /**< Number of Columns for Output */
   int bGrid;             /**< Is output quantity gridded (e.g. a function of latitude)? */

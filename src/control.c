@@ -255,15 +255,50 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 }
 
 void WriteHelpOutput(OUTPUT *output, int bLong) {
-  char ESC=27;
+    char ESC=27;
 
-  if (memcmp(output->cName,"null",4)) {
-    if (output->bNeg == 1)
-      printf("%c[1m[-]%c[0m",ESC,ESC);
-    printf("%c[1m%s%c[0m -- %s.",ESC,output->cName,ESC,output->cDescr);
-    if (output->bNeg == 1)
-      printf(" [Negative = %s]",output->cNeg);
-    printf("\n");
+    if (memcmp(output->cName,"null",4)) {
+        if (bLong == 0) {
+
+            // ** Short help **
+            if (output->bNeg == 1)
+                printf("%c[1m[-]%c[0m",ESC,ESC);
+            printf("%c[1m%s%c[0m -- %s.",ESC,output->cName,ESC,output->cDescr);
+            if (output->bNeg == 1)
+                printf(" [Negative = %s]",output->cNeg);
+            printf("\n");
+
+        } else {
+
+            // ** Long help **
+
+            // Header
+            printf("%s\n",output->cName);
+            char* pch = strchr(output->cName, '\0');
+            int sz = (int)(pch - output->cName);
+            int i;
+            for (i = 0; i < sz; i++) printf("^");
+            printf("\n");
+
+            // Properties
+            printf("==================  ====================================\n");
+            if (output->bNeg == 1)
+                printf("**Custom unit**     %s\n", output->cNeg);
+            else
+                printf("**Custom unit**     \n");
+            printf("**Modules**         ");
+            if (output->iModuleBit) PrintModuleList(stdout, output->iModuleBit);
+            else printf("ALL");
+            printf("\n");
+            printf("**Description**     %s\n", output->cDescr);
+            printf("==================  ====================================\n\n");
+
+            // Long description
+            if (memcmp(output->cLongDescr,"null",4)) {
+                printf("%s\n\n",output->cLongDescr);
+            }
+
+        }
     }
 }
 
@@ -274,10 +309,6 @@ void HelpOptions(OPTIONS *options, int bLong) {
   int sorted[MODULEOPTEND];
   sort_options(options, sorted);
 
-  if (bLong == 0)
-    printf("----- Input Options -----\n\n");
-  else
-    printf("Input Options\n~~~~~~~~~~~~~\n");
   for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
     WriteHelpOption(&options[sorted[iOpt]], bLong);
 
@@ -296,49 +327,88 @@ void HelpOutput(OUTPUT *output, int bLong) {
 }
 
 void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
-  int i;
-  char ESC=27;
 
-  printf("\n\t\t\tHelp Message for %s\n",exe);
-  printf("\nWritten by Rory Barnes\n");
-  printf("\n%s is a general purpose tidal integrator. It takes ",exe);
-  printf("an input file consisting of options and initial conditions ");
-  printf("and simulates tidal evolution, along with other secondary ");
-  printf("parameters, forward and/or backward in time. This help ");
-  printf("describes the basics of the input file.\n\n");
+    char ESC=27;
 
-  printf("----- Command Line Options -----\n\n");
-  printf("%c[1m-v, -verbose%c[0m -- Maximum verbosity, i.e. display all warnings and updates.\n",ESC,ESC);
-  printf("%c[1m-q, -quiet%c[0m   -- No verbosity, i.e. nothing printed to device.\n",ESC,ESC);
-  printf("%c[1m-h, -help%c[0m    -- Display this message.\n\n",ESC,ESC);
+    printf("\n\t\t\tHelp Message for %s\n", exe);
+    printf("\nWritten by Rory Barnes\n");
+    printf("\n%s is a general purpose planetary evolution integrator. It takes ",exe);
+    printf("an input file consisting of options and initial conditions ");
+    printf("and simulates tidal evolution, along with other secondary ");
+    printf("parameters, forward and/or backward in time. This help ");
+    printf("describes the basics of the input file.\n\n");
 
-  printf("----- Input File -----\n\n");
-  printf("Comments/White Space: Any characters to the right of a # sign ");
-  printf("are treated as a comment and are ignored. All white space is ");
-  printf("ignored.\n");
-  printf("Options that take an array may span multiple lines if a $ is ");
-  printf("placed at the end of the line.\n");
-  printf("Options must be the first string on any line, and must be ");
-  printf("written exactly as listed below.\n");
-  printf("Arguments may have any format, and need only be unambiguous.\n\n");
+    printf("----- Command Line Options -----\n\n");
+    printf("%c[1m-v, -verbose%c[0m -- Maximum verbosity, i.e. display all warnings and updates.\n",ESC,ESC);
+    printf("%c[1m-q, -quiet%c[0m   -- No verbosity, i.e. nothing printed to device.\n",ESC,ESC);
+    printf("%c[1m-h, -help%c[0m    -- Display this message.\n\n",ESC,ESC);
+    printf("%c[1m-H, -Help%c[0m    -- Display the extended help.\n\n",ESC,ESC);
 
-  HelpOptions(options, 0);
+    printf("----- Input File -----\n\n");
+    printf("Comments/White Space: Any characters to the right of a # sign ");
+    printf("are treated as a comment and are ignored. All white space is ");
+    printf("ignored.\n");
+    printf("Options that take an array may span multiple lines if a $ is ");
+    printf("placed at the end of the line.\n");
+    printf("Options must be the first string on any line, and must be ");
+    printf("written exactly as listed below.\n");
+    printf("Arguments may have any format, and need only be unambiguous.\n\n");
 
-  printf("\n----- Output Options -----\n\n");
-  printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
-  HelpOutput(output, 0);
+    printf("----- Input Options -----\n\n");
+    HelpOptions(options, 0);
 
-  exit(0);
+    printf("\n----- Output Options -----\n\n");
+    printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
+    HelpOutput(output, 0);
+
+    exit(0);
 
 }
 
 void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
 
+    printf("\nHelp Message for %s\n", exe);
+    char* pch = strchr(exe, '\0');
+    int sz = (int)(pch - exe) + 17;
+    int i;
+    for (i = 0; i < sz; i++) printf("-");
+    printf("\n\n");
 
-  // TODO: RL still working on this
-  HelpOptions(options, 1);
+    printf("**Author:** Rory Barnes\n");
+    printf("\n%s is a general purpose planetary evolution integrator. It takes ", exe);
+    printf("an input file consisting of options and initial conditions ");
+    printf("and simulates tidal evolution, along with other secondary ");
+    printf("parameters, forward and/or backward in time. This help ");
+    printf("describes the basics of the input file.\n\n");
 
-  exit(0);
+    printf("Command Line Options\n");
+    printf("~~~~~~~~~~~~~~~~~~~~\n\n");
+    printf("=================   ==========================================================\n");
+    printf("**-v, -verbose**    Maximum verbosity, i.e. display all warnings and updates.\n");
+    printf("**-q, -quiet**      No verbosity, i.e. nothing printed to device.\n");
+    printf("**-h, -help**       Display the short help message.\n");
+    printf("**-H, -Help**       Display the extended help message.\n");
+    printf("=================   ==========================================================\n\n");
+
+    printf("Input File\n");
+    printf("~~~~~~~~~~\n\n");
+    printf("Comments/White Space: Any characters to the right of a # sign ");
+    printf("are treated as a comment and are ignored. All white space is ");
+    printf("ignored.\n");
+    printf("Options that take an array may span multiple lines if a $ is ");
+    printf("placed at the end of the line.\n");
+    printf("Options must be the first string on any line, and must be ");
+    printf("written exactly as listed below.\n");
+    printf("Arguments may have any format, and need only be unambiguous.\n\n");
+
+    printf("Input Options\n~~~~~~~~~~~~~\n\n");
+    HelpOptions(options, 1);
+
+    printf("Output Options\n~~~~~~~~~~~~~~\n\n");
+    printf(".. note:: These options follow the argument %s.\n\n",options[OPT_OUTPUTORDER].cName);
+    HelpOutput(output, 1);
+
+    exit(0);
 
 }
 

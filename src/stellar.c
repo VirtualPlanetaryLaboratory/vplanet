@@ -328,12 +328,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
       "while setting it to REINERS will use the empirical relations of "
       "Reiners, Schussler and Passegger (2014). Please note that the latter "
       "model has not been fully vetted. Users may also set this parameter to NONE, "
-      "in which case the XUV luminosity will remain constant." 
+      "in which case the XUV luminosity will remain constant."
   );
   sprintf(options[OPT_XUVMODEL].cDefault,"RIBAS");
   sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
   options[OPT_XUVMODEL].iType = 3;
   options[OPT_XUVMODEL].iMultiFile = 1;
+  options[OPT_XUVMODEL].iModuleBit = STELLAR;
   fnRead[OPT_XUVMODEL] = &ReadXUVModel;
 
   sprintf(options[OPT_HZMODEL].cName,"sHZModel");

@@ -895,14 +895,6 @@ void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 
 /************* BINARY Outputs ******************/
 
-void HelpOutputBinary(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ BINARY output ------\n");
-  for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
-
 void WriteFreeEccBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   // Note: Only makes sense for planets (iBodyType == 0)
   if(body[iBody].iBodyType == 0)

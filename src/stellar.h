@@ -98,7 +98,6 @@ void FinalizeUpdateLuminosityStellar(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateTemperatureStellar(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateRadiusStellar(BODY*,UPDATE*,int*,int,int,int);
 
-void HelpOutputStellar(OUTPUT*);
 void InitializeOutputStellar(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionStellar(OUTPUT*,int,int);
 void FinalizeOutputFunctionStellar(OUTPUT*,int,int);

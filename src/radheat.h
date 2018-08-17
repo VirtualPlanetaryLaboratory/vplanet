@@ -245,7 +245,7 @@ void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int)
 
 void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
 void fvForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
-void fvRadheatExit(FILES*,char,int);
+void fvRadheatExit(FILES*,char*,int);
 void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Update functions */

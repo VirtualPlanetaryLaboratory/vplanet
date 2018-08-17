@@ -1,22 +1,22 @@
-# The host star, the sun -> Primary body!
-sName		secondary		# Body's name
-saModules       binary stellar
+# Secondary star
+sName                                secondary       # Body's name
+saModules                            binary stellar
 
 # Physical Parameters
-iBodyType     1 # Star!
-dMass         0.3 # Mass, solar masses
-dAge          1.0e6
-dRotPeriod    -0.5
-dRadGyra      0.27             # Radius of gyration (moment of inertia constant)
+iBodyType                            1               # Specify body type: 1 == star
+dMass                                0.3             # Mass, solar masses
+dAge                                 1.0e6           # Initial age of star
+dRotPeriod                           -0.5            # Initial rotation period (- -> days)
+dRadGyra                             0.27            # Radius of gyration (moment of inertia constant)
 
-# Binary Parameters
-dEcc            0.16048           # Binary eccentricity
-dSemi           0.1
-dLongP          263.45            # Binary longitude of pericenter
-dLL13PhiAB      129.84            # Initial binary mean anomaly
+# Binary Orbital Parameters
+dEcc                                 0.16048         # Eccentricity
+dSemi                                0.1             # Semi-major axis
+dLongP                               263.45          # Longitude of pericenter
+dLL13PhiAB                           129.84          # Initial binary mean anomaly
 
-# Stellar param
-sStellarModel baraffe
-sMagBrakingModel skumanich
+# Stellar paramaters
+sStellarModel                        baraffe         # Specify stellar evolution model (Barrafe+15)
+sMagBrakingModel                     skumanich       # Specify magnetic braking model
 
 saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer

@@ -124,8 +124,11 @@
 #define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
+#define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define LINE          256   /* Maximum number of characters in a line */
+#define OUTDESCR      256   /* Number of characters in output description */
+#define OUTLONDESCR   2048  /* Number of characters in output long description */
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -1675,15 +1678,20 @@ struct FILES{
 struct OPTIONS{
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
+  char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
+  char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
+  int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
   int iMultiIn;
   int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
+  int bNeg;                    /**< Is There a Negative Option? */
   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
+  int iFileType;               /**< What type of file can option be in? 0 = primary only, 1 = body file only, 2 = any file */
   double dNeg;                 /**< Conversion Factor to System Units */
 };
 
@@ -1711,11 +1719,12 @@ struct OPTIONS{
 
 struct OUTPUT {
   char cName[OPTLEN];    /**< Output Name */
-  char cDescr[LINE];     /**< Output Description */
+  char cDescr[OUTDESCR];     /**< Output Description */
+  char cLongDescr[OUTLONDESCR]; /**< Output Long Description */
   int bNeg;              /**< Is There a Negative Option? */
-  int iModuleBit;              /**< Bit flag for module to check output parameters */
+  int iModuleBit;        /**< Bit flag for module to check output parameters */
   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
-  char cNeg[NAMELEN];    /**< Units of Negative Option */
+  char cNeg[OUTDESCR];   /**< Units of Negative Option */
   double dNeg;           /**< Conversion Factor for Negative Option */
   int iNum;              /**< Number of Columns for Output */
   int bGrid;             /**< Is output quantity gridded (e.g. a function of latitude)? */

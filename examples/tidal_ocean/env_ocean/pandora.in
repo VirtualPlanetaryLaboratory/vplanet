@@ -4,7 +4,6 @@ saModules 	radheat thermint eqtide atmesc
 
 # Physical Properties
 dMass		-1.27  			# Mass, negative -> Earth masses
-#dRadius		-1.0  			# Radius, negative -> Earth radii
 dRotPeriod	-1.0  			# Rotation period, negative -> days
 dObliquity	23.5
 dRadGyra	0.5
@@ -75,15 +74,3 @@ dPresSWind     -1  #-0.2
 #Output
 saOutputOrder Time TidalQ K2 ImK2 -Radius SemimajorAxis Eccentricity -SurfEnFluxTot -SurfWaterMass $ 
 -TMan -TCore -RIC -EnvelopeMass -OxygenMass
-#		-26AlPowerMan -26AlMassMan -26AlMassCore 
-	    
-#-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
-#		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $
-#		-RadPowerMan -RadPowerCore -RadPowerCrust -RadPowerTotal $
-#		-BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan -FMeltUMan -MeltFactorUMan -MeltMassFluxMan $
-#		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC -ChiOC -ChiIC -DTChi
-
-
-#bFixOrbit	1
-# Output can be in any order and need only be unambiguous. 
-# Units of negative arguments are listed in the onboard help (./vplanet -h).

@@ -1,23 +1,23 @@
-# Earthlike parameters
-sName		pandora			# Body's name
+# Proxima Centauri b parameters
+sName		pandora                     # Body's name
 saModules 	eqtide
 
 # Physical Properties
-dMass		-1.27  			# Mass, negative -> Earth masses
-dRadius		-1.07  			# Radius, negative -> Earth radii
-dRotPeriod	-1.0  			# Rotation period, negative -> days
-dObliquity	23.5
-dRadGyra	0.5
+dMass                     -1.27     # Mass, negative -> Earth masses
+dRadius		                -1.07     # Radius, negative -> Earth radii
+dRotPeriod                -1.0      # Rotation period, negative -> days
+dObliquity                23.5      # Obliquity (degrees)
+dRadGyra                  0.5       # Radius of Gyration
 
 # Orbital Properties
-dEcc            0.1		# Eccentricity
-dSemi           0.05 #0.0483		# Semi-major axis, negative -> AU
+dEcc                      0.1       # Eccentricity
+dSemi                     0.05      # Semi-major axis, negative -> AU
 
 # Eqtide Properties
-dTidalQ         12              # Tidal phase lag
-dK2             0.3                 # Love number of degree 2
-dMaxLockDiff    0.1
-saTidePerts     star
-    
+dTidalQ                   12        # Tidal phase lag
+dK2                       0.3       # Love number of degree 2
+dMaxLockDiff              0.1       # Maximum difference between spin and orbital period before tidally locking rotation rate
+saTidePerts               star      # Tidal partner
+
 #Output
 saOutputOrder Time -TotEn -TotAngMom TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -SurfEnFluxTot

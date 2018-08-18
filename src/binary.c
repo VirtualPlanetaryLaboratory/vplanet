@@ -1470,7 +1470,7 @@ double fndComputeArgPeri(BODY *body, int iBody) {
 }
 
 /** Convert mean anomaly M to eccentric anomaly E
-    by solving kepler equation using Newton's Method */
+    by solving kepler equation using Newton's Method
 double fndMeanToEccentric(double M, double e) {
   // Make sure M in [0,2pi)
   M = fmod(M,2.0*PI);
@@ -1505,6 +1505,36 @@ double fndMeanToEccentric(double M, double e) {
   }
 
   return E;
+}
+*/
+
+/**
+Solves kepler's equation for one body
+
+@param M double, Mean anomaly
+@param e, eccentricity
+*/
+double fndMeanToEccentric(double M, double e) {
+  double di1, di2, di3, fi, fi1, fi2, fi3, dEccA;
+  if(M) {
+    dEccA = 0;
+  } else {
+    dEccA = M + fiSign(sin(M))*0.85*e;
+    di3 = 1.0;
+
+    while (di3 > 1e-10) {
+      fi = dEccA - e*sin(dEccA) - M;
+      fi1 = 1.0 - e*cos(dEccA);
+      fi2 = e*sin(dEccA);
+      fi3 = e*cos(dEccA);
+      di1 = -fi/fi1;
+      di2 = -fi/(fi1+0.5*di1*fi2);
+      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*di2*di2*fi3);
+      dEccA += di3;
+    }
+  }
+
+  return dEccA;
 }
 
 /** Convert eccentric anomaly to true anomaly */
@@ -1990,7 +2020,8 @@ double fndFluxApproxBinary(BODY *body, int iBody) {
 
 /** Compute the exact flux (as close to exact as you want)
     received by the CBP from the 2 stars averaged over 1 CBP orbit
-    Assumes binary orb elements don't vary much over 1 CBP orbit */
+    Assumes binary orb elements don't vary much over 1 CBP orbit
+    Also assumes that 1 CBP orbit is approximately Keplerian */
 double fndFluxExactBinary(BODY *body, int iBody, double L0, double L1) {
 
   // Define/init all variables
@@ -2015,15 +2046,16 @@ double fndFluxExactBinary(BODY *body, int iBody, double L0, double L1) {
     // Get binary position by solving kepler's eqn
     // mean -> ecc -> true anomaly
     meanAnomaly = body[1].dMeanMotion*body[iBody].dAge + body[1].dLL13PhiAB;
-    eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc);
+    eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
     trueAnomaly = fndEccToTrue(eccAnomaly,body[1].dEcc);
 
     radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
-    radius /= (1.0 + body[1].dEcc*cos(trueAnomaly));
+    radius /= (1.0 + body[1].dEcc*cos(trueAnomaly-body[1].dLongP));
 
     // Radial position of each star (- accounts for 180 deg phase offset)
-    r1 = body[1].dMass*radius/(body[0].dMass+body[1].dMass);
-    r2 = -body[0].dMass*radius/(body[0].dMass+body[1].dMass);
+    double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
+    r1 = body[1].dMass*radius*dInvMass;
+    r2 = -body[0].dMass*radius*dInvMass;
 
     // Cartesian position of stars (in plane, no z)
     x1 = r1*cos(trueAnomaly);
@@ -2032,8 +2064,11 @@ double fndFluxExactBinary(BODY *body, int iBody, double L0, double L1) {
     y2 = r2*sin(trueAnomaly);
 
     // Compute CBP positon in cylindrical coords
-    r = fndCBPRBinary(body,system,iaBody);
-    phi = fndCBPPhiBinary(body,system,iaBody);
+    phi = (360.0 * (i+1.0)/FLUX_INT_MAX)/PI; // True anomaly
+    r = body[iBody].dSemi*(1.0-body[iBody].dEcc*body[iBody].dEcc);
+    r /= (1.0 + body[iBody].dEcc*cos(phi-body[iBody].dLongP));
+    //r = fndCBPRBinary(body,system,iaBody);
+    //phi = fndCBPPhiBinary(body,system,iaBody);
     z = fndCBPZBinary(body,system,iaBody);
 
     // Convert to cartesian

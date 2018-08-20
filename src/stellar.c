@@ -1041,6 +1041,7 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
 /*! Compute instataneous change in potential energy due to stellar radius evolution
  * Note that this energy is released as radiation
+ * XXX add additional derivative for changing rg
  */
 double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
@@ -1056,6 +1057,7 @@ double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
 /*! Compute instataneous change in rotational energy due to stellar radius evolution
  * and considering angular momentum conservation
+ * XXX add additional derivative for changing rg
  */
 double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
@@ -1083,7 +1085,9 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return -dEdt;
 }
 
-/*! Compute total energy lost due to stellar evolution */
+/*! Compute total energy lost due to stellar evolution
+  * XXX add additional derivative for changing rg
+ */
 double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody);
 }
@@ -1145,6 +1149,8 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
 }
 
+// XXX add additional derivative for changing rg
+
 /*! Compute the change in rotation rate when the radius changes via conservation
  * of angular momentum:
  * dw/dt = -2 dR/dt * w/R
@@ -1194,6 +1200,7 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
 
 /*! Compute the change in rotation rate when the radius and total angular momentum
  * are changing.
+ * XXX add additional derivative for changing rg
  */
 double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
 

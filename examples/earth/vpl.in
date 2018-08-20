@@ -1,5 +1,5 @@
 # Example primary input file for VPLANET
-sSystemName	sun			# System Name
+sSystemName	earth			# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 

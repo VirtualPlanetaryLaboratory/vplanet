@@ -41,16 +41,16 @@
 #define MASS40K		 39.96399848*ATOMMASS	/**< [kg] Mass of a 40K atom */                 
 #define HALFLIFE40K	 5.736527e+16		/**< [s] Half-life of 40K */                    
 /* Mantle */					                                                
-#define EMASSMAN40K	 1.11075e+18		/**< [kg]  Default mantle mass of 40K */        		      
-#define ENUMMAN40K	 8.8692227e+42		/**< [num] Default mantle number of 40K atoms */		      
-#define EPOWERMAN40K	 3.29892e+13		/**< [W] Default mantle power from 40K decay */ 
+#define EMASSMAN40K	 6.45089e+17		/**< [kg]  Default mantle mass of 40K */        		      
+#define ENUMMAN40K	 9.72110e+42		/**< [num] Default mantle number of 40K atoms */		      
+#define EPOWERMAN40K	 3.61578e+13		/**< [W] Default mantle power from 40K decay */ 
 /* Core */					                                                
-#define EMASSCORE40K	 3.90916e+17		/**< [kg]  Default core mass of 40K */          		     
-#define ENUMCORE40K	 3.1214255e+42		/**< [num] Default core number of 40K atoms */  		     
-#define EPOWERCORE40K	 1.16102e+13		/**< [W] Default core power from 40K decay */   
+#define EMASSCORE40K	 6.04046e+17		/**< [kg]  Default core mass of 40K */          		     
+#define ENUMCORE40K	 9.10261e+42		/**< [num] Default core number of 40K atoms */  		     
+#define EPOWERCORE40K	 3.38573e+13		/**< [W] Default core power from 40K decay */   
 /* Crust (assuming crustal mass constant) */	                                                
-#define EMASSCRUST40K	 4.67540e+17		/**< [kg]  Default crust mass of 40K */         		      
-#define ENUMCRUST40K	 3.7332574e+42		/**< [num] Default crust number of 40K atoms */ 		      
+#define EMASSCRUST40K	 2.47738e+17		/**< [kg]  Default crust mass of 40K */         		      
+#define ENUMCRUST40K	 3.73326e+42		/**< [num] Default crust number of 40K atoms */ 		      
 #define EPOWERCRUST40K	 1.38859e+13		/**< [W] Default crust power from 40K decay */   
 
 /* 232TH */
@@ -58,51 +58,51 @@
 #define MASS232TH	 232.0377*ATOMMASS	/**< [kg] Mass of a 232Th atom */                 
 #define HALFLIFE232TH	 6.3752726e+17		/**< [s] Half-life of 232Th */                    
 /* Mantle */					                                                  
-#define EMASSMAN232TH	 2.31439e+17		/**< [kg]  Default mantle mass of 232Th */        
-#define ENUMMAN232TH	 5.5262845e+41		/**< [num] Default mantle number of 232Th atoms */
-#define EPOWERMAN232TH	 5.92484e+12		/**< [W] Default mantle power from 232Th decay */ 
+#define EMASSMAN232TH	 2.34211e+17		/**< [kg]  Default mantle mass of 232Th */        
+#define ENUMMAN232TH	 6.07873e+41		/**< [num] Default mantle number of 232Th atoms */
+#define EPOWERMAN232TH	 6.51575e+12		/**< [W] Default mantle power from 232Th decay */ 
 /* Core */					                                                  
-#define EMASSCORE232TH	 1.92682e+15		/**< [kg]  Default core mass of 232Th */          
-#define ENUMCORE232TH	 4.6008515e+39		/**< [num] Default core number of 232Th atoms */  
-#define EPOWERCORE232TH	 4.93267e+10		/**< [W] Default core power from 232Th decay */   
+#define EMASSCORE232TH	 5.22682e+15		/**< [kg]  Default core mass of 232Th */          
+#define ENUMCORE232TH	 1.35657e+40		/**< [num] Default core number of 232Th atoms */  
+#define EPOWERCORE232TH	 1.45410e+11		/**< [W] Default core power from 232Th decay */   
 /* Crust (assuming crustal mass constant) */	                                                  
-#define EMASSCRUST232TH	 1.49638e+17		/**< [kg]  Default crust mass of 232Th */         
-#define ENUMCRUST232TH	 3.5730363e+41		/**< [num] Default crust number of 232Th atoms */ 
-#define EPOWERCRUST232TH 3.83072e+12		/**< [W] Default crust power from 232Th decay */  
+#define EMASSCRUST232TH	 1.37667e+17		/**< [kg]  Default crust mass of 232Th */         
+#define ENUMCRUST232TH	 3.57304e+41		/**< [num] Default crust number of 232Th atoms */ 
+#define EPOWERCRUST232TH 3.82991e+12		/**< [W] Default crust power from 232Th decay */  
 
 /* 238U */
 #define ENERGY238U       8.28293620554e-12      /**< [J] Decay energy of 238U */                 
 #define MASS238U         238.050788268*ATOMMASS	/**< [kg] Mass of a 238U atom */                 
 #define HALFLIFE238U     2.0359742e+17  	/**< [s] Half-life of 238U */                    
 /* Mantle */					                                                  
-#define EMASSMAN238U     1.16*1.00111e+17  	/**< [kg]  Default mantle mass of 238U */        
-#define ENUMMAN238U	 1.16*2.2505054e+41 	/**< [num] Default mantle number of 238U atoms */
-#define EPOWERMAN238U	 1.16*9.18017e+12  	/**< [W] Default mantle power from 238U decay */ 
+#define EMASSMAN238U     1.13378e+17      	/**< [kg]  Default mantle mass of 238U */        
+#define ENUMMAN238U	 2.86829e+41    	/**< [num] Default mantle number of 238U atoms */
+#define EPOWERMAN238U	 1.16691e+13    	/**< [W] Default mantle power from 238U decay */ 
 /* Core */					                                                  
-#define EMASSCORE238U    7.83780e+14  		/**< [kg]  Default core mass of 238U */          
-#define ENUMCORE238U	 1.7619456e+39		/**< [num] Default core number of 238U atoms */  
-#define EPOWERCORE238U	 7.18726e+10  		/**< [W] Default core power from 238U decay */   
+#define EMASSCORE238U    1.16964e+15  		/**< [kg]  Default core mass of 238U */          
+#define ENUMCORE238U	 2.95900e+39		/**< [num] Default core number of 238U atoms */  
+#define EPOWERCORE238U	 1.20381e+11   		/**< [W] Default core power from 238U decay */   
 /* Crust (assuming crustal mass constant) */	                                                  
-#define EMASSCRUST238U  5.64467e+16  		/**< [kg]  Default crust mass of 238U */         
-#define ENUMCRUST238U	1.2689272e+41		/**< [num] Default crust number of 238U atoms */ 
-#define EPOWERCRUST238U	 5.17616e+12 		/**< [W] Default crust power from 238U decay */  
+#define EMASSCRUST238U   5.01582e+16  		/**< [kg]  Default crust mass of 238U */         
+#define ENUMCRUST238U	 1.26893e+41 		/**< [num] Default crust number of 238U atoms */ 
+#define EPOWERCRUST238U	 5.16237e+12 		/**< [W] Default crust power from 238U decay */  
 
 /* 235U */
 #define HALFLIFE235U     3.2038174e+16          /**< [J] Decay energy of 235U */                  
 #define MASS235U         235.0439299*ATOMMASS	/**< [kg] Mass of a 235U atom */                  
 #define ENERGY235U       6.55516e-12    	/**< [s] Half-life of 235U */                     
 /* Mantle */					                                                  
-#define EMASSMAN235U     3.20325e+16  		/**< [kg]  Default mantle mass of 235U */         
-#define ENUMMAN235U	 9.0058843e+40 		/**< [num] Default mantle number of 235U atoms */ 
-#define EPOWERMAN235U	 1.84187e+13  		/**< [W] Default mantle power from 235U decay */  
+#define EMASSMAN235U     3.86253e+16  		/**< [kg]  Default mantle mass of 235U */         
+#define ENUMMAN235U	 9.89663e+40 		/**< [num] Default mantle number of 235U atoms */ 
+#define EPOWERMAN235U	 2.02490e+13  		/**< [W] Default mantle power from 235U decay */  
 /* Core */					                                                  
-#define EMASSCORE235U    2.50786e+14  		/**< [kg]  Default core mass of 235U */           
-#define ENUMCORE235U	 7.0508058e+38		/**< [num] Default core number of 235U atoms */   
-#define EPOWERCORE235U	 1.44202e+11  		/**< [W] Default core power from 235U decay */    
+#define EMASSCORE235U    9.56785e+14  		/**< [kg]  Default core mass of 235U */           
+#define ENUMCORE235U	 2.45149e+39		/**< [num] Default core number of 235U atoms */   
+#define EPOWERCORE235U	 5.01586e+11  		/**< [W] Default core power from 235U decay */    
 /* Crust (assuming crustal mass constant) */	                                                  
-#define EMASSCRUST235U   1.80612e+16  		/**< [kg]  Default crust mass of 235U */          
-#define ENUMCRUST235U    5.0778866e+40		/**< [num] Default crust number of 235U atoms */  
-#define EPOWERCRUST235U  1.03852e+13  		/**< [W] Default crust power from 235U decay */   
+#define EMASSCRUST235U   1.98184e+16  		/**< [kg]  Default crust mass of 235U */          
+#define ENUMCRUST235U    5.07789e+40		/**< [num] Default crust number of 235U atoms */  
+#define EPOWERCRUST235U  1.03896e+13  		/**< [W] Default crust power from 235U decay */   
 
 /* Continental Crust Mass Earth today */
 /* Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust". */

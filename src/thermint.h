@@ -123,7 +123,7 @@
 #define ADJUMPC2CMB      0.8                    /**< [nd] Adiabatic temperature jump from average core to CMB "epsilon_c" */
 /* MAGNETIC DYNAMO PROPERTIES */                 	
 #define MAGPERM          4*PI*1e-7              /**< [H/m] Magnetic permeability constant */
-#define MAGMOMCOEF       0.2                    /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
+#define MAGMOMCOEF       0.146                  /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
 #define ELECCONDCORE     10e5                   /**< [S/m] Electrical conductivity of core  */
 #define LORENTZNUM       2.5e-8                 /**< [W Ohm/K] Lorentz number, relates thermal and electrical conductivity */
 #define EMAGMOM          80e21                  /**< [Am^2] Earth's present day magnetic moment */

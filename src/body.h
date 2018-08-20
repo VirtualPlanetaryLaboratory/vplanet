@@ -42,9 +42,10 @@
 #define TIMELEN    50
 
 // Constants/array lens for Baraffe model
-#define STELLAR_T                      1
-#define STELLAR_L                      2
-#define STELLAR_R                      3
+#define STELLAR_T                      1 // Effective Temperature
+#define STELLAR_L                      2 // Luminosity
+#define STELLAR_R                      3 // Radius
+#define STELLAR_RG                     4 // Radius of Gyration
 #define STELLAR_ERR_LINEAR             1
 #define STELLAR_ERR_NONE               0
 #define STELLAR_ERR_OUTOFBOUNDS_LO    -2

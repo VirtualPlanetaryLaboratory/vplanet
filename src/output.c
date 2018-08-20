@@ -480,6 +480,10 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
+void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadGyra;
+}
+
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
@@ -1083,6 +1087,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADIUS].iNum = 1;
   output[OUT_RADIUS].iModuleBit = 1;
   fnWrite[OUT_RADIUS] = &WriteRadius;
+
+  sprintf(output[OUT_RADGYRA].cName,"RadGyra");
+  sprintf(output[OUT_RADGYRA].cDescr,"Radius of Gyration");
+  output[OUT_RADGYRA].bNeg = 0;
+  output[OUT_RADGYRA].iNum = 1;
+  output[OUT_RADGYRA].iModuleBit = 1;
+  fnWrite[OUT_RADGYRA] = &WriteRadGyra;
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");

@@ -7,7 +7,6 @@ iBodyType     1 # Star!
 dMass         1.0                        # Mass, solar masses
 dAge          1.0e6
 dRotPeriod    -1.67
-dRadGyra      0.45             # Radius of gyration (moment of inertia constant)
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.
@@ -26,4 +25,4 @@ sMagBrakingModel skumanich
 # Some options are allowed to only appear in one file, but it can be primary or body.
 # That should really be documented!
 
-saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom -SurfEnFluxTotal 
+saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom RadGyra -SurfEnFluxTotal 

@@ -1100,12 +1100,11 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return 0.0;
   }
 
-  // Delta t = 10 years since  10 yr << typical stellar evolution timescales
+  // Delta t = 10 years since 10 yr << typical stellar evolution timescales
   double eps = 10.0 * YEARDAY * DAYSEC;
   double dRadMinus, dRadPlus;
 
@@ -1123,8 +1122,7 @@ double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius of gyration and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return 0.0;
   }
 
@@ -1140,7 +1138,6 @@ double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
 /*! Compute instataneous change in potential energy due to stellar radius evolution
  * Note that this energy is released as radiation
- * XXX add additional derivative for changing rg?
  */
 double fdDEDtPotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
@@ -1199,7 +1196,6 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 /*! Compute total energy lost due to stellar evolution
-  * XXX add additional derivative for changing rg?
  */
 double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody) + fdDEDtRotRadGyraStellar(body,system,iaBody);
@@ -1313,12 +1309,10 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC) {
     return 0.0;
   }
-  else
-  {
+  else {
     // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
     dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 

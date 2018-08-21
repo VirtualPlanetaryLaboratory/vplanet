@@ -1,11 +1,8 @@
-/************************ ORBIT.C *******************/
-/*
- * Rory Barnes, Wed May  7 14:59:37 PDT 2014
- *
- * This file contains subroutines associated with
- * orbital properties. Note that element 1 in the
- * BODY array contains the up-to-date orbital
- * properties.
+/**
+  @file system.c
+  @brief Subroutines that control system-wide properties.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -42,7 +39,7 @@ double fdSemiToMeanMotion(double dSemi,double dMass) {
 /*! Compute the orbital angular momentum of the iBodyth body
  * as J = mu*sqrt(GMA(1-e^2)) for each orbiting body
  */
-double * fdOrbAngMom(BODY *body, int iBody) {
+double * fdOrbAngMom(BODY *body, CONTROL *control, int iBody) {
 
   double dMass, mu; // Mass of central body or bodies if using binary and not secondary star
 
@@ -62,7 +59,7 @@ double * fdOrbAngMom(BODY *body, int iBody) {
     double * pdNetOrbMom = malloc(sizeof(double));
 
     // Central body (or primary binary star) doesn't orbit itself
-    if(iBody < 1)
+    if(iBody < 1 || !control->bOrbiters)
     {
       *pdNetOrbMom = 0.0;
       return pdNetOrbMom;
@@ -106,7 +103,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
     //SpiNBody has direct x,y,z components for position and velocity
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
     if (body[iBody].bSpiNBody){
-      pdaTmp = fdOrbAngMom(body,iBody);
+      pdaTmp = fdOrbAngMom(body,control,iBody);
       for (i=0; i<3; i++){
         daOrbTot[i] += *(pdaTmp+i);
       }
@@ -117,7 +114,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
     }
     else {
       for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-        pdaTmp = fdOrbAngMom(body,iBody);
+        pdaTmp = fdOrbAngMom(body,control,iBody);
         dTot += *pdaTmp;
         dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
         dTot += body[iBody].dLostAngMom;
@@ -154,9 +151,8 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
     }
     return(PotEnergy);
   }
-  // Ignore central body or other stars if not using binary
-  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
-  {
+  // Ignore for central body or if there's no orbiting bodies
+  if(iBody < 1 || !control->bOrbiters) {
     return 0.0;
   }
 
@@ -192,9 +188,8 @@ double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
         +(body[iBody].dVelZ)*(body[iBody].dVelZ);
     return 0.5*body[iBody].dMass*Velocity2;
   }
-  // Ignore central body or other stars if not using binary
-  else if(iBody < 1 || (body[iBody].bStellar && !body[iBody].bBinary))
-  {
+  // Ignore for central body or if there's no orbiting bodies
+  if(iBody < 1 || !control->bOrbiters) {
     return 0.0;
   }
 
@@ -314,6 +309,7 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 {
   double adot = 0.0;
   double Jdot = 0.0;
+  double edot = 0.0;
   double R1dot, R2dot, Rdot;
   double num, denom, tmp;
   double M = body[0].dMass + body[1].dMass;
@@ -321,52 +317,80 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   double dMeanMotion = body[1].dMeanMotion;
   double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
   SYSTEM *system; // Dummy system struct
+  int iaBody[1] = {0};
 
   // Both tidally locked
-  if(iNumLocked > 1)
-  {
+  if(iNumLocked > 1) {
     // Compute change in angular momentum due to magnetic braking for both stars
     // and compute star's change in radii
 
-    int iaBody[1] = {0};
-    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
-    R1dot = fdDRadiusDtStellar(body,system,iaBody);
+    // Is body 0 a star? If not, not undergoing stellar evolution
+    if(body[0].bStellar) {
 
-    iaBody[0] = 1;
-    Jdot += -fdDJDtMagBrakingStellar(body,system,iaBody);
-    R2dot = fdDRadiusDtStellar(body,system,iaBody);
+      iaBody[0] = 0;
+      edot = 0.0; // No effect produces a de/dt term
+
+      Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
+      R1dot = fdDRadiusDtStellar(body,system,iaBody);
+    }
+    else {
+      Jdot += 0.0;
+      R1dot = 0.0;
+    }
+
+    // Is body 1 a star? If not, not undergoing stellar evolution
+    if(body[1].bStellar) {
+
+      iaBody[0] = 1;
+      edot += 0.0; // No effect produces a de/dt term
+
+      Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
+      R2dot = fdDRadiusDtStellar(body,system,iaBody);
+    }
+    else {
+      Jdot += 0.0;
+      R2dot = 0.0;
+    }
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
 
-    num = Jdot - 2.0*dMeanMotion*tmp;
+    num = -Jdot - 2.0*body[0].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*body[0].dRadius;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*body[1].dRadius;
-    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
+    tmp *= 1.5*body[0].dRotRate/body[1].dSemi;
     denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
 
     adot = num/denom;
   }
   // Just one (body[iBody]) is tidally locked
-  else if(iNumLocked == 1)
-  {
-    int iaBody[1] = {iBody};
-    Jdot = -fdDJDtMagBrakingStellar(body,system,iaBody);
-    Rdot = fdDRadiusDtStellar(body,system,iaBody);
+  else if(iNumLocked == 1) {
 
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
+    // Only applies if stellar evolution is occurring.
+    if(body[iBody].bStellar) {
+      int iaBody[1] = {iBody};
 
-    num = Jdot - 2.0*dMeanMotion*tmp;
+      edot = 0.0; // No effect produces a de/dt term
 
-    tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
-    tmp *= 3.0*sqrt(BIGG*M/pow(body[1].dSemi,5))/2.0;
-    denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
+      Jdot = fdDJDtMagBrakingStellar(body,system,iaBody);
+      Rdot = fdDRadiusDtStellar(body,system,iaBody);
 
-    adot = num/denom;
+      tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
+
+      num = -Jdot - 2.0*body[iBody].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
+
+      tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius;
+      tmp *= 1.5*body[iBody].dRotRate/body[1].dSemi;
+      denom = mu*mu*BIGG*M*(1.0-body[1].dEcc*body[1].dEcc)/(2.0*J) - tmp;
+
+      adot = num/denom;
+    }
+    else {
+      adot = 0.0;
+    }
   }
-  else
-  {
+  else {
     adot = 0.0;
   }
 
@@ -400,4 +424,54 @@ double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
   {
     return 0.0;
   }
+}
+
+double fndUpdateSpiNBodyCoords(BODY *body,EVOLVE *evolve) {
+  int iBody;
+
+  for (iBody = 0; iBody<evolve->iNumBodies; iBody++) {
+    if (iBody != 0) {
+      // If iBody is a planet, then calculate various orbital elements
+      body[iBody].dMu = BIGG*(body[0].dMass+body[iBody].dMass);
+
+      body[iBody].dMeanL += sqrt(body[iBody].dMu/(body[iBody].dSemi*body[iBody].dSemi*body[iBody].dSemi))*evolve->dTime;
+      body[iBody].dMeanL = fmod(body[iBody].dMeanL,2*PI);
+
+      // Convert all bodies w/ orbital elements to Heliocentric
+
+      // First find osc elems from DistOrb primary variables
+      body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+      body[iBody].dLongA = atan2(body[iBody].dPinc,body[iBody].dQinc);
+      body[iBody].dInc = 2*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
+      body[iBody].dEcc = sqrt(body[iBody].dKecc*body[iBody].dKecc+body[iBody].dHecc*body[iBody].dHecc);
+
+      body[iBody].dMeanA = body[iBody].dMeanL - body[iBody].dLongP;
+    } else {
+      // If iBody is the star, zero out everything
+      body[iBody].dMu = 0;
+      body[iBody].dMeanL = 0;
+      body[iBody].dLongP = 0;
+      body[iBody].dLongA = 0;
+      body[iBody].dInc = 0;
+      body[iBody].dEcc = 0;
+      body[iBody].dMeanA = 0;
+    }
+
+    OrbElems2Helio(body, iBody);
+  }
+
+  for (iBody = 0; iBody<evolve->iNumBodies; iBody++) {
+    // Calculate Barycentric Cartesian coords:
+
+    Helio2Bary(body, evolve->iNumBodies, iBody);
+    body[iBody].dPositionX = body[iBody].dBCartPos[0]*AUM;
+    body[iBody].dPositionY = body[iBody].dBCartPos[1]*AUM;
+    body[iBody].dPositionZ = body[iBody].dBCartPos[2]*AUM;
+    body[iBody].dVelX      = body[iBody].dBCartVel[0]*AUM/DAYSEC;
+    body[iBody].dVelY      = body[iBody].dBCartVel[1]*AUM/DAYSEC;
+    body[iBody].dVelZ      = body[iBody].dBCartVel[2]*AUM/DAYSEC;
+  }
+
+  // TODO: Should this function be *void*?
+  return 0;
 }

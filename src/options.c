@@ -1,10 +1,9 @@
-
-/******************** OPTIONS.C *********************/
-/*
- * Rory Barnes, Wed May  7 16:27:19 PDT 2014
- *
- * All subroutines necessary to read in all options. Also
- * monitor input files for mistakes and log all option data.
+/**
+  @file options.c
+  @brief All subroutines necessary to read in all options. Also
+         monitor input files for mistakes and log all option data.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -154,6 +153,12 @@ int GetPos(char cLine[]) {
 void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bContinue) {
   int iPos,iPosStart,iWord;
   char cTmp[OPTLEN];
+
+  if(strlen(cLine) == 0) {
+      *iNumWords = 0;
+      *bContinue = 0;
+      return;
+      }
 
   //iPos0=GetPos(cLine);
   iWord=0;
@@ -1453,6 +1458,20 @@ void ReadDoForward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else
     /* Set to default */
     AssignDefaultInt(options,&control->Evolve.bDoForward,files->iNumInputs);
+}
+
+void ReadGRCorr(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bGRCorr = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].bGRCorr = atoi(options->cDefault);
+    }
 }
 
 /*
@@ -2886,6 +2905,14 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FORW].iType = 0;
   fnRead[OPT_FORW] = &ReadDoForward;
 
+  sprintf(options[OPT_GRCORR].cName,"bGRCorr");
+  sprintf(options[OPT_GRCORR].cDescr,"Use general relativity correction");
+  sprintf(options[OPT_GRCORR].cDefault,"0");
+  options[OPT_GRCORR].dDefault = 0;
+  options[OPT_GRCORR].iType = 0;
+  options[OPT_GRCORR].iMultiFile = 1;
+  fnRead[OPT_GRCORR] = &ReadGRCorr;
+
   /*
    *
    *   HALT
@@ -2926,7 +2953,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
   options[OPT_HALTMINSEMI].dDefault = 0;
   options[OPT_HALTMINSEMI].iType = 2;
-  options[OPT_HALTMINSEMI].dNeg = AUCM;
+  options[OPT_HALTMINSEMI].dNeg = AUM;
   sprintf(options[OPT_HALTMINSEMI].cNeg,"AU");
   fnRead[OPT_HALTMINSEMI] = &ReadHaltMinSemi;
 
@@ -3104,9 +3131,9 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBSEMI].cName,"dSemi");
   sprintf(options[OPT_ORBSEMI].cDescr,"Semi-Major Axis");
   sprintf(options[OPT_ORBSEMI].cDefault,"1 AU");
-  options[OPT_ORBSEMI].dDefault = AUCM;
+  options[OPT_ORBSEMI].dDefault = AUM;
   options[OPT_ORBSEMI].iType = 2;
-  options[OPT_ORBSEMI].dNeg = AUCM;
+  options[OPT_ORBSEMI].dNeg = AUM;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   fnRead[OPT_ORBSEMI] = &ReadSemiMajorAxis;
 
@@ -3389,4 +3416,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsPoise(options,fnRead);
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
+  InitializeOptionsSpiNBody(options,fnRead);
 }

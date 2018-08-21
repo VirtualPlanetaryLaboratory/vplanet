@@ -1,7 +1,8 @@
-/*********************** MAIN.C *****************************/
-/*
- * Rory Barnes, Wed May  7 16:22:34 PDT 2014
- *
+/**
+  @file vplanet.c
+  @brief The main entry point for the code. All the magic starts here.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
 */
 
 #include <stdio.h>
@@ -27,7 +28,7 @@ int main(int argc,char *argv[]) {
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
 #endif
-  
+
   time_t dStartTime;
   dStartTime = time(NULL);
 
@@ -129,7 +130,7 @@ int main(int argc,char *argv[]) {
   /* Perform evolution */
 
   if (control.Evolve.bDoForward || control.Evolve.bDoBackward) {
-    Evolve(body,&control,&files,output,&system,update,fnUpdate,fnWrite,fnOneStep);
+    Evolve(body,&control,&files,&module,output,&system,update,fnUpdate,fnWrite,fnOneStep);
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {

@@ -1,14 +1,14 @@
-/***************** DISTROT.H *********************** 
- *
- * Russell Deitrick, July 7, 2015
- *
- * This header file contains all the subroutines in
- * file distrot.c.
- *
+/**
+   @file distrot.h
+
+   @brief Subroutines that control the integration of the obliquity model.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date July 7 2015
+
 */
 
-void AddModuleDistRot(MODULE*,int,int);
-void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 
 /* Options Info */
 
@@ -20,35 +20,12 @@ void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 #define OPT_READORBITDATA         1405
 #define OPT_FILEORBITDATA         1406
 
-/* Options Functions */
-void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadFileOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-
-void ReadCalcDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsDistRot(OPTIONS*, fnReadOption[]);
-void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
-
-/* Verify Functions */
-void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-
-/* Update Functions */
-
-void InitializeUpdateDistRot(BODY*,UPDATE*,int);
-void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
-
-/* Output Functinos */
-
 /* DISTROT 1400 - 1499 */
 /* System properties 1400-1419, body properties 1420-1499 */
 
 #define OUTSTARTDISTROT        1400 /* Start of DISTROT options */
 #define OUTENDDISTROT          1500 /* End of DISTROT options */
-#define OUTBODYSTARTDISTROT   1420 /* Start of DISTROT BODY options */
+#define OUTBODYSTARTDISTROT    1420 /* Start of DISTROT BODY options */
 
 #define OUT_CASS1               1430
 #define OUT_CASS2               1431
@@ -65,6 +42,34 @@ void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_ZOBLTIMEDISTROT     1449
 #define OUT_DYNELLIP            1450
 #define OUT_PRECFNAT            1451
+
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleDistRot(MODULE*,int,int);
+void BodyCopyDistRot(BODY*,BODY*,int,int,int);
+
+/* Options Functions */
+void ReadPrecA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadFileOrbitData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+void ReadCalcDynEllip(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsDistRot(OPTIONS*, fnReadOption[]);
+void ReadOptionsDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void InitializeUpdateTmpBodyDistRot(BODY*,CONTROL*,UPDATE*,int);
+
+/* Verify Functions */
+void VerifyDistRot(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdateDistRot(BODY*,UPDATE*,int);
+void FinalizeUpdateXoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateYoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateZoblDistRot(BODY*,UPDATE*,int*,int,int,int);
+
+/* Output Functinos */
 
 void HelpOutputDistRot(OUTPUT*);
 void WriteBodyDOblDtDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -90,22 +95,24 @@ void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*
 
 /* DistRot Functions */
 void PropertiesDistRot(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorDistRot(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorDistRot(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void RotateVector(double*,double*,double,int);
 
 /* DistRot's equations */
-double fdCentralTorqueR(BODY*, int);
+double fndCentralTorqueR(BODY*, int);
 
-double fdDistRotRD4DxDt(BODY*, SYSTEM*, int*);
-double fdDistRotRD4DyDt(BODY*, SYSTEM*, int*);
-double fdDistRotRD4DzDt(BODY*, SYSTEM*, int*);
-double fdAxialGRDyDt(BODY*, SYSTEM*, int*);
-double fdAxialGRDxDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DxDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DyDt(BODY*, SYSTEM*, int*);
+double fndDistRotRD4DzDt(BODY*, SYSTEM*, int*);
+double fndAxialGRDyDt(BODY*, SYSTEM*, int*);
+double fndAxialGRDxDt(BODY*, SYSTEM*, int*);
 
-double fdDistRotLL2DxDt(BODY*, SYSTEM*, int*);
-double fdDistRotLL2DyDt(BODY*, SYSTEM*, int*);
-double fdDistRotLL2DzDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DxDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DyDt(BODY*, SYSTEM*, int*);
+double fndDistRotLL2DzDt(BODY*, SYSTEM*, int*);
 
-double fdDistRotExtDxDt(BODY*, SYSTEM*, int*);
-double fdDistRotExtDyDt(BODY*, SYSTEM*, int*);
-double fdDistRotExtDzDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDxDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDyDt(BODY*, SYSTEM*, int*);
+double fndDistRotExtDzDt(BODY*, SYSTEM*, int*);
+
+/* @endcond */

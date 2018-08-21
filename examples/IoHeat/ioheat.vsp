@@ -1,0 +1,11 @@
+srcfolder  .
+destfolder data
+trialname  ioheat
+
+file   vpl.in
+
+file   jupiter.in
+
+file   io.in
+dEcc  [1e-3,0.3,l30] e
+dObliquity [1e-4,0.01,l30] o

@@ -1,10 +1,13 @@
-/********************** CONTROL.C ***********************/
-/*
- * Rory Barnes, Wed Jan  7 15:48:08 PST 2015
- *
- * This subroutines deal with control, including I/O, units, and files.
- *
- */
+/**
+   @file control.c
+
+   @brief These subroutines deal with control, including I/O, units, and files.
+
+   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+   @date Jan 7 2015
+
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +30,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
   control->bOutputLapl=0; // XXX Shouldn't be module-specific lines here.
-  
+
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
@@ -41,7 +44,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->fnPropsAux[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnPropsAuxModule));
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnInitializeControl[iBody][iModule](control,iBody); 
+      module->fnInitializeControl[iBody][iModule](control,iBody);
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
@@ -59,10 +62,10 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
 
   control->Evolve.tmpBody = malloc(control->Evolve.iNumBodies*sizeof(BODY));
   InitializeBodyModules(&control->Evolve.tmpBody,control->Evolve.iNumBodies);
-  
+
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
-      
+
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
 	control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
       }
@@ -78,8 +81,8 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
   }
 }
 
-/* 
- * Help functions 
+/*
+ * Help functions
  */
 
 void WriteHelpOption(OPTIONS *options) {
@@ -89,7 +92,7 @@ void WriteHelpOption(OPTIONS *options) {
     printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
     if (options->iType == 0)
       printf("Bool");
-    else if (options->iType == 1) 
+    else if (options->iType == 1)
       printf("Int");
     else if (options->iType == 2)
       printf("Double");
@@ -116,26 +119,26 @@ void WriteHelpOutput(OUTPUT *output) {
 
 void HelpOptions(OPTIONS *options) {
   int iOpt,iModule;
-  
+
   /* XXX Disperse to modules to organize options by module */
 
   printf("----- Input Options -----\n\n");
-  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) 
+  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
     WriteHelpOption(&options[iOpt]);
-  
+
 }
 
 void HelpOutput(OUTPUT *output) {
   int iOut,iModule;
-  
-  for (iOut=0;iOut<MODULEOUTEND;iOut++) 
+
+  for (iOut=0;iOut<MODULEOUTEND;iOut++)
     WriteHelpOutput(&output[iOut]);
-  
+
 }
 
 void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
   int i;
-  char ESC=27; 
+  char ESC=27;
 
   printf("\n\t\t\tHelp Message for %s\n",exe);
   printf("\nWritten by Rory Barnes\n");
@@ -144,12 +147,12 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
   printf("and simulates tidal evolution, along with other secondary ");
   printf("parameters, forward and/or backward in time. This help ");
   printf("describes the basics of the input file.\n\n");
-  
+
   printf("----- Command Line Options -----\n\n");
   printf("%c[1m-v, -verbose%c[0m -- Maximum verbosity, i.e. display all warnings and updates.\n",ESC,ESC);
   printf("%c[1m-q, -quiet%c[0m   -- No verbosity, i.e. nothing printed to device.\n",ESC,ESC);
   printf("%c[1m-h, -help%c[0m    -- Display this message.\n\n",ESC,ESC);
-  
+
   printf("----- Input File -----\n\n");
   printf("Comments/White Space: Any characters to the right of a # sign ");
   printf("are treated as a comment and are ignored. All white space is ");
@@ -159,9 +162,9 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
   printf("Options must be the first string on any line, and must be ");
   printf("written exactly as listed below.\n");
   printf("Arguments may have any format, and need only be unambiguous.\n\n");
-  
+
   HelpOptions(options);
-  
+
   printf("\n----- Output Options -----\n\n");
   printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
   HelpOutput(output);
@@ -183,89 +186,89 @@ char *sLower(char cString[]) {
   int iPos;
   for (iPos=0;cString[iPos];iPos++)
   cString[iPos] = tolower(cString[iPos]);
-    
+
   return cString;
 }
 
 void fprintd(FILE *fp,double x,int iExp,int iDig) {
   double dMin,dMax;
-  
+
   dMax=pow(10,iExp);
   dMin=pow(10,-iExp);
   if ((fabs(x) > dMax || fabs(x) < dMin) && x != 0) {
-    if (iDig == 0) 
+    if (iDig == 0)
       fprintf(fp,"%.0e",x);
-    if (iDig == 1) 
+    if (iDig == 1)
       fprintf(fp,"%.1e",x);
-    if (iDig == 2) 
+    if (iDig == 2)
       fprintf(fp,"%.2e",x);
-    if (iDig == 3) 
+    if (iDig == 3)
       fprintf(fp,"%.3e",x);
-    if (iDig == 4) 
+    if (iDig == 4)
       fprintf(fp,"%.4e",x);
-    if (iDig == 5) 
+    if (iDig == 5)
       fprintf(fp,"%.5e",x);
-    if (iDig == 6) 
+    if (iDig == 6)
       fprintf(fp,"%.6e",x);
-    if (iDig == 7) 
+    if (iDig == 7)
       fprintf(fp,"%.7e",x);
-    if (iDig == 8) 
+    if (iDig == 8)
       fprintf(fp,"%.8e",x);
-    if (iDig == 9) 
+    if (iDig == 9)
       fprintf(fp,"%.9e",x);
-    if (iDig == 10) 
+    if (iDig == 10)
       fprintf(fp,"%.10e",x);
-    if (iDig == 11) 
+    if (iDig == 11)
       fprintf(fp,"%.11e",x);
-    if (iDig == 12) 
+    if (iDig == 12)
       fprintf(fp,"%.12e",x);
-    if (iDig == 13) 
+    if (iDig == 13)
       fprintf(fp,"%.13e",x);
-    if (iDig == 14) 
+    if (iDig == 14)
       fprintf(fp,"%.14e",x);
-    if (iDig == 15) 
+    if (iDig == 15)
       fprintf(fp,"%.15e",x);
-    if (iDig == 16) 
+    if (iDig == 16)
       fprintf(fp,"%.16e",x);
   } else {
-    if (iDig == 0) 
+    if (iDig == 0)
       fprintf(fp,"%.0lf",x);
-    if (iDig == 1) 
+    if (iDig == 1)
       fprintf(fp,"%.1lf",x);
-    if (iDig == 2) 
+    if (iDig == 2)
       fprintf(fp,"%.2lf",x);
-    if (iDig == 3) 
+    if (iDig == 3)
       fprintf(fp,"%.3lf",x);
-    if (iDig == 4) 
+    if (iDig == 4)
       fprintf(fp,"%.4lf",x);
-    if (iDig == 5) 
+    if (iDig == 5)
       fprintf(fp,"%.5lf",x);
-    if (iDig == 6) 
+    if (iDig == 6)
       fprintf(fp,"%.6lf",x);
-    if (iDig == 7) 
+    if (iDig == 7)
       fprintf(fp,"%.7lf",x);
-    if (iDig == 8) 
+    if (iDig == 8)
       fprintf(fp,"%.8lf",x);
-    if (iDig == 9) 
+    if (iDig == 9)
       fprintf(fp,"%.9lf",x);
-    if (iDig == 10) 
+    if (iDig == 10)
       fprintf(fp,"%.10lf",x);
-    if (iDig == 11) 
+    if (iDig == 11)
       fprintf(fp,"%.11lf",x);
-    if (iDig == 12) 
+    if (iDig == 12)
       fprintf(fp,"%.12lf",x);
-    if (iDig == 13) 
+    if (iDig == 13)
       fprintf(fp,"%.13lf",x);
-    if (iDig == 14) 
+    if (iDig == 14)
       fprintf(fp,"%.14lf",x);
-    if (iDig == 15) 
+    if (iDig == 15)
       fprintf(fp,"%.15lf",x);
-    if (iDig == 16) 
+    if (iDig == 16)
       fprintf(fp,"%.16lf",x);
   }
 }
 
-/* 
+/*
  * Unit Conversions
  */
 
@@ -284,10 +287,10 @@ double fdUnitsLength(int iType) {
   else if (iType == 5)
     return RJUP;
   else if (iType == 6)
-    return AUCM;
+    return AUM;
   else {
     fprintf(stderr,"ERROR: Unknown iUnitLength %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -308,7 +311,7 @@ void fsUnitsLength(int iType,char cUnit[]) {
     sprintf(cUnit,"AU");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitLength %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -326,7 +329,7 @@ double fdUnitsTime(int iType) {
     return 1e9*YEARSEC;
   else {
     fprintf(stderr,"ERROR: Unknown iUnitTime: %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -343,7 +346,7 @@ void fsUnitsTime(int iType,char cUnit[]) {
     sprintf(cUnit,"Gyr");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitTime: %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -362,7 +365,7 @@ double fdUnitsMass(int iType) {
     return MNEP;
   else {
     fprintf(stderr,"ERROR: Unknown iUnitMass: %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -381,7 +384,7 @@ void fsUnitsMass(int iType,char cUnit[]) {
     sprintf(cUnit,"Neptune");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitMass: %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -418,7 +421,7 @@ void fsUnitsViscosity(UNITS *units,char cUnit[]) {
 
 void fsUnitsAngMom(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
-  
+
   fsUnitsMass(units->iMass,cUnit);
   fsUnitsLength(units->iLength,cTmp);
   strcat(cUnit,"*");
@@ -430,7 +433,7 @@ void fsUnitsAngMom(UNITS *units,char cUnit[]) {
 
 void fsUnitsDensity(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
-  
+
   fsUnitsMass(units->iMass,cUnit);
   strcat(cUnit,"/");
   fsUnitsLength(units->iLength,cTmp);
@@ -440,7 +443,7 @@ void fsUnitsDensity(UNITS *units,char cUnit[]) {
 
 void fsUnitsVel(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
-  
+
   fsUnitsLength(units->iLength,cUnit);
   strcat(cUnit,"/");
   fsUnitsTime(units->iTime,cTmp);
@@ -449,7 +452,7 @@ void fsUnitsVel(UNITS *units,char cUnit[]) {
 
 void fsUnitsRate(int iType,char cUnit[]) {
   char cTmp[OPTLEN];
-  
+
   sprintf(cUnit,"/");
   fsUnitsTime(iType,cTmp);
   strcat(cUnit,cTmp);
@@ -457,7 +460,7 @@ void fsUnitsRate(int iType,char cUnit[]) {
 
 void fsUnitsAngRate(UNITS *units,char cUnit[]) {
   char cTmp[OPTLEN];
-  
+
   fsUnitsAngle(units->iAngle,cUnit);
   strcat(cUnit,"/");
   fsUnitsTime(units->iTime,cTmp);
@@ -514,7 +517,7 @@ void fsUnitsEnergyFlux(UNITS *units,char cUnit[]) {
 double fdUnitsEnergyFlux(int iTime,int iMass,int iLength) {
   double dTmp;
 
-  dTmp=fdUnitsPower(iTime,iMass,iLength);  
+  dTmp=fdUnitsPower(iTime,iMass,iLength);
   return dTmp/(fdUnitsLength(iLength)*fdUnitsLength(iLength));
 }
 
@@ -573,7 +576,7 @@ void fsUnitsTemp(int iType,char cUnit[]) {
     sprintf(cUnit,"F");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitTemp %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
@@ -586,12 +589,12 @@ void fsUnitsTempRate(int iType,char cUnit[]) {
     sprintf(cUnit,"F/s");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitTempRate %d.\n",iType);
-    exit(EXIT_UNITS);      
+    exit(EXIT_UNITS);
   }
 }
 
 /*
- * FILES struct functions 
+ * FILES struct functions
  */
 
 void InfileCopy(INFILE *dest,INFILE *src) {

@@ -1,17 +1,21 @@
-/***************** RADHEAT.H *********************** 
- *
- * Rory Barnes, Sat Jun 28 09:51:13 PDT 2014
- *
- * This header file contains all the subroutines in
- * file radheat.c.
- *
+/**
+ @file radheat.h
+
+ @brief Subroutines that control the integration of the
+        radiogenic heating model. Also includes subroutines
+        that switch between the two models.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Jun 28 2014
+
 */
 
-/* 
+/*
  * Earth conversions are subjective. Different options are available
- * I assume Earth's mantle is 1.4e-4 
+ * I assume Earth's mantle is 1.4e-4
  *
- * PD NOTE: Default Radiogenic concentrations are from my radheat.pro, where values are based on 
+ * PD NOTE: Default Radiogenic concentrations are from my radheat.pro, where values are based on
  * Korenaga (2006), Arevalo (2009), Huang (2013).
  * ENERGY values are Rory's (from Wikipedia?).  They seem ok.
  */
@@ -119,7 +123,7 @@ void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_26ALMASSMAN            1110
 #define OPT_26ALMASSCORE           1111
 #define OPT_26ALNUMMAN             1112
-#define OPT_26ALNUMCORE            1113 
+#define OPT_26ALNUMCORE            1113
 #define OPT_26ALPOWERMAN           1114
 #define OPT_26ALPOWERCORE          1115
 
@@ -148,7 +152,7 @@ void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_232THNUMCRUST          1142
 #define OPT_232THPOWERCRUST        1143
 
-#define OPT_235UMASSMAN            1145  
+#define OPT_235UMASSMAN            1145
 #define OPT_235UMASSCORE           1146
 #define OPT_235UNUMMAN             1147
 #define OPT_235UNUMCORE            1148
@@ -342,25 +346,25 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_238UMASSCRUST       1167
 #define OUT_238UNUMCRUST        1168
 
-#define OUT_235UPOWERMAN        1170  
-#define OUT_235UPOWERCORE       1171  
+#define OUT_235UPOWERMAN        1170
+#define OUT_235UPOWERCORE       1171
 #define OUT_235UENFLUX	        1172
 #define OUT_D235UPOWERDT	1174
-#define OUT_235UDNUMDT	        1175 
+#define OUT_235UDNUMDT	        1175
 #define OUT_235UPOWERTIME	1176
 #define OUT_235UMASSMAN	        1178
 #define OUT_235UMASSCORE        1179
 #define OUT_235UNUMMAN          1180
-#define OUT_235UNUMCORE         1181 
+#define OUT_235UNUMCORE         1181
 #define OUT_235UTIME            1185
 #define OUT_235UPOWERCRUST      1186
 #define OUT_235UMASSCRUST       1187
 #define OUT_235UNUMCRUST        1188
 
-#define OUT_RADPOWERMAN         1190  
+#define OUT_RADPOWERMAN         1190
 #define OUT_RADPOWERCORE        1191
 #define OUT_RADPOWERCRUST       1192
-#define OUT_RADPOWERTOTAL       1193  
+#define OUT_RADPOWERTOTAL       1193
 #define OUT_SURFENFLUXRADTOTAL  1195
 
 void fvWrite26AlPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -446,19 +450,19 @@ double fd26AlConstant(double,double);
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);
 double fd238UConstant(double,double);
-double fd235UConstant(double,double);  
+double fd235UConstant(double,double);
 
 double fd26AlPowerMan(UPDATE*,int);
 double fd40KPowerMan(UPDATE*,int);
 double fd232ThPowerMan(UPDATE*,int);
 double fd238UPowerMan(UPDATE*,int);
-double fd235UPowerMan(UPDATE*,int); 
+double fd235UPowerMan(UPDATE*,int);
 
 double fdD26AlNumManDt(BODY*,SYSTEM*,int*);
 double fdD40KNumManDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumManDt(BODY*,SYSTEM*,int*);
 double fdD238UNumManDt(BODY*,SYSTEM*,int*);
-double fdD235UNumManDt(BODY*,SYSTEM*,int*); 
+double fdD235UNumManDt(BODY*,SYSTEM*,int*);
 
 double fd26AlPowerCore(UPDATE*,int);
 double fd40KPowerCore(UPDATE*,int);
@@ -498,6 +502,6 @@ double fdD235UNumCoreDt(BODY*,SYSTEM*,int*);
 double fdD40KNumCrustDt(BODY*,SYSTEM*,int*);
 double fdD232ThNumCrustDt(BODY*,SYSTEM*,int*);
 double fdD238UNumCrustDt(BODY*,SYSTEM*,int*);
-double fdD235UNumCrustDt(BODY*,SYSTEM*,int*); 
+double fdD235UNumCrustDt(BODY*,SYSTEM*,int*);
 
-
+/* @endcond */

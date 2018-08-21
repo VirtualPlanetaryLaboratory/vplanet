@@ -1,11 +1,12 @@
+/**
+  @file body.h
 
-/********************** BODY.H ***********************/
-/*
- * Rory Barnes, Wed May  7 13:53:38 PDT 2014
- *
- * This header file contains all the subroutines in
- * file body.c.
- *
+  @brief Relationships between parameters associated with individual bodies.
+
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+  @date May 7 2014
+
 */
 
 #include <math.h>
@@ -53,6 +54,8 @@
 #define STELLAR_ERR_BADORDER          -7
 #define STELLAR_BAR_MLEN              21
 #define STELLAR_BAR_ALEN              502
+
+/* @cond DOXYGEN_OVERRIDE */
 
 int fiSign(double);
 double fdFreqToPer(double);
@@ -102,6 +105,8 @@ double fdLopezRadius(double, double, double, double, int);
 
 // Baraffe stellar evolution grid
 double fdBaraffe(int, double, double, int, int *);
+
+/* @endcond */
 
 // Data grid for Proxima Centauri from the Y^2 isochrones
 // obtained from www.astro.yale.edu/demarque/fs255_grid.tar.gz

@@ -1,13 +1,15 @@
-/********************** OUTPUT.C ********************/
-/*
- * Rory Barnes, Wed May  7 16:39:18 PDT 2014
- *
- * Integers for output parameters. To add a new output:
- * 1) Add new definition here
- * 2) Add output properties to InitializeOutput
- * 3) Write new subroutine that returns desired output
- * 4) Write new fnWriteOutput function
- *
+/**
+  @file output.h
+  @brief Subroutines for output and logging.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+
+  To add a new output:
+  1) Add new definition here
+  2) Add output properties to InitializeOutput
+  3) Write new subroutine that returns desired output
+  4) Write new fnWriteOutput function
+
 */
 
 /* General Outuput 0-999 */
@@ -68,6 +70,9 @@
 #define OUT_ORBANGMOM		        660
 #define OUT_ARGP                661
 #define OUT_MEANA               662
+#define OUT_INC                 663
+#define OUT_LONGA               664
+#define OUT_MEANL               665
 
 
 #define OUT_ORBKINENERGY        670
@@ -77,6 +82,7 @@
 #define OUT_LOSTENG             691
 #define OUT_LOSTANGMOM          692
 
+/* @cond DOXYGEN_OVERRIDE */
 
 void WriteBodyPrecA(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Bary2OrbElems(BODY *body, int iBody);
@@ -87,3 +93,5 @@ void WriteOutput(BODY*,CONTROL*,FILES*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,do
 void WriteLog(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,time_t,int);
 void InitializeOutput(OUTPUT*,fnWriteOutput*);
 void WriteTime(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+
+/* @endcond */

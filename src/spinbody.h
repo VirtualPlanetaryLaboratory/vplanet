@@ -1,13 +1,9 @@
-/******************************** SpiNBody.h ***********************************
- *
- * Hayden Smotherman, Tue Feb 21 2017
- *
- * Header for the subroutines in SpiNBody.c
- *
- ******************************************************************************/
-
- void AddModuleSpiNBody(MODULE*,int,int);
- void BodyCopySpiNBody(BODY*,BODY*,int,int,int);
+/**
+  @file spinbody.h
+  @brief Subroutines that control the integration of the N Body simulation
+  @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+  @date Feb 21 2017
+*/
 
 //Option numbers
 #define OPTSTARTSPINBODY        1600
@@ -41,6 +37,11 @@
 #define OUT_INCSPINBODY         1630
 #define OUT_LONGASPINBODY       1631
 
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleSpiNBody(MODULE*,int,int);
+void BodyCopySpiNBody(BODY*,BODY*,int,int,int);
+
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]);
 void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody);
 void ReadPositionX(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile);
@@ -54,18 +55,18 @@ void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody
 void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody);
 void InitializeUpdateTmpBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody);
 
-void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
-void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
-void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
-void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
-void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
-void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody);
+void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
+void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
+void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
+void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
+void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
+void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody);
 
 void VerifyPerturbersSpiNBody(BODY *body,int iNumBodies,int iBody);
 
-void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule);
+void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule);
 
-void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule);
+void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule);
 void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody);
 
 void FinalizeUpdateVelXSpiNBody(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo);
@@ -120,3 +121,5 @@ double fdDPositionZDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody);
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody);
+
+/* @endcond */

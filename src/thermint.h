@@ -1,10 +1,8 @@
-/***************** THERMINT.H *********************** 
- *
- * Peter Driscoll 6/1/15
- *
- * This header file contains all the subroutines in
- * file thermint.c.
- *
+/**
+  @file thermint.h
+  @brief Thermal evolution of the planet's interior (mantle + core)
+  @author Peter Driscoll ([peteredriscoll](https://github.com/peteredriscoll/))
+  @date June 1 2015
 */
 
 // GLOBAL VARIABLE INDEXES
@@ -538,3 +536,5 @@ double cubicroot(int,BODY*,int);
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a < _b ? _a : _b; })
+
+/* @endcond */

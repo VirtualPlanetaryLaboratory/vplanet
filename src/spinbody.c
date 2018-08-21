@@ -1,10 +1,9 @@
-/******************************** SpiNBody.c ***********************************
- *
- * Hayden Smotherman, Tue Feb 21 2017
- *
- * Subroutines that control the integration of the N Body simulation
- *
- ******************************************************************************/
+/**
+  @file spinbody.c
+  @brief Subroutines that control the integration of the N Body simulation
+  @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+  @date Feb 21 2017
+*/
 
 #include <stdio.h>
 #include <math.h>
@@ -17,7 +16,7 @@
 
 
 void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
-  int iPert;
+  int jBody, iGravPerts;
   dest[iBody].dVelX = src[iBody].dVelX;
   dest[iBody].dVelY = src[iBody].dVelY;
   dest[iBody].dVelZ = src[iBody].dVelZ;
@@ -25,20 +24,32 @@ void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
   dest[iBody].dPositionY = src[iBody].dPositionY;
   dest[iBody].dPositionZ = src[iBody].dPositionZ;
 
-  dest[iBody].iGravPerts = src[iBody].iGravPerts;
-  //dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int)); //Will create a memory leak. Replaced by InitializeUpdateTmpBodySpiNBody
+  dest[iBody].iGravPertsSpiNBody = src[iBody].iGravPertsSpiNBody;
 
-  for (iPert=0;iPert<src[iBody].iGravPerts;iPert++){
-    dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
-    dest[iBody].dDistance3[iPert]  = src[iBody].dDistance3[iPert];
+  iGravPerts = src[iBody].iGravPertsSpiNBody;
+  for (jBody=0;jBody<iGravPerts;jBody++) {
+    //dest[iBody].dDistance3[jBody]  = src[iBody].dDistance3[jBody];
+    dest[iBody].dDistanceX[jBody]  = src[iBody].dDistanceX[jBody];
+    dest[iBody].dDistanceY[jBody]  = src[iBody].dDistanceY[jBody];
+    dest[iBody].dDistanceZ[jBody]  = src[iBody].dDistanceZ[jBody];
   }
 
 }
 
 void InitializeUpdateTmpBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  int jBody;
   //This replaces malloc'ing the destination body in BodyCopySpiNBody
-  control->Evolve.tmpBody[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-  control->Evolve.tmpBody[iBody].dDistance3  = malloc(body[iBody].iGravPerts*sizeof(double));
+  control->Evolve.tmpBody[iBody].dDistance3  = malloc(control->Evolve.iNumBodies*sizeof(double));
+  control->Evolve.tmpBody[iBody].dDistanceX  = malloc(control->Evolve.iNumBodies*sizeof(double));
+  control->Evolve.tmpBody[iBody].dDistanceY  = malloc(control->Evolve.iNumBodies*sizeof(double));
+  control->Evolve.tmpBody[iBody].dDistanceZ  = malloc(control->Evolve.iNumBodies*sizeof(double));
+
+  for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
+    //body[iBody].dDistance3[jBody] = 0;
+    body[iBody].dDistanceX[jBody] = 0;
+    body[iBody].dDistanceY[jBody] = 0;
+    body[iBody].dDistanceZ[jBody] = 0;
+  }
 }
 
 //================================== Read Inputs ===============================
@@ -262,39 +273,56 @@ void ReadOptionsSpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
 //============================ End Read Inputs =================================
 
 void InitializeBodySpiNBody(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  int iTmpBody = 0;
+  int iTmpBody = 0,jBody;
   if (body[iBody].bSpiNBody){
-    body[iBody].iGravPerts = control->Evolve.iNumBodies-1; //All bodies except the body itself are perturbers
-    body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-    body[iBody].dDistance3 = malloc(body[iBody].iGravPerts*sizeof(double));
+    body[iBody].iGravPertsSpiNBody = control->Evolve.iNumBodies; //All bodies except the body itself are perturbers
+    //body[iBody].dDistance3 = malloc(control->Evolve.iNumBodies*sizeof(double));
+    body[iBody].dDistanceX = malloc(control->Evolve.iNumBodies*sizeof(double));
+    body[iBody].dDistanceY = malloc(control->Evolve.iNumBodies*sizeof(double));
+    body[iBody].dDistanceZ = malloc(control->Evolve.iNumBodies*sizeof(double));
 
-
-    //If orbital parameters are defined, then we want to set position and velocity based on those
-    if (body[iBody].bUseOrbParams){
-       if (iBody == 0){ //Only want to do this once
-         for (iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++){
-           body[iTmpBody].dCartPos = malloc(3*sizeof(double));
-           body[iTmpBody].dCartVel = malloc(3*sizeof(double));
-           //Convert all bodies w/ orbital elements to Heliocentric
-           if (body[iTmpBody].bUseOrbParams){
-             body[iTmpBody].dSinc = sin(0.5*body[iTmpBody].dInc);
-             OrbElems2Helio(body, iTmpBody);
-           }
-         }
-       }
-
-       Helio2Bary(body, control->Evolve.iNumBodies, iBody);
-       body[iBody].dPositionX = body[iBody].dCartPos[0]*AUCM;
-       body[iBody].dPositionY = body[iBody].dCartPos[1]*AUCM;
-       body[iBody].dPositionZ = body[iBody].dCartPos[2]*AUCM;
-       body[iBody].dVelX      = body[iBody].dCartVel[0]*AUCM/DAYSEC;
-       body[iBody].dVelY      = body[iBody].dCartVel[1]*AUCM/DAYSEC;
-       body[iBody].dVelZ      = body[iBody].dCartVel[2]*AUCM/DAYSEC;
+    for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
+      //body[iBody].dDistance3[jBody] = 0;
+      body[iBody].dDistanceX[jBody] = 0;
+      body[iBody].dDistanceY[jBody] = 0;
+      body[iBody].dDistanceZ[jBody] = 0;
     }
 
-  } //elseif (body[iBody].bDistOrb == 0){
-  //  body[iBody].iGravPerts = 0; //Is this already set to zero somewhere?
-  //}
+    //If orbital parameters are defined, then we want to set position and velocity based on those
+    if (body[iBody].bUseOrbParams) {
+      if (iBody == 0) { //Only want to do this once
+        for (iTmpBody = 0; iTmpBody<control->Evolve.iNumBodies; iTmpBody++) {
+          if (iTmpBody != 0) {
+            body[iTmpBody].dMu = BIGG*(body[0].dMass+body[iTmpBody].dMass);
+          } else {
+            body[iTmpBody].dMu = 0;
+          }
+          body[iTmpBody].dHCartPos = malloc(3*sizeof(double));
+          body[iTmpBody].dHCartVel = malloc(3*sizeof(double));
+          body[iTmpBody].dBCartPos = malloc(3*sizeof(double));
+          body[iTmpBody].dBCartVel = malloc(3*sizeof(double));
+
+          //Convert all bodies w/ orbital elements to Heliocentric
+          if (body[iTmpBody].bUseOrbParams) {
+          body[iTmpBody].dSinc = sin(0.5*body[iTmpBody].dInc);
+          body[iTmpBody].dPinc = body[iTmpBody].dSinc*sin(body[iTmpBody].dLongA);
+          body[iTmpBody].dQinc = body[iTmpBody].dSinc*cos(body[iTmpBody].dLongA);
+          body[iTmpBody].dHecc = body[iTmpBody].dEcc*sin(body[iTmpBody].dLongP);
+          body[iTmpBody].dKecc = body[iTmpBody].dEcc*cos(body[iTmpBody].dLongP);
+          OrbElems2Helio(body, iTmpBody);
+          }
+        }
+      }
+
+      Helio2Bary(body, control->Evolve.iNumBodies, iBody);
+      body[iBody].dPositionX = body[iBody].dBCartPos[0]*AUM;
+      body[iBody].dPositionY = body[iBody].dBCartPos[1]*AUM;
+      body[iBody].dPositionZ = body[iBody].dBCartPos[2]*AUM;
+      body[iBody].dVelX      = body[iBody].dBCartVel[0]*AUM/DAYSEC;
+      body[iBody].dVelY      = body[iBody].dBCartVel[1]*AUM/DAYSEC;
+      body[iBody].dVelZ      = body[iBody].dBCartVel[2]*AUM/DAYSEC;
+    }
+  }
 }
 
 void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody) {
@@ -326,7 +354,7 @@ void InitializeUpdateSpiNBody(BODY *body,UPDATE *update,int iBody) {
 }
 
 //======================== Verify Variable Functions ===========================
-void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionX][0] = 1;
@@ -334,10 +362,9 @@ void VerifyPositionX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionX][0][0] = iBody;
 
   update[iBody].pdDPositionX = &update[iBody].daDerivProc[update[iBody].iPositionX][0];
-  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
 }
 
-void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionY][0] = 1;
@@ -345,10 +372,9 @@ void VerifyPositionY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionY][0][0] = iBody;
 
   update[iBody].pdDPositionY = &update[iBody].daDerivProc[update[iBody].iPositionY][0];
-  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
 }
 
-void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iPositionZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iPositionZ][0] = 1;
@@ -356,10 +382,9 @@ void VerifyPositionZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, f
   update[iBody].iaBody[update[iBody].iPositionZ][0][0] = iBody;
 
   update[iBody].pdDPositionZ = &update[iBody].daDerivProc[update[iBody].iPositionZ][0];
-  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
 }
 
-void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelX][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelX][0] = 1;
@@ -367,10 +392,9 @@ void VerifyVelX(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelX][0][0] = iBody;
 
   update[iBody].pdDVelX = &update[iBody].daDerivProc[update[iBody].iVelX][0];
-  fnUpdate[iBody][update[iBody].iVelX][0] = &fdDVelXDt;
 }
 
-void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelY][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelY][0] = 1;
@@ -378,10 +402,9 @@ void VerifyVelY(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelY][0][0] = iBody;
 
   update[iBody].pdDVelY = &update[iBody].daDerivProc[update[iBody].iVelY][0];
-  fnUpdate[iBody][update[iBody].iVelY][0] = &fdDVelYDt;
 }
 
-void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpdateVariable ***fnUpdate, int iBody) {
+void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, int iBody) {
 
   update[iBody].iaType[update[iBody].iVelZ][0] = 7;
   update[iBody].iNumBodies[update[iBody].iVelZ][0] = 1;
@@ -389,39 +412,47 @@ void VerifyVelZ(BODY *body,OPTIONS *options, UPDATE *update, double dAge, fnUpda
   update[iBody].iaBody[update[iBody].iVelZ][0][0] = iBody;
 
   update[iBody].pdDVelZ = &update[iBody].daDerivProc[update[iBody].iVelZ][0];
-  fnUpdate[iBody][update[iBody].iVelZ][0] = &fdDVelZDt;
 }
 
-void VerifyPerturbersSpiNBody(BODY *body,int iNumBodies,int iBody) {
-  int iPert=0, j;
-//   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts*sizeof(int));
-  for (j=0;j<iNumBodies;j++) {
-    if (j != iBody) {
-      if (body[j].bSpiNBody == 0) {
-        fprintf(stderr,"ERROR: SpiNBody must be the called for all planets\n");
-        exit(EXIT_INPUT);
-      }
-      body[iBody].iaGravPerts[iPert] = j;
-      iPert++;
-    }
+void VerifyGM(BODY *body,CONTROL *control) {
+  int iBody;
+
+  for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
+    body[iBody].dGM = BIGG*body[iBody].dMass;
   }
 }
 
-void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void AssignSpiNBodyDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPositionX][0] = &fdDPositionXDt;
+  fnUpdate[iBody][update[iBody].iPositionY][0] = &fdDPositionYDt;
+  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fdDPositionZDt;
+  fnUpdate[iBody][update[iBody].iVelX][0]      = &fdDVelXDt;
+  fnUpdate[iBody][update[iBody].iVelY][0]      = &fdDVelYDt;
+  fnUpdate[iBody][update[iBody].iVelZ][0]      = &fdDVelZDt;
+}
 
-  VerifyPerturbersSpiNBody(body,control->Evolve.iNumBodies,iBody);
+void NullSpiNBodyDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPositionX][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iPositionY][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iPositionZ][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelX][0]      = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelY][0]      = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iVelZ][0]      = &fndUpdateFunctionTiny;
+}
 
-  //VerifyVelX MUST run first, or else distance won't be calculated
-  //Should add a check to see if it's been calculated?
-  VerifyVelX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyVelZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionX(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionY(body,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyPositionZ(body,options,update,body[iBody].dAge,fnUpdate,iBody);
+void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
 
-  control->fnForceBehavior[iBody][iModule] = &ForceBehaviorSpiNBody;
-  control->fnPropsAux[iBody][iModule] = &PropertiesSpiNBody;
+  VerifyVelX(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelY(body,options,update,body[iBody].dAge,iBody);
+  VerifyVelZ(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionX(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionY(body,options,update,body[iBody].dAge,iBody);
+  VerifyPositionZ(body,options,update,body[iBody].dAge,iBody);
+
+  //VerifyGM(body,control);
+
+  control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorSpiNBody;
+  control->fnPropsAux[iBody][iModule]        = &PropertiesSpiNBody;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopySpiNBody;
 }
 
@@ -432,27 +463,27 @@ void OrbElems2Helio(BODY *body, int iBody) {
   double xtmp, ytmp, vxtmp, vytmp;
 
   if (iBody == 0) {
-    body[iBody].dCartPos[0] = 0;
-    body[iBody].dCartPos[1] = 0;
-    body[iBody].dCartPos[2] = 0;
+    body[iBody].dHCartPos[0] = 0;
+    body[iBody].dHCartPos[1] = 0;
+    body[iBody].dHCartPos[2] = 0;
 
-    body[iBody].dCartVel[0] = 0;
-    body[iBody].dCartVel[1] = 0;
-    body[iBody].dCartVel[2] = 0;
+    body[iBody].dHCartVel[0] = 0;
+    body[iBody].dHCartVel[1] = 0;
+    body[iBody].dHCartVel[2] = 0;
   } else {
     kepler_eqn(body, iBody);
-    xtmp = xinit(body, iBody);
-    ytmp = yinit(body, iBody);
-    vxtmp = vxi(body, iBody);
-    vytmp = vyi(body, iBody);
+    xtmp = fndXinit(body, iBody);
+    ytmp = fndYinit(body, iBody);
+    vxtmp = fndVxi(body, iBody);
+    vytmp = fndVyi(body, iBody);
 
-    body[iBody].dCartPos[0] = xtmp*(xangle1(body,iBody))+ytmp*(xangle2(body,iBody));
-    body[iBody].dCartPos[1] = xtmp*(yangle1(body,iBody))+ytmp*(yangle2(body,iBody));
-    body[iBody].dCartPos[2] = xtmp*(zangle1(body,iBody))+ytmp*(zangle2(body,iBody));
+    body[iBody].dHCartPos[0] = xtmp*(fndXangle1(body,iBody))+ytmp*(fndXangle2(body,iBody));
+    body[iBody].dHCartPos[1] = xtmp*(fndYangle1(body,iBody))+ytmp*(fndYangle2(body,iBody));
+    body[iBody].dHCartPos[2] = xtmp*(fndZangle1(body,iBody))+ytmp*(fndZangle2(body,iBody));
 
-    body[iBody].dCartVel[0] = vxtmp*(xangle1(body,iBody))+vytmp*(xangle2(body,iBody));
-    body[iBody].dCartVel[1] = vxtmp*(yangle1(body,iBody))+vytmp*(yangle2(body,iBody));
-    body[iBody].dCartVel[2] = vxtmp*(zangle1(body,iBody))+vytmp*(zangle2(body,iBody));
+    body[iBody].dHCartVel[0] = vxtmp*(fndXangle1(body,iBody))+vytmp*(fndXangle2(body,iBody));
+    body[iBody].dHCartVel[1] = vxtmp*(fndYangle1(body,iBody))+vytmp*(fndYangle2(body,iBody));
+    body[iBody].dHCartVel[2] = vxtmp*(fndZangle1(body,iBody))+vytmp*(fndZangle2(body,iBody));
   }
 }
 
@@ -468,30 +499,30 @@ void Helio2Bary(BODY *body, int iNumBodies, int iBody) {
     xcom[i] = 0;
     vcom[i] = 0;
     for (iTmpBody=1;iTmpBody<iNumBodies;iTmpBody++) {
-      xcom[i] += (body[iTmpBody].dMass*body[iTmpBody].dCartPos[i]/mtotal);
-      vcom[i] += (body[iTmpBody].dMass*body[iTmpBody].dCartVel[i]/mtotal);
+      xcom[i] += (body[iTmpBody].dMass*body[iTmpBody].dHCartPos[i]/mtotal);
+      vcom[i] += (body[iTmpBody].dMass*body[iTmpBody].dHCartVel[i]/mtotal);
     }
   }
 
   for (i=0;i<3;i++) {
-    body[iBody].dCartPos[i] -= xcom[i];
-    body[iBody].dCartVel[i] -= vcom[i];
+    body[iBody].dBCartPos[i] = body[iBody].dHCartPos[i] - xcom[i];
+    body[iBody].dBCartVel[i] = body[iBody].dHCartVel[i] - vcom[i];
   }
 
   free(xcom);
   free(vcom);
 }
 
-void Bary2Helio(BODY *body, int iBody){
+void Bary2Helio(BODY *body, int iBody) {
   //Calculate heliocentric cartesian position
-  body[iBody].dCartPos[0] = body[iBody].dPositionX - body[0].dPositionX;
-  body[iBody].dCartPos[1] = body[iBody].dPositionY - body[0].dPositionY;
-  body[iBody].dCartPos[2] = body[iBody].dPositionZ - body[0].dPositionZ;
+  body[iBody].dHCartPos[0] = body[iBody].dPositionX - body[0].dPositionX;
+  body[iBody].dHCartPos[1] = body[iBody].dPositionY - body[0].dPositionY;
+  body[iBody].dHCartPos[2] = body[iBody].dPositionZ - body[0].dPositionZ;
 
   //Calculate heliocentric cartesian velocity
-  body[iBody].dCartVel[0] = body[iBody].dVelX - body[0].dVelX;
-  body[iBody].dCartVel[1] = body[iBody].dVelY - body[0].dVelY;
-  body[iBody].dCartVel[2] = body[iBody].dVelZ - body[0].dVelZ;
+  body[iBody].dHCartVel[0] = body[iBody].dVelX - body[0].dVelX;
+  body[iBody].dHCartVel[1] = body[iBody].dVelY - body[0].dVelY;
+  body[iBody].dHCartVel[2] = body[iBody].dVelZ - body[0].dVelZ;
 }
 
 void Bary2OrbElems(BODY *body, int iBody){
@@ -500,7 +531,7 @@ void Bary2OrbElems(BODY *body, int iBody){
 
   h = malloc(3*sizeof(double));
   //First convert from Barycentric to heliocentric
-  //Helio values are stored in body[iBody].dCartPos and body[iBody].dCartVel
+  //Helio values are stored in body[iBody].daCartPos and body[iBody].daCartVel
   Bary2Helio(body, iBody);
 
   if (iBody==0) {
@@ -514,20 +545,21 @@ void Bary2OrbElems(BODY *body, int iBody){
 
     //Solve for various values that are used repeatedly
     //Solve for h = r X v
-    cross(body[iBody].dCartPos, body[iBody].dCartVel, h);
+    cross(body[iBody].dHCartPos, body[iBody].dHCartVel, h);
     hsq = h[0]*h[0]+h[1]*h[1]+h[2]*h[2];                  // ||h||^2
     normh = sqrt(hsq);                                    // ||h||
-    vsq = body[iBody].dCartVel[0]*body[iBody].dCartVel[0]   // ||v||^2
-         +body[iBody].dCartVel[1]*body[iBody].dCartVel[1]
-         +body[iBody].dCartVel[2]*body[iBody].dCartVel[2];
-    rsq = body[iBody].dCartPos[0]*body[iBody].dCartPos[0]   // ||r||^2
-         +body[iBody].dCartPos[1]*body[iBody].dCartPos[1]
-         +body[iBody].dCartPos[2]*body[iBody].dCartPos[2];
+    vsq = body[iBody].dHCartVel[0]*body[iBody].dHCartVel[0]   // ||v||^2
+         +body[iBody].dHCartVel[1]*body[iBody].dHCartVel[1]
+         +body[iBody].dHCartVel[2]*body[iBody].dHCartVel[2];
+    rsq = body[iBody].dHCartPos[0]*body[iBody].dHCartPos[0]   // ||r||^2
+         +body[iBody].dHCartPos[1]*body[iBody].dHCartPos[1]
+         +body[iBody].dHCartPos[2]*body[iBody].dHCartPos[2];
     normr = sqrt(rsq);                                    // ||r||
-    rdot = (body[iBody].dCartPos[0]*body[iBody].dCartVel[0]
-           +body[iBody].dCartPos[1]*body[iBody].dCartVel[1]
-           +body[iBody].dCartPos[2]*body[iBody].dCartVel[2])/normr;
+    rdot = (body[iBody].dHCartPos[0]*body[iBody].dHCartVel[0]
+           +body[iBody].dHCartPos[1]*body[iBody].dHCartVel[1]
+           +body[iBody].dHCartPos[2]*body[iBody].dHCartVel[2])/normr;
     mu  = BIGG * (body[iBody].dMass + body[0].dMass);     // G(M+m)
+    body[iBody].dMu = mu;
 
     // Solve for semi-major axis
     body[iBody].dSemi = 1/(2/normr - vsq/mu);
@@ -547,8 +579,8 @@ void Bary2OrbElems(BODY *body, int iBody){
     }
 
     //Solve for w and f
-    sinwf = body[iBody].dCartPos[2]/(normr*sin(body[iBody].dInc));
-    coswf = (body[iBody].dCartPos[0]/normr+sin(body[iBody].dLongA)*sinwf
+    sinwf = body[iBody].dHCartPos[2]/(normr*sin(body[iBody].dInc)); //Error when dInc=0
+    coswf = (body[iBody].dHCartPos[0]/normr+sin(body[iBody].dLongA)*sinwf
            *cos(body[iBody].dInc))/cos(body[iBody].dLongA);
     if (body[iBody].dEcc != 0) { //No true anomaly for circular orbits
       sinfAngle = body[iBody].dSemi*(1-body[iBody].dEccSq)*rdot
@@ -579,20 +611,37 @@ void Bary2OrbElems(BODY *body, int iBody){
         f += 2.*PI;
       }
 
-      //Calculate Mean anomaly
+      // Calculate Mean anomaly
       cosE = (cosfAngle+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cosfAngle);
-      if (f <= PI){
-        body[iBody].dEccA = acos(cosE);
+      if (fabs(fabs(cosE)-1)<1e-12) {
+        /* If there is numerical error such that abs(cosE)>1, then use the small
+           angle approximation to find E */
+        body[iBody].dEccA = (1+(body[iBody].dEccSq-1)*(cosfAngle*cosfAngle)-body[iBody].dEccSq)/(1+body[iBody].dEcc*cosfAngle);
       } else {
-        body[iBody].dEccA = 2.*PI - acos(cosE);
+        body[iBody].dEccA = acos(cosE);
+
+        // If the planet is in the second half of the orbit, we need -acos(cosE) + 2PI
+        // This keeps Mean A in [0, 2PI]
+        if (f > PI) {
+          body[iBody].dEccA = -body[iBody].dEccA + 2*PI;
+        }
+
       }
 
       body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA);
+
       if (body[iBody].dMeanA < 0) {
         body[iBody].dMeanA += 2.*PI;
-      } else if (body[iBody].dMeanA >= 2.*PI){
+      } else if (body[iBody].dMeanA >= 2.*PI) {
         body[iBody].dMeanA -= 2.*PI;
       }
+
+      body[iBody].dOrbPeriod = sqrt(4*PI*PI*body[iBody].dSemi*body[iBody].dSemi*body[iBody].dSemi/mu);
+      body[iBody].dMeanMotion = 2*PI/body[iBody].dOrbPeriod;
+      body[iBody].dPinc = body[iBody].dSinc*sin(body[iBody].dLongA);
+      body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
+      body[iBody].dHecc = body[iBody].dEcc*sin(body[iBody].dLongP);
+      body[iBody].dKecc = body[iBody].dEcc*cos(body[iBody].dLongP);
     }
   }
   free(h);
@@ -629,11 +678,11 @@ void Bary2OrbElems(BODY *body, int iBody){
 // }
 //
 // double xinit(BODY *body, int iBody) {
-//   return body[iBody].dSemi/AUCM * (cos(body[iBody].dEccA) - body[iBody].dEcc);
+//   return body[iBody].dSemi/AUM * (cos(body[iBody].dEccA) - body[iBody].dEcc);
 // }
 //
 // double yinit(BODY *body, int iBody) {
-//   return body[iBody].dSemi/AUCM * sqrt(1.0-pow(body[iBody].dEcc,2)) * sin(body[iBody].dEccA);
+//   return body[iBody].dSemi/AUM * sqrt(1.0-pow(body[iBody].dEcc,2)) * sin(body[iBody].dEccA);
 // }
 //
 // double vxi(BODY *body, int iBody) {
@@ -641,8 +690,8 @@ void Bary2OrbElems(BODY *body, int iBody){
 //   x = xinit(body, iBody);
 //   y = yinit(body, iBody);
 //   mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
-//   n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
-//   return -pow(body[iBody].dSemi/AUCM,2)*n*sin(body[iBody].dEccA)/sqrt(pow(x,2)+pow(y,2));
+//   n = sqrt(mu/pow(body[iBody].dSemi/AUM,3));
+//   return -pow(body[iBody].dSemi/AUM,2)*n*sin(body[iBody].dEccA)/sqrt(pow(x,2)+pow(y,2));
 // }
 //
 // double vyi(BODY *body, int iBody) {
@@ -650,8 +699,8 @@ void Bary2OrbElems(BODY *body, int iBody){
 //   x = xinit(body, iBody);
 //   y = yinit(body, iBody);
 //   mu = pow(KGAUSS,2)*(body[0].dMass+body[iBody].dMass)/MSUN;
-//   n = sqrt(mu/pow(body[iBody].dSemi/AUCM,3));
-//   v = pow(body[iBody].dSemi/AUCM,2)*n*sqrt((1.0-pow(body[iBody].dEcc,2))/(pow(x,2)+pow(y,2)))*cos(body[iBody].dEccA);
+//   n = sqrt(mu/pow(body[iBody].dSemi/AUM,3));
+//   v = pow(body[iBody].dSemi/AUM,2)*n*sqrt((1.0-pow(body[iBody].dEcc,2))/(pow(x,2)+pow(y,2)))*cos(body[iBody].dEccA);
 //   return v;
 // }
 //
@@ -822,12 +871,42 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 //============================ End Writing Functions ===========================
 
-void ForceBehaviorSpiNBody(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
 }
 
 void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+  int jBody,iNumBodies;
+  double DistanceX,DistanceY,DistanceZ,Distance3;
 
+  iNumBodies = evolve->iNumBodies;
+  body[iBody].dGM = BIGG*body[iBody].dMass;
+
+  for (jBody=0; jBody<iNumBodies; jBody++) {
+    // Calculate the cube of the distance to each perturbing body. Used in Vx, Vy, and Vz calculations.
+    if (iBody<jBody) {
+      //(body[jBody].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[jBody];
+      DistanceX = body[jBody].dPositionX-body[iBody].dPositionX;
+      DistanceY = body[jBody].dPositionY-body[iBody].dPositionY;
+      DistanceZ = body[jBody].dPositionZ-body[iBody].dPositionZ;
+      /* body[iBody].dDistance3[jBody] = sqrt(DistanceX*DistanceX
+            + DistanceY*DistanceY
+            + DistanceZ*DistanceZ); */
+      Distance3 = sqrt(DistanceX*DistanceX
+            + DistanceY*DistanceY
+            + DistanceZ*DistanceZ);
+      // body[iBody].dDistance3[jBody] = 1/(body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]*body[iBody].dDistance3[jBody]);
+      Distance3 = 1/(Distance3*Distance3*Distance3);
+      body[iBody].dDistanceX[jBody] = DistanceX*Distance3;
+      body[iBody].dDistanceY[jBody] = DistanceY*Distance3;
+      body[iBody].dDistanceZ[jBody] = DistanceZ*Distance3;
+
+      //body[jBody].dDistance3[iBody] = body[iBody].dDistance3[jBody];
+      body[jBody].dDistanceX[iBody] = -body[iBody].dDistanceX[jBody];
+      body[jBody].dDistanceY[iBody] = -body[iBody].dDistanceY[jBody];
+      body[jBody].dDistanceZ[iBody] = -body[iBody].dDistanceZ[jBody];
+    }
+  }
 }
 
 //========================= Finalize Variable Functions ========================
@@ -889,25 +968,27 @@ void LogSpiNBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDAT
 // Add Module Function
 void AddModuleSpiNBody(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = SPINBODY; //Name
+  module->iaModule[iBody][iModule]                  = SPINBODY; //Name
 
   //Halts
-  module->fnCountHalts[iBody][iModule] = &CountHaltsSpiNBody;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltSpiNBody;
+  module->fnCountHalts[iBody][iModule]              = &CountHaltsSpiNBody;
+  module->fnVerifyHalt[iBody][iModule]              = &VerifyHaltSpiNBody;
 
-  module->fnLogBody[iBody][iModule] = &LogBodySpiNBody;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsSpiNBody;
-  module->fnVerify[iBody][iModule] = &VerifySpiNBody;
+  module->fnLogBody[iBody][iModule]                 = &LogBodySpiNBody;
+  module->fnReadOptions[iBody][iModule]             = &ReadOptionsSpiNBody;
+  module->fnVerify[iBody][iModule]                  = &VerifySpiNBody;
+  module->fnAssignDerivatives[iBody][iModule]       = &AssignSpiNBodyDerivatives;
+  module->fnNullDerivatives[iBody][iModule]         = &NullSpiNBodyDerivatives;
 
-  module->fnInitializeBody[iBody][iModule] = &InitializeBodySpiNBody;
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateSpiNBody;
-  module->fnInitializeOutput[iBody][iModule] = &InitializeOutputSpiNBody;
+  module->fnInitializeBody[iBody][iModule]          = &InitializeBodySpiNBody;
+  module->fnInitializeUpdate[iBody][iModule]        = &InitializeUpdateSpiNBody;
+  module->fnInitializeOutput[iBody][iModule]        = &InitializeOutputSpiNBody;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodySpiNBody;
 
   //Primary Variable Finalizations
-  module->fnFinalizeUpdateVelX[iBody][iModule] = &FinalizeUpdateVelXSpiNBody;
-  module->fnFinalizeUpdateVelY[iBody][iModule] = &FinalizeUpdateVelYSpiNBody;
-  module->fnFinalizeUpdateVelZ[iBody][iModule] = &FinalizeUpdateVelZSpiNBody;
+  module->fnFinalizeUpdateVelX[iBody][iModule]      = &FinalizeUpdateVelXSpiNBody;
+  module->fnFinalizeUpdateVelY[iBody][iModule]      = &FinalizeUpdateVelYSpiNBody;
+  module->fnFinalizeUpdateVelZ[iBody][iModule]      = &FinalizeUpdateVelZSpiNBody;
   module->fnFinalizeUpdatePositionX[iBody][iModule] = &FinalizeUpdatePositionXSpiNBody;
   module->fnFinalizeUpdatePositionY[iBody][iModule] = &FinalizeUpdatePositionYSpiNBody;
   module->fnFinalizeUpdatePositionZ[iBody][iModule] = &FinalizeUpdatePositionZSpiNBody;
@@ -929,21 +1010,14 @@ double fdDPositionZDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumX = 0;        //Double used to calculate the net perturbation
-  int iPertBody = -1;      //Int used to clean up code.
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPertsSpiNBody;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-
-    iPertBody = body[iaBody[0]].iaGravPerts[j]; //Which body is perturbing? Is this fast enough?
-
-    //This is faster than using pow() but not very clean
-    // Calculate the cube of the distance to each perturbing body. Used in Vy and Vz calculations as well.
-    body[iaBody[0]].dDistance3[j] = sqrt((body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)*(body[iPertBody].dPositionX-body[iaBody[0]].dPositionX)
-          + (body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)*(body[iPertBody].dPositionY-body[iaBody[0]].dPositionY)
-          + (body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ)*(body[iPertBody].dPositionZ-body[iaBody[0]].dPositionZ));
-    body[iaBody[0]].dDistance3[j] = body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j]*body[iaBody[0]].dDistance3[j];
-
-    dSumX = dSumX + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      //dSumX = dSumX + BIGG*body[jBody].dMass*(body[jBody].dPositionX-body[iaBody[0]].dPositionX)/body[iaBody[0]].dDistance3[jBody];
+      dSumX = dSumX + body[jBody].dGM*body[iaBody[0]].dDistanceX[jBody];
+    }
   }
 
   return dSumX;
@@ -951,10 +1025,14 @@ double fdDVelXDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumY = 0;        //Double used to calculate the net perturbation
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPertsSpiNBody;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-    dSumY = dSumY + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      //dSumY = dSumY + BIGG*body[jBody].dMass*(body[jBody].dPositionY-body[iaBody[0]].dPositionY)/body[iaBody[0]].dDistance3[jBody];
+      dSumY = dSumY + body[jBody].dGM*body[iaBody[0]].dDistanceY[jBody];
+    }
   }
 
   return dSumY;
@@ -962,10 +1040,14 @@ double fdDVelYDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDVelZDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dSumZ = 0;        //Double used to calculate the net perturbation
-  int j;
+  int jBody, iGravPerts;
+  iGravPerts = body[iaBody[0]].iGravPertsSpiNBody;
 
-  for(j=0; j<body[iaBody[0]].iGravPerts; j++){
-    dSumZ = dSumZ + BIGG*body[body[iaBody[0]].iaGravPerts[j]].dMass*(body[body[iaBody[0]].iaGravPerts[j]].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[j];
+  for(jBody=0; jBody<iGravPerts; jBody++) {
+    if (iaBody[0]!=jBody) {
+      //dSumZ = dSumZ + BIGG*body[jBody].dMass*(body[jBody].dPositionZ-body[iaBody[0]].dPositionZ)/body[iaBody[0]].dDistance3[jBody];
+      dSumZ = dSumZ + body[jBody].dGM*body[iaBody[0]].dDistanceZ[jBody];
+    }
   }
 
   return dSumZ;

@@ -1,17 +1,13 @@
-/***************** GALHABIT.H *********************** 
- *
- * Russell Deitrick, June 24, 2015
- *
- * This header file contains all the subroutines in
- * file galhabit.c.
- *
+/**
+   @file galhabit.h
+
+   @brief Subroutines that simulate the galactic habitat of a stellar system.
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date July 7 2015
+
 */
-
-
-void AddModuleGalHabit(MODULE*,int,int);
-void BodyCopyGalHabit(BODY*,BODY*,int,int,int);
-void InitializeBodyGalHabit(BODY*,CONTROL*,UPDATE*,int,int);
-void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
@@ -44,24 +40,6 @@ void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_MINALLOWED         2257
 #define OPT_GALACTIDES         2258
 
-// void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-// 
-// void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsGalHabit(OPTIONS*, fnReadOption[]);
-void ReadOptionsGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
-/* Verify Functions */
-// void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-
-/* Update Functions */
-
-void InitializeUpdateGalHabit(BODY*,UPDATE*,int);
-void FinalizeUpdatePeriQGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateIncGalHabit(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
-
 /* Output Functinos */
 
 /* GALHABIT 2200-2300 */
@@ -87,6 +65,31 @@ void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DLONGADTGALHTIDAL   2252
 #define OUT_DARGPDTGALHTIDAL    2253
 
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModuleGalHabit(MODULE*,int,int);
+void BodyCopyGalHabit(BODY*,BODY*,int,int,int);
+void InitializeBodyGalHabit(BODY*,CONTROL*,UPDATE*,int,int);
+void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);
+
+// void ReadInc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+//
+// void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void InitializeOptionsGalHabit(OPTIONS*, fnReadOption[]);
+void ReadOptionsGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+/* Verify Functions */
+// void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
+void VerifyGalHabit(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdateGalHabit(BODY*,UPDATE*,int);
+void FinalizeUpdatePeriQGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateArgPGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateIncGalHabit(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateLongAGalHabit(BODY*,UPDATE*,int*,int,int,int);
+
 void HelpOutputGalHabit(OUTPUT*);
 void WriteBodyPeriQ(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteDEccDtGalHTidal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -108,87 +111,75 @@ void LogBodyGalHabit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE
 
 /* GalHabit Functions */
 void PropertiesGalHabit(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorGalHabit(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-double random_double();
+void ForceBehaviorGalHabit(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+double fndRandom_double();
 void testrand(SYSTEM*);
-double NearbyStarDist(double);
-int check_disrupt(BODY*,SYSTEM*,int);
-double DarkMatterDensity(SYSTEM*,double);
-double ISMDensity(SYSTEM*,double);
+double fndNearbyStarDist(double);
+int fniCheck_disrupt(BODY*,SYSTEM*,int);
+double fndDarkMatterDensity(SYSTEM*,double);
+double fndISMDensity(SYSTEM*,double);
 void CalcMeanVelDispSolar(SYSTEM*);
 void VelocityApex(SYSTEM*);
 void GetRelativeVelocity(SYSTEM*);
-double NearbyStarFrEnc(SYSTEM*,double);
-int check_dr(BODY*,EVOLVE*,SYSTEM*,int);
+double fndNearbyStarFrEnc(SYSTEM*,double);
+int fniCheck_dr(BODY*,EVOLVE*,SYSTEM*,int);
 
-double dexdJ(BODY*, int);
-double dexdla(double);
-double dexdap(BODY*, int);
-double deydJ(BODY*, int);
-double deydla(double);
-double deydap(BODY*,int);
-double dezdJ(BODY*, int);
-double dezdap(double,double,double);
+double fndDexDJ(BODY*, int);
+double fndDexDla(double);
+double fndDexDap(BODY*, int);
+double fndDeyDJ(BODY*, int);
+double fndDeyDla(double);
+double fndDeyDap(BODY*,int);
+double fndDezDJ(BODY*, int);
+double fndDezDap(double,double,double);
 void CalcEccVec(BODY*,int);
 void CalcAngMVec(BODY*,int);
 void Rot2Bin(BODY*,int);
 
 /* GalHabit derivatives */
-double fdGalHabitDPeriQDt(BODY*, SYSTEM*, int*);
-double fdGalHabitDArgPDt(BODY*, SYSTEM*, int*);
-double fdGalHabitDIncDt(BODY*, SYSTEM*, int*);
-double fdGalHabitDLongADt(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccXDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccYDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccZDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMXDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMYDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMZDtTidal(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccXDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccYDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccZDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMXDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMYDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMZDtQuad(BODY*, SYSTEM*, int*);
-double fdGalHabitDLongADtQuad0(BODY*, SYSTEM*, int*);
-double fdGalHabitDLongPDtQuad0(BODY*, SYSTEM*, int*);
-double fdGalHabitDArgPDtQuad0(BODY*, SYSTEM*, int*);
-double fdGalHabitDIncDtQuad0(BODY*, SYSTEM*, int*);
+double fndGalHabitDArgPDt(BODY*, SYSTEM*, int*);
+double fndGalHabitDIncDt(BODY*, SYSTEM*, int*);
+double fndGalHabitDLongADt(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccXDtTidal(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccYDtTidal(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccZDtTidal(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMXDtTidal(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMYDtTidal(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMZDtTidal(BODY*, SYSTEM*, int*);
 
-double QuadC2(BODY*, int*);
-double DQuadDEccXInner(BODY*, int*);
-double DQuadDEccYInner(BODY*, int*);
-double DQuadDEccZInner(BODY*, int*);
-double DQuadDAngMXInner(BODY*, int*);
-double DQuadDAngMYInner(BODY*, int*);
-double DQuadDAngMZInner(BODY*, int*);
-double DQuadDAngMXOuter(BODY*, int*);
-double DQuadDAngMYOuter(BODY*, int*);
-double DQuadDAngMZOuter(BODY*, int*);
+double fndQuadC2(BODY*, int*);
+double fndDQuadDEccXInner(BODY*, int*);
+double fndDQuadDEccYInner(BODY*, int*);
+double fndDQuadDEccZInner(BODY*, int*);
+double fndDQuadDAngMXInner(BODY*, int*);
+double fndDQuadDAngMYInner(BODY*, int*);
+double fndDQuadDAngMZInner(BODY*, int*);
+double fndDQuadDAngMXOuter(BODY*, int*);
+double fndDQuadDAngMYOuter(BODY*, int*);
+double fndDQuadDAngMZOuter(BODY*, int*);
 
-double fdGalHabitDEccXDtBV(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccYDtBV(BODY*, SYSTEM*, int*);
-double fdGalHabitDEccZDtBV(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMXDtBV(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMYDtBV(BODY*, SYSTEM*, int*);
-double fdGalHabitDAngMZDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccXDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccYDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDEccZDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMXDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMYDtBV(BODY*, SYSTEM*, int*);
+double fndGalHabitDAngMZDtBV(BODY*, SYSTEM*, int*);
 
-double OctC3(BODY*, int*);
-double DOctDEccXInner(BODY*, int*);
-double DOctDEccYInner(BODY*, int*);
-double DOctDEccZInner(BODY*, int*);
-double DOctDAngMXInner(BODY*, int*);
-double DOctDAngMYInner(BODY*, int*);
-double DOctDAngMZInner(BODY*, int*);
-double DOctDEccXOuter(BODY*, int*);
-double DOctDEccYOuter(BODY*, int*);
-double DOctDEccZOuter(BODY*, int*);
-double DOctDAngMXOuter(BODY*, int*);
-double DOctDAngMYOuter(BODY*, int*);
-double DOctDAngMZOuter(BODY*, int*);
+double fndOctC3(BODY*, int*);
+double fndDOctDEccXInner(BODY*, int*);
+double fndDOctDEccYInner(BODY*, int*);
+double fndDOctDEccZInner(BODY*, int*);
+double fndDOctDAngMXInner(BODY*, int*);
+double fndDOctDAngMYInner(BODY*, int*);
+double fndDOctDAngMZInner(BODY*, int*);
+double fndDOctDEccXOuter(BODY*, int*);
+double fndDOctDEccYOuter(BODY*, int*);
+double fndDOctDEccZOuter(BODY*, int*);
+double fndDOctDAngMXOuter(BODY*, int*);
+double fndDOctDAngMYOuter(BODY*, int*);
+double fndDOctDAngMZOuter(BODY*, int*);
 
-double random_double();
-double mag2mass(double);
+double fndMag2mass(double);
 void GetStarMass(SYSTEM*);
 void GetStarVelocity(SYSTEM*);
 void GetStarPosition(SYSTEM*);
@@ -198,3 +189,5 @@ void ApplyDeltaV(BODY*,SYSTEM*,int);
 void AdvanceMA(BODY*,SYSTEM*,int);
 void NextEncounterTime(SYSTEM*,EVOLVE*,double);
 void CalcEncounterRate(SYSTEM*);
+
+/* @endcond */

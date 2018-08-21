@@ -1,15 +1,18 @@
-/********************** OPTIONS.H *********************/
-/*
- * Rory Barnes, Wed May  7 16:31:58 PDT 2014
- *
- * Header file for options. To add a new option:
- * 1) Add integer definition here
- * 2) Add new option properties in InitializeOptions
- * 3) Write new fnReadOptions function
- * 3) If necessary, modify the ReadOptions subroutine
- * 4) If necessary, modify the WriteLog subroutine
- *
- */
+/**
+  @file options.h
+  @brief All subroutines necessary to read in all options. Also
+        monitor input files for mistakes and log all option data.
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+
+  To add a new option:
+  1) Add integer definition here
+  2) Add new option properties in InitializeOptions
+  3) Write new fnReadOptions function
+  3) If necessary, modify the ReadOptions subroutine
+  4) If necessary, modify the WriteLog subroutine
+
+*/
 
 /* Initial Options */
 #define OPT_BODYFILES           10
@@ -49,18 +52,18 @@
 #define OPT_HALTMINECC          330
 #define OPT_HALTMINOBL          335
 #define OPT_HALTMINSEMI		345
-#define OPT_HALTPOSDEDT         350 
+#define OPT_HALTPOSDEDT         350
 
-#define OPT_HECC                360 
+#define OPT_HECC                360
 
 #define OPT_INTEGRATIONMETHOD   400
 
-#define OPT_KECC                450 
+#define OPT_KECC                450
 
 #define OPT_LOG		        500
 #define OPT_LOGFILE		510
 #define OPT_LONGP               515
-#define OPT_LXUV                517 
+#define OPT_LXUV                517
 
 #define OPT_MASS		520
 #define OPT_MASSRAD	        525
@@ -74,6 +77,7 @@
 #define OPT_INC                 561
 #define OPT_ARGP                562
 #define OPT_LONGA               563
+#define OPT_GRCORR              564
 
 
 #define OPT_OBL	                640
@@ -85,7 +89,7 @@
 
 #define OPT_PRECA               610
 #define OPT_DYNELLIP            611
-#define OPT_CALCDYNELLIP        612     
+#define OPT_CALCDYNELLIP        612
 #define OPT_PRILUM	        615
 #define OPT_SPECMOMINERTIA       616
 
@@ -99,9 +103,11 @@
 #define OPT_ROTRATE	        665
 #define OPT_ROTVEL              680
 
-#define OPT_XOBL                700 
-#define OPT_YOBL                710 
-#define OPT_ZOBL                720 
+#define OPT_XOBL                700
+#define OPT_YOBL                710
+#define OPT_ZOBL                720
+
+/* @cond DOXYGEN_OVERRIDE */
 
 void InitializeOptions(OPTIONS*,fnReadOption*);
 void ReadOptions(BODY**,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE**,fnReadOption*,char[]);
@@ -121,4 +127,4 @@ void AssignDefaultDouble(OPTIONS*,double*,int);
 void AssignDefaultInt(OPTIONS*,int*,int);
 void AssignDefaultString(OPTIONS*,char[],int);
 
-
+/* @endcond */

@@ -1,0 +1,29 @@
+# Phabitable planet
+sName		c		# Body's name
+saModules	spinbody atmesc
+
+# Physical Properties
+dMass		-1.0  		# Mass, negative -> Earth masses
+dRadius		-1.0  		# Radius, negative -> Earth radii
+dRotPeriod	-1.0  		# Rotation period, negative -> days
+dObliquity	23.5			
+dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+bUseOrbParams 1
+dEcc            0.3		# Eccentricity
+dSemi           0.3		# Semi-major axis, negative -> AU
+dInc		5
+dLongA		298
+dLongP		100
+dMeanA          2.8
+
+# ATMESC inputs
+dXFrac		1
+dAtmXAbsEffH	0.3
+dSurfWaterMass	-1
+
+# Output
+saOutputOrder Time Semim Ecce Inc LongP LongA -SurfWaterMass
+
+

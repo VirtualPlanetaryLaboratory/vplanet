@@ -1,11 +1,17 @@
-/********************** STELLAR.C **********************/
-/*
- * Rodrigo Luger, Tue May 12 11:11:38 PDT 2015
- *
- * Subroutines that control the integration of the
- * atmospheric escape model.
+/**
+    @file stellar.c
+    @brief Subroutines that control the evolution of the star.
+    @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
+    @date May 12 2015
+
+    @par Description
+    \rst
+        This module implements the Baraffe stellar evolution tracks
+        :cite:`Baraffe15`, the Ribas XUV evolution model :cite:`Ribas05`,
+        and a simple wind/magnetic braking model.
+    \endrst
+
 */
-// NOTE: Still need to edit module.c, update.c
 
 #include <stdio.h>
 #include <math.h>
@@ -364,38 +370,34 @@ void ReadOptionsStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
 
 /******************* Verify STELLAR ******************/
 
-void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iRot][update[iBody].iRotStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar] = 1;
   update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar] = malloc(update[iBody].iNumBodies[update[iBody].iRot][update[iBody].iRotStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iRot][update[iBody].iRotStellar][0] = iBody;
 
   update[iBody].pdRotRateStellar = &update[iBody].daDerivProc[update[iBody].iRot][update[iBody].iRotStellar];
-  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar] = &fdDRotRateDt;
-
 }
 
-void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;
 
   update[iBody].pdLostAngMomStellar = &update[iBody].daDerivProc[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar];
-  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
 }
 
-void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
   update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
 
   update[iBody].pdLostEngStellar = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngStellar];
-  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] = &fdDEDtStellar;
 }
 
-void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign luminosity
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -420,10 +422,9 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
 
   update[iBody].pdLuminosityStellar = &update[iBody].daDerivProc[update[iBody].iLuminosity][0];  // NOTE: This points to the VALUE of the luminosity
-  fnUpdate[iBody][update[iBody].iLuminosity][0] = &fdLuminosity;                                 // NOTE: Same here!
 }
 
-void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign radius
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -448,10 +449,9 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
 
   update[iBody].pdRadiusStellar = &update[iBody].daDerivProc[update[iBody].iRadius][0];  // NOTE: This points to the VALUE of the radius
-  fnUpdate[iBody][update[iBody].iRadius][0] = &fdRadius;                                 // NOTE: Same here!
 }
 
-void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign temperature
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
@@ -476,7 +476,6 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   update[iBody].iaBody[update[iBody].iTemperature][0][0] = iBody;
 
   update[iBody].pdTemperatureStellar = &update[iBody].daDerivProc[update[iBody].iTemperature][0];  // NOTE: This points to the VALUE of the temperature
-  fnUpdate[iBody][update[iBody].iTemperature][0] = &fdTemperature;                                 // NOTE: Same here!
 }
 
 void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
@@ -525,11 +524,29 @@ void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) 
   }
 }
 
-void fnForceBehaviorStellar(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fnForceBehaviorStellar(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
  // Nothing
 }
 
-void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar]               = &fdDRotRateDt;
+  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar]       = &fdDEDtStellar;
+  fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fdLuminosity;  // NOTE: This points to the value of the Luminosity!
+  fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fdRadius;      // NOTE: This points to the value of the Radius!
+  fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fdTemperature; // NOTE: This points to the value of the Temperature!
+}
+
+void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar]               = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar]       = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
+  fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
+  fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
+}
+
+void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bStellar=0;
 
   /* Stellar is active for this body if this subroutine is called. */
@@ -539,7 +556,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dLuminosity for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyLuminosity(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyLuminosity(body,control,options,update,body[iBody].dAge,iBody);
   bStellar = 1;
 
   if (update[iBody].iNumRadius > 1) {
@@ -547,18 +564,18 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyRadius(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyRadius(body,control,options,update,body[iBody].dAge,iBody);
 
-  VerifyRotRate(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyRotRate(body,control,options,update,body[iBody].dAge,iBody);
 
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dTemperature for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyTemperature(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
-  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,fnUpdate,iBody);
+  VerifyTemperature(body,control,options,update,body[iBody].dAge,iBody);
+  VerifyLostAngMomStellar(body,control,options,update,body[iBody].dAge,iBody);
+  VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
   control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
@@ -941,21 +958,23 @@ void LogBodyStellar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 void AddModuleStellar(MODULE *module,int iBody,int iModule) {
 
-  module->iaModule[iBody][iModule] = STELLAR;
+  module->iaModule[iBody][iModule]                    = STELLAR;
 
-  module->fnCountHalts[iBody][iModule] = &CountHaltsStellar;
-  module->fnReadOptions[iBody][iModule] = &ReadOptionsStellar;
-  module->fnLogBody[iBody][iModule] = &LogBodyStellar;
-  module->fnVerify[iBody][iModule] = &VerifyStellar;
-  module->fnVerifyHalt[iBody][iModule] = &VerifyHaltStellar;
+  module->fnCountHalts[iBody][iModule]                = &CountHaltsStellar;
+  module->fnReadOptions[iBody][iModule]               = &ReadOptionsStellar;
+  module->fnLogBody[iBody][iModule]                   = &LogBodyStellar;
+  module->fnVerify[iBody][iModule]                    = &VerifyStellar;
+  module->fnAssignDerivatives[iBody][iModule]         = &AssignStellarDerivatives;
+  module->fnNullDerivatives[iBody][iModule]           = &NullStellarDerivatives;
+  module->fnVerifyHalt[iBody][iModule]                = &VerifyHaltStellar;
 
-  module->fnInitializeUpdate[iBody][iModule] = &InitializeUpdateStellar;
-  module->fnFinalizeUpdateLuminosity[iBody][iModule] = &FinalizeUpdateLuminosityStellar;
-  module->fnFinalizeUpdateRadius[iBody][iModule] = &FinalizeUpdateRadiusStellar;
-  module->fnFinalizeUpdateRot[iBody][iModule] = &FinalizeUpdateRotRateStellar;
+  module->fnInitializeUpdate[iBody][iModule]          = &InitializeUpdateStellar;
+  module->fnFinalizeUpdateLuminosity[iBody][iModule]  = &FinalizeUpdateLuminosityStellar;
+  module->fnFinalizeUpdateRadius[iBody][iModule]      = &FinalizeUpdateRadiusStellar;
+  module->fnFinalizeUpdateRot[iBody][iModule]         = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
-  module->fnFinalizeUpdateLostAngMom[iBody][iModule] = &FinalizeUpdateLostAngMomStellar;
-  module->fnFinalizeUpdateLostEng[iBody][iModule] = &FinalizeUpdateLostEngStellar;
+  module->fnFinalizeUpdateLostAngMom[iBody][iModule]  = &FinalizeUpdateLostAngMomStellar;
+  module->fnFinalizeUpdateLostEng[iBody][iModule]     = &FinalizeUpdateLostEngStellar;
 }
 
 /************* STELLAR Functions ************/
@@ -1342,6 +1361,6 @@ void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,double *daHZLi
   for (i=0;i<6;i++) {
     seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
     // Limits are in AU, convert to meters
-    daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUCM;
+    daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUM;
   }
 }

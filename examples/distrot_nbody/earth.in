@@ -1,22 +1,27 @@
-sName        Earth   
-saModules     distrot
-dMass        3.00316726e-06
-dRadius      -1.50
-dRotPeriod   -100
-dObliquity   23.5    #no Moons yet in vplanet....
-dSemi        1.00000011
-dEcc         0.0167
-dInc         5e-5
-dLongP       102.94719
-dLongA       348.73936
-# bGRCorr      0
-#saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA
-saOutputOrder Time Obliq PrecA
-dDynEllip    3.28e-3
-dPrecA       0.0
-bForcePrecRate    1
-bCalcDynEllip    1
-bReadOrbitData  1
-sFileOrbitData orbit.dat
-#bOverrideMaxEcc  1
-#dHaltMaxEcc     0.4
+# Planet Earth parameters
+sName        Earth                      # Body's name
+saModules    distrot                    # Modules to be used
+
+# Physical properties
+dMass        3.00316726e-06             # Body's mass
+dRadius      -1                         # Body's radius (negative -> Earth rad)
+dRotPeriod   -100                       # Rotation period (negative -> days)
+dObliquity   23.5                       # Spin axis tilt
+
+# Orbital properties (ignored here)
+dSemi        1.00000011                 # Body's semi-major axis (neg -> au)
+dEcc         0.0167                     # Orbital eccentricity
+dInc         5e-5                       # Orbital inclination
+dLongP       102.94719                  # Longitude of pericenter
+dLongA       348.73936                  # Longitude of ascending node
+
+# DistRot properties
+dDynEllip        3.28e-3                # Dynamical ellipticity
+dPrecA           0.0                    # Initial precession angle
+bForcePrecRate   0                      # Force the precession rate to a const?
+bCalcDynEllip    1                      # Calc DynEllip from M, R, & RotPer
+bReadOrbitData   1                      # Use external orbital data
+sFileOrbitData   orbit.in               # File of orbit data (see README!!!)
+
+# Output
+saOutputOrder    Time Obliq PrecA DynEllip

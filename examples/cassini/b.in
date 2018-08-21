@@ -1,0 +1,46 @@
+# cassini planet parameters
+sName		b			# Body's name
+saModules eqtide distorb distrot
+
+sTideModel p2
+
+# Physical Properties
+dMass -1
+dRadius -1
+dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
+dObliquity 45.0
+dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
+#sMassRad Sotin
+#cColor ff0000
+
+# Orbital Properties
+dEcc 0.1
+#dSemi 0.1167317
+dSemi 0.125
+
+# DISTORB Parameters
+dInc 6
+dLongA 20.677483
+dArgP 248.870768
+sOrbitModel rd4
+#dDfcrit    0.1
+bOutputLapl  0
+bGRCorr    1
+bInvPlane  0
+
+# DISTROT Parameters
+dPrecA	0
+bCalcDynEllip   1
+
+# EQTIDE Parameters
+#dTidalTau	-630			# Tidal time lag, negative -> seconds
+#bForceEqSpin    1
+dTidalQ		100			# Tidal quality factor
+dK2		0.3			# Love number of degree 2
+dMaxLockDiff	0.1			# Difference from tidal rotation period before locking
+saTidePerts	star			# Body name(s) of tidal perturbers
+
+
+# Output
+saOutputOrder Time Semim Ecce Inc ArgP LongA -RotPer Obli PrecA $
+      CassiniOne CassiniTwo -SurfEnFluxEqtide DynEllip PrecFNat DeltaT

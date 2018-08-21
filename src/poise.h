@@ -1,15 +1,13 @@
-/***************** POISE.H *********************** 
- *
- * Russell Deitrick, September 10, 2015
- *
- * This header file contains all the subroutines in
- * file poise.c.
- *
-*/
+/**
+   @file poise.h
 
-void AddModulePoise(MODULE*,int,int);
-void BodyCopyPoise(BODY*,BODY*,int,int,int);
-void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
+   @brief Subroutines that control the energy balance model for climate
+
+   @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
+   @date Sep 10 2015
+
+*/
 
 /* Climate model */
 #define ANN         0
@@ -54,6 +52,8 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_ICEDEPRATE      1920
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT         1922
+#define OPT_SPINUPTOL       1923
+
 
 //#define OPT_LANDGEOM      1940
 #define OPT_HEATCAPLAND     1942
@@ -62,9 +62,9 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 //#define OPT_LATENTHEAT    1945
 #define OPT_ICECONDUCT      1946
 #define OPT_MIXINGDEPTH     1947
-#define OPT_NULANDWATER     1948 
+#define OPT_NULANDWATER     1948
 #define OPT_NSTEPINYEAR     1949
-#define OPT_NUMYEARS        1950 
+#define OPT_NUMYEARS        1950
 #define OPT_SEAICEMODEL     1951
 #define OPT_ALBEDOLAND      1952
 #define OPT_ALBEDOWATER     1953
@@ -81,24 +81,12 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 #define OPT_LAPSER          1964
 #define OPT_REFHEIGHT       1965
 #define OPT_ABLATEFF        1966
-
+#define OPT_FORCEECC        1967
+#define OPT_ECCAMP          1968
+#define OPT_ECCPER          1969
 
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
-
-/* Options Functions */
-void HelpOptionsPoise(OPTIONS*);
-void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
-void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-
-/* Verify Functions */
-void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-
-/* Update Functions */
-
-void InitializeUpdatePoise(BODY*,UPDATE*,int);
-
-/* Output Functinos */
 
 /* POISE 1800 - 1899 */
 /* System properties 1800-1819, body properties 1820-1899 */
@@ -107,7 +95,7 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUTENDPOISE          2000 /* End of POISE options */
 #define OUTBODYSTARTPOISE    1920 /* Start of POISE BODY options */
 
-#define OUT_TGLOBAL          1921 
+#define OUT_TGLOBAL          1921
 #define OUT_ALBEDOGLOBAL     1922
 #define OUT_FLUXINGLOBAL     1923
 #define OUT_FLUXOUTGLOBAL    1924
@@ -145,7 +133,27 @@ void InitializeUpdatePoise(BODY*,UPDATE*,int);
 #define OUT_ICEABLATE        1955
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
+#define OUT_PEAKINSOL        1958
 
+/* @cond DOXYGEN_OVERRIDE */
+
+void AddModulePoise(MODULE*,int,int);
+void BodyCopyPoise(BODY*,BODY*,int,int,int);
+void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
+
+/* Options Functions */
+void HelpOptionsPoise(OPTIONS*);
+void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
+void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+/* Verify Functions */
+void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+
+/* Update Functions */
+
+void InitializeUpdatePoise(BODY*,UPDATE*,int);
+
+/* Output Functinos */
 
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void FinalizeUpdateIceMassPoise(BODY*,UPDATE*,int*,int,int,int);
@@ -179,7 +187,7 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 
 /* Poise Functions */
 void PropertiesPoise(BODY*,EVOLVE*,UPDATE*,int);
-void ForceBehaviorPoise(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
 void AnnualInsolation(BODY*,int);
@@ -203,3 +211,5 @@ double IceMassBalance(BODY*,int,int);
 
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);
+
+/* @endcond */

@@ -1,10 +1,14 @@
-/********************** HALT.C ***********************/
-/*
- * Rory Barnes, Wed May  7 16:19:48 PDT 2014
- *
- * This file contains all the checks for dynamical states
- * that result in the termination of the program.
- */
+/**
+ @file halt.c
+
+ @brief This file contains all the checks for dynamical states
+        that result in the termination of the program.
+
+ @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+
+ @date Mar 7 2014
+
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +69,9 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-int HaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+/* Maximum Eccentricity? */
+int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  // XXX is EccSq defined here
 /* Halt simulation if body reaches maximum orbital eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
@@ -177,7 +183,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
         if(io->iVerbose > VERBPROG)
         {
           printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
-          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUCM,body[1].dSemi/AUCM,max_radius/AUCM);
+          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
         }
         return 1;
       }
@@ -251,7 +257,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (control->Halt[iBody].dMinObl >= 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
     if (control->Halt[iBody].dMaxEcc < 1)
-      control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+      control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
     if (control->Halt[iBody].dMinSemi > 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
     if (control->Halt[iBody].dMinEcc > 0)
@@ -272,7 +278,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (iHaltMaxEcc) {
       if (iBody != iHaltMaxEcc) {
 	control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
-	control->fnHalt[iBody][iHaltNow++] = &HaltMaxEcc;
+	control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
       }
     }
   }

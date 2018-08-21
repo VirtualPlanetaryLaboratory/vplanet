@@ -1,9 +1,9 @@
-/************************** VERIFY.C ***********************/
-/*
- * Rory Barnes, Wed May  7 16:53:43 PDT 2014
- *
- * Validate the options. This will become a mess!
- */
+/**
+  @file verify.c
+  @brief Validate the options. This will become a mess!
+  @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
+  @date May 7 2014
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,13 +109,12 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
  *
  */
 
-void VerifyOrbit(BODY *body,FILES files,OPTIONS *options,int iBody,int iVerbose) {
+void VerifyOrbit(BODY *body, FILES files,OPTIONS *options,CONTROL *control, int iBody,int iVerbose) {
   int iFile=iBody+1;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
-  // If doing binary and we're looking at the secondary, return
-  // Since the secondary holds all binary orbital information
-  if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0)
+  // Body 0 is never an orbiter
+  if(iBody == 0)
     return;
 
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
@@ -247,6 +246,10 @@ void IntegrationWarning(char cName1[],char cName2[],char cName3[],char cFile[],i
 void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnIntegrate *fnOneStep) {
   int iFile,iFile1,iFile2;
   char cTmp[OPTLEN];
+
+
+  // Initialize iDir to 0, i.e. assume no integrations requested to start
+  control->Evolve.iDir=0;
 
   /* Were both Forward and Backward Set? */
   if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
@@ -507,6 +510,22 @@ void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTI
   system->dTotEn = system->dTotEnInit;
 }
 
+void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,fnUpdateVariable ***fnUpdate) {
+  int iBody,iVar,iEqn,iNumBodies,iNumVars,iNumEqns; // Dummy counting variables
+
+  iNumBodies = evolve->iNumBodies;
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    if (update[iBody].iNumVars > 0) {
+      iNumVars = update[iBody].iNumVars;
+      for (iVar=0;iVar<iNumVars;iVar++) {
+        iNumEqns = update[iBody].iNumEqns[iVar];
+        for (iEqn=0;iEqn<iNumEqns;iEqn++) {
+          fnUpdate[iBody][iVar][iEqn] = &fndUpdateFunctionTiny;
+        }
+      }
+    }
+  }
+}
 
 /*
  *
@@ -520,6 +539,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
 
+  // Default to no orbiting bodies
+  control->bOrbiters = 0;
+
   /* First we must determine all the primary variables. The user may not
      input them, but instead a redundant variable. Yet these need to be
      defined before we can call InitializeUpdate. */
@@ -527,6 +549,11 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
+
+    // If any body has an orbit related module initialized, we have orbiters!
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise) {
+      control->bOrbiters = 1;
+    }
 
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
@@ -538,9 +565,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
 
-    /* XXX Only module reference in file -- can this be changed? */
-    if ((iBody > 0 && body[iBody].bEqtide) || (iBody>0 && body[iBody].bPoise) || (iBody > 0 && body[iBody].bBinary)) {
-      VerifyOrbit(body,*files,options,iBody,control->Io.iVerbose);
+    // If any bodies orbit, make sure they do so properly!
+    if(control->bOrbiters) {
+      VerifyOrbit(body,*files,options,control,iBody,control->Io.iVerbose);
     }
 
   }
@@ -553,12 +580,16 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,*fnUpdate,iBody,iModule);
+      module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,iBody,iModule);
     }
 
     VerifyInterior(body,options,iBody);
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
+
+    for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
+      module->fnAssignDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
+    }
 
     /* Must allocate memory in control struct for all perturbing bodies */
     if (control->Evolve.iOneStep == RUNGEKUTTA) {

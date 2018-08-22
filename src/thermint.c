@@ -1307,10 +1307,9 @@ void fvAssignTMan(BODY *body,OPTIONS *options,double dAge,int iBody) {
   @param system System struct
   @param update Update struct
   @param dAge Age
-  @param fnUpdate fnUpdateVariable function to compute variable
   @param iBody Index of body
 */
-void fvVerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void fvVerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
 
   //  AssignTMan(body,options,dAge,iBody);
   /* Mantle */
@@ -1331,10 +1330,9 @@ void fvVerifyTMan(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doub
   @param system System struct
   @param update Update struct
   @param dAge Age
-  @param fnUpdate fnUpdateVariable function to compute variable
   @param iBody Index of body
 */
-void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,fnUpdateVariable ***fnUpdate,int iBody) {
+void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,double dAge,int iBody) {
     //  AssignTCore(body,options,dAge,iBody);
     /* Core */
     update[iBody].iaType[update[iBody].iTCore][0] = 1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
@@ -1454,7 +1452,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   @param iBody Index of body
   @param iModule Index of module
 */
-void fvForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
+void fvForceBehaviorThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   // XXX Reset fnUpdate functions to SetDerivTiny?
   if (body[iBody].dTMan < 0.5)
     body[iBody].dTMan = 0;
@@ -1471,13 +1469,12 @@ void fvForceBehaviorThermint(BODY *body,EVOLVE *evolve,IO *io,SYSTEM *system,UPD
   @param output Output struct
   @param system System struct
   @param update Update struct
-  @param fnUpdate fnUpdateVariable function to compute variable
   @param iBody Index of body
   @param iModule Index of module
 */
-void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  fvVerifyTMan(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);  //Verify Man.
-  fvVerifyTCore(body,options,system,update,body[iBody].dAge,fnUpdate,iBody);        //Verify Core.
+void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+  fvVerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
+  fvVerifyTCore(body,options,system,update,body[iBody].dAge,iBody);        //Verify Core.
 
   control->fnForceBehavior[iBody][iModule] = &fvForceBehaviorThermint;
   control->fnPropsAux[iBody][iModule] = &fvPropsAuxThermint;

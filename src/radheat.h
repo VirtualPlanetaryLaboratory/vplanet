@@ -241,16 +241,16 @@ void fvAssign40KNum(BODY*,OPTIONS*,double,int);
 void fvAssign232ThNum(BODY*,OPTIONS*,double,int);
 void fvAssign238UNum(BODY*,OPTIONS*,double,int);
 void fvAssign235UNum(BODY*,OPTIONS*,double,int);
-void fvVerify26Al(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
-void fvVerify40K(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
-void fvVerify232Th(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
-void fvVerify238U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
-void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerify26Al(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify40K(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify232Th(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify238U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 
 void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
-void fvForceBehaviorRadheat(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fvForceBehaviorRadheat(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void fvRadheatExit(FILES*,char*,int);
-void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 
 /* Update functions */
 void fvInitializeUpdateRadheat(BODY*,UPDATE*,int);

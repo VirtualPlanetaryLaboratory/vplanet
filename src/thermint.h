@@ -277,9 +277,9 @@ int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void fvCountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */
-void fvVerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void fvVerifyTMan(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
-void fvVerifyTCore(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,fnUpdateVariable***,int);
+void fvVerifyThermint(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void fvVerifyTMan(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerifyTCore(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 //void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 //void fvInitializeVplanetThermint(CONTROL*,MODULE*);
 //void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
@@ -290,7 +290,7 @@ void fvInitializeUpdateThermint(BODY*,UPDATE*,int);
 /* Auxiliary Properties */
 void fvPropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
 /* Force Behavior */
-void fvForceBehaviorThermint(BODY*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
+void fvForceBehaviorThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 
 /* Output Functions */
 /* THERMINT */

@@ -1,4 +1,13 @@
 .PHONY: docs test debug opt profile optprof
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+GCC_FLAGS1 = -fPIC -Wl,-Bsymbolic-functions -c
+GCC_FLAGS2 = -shared -Wl,-Bsymbolic-functions,-soname,vplanetlib.so
+endif
+ifeq ($(UNAME_S),Darwin)
+GCC_FLAGS1 = -fPIC -c
+GCC_FLAGS2 = -shared -Wl,-install_name,vplanetlib.so
+endif
 
 default:
 	-gcc -o vplanet src/*.c -lm
@@ -33,7 +42,13 @@ coverage:
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'
 
+shared:
+	-gcc ${GCC_FLAGS1} src/*.c
+	-gcc ${GCC_FLAGS2} -o vplanetlib.so *.o -lc
+
 clean:
 	rm -f vplanet
 	rm -rf gcov
 	rm -rf .pytest_cache
+	rm -f *.o
+	rm -f vplanetlib.so

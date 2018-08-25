@@ -8,6 +8,7 @@ MAXFILES = 24
 
 MODULEOPTEND = 2400
 
+
 class OPTIONS(ctypes.Structure):
     """Input options struct."""
 

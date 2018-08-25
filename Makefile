@@ -50,5 +50,5 @@ clean:
 	rm -f vplanet
 	rm -rf gcov
 	rm -rf .pytest_cache
-	rm *.o
-	rm vplanetlib.so
+	rm -f *.o
+	rm -f vplanetlib.so

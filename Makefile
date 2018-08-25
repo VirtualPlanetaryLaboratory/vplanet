@@ -10,7 +10,7 @@ GCC_FLAGS2 = -shared -Wl,-install_name,vplanetlib.so
 endif
 
 default:
-	-gcc -o vplanet src/*.c -lm
+	-gcc -o vplanet src/*.c -lm -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 debug:
@@ -18,24 +18,24 @@ debug:
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 opt:
-	-gcc -o vplanet src/*.c -lm -O3
+	-gcc -o vplanet src/*.c -lm -O3 -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 profile:
-	-gcc -pg -o vplanet src/*.c -lm
+	-gcc -pg -o vplanet src/*.c -lm -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 optprof:
-	-gcc -pg -o vplanet src/*.c -lm -O3
+	-gcc -pg -o vplanet src/*.c -lm -O3 -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
 test:
-	-gcc -o vplanet src/*.c -lm
+	-gcc -o vplanet src/*.c -lm -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 	py.test
 
 coverage:
-	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
+	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm  -Wno-div-by-zero
 	-py.test
 	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
 

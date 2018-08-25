@@ -17,7 +17,7 @@ Modules and Options
     <p class="first admonition-title">Options Search</p>
     <p></p>
     <div class="last"><div role="search">
-    <form id="options-search-form" class="wy-form" method="post" action=""
+    <form id="options-search-form" class="wy-form" action=""
         onsubmit="location.hash = '#' + getElementById('option_textbox').value.toLowerCase();">
         <div style="margin-bottom:1em;">
         Option name: &nbsp;<input type="text" id="option_textbox" placeholder="e.g., bAccuracyMode"

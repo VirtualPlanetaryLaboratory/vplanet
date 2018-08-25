@@ -1,3 +1,12 @@
+'''
+A sketch of how to wrap VPLANET using CTYPES.
+
+This will be a pain because all structs must have
+identical Python versions, which will make maintaining
+a development version tricky.
+
+'''
+
 import ctypes
 import os
 

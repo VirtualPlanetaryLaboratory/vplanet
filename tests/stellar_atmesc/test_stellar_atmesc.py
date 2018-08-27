@@ -14,7 +14,7 @@ def test_stellar_atmesc():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.star.Luminosity, 0.000868847)
+    assert np.isclose(output.log.final.star.Luminosity, 0.0008687887)
     assert np.isclose(output.log.final.star.LXUVFrac, 5.8884365536e-05)
     assert np.isclose(output.log.final.a.EnvelopeMass, 5.9695893469e+23)
 

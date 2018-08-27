@@ -378,7 +378,6 @@ void fvForceBehaviorThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateV
 #define OUT_DTCHIREF	    1799		/**< [K] Reference core liquidus depression */       
 #define OUT_DYNVISC         1800                /**< [Pa/s] Dynamic viscosity of upper mantle */
 											      
-void fvHelpOutputThermint(OUTPUT*);							      
 void fvInitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
 void fvInitializeOutputFunctionThermint(OUTPUT*,int,int);					      
 void fvFinalizeOutputFunctionThermint(OUTPUT*,int,int);					      

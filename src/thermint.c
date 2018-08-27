@@ -1625,18 +1625,6 @@ void fvVerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody
 }
 
 /************* THERMINT Outputs ******************/
-/**
-  Help information on output parameters
-
-  @param output Output struct
-*/
-void fvHelpOutputThermint(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ THERMINT output ------\n");
-  for (iOut=OUTSTARTTHERMINT;iOut<OUTENDTHERMINT;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate
    block of initialization in InitializeOutputThermint below */

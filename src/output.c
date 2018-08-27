@@ -1815,12 +1815,12 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
    ************************/
 
   InitializeOutputEqtide(output,fnWrite);
-  InitializeOutputRadheat(output,fnWrite);
+  fvInitializeOutputRadheat(output,fnWrite);
   InitializeOutputAtmEsc(output,fnWrite);
   InitializeOutputStellar(output,fnWrite);
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
-  InitializeOutputThermint(output,fnWrite);
+  fvInitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);

@@ -3,7 +3,7 @@ sName            0.7MSUN                          # Body's name
 saModules        stellar                     # Modules to apply, exact spelling required
 
 # Output
-saOutputOrder Time -RotPer -Luminosity -Radius RadGyra Temperature
+saOutputOrder Time -RotPer -Luminosity -Radius Temperature
 
 # Physical Parameters
 dMass         0.7                         # Mass, solar masses

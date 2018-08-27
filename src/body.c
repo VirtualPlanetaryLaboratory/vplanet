@@ -1117,9 +1117,6 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
   } else if (iParam == STELLAR_R) {
       res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RADIUS, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
       return RSUN * res;
-  } else if (iParam == STELLAR_RG) {
-      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RG, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
-      return res;
   } else {
       *iError = STELLAR_ERR_FILE;
       return 0;

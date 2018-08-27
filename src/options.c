@@ -3402,7 +3402,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RG].dDefault = 0.5;
   options[OPT_RG].iType = 2;
   options[OPT_RG].iMultiFile = 1;
-  options[OPT_RG].iModuleBit = 0;
+  options[OPT_RG].iModuleBit = SPINBODY + DISTROT + EQTIDE;
   options[OPT_RG].bNeg = 0;
   options[OPT_RG].iFileType = 1;
   fnRead[OPT_RG] = &ReadRadiusGyration;

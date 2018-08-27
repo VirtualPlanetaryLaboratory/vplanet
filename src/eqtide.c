@@ -2311,7 +2311,7 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcat(cUnit,"");
 }
 
-void (OUTPUT *output,fnWriteOutput fnWrite[]) {
+void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cName,"BodyDsemiDtEqtide");
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cDescr,"Body's Contribution to dSemi/dt in EQTIDE");

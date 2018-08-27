@@ -36,23 +36,4 @@ d238UPowerCrust	  -1
 dTMan          3000
 dTCore         6000
 
-#Output  -HflowSurf
-saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
-    -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
-    -HflowCMB -HflowSecMan $
-    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscJumpMan $
-    -MeltMassFluxMan -FMeltUMan $
-    -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
-    -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
-    -238UPowerCrust -238UNumCrust -238UMassCrust $
-    -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $
-    -235UPowerCrust -235UNumCrust -235UMassCrust $
-    -232ThPowerMan -232ThNumMan -232ThMassMan -232ThPowerCore -232ThNumCore -232ThMassCore $
-    -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
-    -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
-    -40KPowerCrust -40KNumCrust -40KMassCrust
-
-
-#saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#              -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#              -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad
+saOutputOrder -Time TMan TCore RadPowerTotal MagMom

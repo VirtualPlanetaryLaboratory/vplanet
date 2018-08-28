@@ -18,6 +18,11 @@
 #include <string.h>
 #include "vplanet.h"
 
+void fvInitializeControlRadheat(CONTROL *control,int iBody) {
+  if (iBody==0) {
+    //Empty?
+  }
+}
 
 /**
    Copy body elements to dest
@@ -65,6 +70,14 @@ void fvBodyCopyRadheat(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dRadPowerMan = src[iBody].dRadPowerMan;
   dest[iBody].dRadPowerCore = src[iBody].dRadPowerCore;
   dest[iBody].dRadPowerCrust = src[iBody].dRadPowerCrust;
+}
+
+void fvInitializeBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  //empty?
+}
+
+void fvInitializeUpdateTmpBodyRadheat(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  //Empty?
 }
 
 /**************** RADHEAT options ********************/
@@ -1372,7 +1385,7 @@ void fvReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
    @param options Options struct
    @param Function to read in options
 */
-void InitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
+void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* 26Al */
   sprintf(options[OPT_26ALMASSMAN].cName,"d26AlMassMan");
@@ -2390,6 +2403,146 @@ void fvRadheatExit(FILES *files,char cSpecies[16],int iFile) {
   fprintf(stderr,"\tFile: %s\n",files->Infile[iFile].cIn);
   exit(EXIT_INPUT);
 }
+
+
+void fvAssignRadheatDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  // 26Al
+  // Mantle
+  if (update[iBody].i26AlMan >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlMan][0] = &fdD26AlNumManDt;
+  }
+  // Core
+  if (update[iBody].i26AlCore >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlCore][0] = &fdD26AlNumCoreDt;
+  }
+
+  //40K
+  // Mantle
+  if (update[iBody].i40KMan >= 0) {
+    fnUpdate[iBody][update[iBody].i40KMan][0] = &fdD40KNumManDt;
+  }
+  // Core
+  if (update[iBody].i40KCore >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCore][0] = &fdD40KNumCoreDt;
+  }
+  // Crust
+  if (update[iBody].i40KCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCrust][0] = &fdD40KNumCrustDt;
+  }
+
+  // 232Th
+  // Mantle
+  if (update[iBody].i232ThMan >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThMan][0] = &fdD232ThNumManDt;
+  }
+  // Core
+  if (update[iBody].i232ThCore >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCore][0] = &fdD232ThNumCoreDt;
+  }
+  // Crust
+  if (update[iBody].i232ThCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCrust][0] = &fdD232ThNumCrustDt;
+  }
+
+  // 238U
+  // Mantle
+  if (update[iBody].i238UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i238UMan][0] = &fdD238UNumManDt;
+  }
+  // Core
+  if (update[iBody].i238UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCore][0] = &fdD238UNumCoreDt;
+  }
+  // Crust
+  if (update[iBody].i238UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCrust][0] = &fdD238UNumCrustDt;
+  }
+
+  // 235U
+  // Mantle
+  if (update[iBody].i235UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i235UMan][0] = &fdD235UNumManDt;
+  }
+  // Core
+  if (update[iBody].i235UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCore][0] = &fdD235UNumCoreDt;
+  }
+  // Crust
+  if (update[iBody].i235UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCrust][0] = &fdD235UNumCrustDt;
+  }
+}
+
+void fvNullRadheatDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  // 26Al
+  // Mantle
+  if (update[iBody].i26AlMan >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i26AlCore >= 0) {
+    fnUpdate[iBody][update[iBody].i26AlCore][0] = &fndUpdateFunctionTiny;
+  }
+
+  //40K
+  // Mantle
+  if (update[iBody].i40KMan >= 0) {
+    fnUpdate[iBody][update[iBody].i40KMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i40KCore >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i40KCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i40KCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 232Th
+  // Mantle
+  if (update[iBody].i232ThMan >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i232ThCore >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i232ThCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i232ThCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 238U
+  // Mantle
+  if (update[iBody].i238UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i238UMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i238UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i238UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i238UCrust][0] = &fndUpdateFunctionTiny;
+  }
+
+  // 235U
+  // Mantle
+  if (update[iBody].i235UMan >= 0) {
+    fnUpdate[iBody][update[iBody].i235UMan][0] = &fndUpdateFunctionTiny;
+  }
+  // Core
+  if (update[iBody].i235UCore >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCore][0] = &fndUpdateFunctionTiny;
+  }
+  // Crust
+  if (update[iBody].i235UCrust >= 0) {
+    fnUpdate[iBody][update[iBody].i235UCrust][0] = &fndUpdateFunctionTiny;
+  }
+}
+
+
+
 /**
    Verify radheat is initialized: that both man and core initialize and not both mass and number specified.
 
@@ -4391,7 +4544,7 @@ void fvWriteSurfEnFluxRadTotal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
    @param output Output struct
    @param fnWrite fnWriteOutput
 */
-void InitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
+void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   /* Aluminum */
   sprintf(output[OUT_26ALPOWERMAN].cName,"26AlPowerMan");
   sprintf(output[OUT_26ALPOWERMAN].cDescr,"Total Power Generated by 26Al");
@@ -5066,30 +5219,37 @@ void fvAddModuleRadheat(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                      = RADHEAT;
 
-  module->fnCountHalts[iBody][iModule] = &fvCountHaltsRadheat;
-  module->fnReadOptions[iBody][iModule] = &fvReadOptionsRadheat;
-  module->fnLogBody[iBody][iModule] = &fvLogBodyRadheat;
-  module->fnVerify[iBody][iModule] = &fvVerifyRadheat;
-  module->fnVerifyHalt[iBody][iModule] = &fvVerifyHaltRadheat;
+  module->fnInitializeControl[iBody][iModule]           = &fvInitializeControlRadheat;
+  module->fnInitializeUpdateTmpBody[iBody][iModule]     = &fvInitializeUpdateTmpBodyRadheat;
+  module->fnCountHalts[iBody][iModule]                  = &fvCountHaltsRadheat;
+  module->fnLogBody[iBody][iModule]                     = &fvLogBodyRadheat;
+  
+  module->fnReadOptions[iBody][iModule]                 = &fvReadOptionsRadheat;
+  module->fnVerify[iBody][iModule]                      = &fvVerifyRadheat;
+  module->fnAssignDerivatives[iBody][iModule]           = &fvAssignRadheatDerivatives;
+  module->fnNullDerivatives[iBody][iModule]             = &fvNullRadheatDerivatives;
+  module->fnVerifyHalt[iBody][iModule]                  = &fvVerifyHaltRadheat;
 
-  module->fnInitializeUpdate[iBody][iModule] = &fvInitializeUpdateRadheat;
+  module->fnInitializeBody[iBody][iModule]              = &fvInitializeBodyRadheat;  
+  module->fnInitializeUpdate[iBody][iModule]            = &fvInitializeUpdateRadheat;
+  module->fnInitializeOutput[iBody][iModule]            = &fvInitializeOutputRadheat;
 
-  module->fnFinalizeUpdate26AlNumMan[iBody][iModule] = &fvFinalizeUpdate26AlNumManRadheat;
-  module->fnFinalizeUpdate40KNumMan[iBody][iModule] = &fvFinalizeUpdate40KNumManRadheat;
-  module->fnFinalizeUpdate232ThNumMan[iBody][iModule] = &fvFinalizeUpdate232ThNumManRadheat;
-  module->fnFinalizeUpdate238UNumMan[iBody][iModule] = &fvFinalizeUpdate238UNumManRadheat;
-  module->fnFinalizeUpdate235UNumMan[iBody][iModule] = &fvFinalizeUpdate235UNumManRadheat;
+  module->fnFinalizeUpdate26AlNumMan[iBody][iModule]    = &fvFinalizeUpdate26AlNumManRadheat;
+  module->fnFinalizeUpdate40KNumMan[iBody][iModule]     = &fvFinalizeUpdate40KNumManRadheat;
+  module->fnFinalizeUpdate232ThNumMan[iBody][iModule]   = &fvFinalizeUpdate232ThNumManRadheat;
+  module->fnFinalizeUpdate238UNumMan[iBody][iModule]    = &fvFinalizeUpdate238UNumManRadheat;
+  module->fnFinalizeUpdate235UNumMan[iBody][iModule]    = &fvFinalizeUpdate235UNumManRadheat;
 
-  module->fnFinalizeUpdate26AlNumCore[iBody][iModule] = &fvFinalizeUpdate26AlNumCoreRadheat;
-  module->fnFinalizeUpdate40KNumCore[iBody][iModule] = &fvFinalizeUpdate40KNumCoreRadheat;
-  module->fnFinalizeUpdate232ThNumCore[iBody][iModule] = &fvFinalizeUpdate232ThNumCoreRadheat;
-  module->fnFinalizeUpdate238UNumCore[iBody][iModule] = &fvFinalizeUpdate238UNumCoreRadheat;
-  module->fnFinalizeUpdate235UNumCore[iBody][iModule] = &fvFinalizeUpdate235UNumCoreRadheat;
+  module->fnFinalizeUpdate26AlNumCore[iBody][iModule]   = &fvFinalizeUpdate26AlNumCoreRadheat;
+  module->fnFinalizeUpdate40KNumCore[iBody][iModule]    = &fvFinalizeUpdate40KNumCoreRadheat;
+  module->fnFinalizeUpdate232ThNumCore[iBody][iModule]  = &fvFinalizeUpdate232ThNumCoreRadheat;
+  module->fnFinalizeUpdate238UNumCore[iBody][iModule]   = &fvFinalizeUpdate238UNumCoreRadheat;
+  module->fnFinalizeUpdate235UNumCore[iBody][iModule]   = &fvFinalizeUpdate235UNumCoreRadheat;
 
-  module->fnFinalizeUpdate40KNumCrust[iBody][iModule] = &fvFinalizeUpdate40KNumCrustRadheat;
+  module->fnFinalizeUpdate40KNumCrust[iBody][iModule]   = &fvFinalizeUpdate40KNumCrustRadheat;
   module->fnFinalizeUpdate232ThNumCrust[iBody][iModule] = &fvFinalizeUpdate232ThNumCrustRadheat;
-  module->fnFinalizeUpdate238UNumCrust[iBody][iModule] = &fvFinalizeUpdate238UNumCrustRadheat;
-  module->fnFinalizeUpdate235UNumCrust[iBody][iModule] = &fvFinalizeUpdate235UNumCrustRadheat;
+  module->fnFinalizeUpdate238UNumCrust[iBody][iModule]  = &fvFinalizeUpdate238UNumCrustRadheat;
+  module->fnFinalizeUpdate235UNumCrust[iBody][iModule]  = &fvFinalizeUpdate235UNumCrustRadheat;
 }
 
 /************* RADHEAT Functions ************/

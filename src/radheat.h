@@ -113,7 +113,11 @@
 #define EPOWERCRUSTTOTAL 7e12  /**< [W] Earth's modern crustal radiogenic power, 7 TW (Jaupart et al 2007) */
 #define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  /**< [W/kg] Earth's modern crustal heat production density */
 
-void AddModuleRadheat(MODULE*,int,int);
+void fvInitializeControlRadheat(CONTROL*,int);
+void fvInitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
+void fvInitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
+  
+void fvAddModuleRadheat(MODULE*,int,int);
 void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 
 /* Options Info */
@@ -180,7 +184,7 @@ void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_HALTRADPOWER           1195  
 
 /* Options Functions */
-void HelpOptionsRadheat(OPTIONS*);
+void fvHelpOptionsRadheat(OPTIONS*);
 void fvRead40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvRead40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvRead40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -226,7 +230,7 @@ void fvRead235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvRead235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
 void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
-void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
+void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int); 
@@ -251,6 +255,8 @@ void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
 void fvForceBehaviorRadheat(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void fvRadheatExit(FILES*,char*,int);
 void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void fvAssignRadheatDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void fvNullRadheatDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
 /* Update functions */
 void fvInitializeUpdateRadheat(BODY*,UPDATE*,int);
@@ -436,7 +442,7 @@ void fvWriteRadPowerTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doub
 void fvWriteRadEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void fvHelpOutputRadheat(OUTPUT*);
-void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
+void fvInitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
 void fvLogOptionsRadheat(CONTROL*,FILE*);

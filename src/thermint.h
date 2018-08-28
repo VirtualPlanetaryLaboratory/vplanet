@@ -129,7 +129,7 @@
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
 
 //void InitializeControlThermint(CONTROL*);
-void AddModuleThermint(MODULE*,int,int);
+void fvAddModuleThermint(MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
@@ -265,7 +265,7 @@ void fvReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* end vemcee parameters */
 
-void InitializeOptionsThermint(OPTIONS*,fnReadOption[]);
+void fvInitializeOptionsThermint(OPTIONS*,fnReadOption[]);
 void fvReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
@@ -283,6 +283,8 @@ void fvVerifyTCore(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 //void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
 //void fvInitializeVplanetThermint(CONTROL*,MODULE*);
 //void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
+void fvAssignThermintDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void fvNullThermintDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
 /* Update functions */
 void fvInitializeUpdateThermint(BODY*,UPDATE*,int);
@@ -376,8 +378,7 @@ void fvForceBehaviorThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateV
 #define OUT_DTCHIREF	    1799		/**< [K] Reference core liquidus depression */       
 #define OUT_DYNVISC         1800                /**< [Pa/s] Dynamic viscosity of upper mantle */
 											      
-void fvHelpOutputThermint(OUTPUT*);							      
-void InitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
+void fvInitializeOutputThermint(OUTPUT*,fnWriteOutput[]);					      
 void fvInitializeOutputFunctionThermint(OUTPUT*,int,int);					      
 void fvFinalizeOutputFunctionThermint(OUTPUT*,int,int);					      
 											      

@@ -1,47 +1,39 @@
 # Earthlike parameters
-sName           earth                   # Body's name
-saModules       radheat thermint
+sName		earth			# Body's name
+saModules 	radheat thermint
 
 # Physical Properties
-dMass           -1.0                    # Mass, negative -> Earth masses
-dRadius         -1.0                    # Radius, negative -> Earth radii
-dRotPeriod      -1.0                    # Rotation period, negative -> days
-dObliquity      23.5
-dRadGyra        0.5
+dMass		-1.0  			# Mass, negative -> Earth masses
+dRadius		-1.0  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	23.5
+dRadGyra	0.5
 # Orbital Properties
-dEcc            0.0167          # Eccentricity
-dSemi           -1              # Semi-major axis, negative -> AU
+dEcc            0.0167		# Eccentricity
+dSemi           -1		# Semi-major axis, negative -> AU
+
 
 # RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-d40KNumMan    -1.0
-d40KNumCore   -3.0
-d40KNumCrust  -1.0
+d40KPowerMan      -1
+d40KPowerCore     -1
+d40KPowerCrust    -1
 ### 232Th
-d232ThNumMan    -1                      # Number of thorium-232 atoms, negative -> Earth
-d232ThNumCore   -1
-d232ThNumCrust  -1
+d232ThPowerMan	  -1
+d232ThPowerCore	  -1
+d232ThPowerCrust  -1
 ### 235U
-d235UNumMan     -1                      # Number of uranium-238 atims, negative -> Earth
-d235UNumCore    -1
-d235UNumCrust   -1
-### 238U
-d238UNumMan     -1.0                    # Number of uranium-238 atims, negative -> Earth
-d238UNumCore    -1
-d238UNumCrust   -1
+d235UPowerMan     -1
+d235UPowerCore	  -1
+d235UPowerCrust	  -1
+### 238U	   
+d238UPowerMan	  -1
+d238UPowerCore	  -1
+d238UPowerCrust	  -1
 
 ### THERMINT inputs.
-dTMan          3000.0
-dTCore         6000.0
-dEruptEff      0.1
-dTrefLind      5650.
-dDTChiRef      250. 
-dFixMeltfactorUMan 1
-#dMeltfactorUMan 1       #only applies when FixMeltfactorUMan=1
-dViscJumpMan   2.85
-dViscRef       1.0e8
-dStagLid       1
-dManHFlowPref  1.
-dMagMomCoef    0.15
+dTMan          3000
+dTCore         6000
 
-saOutputOrder -Time -TMan -TCore -RIC -RadPowerTotal -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal
+saOutputOrder -Time TMan TCore RadPowerTotal MagMom

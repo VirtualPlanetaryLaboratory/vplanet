@@ -924,7 +924,7 @@ void fvReadElecCondCore(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   @param options Options struct
   @param fnRead fnReadOption functions to read options
 */
-void InitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
+void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
   /* TMan */
@@ -1459,6 +1459,17 @@ void fvForceBehaviorThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
   if (body[iBody].dTCore < 0.5)
     body[iBody].dTCore = 0;
 }
+
+void fvAssignThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iTMan][0]  = &fdTDotMan;
+  fnUpdate[iBody][update[iBody].iTCore][0] = &fdTDotCore;
+}
+
+void fvNullThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iTMan][0]  = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iTCore][0] = &fndUpdateFunctionTiny;
+}
+
 /**
   Verify thermint. Calls VerifyTMan, VerifyTCore, ForceBehaviorThermint, PropsAuxThermint, BodyCopyThermint.
 
@@ -1614,18 +1625,6 @@ void fvVerifyHaltThermint(BODY *body,CONTROL *control,OPTIONS *options,int iBody
 }
 
 /************* THERMINT Outputs ******************/
-/**
-  Help information on output parameters
-
-  @param output Output struct
-*/
-void fvHelpOutputThermint(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ THERMINT output ------\n");
-  for (iOut=OUTSTARTTHERMINT;iOut<OUTENDTHERMINT;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
 
 /* NOTE: If you write a new Write subroutine here you need to add the associate
    block of initialization in InitializeOutputThermint below */
@@ -2976,7 +2975,7 @@ void fvWriteTrefLind(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   @param fnWrite fnWriteOutput
 */
 
-void InitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
+void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TMAN].cName,"TMan");
   sprintf(output[OUT_TMAN].cDescr,"Mantle Temperature");
@@ -3644,21 +3643,25 @@ void fvLogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   @param iBody Index of body
   @param iModule Index of module
 */
-void AddModuleThermint(MODULE *module,int iBody,int iModule) {
+void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]              = THERMINT;
 
-  module->fnCountHalts[iBody][iModule] = &fvCountHaltsThermint;
-  module->fnReadOptions[iBody][iModule] = &fvReadOptionsThermint;
-  module->fnLogBody[iBody][iModule] = &fvLogBodyThermint;
-  module->fnVerify[iBody][iModule] = &fvVerifyThermint;
-  module->fnVerifyHalt[iBody][iModule] = &fvVerifyHaltThermint;
+  module->fnCountHalts[iBody][iModule]          = &fvCountHaltsThermint;
+  module->fnReadOptions[iBody][iModule]         = &fvReadOptionsThermint;
+  module->fnLogBody[iBody][iModule]             = &fvLogBodyThermint;
+  module->fnVerify[iBody][iModule]              = &fvVerifyThermint;
+  module->fnAssignDerivatives[iBody][iModule]   = &fvAssignThermintDerivatives;
+  module->fnNullDerivatives[iBody][iModule]     = &fvNullThermintDerivatives;
+  module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
+  module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
   
-  module->fnInitializeBody[iBody][iModule] = &fvInitializeBodyThermint;
-  module->fnInitializeUpdate[iBody][iModule] = &fvInitializeUpdateThermint;
+  module->fnInitializeBody[iBody][iModule]      = &fvInitializeBodyThermint;
+  module->fnInitializeUpdate[iBody][iModule]    = &fvInitializeUpdateThermint;
+  module->fnInitializeOutput[iBody][iModule]    = &fvInitializeOutputThermint;
 
   // NEED TO ADD THERMINT VARIABLES HERE??
-  module->fnFinalizeUpdateTMan[iBody][iModule] = &fvFinalizeUpdateTManThermint;
+  module->fnFinalizeUpdateTMan[iBody][iModule]  = &fvFinalizeUpdateTManThermint;
   module->fnFinalizeUpdateTCore[iBody][iModule] = &fvFinalizeUpdateTCoreThermint;
 }
 

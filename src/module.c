@@ -137,7 +137,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdatePinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius        = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateRadGyra       = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot           = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi          = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateLostAngMom    = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
@@ -274,7 +273,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateQinc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
   module->fnFinalizeUpdateRadius[iBody]           = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
-  module->fnFinalizeUpdateRadGyra[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot[iBody]              = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
@@ -345,7 +343,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateQinc[iBody][iModule]             = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateRadGyra[iBody][iModule]          = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRot[iBody][iModule]              = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSemi[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;

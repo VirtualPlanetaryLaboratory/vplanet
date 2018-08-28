@@ -153,7 +153,6 @@
 #define VOBL               1004 // Obliquity
 #define VRADIUS            1005 // Radius
 #define VMASS              1006 // Mass
-#define VRADGYRA           1007 // Radius of Gyration
 
 // RADHEAT
 #define VNUM26ALMAN        1100 // 26Al in Mantle
@@ -1104,7 +1103,6 @@ struct UPDATE {
   int iNumRot;          /**< Number of Equations Affecting Rotation Rate */
   int iNumSemi;         /**< Number of Equations Affecting Semi-Major Axis */
   int iNumRadius;
-  int iNumRadGyra;
   int iNumMass;
 
   /* These are the variables that the update matrix modifies */
@@ -1116,7 +1114,6 @@ struct UPDATE {
   int iSemi;            /**< variable number Corresponding to Semi-major Axis */
   double dDSemiDt;      /**< Total Semi-Major Axis Derivative */
   int iRadius;
-  int iRadGyra;         /**, variable number corresponding to radius of gyration */
   int iMass;
 
   /* Next comes the identifiers for the module that modifies a variable */
@@ -1442,7 +1439,6 @@ struct UPDATE {
   double *pdLuminosityStellar;
   double *pdTemperatureStellar;
   double *pdRadiusStellar;
-  double *pdRadGyraStellar;
   double *pdRotRateStellar;
   double *pdLostAngMomStellar;
   double *pdLostEngStellar;
@@ -1791,7 +1787,6 @@ typedef void (*fnFinalizeUpdateMassModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePincModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateQincModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateRadGyraModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateRotModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSemiModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfaceWaterMassModule)(BODY*,UPDATE*,int*,int,int,int);
@@ -1923,8 +1918,6 @@ struct MODULE {
   fnFinalizeUpdateQincModule **fnFinalizeUpdateQinc;
   /*! Function pointers to finalize Radius */
   fnFinalizeUpdateRadiusModule **fnFinalizeUpdateRadius;
-  /*! Function pointers to finalize Radius of gyration */
-  fnFinalizeUpdateRadGyraModule **fnFinalizeUpdateRadGyra;
   /*! Function pointers to finalize Mass */
   fnFinalizeUpdateMassModule **fnFinalizeUpdateMass;
   /*! Function pointers to finalize Rotation Rate */

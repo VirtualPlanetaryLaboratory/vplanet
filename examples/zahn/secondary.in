@@ -7,6 +7,7 @@ iBodyType     1 # Star!
 dMass         1.0 # Mass, solar masses
 dAge          1.0e6
 dRotPeriod    -1.67
+dRadGyra      0.45             # Radius of gyration (moment of inertia constant)
 
 # Orbital properties
 dOrbPeriod  -5.0
@@ -22,4 +23,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sMagBrakingModel skumanich
 
-saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer RadGyra -SurfEnFluxTotal 
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer -SurfEnFluxTotal 

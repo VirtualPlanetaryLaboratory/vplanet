@@ -27,7 +27,7 @@ sUnitTemp   K       # Options: Kelvin, Celsius, Farenheit
 
 # Input/Output
 bDoLog		1					# Write a log file?
-iDigits		6					# Maximum number of digits to right of decimal
+iDigits		16					# Maximum number of digits to right of decimal
 
 # Option names must be exact in spelling and case.
 

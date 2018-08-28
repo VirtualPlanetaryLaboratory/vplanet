@@ -77,7 +77,6 @@ void VerifyFlare(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int)
 void InitializeUpdateFlare(BODY*,UPDATE*,int);
 void FinalizeUpdateLXUVFlare(BODY*,UPDATE*,int*,int,int,int);
 
-void HelpOutputFlare(OUTPUT*);
 void InitializeOutputFlare(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionFlare(OUTPUT*,int,int);
 void FinalizeOutputFunctionFlare(OUTPUT*,int,int);

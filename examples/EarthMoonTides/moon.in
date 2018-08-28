@@ -20,4 +20,6 @@ dK2           0.024059   # Love Number of degree 2
 saTidePerts   earth      # Name of tidal perturber (only central body may have >1)
 bForceEqSpin  1          # Force moon's rotation period to be tidally locked
 
+# Output Options
+sOutFile    earth.backward
 saOutputOrder -Time SemiMajorAxis Eccentricity -TotEnergy -TotAngMom

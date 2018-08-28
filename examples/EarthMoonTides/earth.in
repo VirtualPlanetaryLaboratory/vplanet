@@ -15,4 +15,6 @@ dTidalQ     12     # Tidal Q
 dK2         0.299   # Love number of degree 2 (Yoder 1995)
 saTidePerts moon    # Names of perturbing bodies (only central body may have >1)
 
+# Output Options
+sOutFile    earth.backward
 saOutputOrder -Time RotPer Obliquity

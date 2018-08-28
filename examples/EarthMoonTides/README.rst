@@ -31,4 +31,4 @@ Expected output
    :width: 600px
    :align: center
 
-History of the nominal Earth-Moon tidal model. The Earth's rotation slows as the orbit grows and becomes more eccentric. The obliquity rises due to conservation of angular momentum. Both energy and total angular momentum are well-conserved, at until just prior to the merge, in which case the model breaks down. 
+History of the nominal Earth-Moon tidal model. The Earth's rotation slows as the orbit grows and becomes more eccentric. The obliquity rises due to conservation of angular momentum. Both energy and total angular momentum are well-conserved, at until least until just prior to the merge when the model breaks down. 

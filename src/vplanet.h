@@ -124,11 +124,11 @@
 #define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
-#define OPTLONDESCR   2048  /* Number of characters in option long description */
+#define OPTLONDESCR   2048 /* Number of characters in option long description */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define LINE          256   /* Maximum number of characters in a line */
 #define OUTDESCR      256   /* Number of characters in output description */
-#define OUTLONDESCR   2048  /* Number of characters in output long description */
+#define OUTLONDESCR   2048 /* Number of characters in output long description */
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
@@ -430,84 +430,86 @@ struct BODY {
 
   /* RADHEAT Parameters: H = Const*exp[-Time/HalfLife] */
   int bRadheat;          /**< Apply Module RADHEAT? */
-  double d26AlConstMan;  /**< Body's Mantle 26Al Decay Constant */
+  double d26AlConstMan;  /**< Body's Mantle 26Al Decay Coefficient */
   double d26AlMassMan;   /**< Body's Mantle Mass of 26Al */
   double d26AlNumMan;    /**< Body's Mantle Number of 26Al Atoms */
   double d26AlPowerMan;  /**< Body's Mantle Internal Power Due to 26Al Decay */
-  double d26AlConstCore; /**< Body's Core 26Al Decay Constant */
+  double d26AlConstCore; /**< Body's Core 26Al Decay Coefficient */
   double d26AlMassCore;  /**< Body's Core Mass in 26Al */
   double d26AlNumCore;   /**< Body's Core Number of 26Al Atoms */
   double d26AlPowerCore; /**< Body's Core Power from 26Al */
 
-  double d40KConstMan;   /**< Body's Mantle 40K Decay Constant */
+  double d40KConstMan;   /**< Body's Mantle 40K Decay Coefficient */
   double d40KMassMan;    /**< Body's Mantle Mass of 40K */
   double d40KNumMan;     /**< Body's Mantle Number of 40K Atoms */
   double d40KPowerMan;   /**< Body's Mantle Internal Power Due to 40K Decay */
-  double d40KConstCore;  /**< Body's Core 40K Decay Constant */
+  double d40KConstCore;  /**< Body's Core 40K Decay Coefficient */
   double d40KNumCore;    /**< Body's Core Number of 40K Atoms */
   double d40KPowerCore;  /**< Body's Core Power due to 40K */
   double d40KMassCore;   /**< Body's Core Mass of 40K */
-  double d40KConstCrust; /**< Body's Crust 40K Decay Constant */
+  double d40KConstCrust; /**< Body's Crust 40K Decay Coefficient */
   double d40KNumCrust;   /**< Body's Crust Number of 40K Atoms */
   double d40KPowerCrust; /**< Body's Crust Power due to 40K */
   double d40KMassCrust;  /**< Body's Crust Mass of 40K */
 
-  double d232ThConstMan;    /**< Body's Thorium-232 Decay Constant */
-  double d232ThNumMan;      /**< Body's Number of Thorium-232 Atoms */
-  double d232ThPowerMan;    /**< Body's Internal Power Due to Thorium-232 Decay */
-  double d232ThMassMan;     /**< Body's Total Mass of Thorium-232 Atoms */
-  double d232ThConstCore;
-  double d232ThNumCore;
-  double d232ThPowerCore;
-  double d232ThMassCore;
-  double d232ThConstCrust;
-  double d232ThNumCrust;
-  double d232ThPowerCrust;
-  double d232ThMassCrust;
-  double d238UConstMan;     /**< Body's Uranium-238 Decay Constant */
-  double d238UNumMan;       /**< Body's Number of Uranium-238 Atoms */
-  double d238UPowerMan;     /**< Body's Internal Power Due to Uranium-238 Decay */
-  double d238UMassMan;      /**< Body's Total Mass of Uranium-238 Atoms */
-  double d238UConstCore;
-  double d238UNumCore;
-  double d238UPowerCore;
-  double d238UMassCore;
-  double d238UConstCrust;
-  double d238UNumCrust;
-  double d238UPowerCrust;
-  double d238UMassCrust;
-  double d235UConstMan;
-  double d235UNumMan;
-  double d235UPowerMan;
-  double d235UMassMan;
-  double d235UConstCore;
-  double d235UNumCore;
-  double d235UPowerCore;
-  double d235UMassCore;
-  double d235UConstCrust;
-  double d235UNumCrust;
-  double d235UPowerCrust;
-  double d235UMassCrust;
+  double d232ThConstMan;    /**< Body's Mantle Thorium-232 Decay Coefficient */
+  double d232ThNumMan;      /**< Body's Mantle Number of Thorium-232 Atoms */
+  double d232ThPowerMan;    /**< Body's Mantle Internal Power Due to Thorium-232 Decay */
+  double d232ThMassMan;     /**< Body's Mantle Mass of Thorium-232 Atoms */
+  double d232ThConstCore;   /**< Body's Core Thorium-232 Decay Coefficient */
+  double d232ThNumCore;      /**< Body's Core Number of Thorium-232 Atoms */
+  double d232ThPowerCore;    /**< Body's Core Internal Power Due to Thorium-232 Decay */
+  double d232ThMassCore;     /**< Body's Core Mass of Thorium-232 Atoms */
+  double d232ThConstCrust;   /**< Body's Crust Thorium-232 Decay Coefficient */
+  double d232ThNumCrust;      /**< Body's Crust Number of Thorium-232 Atoms */
+  double d232ThPowerCrust;    /**< Body's Crust Internal Power Due to Thorium-232 Decay */
+  double d232ThMassCrust;     /**< Body's Crust Mass of Thorium-232 Atoms */
+
+  double d238UConstMan;     /**< Body's Mantle Uranium-238 Decay Coefficient */
+  double d238UNumMan;       /**< Body's Mantle Number of Uranium-238 Atoms */
+  double d238UPowerMan;     /**< Body's Mantle Internal Power Due to Uranium-238 Decay */
+  double d238UMassMan;      /**< Body's Mantle Mass of Uranium-238 Atoms */
+  double d238UConstCore;     /**< Body's Core Uranium-238 Decay Coefficient */
+  double d238UNumCore;       /**< Body's Core Number of Uranium-238 Atoms */
+  double d238UPowerCore;     /**< Body's Core Internal Power Due to Uranium-238 Decay */
+  double d238UMassCore;      /**< Body's Core Mass of Uranium-238 Atoms */
+  double d238UConstCrust;     /**< Body's Crust Uranium-238 Decay Coefficient */
+  double d238UNumCrust;       /**< Body's Crust  Number of Uranium-238 Atoms */
+  double d238UPowerCrust;     /**< Body's Crust Internal Power Due to Uranium-238 Decay */
+  double d238UMassCrust;      /**< Body's Crust Mass of Uranium-238 Atoms */
+  double d235UConstMan;     /**< Body's Mantle Uranium-235 Decay Coefficient */
+  double d235UNumMan;       /**< Body's Mantle Number of Uranium-235 Atoms */
+  double d235UPowerMan;     /**< Body's Mantle Internal Power Due to Uranium-235 Decay */
+  double d235UMassMan;      /**< Body's Mantle Mass of Uranium-235 Atoms */
+  double d235UConstCore;     /**< Body's Core Uranium-235 Decay Coefficient */
+  double d235UNumCore;       /**< Body's Core Number of Uranium-235 Atoms */
+  double d235UPowerCore;     /**< Body's Core Internal Power Due to Uranium-235 Decay */
+  double d235UMassCore;      /**< Body's Core Mass of Uranium-235 Atoms */
+  double d235UConstCrust;     /**< Body's Crust Uranium-235 Decay Coefficient */
+  double d235UNumCrust;       /**< Body's Crust Number of Uranium-235 Atoms */
+  double d235UPowerCrust;     /**< Body's Crust Internal Power Due to Uranium-235 Decay */
+  double d235UMassCrust;      /**< Body's Crust Mass of Uranium-235 Atoms */
+
   double dRadPowerTotal;   /**< Total planet Radiogenic Power */
-  double dRadPowerMan;   /**< Total Mantle Radiogenic Power */
-  double dRadPowerCore;   /**< Total Core Radiogenic Power */
+  double dRadPowerMan;     /**< Total Mantle Radiogenic Power */
+  double dRadPowerCore;    /**< Total Core Radiogenic Power */
   double dRadPowerCrust;   /**< Total Crust Radiogenic Power */
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
-  double dTUMan;           /**< Temperature UMTBL */
-  double dTLMan;           /**< Temperature LMTBL */
-  double dTCMB;            /**< Temperature CMB */
-  double dTICB;            /**< Temperature ICB */
-  double dBLUMan;          /**< UM TBL thickness */
-  double dBLLMan;          /**< LM TBL thickness */
-  double dTJumpUMan;       /**< Abs Temperature Jump across UMTBL */
-  double dTJumpLMan;       /**< Abs Temperature Jump across LMTBL */
+  double dTUMan;           /**< Temperature Upper Mantle (UM) */
+  double dTLMan;           /**< Temperature Lower Mantle (LM) */
+  double dTCMB;            /**< Temperature Core-Mantle Boundary (CMB) */
+  double dTICB;            /**< Temperature Inner Core Boundary (ICB) */
+  double dBLUMan;          /**< Thermal Boundary Layer (TBL) Thickness in Upper Mantle */
+  double dBLLMan;          /**< Thermal Boundary Layer Thickness (TBL) in Lower Mantle */
+  double dTJumpUMan;       /**< Absolute value of Temperature Jump across UMTBL */
+  double dTJumpLMan;       /**< Absolute value of Temperature Jump across LMTBL */
   double dSignTJumpUMan;   /**< Sign of Temperature Jump across UMTBL */
   double dSignTJumpLMan;   /**< Sign of Temperature Jump across LMTBL */
-  double dViscUManArr;     /**< Viscosity UMTBL Arrhenius Law */
+  double dViscUManArr;     /**< Viscosity UMTBL from Arrhenius Law */
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dViscMMan;        /**< Viscosity Mid (ave) mantle */
@@ -529,78 +531,78 @@ struct BODY {
   double dViscMeltXi;      /**< Viscosity Melt Factor Xi */
   double dViscMeltPhis;    /**< Viscosity Melt Factor Phis */
   double dDepthMeltMan;    /**< Depth to base of UM Melt layer */
-  double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
-  double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
+  double dTDepthMeltMan;   /**< Temperature at base of UM Melt layer */
+  double dTJumpMeltMan;    /**< Temperature Jump to base of UM Melt layer */
   double dMeltMassFluxMan; /**< Mantle upwelling melt mass flux */
-  double dK2Man;           /**< Mantle k2 love number */
-  double dImk2Man;         /**< Mantle Im(k2) love number */
+  double dK2Man;           /**< Mantle k2 Love number */
+  double dImk2Man;         /**< Mantle Im(k2) Love number */
   double dRayleighMan;     /**< Mantle Rayleigh Number */
   /* Time Derivatives & Gradients */
-  double dTDotMan;         /**< Time deriv of mean mantle temp */
-  double dTDotCore;        /**< time deriv of mean core temp */
-  double dHfluxUMan;       /**< hflux upper mantle thermal boundary layer (UMTBL) */
-  double dHflowUMan;       /**< hflow UMTBL */
-  double dHfluxLMan;       /**< hflux lower mantle thermal boundary layer (UMTBL) */
-  double dHflowLMan;       /**< hflow LMTBL */
-  double dHfluxCMB;        /**< hflux CMB */
-  double dHflowCMB;        /**< hflow CMB */
-  double dHflowTidalMan;   /**< hflow tidal dissipation in mantle */
-  double dHflowTidalCore;  /**< hflow tidal dissipation in core */
-  double dHflowLatentMan;  /**< latent hflow from solidification of mantle */
-  double dHflowMeltMan;    /**< Eruptive Melt Hflow from mantle */
+  double dTDotMan;         /**< Time derivative of mean mantle temperature */
+  double dTDotCore;        /**< Time derivative of mean core temperature */
+  double dHfluxUMan;       /**< Heat flux (Hflux) upper mantle thermal boundary layer (UMTBL) */
+  double dHflowUMan;       /**< Heat flow (Hflow) UMTBL */
+  double dHfluxLMan;       /**< Heat flux (Hflux) lower mantle thermal boundary layer (LMTBL) */
+  double dHflowLMan;       /**< Heat flow (Hflow) LMTBL */
+  double dHfluxCMB;        /**< Heat flux across CMB */
+  double dHflowCMB;        /**< Heat flow across CMB */
+  double dHflowTidalMan;   /**< Heat flow generated by tidal dissipation in mantle */
+  double dHflowTidalCore;  /**< Heat flow generated by tidal dissipation in core */
+  double dHflowLatentMan;  /**< Latent heat flow from solidification of mantle */
+  double dHflowMeltMan;    /**< Eruptive Melt heat flow from mantle */
   double dHflowSecMan;     /**< Mantle Secular Heat flow */
-  double dMassICDot;       /**< Mass Growth Rate of IC */
-  double dHflowLatentIC;   /**< latent hflow from solidification of IC */
-  double dPowerGravIC;     /**< latent hflow from solidification of IC */
-  double dHflowICB;        /**< hflow across ICB */
-  double dHfluxSurf;       /**< hflux surface of mantle */
-  double dHflowSurf;       /**< hflow surface of mantle */
+  double dMassICDot;       /**< Mass Growth Rate of Inner core (IC) */
+  double dHflowLatentIC;   /**< Latent heat flow from solidification of IC */
+  double dPowerGravIC;     /**< Gravitational power released from solidification of IC */
+  double dHflowICB;        /**< Heat flow across ICB */
+  double dHfluxSurf;       /**< Heat flux across surface of mantle */
+  double dHflowSurf;       /**< Heat flow across surface of mantle */
   double dTidalPowMan;     /**< Tidal Dissipation Power in Mantle */
   /* Core Variables */
-  double dRIC;             /**< IC radius */
-  double dDRICDTCMB;       /**< d(R_ic)/d(T_cmb) */
-  double dDOC;             /**< OC shell thickness */
-  double dThermConductOC;  /**< Thermal conductivity OC */
-  double dThermConductIC;  /**< Thermal conductivity IC */
-  double dChiOC;           /**< OC light element concentration chi. */
-  double dChiIC;           /**< IC light element concentration chi. */
-  double dMassOC;          /**< OC Mass. */
-  double dMassIC;          /**< IC Mass. */
-  double dMassChiOC;       /**< OC Chi Mass. */
-  double dMassChiIC;       /**< IC Chi Mass. */
-  double dDTChi;           /**< Core Liquidus Depression */
-  double dHfluxCMBAd;      /**< CMB Adiabatic Heat flux. */
-  double dHfluxCMBConv;    /**< CMB Convective (super-adiabatic) Heat flux. */
-  double dCoreBuoyTherm;   /**< Core Thermal buoyancy flux */
-  double dCoreBuoyCompo;   /**< Core Compositional buoyancy flux */
-  double dCoreBuoyTotal;   /**< Core total (therm+compo) buoyancy flux */
+  double dRIC;             /**< Inner core radius */
+  double dDRICDTCMB;       /**< Derivative of RIC wrt T_CMB: d(R_ic)/d(T_cmb) */
+  double dDOC;             /**< Outer core shell thickness */
+  double dThermConductOC;  /**< Thermal conductivity Outer core */
+  double dThermConductIC;  /**< Thermal conductivity Inner core */
+  double dChiOC;           /**< Outer core light element concentration chi. */
+  double dChiIC;           /**< Inner core light element concentration chi. */
+  double dMassOC;          /**< Outer core mass. */
+  double dMassIC;          /**< Inner core mass. */
+  double dMassChiOC;       /**< Outer core light element (Chi) mass. */
+  double dMassChiIC;       /**< Inner core light element (Chi) mass. */
+  double dDTChi;           /**< Core liquidus depression */
+  double dHfluxCMBAd;      /**< CMB adiabatic heat flux. */
+  double dHfluxCMBConv;    /**< CMB convective (super-adiabatic) heat flux. */
+  double dCoreBuoyTherm;   /**< Core thermal buoyancy flux */
+  double dCoreBuoyCompo;   /**< Core compositional buoyancy flux */
+  double dCoreBuoyTotal;   /**< Core total buoyancy flux */
   double dGravICB;         /**< Gravity at ICB */
   double dDensAnomICB;     /**< Density anomaly across ICB (Delta rho_chi in DB14). */
   double dRICDot;          /**< Inner core growth rate */
   /* Magnetic Field */
-  double dMagMom;          /**< Core Dynamo Magnetic Moment scaling law. */
-  double dMagMomCoef;      /**< Dynamo magnetic moment scaling law dipolarity coefficient (gamma_d in DB14) */
+  double dMagMom;          /**< Core dynamo dipole magnetic moment */
+  double dMagMomCoef;      /**< Dipole magnetic moment coefficient */
   double dPresSWind;       /**< Stellar wind pressure at planets orbit. */
   double dMagPauseRad;     /**< Magnetopause stand-off radius from center of planet */
   /* Constants */
-  double dViscRatioMan;    /**< Viscosity Ratio Man */
-  double dEruptEff;        /**< Mantle melt eruption efficiency */
-  double dViscRef;         /**< Mantle Viscosity Reference (coefficient) */
-  double dTrefLind;         /**< Core Liquidus Lindemann Reference (coefficient) */
-  double dDTChiRef;        /**< Core Liquidus Depression Reference (E) */
-  double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
-  double dManHFlowPref;    /**< Mantle Hflow Prefix */
+  double dViscRatioMan;    /**< Viscosity ratio across mantle */
+  double dEruptEff;        /**< Mantle melt extrusive eruption efficiency */
+  double dViscRef;         /**< Mantle viscosity reference coefficient */
+  double dTrefLind;         /**< Core liquidus Lindemann reference coefficient */
+  double dDTChiRef;        /**< Core liquidus depression reference */
+  double dStagLid;         /**< Stagnant lid heat flow switch (0 or 1)*/
+  double dManHFlowPref;    /**< Mantle heat flow prefix coefficient */
 
   /* vemcee parameters */
   double dActViscMan;      /**< Mantle viscosity activation energy */
-  double dShModRef;        /**< reference kinematic mantle shear modulus */
-  double dStiffness;       /**< effective stiffness of mantle */
-  double dDLind;           /**< lindemann's law length scale for iron liquidus*/
-  double dDAdCore;         /**< liq iron core adiabatic length scale */
-  double dAdJumpM2UM;      /**< adiabatic temp jump from ave mantle to UM */
-  double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
-  double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
-  double dElecCondCore;    /**< electrical conductivity of core */
+  double dShModRef;        /**< Reference kinematic mantle shear modulus */
+  double dStiffness;       /**< Effective stiffness of mantle */
+  double dDLind;           /**< Lindemann's law length scale for iron liquidus*/
+  double dDAdCore;         /**< Liquid iron core adiabatic length scale */
+  double dAdJumpM2UM;      /**< Adiabatic temperature jump from average mantle to UM */
+  double dAdJumpM2LM;      /**< Adiabatic temperature jump from average mantle to LM */
+  double dAdJumpC2CMB;     /**< Adiabatic temperature jump from average core to CMB */
+  double dElecCondCore;    /**< Electrical conductivity of core at CMB */
   /* end vemcee parameters */
 
   /* ATMESC Parameters */
@@ -1190,21 +1192,21 @@ struct UPDATE {
   double *pdLostEngEqtide;
 
   /* RADHEAT Mantle */
-  int i26AlMan;            /**< variable number Corresponding to Aluminum-26 */
-  int i40KMan;             /**< variable number Corresponding to Potassium-40 */
-  int i232ThMan;           /**< variable number Corresponding to Thorium-232 */
-  int i238UMan;            /**< variable number Corresponding to Uranium-238 */
-  int i235UMan;
-  int iNum26AlMan;         /**< Number of Equations Affecting Aluminum-26 [1] */
-  int iNum40KMan;          /**< Number of Equations Affecting Potassium-40 [1] */
-  int iNum232ThMan;        /**< Number of Equations Affecting Thorium-232 [1] */
-  int iNum238UMan;         /**< Number of Equations Affecting Uranium-238 [1] */
-  int iNum235UMan;
-  double dD26AlNumManDt;   /**< Total Aluminum-26 Derivative */
-  double dD40KNumManDt;    /**< Total Potassium-40 Derivative */
-  double dD232ThNumManDt;  /**< Total Thorium-232 Derivative */
-  double dD238UNumManDt;   /**< Total Uranium-238 Derivative */
-  double dD235UNumManDt;
+  int i26AlMan;            /**< variable number Corresponding to Mantle Aluminum-26 */
+  int i40KMan;             /**< variable number Corresponding to Mantle Potassium-40 */
+  int i232ThMan;           /**< variable number Corresponding to Mantle Thorium-232 */
+  int i238UMan;            /**< variable number Corresponding to Mantle Uranium-238 */
+  int i235UMan;            /**< variable number Corresponding to Mantle Uranium-235 */
+  int iNum26AlMan;         /**< Number of Equations Affecting Mantle Aluminum-26 [1] */
+  int iNum40KMan;          /**< Number of Equations Affecting Mantle Potassium-40 [1] */
+  int iNum232ThMan;        /**< Number of Equations Affecting Mantle Thorium-232 [1] */
+  int iNum238UMan;         /**< Number of Equations Affecting Mantle Uranium-238 [1] */
+  int iNum235UMan;         /**< Number of Equations Affecting Mantle Uranium-235 [1] */
+  double dD26AlNumManDt;   /**< Mantle Aluminum-26 Derivative */
+  double dD40KNumManDt;	   /**< Mantle Potassium-40 Derivative */
+  double dD232ThNumManDt;  /**< Mantle Thorium-232 Derivative */
+  double dD238UNumManDt;   /**< Mantle Uranium-238 Derivative */
+  double dD235UNumManDt;   /**< Mantle Uranium-235 Derivative */
   double *pdD26AlNumManDt;
   double *pdD40KNumManDt;
   double *pdD232ThNumManDt;
@@ -1212,21 +1214,21 @@ struct UPDATE {
   double *pdD235UNumManDt;
 
   /* RADHEAT Core */
-  int i26AlCore;
-  int i40KCore;
-  int i232ThCore;
-  int i238UCore;
-  int i235UCore;
-  int iNum26AlCore;
-  int iNum40KCore;
-  int iNum232ThCore;
-  int iNum238UCore;
-  int iNum235UCore;
-  double dD26AlNumCoreDt;
-  double dD40KNumCoreDt;
-  double dD232ThNumCoreDt;
-  double dD238UNumCoreDt;
-  double dD235UNumCoreDt;
+  int i26AlCore;            /**< variable number Corresponding to Core Aluminum-26 */
+  int i40KCore;             /**< variable number Corresponding to Core Potassium-40 */
+  int i232ThCore;           /**< variable number Corresponding to Core Thorium-232 */
+  int i238UCore;            /**< variable number Corresponding to Core Uranium-238 */
+  int i235UCore;            /**< variable number Corresponding to Core Uranium-235 */
+  int iNum26AlCore;         /**< Number of Equations Affecting Core Aluminum-26 [1] */
+  int iNum40KCore;	    /**< Number of Equations Affecting Core Potassium-40 [1] */
+  int iNum232ThCore;	    /**< Number of Equations Affecting Core Thorium-232 [1] */
+  int iNum238UCore;	    /**< Number of Equations Affecting Core Uranium-238 [1] */
+  int iNum235UCore;	    /**< Number of Equations Affecting Core Uranium-235 [1] */
+  double dD26AlNumCoreDt;   /**< Core Aluminum-26 Derivative */
+  double dD40KNumCoreDt;    /**< Core Potassium-40 Derivative */
+  double dD232ThNumCoreDt;  /**< Core Thorium-232 Derivative */
+  double dD238UNumCoreDt;   /**< Core Uranium-238 Derivative */
+  double dD235UNumCoreDt;   /**< Core Uranium-235 Derivative */
   double *pdD26AlNumCoreDt;
   double *pdD40KNumCoreDt;
   double *pdD232ThNumCoreDt;
@@ -1234,18 +1236,21 @@ struct UPDATE {
   double *pdD235UNumCoreDt;
 
   /* RADHEAT CRUST */
-  int i40KCrust;
-  int i232ThCrust;
-  int i238UCrust;
-  int i235UCrust;
-  int iNum40KCrust;
-  int iNum232ThCrust;
-  int iNum238UCrust;
-  int iNum235UCrust;
-  double dD40KNumCrustDt;
-  double dD232ThNumCrustDt;
-  double dD238UNumCrustDt;
-  double dD235UNumCrustDt;
+  int i26AlCrust;	     /**< variable number Corresponding to Crust Aluminum-26 */
+  int i40KCrust;	     /**< variable number Corresponding to Crust Potassium-40 */
+  int i232ThCrust;	     /**< variable number Corresponding to Crust Thorium-232 */
+  int i238UCrust;	     /**< variable number Corresponding to Crust Uranium-238 */
+  int i235UCrust;	     /**< variable number Corresponding to Crust Uranium-235 */
+  int iNum26AlCrust;         /**< Number of Equations Affecting Crust Aluminum-26 [1] */
+  int iNum40KCrust;	     /**< Number of Equations Affecting Crust Potassium-40 [1] */
+  int iNum232ThCrust;	     /**< Number of Equations Affecting Crust Thorium-232 [1] */
+  int iNum238UCrust;	     /**< Number of Equations Affecting Crust Uranium-238 [1] */
+  int iNum235UCrust;	     /**< Number of Equations Affecting Crust Uranium-235 [1] */
+  double dD26AlNumCrustDt;   /**< Crust Aluminum-26 Derivative */
+  double dD40KNumCrustDt;    /**< Crust Potassium-40 Derivative */
+  double dD232ThNumCrustDt;  /**< Crust Thorium-232 Derivative */
+  double dD238UNumCrustDt;   /**< Crust Uranium-238 Derivative */
+  double dD235UNumCrustDt;   /**< Crust Uranium-235 Derivative */
   double *pdD40KNumCrustDt;
   double *pdD232ThNumCrustDt;
   double *pdD238UNumCrustDt;
@@ -1476,8 +1481,8 @@ struct HALT {
   double dMin40KPower;     /**< Halt at this Potassium-40 Power */
   double dMin232ThPower;   /**< Halt at this Thorium-232 Power */
   double dMin238UPower;    /**< Halt at this Uranium-238 Power */
-  double dMin235UPower;
-  double dMinRadPower;
+  double dMin235UPower;    /**< Halt at this Uranium-235 Power */
+  double dMinRadPower;     /**< Halt at this total Power */
 
   /* ATMESC */
   int bSurfaceDesiccated;         /**< Halt if dry?*/
@@ -1487,7 +1492,7 @@ struct HALT {
   int bEndBaraffeGrid;            /***< Halt if we reached the end of the luminosity grid? */
 
   /* THERMINT */
-  double dMinTMan;     /**< Halt at this TMan */
+  double dMinTMan;      /**< Halt at this TMan */
   double dMinTCore;     /**< Halt at this TCore */
 
   /* DISTORB */
@@ -1675,25 +1680,26 @@ struct FILES{
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-struct OPTIONS{
-  char cName[OPTLEN];          /**< Option Name */
-  char cDescr[OPTDESCR];       /**< Brief Description of Option */
-  char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
-  char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
-  int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
-  char cDefault[OPTDESCR];     /**< Description of Default Value */
-  double dDefault;             /**< Default Value */
-  int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
-  int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
-  int iMultiIn;
-  int *iLine;                  /**< Option's Line number in Input File */
-  char *iFile;
-  char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
-  int bNeg;                    /**< Is There a Negative Option? */
-  char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
-  int iFileType;               /**< What type of file can option be in? 0 = primary only, 1 = body file only, 2 = any file */
-  double dNeg;                 /**< Conversion Factor to System Units */
-};
+ struct OPTIONS{
+   char cName[OPTLEN];          /**< Option Name */
+   char cDescr[OPTDESCR];       /**< Brief Description of Option */
+   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
+   char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
+   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
+   char cDefault[OPTDESCR];     /**< Description of Default Value */
+   double dDefault;             /**< Default Value */
+   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
+   int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
+   int iMultiIn;
+   int *iLine;                  /**< Option's Line number in Input File */
+   char *iFile;
+   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
+   int bNeg;                    /**< Is There a Negative Option? */
+   char cNeg[OPTDESCR];         /**< Description of Negative Unit Conversion */
+   int iFileType;               /**< What type of file can option be in? 0 = primary only, 1 = body file only, 2 = any file */
+   double dNeg;                 /**< Conversion Factor to System Units */
+ };
+
 
 /* OUTPUT contains the data regarding every output parameters */
 

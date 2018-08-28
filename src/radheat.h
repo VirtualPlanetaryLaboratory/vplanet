@@ -27,93 +27,100 @@
 // M=N*m ,[N]=number, [m]=kg/1 atom
 // p=e/(m*tau) ,[e]=J, [tau]=s
 
-// 26Al -- Masses, numbers and powers from Wikipedia XXX Check!
-#define ENERGY26AL        6.4153392709791e-13 // [J]
-#define MASS26AL          26*ATOMMASS // [kg]  Mass of a 26Al atom.
-#define HALFLIFE26AL      2.26267992e13  // [s]
+/* 26Al -- Masses, numbers and powers from Wikipedia XXX Check! */
+#define ENERGY26AL        6.4153392709791e-13 /**< [J] Decay energy of Aluminum-26 */ 
+#define MASS26AL          26*ATOMMASS         /**< [kg] Mass of a 26Al atom */        
+#define HALFLIFE26AL      2.26267992e13       /**< [s] Half-life of 26Al */           
 /* Mantle */
-#define EMASSMAN26AL      4.6e18      //9.9866e22   //9.854e22  //[kg]  mass of 26Mg on Earth
-#define ENUMMAN26AL       1.0654e41   //2.31311e45  //2.2824e48  //[num] number of 26Mg atoms on Earth
-#define EPOWERMAN26AL     2.0944e15   //4.54700e19  //1.009e35  //[W]  Power from 26Al if all Earth's 26Mg was 26Al
+#define EMASSMAN26AL      4.6e18               /**< [kg]  Default mantle mass of 26Al */                              
+#define ENUMMAN26AL       1.0654e41            /**< [num] Default mantle number of 26Al atoms */                      
+#define EPOWERMAN26AL     2.0944e15            /**< [W] Default mantle power from 26Al if all 26Mg from 26Al decay */ 
 /* Core */
-#define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  //2.1417e20  //9.854e19  //[kg]
-#define ENUMCORE26AL      1e-2*(ENUMMAN26AL)  //4.9606e42  //2.2824e45  //[num]
-#define EPOWERCORE26AL    1e-2*(EPOWERMAN26AL)  //9.7513e16  //1.009e35  //[W]
+#define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  /**< [kg]  Default core mass of 26Al */                              
+#define ENUMCORE26AL	  1e-2*(ENUMMAN26AL)   /**< [num] Default core number of 26Al atoms */                      
+#define EPOWERCORE26AL	  1e-2*(EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg from 26Al decay */ 
 
-// 40K
-#define ENERGY40K        2.13371243669e-13 // [J?] -- weighting both Ar and Ca decay chains
-#define MASS40K          39.96399848*ATOMMASS  // =6.6361772e-26 [kg]  Mass of a 40K atom.
-#define HALFLIFE40K      5.736527e+16  //3.9762576e+16  //[s]
-/* Mantle */
-#define EMASSMAN40K      1.11075e+18  //[kg]  mass in Earths mantle of 40K at 4.5 Ga (t=0)
-#define ENUMMAN40K       8.8692227e+42  //[num] number of 40K atoms in E mantle at 4.5Ga
-#define EPOWERMAN40K     3.29892e+13  //[W]  Power from 40K in Earths Mantle at 4.5 Ga
-/* Core */
-#define EMASSCORE40K     3.90916e+17  //[kg]
-#define ENUMCORE40K      3.1214255e+42  //[num]
-#define EPOWERCORE40K    1.16102e+13  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST40K    4.67540e+17  //[kg]
-#define ENUMCRUST40K     3.7332574e+42  //[num]
-#define EPOWERCRUST40K   1.38859e+13  //[W]
+/* 40K */
+#define ENERGY40K        2.13371243669e-13      /**< [J] Decay energy of Potassium-40 */        
+#define MASS40K		 39.96399848*ATOMMASS	/**< [kg] Mass of a 40K atom */                 
+#define HALFLIFE40K	 5.736527e+16		/**< [s] Half-life of 40K */                    
+/* Mantle */					                                                
+#define EMASSMAN40K	 6.45089e+17		/**< [kg]  Default mantle mass of 40K */        		      
+#define ENUMMAN40K	 9.72110e+42		/**< [num] Default mantle number of 40K atoms */		      
+#define EPOWERMAN40K	 3.61578e+13		/**< [W] Default mantle power from 40K decay */ 
+/* Core */					                                                
+#define EMASSCORE40K	 6.04046e+17		/**< [kg]  Default core mass of 40K */          		     
+#define ENUMCORE40K	 9.10261e+42		/**< [num] Default core number of 40K atoms */  		     
+#define EPOWERCORE40K	 3.38573e+13		/**< [W] Default core power from 40K decay */   
+/* Crust (assuming crustal mass constant) */	                                                
+#define EMASSCRUST40K	 2.47738e+17		/**< [kg]  Default crust mass of 40K */         		      
+#define ENUMCRUST40K	 3.73326e+42		/**< [num] Default crust number of 40K atoms */ 		      
+#define EPOWERCRUST40K	 1.38859e+13		/**< [W] Default crust power from 40K decay */   
 
-//232TH
-#define HALFLIFE232TH    6.3752726e+17 //4.4338428e17   // seconds
-#define MASS232TH        232.0377*ATOMMASS
-#define ENERGY232TH      6.833606619959e-12 // W
-/* Mantle */
-#define EMASSMAN232TH    2.31439e+17  //[kg]
-#define ENUMMAN232TH     5.5262845e+41  //[num]
-#define EPOWERMAN232TH   5.92484e+12  //[W]
-/* Core */
-#define EMASSCORE232TH   1.92682e+15  //[kg]
-#define ENUMCORE232TH    4.6008515e+39  //[num]
-#define EPOWERCORE232TH  4.93267e+10  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST232TH  1.49638e+17  //[kg]
-#define ENUMCRUST232TH   3.5730363e+41  //[num]
-#define EPOWERCRUST232TH 3.83072e+12  //[W]
+/* 232TH */
+#define ENERGY232TH      6.833606619959e-12     /**< [J] Decay energy of 232Th */                 
+#define MASS232TH	 232.0377*ATOMMASS	/**< [kg] Mass of a 232Th atom */                 
+#define HALFLIFE232TH	 6.3752726e+17		/**< [s] Half-life of 232Th */                    
+/* Mantle */					                                                  
+#define EMASSMAN232TH	 2.34211e+17		/**< [kg]  Default mantle mass of 232Th */        
+#define ENUMMAN232TH	 6.07873e+41		/**< [num] Default mantle number of 232Th atoms */
+#define EPOWERMAN232TH	 6.51575e+12		/**< [W] Default mantle power from 232Th decay */ 
+/* Core */					                                                  
+#define EMASSCORE232TH	 5.22682e+15		/**< [kg]  Default core mass of 232Th */          
+#define ENUMCORE232TH	 1.35657e+40		/**< [num] Default core number of 232Th atoms */  
+#define EPOWERCORE232TH	 1.45410e+11		/**< [W] Default core power from 232Th decay */   
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST232TH	 1.37667e+17		/**< [kg]  Default crust mass of 232Th */         
+#define ENUMCRUST232TH	 3.57304e+41		/**< [num] Default crust number of 232Th atoms */ 
+#define EPOWERCRUST232TH 3.82991e+12		/**< [W] Default crust power from 232Th decay */  
 
-//238U
-#define HALFLIFE238U     2.0359742e+17  //1.409993568e17 // seconds
-#define MASS238U         238.050788268*ATOMMASS
-#define ENERGY238U       8.28293620554e-12 // [J]
-/* Mantle */
-#define EMASSMAN238U     1.16*1.00111e+17  //[kg]
-#define ENUMMAN238U      1.16*2.2505054e+41  //[num]
-#define EPOWERMAN238U    1.16*9.18017e+12  //[W]
-/* Core */
-#define EMASSCORE238U    7.83780e+14  //[kg]
-#define ENUMCORE238U     1.7619456e+39  //[num]
-#define EPOWERCORE238U   7.18726e+10  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST238U  5.64467e+16  //[kg]
-#define ENUMCRUST238U   1.2689272e+41  //[num]
-#define EPOWERCRUST238U  5.17616e+12  //[W]
+/* 238U */
+#define ENERGY238U       8.28293620554e-12      /**< [J] Decay energy of 238U */                 
+#define MASS238U         238.050788268*ATOMMASS	/**< [kg] Mass of a 238U atom */                 
+#define HALFLIFE238U     2.0359742e+17  	/**< [s] Half-life of 238U */                    
+/* Mantle */					                                                  
+#define EMASSMAN238U     1.13378e+17      	/**< [kg]  Default mantle mass of 238U */        
+#define ENUMMAN238U	 2.86829e+41    	/**< [num] Default mantle number of 238U atoms */
+#define EPOWERMAN238U	 1.16691e+13    	/**< [W] Default mantle power from 238U decay */ 
+/* Core */					                                                  
+#define EMASSCORE238U    1.16964e+15  		/**< [kg]  Default core mass of 238U */          
+#define ENUMCORE238U	 2.95900e+39		/**< [num] Default core number of 238U atoms */  
+#define EPOWERCORE238U	 1.20381e+11   		/**< [W] Default core power from 238U decay */   
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST238U   5.01582e+16  		/**< [kg]  Default crust mass of 238U */         
+#define ENUMCRUST238U	 1.26893e+41 		/**< [num] Default crust number of 238U atoms */ 
+#define EPOWERCRUST238U	 5.16237e+12 		/**< [W] Default crust power from 238U decay */  
 
-//235U
-#define HALFLIFE235U     3.2038174e+16  // seconds
-#define MASS235U         235.0439299*ATOMMASS
-#define ENERGY235U       6.55516e-12    // J
-/* Mantle */
-#define EMASSMAN235U     3.20325e+16  //[kg]
-#define ENUMMAN235U      9.0058843e+40  //[num]
-#define EPOWERMAN235U    1.84187e+13  //[W]
-/* Core */
-#define EMASSCORE235U    2.50786e+14  //[kg]
-#define ENUMCORE235U     7.0508058e+38  //[num]
-#define EPOWERCORE235U   1.44202e+11  //[W]
-/* Crust (assuming crustal mass constant) */
-#define EMASSCRUST235U   1.80612e+16  //[kg]
-#define ENUMCRUST235U    5.0778866e+40  //[num]
-#define EPOWERCRUST235U  1.03852e+13  //[W]
+/* 235U */
+#define HALFLIFE235U     3.2038174e+16          /**< [J] Decay energy of 235U */                  
+#define MASS235U         235.0439299*ATOMMASS	/**< [kg] Mass of a 235U atom */                  
+#define ENERGY235U       6.55516e-12    	/**< [s] Half-life of 235U */                     
+/* Mantle */					                                                  
+#define EMASSMAN235U     3.86253e+16  		/**< [kg]  Default mantle mass of 235U */         
+#define ENUMMAN235U	 9.89663e+40 		/**< [num] Default mantle number of 235U atoms */ 
+#define EPOWERMAN235U	 2.02490e+13  		/**< [W] Default mantle power from 235U decay */  
+/* Core */					                                                  
+#define EMASSCORE235U    9.56785e+14  		/**< [kg]  Default core mass of 235U */           
+#define ENUMCORE235U	 2.45149e+39		/**< [num] Default core number of 235U atoms */   
+#define EPOWERCORE235U	 5.01586e+11  		/**< [W] Default core power from 235U decay */    
+/* Crust (assuming crustal mass constant) */	                                                  
+#define EMASSCRUST235U   1.98184e+16  		/**< [kg]  Default crust mass of 235U */          
+#define ENUMCRUST235U    5.07789e+40		/**< [num] Default crust number of 235U atoms */  
+#define EPOWERCRUST235U  1.03896e+13  		/**< [W] Default crust power from 235U decay */   
 
-//Continental Crust Mass Earth today.  Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust".
-#define EPOWERCRUSTTOTAL 7e12  //[W] 7 TW (Jaupart et al 2007)  or 6.8 TW (Huang 2013)
-#define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  //[W/kg] crustal heat production density.
+/* Continental Crust Mass Earth today */
+/* Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust". */
+#define EPOWERCRUSTTOTAL 7e12  /**< [W] Earth's modern crustal radiogenic power, 7 TW (Jaupart et al 2007) */
+#define ECRUSTRADPOWDEN  (EPOWERCRUSTTOTAL)/(ECRUSTMASS)  /**< [W/kg] Earth's modern crustal heat production density */
+
+void fvInitializeControlRadheat(CONTROL*,int);
+void fvInitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
+void fvInitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
+  
+void fvAddModuleRadheat(MODULE*,int,int);
+void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 
 /* Options Info */
-
 #define OPTSTARTRADHEAT            1100 /* Start of RADHEAT options */
 #define OPTENDRADHEAT              1200 /* End of RADHEAT options */
 
@@ -173,14 +180,115 @@
 #define OPT_HALTMIN87RBPOWER       1191
 #define OPT_HALT232THPOWER         1192
 #define OPT_HALT238UPOWER	   1193
-#define OPT_HALT235UPOWER          1194
-#define OPT_HALTRADPOWER           1195
+#define OPT_HALT235UPOWER          1194  
+#define OPT_HALTRADPOWER           1195  
+
+/* Options Functions */
+void fvHelpOptionsRadheat(OPTIONS*);
+void fvRead40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+
+void fvRead26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+void fvRead40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvRead40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvRead235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int); 
+void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
+void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
+void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int); 
+int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+//void CountHaltsRadheat(HALT*,int*);
+
+/* Verify Functions */
+void fvNotMassAndNum(OPTIONS*,int,int,int);
+void fvAssign26AlNum(BODY*,OPTIONS*,double,int);
+void fvAssign40KNum(BODY*,OPTIONS*,double,int);
+void fvAssign232ThNum(BODY*,OPTIONS*,double,int);
+void fvAssign238UNum(BODY*,OPTIONS*,double,int);
+void fvAssign235UNum(BODY*,OPTIONS*,double,int);
+void fvVerify26Al(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify40K(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify232Th(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify238U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
+
+void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
+void fvForceBehaviorRadheat(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+void fvRadheatExit(FILES*,char*,int);
+void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void fvAssignRadheatDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+void fvNullRadheatDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
+
+/* Update functions */
+void fvInitializeUpdateRadheat(BODY*,UPDATE*,int);
+void fvFinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate26AlNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumCoreRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate26AlNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate40KNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate232ThNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate238UNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
+void fvFinalizeUpdate235UNumCrustRadheat(BODY*,UPDATE*,int*,int,int,int);
 
 /* Halt Functions */
 #define RADHEATHALTSYSEND       5
 #define RADHEATHALTBODYEND      5
+// XXX Need to add 26Al
+void fvReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvCountHaltsRadheat(HALT*,int*);
+void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 
-/* Output Functinos */
+/* Output Functions */
 
 /* RADHEAT 1100 - 1199 */
 #define OUTSTARTRADHEAT         1100
@@ -265,178 +373,85 @@
 #define OUT_RADPOWERTOTAL       1193
 #define OUT_SURFENFLUXRADTOTAL  1195
 
-/* @cond DOXYGEN_OVERRIDE */
+void fvWrite26AlPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteD26AlPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite26AlNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
-void AddModuleRadheat(MODULE*,int,int);
-void BodyCopyRadheat(BODY*,BODY*,int,int,int);
+void fvWrite40KPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteD40KPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite40KNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
-/* Options Functions */
-void HelpOptionsRadheat(OPTIONS*);
-void Read40KPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read26AlPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvWrite232ThPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteD232ThPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite232ThNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
-void Read26AlPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read26AlNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read40KPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvWrite238UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteD238UPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void fvWrite238UPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite238UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
-void Read40KPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-void Read40KNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read232ThNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read238UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UPowerCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UMassCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void Read235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void fvWrite235UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);  
+void fvWriteD235UPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void fvWrite235UNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void fvWrite235UPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void fvWrite235UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWrite235UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
+void fvWrite235UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]); 
 
-// XXX Need to add 26Al
-void ReadHaltMin40KPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin232ThPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin238UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMin235UPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltMinRadPower(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void InitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
-void ReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void fvWriteRadPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRadPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRadPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRadPowerTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvWriteRadEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
-//int fbHaltMin40KPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin232ThPower(BODY*,CONTROL*,UPDATE*,int);
-//int fbHaltMin238UPower(BODY*,CONTROL*,UPDATE*,int);
-int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  //syntax now is same as fnHaltModule in vplanet.h
-int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-void CountHaltsRadHeat(HALT*,int*);
-
-
-/* Verify Functions */
-
-void VerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
-void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
-void InitializeVplanetRadheat(CONTROL*,MODULE*);
-void PropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
-void VerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
-void VerifyRotationRadheat(BODY*,CONTROL*,OPTIONS*,char[],int);
-
-/* Update functions */
-void InitializeUpdateRadheat(BODY*,UPDATE*,int);
-void FinalizeUpdateEccRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate26AlNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate40KNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate232ThNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate238UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdate235UNumManRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateOblRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateRotRadheat(BODY*,UPDATE*,int*,int,int,int);
-void FinalizeUpdateSemiRadheat(BODY*,UPDATE*,int*,int,int,int);
-
-void HelpOutputRadheat(OUTPUT*);
-void InitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
-void InitializeOutputFunctionRadheat(OUTPUT*,int,int);
-void FinalizeOutputFunctionRadheat(OUTPUT*,int,int);
-
-void Write26AlPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteD26AlPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write26AlNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
-void Write40KPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteD40KPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write40KNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
-void Write232ThPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteD232ThPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write232ThNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
-void Write238UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteD238UPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write238UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
-void Write235UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteD235UPowerDt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UTimescale(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UMassMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void Write235UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
-void WriteRadPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRadPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRadPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRadPowerTotal(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteRadEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void fvHelpOutputRadheat(OUTPUT*);
+void fvInitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 
 /* Logging Functions */
-void LogOptionsRadheat(CONTROL*,FILE*);
-void LogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void fvLogOptionsRadheat(CONTROL*,FILE*);
+void fvLogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
+void fvLogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+
+void fvAddModuleRadheat(MODULE*,int,int);
 
 /* RadHeat functions */
-void fnForceBehaviorRadheat(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
-
 double fd26AlConstant(double,double);
 double fd40KConstant(double,double);
 double fd232ThConstant(double,double);

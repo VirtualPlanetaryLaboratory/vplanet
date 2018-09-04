@@ -1535,19 +1535,6 @@ void VerifyHaltAtmEsc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 /************* ATMESC Outputs ******************/
 
 /**
-Writes info to the vplanet help.
-
-@param output A pointer to the current OUTPUT instance
-*/
-void HelpOutputAtmEsc(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ ATMESC output ------\n");
-  for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
-
-/**
 Logs the surface water mass.
 
 @param body A pointer to the current BODY instance

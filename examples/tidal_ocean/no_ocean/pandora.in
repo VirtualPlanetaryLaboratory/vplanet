@@ -55,18 +55,5 @@ dMagMomCoef    0.15
 dPresSWind     -1  #-0.2
     
 #Output
-#saOutputOrder Time TidalQ K2 ImK2 -RotRate Obli SemimajorAxis Eccentricity -RadPowerTot -SurfEnFluxTot
 saOutputOrder Time -Tman -TCore -RIC -MagMom -MagPauseRad -SurfEnFluxTot TidalQ -RadPowerTot $
 -TDotMan Eccentricity SemimajorAxis -SurfEnFluxEqtide K2 ImK2 TidalQ
-#		-26AlPowerMan -26AlMassMan -26AlMassCore 
-	    
-#-HflowMeltMan -HflowLatentMan  -SurfEnFLuxTot $
-#		-HflowLatentIC -PowerGravIC -TDotMan -TDotCore $
-#		-RadPowerMan -RadPowerCore -RadPowerCrust -RadPowerTotal $
-#		-BLUMan -BLLMan -TJumpUMan -TJumpLMan -ViscUMan -ViscLMan -FMeltUMan -MeltFactorUMan -MeltMassFluxMan $
-#		-K2Man -Imk2Man -RIC -MassIC -MassOC -MassChiOC -MassChiIC -ChiOC -ChiIC -DTChi
-
-
-#bFixOrbit	1
-# Output can be in any order and need only be unambiguous. 
-# Units of negative arguments are listed in the onboard help (./vplanet -h).

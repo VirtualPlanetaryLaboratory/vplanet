@@ -93,6 +93,8 @@ int main(int argc,char *argv[]) {
     }
     if (memcmp(argv[iOption],"-h",2) == 0)
       Help(options,output,files.cExe);
+    if (memcmp(argv[iOption],"-H",2) == 0)
+      LongHelp(options,output,files.cExe);
   }
 
   if (iQuiet != -1 && iVerbose != -1) {

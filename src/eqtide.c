@@ -52,6 +52,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].bTideLock = src[iBody].bTideLock;
   dest[iBody].dTidalQRock = src[iBody].dTidalQRock;
   dest[iBody].dK2Rock = src[iBody].dK2Rock;
+  dest[iBody].bEqtide = src[iBody].bEqtide;
 
 
   if (iBody > 0) {

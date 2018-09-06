@@ -23,7 +23,7 @@ void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
 
   dest[iBody].dPinc = src[iBody].dPinc;
   dest[iBody].dQinc = src[iBody].dQinc;
-  dest[iBody].bDistOrb = src[iBody].bDistorb;
+  dest[iBody].bDistOrb = src[iBody].bDistOrb;
 
   dest[iBody].iGravPerts = src[iBody].iGravPerts;
 //   dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int));

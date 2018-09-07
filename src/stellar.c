@@ -31,7 +31,6 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
   dest[iBody].iMagBrakingModel = src[iBody].iMagBrakingModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
-  dest[iBody].bStellar = src[iBody].bStellar;
 }
 
 /**************** STELLAR options ********************/

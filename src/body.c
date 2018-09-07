@@ -447,6 +447,17 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dObliquity = src[iBody].dObliquity;
     dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
     dest[iBody].dLostEng = src[iBody].dLostEng;
+    dest[iBody].bBinary = src[iBody].bBinary;
+    dest[iBody].bDistOrb = src[iBody].bDistOrb;
+    dest[iBody].bDistRot = src[iBody].bDistRot;
+    dest[iBody].bEqtide = src[iBody].bEqtide;
+    dest[iBody].bFlare = src[iBody].bFlare;
+    dest[iBody].bGalHabit = src[iBody].bGalHabit;
+    dest[iBody].bPoise = src[iBody].bPoise;
+    dest[iBody].bStellar = src[iBody].bStellar;
+    dest[iBody].bThermint = src[iBody].bThermint;
+    dest[iBody].bRadheat = src[iBody].bRadheat;
+    dest[iBody].bSpiNBody = src[iBody].bSpiNBody;
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 

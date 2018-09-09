@@ -17,19 +17,19 @@ def test_stellar():
     assert np.isclose(output.log.final.a.Luminosity, 0.000869)
     assert np.isclose(output.log.final.a.Temperature, 2811.000999)
     assert np.isclose(output.log.final.a.Radius, 0.124)
-    assert np.isclose(output.log.final.a.LostAngMom, 1.290268e+40,
-                      rtol=1e-3)
-    assert np.isclose(output.log.final.a.RotPer, 1.921597, rtol=1e-3)
-    assert np.isclose(output.log.final.b.Luminosity, 1.021926)
+    assert np.isclose(output.log.final.a.LostAngMom, 1.231953e+40,
+                      rtol=1e-4)
+    assert np.isclose(output.log.final.a.RotPer, 2.130347, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.Luminosity, 1.021926, rtol=1.0e-4)
     assert np.isclose(output.log.final.b.Temperature, 5730.814496)
-    assert np.isclose(output.log.final.b.Radius, 1.026419)
-    assert np.isclose(output.log.final.b.LostAngMom, 1.648878e+43,
-                      rtol=1e-3)
-    assert np.isclose(output.log.final.b.RotPer, 23.680862, rtol=1e-3)
-    assert np.isclose(output.log.final.system.TotAngMom, 1.729433e+43,
-                      rtol=1e-3)
-    assert np.isclose(output.log.final.system.TotEnergy, -2.468221e+41,
-                      rtol=1e-3)
+    assert np.isclose(output.log.final.b.Radius, 1.026419, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.LostAngMom, 4.94742e+42,
+                      rtol=1e-4)
+    assert np.isclose(output.log.final.b.RotPer, 32.262612, rtol=1e-4)
+    assert np.isclose(output.log.final.system.TotAngMom, 5.130072e+42,
+                      rtol=1e-4)
+    assert np.isclose(output.log.final.system.TotEnergy, -2.472597e+41,
+                      rtol=1e-4)
 
 
 if __name__ == "__main__":

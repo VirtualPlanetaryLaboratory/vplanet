@@ -1,0 +1,28 @@
+# corot7-c
+sName		c			# Body's name
+saModules 	eqtide distorb
+
+# Physical Properties
+dMass		-13.6  			# Mass, negative -> Earth masses
+dRadius		-2.39  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	0.0
+dRadGyra	0.4
+
+# Orbital Properties
+dEcc            0.2		# Eccentricity
+dSemi           0.0462            # Semi-major axis, negative -> AU
+
+# Eqtide Properties
+dTidalQ         100              # Tidal phase lag
+dK2             0.3                 # Love number of degree 2
+dMaxLockDiff    0.1
+saTidePerts     star
+
+# DISTORB Parameters
+dInc            0.0
+dLongA          178.0
+dLongP          270.0
+
+#Output
+saOutputOrder Time -RotPer LongP SemimajorAxis Eccentricity -SurfEnFluxTot

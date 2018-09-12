@@ -1,5 +1,5 @@
 sName		star		# Body's name
-saModules stellar eqtide
+saModules stellar eqtide        # Modules
 
 # Physical Parameters
 dMass		    0.93        # Mass, negative -> Earth masses
@@ -20,8 +20,5 @@ saTidePerts	    b c		# Body name(s) of tidal perturbers
 sStellarModel       baraffe     # Stellar evolutin model: `baraffe` or `none`
 sMagBrakingModel    reiners     # Stellar magnetic braking model
 dSatXUVFrac         1.e-3       # Saturation level of the XUV luminosity
-
-# Some options are allowed to only appear in one file, but it can be primary or body.
-# That should really be documented!
 
 saOutputOrder	Time -Radius -RotPer -Luminosity

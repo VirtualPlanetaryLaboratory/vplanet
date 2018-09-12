@@ -1,6 +1,6 @@
-# corot7-b
+# corot7-b Parameters taken from Rodriguez+2011
 sName		b			# Body's name
-saModules 	eqtide distorb
+saModules 	eqtide distorb          # Modules
 
 # Physical Properties
 dMass		-8.0  	        # Mass, negative -> Earth masses
@@ -16,14 +16,14 @@ dSemi           0.0188          # Semi-major axis, negative -> AU
 # Eqtide Properties
 dTidalQ         100             # Tidal phase lag
 dK2             0.3             # Love number of degree 2
-dMaxLockDiff    0.01
-saTidePerts     star          
+dMaxLockDiff    0.01            # Tidally lock when spin period is within 1% of orbital period
+saTidePerts     star            # Tidally interacting with star
 
 # DISTORB Parameters
-dInc            0.0
-dLongA          0.0
-dLongP          0.0
-sOrbitModel     rd4
+dInc            0.0             # Orbital inclination (assume coplanar)
+dLongA          0.0             # Longitude of the Ascending node (degrees)
+dLongP          0.0             # Longitude of the Periapse (degrees)
+sOrbitModel     rd4             # Use 4th Order disturbing function model
 
 #Output
 saOutputOrder Time -TotEn -TotAngMom -RotPer LongP SemimajorAxis Eccentricity -SurfEnFluxTot

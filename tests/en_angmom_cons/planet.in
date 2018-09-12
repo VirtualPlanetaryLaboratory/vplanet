@@ -1,3 +1,4 @@
+#
 sName		planet
 saModules	eqtide
 
@@ -15,4 +16,4 @@ dTidalQ		100
 saTidePerts	star
 dMaxLockDiff	0.01
 
-saOutputOrder
+saOutputOrder -RotPer -OrbPer

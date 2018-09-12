@@ -354,8 +354,6 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
       RG2dot = 0.0;
     }
 
-    //fprintf(stderr,"RG1,2dot: %e, %e\n",R1dot,R2dot);
-
     edot = 0.0; // No effect produces a de/dt term
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;

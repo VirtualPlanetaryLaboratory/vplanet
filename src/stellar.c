@@ -468,7 +468,7 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
     body[iBody].dRadGyra = fdRadGyraFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RG].iLine[iBody+1] >= 0) {
-      // User specified radius, but we're reading it from the grid!
+      // User specified radius of gyration, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
         printf("WARNING: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
     }

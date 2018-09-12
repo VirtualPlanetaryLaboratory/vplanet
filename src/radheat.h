@@ -198,6 +198,7 @@
 #define OUT_26ALNUMMAN          1118
 #define OUT_26ALNUMCORE         1119
 #define OUT_26ALTIME            1120
+#define OUT_26ALPOWERTOT        1121
 
 #define OUT_40KPOWERMAN	        1125
 #define OUT_40KPOWERCORE        1126
@@ -213,6 +214,7 @@
 #define OUT_40KPOWERCRUST       1136
 #define OUT_40KMASSCRUST        1137
 #define OUT_40KNUMCRUST         1138
+#define OUT_40KPOWERTOT        1139
 
 #define OUT_232THPOWERMAN       1140
 #define OUT_232THPOWERCORE      1141
@@ -228,6 +230,7 @@
 #define OUT_232THPOWERCRUST     1151
 #define OUT_232THMASSCRUST      1152
 #define OUT_232THNUMCRUST       1153
+#define OUT_232THPOWERTOT       1154
 
 #define OUT_238UPOWERMAN        1155
 #define OUT_238UPOWERCORE       1156
@@ -243,6 +246,7 @@
 #define OUT_238UPOWERCRUST      1166
 #define OUT_238UMASSCRUST       1167
 #define OUT_238UNUMCRUST        1168
+#define OUT_238UPOWERTOT        1169
 
 #define OUT_235UPOWERMAN        1170
 #define OUT_235UPOWERCORE       1171
@@ -258,6 +262,7 @@
 #define OUT_235UPOWERCRUST      1186
 #define OUT_235UMASSCRUST       1187
 #define OUT_235UNUMCRUST        1188
+#define OUT_235UPOWERTOT        1189
 
 #define OUT_RADPOWERMAN         1190
 #define OUT_RADPOWERCORE        1191
@@ -370,6 +375,7 @@ void Write26AlNumMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void Write26AlPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write26AlMassCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write26AlNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write26AlPowerTot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void Write40KPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write40KEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -383,6 +389,7 @@ void Write40KNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void Write40KPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write40KMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write40KNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write40KPowerTot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void Write232ThPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write232ThEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -396,6 +403,7 @@ void Write232ThNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*
 void Write232ThPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write232ThMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write232ThNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write232ThPowerTot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void Write238UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write238UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -409,6 +417,7 @@ void Write238UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void Write238UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write238UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write238UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write438UPowerTot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void Write235UPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write235UEnFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -422,6 +431,7 @@ void Write235UNumCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void Write235UPowerCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write235UMassCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void Write235UNumCrust(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void Write235UPowerTot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 void WriteRadPowerMan(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRadPowerCore(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);

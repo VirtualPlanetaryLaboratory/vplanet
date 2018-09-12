@@ -108,4 +108,4 @@ inset2.set_xticks([0.1, 0.25, 0.5, 1, 2, 3])
 inset2.set_xticklabels(["0.1", "0.25", "0.5", "1", "2", "3"], fontsize=12)
 inset2.set_xlabel("Time [Myr]", fontsize=12)
 
-fig.savefig("Rodriguez2011_Figs23.pdf", bbox_inches="tight", dpi=600)
+fig.savefig("Rodriguez2011_Figs23.png", bbox_inches="tight", dpi=600)

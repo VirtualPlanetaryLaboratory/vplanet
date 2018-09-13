@@ -14,10 +14,10 @@ def test_radheat_thermint():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.earth.TMan, 2350.066809)
-    assert np.isclose(output.log.final.earth.TCore, 4998.497405)
-    assert np.isclose(output.log.final.earth.RadPowerTotal, 22.955414)
-    assert np.isclose(output.log.final.earth.MagMom, 0.962911)
+    assert np.isclose(output.log.final.earth.TMan, 2256.1804)
+    assert np.isclose(output.log.final.earth.TCore, 5009.8424)
+    assert np.isclose(output.log.final.earth.RadPowerTotal, 24.2630e12)
+    assert np.isclose(output.log.final.earth.MagMom, 0.994634)
 
 
 if __name__ == "__main__":

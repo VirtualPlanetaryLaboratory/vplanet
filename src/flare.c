@@ -411,14 +411,6 @@ void VerifyHaltFlare(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int 
 /* NOTE: If you write a new Write subroutine here you need to add the associate
    block of initialization in InitializeOutputFlare below */
 
-void HelpOutputFlare(OUTPUT *output) {
-  int iOut;
-
-  printf("\n ------ STELLAR output ------\n");
-  for (iOut=OUTSTARTFLARE;iOut<OUTENDFLARE;iOut++)
-    WriteHelpOutput(&output[iOut]);
-}
-
 void WriteLXUVFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dLXUVFlare;
   if (output->bDoNeg[iBody]) {

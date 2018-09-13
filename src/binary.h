@@ -104,7 +104,6 @@ void FinalizeUpdateCBPZDotBinary(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateCBPPhiDotBinary(BODY*,UPDATE*,int*,int,int,int);
 
 /* Output Functinos */
-void HelpOutputBinary(OUTPUT*);
 void InitializeOutputFunctionBinary(OUTPUT*,int,int);
 void InitializeOutputBinary(OUTPUT*,fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT*,int,int);

@@ -112,7 +112,6 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_FXUV               1226 /**< XUV flux */
 #define OUT_EPSH2O             1227 /**< XUV Atmospheric Escape Efficiency for H2O */
 
-void HelpOutputAtmEsc(OUTPUT*);
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT*,int,int);

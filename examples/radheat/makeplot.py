@@ -47,4 +47,5 @@ plt.xlabel('Time (Gyr)')
 
 vplot.make_pretty(fig)
 plt.savefig('radheat.pdf')
+plt.savefig('radheat.png')
 plt.close()

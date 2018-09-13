@@ -3610,7 +3610,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
    ************************/
 
   InitializeOptionsEqtide(options,fnRead);
-  fvInitializeOptionsRadheat(options,fnRead);
+  InitializeOptionsRadheat(options,fnRead);
   InitializeOptionsDistOrb(options,fnRead);
   InitializeOptionsDistRot(options,fnRead);
   fvInitializeOptionsThermint(options,fnRead);

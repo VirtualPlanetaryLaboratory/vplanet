@@ -20,9 +20,9 @@ def test_stellar():
     assert np.isclose(output.log.final.a.LostAngMom, 1.290268e+40,
                       rtol=1e-3)
     assert np.isclose(output.log.final.a.RotPer, 1.921597, rtol=1e-3)
-    assert np.isclose(output.log.final.b.Luminosity, 1.022389)
-    assert np.isclose(output.log.final.b.Temperature, 5730.995418)
-    assert np.isclose(output.log.final.b.Radius, 1.026571)
+    assert np.isclose(output.log.final.b.Luminosity, 1.021926)
+    assert np.isclose(output.log.final.b.Temperature, 5730.814496)
+    assert np.isclose(output.log.final.b.Radius, 1.026419)
     assert np.isclose(output.log.final.b.LostAngMom, 1.648878e+43,
                       rtol=1e-3)
     assert np.isclose(output.log.final.b.RotPer, 23.680862, rtol=1e-3)

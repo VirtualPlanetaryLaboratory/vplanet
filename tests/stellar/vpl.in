@@ -1,4 +1,4 @@
-# 
+#
 sSystemName   star                       # System Name
 iVerbose      5                             # Verbosity level
 bOverwrite    1                             # Allow file overwrites?
@@ -8,7 +8,7 @@ saBodyFiles   a.in b.in                        # The first star
 
 # Input/Output Units
 sUnitMass      solar                        # Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength    aU                           # Options: cm, m, km, Earth, Jupiter, solar, AU   
+sUnitLength    aU                           # Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime      YEARS                        # Options: sec, day, year, Myr, Gyr
 sUnitAngle     d                            # Options: deg, rad
 

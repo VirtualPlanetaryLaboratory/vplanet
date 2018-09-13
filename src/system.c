@@ -315,7 +315,7 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   double M = body[0].dMass + body[1].dMass;
   double mu = body[0].dMass*body[1].dMass/M;
   double dMeanMotion = body[1].dMeanMotion;
-  double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
+  double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc)); // Orbital angular momentum
   SYSTEM *system; // Dummy system struct
   int iaBody[1] = {0};
 
@@ -328,7 +328,6 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     if(body[0].bStellar) {
 
       iaBody[0] = 0;
-      edot = 0.0; // No effect produces a de/dt term
 
       Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
       R1dot = fdDRadiusDtStellar(body,system,iaBody);
@@ -344,7 +343,6 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     if(body[1].bStellar) {
 
       iaBody[0] = 1;
-      edot += 0.0; // No effect produces a de/dt term
 
       Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
       R2dot = fdDRadiusDtStellar(body,system,iaBody);
@@ -355,6 +353,8 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
       R2dot = 0.0;
       RG2dot = 0.0;
     }
+
+    edot = 0.0; // No effect produces a de/dt term
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;

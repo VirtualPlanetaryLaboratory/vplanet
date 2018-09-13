@@ -52,8 +52,6 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCBPM0 = src[iBody].dCBPM0;
   dest[iBody].dCBPZeta = src[iBody].dCBPZeta;
   dest[iBody].dCBPPsi = src[iBody].dCBPPsi;
-
-  dest[iBody].bBinary = src[iBody].bBinary;
   dest[iBody].bBinaryUseMatrix = src[iBody].bBinaryUseMatrix;
 }
 

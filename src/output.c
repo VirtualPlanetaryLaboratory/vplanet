@@ -1839,7 +1839,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputStellar(output,fnWrite);
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
-  InitializeOutputThermint(output,fnWrite);
+  fvInitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);

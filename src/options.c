@@ -3613,7 +3613,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsRadheat(options,fnRead);
   InitializeOptionsDistOrb(options,fnRead);
   InitializeOptionsDistRot(options,fnRead);
-  InitializeOptionsThermint(options,fnRead);
+  fvInitializeOptionsThermint(options,fnRead);
   InitializeOptionsAtmEsc(options,fnRead);
   InitializeOptionsStellar(options,fnRead);
   InitializeOptionsPoise(options,fnRead);

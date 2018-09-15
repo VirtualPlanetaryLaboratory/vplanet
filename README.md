@@ -4,7 +4,7 @@
 
 © 2018 The VPLANET Team.
 
-`vplanet` is software to simulate planetary system evolution, with a special focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for teh age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the source code, extensive documentation, and the scripts and files to generate published figures and that validate the current release. We can't claim we found aliens with closed source software!
+`vplanet` is software to simulate planetary system evolution, with a special focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the source code, extensive documentation, and the scripts and files to generate published figures and that validate the current release. We can't claim we found aliens with closed source software!
 
 **NOTE:** `vplanet` is in active development and does not have any official releases yet. Code here may be unstable and could change in the near future. Use at your own risk! But please do use, and if you encounter problems, please raise an issue. 
 

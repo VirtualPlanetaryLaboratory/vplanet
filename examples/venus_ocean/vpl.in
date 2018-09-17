@@ -7,7 +7,7 @@ saBodyFiles   sun.in venus1.in venus2.in venus3.in
 
 # Input/Output Units
 sUnitMass      solar                        # Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength    AU                           # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitLength    aU                           # Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime      YEARS                        # Options: sec, day, year, Myr, Gyr
 sUnitAngle     d                            # Options: deg, rad
 

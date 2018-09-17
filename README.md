@@ -16,6 +16,6 @@ An ecosystem of support software is also publicly available. In this repo, vspac
 
 Behind the scenes, the vplanet team maintains code integrity through continuous integration, in which numerous scientific and numerical tests are validated at every commit. See the tests/ directory for the validation checks that the current build passes. Additionally, we use valgrind and addresssanitizer to periodically search for memory issues like leaks, accessing memory beyond array bounds, etc. We are committed to maintaining a stable tool that planetary scientists can rely on for fast analyses of the Solar System and beyond.  
 
-`vplanet` development was supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
+`vplanet` development has been developed with support from NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
 
 Enjoy!

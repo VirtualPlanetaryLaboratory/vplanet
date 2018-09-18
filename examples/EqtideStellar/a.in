@@ -1,0 +1,17 @@
+# Planet a parameters
+sName         a                           # Body's name
+saModules     eqtide                      # Modules to apply, exact spelling required
+
+# Physical Properties
+dMass         -5.5                        # Mass, negative -> Earth masses
+dRadius       -1.5                        # Radius, negative -> Earth radii
+dRotPeriod    -10                         # Rotation period, negative -> days
+dObliquity    23.5
+dRadGyra      0.5                         # Radius of gyration (moment of inertia constant)
+
+# Orbital Properties
+dSemi         0.03721                     # Semi-major axis (AU)
+dEcc          0.0                         # Eccentricity
+
+# Tidal perturbers
+saTidePerts   star                        # The star is perturbing this planet

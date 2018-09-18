@@ -137,6 +137,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdatePinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius        = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRadGyra       = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot           = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi          = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateLostAngMom    = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
@@ -273,6 +274,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateQinc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
   module->fnFinalizeUpdateRadius[iBody]           = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRadGyra[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot[iBody]              = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
@@ -343,6 +345,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateQinc[iBody][iModule]             = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadGyra[iBody][iModule]          = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRot[iBody][iModule]              = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSemi[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
@@ -396,7 +399,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-    AddModuleThermint(module,iBody,iModule);
+    fvAddModuleThermint(module,iBody,iModule);
     module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
@@ -526,31 +529,67 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 }
 
 void PrintModuleList(FILE *file,int iBitSum) {
-
-  if (iBitSum & ATMESC)
-    fprintf(file,"ATMESC ");
-  if (iBitSum & BINARY)
-    fprintf(file,"BINARY ");
-  if (iBitSum & DISTORB)
-    fprintf(file,"DISTORB ");
-  if (iBitSum & DISTROT)
-    fprintf(file,"DISTROT ");
-  if (iBitSum & EQTIDE)
-    fprintf(file,"EQTIDE ");
-  if (iBitSum & FLARE)
-    fprintf(file,"FLARE ");
-  if (iBitSum & GALHABIT)
-    fprintf(file,"GALHABIT ");
-  if (iBitSum & POISE)
-    fprintf(file,"POISE ");
-  if (iBitSum & RADHEAT)
-    fprintf(file,"RADHEAT ");
-  if (iBitSum & STELLAR)
-    fprintf(file,"STELLAR ");
-  if (iBitSum & THERMINT)
-    fprintf(file,"THERMINT ");
-  if (iBitSum & SPINBODY)
-    fprintf(file,"SPINBODY ");
+  int space = 0;
+  if (iBitSum & ATMESC) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"ATMESC");
+  }
+  if (iBitSum & BINARY) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"BINARY");
+  }
+  if (iBitSum & DISTORB) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"DISTORB");
+  }
+  if (iBitSum & DISTROT) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"DISTROT");
+  }
+  if (iBitSum & EQTIDE) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"EQTIDE");
+  }
+  if (iBitSum & FLARE) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"FLARE");
+  }
+  if (iBitSum & GALHABIT) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"GALHABIT");
+  }
+  if (iBitSum & POISE) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"POISE");
+  }
+  if (iBitSum & RADHEAT) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"RADHEAT");
+  }
+  if (iBitSum & STELLAR) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"STELLAR");
+  }
+  if (iBitSum & THERMINT) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"THERMINT");
+  }
+  if (iBitSum & SPINBODY) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"SPINBODY");
+  }
 
 }
 

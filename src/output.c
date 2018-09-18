@@ -480,6 +480,11 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
+void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadGyra;
+  sprintf(cUnit,"");
+}
+
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
@@ -1083,6 +1088,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADIUS].iNum = 1;
   output[OUT_RADIUS].iModuleBit = 1;
   fnWrite[OUT_RADIUS] = &WriteRadius;
+
+  sprintf(output[OUT_RADGYRA].cName,"RadGyra");
+  sprintf(output[OUT_RADGYRA].cDescr,"Radius of Gyration");
+  output[OUT_RADGYRA].bNeg = 0;
+  output[OUT_RADGYRA].iNum = 1;
+  output[OUT_RADGYRA].iModuleBit = 1;
+  fnWrite[OUT_RADGYRA] = &WriteRadGyra;
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
@@ -1786,12 +1798,19 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   int iOut,iBody,iModule;
 
   for (iOut=0;iOut<MODULEOUTEND;iOut++) {
+    memset(output[iOut].cName,'\0',OPTLEN);
     sprintf(output[iOut].cName,"null");
     output[iOut].bGrid = 0;
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
+    memset(output[iOut].cDescr,'\0',OUTDESCR);
+    sprintf(output[iOut].cDescr,"null");
+    memset(output[iOut].cLongDescr,'\0',OUTLONDESCR);
+    sprintf(output[iOut].cLongDescr,"null");
+    memset(output[iOut].cNeg,'\0',OUTDESCR);
+    sprintf(output[iOut].cNeg,"null");
     for (iBody=0;iBody<MAXBODIES;iBody++)
         output[iOut].bDoNeg[iBody] = 0;
   }
@@ -1820,7 +1839,7 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputStellar(output,fnWrite);
   InitializeOutputDistOrb(output,fnWrite);
   InitializeOutputDistRot(output,fnWrite);
-  InitializeOutputThermint(output,fnWrite);
+  fvInitializeOutputThermint(output,fnWrite);
   InitializeOutputPoise(output,fnWrite);
   InitializeOutputBinary(output,fnWrite);
   InitializeOutputFlare(output,fnWrite);

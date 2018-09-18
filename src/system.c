@@ -310,12 +310,12 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   double adot = 0.0;
   double Jdot = 0.0;
   double edot = 0.0;
-  double R1dot, R2dot, Rdot;
+  double R1dot, R2dot, Rdot, RG1dot, RG2dot, RGdot;
   double num, denom, tmp;
   double M = body[0].dMass + body[1].dMass;
   double mu = body[0].dMass*body[1].dMass/M;
   double dMeanMotion = body[1].dMeanMotion;
-  double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc));
+  double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc)); // Orbital angular momentum
   SYSTEM *system; // Dummy system struct
   int iaBody[1] = {0};
 
@@ -328,32 +328,38 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
     if(body[0].bStellar) {
 
       iaBody[0] = 0;
-      edot = 0.0; // No effect produces a de/dt term
 
       Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
       R1dot = fdDRadiusDtStellar(body,system,iaBody);
+      RG1dot = fdDRadGyraDtStellar(body,system,iaBody);
     }
     else {
       Jdot += 0.0;
       R1dot = 0.0;
+      RG1dot = 0.0;
     }
 
     // Is body 1 a star? If not, not undergoing stellar evolution
     if(body[1].bStellar) {
 
       iaBody[0] = 1;
-      edot += 0.0; // No effect produces a de/dt term
 
       Jdot += fdDJDtMagBrakingStellar(body,system,iaBody);
       R2dot = fdDRadiusDtStellar(body,system,iaBody);
+      RG2dot = fdDRadGyraDtStellar(body,system,iaBody);
     }
     else {
       Jdot += 0.0;
       R2dot = 0.0;
+      RG2dot = 0.0;
     }
+
+    edot = 0.0; // No effect produces a de/dt term
 
     tmp = body[0].dMass*body[0].dRadGyra*body[0].dRadGyra*body[0].dRadius*R1dot;
     tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadGyra*body[1].dRadius*R2dot;
+    tmp += body[0].dMass*body[0].dRadGyra*body[0].dRadius*body[0].dRadius*RG1dot;
+    tmp += body[1].dMass*body[1].dRadGyra*body[1].dRadius*body[1].dRadius*RG2dot;
 
     num = -Jdot - 2.0*body[0].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
 
@@ -375,8 +381,10 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
 
       Jdot = fdDJDtMagBrakingStellar(body,system,iaBody);
       Rdot = fdDRadiusDtStellar(body,system,iaBody);
+      RGdot = fdDRadGyraDtStellar(body,system,iaBody);
 
       tmp = body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dRadius*Rdot;
+      tmp += body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius*RGdot;
 
       num = -Jdot - 2.0*body[iBody].dRotRate*tmp + mu*mu*BIGG*M*body[1].dSemi*body[1].dEcc*edot/J;
 
@@ -406,22 +414,18 @@ double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
   double adot = 0.0;
 
   // Both are tidally locked
-  if(body[0].bTideLock && body[1].bTideLock)
-  {
+  if(body[0].bTideLock && body[1].bTideLock) {
     return fdSemiTidalLockEqSt(body,2,-1);
   }
   // Primary is tidally locked
-  else if(body[0].bTideLock && !body[1].bTideLock)
-  {
+  else if(body[0].bTideLock && !body[1].bTideLock) {
     return fdSemiTidalLockEqSt(body,1,0);
   }
   // Secondary is tidally locked
-  else if(!body[0].bTideLock && body[1].bTideLock)
-  {
+  else if(!body[0].bTideLock && body[1].bTideLock) {
     return fdSemiTidalLockEqSt(body,1,1);
   }
-  else
-  {
+  else {
     return 0.0;
   }
 }

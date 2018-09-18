@@ -1,5 +1,5 @@
-# Example primary input file for VPLANET
-sSystemName	waterloss			# System Name
+# Primary input file for VPLANET
+sSystemName	corot7		# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -8,7 +8,8 @@ bOverwrite	1			# Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	primary.in secondary.in	cbp.in # The primary star
+saBodyFiles	star.in $ 
+		b.in c.in  	
 
 # Array options can continue to the next line with a terminating "$". The $ can be 
 # at the end of the string or not. Comments are allowed afterwards.
@@ -16,7 +17,7 @@ saBodyFiles	primary.in secondary.in	cbp.in # The primary star
 # Input/Output Units
 sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
 sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
-sUnitTime	year		# Options: sec, day, year, Myr, Gyr
+sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K
 
@@ -34,9 +35,6 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.01		# Coefficient for variable timestepping
-dStopTime	1.0e7		# Stop time for evolution
-dOutputTime	1.0e5		# Output timesteps (assuming in body files)
-
-# Some options are only permitted in the primary file, some are forbidden. 
-# That should really be documented!
+dEta		0.001		# Coefficient for variable timestepping
+dStopTime	1.0e7   	# Stop time for evolution
+dOutputTime	1.0e4		# Output timesteps (assuming in body files)

@@ -1,5 +1,5 @@
 # Example primary input file for VPLANET
-sSystemName	sun			# System Name
+sSystemName	earth			# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -12,12 +12,12 @@ saBodyFiles	sun.in $	# The host star
 		earth.in	# Earth
 
 
-# Array options can continue to the next line with a terminating "$". The $ can be 
+# Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
 sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K
@@ -38,7 +38,7 @@ bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
 dStopTime	4.5e9  #1e10		# Stop time for evolution
-dOutputTime	1e8		# Output timesteps (assuming in body files)
+dOutputTime	1e7		# Output timesteps (assuming in body files)
 
-# Some options are only permitted in the primary file, some are forbidden. 
+# Some options are only permitted in the primary file, some are forbidden.
 # That should really be documented!

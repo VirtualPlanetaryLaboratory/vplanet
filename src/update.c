@@ -105,6 +105,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumMass=0;
     update[iBody].iNumPinc=0;
     update[iBody].iNumQinc=0;
+    update[iBody].iNumRadGyra=0;
     update[iBody].iNumRadius=0;
     update[iBody].iNumRot=0;
     update[iBody].iNumSemi=0;
@@ -1254,6 +1255,36 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateTemperature[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    // Stellar radius of gyration:
+    update[iBody].iRadGyra = -1;
+    if (update[iBody].iNumRadGyra) {
+      update[iBody].iRadGyra = iVar;
+      update[iBody].iaVar[iVar] = VRADGYRA;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumRadGyra;
+      update[iBody].pdVar[iVar] = &body[iBody].dRadGyra;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int*));
+      update[iBody].iaType[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dRadGyra;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumRadGyra*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateRadGyra[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

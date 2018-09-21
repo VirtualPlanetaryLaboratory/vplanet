@@ -20,7 +20,7 @@ To run this example
 
 .. code-block:: bash
 
-   vsapce ioheat.vsp
+   vspace ioheat.vsp
    python runall.py
 
 

@@ -1,0 +1,14 @@
+# GJ 1132 d
+saModules 	distorb  # Modules
+
+# Physical Properties
+dMass		     -1.66  	 # Mass, negative -> Earth masses
+
+# Orbital Properties
+dEcc            0.4		 # Eccentricity
+dSemi           0.35 # Semi-major axis, negative -> AU
+dArgPeri        6.6   # Argument of Pericenter
+dLongAscNode    287.3  # Longitude of Ascending node
+dInclination    0.2    # Inclination
+
+saOutputOrder   -Time -SemiMajorAxis Eccentricity Inclination ArgPeri LongAscNode 

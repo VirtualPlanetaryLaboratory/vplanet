@@ -1,0 +1,85 @@
+# GJ 1132 b propertis (Bonfils et al. 2018)
+sName		    b			# Body's name
+saModules 	atmesc eqtide distorb distrot radheat thermint           # Modules
+
+# Physical Properties
+dMass		     -1.66  	 # Mass, negative -> Earth masses
+dRadius		   -1.1    # Radius, negative -> Earth radii
+dRotPeriod	 -1.0  	 # Rotation period, negative -> days
+dObliquity	 60.0    # Obliquity (degrees)
+dPrecA       213.6
+dRadGyra	   0.4     # Radius of gyration (unitless)
+
+# Orbital Properties
+dEcc            0.1		 # Eccentricity
+dSemi           0.0153 # Semi-major axis, negative -> AU
+dArgPeri        74.3   # Argument of Pericenter
+dLongAscNode    121.3  # Longitude of Ascending node
+dInclination    1.3    # Inclination
+
+# AtMesc Properties
+dXFrac            1.0
+dSurfWaterMass    -5
+dEnvelopeMass     -1e-3
+dMinEnvelopeMass  -1e-5
+dMinSurfWaterMass -1e-5
+sPlanetModel      Lehmer
+
+# EqTide Properties
+bOceanTides     1
+dTidalQOcean    12
+dK2Ocean        0.3
+bEnvTides       1
+dTidalQEnv      1e4
+dK2Env          0.01
+bUseTidalRadius 1
+dTidalRadius    -1.1
+dMaxLockDiff    0.01            # Tidally lock when spin period is within 1% of orbital period
+saTidePerts     star            # Tidally interacting with star
+
+# DistOrb Parameters
+sOrbitModel     rd4             # Use 4th Order disturbing function model
+bGRCorr         1
+
+# RadHeat Parameters
+# 40K
+d40KNumMan      -3.0
+d40KNumCore     -1.0
+d40KNumCrust    -1.0
+# 232Th
+d232ThNumMan	  -0.8
+d232ThNumCore	  -1
+d232ThNumCrust	-1
+# 235U
+d235UNumMan	    -2
+d235UNumCore	  -1
+d235UNumCrust	  -1
+# 238U
+d238UNumMan	    -1.4
+d238UNumCore	  -1
+d238UNumCrust	  -1
+
+# ThermInt Parameters
+dTMan           3000.0
+dTCore          6000.0
+dEruptEff       0.1
+dTrefLind       5650.
+dDTChiRef       0.0
+dMeltfactorUMan 1
+dViscJumpMan    2.85
+dViscRef        1.0e8
+dStagLid        1
+dManHFlowPref   1.
+dMagMomCoef     0.15
+dPresSWind      -1
+
+# DistRot Properties
+bCalcDynEllip   1
+
+#Output
+saOutputOrder Time -Mass -Radius -SurfWaterMass -EnvelopeMass -OxygenMass $
+              -SemiMajorAxis Eccentricity Inc ArgP LongA $
+              -RotPer PrecA Obliquity DynEllip $
+              -40KPowerTot -232ThPowerTot -235UPowerTot -238UPowerTot $
+              TMan TCore TCMB -RIC -MagMom -MagPauseRad $
+              -TidalPower -TidalQ -PowerTot -SurfEnFluxTot

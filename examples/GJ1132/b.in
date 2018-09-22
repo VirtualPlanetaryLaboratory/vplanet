@@ -80,6 +80,6 @@ bCalcDynEllip   1
 saOutputOrder Time -Mass -Radius -SurfWaterMass -EnvelopeMass -OxygenMass $
               -SemiMajorAxis Eccentricity Inc ArgP LongA $
               -RotPer PrecA Obliquity DynEllip $
-              -40KPowerTot -232ThPowerTot -235UPowerTot -238UPowerTot $
+              -40KPowerTotal -232ThPowerTot -235UPowerTot -238UPowerTot $
               TMan TCore TCMB -RIC -MagMom -MagPauseRad $
               -TidalPower -TidalQ -PowerTot -SurfEnFluxTot

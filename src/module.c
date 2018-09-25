@@ -394,7 +394,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
-    AddModuleRadheat(module,iBody,iModule);
+    fvAddModuleRadheat(module,iBody,iModule);
     module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
@@ -590,6 +590,31 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"SPINBODY");
   }
+
+  if (iBitSum & ATMESC)
+    fprintf(file,"ATMESC ");
+  if (iBitSum & BINARY)
+    fprintf(file,"BINARY ");
+  if (iBitSum & DISTORB)
+    fprintf(file,"DISTORB ");
+  if (iBitSum & DISTROT)
+    fprintf(file,"DISTROT ");
+  if (iBitSum & EQTIDE)
+    fprintf(file,"EQTIDE ");
+  if (iBitSum & FLARE)
+    fprintf(file,"FLARE ");
+  if (iBitSum & GALHABIT)
+    fprintf(file,"GALHABIT ");
+  if (iBitSum & POISE)
+    fprintf(file,"POISE ");
+  if (iBitSum & RADHEAT)
+    fprintf(file,"RADHEAT ");
+  if (iBitSum & STELLAR)
+    fprintf(file,"STELLAR ");
+  if (iBitSum & THERMINT)
+    fprintf(file,"THERMINT ");
+  if (iBitSum & SPINBODY)
+    fprintf(file,"SPINBODY ");
 
 }
 

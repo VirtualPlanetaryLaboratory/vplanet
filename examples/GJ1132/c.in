@@ -1,0 +1,47 @@
+# GJ 1132 b propertis (Bonfils et al. 2018)
+sName		c			# Body's name
+saModules 	atmesc eqtide distorb distrot   # Modules
+
+# Physical Properties
+dMass		     -2.64  	 # Mass, negative -> Earth masses
+dRadius		   -1.1    # Radius, negative -> Earth radii
+dRotPeriod	 -1.0  	 # Rotation period, negative -> days
+dObliquity	 60.0    # Obliquity (degrees)
+dPrecA       213.6
+dRadGyra	   0.4     # Radius of gyration (unitless)
+
+# Orbital Properties
+dEcc            0.06		 # Eccentricity
+dSemi           0.0476 # Semi-major axis, negative -> AU
+dArgP        28.4   # Argument of Pericenter
+dLongA    319.3  # Longitude of Ascending node
+dInc    2.4    # Inclination
+
+# AtMesc Properties
+dXFrac            1.0
+dSurfWaterMass    -5
+dEnvelopeMass     -1e-3
+dMinEnvelopeMass  -1e-5
+dMinSurfWaterMass -1e-5
+sPlanetRadiusModel      Lehmer
+
+# EqTide Properties
+bEnvTides       1
+dTidalQEnv      1e4
+dK2Env          0.01
+bUseTidalRadius 1
+dTidalRadius    -1.1
+dMaxLockDiff    0.01            # Tidally lock when spin period is within 1% of orbital period
+saTidePerts     star            # Tidally interacting with star
+
+# DistOrb Parameters
+bGRCorr         1
+
+# DistRot Properties
+bCalcDynEllip   1
+
+#Output
+saOutputOrder Time -Mass -Radius -SurfWaterMass -EnvelopeMass -OxygenMass $
+              -SemiMajorAxis Eccentricity Inc ArgP LongA $
+              -RotPer PrecA Obliquity DynEllip $
+              -PowerEqtide TidalQ -SurfEnFluxTot

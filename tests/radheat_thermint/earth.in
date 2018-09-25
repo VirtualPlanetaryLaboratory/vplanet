@@ -36,4 +36,4 @@ d238UPowerCrust	  -1
 dTMan          3000
 dTCore         6000
 
-saOutputOrder -Time TMan TCore RadPowerTotal -MagMom
+saOutputOrder -Time TMan TCore RadPowerTotal -MagMom RIC

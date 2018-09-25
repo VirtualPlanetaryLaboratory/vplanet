@@ -13,9 +13,9 @@ dRadGyra	   0.4     # Radius of gyration (unitless)
 # Orbital Properties
 dEcc            0.1		 # Eccentricity
 dSemi           0.0153 # Semi-major axis, negative -> AU
-dArgPeri        74.3   # Argument of Pericenter
-dLongAscNode    121.3  # Longitude of Ascending node
-dInclination    1.3    # Inclination
+dArgP           74.3   # Argument of Pericenter
+dLongA          121.3  # Longitude of Ascending node
+dInc    1.3    # Inclination
 
 # AtMesc Properties
 dXFrac            1.0
@@ -23,7 +23,7 @@ dSurfWaterMass    -5
 dEnvelopeMass     -1e-3
 dMinEnvelopeMass  -1e-5
 dMinSurfWaterMass -1e-5
-sPlanetModel      Lehmer
+sPlanetRadiusModel      Lehmer
 
 # EqTide Properties
 bOceanTides     1
@@ -82,4 +82,4 @@ saOutputOrder Time -Mass -Radius -SurfWaterMass -EnvelopeMass -OxygenMass $
               -RotPer PrecA Obliquity DynEllip $
               -40KPowerTotal -232ThPowerTot -235UPowerTot -238UPowerTot $
               TMan TCore TCMB -RIC -MagMom -MagPauseRad $
-              -TidalPower -TidalQ -PowerTot -SurfEnFluxTot
+              -PowerEqtide TidalQ -SurfEnFluxTot

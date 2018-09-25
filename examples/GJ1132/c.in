@@ -1,28 +1,47 @@
-# corot7-c Parameters taken from Rodriguez+2011
+# GJ 1132 b propertis (Bonfils et al. 2018)
 sName		c			# Body's name
-saModules 	eqtide distorb
+saModules 	atmesc eqtide distorb distrot   # Modules
 
 # Physical Properties
-dMass		-13.6  		# Mass, negative -> Earth masses
-dRadius		-2.39  		# Radius, negative -> Earth radii
-dRotPeriod	-1.0  		# Rotation period, negative -> days
-dObliquity	0.0             # Obliquity (degrees)
-dRadGyra	0.4             # Radius of gyration
+dMass		     -2.64  	 # Mass, negative -> Earth masses
+dRadius		   -1.1    # Radius, negative -> Earth radii
+dRotPeriod	 -1.0  	 # Rotation period, negative -> days
+dObliquity	 60.0    # Obliquity (degrees)
+dPrecA       213.6
+dRadGyra	   0.4     # Radius of gyration (unitless)
 
 # Orbital Properties
-dEcc            0.2		# Eccentricity
-dSemi           0.0462          # Semi-major axis, negative -> AU
+dEcc            0.06		 # Eccentricity
+dSemi           0.0476 # Semi-major axis, negative -> AU
+dArgP        28.4   # Argument of Pericenter
+dLongA    319.3  # Longitude of Ascending node
+dInc    2.4    # Inclination
 
-# Eqtide Properties
-dTidalQ         100             # Tidal phase lag
-dK2             0.3             # Love number of degree 2
-dMaxLockDiff    0.01            # Tidally lock when spin period is within 10% of orbital period
-saTidePerts     star            # Tidally interact with star
+# AtMesc Properties
+dXFrac            1.0
+dSurfWaterMass    -5
+dEnvelopeMass     -1e-3
+dMinEnvelopeMass  -1e-5
+dMinSurfWaterMass -1e-5
+sPlanetRadiusModel      Lehmer
 
-# DISTORB Parameters
-dInc            0.0             # Orbital inclination (degrees)
-dLongA          178.0           # Longitude of the Ascending node (degrees)
-dLongP          270.0           # Longitude of the Periapse (degrees)
+# EqTide Properties
+bEnvTides       1
+dTidalQEnv      1e4
+dK2Env          0.01
+bUseTidalRadius 1
+dTidalRadius    -1.1
+dMaxLockDiff    0.01            # Tidally lock when spin period is within 1% of orbital period
+saTidePerts     star            # Tidally interacting with star
+
+# DistOrb Parameters
+bGRCorr         1
+
+# DistRot Properties
+bCalcDynEllip   1
 
 #Output
-saOutputOrder Time -RotPer LongP SemimajorAxis Eccentricity -SurfEnFluxTot
+saOutputOrder Time -Mass -Radius -SurfWaterMass -EnvelopeMass -OxygenMass $
+              -SemiMajorAxis Eccentricity Inc ArgP LongA $
+              -RotPer PrecA Obliquity DynEllip $
+              -PowerEqtide TidalQ -SurfEnFluxTot

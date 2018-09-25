@@ -9,7 +9,7 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	star.in $ # Star
-						b.in c.in # Planets
+						b.in c.in d.in # Planets
 
 # Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
@@ -35,6 +35,6 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.001		# Coefficient for variable timestepping
-dStopTime	1.0e7   	# Stop time for evolution
-dOutputTime	1.0e4		# Output timesteps (assuming in body files)
+dEta		1e-4		# Coefficient for variable timestepping
+dStopTime	1e7   	# Stop time for evolution
+dOutputTime	1e3		# Output timesteps 

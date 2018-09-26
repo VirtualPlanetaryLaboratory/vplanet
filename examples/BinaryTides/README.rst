@@ -29,10 +29,10 @@ Expected output
 ---------------
 
 Coupled stellar and tidal evolution of a solar twin binary from the pre-main
-sequence onward calculated in vplanet using the eqtide and stellar modules.  
+sequence onward calculated in vplanet using the eqtide and stellar modules.
 Orbital eccentricity evolution is given by the red solid line, the orbital
 period by the purple dashed line, and the ratio of stellar rotation rate to
-binary mean motion ($\Omega/n$) evolution is given by the blue dot dashed curve.
+binary mean motion (Omega/n) evolution is given by the blue dot dashed curve.
 The binary's evolution qualitatively agrees with that of an identical system
 presented in Figure 1 of :cite:`ZahnBouchet89`.
 

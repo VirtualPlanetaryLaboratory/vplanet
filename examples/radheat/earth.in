@@ -33,4 +33,4 @@ saOutputOrder -Time -40KPowerCore -40KPowerMan -40KPowerCrust -40KPowerTot $
 		    -232ThPowerCore -232ThPowerMan -232ThPowerCrust -232ThPowerTot $
 		    -235UPowerCore -235UPowerMan -235UPowerCrust  -235UPowerTot $
 		    -238UPowerCore -238UPowerMan -238UPowerCrust -238UPowerTot $
-		    -RadPowerCore -RadPowerMan -RadPowerCrust -RadPowerTot
+-RadPowerCore -RadPowerMan -RadPowerCrust -RadPowerTot

@@ -37,3 +37,5 @@ bVarDt        1          # Use variable timestepping?
 dEta          0.1        # Coefficient for variable timestepping
 dStopTime     4.5e9      # Stop time for evolution
 dOutputTime   1e7        # Output timesteps (assuming in body files)
+
+

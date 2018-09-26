@@ -1,4 +1,4 @@
-The Main Sequence
+Orbital Damping in the CoRoT-7 System
 =================
 
 Overview

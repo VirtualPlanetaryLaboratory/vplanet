@@ -5,7 +5,7 @@ import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_radheat_thermint():
+def test_EarthInterior():
     """Test the coupling between radheat and thermint."""
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
@@ -22,4 +22,4 @@ def test_radheat_thermint():
 
 
 if __name__ == "__main__":
-    test_radheat_thermint()
+    test_EarthInterior()

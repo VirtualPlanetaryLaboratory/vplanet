@@ -139,7 +139,7 @@
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
-#define TINY          (1./HUGE)
+#define TINY          (1./HUGE_VAL)
 
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1

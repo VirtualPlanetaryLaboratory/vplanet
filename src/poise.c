@@ -4437,10 +4437,10 @@ void PoiseSeasonal(BODY *body, int iBody) {
         body[iBody].daIceBalanceAnnual[i] = 0.0;
         body[iBody].daEnerResLAnn[i] = 0.0;
         body[iBody].daEnerResWAnn[i] = 0.0;
-        body[iBody].daTempMinLW[i] = HUGE_VAL;
-        body[iBody].daTempMaxLW[i] = -1*HUGE_VAL;
-        body[iBody].daTempMaxLand[i] = -1*HUGE_VAL;
-        body[iBody].daTempMaxWater[i] = -1*HUGE_VAL;
+        body[iBody].daTempMinLW[i] = DBL_MAX;
+        body[iBody].daTempMaxLW[i] = -1*DBL_MAX;
+        body[iBody].daTempMaxLand[i] = -1*DBL_MAX;
+        body[iBody].daTempMaxWater[i] = -1*DBL_MAX;
 
         if (nyear == 0) {
           //reset ice sheet stuff only on first year

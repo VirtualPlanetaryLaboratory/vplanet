@@ -139,7 +139,7 @@
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
-#define TINY          (1./HUGE_VAL)
+#define TINY          (1./DBL_MAX)
 
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1
@@ -2013,6 +2013,7 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 
 #include <assert.h>
 #include <time.h>
+#include <float.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

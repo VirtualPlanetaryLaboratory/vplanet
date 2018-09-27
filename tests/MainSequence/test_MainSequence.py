@@ -5,7 +5,7 @@ import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_stellar():
+def test_MainSequence():
     """Test the stellar module."""
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
@@ -42,4 +42,4 @@ def test_stellar():
     assert np.isclose(Linit, Lfinal, rtol=1e-4)
 
 if __name__ == "__main__":
-    test_stellar()
+    test_MainSequence()

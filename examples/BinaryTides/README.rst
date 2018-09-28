@@ -1,14 +1,19 @@
 Evolution of Tight Stellar Binaries
 =====================
 
+.. todo::
+
+**@dflemin3**: This example is broken as it does not match ZB89.
+
+
 Overview
 --------
 
 ===================   ============
 **Date**              07/25/18
 **Author**            David Fleming
-**Modules**           `eqtide <../src/eqtide.html>`_
-                      `stellar <../src/stellar.html>`_
+**Modules**           eqtide
+                      stellar
 **Approx. runtime**   71 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/zahn>`_
 ===================   ============
@@ -22,7 +27,7 @@ To run this example
 .. code-block:: bash
 
     vplanet vpl.in
-    python zahn89.py
+    python makeplot.py <pdf | png>
 
 
 Expected output
@@ -38,6 +43,6 @@ presented in Figure 1 of :cite:`ZahnBouchet89`.
 
 
 
-.. figure:: zahn.png
+.. figure:: BinaryTides.png
    :width: 600px
    :align: center

@@ -12,6 +12,18 @@ import os
 import vplot as vpl
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import sys
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
+
 
 mpl.rcParams['figure.figsize'] = (10,8)
 mpl.rcParams['font.size'] = 18.0
@@ -80,4 +92,8 @@ plt.text(0.77, 0.9,r"1 M$_{\odot}$ + 1 M$_{\odot}$",
 
 # Save figure
 fig.tight_layout()
-fig.savefig("zahncomp.pdf", bbox_inches="tight")
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('BinaryTides.pdf')
+if (sys.argv[1] == 'png'):
+    fig.savefig('BinaryTides.png')
+#fig.savefig("zahncomp.pdf", bbox_inches="tight")

@@ -29,7 +29,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: VenusOcean.png
+.. figure:: VenusWaterLoss.png
    :width: 600px
    :align: center
 

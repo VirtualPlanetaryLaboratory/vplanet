@@ -11,6 +11,17 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import vplot as vpl
+import sys
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 #Typical plot parameters that make for pretty plot
 mpl.rcParams['figure.figsize'] = (10,8)
@@ -108,4 +119,8 @@ inset2.set_xticks([0.1, 0.25, 0.5, 1, 2, 3])
 inset2.set_xticklabels(["0.1", "0.25", "0.5", "1", "2", "3"], fontsize=12)
 inset2.set_xlabel("Time [Myr]", fontsize=12)
 
-fig.savefig("Rodriguez2011_Figs23.pdf", bbox_inches="tight", dpi=600)
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('Corot-7.pdf', bbox_inches="tight", dpi=600)
+if (sys.argv[1] == 'png'):
+    fig.savefig('Corot-7.png', bbox_inches="tight", dpi=600)
+#fig.savefig("Rodriguez2011_Figs23.pdf", bbox_inches="tight", dpi=600)

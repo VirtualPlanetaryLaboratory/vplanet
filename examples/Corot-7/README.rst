@@ -41,5 +41,5 @@ Expected output
    shows the slightly non-zero eccentricities for planet b and c decaying
    towards 0 near the end of the simulation. Lower left: Semi-major axis
    evolution of CoRoT-7 c. Lower right: Difference between the longitudes of
-   pericenters of CoRoT-7 b and c.  In the inset, we display both planets
+   pericenter of CoRoT-7 b and c.  In the inset, we display both planets
    becoming apsidally locked within 3 Myr due to tidal damping.

@@ -1,15 +1,22 @@
-#!/usr/local/bin/python3.7
-
 # Script to run all vspace runs
 import sys
 import string
 import subprocess as subp
 import matplotlib.pyplot as plt
 import vplot as vpl
+import sys
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 # Arrays ecc,obl,heat now contain the data to make the figure
-
-
 f, ax = plt.subplots(3,2,figsize=(8.5,11))
 
 nlines=1548
@@ -103,5 +110,7 @@ ax[2][1].set_xticks([-1.5,-1,-0.5,0])
 ax[2][1].plot(t,am,linestyle='-', color='k', linewidth=2)
 
 plt.tight_layout()
-
-plt.savefig('earthmoontides.png')
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('EarthMoonTides.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('EarthMoonTides.png')

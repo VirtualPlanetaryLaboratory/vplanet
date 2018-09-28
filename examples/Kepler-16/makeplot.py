@@ -11,6 +11,18 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import vplot as vpl
+import sys
+
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 #Typical plot parameters that make for pretty plot
 mpl.rcParams['figure.figsize'] = (10,8)
@@ -69,4 +81,7 @@ fig.subplots_adjust(hspace=0.05)
 for ax in axes.flatten():
     ax.set_rasterization_zorder(0)
 
-fig.savefig("LL13Fig4Comp.pdf", bbox_inches="tight", dpi=600)
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('Kepler-16.pdf', bbox_inches="tight", dpi=600)
+if (sys.argv[1] == 'png'):
+    plt.savefig('Kepler-16.png', bbox_inches="tight", dpi=600)

@@ -7,13 +7,13 @@ Overview
 ===================   ============
 **Date**              07/24/18
 **Author**            David Fleming
-**Modules**           `binary <../src/binary.html>`_
-**Approx. runtime**   32 seconds
+**Modules**           binary
+**Approx. runtime**   24 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cbp_dyn>`_
 ===================   ============
 
 
-An example of the orbital evolution of circumbinary planet Kepler-16b.
+An example of the orbital evolution of circumbinary planet Kepler-16 b.
 
 
 To run this example
@@ -22,13 +22,13 @@ To run this example
 .. code-block:: bash
 
     vplanet vpl.in
-    python cbp_dyn.py
+    python makeplot.py <pdf | png>
 
 
 Expected output
 ---------------
 
-.. figure:: cbp_dyn.png
+.. figure:: Kepler-16.png
    :width: 600px
    :align: center
 

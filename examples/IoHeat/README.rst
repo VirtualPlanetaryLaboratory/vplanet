@@ -13,7 +13,7 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/IoHeat>`_
 ===================   ============
 
-Surface energy flux on Io due to tidal dissipation according the the EqTide-CPL
+Surface energy flux on Io due to tidal dissipation according the the eqtide-CPL
 model.
 
 

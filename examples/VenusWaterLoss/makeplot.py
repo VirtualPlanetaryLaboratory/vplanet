@@ -55,6 +55,6 @@ for axis in ax.flatten():
     axis.set_xscale('log')
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('VenusOcean.pdf', bbox_inches="tight")
+    fig.savefig('VenusWaterLoss.pdf', bbox_inches="tight")
 if (sys.argv[1] == 'png'):
-    fig.savefig('VenusOcean.png', bbox_inches="tight")
+    fig.savefig('VenusWaterLoss.png', bbox_inches="tight")

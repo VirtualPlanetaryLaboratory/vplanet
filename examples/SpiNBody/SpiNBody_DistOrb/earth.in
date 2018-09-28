@@ -1,0 +1,19 @@
+sName        Earth   
+saModules    distorb distrot
+dMass        3.00316726e-06
+dRadius      -1.50
+dRotPeriod   -100
+dObliquity   23.5    #no Moons yet in vplanet....
+dSemi        1.00000011
+dEcc         0.0167
+dInc         5e-5
+dLongP       102.94719
+dLongA       348.73936
+# bGRCorr      0
+saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA -TotEn -TotAngMom
+dDynEllip    3.28e-3
+dPrecA       0.0
+bForcePrecRate    1
+bCalcDynEllip    1
+#bOverrideMaxEcc  1
+#dHaltMaxEcc     0.4

@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              06/28/18
 **Author**            Rodrigo Luger
-**Modules**           `atmesc`_
-                      `stellar`_
+**Modules**           atmesc
+                      stellar
 **Approx. runtime**   31 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/kepler36>`_
 ===================   ============
@@ -31,7 +31,7 @@ To run this example
 
 .. code-block:: bash
 
-    python makeplot.py
+    python makeplot.py <pdf | png>
 
 
 Expected output

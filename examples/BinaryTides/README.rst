@@ -1,9 +1,7 @@
 Evolution of Tight Stellar Binaries
 =====================
 
-.. todo::
-
-**@dflemin3**: This example is broken as it does not match ZB89.
+.. todo:: **@dflemin3**: This example is broken as it does not match ZB89.
 
 
 Overview

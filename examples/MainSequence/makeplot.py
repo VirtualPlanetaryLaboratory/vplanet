@@ -6,16 +6,6 @@ import matplotlib.pyplot as pl
 cmap = pl.get_cmap('inferno')
 import sys
 
-# Check correct number of arguments
-if (len(sys.argv) != 2):
-    print('ERROR: Incorrect number of arguments.')
-    print('Usage: '+sys.argv[0]+' <pdf | png>')
-    exit(1)
-if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
-    print('ERROR: Unknown file format: '+sys.argv[1])
-    print('Options are: pdf, png')
-    exit(1)
-
 star = """#
 sName	                  s%02d
 saModules	              stellar
@@ -75,6 +65,15 @@ def run(masses):
     prot = [output.bodies[n].RotPer for n in range(len(masses))]
     return age, radius, lum, lxuv, temp, prot
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 # Create the figure
 fig, ax = pl.subplots(2, 2, figsize=(10, 6))

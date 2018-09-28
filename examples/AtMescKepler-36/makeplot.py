@@ -4,6 +4,7 @@ import subprocess
 import vplot as vpl
 from tqdm import tqdm
 import matplotlib.pyplot as pl
+import sys
 cmap = pl.get_cmap('jet')
 
 star = """#
@@ -82,6 +83,16 @@ def run(envmass, mass):
         envmassfinal[i] = body.EnvelopeMass[-1]
     return (envmass - envmassfinal) / envmass
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
+
 
 # The variables we're iterating over
 envfrac = np.array([0.01, 0.03, 0.05, 0.1, 0.25, 0.33, 0.45])
@@ -131,4 +142,7 @@ ax[0].set_xlabel(r"Core Mass ($\mathrm{M}_\oplus$)")
 ax[1].set_xlabel(r"Initial Envelope Mass ($\mathrm{M}_\oplus$)")
 ax[2].set_xlabel(r"Initial Total Mass ($\mathrm{M}_\oplus$)")
 
-fig.savefig('kepler36.pdf')
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('AtMescKepler-36.pdf')
+if (sys.argv[1] == 'png'):
+    fig.savefig('AtMescKepler-36.png')    

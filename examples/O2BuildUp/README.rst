@@ -4,7 +4,7 @@ Oxygen Buildup
 Overview
 --------
 
-..todo:: **@rodluger**: This python script runs the trials, but then hangs.
+.. todo:: **@rodluger**: This python script runs the trials, but then hangs.
 
 ===================   ============
 **Date**              07/25/18

@@ -6,7 +6,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 
 def test_Milankovitch():
-    """Test modules distorb distrot and poise."""
+    """Test modules distorb, distrot, and poise."""
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

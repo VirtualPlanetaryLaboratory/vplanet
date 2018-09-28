@@ -1,4 +1,4 @@
-Venus Ocean
+Water Loss on Venus
 ===========
 
 Overview
@@ -7,11 +7,13 @@ Overview
 ===================   ============
 **Date**              07/25/18
 **Author**            Rodrigo Luger
-**Modules**           `atmesc <../src/atmesc.html>`_
-                      `stellar <../src/stellar.html>`_
-**Approx. runtime**   34 seconds
+**Modules**           atmesc
+                      stellar
+**Approx. runtime**   49 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/venus_ocean>`_
 ===================   ============
+
+Water loss on Venus from thermal processes.
 
 
 
@@ -21,13 +23,13 @@ To run this example
 .. code-block:: bash
 
     vplanet vpl.in
-    python venus.py
+    python makeplot.py <pdf | png>
 
 
 Expected output
 ---------------
 
-.. figure:: venus.png
+.. figure:: VenusOcean.png
    :width: 600px
    :align: center
 

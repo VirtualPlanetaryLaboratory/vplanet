@@ -3,6 +3,17 @@ from __future__ import division, print_function, absolute_import, \
 import matplotlib.pyplot as pl
 import numpy as np
 import vplot as vpl
+import sys
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 output = vpl.GetOutput()
 time = output.sun.Age
@@ -43,4 +54,7 @@ ax[1].set_xlim(5e7, 4.6e9)
 for axis in ax.flatten():
     axis.set_xscale('log')
 
-fig.savefig('venus.pdf', bbox_inches='tight')
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('VenusOcean.pdf', bbox_inches="tight")
+if (sys.argv[1] == 'png'):
+    fig.savefig('VenusOcean.png', bbox_inches="tight")

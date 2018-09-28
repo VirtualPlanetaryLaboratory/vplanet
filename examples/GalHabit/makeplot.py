@@ -1,7 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import vplot
+import sys
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 out = vplot.GetOutput()
 out2 = vplot.GetOutput('tides_only')
 
@@ -18,5 +28,9 @@ plt.legend(loc='lower right', ncol=2, fontsize=10)
 plt.ylabel('Distance (au)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(10,2e4)
-plt.savefig('galactic_evol.pdf')
+
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('Galhabit.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('Galhabit.png')
 plt.close()

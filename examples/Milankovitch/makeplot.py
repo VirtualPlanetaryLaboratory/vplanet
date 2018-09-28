@@ -5,6 +5,7 @@ from matplotlib import ticker
 import os
 import subprocess
 import re
+import sys
 
 def comp2huybers(plname,dir='.',xrange=False,show=True):
   """
@@ -215,8 +216,10 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
     if dir[ii] == '.':
       dir[ii] = 'cwd'
 
-  plt.savefig('milankovitch.pdf')
-
+  if (sys.argv[1] == 'pdf'):
+      plt.savefig('MilankovitchComp.pdf')
+  if (sys.argv[1] == 'png'):
+      plt.savefig('MilankovitchComp.png')
   if show:
     plt.show()
   else:
@@ -366,12 +369,25 @@ def seasonal_maps(time, dir = '.', show = True):
     clb=plt.colorbar(c2,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
     clb.set_label(r'OLR (W m$^{-2}$)',fontsize=12)
 
-    plt.savefig('seasons.png',dpi=300)
+    if (sys.argv[1] == 'pdf'):
+        plt.savefig('MilankovitchSeasons.pdf', dpi=300)
+    if (sys.argv[1] == 'png'):
+        plt.savefig('MilankovitchSeasons.png', dpi=300)
     if show:
-      plt.show()
+        plt.show()
     else:
-      plt.close()
+        plt.close()
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
+# Make plots
 comp2huybers('Earth',show=False)
 seasonal_maps(0,show=False)

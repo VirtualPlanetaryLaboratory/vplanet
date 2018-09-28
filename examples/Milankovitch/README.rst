@@ -1,4 +1,4 @@
-Milankovitch cycles
+Seasonal and Milankovitch Climate Cycles
 ===================
 
 Overview

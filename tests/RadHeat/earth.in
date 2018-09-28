@@ -1,0 +1,36 @@
+# Earthlike parameters
+sName         earth                # Body's name
+saModules     radheat
+
+# Physical Properties
+dMass          -1.0               # Mass, negative -> Earth masses
+dRadius        -1.0               # Radius, negative -> Earth radii
+
+# RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
+### 40K
+d40KNumMan    -1
+d40KNumCore   -1
+d40KNumCrust  -1.0
+
+### 232Th
+d232ThNumMan      -1
+d232ThNumCore     -1
+d232ThNumCrust    -1
+
+### 235U
+d235UNumMan      -1
+d235UNumCore     -1
+d235UNumCrust    -1
+
+### 238U
+d238UNumMan      -1
+d238UNumCore     -1
+d238UNumCrust    -1
+
+#Output
+saOutputOrder -Time -40KPowerCore -40KPowerMan -40KPowerCrust -40KPowerTot $
+		    -232ThPowerCore -232ThPowerMan -232ThPowerCrust -232ThPowerTot $
+		    -235UPowerCore -235UPowerMan -235UPowerCrust  -235UPowerTot $
+		    -238UPowerCore -238UPowerMan -238UPowerCrust -238UPowerTot $
+-RadPowerCore -RadPowerMan -RadPowerCrust -RadPowerTot

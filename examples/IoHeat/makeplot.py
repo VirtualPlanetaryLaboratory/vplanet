@@ -7,6 +7,16 @@ import subprocess as subp
 import matplotlib.pyplot as plt
 import vplot as vpl
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
+
 # Number of dimensions
 necc=30
 nobl=30
@@ -82,4 +92,7 @@ x=[1e-3,0.3]
 y=[0.0023,0.0023]
 plt.plot(x,y,linestyle='dotted',color='black')
 
-plt.savefig('ioheat.png')
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('IoHeat.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('IoHeat.png')

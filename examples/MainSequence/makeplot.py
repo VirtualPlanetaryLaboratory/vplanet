@@ -4,7 +4,17 @@ import subprocess
 import vplot as vpl
 import matplotlib.pyplot as pl
 cmap = pl.get_cmap('inferno')
+import sys
 
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 star = """#
 sName	                  s%02d
@@ -90,4 +100,8 @@ ax[1, 0].set_ylabel(r'Temperature ($\mathrm{K}$)', fontsize=14)
 ax[1, 1].set_ylabel(r'Rotation Period (days)', fontsize=14)
 leg = ax[1, 1].legend(loc=(1.1, 0.5), title='Mass ($\mathrm{M}_\oplus$)')
 leg.get_title().set_fontweight('bold')
-fig.savefig('stellar.pdf', bbox_inches='tight')
+
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('MainSequence.pdf', bbox_inches="tight", dpi=600)
+if (sys.argv[1] == 'png'):
+    fig.savefig('MainSequence.png', bbox_inches="tight", dpi=600)

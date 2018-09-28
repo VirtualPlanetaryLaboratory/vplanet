@@ -8,8 +8,8 @@ Overview
 ===================   ============
 **Date**              09/12/18
 **Author**            Rory Barnes
-**Modules**           `radheat <../src/radheat.html>`_
-**Approx. runtime**   <1 second
+**Modules**           radheat
+**Approx. runtime**   1 second
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/RadHeat>`_
 ===================   ============
 

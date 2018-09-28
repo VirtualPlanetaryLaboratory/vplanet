@@ -36,12 +36,12 @@ To run this example
 Expected output
 ---------------
 
-Evolution of an M dwarf orbiting the sun under the influence of the galactic
-environment. The blue curves represent the evolution due to the galactic tide
-alone, while the black includes the effects of random stellar encounters. The
-dash curves are the semi-major axis (unaffected by the tide); the solid curves
-are the perihelion distance.
-
 .. figure:: Galhabit.png
    :width: 600px
    :align: center
+
+   Evolution of an M dwarf orbiting the sun under the influence of the galactic
+   environment. The blue curves represent the evolution due to the galactic tide
+   alone, while the black includes the effects of random stellar encounters. The
+   dash curves are the semi-major axis (unaffected by the tide); the solid curves
+   are the perihelion distance.

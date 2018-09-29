@@ -14,10 +14,10 @@ def test_GalHabit():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.comp.SemiMajorAxis, 1.5197682790e+15, rtol=1e-4)
-    assert np.isclose(output.log.final.comp.Eccentricity, 0.7369917772)
-    assert np.isclose(output.log.final.comp.PeriQ, 3.9971155411e+14)
-    assert np.isclose(output.log.final.comp.Inc, 1.3483166684)
+    assert np.isclose(output.log.final.comp.SemiMajorAxis, 1.4959787070e+15)
+    assert np.isclose(output.log.final.comp.Eccentricity, 0.7052434592)
+    assert np.isclose(output.log.final.comp.PeriQ, 4.4094950872e+14)
+    assert np.isclose(output.log.final.comp.Inc, 1.3949755231)
 
 if __name__ == "__main__":
     test_GalHabit()

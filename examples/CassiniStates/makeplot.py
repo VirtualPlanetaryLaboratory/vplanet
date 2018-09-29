@@ -1,9 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import vplot
+import sys
 import scipy.signal as sig
 #plt.rcParams["text.usetex"]=True
 #plt.rcParams["text.latex.unicode"]=True
+
+# Check correct number of arguments
+if (len(sys.argv) != 2):
+    print('ERROR: Incorrect number of arguments.')
+    print('Usage: '+sys.argv[0]+' <pdf | png>')
+    exit(1)
+if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
+    print('ERROR: Unknown file format: '+sys.argv[1])
+    print('Options are: pdf, png')
+    exit(1)
 
 out = vplot.GetOutput()
 
@@ -32,7 +43,10 @@ plt.ylabel(u'$\cos{\Psi}$')
 # plt.xlim(0,5)
 
 vplot.make_pretty(fig)
-plt.savefig('cassini_damp.png')
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('CassiniStatesEvol.pdf')
+if (sys.argv[1] == 'png'):
+    fig.savefig('CassiniStatesEvol.png')
 plt.close()
 
 # X = np.sin(out.b.Obliquity*np.pi/180)*np.cos(out.b.PrecA*np.pi/180)
@@ -102,5 +116,9 @@ plt.xlabel(r'$\sin{\epsilon}$ $\cos{(\psi+\Omega)}$')
 plt.ylabel(r'$\sin{\epsilon}$ $\sin{(\psi+\Omega)}$')
 plt.xlim(-1.1,1.1)
 plt.ylim(-1.1,1.1)
-plt.savefig('cassini_ham.png')
+
+if (sys.argv[1] == 'pdf'):
+    fig.savefig('CassiniStatesSection.pdf')
+if (sys.argv[1] == 'png'):
+    fig.savefig('CassiniStatesSection.png')
 plt.close()

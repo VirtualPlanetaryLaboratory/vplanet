@@ -1,4 +1,4 @@
-Solar System Dynamics
+Solar System Orbital Dynamics
 =====================
 
 Overview
@@ -7,12 +7,12 @@ Overview
 ===================   ============
 **Date**              07/24/18
 **Author**            Russell Deitrick
-**Modules**           `distorb <../src/distorb.html>`_
-                      `distrot <../src/distrot.html>`_
-**Approx. runtime**   | 176 seconds (:code:`vpl.in`)
-                      | 159 seconds (:code:`womoon/vpl.in`)
-                      | 9 seconds (:code:`marshnb/vpl.in`)
-                      | 87 seconds (:code:`marsvpl/vpl.in`)
+**Modules**           distorb
+                      distrot
+**Approx. runtime**   | 116 seconds (:code:`vpl.in`)
+                      | 112 seconds (:code:`womoon/vpl.in`)
+                      | 25 seconds (:code:`marshnb/vpl.in`)
+                      | 110 seconds (:code:`marsvpl/vpl.in`)
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys2>`_
 ===================   ============
 
@@ -57,7 +57,7 @@ Expected output
 ---------------
 
 
-.. figure:: InnerSolOrbs.png
+.. figure:: SSDistOrbDistRotInner.png
    :width: 600px
    :align: center
 
@@ -66,7 +66,7 @@ Expected output
    from Appendix A of :cite:`MurrayDermott99`.
 
 
-.. figure:: OuterSolOrbs.png
+.. figure:: SSDistOrbDistRotOuter.png
    :width: 600px
    :align: center
 
@@ -75,7 +75,7 @@ Expected output
    from Appendix A of :cite:`MurrayDermott99`.
 
 
-.. figure:: ObliqComp.png
+.. figure:: SSDistOrbDistRotObliq.png
    :width: 600px
    :align: center
 

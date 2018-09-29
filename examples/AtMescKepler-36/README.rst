@@ -1,4 +1,4 @@
-Kepler 36 Atmospheric Escape
+Kepler-36 Atmospheric Escape
 ============================
 
 Overview
@@ -7,8 +7,8 @@ Overview
 ===================   ============
 **Date**              06/28/18
 **Author**            Rodrigo Luger
-**Modules**           `atmesc <../src/atmesc.html>`_
-                      `stellar <../src/stellar.html>`_
+**Modules**           atmesc
+                      stellar
 **Approx. runtime**   31 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/kepler36>`_
 ===================   ============
@@ -31,13 +31,13 @@ To run this example
 
 .. code-block:: bash
 
-    python run.py
+    python makeplot.py <pdf | png>
 
 
 Expected output
 ---------------
 
-.. figure:: kepler36.png
+.. figure:: AtMescKepler-36.png
    :width: 400px
    :align: center
 

@@ -1,18 +1,20 @@
-The Main Sequence
+Stellar evolution
 =================
 
 Overview
 --------
 
+.. todo:: Change ranges to [0.075, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 2]??
+
 ===================   ============
-**Date**              10/19/15
-**Author**            Rory Barnes
-**Modules**           `stellar <../src/stellar.html>`_
-**Approx. runtime**   24 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/main_seq>`_
+**Date**              07/25/18
+**Author**            Rodrigo Luger
+**Modules**           stellar
+**Approx. runtime**   2 minutes
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/stellar>`_
 ===================   ============
 
-A test of the Baraffe evolution models for a range of stellar masses.
+Stellar evolution for stars between 0.1 and 1.0 solar masses.
 
 
 To run this example
@@ -20,15 +22,16 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
-    vplot
+    python makeplot.py <pdf | png>
+
 
 Expected output
 ---------------
 
-.. figure:: main_seq.png
-   :width: 300px
+.. figure:: MainSequence.png
+   :width: 600px
    :align: center
 
-   Evolution of the luminosity, radius, period, and temperature of M, K, and G dwarfs as a function of time
-   according to the Baraffe et al. (2015) stellar evolution tracks.
+   Evolution of the radius, luminosity, temperature, and period of stars
+   of different masses according to the Baraffe (2015) :cite:`Baraffe15`
+   stellar evolution tracks.

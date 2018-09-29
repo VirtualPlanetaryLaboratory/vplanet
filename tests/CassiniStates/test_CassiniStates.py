@@ -14,7 +14,7 @@ def test_CassiniStates():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.b. Inc, 0.008680)
+    assert np.isclose(output.log.final.b.Inc, 0.008680)
     assert np.isclose(output.log.final.b.ArgP, 4.733145)
     assert np.isclose(output.log.final.b.LongA, 0.148731)
     assert np.isclose(output.log.final.b.Obliquity, 0.786733)

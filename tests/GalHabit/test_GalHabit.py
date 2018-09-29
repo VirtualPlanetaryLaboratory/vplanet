@@ -14,7 +14,7 @@ def test_GalHabit():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.comp.SemiMajorAxis, 1.5197682790e+15)
+    assert np.isclose(output.log.final.comp.SemiMajorAxis, 1.5197682790e+15, rtol=1e-4)
     assert np.isclose(output.log.final.comp.Eccentricity, 0.7369917772)
     assert np.isclose(output.log.final.comp.PeriQ, 3.9971155411e+14)
     assert np.isclose(output.log.final.comp.Inc, 1.3483166684)

@@ -1594,14 +1594,14 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
 
     // We think there is an envelope, but there isnt!
     if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
-      if (io->iVerbose > 1) {
+      if (io->iVerbose > VERBERR) {
         fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
       }
       body[iBody].bEnv = 0;
 
       // is there an ocean? lets set tidalq to that!
       if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        if (io->iVerbose > 1) {
+        if (io->iVerbose > VERBERR) {
           fprintf(stderr," dTidalQOcean,\n");
         }
         body[iBody].dTidalQ = body[iBody].dTidalQOcean;
@@ -1610,7 +1610,7 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
       }
       // there is not ocean, so lets use dTidalQRock!
       else {
-        if (io->iVerbose > 1) {
+        if (io->iVerbose > VERBERR) {
           fprintf(stderr," dTidalQRock.\n");
         }
         body[iBody].dTidalQ = body[iBody].dTidalQRock;
@@ -1620,12 +1620,13 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
     }
     // we think theres an ocean, but there isnt!!
     else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      if (io->iVerbose > 1) {
+      if (io->iVerbose > VERBERR) {
         fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
       }
       body[iBody].dTidalQ = body[iBody].dTidalQRock;
       body[iBody].dK2 = body[iBody].dK2Rock;
       body[iBody].dImK2 = body[iBody].dImK2Rock;
+      body[iBody].bOcean = 0;
     }
   }
 }

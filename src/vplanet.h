@@ -139,7 +139,8 @@
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
-#define TINY          (1./DBL_MAX)
+#define TINY          1/FLT_MAX
+#define HUGE          DBL_MAX
 
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1
@@ -2005,7 +2006,6 @@ struct MODULE {
 /* fnIntegrate is a pointer to a function that performs
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
-
 
 /*
  * Other Header Files - These are primarily for function declarations

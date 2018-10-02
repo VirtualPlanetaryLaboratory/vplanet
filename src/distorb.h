@@ -12,7 +12,7 @@
 /* Orbital model */
 #define LL2           1
 #define RD4           0
-#define TEENY				1e-20 // Already a TINY in vplanet.h! XXX
+#define TEENY				1e-20 // Already a dTINY in vplanet.h! XXX
 #define MAXECCDISTORB 0.6627434
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution

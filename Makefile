@@ -17,6 +17,10 @@ debug:
 	-gcc -g -D DEBUG -o vplanet src/*.c -lm -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
 
+debug_no_AE:
+	-gcc -g -o vplanet src/*.c -lm -Wno-div-by-zero
+	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+
 opt:
 	-gcc -o vplanet src/*.c -lm -O3 -Wno-div-by-zero
 	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"

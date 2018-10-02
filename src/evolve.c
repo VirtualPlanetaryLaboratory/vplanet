@@ -324,8 +324,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
      *dDt = AssignDt(*dDt,(dTimeOut - evolve->dTime),evolve->dEta);
-  } else
+  } else {
     *dDt = evolve->dTimeStep;
+  }
 
   evolve->dCurrentDt = *dDt;
 

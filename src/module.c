@@ -982,7 +982,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
 
       // if there is an envelope/ocean, we calculate ImK2Env/ImK2Ocean
       if (body[iBody].bEnv && (body[iBody].dTidalQ != body[iBody].dTidalQEnv)) {
-        fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+        if (control->Io.iVerbose > 1) {
+          fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQEnv;
         body[iBody].dK2 = body[iBody].dK2Env;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
@@ -1592,19 +1594,25 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
 
     // We think there is an envelope, but there isnt!
     if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
-      fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      }
       body[iBody].bEnv = 0;
 
       // is there an ocean? lets set tidalq to that!
       if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        fprintf(stderr," dTidalQOcean,\n");
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQOcean,\n");
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQOcean;
         body[iBody].dK2 = body[iBody].dK2Ocean;
         body[iBody].dImK2 = body[iBody].dImK2Ocean;
       }
       // there is not ocean, so lets use dTidalQRock!
       else {
-        fprintf(stderr," dTidalQRock.\n");
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQRock.\n");
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQRock;
         body[iBody].dK2 = body[iBody].dK2Rock;
         body[iBody].dImK2 = body[iBody].dImK2Rock;
@@ -1612,10 +1620,13 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
     }
     // we think theres an ocean, but there isnt!!
     else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      }
       body[iBody].dTidalQ = body[iBody].dTidalQRock;
       body[iBody].dK2 = body[iBody].dK2Rock;
       body[iBody].dImK2 = body[iBody].dImK2Rock;
+      body[iBody].bOcean = 0;
     }
   }
 }

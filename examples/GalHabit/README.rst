@@ -1,20 +1,20 @@
-Galactic Habitat
+Galactic Evolution
 ================
 
 Overview
 --------
 
+.. todo:: **@deitrr**: Change system names in vpl.in.
+
 ===================   ============
 **Date**              07/25/18
 **Author**            Russell Deitrick
-**Modules**           `galhabit <../src/galhabit.html>`_
-**Approx. runtime**   | 183 seconds (:code:`vpl.in`)
-                      | 175 seconds (:code:`tides_only/vpl.in`)
+**Modules**           galhabit
+**Approx. runtime**   6 minutes
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/galhabit>`_
 ===================   ============
 
-.. todo:: **@deitrr**: Description needed for the **galh_test** example.
-
+An example of galactic migration and perturbations from passing stars.
 
 To run this example
 -------------------
@@ -30,14 +30,18 @@ To run this example
     cd ..
 
     # Plot the figure
-    python plotgalh.py
+    python makeplot.py <pdf | png>
 
 
 Expected output
 ---------------
 
-.. todo:: **@deitrr**: Caption needed for the **galh_test** example figure.
-
-.. figure:: galh_test.png
+.. figure:: Galhabit.png
    :width: 600px
    :align: center
+
+   Evolution of an M dwarf orbiting the sun under the influence of the galactic
+   environment. The blue curves represent the evolution due to the galactic tide
+   alone, while the black includes the effects of random stellar encounters. The
+   dash curves are the semi-major axis (unaffected by the tide); the solid curves
+   are the perihelion distance.

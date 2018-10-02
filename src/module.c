@@ -575,6 +575,11 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"RADHEAT");
   }
+  if (iBitSum & SPINBODY) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"SPINBODY");
+  }
   if (iBitSum & STELLAR) {
     if (space) fprintf(file," ");
     space = 1;
@@ -585,37 +590,6 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"THERMINT");
   }
-  if (iBitSum & SPINBODY) {
-    if (space) fprintf(file," ");
-    space = 1;
-    fprintf(file,"SPINBODY");
-  }
-
-  if (iBitSum & ATMESC)
-    fprintf(file,"ATMESC ");
-  if (iBitSum & BINARY)
-    fprintf(file,"BINARY ");
-  if (iBitSum & DISTORB)
-    fprintf(file,"DISTORB ");
-  if (iBitSum & DISTROT)
-    fprintf(file,"DISTROT ");
-  if (iBitSum & EQTIDE)
-    fprintf(file,"EQTIDE ");
-  if (iBitSum & FLARE)
-    fprintf(file,"FLARE ");
-  if (iBitSum & GALHABIT)
-    fprintf(file,"GALHABIT ");
-  if (iBitSum & POISE)
-    fprintf(file,"POISE ");
-  if (iBitSum & RADHEAT)
-    fprintf(file,"RADHEAT ");
-  if (iBitSum & STELLAR)
-    fprintf(file,"STELLAR ");
-  if (iBitSum & THERMINT)
-    fprintf(file,"THERMINT ");
-  if (iBitSum & SPINBODY)
-    fprintf(file,"SPINBODY ");
-
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {

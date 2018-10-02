@@ -82,7 +82,7 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
     int iBody,iVar,iEqn; // Dummy counting variables
     EVOLVE integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
-    double dVarNow,dMinNow,dMin=dHUGE,dVarTotal; // Intermediate storage variables
+    double dVarNow,dMinNow,dMin=dHUGE,dVarTotal,dTimeOut; // Intermediate storage variables
 
     integr = control->Evolve;
 
@@ -116,33 +116,16 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   	  }
   	}
 
-  	/* The parameter does not require a derivative, but is calculated
-  	   explicitly as a function of age and can oscillate through 0
-  	   (like circumbinary position, velocities). 10 because binary! */
+    /* Integration for binary, where parameters can be computed via derivatives,
+       or as an explicit function of age */
   	else if (update[iBody].iaType[iVar][0] == 10) {
-  	  dVarNow = *update[iBody].pdVar[iVar];
-  	  // Something like amp = body.CBPAmp[iVar];
-  	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-  	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-  	  }
-  	  if (control->Evolve.bFirstStep) {
-  	    dMin = integr.dTimeStep;
-  	    control->Evolve.bFirstStep = 0;
-  	  } else {
-  	    /* Sum over all equations giving new value of the variable */
-  	    dVarTotal = 0.;
-  	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-  	      dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
-  	    }
-  	    // Prevent division by zero
-  	    if (fabs(dVarNow - dVarTotal) > 1.0e-5) {
-  	      dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
-  	      if (dMinNow < dMin && dMinNow > DAYSEC) // Don't resolve things on < 1 day scales (dflemin3 ad-hoc assumption)
-  		{
-  		  dMin = dMinNow;
-  		}
-  	    }
-  	  }
+      // Equations not in matrix, computing things as explicit function of time,
+      // so we set dMin to time until next output
+      // Figure out time until next output
+      dMinNow = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+      if (dMinNow < dMin) {
+        dMin = dMinNow;
+      }
   	}
 
             /* The parameter does not require a derivative, but is calculated

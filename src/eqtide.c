@@ -1413,7 +1413,7 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
         fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
       }
     } else {
-      // If the orbit is fixed, function return TINY
+      // If the orbit is fixed, function return dTINY
       fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fndUpdateFunctionTiny;
@@ -2948,7 +2948,7 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
     else {
       // Is the body now tidally locked?
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update);
-      // If so, reset the function pointer to return TINY for dDRotRateDt
+      // If so, reset the function pointer to return dTINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */
       if (evolve->bForceEqSpin[iBody])

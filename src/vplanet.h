@@ -139,8 +139,6 @@
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
-#define TINY          (1./HUGE)
-
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1
 #define RUNGEKUTTA    2
@@ -232,6 +230,11 @@
 /* Now define the structs */
 
 #define MAXSPECIES       100
+
+/* Do not change these declarations */
+extern const double dHUGE;
+extern const double dTINY;
+/* Do not change these declarations */
 
 /* Forward declaration of structs.
 This is necessary in order to add pointers to structs into typedef'd functions */
@@ -2006,13 +2009,13 @@ struct MODULE {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
-
 /*
  * Other Header Files - These are primarily for function declarations
  */
 
 #include <assert.h>
 #include <time.h>
+#include <float.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

@@ -671,7 +671,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // For CBP, cannot have dLL13PhiAB set since that is for the binary!
   if(body[iBody].iBodyType == 0) {
-    if(body[iBody].dLL13PhiAB > TINY) {
+    if(body[iBody].dLL13PhiAB > dTINY) {
       if(control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: The circumbinary planet cannot have dLL13PhiAB set as that is the BINARY's initial mean anomaly.\n");
       }
@@ -684,7 +684,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if(body[iBody].iBodyType == 1) {
     if(iBody == 0) { // Primary!
       // These values default to -1
-      if(fabs(body[iBody].dInc) + 1 < TINY || fabs(body[iBody].dEcc) + 1 < TINY || fabs(body[iBody].dSemi + 1) < TINY || fabs(body[iBody].dMeanMotion) + 1 < TINY) {
+      if(fabs(body[iBody].dInc) + 1 < dTINY || fabs(body[iBody].dEcc) + 1 < dTINY || fabs(body[iBody].dSemi + 1) < dTINY || fabs(body[iBody].dMeanMotion) + 1 < dTINY) {
         if(control->Io.iVerbose >= VERBERR)
         {
           fprintf(stderr,"ERROR: In binary, binary orbital element information can ONLY be in the secondary star (iBody == 1).\n");
@@ -693,7 +693,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       }
     } else { // Secondary
       // Was dCBPM0, dCBPZeta, dCBPPsi set for one of the stars?
-      if(body[iBody].dCBPM0 > TINY || body[iBody].dCBPZeta > TINY || body[iBody].dCBPPsi > TINY)
+      if(body[iBody].dCBPM0 > dTINY || body[iBody].dCBPZeta > dTINY || body[iBody].dCBPPsi > dTINY)
       {
         if(control->Io.iVerbose >= VERBERR)
         {
@@ -1389,7 +1389,7 @@ double fndComputeLongA(BODY *body, int iBody) {
 
   // Case: |n| = 0
   double mag_n = sqrt(fndDot(n,n));
-  if(fabs(mag_n) < TINY) {
+  if(fabs(mag_n) < dTINY) {
     return Omega;
   }
 
@@ -1449,7 +1449,7 @@ double fndComputeArgPeri(BODY *body, int iBody) {
   double mag_evec = sqrt(fndDot(evec,evec));
 
   // if LongA ~ 0, assume planar orbit
-  if(fabs(fndComputeLongA(body,iBody)) < TINY) {
+  if(fabs(fndComputeLongA(body,iBody)) < dTINY) {
     if(h[2] > 0) {
       return atan2(evec[1],evec[0]);
     }
@@ -1474,7 +1474,7 @@ double fndMeanToEccentric(double M, double e) {
   M = fmod(M,2.0*PI);
 
   // If e is 0, or close enough, return
-  if(e < TINY) {
+  if(e < dTINY) {
     return M;
   }
   else if(e >= 1 || e < 0) { // Should never happen, but better safe than sorry

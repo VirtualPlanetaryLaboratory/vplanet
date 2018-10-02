@@ -82,7 +82,7 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
     int iBody,iVar,iEqn; // Dummy counting variables
     EVOLVE integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
-    double dVarNow,dMinNow,dMin=HUGE,dVarTotal; // Intermediate storage variables
+    double dVarNow,dMinNow,dMin=dHUGE,dVarTotal; // Intermediate storage variables
 
     integr = control->Evolve;
 
@@ -252,7 +252,7 @@ void fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   int iBody,iVar,iEqn,iNumBodies,iNumVars,iNumEqns; // Dummy counting variables
   EVOLVE integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
-  double dVarNow,dMinNow,dMin=HUGE,dVarTotal; // Intermediate storage variables
+  double dVarNow,dMinNow,dMin=dHUGE,dVarTotal; // Intermediate storage variables
 
   integr = control->Evolve;
 

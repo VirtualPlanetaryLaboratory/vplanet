@@ -139,9 +139,6 @@
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
 
-#define TINY          1/FLT_MAX
-#define HUGE          DBL_MAX
-
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1
 #define RUNGEKUTTA    2
@@ -233,6 +230,11 @@
 /* Now define the structs */
 
 #define MAXSPECIES       100
+
+/* Do not change these declarations */
+extern const double dHUGE;
+extern const double dTINY;
+/* Do not change these declarations */
 
 /* Forward declaration of structs.
 This is necessary in order to add pointers to structs into typedef'd functions */

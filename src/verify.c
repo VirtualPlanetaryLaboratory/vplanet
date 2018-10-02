@@ -19,17 +19,20 @@
  */
 
 /*! Check to see if two decimals numbers are equal (1) or not (0) */
- int bFloatComparison(double x, double y)
- {
-   if(fabs(x - y) < TINY)
-   {
-     return 1;
-   }
-   else
-   {
-     return 0;
-   }
- }
+int bFloatComparison(double x, double y)
+{
+  /*double bigger;
+  if (x>y) {
+    bigger = x;
+  } else {
+    bigger = y;
+  }*/
+  if(fabs(x - y) < FLT_EPSILON) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 /*
  * Exit Calls

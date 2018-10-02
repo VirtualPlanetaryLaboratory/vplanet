@@ -1540,7 +1540,7 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fndUpdateFunctionTiny;
   //     }
   //
-  //     dMinOrbPeriod = DBL_MAX;
+  //     dMinOrbPeriod = HUGE;
   //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
   //       // Calculate the minimum Orbital period
   //       if (body[iBody].dOrbPeriod < dMinOrbPeriod) {
@@ -1628,7 +1628,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
 
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
-  // If oceans or envelope weren't initially set to be modeled, their Q == -DBL_MAX
+  // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
   int bOceans = 0;
   int bEnv = 0;
 

@@ -16,7 +16,9 @@ parser.add_argument('-r', '--read', action='store', type=str, dest='readfile',
                     default='earth.earth.forward', help='name of .forward file to read in')
 parser.add_argument('-sn', '--savename', action='store', type=str, dest='savename',
                     required=False,
-                    default='plot_vplanet.txt', help='name of .txt file to save')
+                    default='plotEIt.txt', help='name of .txt file to save')
+parser.add_argument('-s', '--save', action='store_const', dest='save', const=True,
+                    default=False, required=False, help='save fig')
 parser.add_argument('-t', '--text', action='store_const', dest='text', const=True,
                     default=False, required=False, help='save summary to text file')
 args = parser.parse_args()
@@ -221,13 +223,25 @@ plot(Time,TCMB,label='TCMB')
 plot(Time,TCore,label='TCore')
 plt.xlabel(xlabel); plt.ylabel('T (K)')
 plt.legend()
-
 plt.subplot(222)
+plot(Time,HflowUMan,label='HflowUMan')
+plot(Time,HflowCMB,label='HflowCMB')
+plot(Time,RadPowerMan,label='RadPowerMan')
+plot(Time,RadPowerCore,label='RadPowerCore')
+plt.xlabel(xlabel); plt.ylabel('Q (TW)')
+plt.ylim(0,100)
+plt.legend()
+plt.subplot(223)
 plot(Time,RIC,label='RIC')
 plt.xlabel(xlabel);plt.ylabel('RIC')
-plt.subplot(223)
+plt.subplot(224)
 plot(Time,MagMom,label='MagMom')
 plt.xlabel(xlabel);plt.ylabel('MagMom')
+
+if args.save:
+    savename='plotEI.png'
+    plt.savefig(savename)
+    print('Saved '+savename)
 
 ### Write to text file. ###
 if args.text:

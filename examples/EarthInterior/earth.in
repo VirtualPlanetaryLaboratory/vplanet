@@ -40,9 +40,10 @@ dTCore         6000
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
     -HflowCMB -HflowSecMan $
-    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscJumpMan $
+    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
     -MeltMassFluxMan -FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
+    -BLUMan -BLLMan -MeltMassFluxMan $
     -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
     -238UPowerCrust -238UNumCrust -238UMassCrust $
     -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $

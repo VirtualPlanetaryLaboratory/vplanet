@@ -21,7 +21,7 @@ To run this example
 .. code-block:: bash
 
    vplanet vpl.in
-   python plotEI.py
+   python makeplot.py
 
 
 Expected output

@@ -52,7 +52,6 @@ void BodyCopyBinary(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCBPM0 = src[iBody].dCBPM0;
   dest[iBody].dCBPZeta = src[iBody].dCBPZeta;
   dest[iBody].dCBPPsi = src[iBody].dCBPPsi;
-  dest[iBody].bBinaryUseMatrix = src[iBody].bBinaryUseMatrix;
 }
 
 /** Only use this function for malloc'ing stuff
@@ -352,21 +351,6 @@ void ReadHaltRocheLobe(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       control->Halt[iFile-1].bHaltRocheLobe = 0;
 }
 
-/** This parameter cannot exist in primary file */
-void ReadBinaryUseMatrix(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bBinaryUseMatrix = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].bBinaryUseMatrix = 0; // Default to using the matrix
-}
-
 /** Initialization Options for BINARY */
 void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
@@ -467,12 +451,6 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTROCHELOBE].iType = 0;
   fnRead[OPT_HALTROCHELOBE] = &ReadHaltRocheLobe;
 
-  sprintf(options[OPT_BINUSEMATRIX].cName,"bBinaryUseMatrix");
-  sprintf(options[OPT_BINUSEMATRIX].cDescr,"Use matrix or compute main variables on the fly?");
-  sprintf(options[OPT_BINUSEMATRIX].cDefault,"1");
-  options[OPT_BINUSEMATRIX].iType = 0;
-  fnRead[OPT_BINUSEMATRIX] = &ReadBinaryUseMatrix;
-
 }
 
 /** Read all BINARY input options. */
@@ -498,7 +476,7 @@ void ReadOptionsBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPR][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPR][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPR][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPR][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPR][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPR][0][0] = iBody;
@@ -508,7 +486,7 @@ void VerifyCBPR(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody
 
 void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPZ][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPZ][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPZ][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPZ][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPZ][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPZ][0][0] = iBody;
@@ -518,7 +496,7 @@ void VerifyCBPZ(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody
 
 void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPPhi][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPPhi][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhi][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhi][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPPhi][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhi][0][0] = iBody;
@@ -528,7 +506,7 @@ void VerifyCBPPhi(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBo
 
 void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPRDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPRDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPRDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPRDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPRDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPRDot][0][0] = iBody;
@@ -538,7 +516,7 @@ void VerifyCBPRDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iB
 
 void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPZDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPZDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPZDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPZDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPZDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPZDot][0][0] = iBody;
@@ -548,7 +526,7 @@ void VerifyCBPZDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iB
 
 void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
-  update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 0;
+  update[iBody].iaType[update[iBody].iCBPPhiDot][0] = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0] = malloc(update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0][0] = iBody;
@@ -559,17 +537,15 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int 
 void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
 
   if(body[iBody].iBodyType == 0) { // CBP
-    if(body[iBody].bBinaryUseMatrix == 0) { // Not using the matrix
-      // If not including eqns in the matrix, compute main variables on the fly!
-      SYSTEM * system; // dummy variable
-      int iaBody[1] = {iBody}; //  Pick out CBP
-      body[iBody].dCBPR = fndCBPRBinary(body,system,iaBody);
-      body[iBody].dCBPZ = fndCBPZBinary(body,system,iaBody);
-      body[iBody].dCBPPhi = fndCBPPhiBinary(body,system,iaBody);
-      body[iBody].dCBPRDot = fndCBPRDotBinary(body,system,iaBody);
-      body[iBody].dCBPPhiDot = fndCBPPhiDotBinary(body,system,iaBody);
-      body[iBody].dCBPZDot = fndCBPZDotBinary(body,system,iaBody);
-    }
+    // If not including eqns in the matrix, compute main variables on the fly!
+    SYSTEM * system; // dummy variable
+    int iaBody[1] = {iBody}; //  Pick out CBP
+    body[iBody].dCBPR = fndCBPRBinary(body,system,iaBody);
+    body[iBody].dCBPZ = fndCBPZBinary(body,system,iaBody);
+    body[iBody].dCBPPhi = fndCBPPhiBinary(body,system,iaBody);
+    body[iBody].dCBPRDot = fndCBPRDotBinary(body,system,iaBody);
+    body[iBody].dCBPPhiDot = fndCBPPhiDotBinary(body,system,iaBody);
+    body[iBody].dCBPZDot = fndCBPZDotBinary(body,system,iaBody);
 
     // Set CBP orbital elements, mean motion
     fnvAssignOrbitalElements(body,iBody);
@@ -597,16 +573,12 @@ void AssignBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
 
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
-    // Add equations to the matrix
-    if(body[iBody].bBinaryUseMatrix)
-    {
-      fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndCBPRBinary;
-      fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndCBPZBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndCBPPhiBinary;
-      fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndCBPRDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndCBPZDotBinary;
-      fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndCBPPhiDotBinary;
-    }
+    fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndCBPRBinary;
+    fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndCBPZBinary;
+    fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndCBPPhiBinary;
+    fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndCBPRDotBinary;
+    fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndCBPZDotBinary;
+    fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndCBPPhiDotBinary;
   }
 }
 
@@ -615,15 +587,12 @@ void NullBinaryDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVari
   if(body[iBody].iBodyType == 0) // Planets are added to matrix
   {
     // Add equations to the matrix
-    if(body[iBody].bBinaryUseMatrix)
-    {
       fnUpdate[iBody][update[iBody].iCBPR][0]      = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iCBPZ][0]      = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iCBPPhi][0]    = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iCBPRDot][0]   = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iCBPZDot][0]   = &fndUpdateFunctionTiny;
       fnUpdate[iBody][update[iBody].iCBPPhiDot][0] = &fndUpdateFunctionTiny;
-    }
   }
 }
 
@@ -706,16 +675,13 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // Initialize the circumbinary planets
   if(body[iBody].iBodyType == 0) { // Planets are added to matrix
-    // Add equations to the matrix
-    if(body[iBody].bBinaryUseMatrix) {
-      // Call verifies to properly set up eqns in matrix
-      VerifyCBPR(body,options,update,body[iBody].dAge,iBody);
-      VerifyCBPZ(body,options,update,body[iBody].dAge,iBody);
-      VerifyCBPPhi(body,options,update,body[iBody].dAge,iBody);
-      VerifyCBPRDot(body,options,update,body[iBody].dAge,iBody);
-      VerifyCBPZDot(body,options,update,body[iBody].dAge,iBody);
-      VerifyCBPPhiDot(body,options,update,body[iBody].dAge,iBody);
-    }
+    // Call verifies to properly set up eqns in matrix
+    VerifyCBPR(body,options,update,body[iBody].dAge,iBody);
+    VerifyCBPZ(body,options,update,body[iBody].dAge,iBody);
+    VerifyCBPPhi(body,options,update,body[iBody].dAge,iBody);
+    VerifyCBPRDot(body,options,update,body[iBody].dAge,iBody);
+    VerifyCBPZDot(body,options,update,body[iBody].dAge,iBody);
+    VerifyCBPPhiDot(body,options,update,body[iBody].dAge,iBody);
 
     // Init parameters needed for subsequent cbp motion
 
@@ -776,32 +742,30 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
 void InitializeUpdateBinary(BODY *body, UPDATE *update, int iBody) {
   /* Only planets should be in matrix, if the user is so inclinded */
-  if(body[iBody].bBinaryUseMatrix) { // include eqns in matrix
-    if(body[iBody].iBodyType == 0) {
-      if(update[iBody].iNumCBPR == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPR++;
+  if(body[iBody].iBodyType == 0) {
+    if(update[iBody].iNumCBPR == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPR++;
 
-      if(update[iBody].iNumCBPZ == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPZ++;
+    if(update[iBody].iNumCBPZ == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPZ++;
 
-      if(update[iBody].iNumCBPPhi == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPPhi++;
+    if(update[iBody].iNumCBPPhi == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPPhi++;
 
-      if(update[iBody].iNumCBPRDot == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPRDot++;
+    if(update[iBody].iNumCBPRDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPRDot++;
 
-      if(update[iBody].iNumCBPZDot == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPZDot++;
+    if(update[iBody].iNumCBPZDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPZDot++;
 
-      if(update[iBody].iNumCBPPhiDot == 0)
-        update[iBody].iNumVars++;
-      update[iBody].iNumCBPPhiDot++;
-    }
+    if(update[iBody].iNumCBPPhiDot == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCBPPhiDot++;
   }
 }
 

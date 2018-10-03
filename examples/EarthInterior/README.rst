@@ -6,7 +6,7 @@ Overview
 --------
 
 ===================   ============
-**Date**              09/26/18
+**Date**              10/03/18
 **Author**            Peter Driscoll
 **Modules**           `radheat, thermint <../src/radheat.html, ../src/thermint.html>`_
 **Approx. runtime**   <1 second
@@ -27,7 +27,8 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: earthinterior.png
+.. figure:: earthinterior1.png
+.. figure:: earthinterior2.png
    :width: 600px
    :align: center
 

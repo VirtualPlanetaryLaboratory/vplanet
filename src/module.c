@@ -45,10 +45,10 @@ double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 }
 
 double fndUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
-  return TINY;
+  return dTINY;
 }
 
-// Reset function pointer to return TINY
+// Reset function pointer to return dTINY
 void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
   fnUpdate[iBody][iVar][iEqn] = &fndUpdateFunctionTiny;
 }
@@ -1516,7 +1516,7 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fndUpdateFunctionTiny;
   //     }
   //
-  //     dMinOrbPeriod = HUGE;
+  //     dMinOrbPeriod = dHUGE;
   //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
   //       // Calculate the minimum Orbital period
   //       if (body[iBody].dOrbPeriod < dMinOrbPeriod) {
@@ -1613,7 +1613,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
 
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
-  // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
+  // If oceans or envelope weren't initially set to be modeled, their Q == -dHUGE
   int bOceans = 0;
   int bEnv = 0;
 

@@ -8,7 +8,7 @@ Overview
 ===================   ============
 **Date**              10/03/18
 **Author**            Peter Driscoll
-**Modules**           `radheat, thermint <../src/radheat.html, ../src/thermint.html>`_
+**Modules**           radheat thermint
 **Approx. runtime**   <1 second
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/EarthInterior>`_
 ===================   ============

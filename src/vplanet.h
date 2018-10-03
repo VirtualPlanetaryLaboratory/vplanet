@@ -132,7 +132,7 @@
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
-#define MAXARRAY      64    /* Maximum number of options in
+#define MAXARRAY      128    /* Maximum number of options in
 			     * an option array */
 #define NUMOPT	      1000  /* Number of options that could be
 			     * in MODULE */

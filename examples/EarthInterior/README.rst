@@ -27,8 +27,8 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: earthinterior1.png
-.. figure:: earthinterior2.png
+.. figure:: EarthInterior1.png
+.. figure:: EarthInterior2.png
    :width: 600px
    :align: center
 

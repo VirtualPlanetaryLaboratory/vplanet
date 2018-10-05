@@ -1783,12 +1783,15 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       }
   }
 
-  if (body[1].bDistOrb) {
-    if (control->bOutputEigen) {
-      if (control->Evolve.iDistOrbModel == RD4) {
-         SolveEigenVal(body,&control->Evolve,system);
+  // Only check for DistOrb-specific output behavior if more than one body exists
+  if(control->Evolve.iNumBodies > 1) {
+    if (body[1].bDistOrb) {
+      if (control->bOutputEigen) {
+        if (control->Evolve.iDistOrbModel == RD4) {
+           SolveEigenVal(body,&control->Evolve,system);
+        }
+        WriteEigen(control,system);
       }
-      WriteEigen(control,system);
     }
   }
 

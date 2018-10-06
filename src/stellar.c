@@ -1100,8 +1100,8 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return 0.0;
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return dTINY;
   }
 
   // Delta t = 10 years since 10 yr << typical stellar evolution timescales
@@ -1122,8 +1122,8 @@ double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius of gyration and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return 0.0;
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return dTINY;
   }
 
   // Delta t = 10 years since  10 yr << typical stellar evolution timescales
@@ -1210,17 +1210,8 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dOmegaCrit;
 
   // No magnetic braking
-  if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE)
-  {
-    return 0.0;
-  }
-
-  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
-  // so lost angular momentum is due to radius evolution and is lost to disk
-  // so ignore magnetic braking early on.  Only works with a stellar model selected
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
-    return 0.0;
+  if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE) {
+    return dTINY;
   }
 
   // Reiners & Mohanty 2012 magnetic braking model
@@ -1251,9 +1242,8 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
     return dDJDt; // Return positive amount of los angular momentum
   }
   // No magnetic braking
-  else
-  {
-    return 0.0;
+  else {
+    return dTINY;
   }
 
 }
@@ -1269,8 +1259,8 @@ double fdDRotRateDtRadGyra(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return 0.0;
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return dTINY;
   }
 
   // Compute the instataneous change in stellar radius
@@ -1290,8 +1280,8 @@ double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return 0.0;
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return dTINY;
   }
 
   // Compute the instataneous change in stellar radius
@@ -1307,20 +1297,14 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dDJDt, dMomIn;
 
-  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
-  // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC) {
-    return 0.0;
-  }
-  else {
-    // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
-    dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
+  // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
+  dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 
-    // Calculate moment of inertia
-    dMomIn = body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;
+  // Calculate moment of inertia
+  dMomIn = body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadius*body[iaBody[0]].dRadius;
 
-    return dDJDt/dMomIn;
-  }
+  return dDJDt/dMomIn;
+
 }
 
 /*! Compute the change in rotation rate when the radius and total angular momentum

@@ -27,6 +27,10 @@ int bFloatComparison(double x, double y) {
     bigger = y;
   }*/
 
+  if((fabs(x) < dTINY) && (fabs(y) < dTINY)) {
+    return 1;
+  }
+
   if (fabs(x - y) < 2.93873605221803725e-39) {
     return 1;
   } else {

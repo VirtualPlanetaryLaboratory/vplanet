@@ -1103,7 +1103,7 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // values of the radius and compute the derivative from those? TODO: Check this.
 
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return TINY;
+    return dTINY;
   }
 
   // Delta t = 10 years since 10 yr << typical stellar evolution timescales
@@ -1125,7 +1125,7 @@ double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // values of the radius of gyration and compute the derivative from those? TODO: Check this.
 
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return TINY;
+    return dTINY;
   }
 
   // Delta t = 10 years since  10 yr << typical stellar evolution timescales
@@ -1216,7 +1216,7 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // No magnetic braking
   if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE)
   {
-    return TINY;
+    return dTINY;
   }
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
@@ -1224,7 +1224,7 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // so ignore magnetic braking early on.  Only works with a stellar model selected
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
   {
-    return TINY;
+    return dTINY;
   }
 
   // Reiners & Mohanty 2012 magnetic braking model
@@ -1279,7 +1279,7 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // No magnetic braking
   else
   {
-    return TINY;
+    return dTINY;
   }
 
 }
@@ -1296,7 +1296,7 @@ double fdDRotRateDtRadGyra(BODY *body,SYSTEM *system,int *iaBody) {
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return TINY;
+    return dTINY;
   }
 
   // Compute the instataneous change in stellar radius
@@ -1317,7 +1317,7 @@ double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
-    return TINY;
+    return dTINY;
   }
 
   // Compute the instataneous change in stellar radius
@@ -1336,7 +1336,7 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC) {
-    return TINY;
+    return dTINY;
   }
   else {
     // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it

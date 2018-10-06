@@ -11,6 +11,10 @@
 #define RM12OMEGACRITFULLYCONVEC      1.82e-6           /**< Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012) */
 #define RM12CONST                     (2.66e3 * 46.416) /**< dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012) */
 #define SK72CONST                     5.0e-25           /**< dJ/dt constant from Skumanich 1972 (Repetto+2014) */
+#define MATT15T0                      9.5e23            /**< Matt+2015 T0 constant in Joules */
+#define MATT15X                       10.0              /**< Matt+2015 saturation ratio threshold */
+#define MATT15TAUCZ                   1.115e6           /**< Matt+2015 solar TauCZ value in s */
+#define MATT15OMEGASUN                2.6e-6            /**< Matt+2015 solar rotation rate in s^-1 */
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
@@ -21,6 +25,7 @@
 #define STELLAR_DJDT_NONE             0 /**< No stellar angular momentum loss via magnetic braking */
 #define STELLAR_DJDT_RM12             1 /**< dJ/dt according to Reiners & Mohanty 2012 */
 #define STELLAR_DJDT_SK72             2 /**< dJ/dt according to Skumanich 1972 empirical law */
+#define STELLAR_DJDT_MA15             3 /**< dJ/dt according to Matt+2015 */
 
 #define HZ_MODEL_KOPPARAPU            1
 #define DRYRGFLUX                     415 /**< W/m^2 from Abe et al. (2011) */
@@ -138,6 +143,7 @@ double fdDEDtRotConStellar(BODY*,SYSTEM*,int*);
 double fdDEDtRotRadGyraStellar(BODY*,SYSTEM*,int*);
 double fdDEDtRotBrakeStellar(BODY*,SYSTEM*,int*);
 double fdDEDtStellar(BODY*,SYSTEM*,int*);
+double fdCranmerSaar2011TauCZ(double);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY*,SYSTEM*,UPDATE*,int,int);

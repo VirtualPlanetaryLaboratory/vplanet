@@ -21,6 +21,11 @@
 
 #include <xmmintrin.h>
 
+/* Do not change these values */
+const double dHUGE = DBL_MAX; // This is the largest possible double value according to <float.h>
+const double dTINY = 1./DBL_MAX; // This is the smallest possibled double value according to <float.h>
+/* Do not change these values */
+
 /*! \brief Main function. All the magic happens here!
  */
 int main(int argc,char *argv[]) {

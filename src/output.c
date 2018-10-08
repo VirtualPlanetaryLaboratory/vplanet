@@ -480,6 +480,11 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
+void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadGyra;
+  sprintf(cUnit,"");
+}
+
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
@@ -1083,6 +1088,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADIUS].iNum = 1;
   output[OUT_RADIUS].iModuleBit = 1;
   fnWrite[OUT_RADIUS] = &WriteRadius;
+
+  sprintf(output[OUT_RADGYRA].cName,"RadGyra");
+  sprintf(output[OUT_RADGYRA].cDescr,"Radius of Gyration");
+  output[OUT_RADGYRA].bNeg = 0;
+  output[OUT_RADGYRA].iNum = 1;
+  output[OUT_RADGYRA].iModuleBit = 1;
+  fnWrite[OUT_RADGYRA] = &WriteRadGyra;
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
@@ -1771,12 +1783,15 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       }
   }
 
-  if (body[1].bDistOrb) {
-    if (control->bOutputEigen) {
-      if (control->Evolve.iDistOrbModel == RD4) {
-         SolveEigenVal(body,&control->Evolve,system);
+  // Only check for DistOrb-specific output behavior if more than one body exists
+  if(control->Evolve.iNumBodies > 1) {
+    if (body[1].bDistOrb) {
+      if (control->bOutputEigen) {
+        if (control->Evolve.iDistOrbModel == RD4) {
+           SolveEigenVal(body,&control->Evolve,system);
+        }
+        WriteEigen(control,system);
       }
-      WriteEigen(control,system);
     }
   }
 

@@ -1,0 +1,8 @@
+sName	          star
+saModules	      stellar
+dMass           0.089
+dAge            1e7
+sStellarModel   baraffe
+dSatXUVFrac     1.e-3
+dSatXUVTime     -1
+saOutputOrder 	Time HZLimRecVenus HZLimRunaway HZLimMaxGreenhouse HZLimEarlyMars

@@ -132,9 +132,11 @@ void ReadMagBrakingModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
       body[iFile-1].iMagBrakingModel = STELLAR_DJDT_NONE;
     } else if (!memcmp(sLower(cTmp),"sk",2)) {
       body[iFile-1].iMagBrakingModel = STELLAR_DJDT_SK72;
+    } else if (!memcmp(sLower(cTmp),"ma",2)) {
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_MA15;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, MATT, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -462,6 +464,33 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
   update[iBody].pdRadiusStellar = &update[iBody].daDerivProc[update[iBody].iRadius][0];  // NOTE: This points to the VALUE of the radius
 }
 
+void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
+
+  // Assign radius
+  if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    body[iBody].dRadGyra = fdRadGyraFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    if (options[OPT_RG].iLine[iBody+1] >= 0) {
+      // User specified radius of gyration, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("WARNING: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
+    }
+  } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    if (options[OPT_RG].iLine[iBody+1] < 0) {
+      // User specified radius, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("ERROR: Must set radius of gyration for body %d when using Proxima Cen stellar model.\n", iBody);
+        exit(1);
+    }
+  }
+
+  update[iBody].iaType[update[iBody].iRadGyra][0] = 0;
+  update[iBody].iNumBodies[update[iBody].iRadGyra][0] = 1;
+  update[iBody].iaBody[update[iBody].iRadGyra][0] = malloc(update[iBody].iNumBodies[update[iBody].iRadGyra][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iRadGyra][0][0] = iBody;
+
+  update[iBody].pdRadGyraStellar = &update[iBody].daDerivProc[update[iBody].iRadGyra][0];  // NOTE: This points to the VALUE of the radius of gyration
+}
+
 void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign temperature
@@ -546,6 +575,7 @@ void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateV
   fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fdLuminosity;  // NOTE: This points to the value of the Luminosity!
   fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fdRadius;      // NOTE: This points to the value of the Radius!
   fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fdTemperature; // NOTE: This points to the value of the Temperature!
+  fnUpdate[iBody][update[iBody].iRadGyra][0]                                   = &fdRadGyra; // NOTE: This points to the value of the Radius of Gyration!
 }
 
 void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -555,6 +585,7 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
   fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
   fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
   fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
+  fnUpdate[iBody][update[iBody].iRadGyra][0]                                   = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius of Gyration!
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -575,8 +606,9 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
-  VerifyRadius(body,control,options,update,body[iBody].dAge,iBody);
 
+  VerifyRadius(body,control,options,update,body[iBody].dAge,iBody);
+  VerifyRadGyra(body,control,options,update,body[iBody].dAge,iBody);
   VerifyRotRate(body,control,options,update,body[iBody].dAge,iBody);
 
   if (update[iBody].iNumTemperature > 1) {
@@ -613,6 +645,12 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadius++;
   }
 
+  if (body[iBody].dRadGyra > 0) {
+    if (update[iBody].iNumRadGyra == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumRadGyra++;
+  }
+
   // NOTE: Rory and I decided to ALWAYS track the rotation evolution of the star,
   // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
   // to its default value, and we track angular momentum conservation from there.
@@ -647,6 +685,11 @@ void FinalizeUpdateLuminosityStellar(BODY *body,UPDATE*update,int *iEqn,int iVar
 void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = STELLAR;
   update[iBody].iNumRadius = (*iEqn)++;
+}
+
+void FinalizeUpdateRadGyraStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+  update[iBody].iNumRadGyra = (*iEqn)++;
 }
 
 void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -974,6 +1017,7 @@ void AddModuleStellar(MODULE *module,int iBody,int iModule) {
   module->fnInitializeUpdate[iBody][iModule]          = &InitializeUpdateStellar;
   module->fnFinalizeUpdateLuminosity[iBody][iModule]  = &FinalizeUpdateLuminosityStellar;
   module->fnFinalizeUpdateRadius[iBody][iModule]      = &FinalizeUpdateRadiusStellar;
+  module->fnFinalizeUpdateRadGyra[iBody][iModule]     = &FinalizeUpdateRadGyraStellar;
   module->fnFinalizeUpdateRot[iBody][iModule]         = &FinalizeUpdateRotRateStellar;
   module->fnFinalizeUpdateTemperature[iBody][iModule] = &FinalizeUpdateTemperatureStellar;
   module->fnFinalizeUpdateLostAngMom[iBody][iModule]  = &FinalizeUpdateLostAngMomStellar;
@@ -1016,6 +1060,40 @@ double fdRadius(BODY *body,SYSTEM *system,int *iaBody) {
     return 0;
 }
 
+double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    foo = fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge,body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
+    return body[iaBody[0]].dTemperature;
+  else
+    return 0;
+}
+
+double fdRadGyra(BODY *body,SYSTEM *system,int *iaBody) {
+  double foo;
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
+    foo = fdRadGyraFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
+    foo = body[iaBody[0]].dRadGyra; // XXX Not implemented!
+    if (!isnan(foo)) return foo;
+    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
+    return body[iaBody[0]].dRadGyra;
+  else
+    return 0;
+}
+
 /*! Compute the instataneous change in stellar radius according to the Baraffe models.
  * Valid for the Baraffe stellar models
  */
@@ -1024,12 +1102,11 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return 0.0;
   }
 
-  // Delta t = 10 years since  10 yr << typical stellar evolution timescales
+  // Delta t = 10 years since 10 yr << typical stellar evolution timescales
   double eps = 10.0 * YEARDAY * DAYSEC;
   double dRadMinus, dRadPlus;
 
@@ -1037,6 +1114,28 @@ double fdDRadiusDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   dRadPlus = fdRadiusFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
 
   return (dRadPlus - dRadMinus) /  (2. * eps);
+}
+
+/*! Compute the instataneous change in stellar radius according to the Baraffe models.
+ * Valid for the Baraffe stellar models
+ */
+double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
+  // Note: Compute a very simple derivative. NOTE: This won't work if variables like the
+  // stellar mass are changing, too! Perhaps it's better to keep track of the previous
+  // values of the radius of gyration and compute the derivative from those? TODO: Check this.
+
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return 0.0;
+  }
+
+  // Delta t = 10 years since  10 yr << typical stellar evolution timescales
+  double eps = 10.0 * YEARDAY * DAYSEC;
+  double dRGMinus, dRGPlus;
+
+  dRGMinus = fdRadGyraFunctionBaraffe(body[iaBody[0]].dAge - eps, body[iaBody[0]].dMass);
+  dRGPlus = fdRadGyraFunctionBaraffe(body[iaBody[0]].dAge + eps, body[iaBody[0]].dMass);
+
+  return (dRGPlus - dRGMinus) /  (2. * eps);
 }
 
 /*! Compute instataneous change in potential energy due to stellar radius evolution
@@ -1069,6 +1168,21 @@ double fdDEDtRotConStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return -dEdt; // If E_rot increases, energy un-lost, so negative sign
 }
 
+/*! Compute instataneous change in rotational energy due to stellar radius of
+ *  gyration evolution and considering angular momentum conservation
+ */
+double fdDEDtRotRadGyraStellar(BODY *body,SYSTEM *system,int *iaBody) {
+  int iBody = iaBody[0];
+  double dDRGDt, dEdt;
+
+  // Compute the instataneous change in stellar radius
+  dDRGDt = fdDRadGyraDtStellar(body,system,iaBody);
+
+  dEdt = -body[iBody].dMass*body[iBody].dRadGyra*body[iBody].dRadius*body[iBody].dRadius*dDRGDt*body[iBody].dRotRate*body[iBody].dRotRate;
+
+  return -dEdt; // If E_rot increases, energy un-lost, so negative sign
+}
+
 /*! Compute instataneous change in rotational energy due to stellar magnetic braking */
 double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
@@ -1083,9 +1197,10 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return -dEdt;
 }
 
-/*! Compute total energy lost due to stellar evolution */
+/*! Compute total energy lost due to stellar evolution
+ */
 double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
-  return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody);
+  return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody) + fdDEDtRotRadGyraStellar(body,system,iaBody);
 }
 
 /*! Calculate dJ/dt due to magnetic braking.  This is from Reiners & Mohanty
@@ -1095,6 +1210,8 @@ double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
 double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
+  double dTauCZ;
+  double dT0;
 
   // No magnetic braking
   if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE)
@@ -1125,6 +1242,10 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
                           * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
       }
     }
+    else {
+      fprintf(stderr,"ERROR! Must set iWindModel to reiners if using reiners magnetic braking model!\n");
+      exit(1);
+    }
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }
@@ -1137,12 +1258,51 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
     return dDJDt; // Return positive amount of los angular momentum
   }
+  else if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
+
+    // Compute convective turnover timescale and normalized torque
+    dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+    dT0 = MATT15T0*pow(body[iaBody[0]].dRadius/RSUN,3.1)*sqrt(body[iaBody[0]].dMass/MSUN);
+
+    // Is the magnetic braking saturated?
+    if(MATT15X <= body[iaBody[0]].dRotRate*dTauCZ/(MATT15OMEGASUN*MATT15TAUCZ)) {
+      // Saturated
+      dDJDt = -dT0*MATT15X*MATT15X*(body[iaBody[0]].dRotRate/MATT15OMEGASUN);
+    }
+    else {
+      // Unsaturated
+      dDJDt = -dT0*(dTauCZ/MATT15TAUCZ)*(dTauCZ/MATT15TAUCZ)*pow(body[iaBody[0]].dRotRate/MATT15OMEGASUN,3);
+    }
+
+    return -dDJDt; // Return positive amount of lost angular momentum
+  }
   // No magnetic braking
   else
   {
     return 0.0;
   }
 
+}
+
+/*! Compute the change in rotation rate when the radius of gyration changes via conservation
+ * of angular momentum:
+ * dw/dt = -2 dRG/dt * w/RG
+ */
+double fdDRotRateDtRadGyra(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dDRGDt;
+
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
+  // is likely locked to the disk rotation (Kevin Covey's suggestion).
+  // Also, only applies when you're using a stellar model!
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+    return 0.0;
+  }
+
+  // Compute the instataneous change in stellar radius
+  dDRGDt = fdDRadGyraDtStellar(body,system,iaBody);
+
+  return -2.0*dDRGDt*body[iaBody[0]].dRotRate/body[iaBody[0]].dRadGyra;
 }
 
 /*! Compute the change in rotation rate when the radius changes via conservation
@@ -1156,8 +1316,7 @@ double fdDRotRateDtCon(BODY *body,SYSTEM *system,int *iaBody) {
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
   // Also, only applies when you're using a stellar model!
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC || body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return 0.0;
   }
 
@@ -1176,12 +1335,10 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
   // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC)
-  {
+  if(body[iaBody[0]].dAge <= 1.e6 * YEARSEC) {
     return 0.0;
   }
-  else
-  {
+  else {
     // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
     dDJDt = -fdDJDtMagBrakingStellar(body,system,iaBody);
 
@@ -1197,26 +1354,9 @@ double fdDRotRateDtMagBrake(BODY *body,SYSTEM *system,int *iaBody) {
  */
 double fdDRotRateDt(BODY *body,SYSTEM *system,int *iaBody) {
 
-  // Contributions due to contraction and magnetic braking
-  // dw_net/dt = dw_contraction/dt + dw_mag_braking/dt
-  return fdDRotRateDtCon(body,system,iaBody) + fdDRotRateDtMagBrake(body,system,iaBody);
-}
-
-double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
-  double foo;
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
-    foo = fdTemperatureFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
-    if (!isnan(foo)) return foo;
-    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge,body[iaBody[0]].dMass);
-    if (!isnan(foo)) return foo;
-    else body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-  }
-  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE || body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST)
-    return body[iaBody[0]].dTemperature;
-  else
-    return 0;
+  // Contributions due to contraction, r_g changes, and magnetic braking via chain rule
+  // dw_net/dt = dw_contraction/dt + dw_mag_braking/dt + dw_rg_changes/dt
+  return fdDRotRateDtCon(body,system,iaBody) + fdDRotRateDtMagBrake(body,system,iaBody) + fdDRotRateDtRadGyra(body,system,iaBody);
 }
 
 double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
@@ -1244,6 +1384,26 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
   double R = fdBaraffe(STELLAR_R, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
     return R;
+  else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN)
+    return NAN;
+  else {
+    if (iError == STELLAR_ERR_OUTOFBOUNDS_LO)
+      fprintf(stderr,"ERROR: Out of bounds (low) in fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_FILE)
+      fprintf(stderr,"ERROR: File access error in routine fdBaraffe().\n");
+    else if (iError == STELLAR_ERR_BADORDER)
+      fprintf(stderr,"ERROR: Bad interpolation order in routine fdBaraffe().\n");
+    else
+      fprintf(stderr,"ERROR: Undefined error in fdBaraffe().\n");
+    exit(EXIT_INT);
+  }
+}
+
+double fdRadGyraFunctionBaraffe(double dAge, double dMass) {
+  int iError;
+  double rg = fdBaraffe(STELLAR_RG, dAge, dMass, 3, &iError);
+  if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR))
+    return rg;
   else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN)
     return NAN;
   else {
@@ -1307,6 +1467,15 @@ double fdRadiusFunctionProximaCen(double dAge, double dMass) {
   else {
     return L;
   }
+}
+
+/* Compute the convective turnover timescale (in seconds) based on Equation 36
+   from Cranmer and Saar 2011.  This equation is valid for 3300 <= Teff <= 7000 K,
+   which pretty much brackets all stellar evolution models considered in stellar.
+*/
+double fdCranmerSaar2011TauCZ(double Teff) {
+  double tau = 314.24*exp(-(Teff/1952.5) - pow((Teff/6250.0),18)) + 0.002;
+  return tau*86400.0;
 }
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

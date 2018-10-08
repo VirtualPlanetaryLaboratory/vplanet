@@ -306,6 +306,7 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_26ALNUMMAN          1118
 #define OUT_26ALNUMCORE         1119
 #define OUT_26ALTIME            1120
+#define OUT_26ALPOWERTOT        1121
 
 #define OUT_40KPOWERMAN	        1125
 #define OUT_40KPOWERCORE        1126
@@ -321,6 +322,7 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_40KPOWERCRUST       1136
 #define OUT_40KMASSCRUST        1137
 #define OUT_40KNUMCRUST         1138
+#define OUT_40KPOWERTOT         1139
 
 #define OUT_232THPOWERMAN       1140
 #define OUT_232THPOWERCORE      1141
@@ -336,6 +338,7 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_232THPOWERCRUST     1151
 #define OUT_232THMASSCRUST      1152
 #define OUT_232THNUMCRUST       1153
+#define OUT_232THPOWERTOT       1154
 
 #define OUT_238UPOWERMAN        1155
 #define OUT_238UPOWERCORE       1156
@@ -351,6 +354,7 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_238UPOWERCRUST      1166
 #define OUT_238UMASSCRUST       1167
 #define OUT_238UNUMCRUST        1168
+#define OUT_238UPOWERTOT        1169
 
 #define OUT_235UPOWERMAN        1170
 #define OUT_235UPOWERCORE       1171
@@ -366,6 +370,7 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_235UPOWERCRUST      1186
 #define OUT_235UMASSCRUST       1187
 #define OUT_235UNUMCRUST        1188
+#define OUT_235UPOWERTOT        1189
 
 #define OUT_RADPOWERMAN         1190
 #define OUT_RADPOWERCORE        1191

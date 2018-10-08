@@ -42,6 +42,7 @@
 #define OUT_ZOBL                517
 
 #define OUT_RADIUS              520
+#define OUT_RADGYRA             521
 #define OUT_ROTANGMOM		530
 #define OUT_ROTKINENERGY        535
 #define OUT_ROTVEL		540

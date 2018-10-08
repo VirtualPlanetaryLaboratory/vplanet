@@ -45,10 +45,10 @@ double fdReturnOutputZero(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int
 }
 
 double fndUpdateFunctionTiny(BODY *body,SYSTEM *system,int *iaBody) {
-  return TINY;
+  return dTINY;
 }
 
-// Reset function pointer to return TINY
+// Reset function pointer to return dTINY
 void SetDerivTiny(fnUpdateVariable ***fnUpdate,int iBody,int iVar,int iEqn) {
   fnUpdate[iBody][iVar][iEqn] = &fndUpdateFunctionTiny;
 }
@@ -137,6 +137,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdatePinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc          = malloc(iNumBodies*sizeof(fnFinalizeUpdateQincModule));
   module->fnFinalizeUpdateRadius        = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRadGyra       = malloc(iNumBodies*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot           = malloc(iNumBodies*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi          = malloc(iNumBodies*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateLostAngMom    = malloc(iNumBodies*sizeof(fnFinalizeUpdateLostAngMomModule));
@@ -273,6 +274,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateQinc[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateQincModule));
 
   module->fnFinalizeUpdateRadius[iBody]           = malloc(iNumModules*sizeof(fnFinalizeUpdateRadiusModule));
+  module->fnFinalizeUpdateRadGyra[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdateRadGyraModule));
   module->fnFinalizeUpdateRot[iBody]              = malloc(iNumModules*sizeof(fnFinalizeUpdateRotModule));
   module->fnFinalizeUpdateSemi[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateSemiModule));
   module->fnFinalizeUpdateSurfaceWaterMass[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfaceWaterMassModule));
@@ -343,6 +345,7 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateQinc[iBody][iModule]             = &FinalizeUpdateNULL;
 
     module->fnFinalizeUpdateRadius[iBody][iModule]           = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateRadGyra[iBody][iModule]          = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateRot[iBody][iModule]              = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSemi[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule] = &FinalizeUpdateNULL;
@@ -572,6 +575,11 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"RADHEAT");
   }
+  if (iBitSum & SPINBODY) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"SPINBODY");
+  }
   if (iBitSum & STELLAR) {
     if (space) fprintf(file," ");
     space = 1;
@@ -582,12 +590,6 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"THERMINT");
   }
-  if (iBitSum & SPINBODY) {
-    if (space) fprintf(file," ");
-    space = 1;
-    fprintf(file,"SPINBODY");
-  }
-
 }
 
 void InitializeBodyModules(BODY **body,int iNumBodies) {
@@ -954,7 +956,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
 
       // if there is an envelope/ocean, we calculate ImK2Env/ImK2Ocean
       if (body[iBody].bEnv && (body[iBody].dTidalQ != body[iBody].dTidalQEnv)) {
-        fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+        if (control->Io.iVerbose > 1) {
+          fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQEnv;
         body[iBody].dK2 = body[iBody].dK2Env;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
@@ -1512,7 +1516,7 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fndUpdateFunctionTiny;
   //     }
   //
-  //     dMinOrbPeriod = HUGE;
+  //     dMinOrbPeriod = dHUGE;
   //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
   //       // Calculate the minimum Orbital period
   //       if (body[iBody].dOrbPeriod < dMinOrbPeriod) {
@@ -1564,19 +1568,25 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
 
     // We think there is an envelope, but there isnt!
     if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
-      fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      }
       body[iBody].bEnv = 0;
 
       // is there an ocean? lets set tidalq to that!
       if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        fprintf(stderr," dTidalQOcean,\n");
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQOcean,\n");
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQOcean;
         body[iBody].dK2 = body[iBody].dK2Ocean;
         body[iBody].dImK2 = body[iBody].dImK2Ocean;
       }
       // there is not ocean, so lets use dTidalQRock!
       else {
-        fprintf(stderr," dTidalQRock.\n");
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQRock.\n");
+        }
         body[iBody].dTidalQ = body[iBody].dTidalQRock;
         body[iBody].dK2 = body[iBody].dK2Rock;
         body[iBody].dImK2 = body[iBody].dImK2Rock;
@@ -1584,10 +1594,13 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,S
     }
     // we think theres an ocean, but there isnt!!
     else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      }
       body[iBody].dTidalQ = body[iBody].dTidalQRock;
       body[iBody].dK2 = body[iBody].dK2Rock;
       body[iBody].dImK2 = body[iBody].dImK2Rock;
+      body[iBody].bOcean = 0;
     }
   }
 }
@@ -1600,7 +1613,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
 
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
-  // If oceans or envelope weren't initially set to be modeled, their Q == -HUGE
+  // If oceans or envelope weren't initially set to be modeled, their Q == -dHUGE
   int bOceans = 0;
   int bEnv = 0;
 

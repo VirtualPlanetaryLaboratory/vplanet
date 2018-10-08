@@ -30,11 +30,11 @@ int bFloatComparison(double x, double y) {
 
   dRel_Tol = 5*dBigger*DBL_EPSILON;
 
-  if (dRel_Tol < dTINY) {
-    dRel_Tol = dTINY;
+  if (dRel_Tol <= 10*dTINY) {
+    dRel_Tol = 10*dTINY;
   }
 
-  if (fabs(x - y) < dRel_Tol) {
+  if (fabs(x - y) <= dRel_Tol) {
     return 1;
   } else {
     return 0;

@@ -132,9 +132,11 @@ void ReadMagBrakingModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
       body[iFile-1].iMagBrakingModel = STELLAR_DJDT_NONE;
     } else if (!memcmp(sLower(cTmp),"sk",2)) {
       body[iFile-1].iMagBrakingModel = STELLAR_DJDT_SK72;
+    } else if (!memcmp(sLower(cTmp),"ma",2)) {
+      body[iFile-1].iMagBrakingModel = STELLAR_DJDT_MA15;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, or NONE.\n",options->cName,cTmp);
+	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, MATT, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -1208,6 +1210,8 @@ double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
 double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
+  double dTauCZ;
+  double dT0;
 
   // No magnetic braking
   if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE) {
@@ -1229,6 +1233,10 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
                           * pow(body[iaBody[0]].dRadius, 16. / 3.) * pow(body[iaBody[0]].dMass, -2. / 3);
       }
     }
+    else {
+      fprintf(stderr,"ERROR! Must set iWindModel to reiners if using reiners magnetic braking model!\n");
+      exit(1);
+    }
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }
@@ -1240,6 +1248,24 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
     dDJDt *= body[iaBody[0]].dRotRate*body[iaBody[0]].dRotRate*body[iaBody[0]].dRotRate;
 
     return dDJDt; // Return positive amount of los angular momentum
+  }
+  else if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
+
+    // Compute convective turnover timescale and normalized torque
+    dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+    dT0 = MATT15T0*pow(body[iaBody[0]].dRadius/RSUN,3.1)*sqrt(body[iaBody[0]].dMass/MSUN);
+
+    // Is the magnetic braking saturated?
+    if(MATT15X <= body[iaBody[0]].dRotRate*dTauCZ/(MATT15OMEGASUN*MATT15TAUCZ)) {
+      // Saturated
+      dDJDt = -dT0*MATT15X*MATT15X*(body[iaBody[0]].dRotRate/MATT15OMEGASUN);
+    }
+    else {
+      // Unsaturated
+      dDJDt = -dT0*(dTauCZ/MATT15TAUCZ)*(dTauCZ/MATT15TAUCZ)*pow(body[iaBody[0]].dRotRate/MATT15OMEGASUN,3);
+    }
+
+    return -dDJDt; // Return positive amount of lost angular momentum
   }
   // No magnetic braking
   else {
@@ -1425,6 +1451,15 @@ double fdRadiusFunctionProximaCen(double dAge, double dMass) {
   else {
     return L;
   }
+}
+
+/* Compute the convective turnover timescale (in seconds) based on Equation 36
+   from Cranmer and Saar 2011.  This equation is valid for 3300 <= Teff <= 7000 K,
+   which pretty much brackets all stellar evolution models considered in stellar.
+*/
+double fdCranmerSaar2011TauCZ(double Teff) {
+  double tau = 314.24*exp(-(Teff/1952.5) - pow((Teff/6250.0),18)) + 0.002;
+  return tau*86400.0;
 }
 
 double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {

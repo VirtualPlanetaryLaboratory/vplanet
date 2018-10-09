@@ -17,7 +17,6 @@ saTidePerts    b        # Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel proximacen              # Stellar evolutin model: `baraffe` or `none`
-sWindModel    none                     # Stellar wind model: `reiners` or `none`
 dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 saOutputOrder    Time #-RotRate -Luminosity #-Radius

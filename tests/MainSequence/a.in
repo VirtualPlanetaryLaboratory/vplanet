@@ -10,4 +10,4 @@ sStellarModel       baraffe
 sMagBrakingModel    reiners
 
 # Output
-saOutputOrder Time -RotPer -TotEn -TotAngMom -Luminosity -Radius Temperature
+saOutputOrder Time -RotPer -TotEn -TotAngMom -Luminosity -Radius Temperature -TotEn -TotAngMom

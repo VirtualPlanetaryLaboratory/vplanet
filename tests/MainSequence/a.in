@@ -3,6 +3,7 @@ sName               a		                  # Body's name
 saModules	    stellar                     # Modules to apply, exact spelling required
 
 # Physical Parameters
+dAge                2e6
 dMass               0.1
 
 # Stellar Parameters
@@ -10,4 +11,4 @@ sStellarModel       baraffe
 sMagBrakingModel    reiners
 
 # Output
-saOutputOrder Time -RotPer -TotEn -TotAngMom -Luminosity -Radius Temperature -TotEn -TotAngMom
+saOutputOrder Time -RotPer -Luminosity -Radius Temperature -TotEn -TotAngMom

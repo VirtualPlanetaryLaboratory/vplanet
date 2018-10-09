@@ -16,18 +16,18 @@ def test_MainSequence():
     # Check
 
     # Star a
-    assert np.isclose(output.log.final.a.Luminosity, 0.000869)
-    assert np.isclose(output.log.final.a.Temperature, 2811.000999)
-    assert np.isclose(output.log.final.a.Radius, 0.124)
-    assert np.isclose(output.log.final.a.LostAngMom, 1.231953e+40, rtol=1.0e-4)
-    assert np.isclose(output.log.final.a.RotPer, 2.130347, rtol=1.0e-4)
+    assert np.isclose(output.log.final.a.Luminosity, 0.002445)
+    assert np.isclose(output.log.final.a.Temperature, 2992.330343)
+    assert np.isclose(output.log.final.a.Radius, 0.184360)
+    assert np.isclose(output.log.final.a.LostAngMom, 9.438637e+41, rtol=1.0e-4)
+    assert np.isclose(output.log.final.a.RotPer, 0.299253, rtol=1.0e-4)
 
     # Star b
-    assert np.isclose(output.log.final.b.Luminosity, 1.021926, rtol=1.0e-4)
-    assert np.isclose(output.log.final.b.Temperature, 5730.814496)
-    assert np.isclose(output.log.final.b.Radius, 1.026419, rtol=1.0e-4)
-    assert np.isclose(output.log.final.b.LostAngMom, 4.94742e+42, rtol=1.0e-4)
-    assert np.isclose(output.log.final.b.RotPer, 32.262612, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.Luminosity, 0.689088, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.Temperature, 5539.190016)
+    assert np.isclose(output.log.final.b.Radius, 0.902638, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.LostAngMom, 5.085997e+43, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.RotPer, 3.075674, rtol=1.0e-4)
 
     # Energy
     Einit = output.a.TotEnergy[0]
@@ -38,8 +38,8 @@ def test_MainSequence():
     Lfinal = output.a.TotAngMom[-1]
 
     # Check conservation
-    assert np.isclose(Einit, Efinal, rtol=1e-4)
-    assert np.isclose(Linit, Lfinal, rtol=1e-4)
+    assert np.isclose(Einit, Efinal, rtol=1e-3)
+    assert np.isclose(Linit, Lfinal, rtol=1e-3)
 
 if __name__ == "__main__":
     test_MainSequence()

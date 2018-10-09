@@ -3105,7 +3105,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCJUMPMAN].iNum = 1;
   output[OUT_VISCJUMPMAN].iModuleBit = THERMINT;
   fnWrite[OUT_VISCJUMPMAN] = &fvWriteViscJumpMan;
-
+  /* BLUMan */
   sprintf(output[OUT_BLUMAN].cName,"BLUMan");
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
   sprintf(output[OUT_BLUMAN].cNeg,"km");
@@ -3114,7 +3114,6 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLUMAN].iNum = 1;
   output[OUT_BLUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_BLUMAN] = &fvWriteBLUMan;
-
   /* BLLMan */
   sprintf(output[OUT_BLLMAN].cName,"BLLMan");
   sprintf(output[OUT_BLLMAN].cDescr,"Boundary Layer Thickness Lower Mantle");

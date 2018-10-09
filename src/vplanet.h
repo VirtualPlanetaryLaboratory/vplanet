@@ -132,7 +132,7 @@
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
-#define MAXARRAY      64    /* Maximum number of options in
+#define MAXARRAY      128    /* Maximum number of options in
 			     * an option array */
 #define NUMOPT	      1000  /* Number of options that could be
 			     * in MODULE */
@@ -347,7 +347,6 @@ struct BODY {
 
   /* BINARY parameters */
   int bBinary;           /** Apply BINARY module? */
-  int bBinaryUseMatrix;  /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;            /**< Guiding Radius,initially equal to dSemi */
   double dCBPR;          /** < CBP orbital radius */
   double dCBPZ;          /** < CBP height above/below the orbital plane */

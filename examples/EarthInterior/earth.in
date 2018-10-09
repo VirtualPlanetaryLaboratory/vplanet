@@ -27,7 +27,7 @@ d232ThPowerCrust  -1
 d235UPowerMan     -1
 d235UPowerCore	  -1
 d235UPowerCrust	  -1
-### 238U	   
+### 238U
 d238UPowerMan	  -1
 d238UPowerCore	  -1
 d238UPowerCrust	  -1
@@ -36,13 +36,13 @@ d238UPowerCrust	  -1
 dTMan          3000
 dTCore         6000
 
-#Output  -HflowSurf
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
     -HflowCMB -HflowSecMan $
-    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscJumpMan $
+    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
     -MeltMassFluxMan -FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
+    -BLUMan -BLLMan $
     -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
     -238UPowerCrust -238UNumCrust -238UMassCrust $
     -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $

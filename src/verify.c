@@ -20,14 +20,21 @@
 
 /*! Check to see if two decimals numbers are equal (1) or not (0) */
 int bFloatComparison(double x, double y) {
-  /*double bigger;
-  if (x>y) {
-    bigger = x;
+  double dBigger;
+  double dRel_Tol;
+  if (fabs(x)>fabs(y)) {
+    dBigger = fabs(x);
   } else {
-    bigger = y;
-  }*/
+    dBigger = fabs(y);
+  }
 
-  if (fabs(x - y) < 2.93873605221803725e-39) {
+  dRel_Tol = 5*dBigger*DBL_EPSILON;
+
+  if (dRel_Tol <= 10*dTINY) {
+    dRel_Tol = 10*dTINY;
+  }
+
+  if (fabs(x - y) <= dRel_Tol) {
     return 1;
   } else {
     return 0;

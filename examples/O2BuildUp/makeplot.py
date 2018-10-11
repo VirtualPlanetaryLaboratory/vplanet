@@ -173,6 +173,6 @@ ax[0].set_title("Water Lost (TO)", fontsize=20)
 ax[1].set_title(r"$\mathrm{O}_2$ buildup (bar)", fontsize=20)
 
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('O2BuildUp.pdf')
+    fig.savefig('O2BuildUp.pdf')
 if (sys.argv[1] == 'png'):
-    plt.savefig('O2BuildUp.png')
+    fig.savefig('O2BuildUp.png')

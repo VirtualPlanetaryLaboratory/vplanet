@@ -15,8 +15,8 @@ def test_AtMescKepler36():
 
     # Run our comparisons
     assert np.isclose(output.log.final.star.LXUVStellar, 3.120390e+21)
-    assert np.isclose(output.log.final.p10.EnvelopeMass, 2.977950)
-    assert np.isclose(output.log.final.p10.Radius, 3.259816e+07)
+    assert np.isclose(output.log.final.p10.EnvelopeMass, 2.99612)
+    assert np.isclose(output.log.final.p10.Radius, 32662670.0)
 
 if __name__ == "__main__":
     test_AtMescKepler36()

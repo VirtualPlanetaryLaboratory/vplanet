@@ -49,4 +49,4 @@ Expected output
    habitable zone, causing the loss of surface water (left) and the
    buildup of atmospheric oxygen (right). See :cite:`LugerBarnes2015`
    for more details.
-.. todo:: **@rodluger** Investigate the single outlier in the water loss plot of the `o2buildup` example.
+

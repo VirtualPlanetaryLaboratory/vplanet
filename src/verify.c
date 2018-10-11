@@ -62,8 +62,8 @@ void OverwriteExit(char cName[],char cFile[]) {
 
 /* XXX Should these be iLine+1? */
 void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1+1);
+  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2+1);
   exit(EXIT_INPUT);
 }
 
@@ -118,6 +118,25 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
         fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
     }
     body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
+  }
+}
+
+/**
+  Verify the user did not use the same name for two bodies.
+  */
+
+void VerifyNames(BODY *body,CONTROL *control,OPTIONS *options) {
+  int iBody,jBody;
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    for (jBody = iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+      if (strcmp(body[iBody].cName,body[jBody].cName) == 0) {
+        if (control->Io.iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Two bodies have the same name.\n");
+          DoubleLineExit(options[OPT_BODYNAME].cFile[iBody+1],options[OPT_BODYNAME].cFile[jBody+1],options[OPT_BODYNAME].iLine[iBody+1],options[OPT_BODYNAME].iLine[jBody+1]);
+        }
+      }
+    }
   }
 }
 
@@ -553,6 +572,8 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
 
 void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
   int iBody,iModule;
+
+  VerifyNames(body,control,options);
 
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);

@@ -2089,6 +2089,13 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile,options[OPT_OUTPUTORDER].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
 
+    if (iNumIndices >= MAXARRAY) {
+      if (iVerbose >= VERBERR) {
+        fprintf(stderr,"ERROR: Too many output options in file %s. Either reduce, or increase MAXARRAY in vplanet.h.\n",files->Infile[iFile].cIn);
+      }
+      exit(EXIT_INPUT);
+    }
+
     /* First remove and record negative signs */
     for (i=0;i<iNumIndices;i++) {
       if (saTmp[i][0] == 45) {

@@ -68,38 +68,46 @@ void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
 }
 
 void VerifyOrbitExit(char cName1[],char cName2[],char cFile1[],char cFile2[],int iLine1,int iLine2,int iVerbose) {
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",cName1,cName2);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+    fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
+    fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+  }
   exit(EXIT_INPUT);
 }
 
 void VerifyBodyExit(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2,int iVerbose) {
 
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s in same file.\n",cName1,cName2);
-  fprintf(stderr,"\tFile: %s, Lines: %d and %d\n",cFile,iLine1,iLine2);
+    fprintf(stderr,"\tFile: %s, Lines: %d and %d\n",cFile,iLine1,iLine2);
+  }
   exit(EXIT_INPUT);
 }
 
+/** Print three lines that are in conflict
+    Only called if iVerbose >= VERBERR
+*/
+
 void TripleLineExit(char cFile[],int iLine1,int iLine2,int iLine3) {
   fprintf(stderr,"\tFile: %s, Lines: %d, %d and %d.\n",cFile,iLine1,iLine2,iLine3);
-    exit(EXIT_INPUT);
+  exit(EXIT_INPUT);
 }
 
 /* Do we need both these? */
 void VerifyTripleExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set %s, %s, and %s simultaneously.\n",cName1,cName2,cName3);
-  TripleLineExit(cFile,iLine1,iLine2,iLine3);
+    TripleLineExit(cFile,iLine1,iLine2,iLine3);
+  }
 }
 
 void VerifyTwoOfThreeExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
 
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Can only set 2 of %s, %s, and %s.\n",cName1,cName2,cName3);
-  TripleLineExit(cFile,iLine1,iLine2,iLine3);
+    TripleLineExit(cFile,iLine1,iLine2,iLine3);
+  }
 }
 
 void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
@@ -561,7 +569,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     // If any body has an orbit related module initialized, we have orbiters!
-    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise) {
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
       control->bOrbiters = 1;
     }
 

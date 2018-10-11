@@ -129,6 +129,12 @@ void VerifyNames(BODY *body,CONTROL *control,OPTIONS *options) {
   int iBody,jBody;
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (strlen(body[iBody].cName) == 0) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"WARNING: No input to %s in file %s, defaulting to %d/\n",options[OPT_BODYNAME].cName,options[OPT_BODYNAME].cFile[iBody]+1,iBody);
+      }
+      sprintf(body[iBody].cName,"%d",iBody+1);
+    }
     for (jBody = iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
       if (strcmp(body[iBody].cName,body[jBody].cName) == 0) {
         if (control->Io.iVerbose >= VERBERR) {

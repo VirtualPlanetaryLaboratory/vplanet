@@ -569,7 +569,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     // If any body has an orbit related module initialized, we have orbiters!
-    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc) {
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
       control->bOrbiters = 1;
     }
 

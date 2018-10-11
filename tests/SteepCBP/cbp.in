@@ -10,7 +10,6 @@ dMass		0.0 			# Mass, negative -> Earth masses
 dFreeEcc        0.03                   # Free Eccentricity
 dFreeInc        0.3083                     # Free Inclination [deg]
 bHaltHolmanUnstable   1                   # End simulation if the CBP goes within the critical stability limit
-bBinaryUseMatrix      0                  # Use the matrix to solve for main variables or compute them on the fly?
 
 # Orbital Properties
 dSemi           0.7016		# Semi-major axis, negative -> AU

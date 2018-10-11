@@ -19,17 +19,27 @@
  */
 
 /*! Check to see if two decimals numbers are equal (1) or not (0) */
- int bFloatComparison(double x, double y)
- {
-   if(fabs(x - y) < TINY)
-   {
-     return 1;
-   }
-   else
-   {
-     return 0;
-   }
- }
+int bFloatComparison(double x, double y) {
+  double dBigger;
+  double dRel_Tol;
+  if (fabs(x)>fabs(y)) {
+    dBigger = fabs(x);
+  } else {
+    dBigger = fabs(y);
+  }
+
+  dRel_Tol = 5*dBigger*DBL_EPSILON;
+
+  if (dRel_Tol <= 10*dTINY) {
+    dRel_Tol = 10*dTINY;
+  }
+
+  if (fabs(x - y) <= dRel_Tol) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 /*
  * Exit Calls
@@ -493,7 +503,7 @@ void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTI
   int iBody;
 
   // Initially no lost angular momentum, energy
-  // Set to TINY, not 0 since these are integrated
+  // Set to dTINY, not 0 since these are integrated
   // and it being 0 can mess up the time step
   for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
   {

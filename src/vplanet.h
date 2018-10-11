@@ -132,14 +132,12 @@
 #define NAMELEN       100
 
 #define MAXFILES      24    /* Maximum number of input files */
-#define MAXARRAY      64    /* Maximum number of options in
+#define MAXARRAY      128    /* Maximum number of options in
 			     * an option array */
 #define NUMOPT	      1000  /* Number of options that could be
 			     * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an
 			     * input file */
-
-#define TINY          (1./HUGE)
 
 /* 0 => Not input by user, verify assigns default */
 #define EULER         1
@@ -232,6 +230,11 @@
 /* Now define the structs */
 
 #define MAXSPECIES       100
+
+/* Do not change these declarations */
+extern const double dHUGE;
+extern const double dTINY;
+/* Do not change these declarations */
 
 /* Forward declaration of structs.
 This is necessary in order to add pointers to structs into typedef'd functions */
@@ -344,7 +347,6 @@ struct BODY {
 
   /* BINARY parameters */
   int bBinary;           /** Apply BINARY module? */
-  int bBinaryUseMatrix;  /** Include eqns in matrix or solve for main variables on the fly? */
   double dR0;            /**< Guiding Radius,initially equal to dSemi */
   double dCBPR;          /** < CBP orbital radius */
   double dCBPZ;          /** < CBP height above/below the orbital plane */
@@ -2006,13 +2008,13 @@ struct MODULE {
  * integration. */
 typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,double*,int);
 
-
 /*
  * Other Header Files - These are primarily for function declarations
  */
 
 #include <assert.h>
 #include <time.h>
+#include <float.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

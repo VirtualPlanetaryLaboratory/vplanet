@@ -5,8 +5,8 @@ To install the development version of VPLANET, open a terminal and run
 
 .. code-block:: bash
 
-   git clone https://github.com/VirtualPlanetaryLaboratory/vplanet-private.git
-   cd vplanet-private
+   git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+   cd vplanet
    make
 
 Currently, the installer doesn't add the VPLANET executable to your :code:`PATH` variable, so

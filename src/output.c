@@ -44,7 +44,7 @@ void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0)
+  if (control->Evolve.dTime > 0 && control->Evolve.nSteps > 0)
     *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
   else
     *dTmp = 0;

@@ -1021,7 +1021,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MEANL].iNum = 1;
   output[OUT_MEANL].bNeg = 1;
   output[OUT_MEANL].dNeg = 1/DEGRAD;
-  output[OUT_MEANL].iModuleBit = SPINBODY + DISTORB;
+  output[OUT_MEANL].iModuleBit = SPINBODY;
   fnWrite[OUT_MEANL] = &WriteMeanLongitude;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");

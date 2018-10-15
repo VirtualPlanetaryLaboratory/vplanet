@@ -336,6 +336,9 @@ void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbo
 void AddOptionString(char cFile[],char cOption[],char cInput[],int *iLine,int iVerbose) {
   char cTmp[OPTLEN],cLine[LINE];
 
+  memset(cLine,'\0',LINE);
+  memset(cTmp,'\0',OPTLEN);
+
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
   sscanf(cLine,"%s %s",cTmp,cInput);
 }
@@ -1346,7 +1349,11 @@ void ReadBodyName(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   if (lTmp >= 0) {
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    strcpy(body[iFile-1].cName,cTmp);
+    if (strlen(cTmp) > 0) {
+      strcpy(body[iFile-1].cName,cTmp);
+    } else {
+      sprintf(body[iFile-1].cName,"%d",iFile);
+    }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -2081,6 +2088,13 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
 
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile,options[OPT_OUTPUTORDER].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
+
+    if (iNumIndices >= MAXARRAY) {
+      if (iVerbose >= VERBERR) {
+        fprintf(stderr,"ERROR: Too many output options in file %s. Either reduce, or increase MAXARRAY in vplanet.h.\n",files->Infile[iFile].cIn);
+      }
+      exit(EXIT_INPUT);
+    }
 
     /* First remove and record negative signs */
     for (i=0;i<iNumIndices;i++) {

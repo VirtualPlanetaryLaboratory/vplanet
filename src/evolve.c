@@ -213,7 +213,6 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   	      // The parameter is controlled by a time derivative
   	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
           if (!bFloatComparison(update[iBody].daDerivProc[iVar][iEqn],0.0) && !bFloatComparison(*(update[iBody].pdVar[iVar]),0.0)) {
-  	        //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) { // Obselete float comparison
   	      	dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
   		      if (dMinNow < dMin)
   		        dMin = dMinNow;
@@ -307,8 +306,9 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
      *dDt = AssignDt(*dDt,(dTimeOut - evolve->dTime),evolve->dEta);
-  } else
+  } else {
     *dDt = evolve->dTimeStep;
+  }
 
   evolve->dCurrentDt = *dDt;
 

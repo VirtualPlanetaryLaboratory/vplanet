@@ -22,7 +22,6 @@ saTidePerts	secondary		# Body name(s) of tidal perturbers
 
 # STELLAR parameters
 sStellarModel baraffe                     # Stellar evolutin model: `baraffe` or `none`
-sWindModel    none                     # Stellar wind model: `reiners` or `none`
 dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 
 # Some options are allowed to only appear in one file, but it can be primary or body.

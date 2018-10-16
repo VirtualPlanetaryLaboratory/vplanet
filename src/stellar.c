@@ -393,7 +393,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
 }
 
 void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
-  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
+  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 5;
   update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;
@@ -402,7 +402,7 @@ void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDA
 }
 
 void VerifyLostEngStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
-  update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
+  update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 5;
   update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngStellar][0] = iBody;
@@ -1198,6 +1198,7 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 /*! Compute total energy lost due to stellar evolution
+  XXX broken due to PotConStellar ???
  */
 double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody) + fdDEDtRotRadGyraStellar(body,system,iaBody);

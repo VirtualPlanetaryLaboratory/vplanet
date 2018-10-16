@@ -10,16 +10,16 @@ star = """#
 sName	                  s%02d
 saModules	              stellar
 dMass                     %.5f
-dAge                      1e7
+dAge                      5e6
 sStellarModel             baraffe
 dSatXUVFrac               1.e-3
 dSatXUVTime               -0.1
-saOutputOrder Age -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+saOutputOrder Time -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
 """
 
 system = """#
 sSystemName               system
-iVerbose                  5
+iVerbose                  0
 bOverwrite                1
 saBodyFiles               %s
 sUnitMass                 solar
@@ -33,7 +33,7 @@ bDoForward                1
 bVarDt                    1
 dEta                      0.1
 dStopTime                 5e9
-dOutputTime               5e6
+dOutputTime               5e7
 """
 
 
@@ -57,14 +57,14 @@ def run(masses):
     write_in(masses)
     subprocess.call(['vplanet', 'vpl.in'])
     output = vpl.GetOutput()
-    age = output.bodies[0].Age
+    time = output.bodies[0].Time
     radius = [output.bodies[n].Radius for n in range(len(masses))]
     temp = [output.bodies[n].Temperature for n in range(len(masses))]
     lum = [output.bodies[n].Luminosity for n in range(len(masses))]
     lxuv = [output.bodies[n].LXUVTot for n in range(len(masses))]
     prot = [output.bodies[n].RotPer for n in range(len(masses))]
     rg = [output.bodies[n].RadGyra for n in range(len(masses))]
-    return age, radius, lum, lxuv, temp, prot, rg
+    return time, radius, lum, lxuv, temp, prot, rg
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -80,22 +80,24 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
 fig, ax = pl.subplots(nrows=3, ncols=2, figsize=(10, 6))
 fig.subplots_adjust(right=0.825, wspace=0.30)
 
-masses = np.array([0.1, 0.2, 0.4, 0.6, 0.8, 1.0])
-age, radius, lum, lxuv, temp, prot, rg = run(masses)
+masses = np.array([0.08, 0.25, 0.5, 0.75, 1.0])
+time, radius, lum, lxuv, temp, prot, rg = run(masses)
 
+# Plot stars that survived
 for n, m in enumerate(masses):
     # Top row: radius, legend
-    ax[0, 0].plot(age, radius[n], label="%.1f" % m, color=cmap(m))
+    ax[0, 0].plot(time, radius[n], label="%.2f" % m, color=cmap(0.7*m))
     # Dummy data for legend
-    ax[0, 1].plot([101], [100], label="%.1f" % m, color=cmap(m))
+    ax[0, 1].plot([101], [100], label="%.2f" % m, color=cmap(0.7*m))
 
     # Middle row: rg, Teff
-    ax[1, 0].plot(age, rg[n], label="%.1f" % m, color=cmap(m))
-    ax[1, 1].plot(age, temp[n], label="%.1f" % m, color=cmap(m))
+    ax[1, 0].plot(time, rg[n], label="%.2f" % m, color=cmap(0.7*m))
+    ax[1, 1].plot(time, temp[n], label="%.2f" % m, color=cmap(0.7*m))
 
     # Bottom row: L, Lxuv
-    ax[2, 0].plot(age, lum[n], label="%.1f" % m, color=cmap(m))
-    ax[2, 1].plot(age, lxuv[n]/lum[n], label="%.1f" % m, color=cmap(m))
+    ax[2, 0].plot(time, lum[n], label="%.2f" % m, color=cmap(0.7*m))
+    ax[2, 1].plot(time, lxuv[n]/lum[n], label="%.2f" % m, color=cmap(0.7*m))
+    print(lxuv[n]/lum[n])
 
 for axis in ax.flatten():
     axis.set_xscale('log')
@@ -110,7 +112,7 @@ ax[0, 0].set_ylabel(r'Radius ($\mathrm{R}_\odot$)', fontsize=14)
 ax[1, 0].set_ylabel(r'Radius of Gyration', fontsize=14)
 ax[2, 0].set_ylabel(r'Luminosity ($\mathrm{L}_\odot$)', fontsize=14)
 ax[1, 1].set_ylabel(r'Temperature ($\mathrm{K}$)', fontsize=14)
-ax[2, 1].set_ylabel(r'L$_{\mathrm{XUV}}/$L$_{\mathrm{Bol}}$', fontsize=14)
+ax[2, 1].set_ylabel(r'L$_{\mathrm{XUV}} ($\mathrm{L}_\odot$)', fontsize=14)
 leg = ax[0, 1].legend(loc=(-0.11, 0.0), title='Mass ($\mathrm{M}_\odot$)',
                       ncol=3)
 leg.get_title().set_fontweight('bold')

@@ -1198,7 +1198,6 @@ double fdDEDtRotBrakeStellar(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 /*! Compute total energy lost due to stellar evolution
-  XXX broken due to PotConStellar ???
  */
 double fdDEDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   return fdDEDtRotBrakeStellar(body,system,iaBody) + fdDEDtRotConStellar(body,system,iaBody) + fdDEDtPotConStellar(body,system,iaBody) + fdDEDtRotRadGyraStellar(body,system,iaBody);

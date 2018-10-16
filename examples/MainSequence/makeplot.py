@@ -5,6 +5,7 @@ import vplot as vpl
 import matplotlib.pyplot as pl
 cmap = pl.get_cmap('inferno')
 import sys
+import os
 
 star = """#
 sName	                  s%02d
@@ -31,9 +32,9 @@ iDigits                   6
 dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
-dEta                      0.1
+dEta                      0.01
 dStopTime                 5e9
-dOutputTime               5e7
+dOutputTime               1.0e6
 """
 
 
@@ -76,6 +77,13 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
+# Run, load in 1.3 M sun data (load separately because it leaves main sequence)
+os.chdir("M1.3") # cd into dead star dir
+subprocess.call(['vplanet', 'vpl.in'])
+os.chdir("..") # cd back!
+
+dead = np.genfromtxt("M1.3/system.a.forward", delimiter=" ")
+
 # Create the figure
 fig, ax = pl.subplots(nrows=3, ncols=2, figsize=(10, 6))
 fig.subplots_adjust(right=0.825, wspace=0.30)
@@ -96,8 +104,23 @@ for n, m in enumerate(masses):
 
     # Bottom row: L, Lxuv
     ax[2, 0].plot(time, lum[n], label="%.2f" % m, color=cmap(0.7*m))
-    ax[2, 1].plot(time, lxuv[n]/lum[n], label="%.2f" % m, color=cmap(0.7*m))
-    print(lxuv[n]/lum[n])
+    ax[2, 1].plot(time, lxuv[n], label="%.2f" % m, color=cmap(0.7*m))
+
+# Add in dead star
+# Top row: radius, legend
+m = 1.3
+time = dead[:,0]
+ax[0, 0].plot(time, dead[:,4], label="%.2f" % m, color=cmap(0.7*m))
+# Dummy data for legend
+ax[0, 1].plot([101], [100], label="%.2f" % m, color=cmap(0.7*m))
+
+# Middle row: rg, Teff
+ax[1, 0].plot(time, dead[:,8], label="%.2f" % m, color=cmap(0.7*m))
+ax[1, 1].plot(time, dead[:,5], label="%.2f" % m, color=cmap(0.7*m))
+
+# Bottom row: L, Lxuv
+ax[2, 0].plot(time, dead[:,3], label="%.2f" % m, color=cmap(0.7*m))
+ax[2, 1].plot(time, dead[:,7], label="%.2f" % m, color=cmap(0.7*m))
 
 for axis in ax.flatten():
     axis.set_xscale('log')
@@ -112,8 +135,8 @@ ax[0, 0].set_ylabel(r'Radius ($\mathrm{R}_\odot$)', fontsize=14)
 ax[1, 0].set_ylabel(r'Radius of Gyration', fontsize=14)
 ax[2, 0].set_ylabel(r'Luminosity ($\mathrm{L}_\odot$)', fontsize=14)
 ax[1, 1].set_ylabel(r'Temperature ($\mathrm{K}$)', fontsize=14)
-ax[2, 1].set_ylabel(r'L$_{\mathrm{XUV}} ($\mathrm{L}_\odot$)', fontsize=14)
-leg = ax[0, 1].legend(loc=(-0.11, 0.0), title='Mass ($\mathrm{M}_\odot$)',
+ax[2, 1].set_ylabel(r'L$_{\mathrm{XUV}}$ ($\mathrm{L}_\odot$)', fontsize=14)
+leg = ax[0, 1].legend(loc=(-0.2, 0.15), title=r'Mass ($\mathrm{M}_\odot$)',
                       ncol=3)
 leg.get_title().set_fontweight('bold')
 

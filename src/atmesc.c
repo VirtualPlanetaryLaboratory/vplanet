@@ -2217,7 +2217,7 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) {
-      printf("%d\n",output[iOut].iNum);
+      printf("%d\n",iOut);
       fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }

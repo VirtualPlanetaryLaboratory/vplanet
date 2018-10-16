@@ -19,6 +19,10 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     exit(1)
 
 out = vplot.GetOutput()
+# Print final state
+print('Final: t=%.3f TUMan=%.1f TMan=%.1f TCMB=%.1f HflowUMan=%.1f HflowCMB=%.1f RadPowerMan=%.1f RadPowerCore=%.1f MagMom=%.1f RIC=%.1f'%(out.earth.Time[-1],out.earth.TUMan[-1],out.earth.TMan[-1],out.earth.TCMB[-1],out.earth.HflowUMan[-1],out.earth.HflowCMB[-1],out.earth.RadPowerMan[-1],out.earth.RadPowerCore[-1],out.earth.MagMom[-1],out.earth.RIC[-1]))
+
+# Plots
 rows=3
 cols=2
 # Mantle Figure

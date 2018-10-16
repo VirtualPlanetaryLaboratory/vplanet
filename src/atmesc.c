@@ -1017,6 +1017,8 @@ Initializes several helper variables and properties used in the integration.
 */
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
+  body[iBody].dAge = body[0].dAge;
+
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
@@ -1212,6 +1214,12 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+  } else {
+    /* Must initialized the above values to avoid memory leaks. */
+    body[iBody].dRadXUV = -1;
+    body[iBody].dRadSolid = -1;
+    body[iBody].dScaleHeight = -1;
+    body[iBody].dPresSurf = -1;
   }
 
   if (body[iBody].dSurfaceWaterMass > 0) {
@@ -1790,7 +1798,7 @@ Logs the atmospheric mass loss rate.
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  dTmp = 0;
+  *dTmp = -1;
   /* BROKEN!!!!
   dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;

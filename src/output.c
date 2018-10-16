@@ -556,21 +556,34 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   int bEnv = 0;
 
   // From initial conditions, did we want to model ocean tidal effects?
-  if(body[iBody].dTidalQOcean < 0)
-    bOcean = 0;
-  else
-    bOcean = 1;
+  if(body[iBody].bEqtide) {
+    // Are there tidal effects due to oceans?
+    if(body[iBody].bOceanTides) {
+      bOcean = 1;
+    }
+    else {
+      bOcean = 0;
+    }
 
-  // Same as ocean, but for envelope
-  if(body[iBody].dTidalQEnv < 0)
+    // Are the tidal effects due to gaseous envelopes?
+    if(body[iBody].bEnvTides) {
+      bEnv = 1;
+    }
+    else {
+      bEnv = 0;
+    }
+
+  }
+  // No eqtide
+  else {
+    bOcean = 0;
     bEnv = 0;
-  else
-    bEnv = 1;
+  }
 
   if (body[iBody].bThermint) {
     *dTmp += fdHfluxSurf(body,iBody);
 
-    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv))
+    if(bOcean || bEnv)
     {
        *dTmp += fdSurfEnFluxOcean(body,iBody);
     }

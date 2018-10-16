@@ -164,7 +164,7 @@ Read the Jeans time, the time at which the flow transitions from hydrodynamic to
 @param system A pointer to the SYSTEM instance
 @param iFile The current file number
 */
-void (BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;

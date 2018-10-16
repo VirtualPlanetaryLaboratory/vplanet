@@ -1017,6 +1017,8 @@ Initializes several helper variables and properties used in the integration.
 */
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
+  body[iBody].dAge = body[0].dAge;
+
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);

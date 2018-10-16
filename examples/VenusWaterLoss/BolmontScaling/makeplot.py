@@ -37,6 +37,6 @@ ax.set_ylabel('XUV Atmospheric Escape Efficiency for H2O')
 ax.set_xscale('log')
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('EpsilonScaling.pdf', bbox_inches="tight")
+    fig.savefig('BolmontScaling.pdf', bbox_inches="tight")
 if (sys.argv[1] == 'png'):
-    fig.savefig('EpsilonScaling.png', bbox_inches="tight")
+    fig.savefig('BolmontScaling.png', bbox_inches="tight")

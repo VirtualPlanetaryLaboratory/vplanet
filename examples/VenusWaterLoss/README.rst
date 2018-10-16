@@ -43,11 +43,11 @@ To run this example
 
 .. code-block:: bash
 
-   cd BolmontEps
+   cd BolmontScaling
    vplanet vpl.in
    python makeplot.py <pdf | png>
 
-.. figure:: EpsilonScaling.png
+.. figure:: BolmontScaling.png
    :width: 600px
    :align: center
 

@@ -18,24 +18,24 @@ def test_MainSequence():
     # Star a
     assert np.isclose(output.log.final.a.Luminosity, 0.002445)
     assert np.isclose(output.log.final.a.Temperature, 2992.330343)
-    assert np.isclose(output.log.final.a.Radius, 0.184360)
-    assert np.isclose(output.log.final.a.LostAngMom, 9.438637e+41, rtol=1.0e-4)
-    assert np.isclose(output.log.final.a.RotPer, 0.299253, rtol=1.0e-4)
+    assert np.isclose(output.log.final.a.Radius, 0.184366)
+    assert np.isclose(output.log.final.a.LostAngMom, 9.438825e+41, rtol=1.0e-4)
+    assert np.isclose(output.log.final.a.RotPer, 0.299133, rtol=1.0e-4)
 
     # Star b
     assert np.isclose(output.log.final.b.Luminosity, 0.689088, rtol=1.0e-4)
     assert np.isclose(output.log.final.b.Temperature, 5539.190016)
     assert np.isclose(output.log.final.b.Radius, 0.902638, rtol=1.0e-4)
-    assert np.isclose(output.log.final.b.LostAngMom, 5.085997e+43, rtol=1.0e-4)
-    assert np.isclose(output.log.final.b.RotPer, 3.075674, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.LostAngMom, 5.085396e+43, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.RotPer, 3.075721, rtol=1.0e-4)
 
     # Energy
-    Einit = output.a.TotEnergy[0]
-    Efinal = output.a.TotEnergy[-1]
+    Einit = output.log.initial.system.TotEnergy
+    Efinal = output.log.initial.system.TotEnergy
 
     # Angular momentum
-    Linit = output.a.TotAngMom[0]
-    Lfinal = output.a.TotAngMom[-1]
+    Linit = output.log.initial.system.TotAngMom
+    Lfinal = output.log.final.system.TotAngMom
 
     # Check conservation
     assert np.isclose(Einit, Efinal, rtol=1e-3)

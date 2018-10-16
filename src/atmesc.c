@@ -164,7 +164,7 @@ Read the Jeans time, the time at which the flow transitions from hydrodynamic to
 @param system A pointer to the SYSTEM instance
 @param iFile The current file number
 */
-void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void (BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -1016,6 +1016,8 @@ Initializes several helper variables and properties used in the integration.
 @param iBody The current BODY number
 */
 void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+
+  body[iBody].dAge = body[0].dAge;
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);

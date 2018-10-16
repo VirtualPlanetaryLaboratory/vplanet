@@ -1215,10 +1215,11 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
   } else {
-    /* dRadXUV and dRadSolid only used for LEHMER17 model, but it must be
-       initialized to avoid memory leaks. */
-    body[iBody].dRadXUV = body[iBody].dRadius;
-    body[iBody].dRadSolid = body[iBody].dRadius;
+    /* Must initialized the above values to avoid memory leaks. */
+    body[iBody].dRadXUV = -1;
+    body[iBody].dRadSolid = -1;
+    body[iBody].dScaleHeight = -1;
+    body[iBody].dPresSurf = -1;
   }
 
   if (body[iBody].dSurfaceWaterMass > 0) {

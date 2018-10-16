@@ -1798,7 +1798,7 @@ Logs the atmospheric mass loss rate.
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  dTmp = 0;
+  *dTmp = -1;
   /* BROKEN!!!!
   dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;

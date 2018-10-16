@@ -175,7 +175,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
     fflush(stdout);
     */
     iPosStart=0;
-    while (!isspace(cLine[iPos])) {
+    while (cLine[iPos] && !isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) { // 35 is ASCII code for #
         /* Fill word in */
         cInput[iWord][iPosStart] = cLine[iPos];
@@ -193,7 +193,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
       }
     }
     /* Now advance to next word */
-    while (isspace(cLine[iPos]))
+    while (cLine[iPos] && isspace(cLine[iPos]))
       iPos++;
 
     iPos--;

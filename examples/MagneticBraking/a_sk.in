@@ -1,0 +1,11 @@
+#
+sName	                  a_sk
+saModules	          stellar
+dMass                     0.1
+sStellarModel             baraffe
+sMagBrakingModel          skumanich
+bHaltEndBaraffeGrid       1 
+dSatXUVFrac               1.e-3
+dSatXUVTime               -0.1
+saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+

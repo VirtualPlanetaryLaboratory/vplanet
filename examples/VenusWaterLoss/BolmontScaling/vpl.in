@@ -1,10 +1,9 @@
-#
-sSystemName   star                       # System Name
+sSystemName   solarsystem                   # System Name
 iVerbose      5                             # Verbosity level
 bOverwrite    1                             # Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles   a.in b.in                        # The first star
+saBodyFiles   sun.in venus1.in venus2.in venus3.in
 
 # Input/Output Units
 sUnitMass      solar                        # Options: gram, kg, Earth, Neptune, Jupiter, solar
@@ -20,6 +19,6 @@ dMinValue      1e-10                        # Minimum value of eccentricity/obli
 # Evolution Parameters
 bDoForward    1                             # Perform a forward evolution?
 bVarDt        1                             # Use variable timestepping?
-dEta          0.001                         # Coefficient for variable timestepping
-dStopTime     1e8                           # Stop time for evolution
-dOutputTime   1e8                           # Output timesteps (assuming in body files)
+dEta          0.1                           # Coefficient for variable timestepping
+dStopTime     4.6e9                         # Stop time for evolution
+dOutputTime   1e5                           # Output timesteps (assuming in body files)

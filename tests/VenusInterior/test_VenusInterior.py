@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_VenusInterior():
     """Test the coupling between radheat and thermint under stagnant lid conditions."""
+    # Remove old log file
+    subprocess.run(['rm', 'venus.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
@@ -14,11 +16,11 @@ def test_VenusInterior():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.venus.TMan, 2668.703011)
-    assert np.isclose(output.log.final.venus.TCore, 6404.180534)
+    assert np.isclose(output.log.final.venus.TMan, 2703.063740)
+    assert np.isclose(output.log.final.venus.TCore, 7924.260194)
     assert np.isclose(output.log.final.venus.RIC, 0.0)
     assert np.isclose(output.log.final.venus.RadPowerTotal, 3.141604e+13)
-    assert np.isclose(output.log.final.venus.BLUMan, 5.573595)
+    assert np.isclose(output.log.final.venus.BLUMan, 0.871189)
 
 
 if __name__ == "__main__":

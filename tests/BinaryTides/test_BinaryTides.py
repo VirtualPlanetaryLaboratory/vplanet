@@ -18,7 +18,7 @@ def test_BinaryTides():
     assert np.isclose(output.log.final.primary.RotPer, 3.577631, rtol=1e-4)
     assert np.isclose(output.log.final.secondary.RotPer, 3.577631, rtol=1e-4)
     assert np.isclose(output.log.final.secondary.RadGyra, 0.451302)
-    assert np.isclose(output.log.final.secondary.Eccentricity, 0.045472, rtol=1e-4) 
+    assert np.isclose(output.log.final.secondary.Eccentricity, 0.045481, rtol=1e-4) 
     assert np.isclose(output.log.final.secondary.SemiMajorAxis, 0.057678, rtol=1e-4)
 
 if __name__ == "__main__":

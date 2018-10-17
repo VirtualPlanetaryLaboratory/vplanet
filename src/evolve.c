@@ -115,6 +115,16 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   	    }
   	  }
   	}
+    /* Equations that are integrated in the matrix but are NOT allowed to dictate
+       timestepping.  These are derived quantities, like lost energy, that must
+       be integrated as primary variables to keep track of them properly, i.e.
+       lost energy depends on changing radii, which are integrated.  But in this
+       case, since they are derived quantities, they should NOT participate in
+       timestep selection - dflemin3
+     */
+    else if(update[iBody].iaType[iVar][0] == 5) {
+      continue;
+    }
 
     /* Integration for binary, where parameters can be computed via derivatives,
        or as an explicit function of age */

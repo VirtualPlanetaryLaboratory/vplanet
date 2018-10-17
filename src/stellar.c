@@ -393,7 +393,7 @@ void VerifyRotRate(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
 }
 
 void VerifyLostAngMomStellar(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
-  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 5;
+  update[iBody].iaType[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = 1;
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = malloc(update[iBody].iNumBodies[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar][0] = iBody;

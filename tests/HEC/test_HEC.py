@@ -17,9 +17,9 @@ def test_HEC():
     assert np.isclose(output.log.final.star.Luminosity, 5.876542e+23)
     assert np.isclose(output.log.final.b.DsemiDtEqtide,  -8.304900e-10)
     assert np.isclose(output.log.final.b.SurfEnFluxTotal, 1.702847)
-    assert np.isclose(output.log.final.b.SurfWaterMass, 1.698882, rtol=1e-4)
+    assert np.isclose(output.log.final.b.SurfWaterMass, 1.702758, rtol=1e-4)
     assert np.isclose(output.log.final.b.EnvelopeMass, 0)
-    assert np.isclose(output.log.final.b.OxygenMass, 473.145961)
+    assert np.isclose(output.log.final.b.OxygenMass, 472.709945)
 
 if __name__ == "__main__":
     test_HEC()

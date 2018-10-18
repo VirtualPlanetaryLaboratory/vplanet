@@ -13,8 +13,9 @@
 #define SK72CONST                     5.0e-25           /**< dJ/dt constant from Skumanich 1972 (Repetto+2014) */
 #define MATT15T0                      9.5e23            /**< Matt+2015 T0 constant in Joules */
 #define MATT15X                       10.0              /**< Matt+2015 saturation ratio threshold */
+#define MATT15R0SUN                   2.168             /**< Matt+2015 solar Rossby number */
 #define MATT15TAUCZ                   1.115e6           /**< Matt+2015 solar TauCZ value in s */
-#define MATT15OMEGASUN                2.6e-6            /**< Matt+2015 solar rotation rate in s^-1 */
+#define MATT15OMEGASUN                2.6e-6            /**< Matt+2015 solar angular rotation frequency in s^-1 */
 #define ROSSBYCRIT                    2.08              /**< Critical Rossby number above which magnetic braking shuts off according to van Saders+2018 */
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1

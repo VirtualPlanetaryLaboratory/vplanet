@@ -1305,10 +1305,15 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
 
     // Compute convective turnover timescale and normalized torque
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+
+    // Compute Rossby number
+    dR0 = body[iaBody[0]].dRotPer/dTauCS;
+
+    // Compute Matt+2015 normalized torque
     dT0 = MATT15T0*pow(body[iaBody[0]].dRadius/RSUN,3.1)*sqrt(body[iaBody[0]].dMass/MSUN);
 
     // Is the magnetic braking saturated?
-    if(MATT15X <= body[iaBody[0]].dRotRate*dTauCZ/(MATT15OMEGASUN*MATT15TAUCZ)) {
+    if(dR0 <= MATT15R0SUN/MATT15X) {
       // Saturated
       dDJDt = -dT0*MATT15X*MATT15X*(body[iaBody[0]].dRotRate/MATT15OMEGASUN);
     }

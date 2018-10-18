@@ -31,6 +31,7 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iXUVModel = src[iBody].iXUVModel;
   dest[iBody].iMagBrakingModel = src[iBody].iMagBrakingModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
+  dest[iBody].bRossbyCut = src[iBody].bRossbyCut;
 }
 
 /**************** STELLAR options ********************/
@@ -253,6 +254,22 @@ void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].dTemperature = options->dDefault;
 }
 
+void ReadRossbyCut(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bRossbyCut = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].bRossbyCut = 0; // Default to NOT using Rossby cut model
+  }
+}
+
 /* Halts */
 
 void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -369,6 +386,14 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault,"1");
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID] = &ReadHaltEndBaraffeGrid;
+
+  sprintf(options[OPT_ROSSBYCUT].cName,"bRossbyCut");
+  sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08 (van Saders+2018)?");
+  sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
+  options[OPT_ROSSBYCUT].iType = 0;
+  options[OPT_ROSSBYCUT].iMultiFile = 1;
+  options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
+  fnRead[OPT_ROSSBYCUT] = &ReadRossbyCut;
 
 }
 
@@ -519,6 +544,9 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
 }
 
 void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+
+  // Set rotation period for rossby number calculations
+  body[iBody].dRotPer = fdFreqToPer(body[iBody].dRotRate);
 
   // Update LXUV
   if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
@@ -888,6 +916,11 @@ void WriteLXUVFrac(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   strcpy(cUnit,"");
 }
 
+void WriteRossbyNumber(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRotPer/fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+  strcpy(cUnit,"");
+}
+
 void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
@@ -967,6 +1000,13 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFRAC].iNum = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC] = &WriteLXUVFrac;
+
+  sprintf(output[OUT_ROSSBYNUMBER].cName,"RossbyNumber");
+  sprintf(output[OUT_ROSSBYNUMBER].cDescr,"Rossby Number");
+  output[OUT_ROSSBYNUMBER].bNeg = 0;
+  output[OUT_ROSSBYNUMBER].iNum = 1;
+  output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
+  fnWrite[OUT_ROSSBYNUMBER] = &WriteRossbyNumber;
 }
 
 /************ STELLAR Logging Functions **************/
@@ -1212,6 +1252,18 @@ double fdDJDtMagBrakingStellar(BODY *body,SYSTEM *system,int *iaBody) {
   double dOmegaCrit;
   double dTauCZ;
   double dT0;
+  double dR0; // Rossby number
+
+  // If using bRossbyCut, magnetic braking terminates when the rossby number
+  // exceeds 2.08 following the model of van Saders et al. (2018)
+  if(body[iaBody[0]].bRossbyCut) {
+    dR0 = body[iaBody[0]].dRotPer/fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+
+    // Rossby number exceeds threshold: cease magnetic braking
+    if(dR0 > ROSSBYCRIT) {
+      return dTINY;
+    }
+  }
 
   // No magnetic braking
   if(body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE) {

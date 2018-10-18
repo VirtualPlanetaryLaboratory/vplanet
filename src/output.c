@@ -1630,7 +1630,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat,jBody,j;
   double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
+  char cUnit[OPTDESCR], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the

@@ -3,6 +3,39 @@ Quickstart
 
 .. contents:: :local:
 
+Downloading the code
+--------------------
+
+Navigate to the directory in which you want the :code:`VPLANET` source code to live
+and type
+
+.. code-block:: bash
+
+  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+
+This creates a sub-directory called vplanet.
+
+Compiling the code
+------------------
+
+Change your working directory to vplanet to build the executable. :code:`VPLANET`
+is written in C, and the current version requires gcc. :code:`VPLANET` has been
+developed on MacOS and Linux operating systems.
+
+In the top-level directory is a `Makefile` that will build the executable. Most
+users should use the optimized version:
+
+.. code-block:: bash
+
+  make opt
+
+You should now have a file called vplanet in the directory.
+
+.. note::
+
+  We recommend you add :code:`VPLANET` to your PATH variable.
+
+
 
 A simple example
 ----------------

@@ -6,14 +6,14 @@ Quickstart
 Downloading the code
 --------------------
 
-Navigate to the directory in which you want the :code:`VPLANET` source code to live
-and type
+Navigate to the directory in which you want to place :code:`VPLANET` and type
 
 .. code-block:: bash
 
   git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
 
-This creates a sub-directory called vplanet.
+This creates a sub-directory called vplanet that contains all the files in the
+repository.
 
 Compiling the code
 ------------------

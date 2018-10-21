@@ -18,7 +18,7 @@ def test_RadHeat():
     assert np.isclose(output.log.final.earth._232ThMassCore, 4.182962e+15)
     assert np.isclose(output.log.final.earth._235UPowerMan,  0.240654)
     assert np.isclose(output.log.final.earth._232ThNumCrust, 2.859381e+41)
-    assert np.isclose(output.log.final.earth.SurfEnFluxRadTotal, 0.047463)
+    assert np.isclose(output.log.final.earth.SurfEnFluxRadTotal, 0.047491)
 
 if __name__ == "__main__":
     test_RadHeat()

@@ -14,10 +14,10 @@ def test_EarthMoonTides():
     output = GetOutput(path=cwd)
 
     # Run our comparisons
-    assert np.isclose(output.log.final.moon.Eccentricity, 0.0077708405172700)
-    assert np.isclose(output.log.final.moon.SemiMajorAxis, -8.9493380478454471e+07)
-    assert np.isclose(output.log.final.earth.RotPer, 158.5020751480991521)
-    assert np.isclose(output.log.final.earth.Obliquity, 0.0483032126773969)
+    assert np.isclose(output.log.final.moon.Eccentricity, 0.0136505935724777)
+    assert np.isclose(output.log.final.moon.SemiMajorAxis, -60276727.74464643)
+    assert np.isclose(output.log.final.earth.RotPer, 222.74591695807214)
+    assert np.isclose(output.log.final.earth.Obliquity, 0.0268799502888956)
 
 if __name__ == "__main__":
     test_EarthMoonTides()

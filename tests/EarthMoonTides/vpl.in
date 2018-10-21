@@ -36,7 +36,7 @@ iDigits		16					# Maximum number of digits to right of decimal
 
 bDoBackward 	1
 bVarDt				1
-dOutputTime 	365.25e6
+dOutputTime 	1643.625e9
 dStopTime			1643.625e9
 
 # Some options are only permitted in the primary file, some are forbidden.

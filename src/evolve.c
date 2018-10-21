@@ -309,7 +309,11 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   */
 
   /* Derivatives at start */
-  *dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
+  //*dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
+  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
+  *dDt = fdGetTimeStep(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
+  //fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
@@ -504,6 +508,8 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
         control->fnForceBehaviorMulti[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
     }
 
+    fdGetUpdateInfo(body,control,system,update,fnUpdate);
+
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {
       /* Use dummy variable as dDt is used for the integration.
@@ -523,7 +529,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {
-      fdGetUpdateInfo(body,control,system,update,fnUpdate);
+      //fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
       control->Evolve.nSteps += nSteps;

@@ -6,7 +6,7 @@ saBodyFiles               Star.in Mercury.in Venus.in Earth.in Mars.in #The sola
 
 # Input/Output Units
 sUnitMass                 kg              # Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength               m               # Options: cm, m, km, Earth, Jupiter, solar, AU   
+sUnitLength               m               # Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime                 sec             # Options: sec, day, year, Myr, Gyr
 sUnitAngle                deg             # Options: deg, rad
 
@@ -20,4 +20,4 @@ bDoForward                1               # Perform a forward evolution?
 bVarDt                    1               # Use variable timestepping?
 dEta                      0.05            # Coefficient for variable timestepping
 dStopTime                 1e9      # Stop time for evolution
-dOutputTime               1e8             # Output timesteps (assuming in body files)
+dOutputTime               1e9             # Output timesteps (assuming in body files)

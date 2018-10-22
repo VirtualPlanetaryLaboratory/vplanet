@@ -13,7 +13,7 @@ iDigits                   6
 dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
-dEta                      0.001
+dEta                      0.01
 dStopTime                 5e9
 dOutputTime               1e6
 

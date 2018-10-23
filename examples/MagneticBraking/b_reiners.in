@@ -1,0 +1,11 @@
+#
+sName	                  b_reiners
+saModules	          stellar
+dMass                     1.0
+sStellarModel             baraffe
+sMagBrakingModel          reiners
+bHaltEndBaraffeGrid       1 
+dSatXUVFrac               1.e-3
+dSatXUVTime               -0.1
+saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+

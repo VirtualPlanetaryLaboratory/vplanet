@@ -36,6 +36,10 @@ iDigits		16					# Maximum number of digits to right of decimal
 
 bDoBackward 	1
 bVarDt				1
+<<<<<<< HEAD
+=======
+dEta					0.01
+>>>>>>> fad1512e98fd427cf0cdf072809c85a2892f03a9
 dOutputTime 	1643.625e9
 dStopTime			1643.625e9
 

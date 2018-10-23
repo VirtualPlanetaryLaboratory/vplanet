@@ -17,10 +17,10 @@ def test_VenusInterior():
 
     # Check
     assert np.isclose(output.log.final.venus.TMan, 2668.711843)
-    assert np.isclose(output.log.final.venus.TCore, 6402.668703)
+    assert np.isclose(output.log.final.venus.TCore, 6402.530889)
     assert np.isclose(output.log.final.venus.RIC, 0.0)
-    assert np.isclose(output.log.final.venus.RadPowerTotal, 31420820000000.0)
-    assert np.isclose(output.log.final.venus.BLUMan, 5.57884)
+    assert np.isclose(output.log.final.venus.RadPowerTotal, 31417390000000.0)
+    assert np.isclose(output.log.final.venus.BLUMan, 5.579136)
 
 
 if __name__ == "__main__":

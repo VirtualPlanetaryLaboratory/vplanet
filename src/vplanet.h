@@ -356,7 +356,7 @@ struct BODY {
   double dCBPPhiDot;     /** < CBP phi angular orbital velocity */
   double dFreeEcc;       /**< CBP's free eccentricity */
   double dFreeInc;       /**< CBP's free inclination, or binary's inclination */
-  double dInc;           /**< CBP's actual inclication */
+  double dInc;           /**< Orbital inclication */
   double dLL13N0;        /**< CBP's Mean motion defined in LL13 eqn 12 */
   double dLL13K0;        /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
   double dLL13V0;        /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
@@ -594,7 +594,6 @@ struct BODY {
   double dStagLid;         /**< Stagnant Lid heat flow switch (0 or 1)*/
   double dManHFlowPref;    /**< Mantle Hflow Prefix */
 
-  /* vemcee parameters */
   double dActViscMan;      /**< Mantle viscosity activation energy */
   double dShModRef;        /**< reference kinematic mantle shear modulus */
   double dStiffness;       /**< effective stiffness of mantle */
@@ -604,7 +603,6 @@ struct BODY {
   double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
-  /* end vemcee parameters */
 
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */

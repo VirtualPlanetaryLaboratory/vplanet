@@ -2,7 +2,7 @@
 sSystemName               kepler36
 iVerbose                  0
 bOverwrite                1
-saBodyFiles               star.in p10.in 
+saBodyFiles               star.in p10.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
@@ -14,4 +14,4 @@ bDoForward                1
 bVarDt                    1
 dEta                      0.01
 dStopTime                 5e9
-dOutputTime               1e9
+dOutputTime               5e9

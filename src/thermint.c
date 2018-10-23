@@ -574,8 +574,12 @@ void fvReadManHFlowPref(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
      body[iFile-1].dManHFlowPref = dTmp;  //no units.
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dManHFlowPref = options->dDefault;
+    if (iFile > 0) { //if line num not ge 0, then if iFile gt 0, then set default.
+      if (body[iFile-1].dStagLid==0) //if StagLid=0 then use plate tectonic default
+        body[iFile-1].dManHFlowPref = options->dDefault;
+      if (body[iFile-1].dStagLid>0) //if StagLid>0 then use staglid default.
+        body[iFile-1].dManHFlowPref = HFLOWREDUCTSTAG;
+    }
 }
 /**
   Read dipole magnetic moment coefficient from input file
@@ -4247,7 +4251,11 @@ double fdCoreBuoyTotal(BODY *body, int iBody) {
   @return Dipole magnetic moment
 */
 double fdMagMom(BODY *body, int iBody) {
-  return 4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
+  double MagMom=0.;
+  if (body[iBody].dCoreBuoyTotal > 0) {
+    MagMom =  4.*PI*pow((ERCORE),3)*body[iBody].dMagMomCoef*sqrt((EDENSCORE)/(2*(MAGPERM)))*pow(body[iBody].dCoreBuoyTotal*((ERCORE)-body[iBody].dRIC),1./3);
+  }
+  return MagMom;
 }
 /**
   Function compute solar wind pressure

@@ -3,6 +3,7 @@ sName               b		                  # Body's name
 saModules	    stellar                     # Modules to apply, exact spelling required
 
 # Physical Parameters
+dAge                2e6
 dMass               1.0
 
 # Stellar Parameters

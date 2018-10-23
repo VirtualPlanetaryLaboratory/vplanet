@@ -3,6 +3,39 @@ Quickstart
 
 .. contents:: :local:
 
+Downloading the code
+--------------------
+
+Navigate to the directory in which you want to place :code:`VPLANET` and type
+
+.. code-block:: bash
+
+  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+
+This creates a sub-directory called vplanet that contains all the files in the
+repository.
+
+Compiling the code
+------------------
+
+Change your working directory to vplanet to build the executable. :code:`VPLANET`
+is written in C, and the current version requires gcc. :code:`VPLANET` has been
+developed on MacOS and Linux operating systems.
+
+In the top-level directory is a `Makefile` that will build the executable. Most
+users should use the optimized version:
+
+.. code-block:: bash
+
+  make opt
+
+You should now have a file called vplanet in the directory.
+
+.. note::
+
+  We recommend you add :code:`VPLANET` to your PATH variable.
+
+
 
 A simple example
 ----------------
@@ -13,7 +46,8 @@ suggests Venus may have had a similar amount of water to Earth in the
 past :cite:`Donahue1982`, but because of vigorous hydrodynamic escape it probably lost all
 of it in the first few hundred Myr :cite:`Hunten1973`. Here we're going to use the :doc:`stellar </src/stellar>`
 and :doc:`atmesc </src/atmesc>` modules of :code:`VPLANET` to jointly model the evolution
-of the Sun and Venus.
+of the Sun and Venus. This guide shows how to interpret the :doc:`VenusWaterLoss </examples/VenusWaterLoss>`
+example, but here we will only use one planet, whereas the example uses three.
 
 The basic workflow for a :code:`VPLANET` simulation is to create input
 (:code:`.in`) files with the pertinent system, star, and planet parameters
@@ -53,7 +87,7 @@ vpl.in
     # Evolution Parameters
     bDoForward    1                  # Perform a forward evolution?
     bVarDt        1                  # Use variable timestepping?
-    dEta          1                  # Coefficient for variable timestepping
+    dEta          0.01                  # Coefficient for variable timestepping
     dStopTime     4.6e9              # Stop time for evolution
     dOutputTime   1e6                # Output timesteps (assuming in body files)
 
@@ -61,7 +95,8 @@ vpl.in
 First off, before we delve in: input parameters are specified with the name
 of the parameter (:code:`dEta` or
 :code:`dStopTime`) followed by one or more spaces (or tabs) and the
-value of the parameter. Note that parameter names are case-sensitive! Comments
+value of the parameter. Note that parameter names are case-sensitive! The order of
+the input options is irrelevant, and blank lines are ignored. Comments
 can be specified anywhere with the pound sign.
 
 In this case, we set some fairly self-explanatory parameters.
@@ -71,7 +106,9 @@ system :code:`"solarsystem"` (our output files will have this prefix and any
 plots will have this title). We specified maximum verbosity (:code:`5`),
 so :code:`VPLANET` will talk a LOT. We're allowing output file overwrites,
 and we're telling the code to expect two body files: :code:`sun.in` and
-:code:`venus.in`, which we'll create below. Next, we set the default units
+:code:`venus.in`, which we'll create below. Note that  in :doc:`VenusWaterLoss </examples/VenusWaterLoss>`
+uses 3 planets, each representing a different amount of initial water content.
+Next, we set the default units
 for I/O: solar masses, astronomical units, years, and degrees.
 
 .. note::
@@ -87,7 +124,7 @@ Moving along, we tell the code to spit out a log file at the end, set the
 output precision and a tolerance parameter. The final section is probably
 the most important: here we tell :code:`VPLANET` what to *actually* do
 in the simulation. We want to evolve the system *forward* in time using
-variable (adaptive) timestepping with a coefficient :code:`dEta = 1`. The
+variable (adaptive) timestepping with a coefficient :code:`dEta = 0.01`. The
 smaller this coefficient, the higher the precision of the integration (but
 the slower it will run). We then specify how long to run the simulation for
 (the age of the solar system in our case) and how often to output (every
@@ -121,23 +158,30 @@ sun.in
 
 
 As before, the parameters are fairly straightforward. Note that we're only
-setting a few, and those that are not
-specified assume their default values.
+setting a few, and those that are not specified assume their default values.
+Here again we have a few differences with :doc:`VenusWaterLoss </examples/VenusWaterLoss>`.
+The example assigns a hexadecimal color that can beused for plotting with `vplot`, and
+uses the negative option for dSatXUVTime, which means the units are Gyr.
+
 
 .. note::
 
     To get a list of all the allowed
-    parameters and their default values, type :code:`vplanet -h` in a terminal.
+    parameters, their default values, and the units associated with the negative
+    optin, type :code:`vplanet -h` in a terminal.
 
 We gave the star a name,
 told :code:`VPLANET` we want to use the :code:`stellar` module to compute
-its evolution, requested that the code output the XUV luminosity at each
-step, gave it a mass and an age, and set a few :code:`stellar`-specific
+its evolution, requested that the code output time and the XUV luminosity at each output time, 1 Myr as set by
+option dOutputTime in vpl.in. (The example outputs a few more parameters.) We assigned the mass and age at time = 0, and set a few :code:`stellar`-specific
 properties. Specifically, we're using the Baraffe et al. (2015) :cite:`Baraffe15`
-evolution tracks and the Ribas et al. (2005) :cite:`Ribas05` XUV evolution power law
-with a saturation level of :code:`1e-3` and timescale of 100 Myr.
+evolutionary tracks and the Ribas et al. (2005) :cite:`Ribas05` XUV evolution power law
+with a saturation level of :code:`1e-3` and timescale of 100 Myr. Note that `"time"`
+is different than `"age"` in that the former is the internal counter for the simulation,
+whereas the latter is the physical age of the star since some birth time.
 
-Next up is the input file for the planet, Venus:
+Next up is the input file for the planet, Venus. This file is based off venus1.in
+in :doc:`VenusWaterLoss </examples/VenusWaterLoss>`.
 
 venus.in
 ~~~~~~~~
@@ -320,9 +364,10 @@ solarsystem.sun.forward
     ...
 
 
-For the planet, we asked for the timestamp, the amount of surface
-water (with a minus sign, indicating in units of Earth oceans), and
-the amount of oxygen absorbed by the mantle (in bars):
+You can check the units in the log file if you're unsure what they are. For the
+planet, we asked for the timestamp, the amount of surface water (with a minus
+sign, indicating in units of Earth oceans), and the amount of oxygen absorbed by
+the mantle (in bars):
 
 
 solarsystem.venus.forward

@@ -12,12 +12,12 @@ saBodyFiles	primary.in $	# The primary star
 		secondary.in $ 	# The secondary star
                 cbp.in
 
-# Array options can continue to the next line with a terminating "$". The $ can be 
+# Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
 sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K
@@ -39,7 +39,7 @@ bVarDt		1		# Use variable timestepping?
 dEta		0.1		# Coefficient for variable timestepping
 #dTimeStep	100
 dStopTime	1.0e2   	# Stop time for evolution
-dOutputTime	1.0e0		# Output timesteps (assuming in body files)
+dOutputTime	1.0e2		# Output timesteps (assuming in body files)
 
-# Some options are only permitted in the primary file, some are forbidden. 
+# Some options are only permitted in the primary file, some are forbidden.
 # That should really be documented!

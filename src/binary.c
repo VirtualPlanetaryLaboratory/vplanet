@@ -730,6 +730,9 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dCBPZDot = 0.0;
     body[iBody].dCBPPhi = 0.0;
     body[iBody].dCBPPhiDot = 0.0;
+    body[iBody].dLL13N0 = 0.0;
+    body[iBody].dLL13K0 = 0.0;
+    body[iBody].dLL13V0 = 0.0;
   }
 
   // Other things that must be set

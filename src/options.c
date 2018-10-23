@@ -175,7 +175,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
     fflush(stdout);
     */
     iPosStart=0;
-    while (!isspace(cLine[iPos])) {
+    while (cLine[iPos] && !isspace(cLine[iPos])) {
       if (cLine[iPos] != 35) { // 35 is ASCII code for #
         /* Fill word in */
         cInput[iWord][iPosStart] = cLine[iPos];
@@ -193,7 +193,7 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
       }
     }
     /* Now advance to next word */
-    while (isspace(cLine[iPos]))
+    while (cLine[iPos] && isspace(cLine[iPos]))
       iPos++;
 
     iPos--;
@@ -335,6 +335,9 @@ void AddOptionBool(char cFile[],char cOption[],int *iInput,int *iLine,int iVerbo
 
 void AddOptionString(char cFile[],char cOption[],char cInput[],int *iLine,int iVerbose) {
   char cTmp[OPTLEN],cLine[LINE];
+
+  memset(cLine,'\0',LINE);
+  memset(cTmp,'\0',OPTLEN);
 
   GetLine(cFile,cOption,cLine,iLine,iVerbose);
   sscanf(cLine,"%s %s",cTmp,cInput);
@@ -1207,6 +1210,8 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     control->Evolve.bDoBackward = bTmp;
+    fprintf(stderr,"\nWARNING: Backward integrations have not been validated and may be unstable!\n");
+    fprintf(stderr,"Use at your own risk.\n\n");
   } else
     AssignDefaultInt(options,&control->Evolve.bDoBackward,files->iNumInputs);
 }
@@ -1346,7 +1351,11 @@ void ReadBodyName(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   if (lTmp >= 0) {
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    strcpy(body[iFile-1].cName,cTmp);
+    if (strlen(cTmp) > 0) {
+      strcpy(body[iFile-1].cName,cTmp);
+    } else {
+      sprintf(body[iFile-1].cName,"%d",iFile);
+    }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -2081,6 +2090,13 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
 
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile,options[OPT_OUTPUTORDER].cName,files->Infile[iFile].cIn,lTmp[0],iVerbose);
+
+    if (iNumIndices >= MAXARRAY) {
+      if (iVerbose >= VERBERR) {
+        fprintf(stderr,"ERROR: Too many output options in file %s. Either reduce, or increase MAXARRAY in vplanet.h.\n",files->Infile[iFile].cIn);
+      }
+      exit(EXIT_INPUT);
+    }
 
     /* First remove and record negative signs */
     for (i=0;i<iNumIndices;i++) {

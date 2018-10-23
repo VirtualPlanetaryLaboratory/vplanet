@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_SpiNBody():
     """Test SpiNBody."""
+    # Remove old log file
+    subprocess.run(['rm', 'SpiNBody.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
@@ -15,7 +17,7 @@ def test_SpiNBody():
 
     # Check
     assert np.isclose(output.log.final.Star. PositionXSpiNBody, -7.2996045904859365e+05)
-    assert np.isclose(output.log.final.Star.VelZSpiNBody, -0.0074053658185989)    
+    assert np.isclose(output.log.final.Star.VelZSpiNBody, -0.0074053658185989)
     assert np.isclose(output.log.final.Mercury.Inc, 0.1222430915966078)
     assert np.isclose(output.log.final.Mercury.VelXSpiNBody, -5.6172614113858515e+04)
     assert np.isclose(output.log.final.Venus.ArgP, 0.9555745288739304)

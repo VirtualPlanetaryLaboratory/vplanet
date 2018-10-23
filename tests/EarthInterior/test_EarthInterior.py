@@ -18,8 +18,8 @@ def test_EarthInterior():
     # Check
     assert np.isclose(output.log.final.earth.TMan, 2256.001803)
     assert np.isclose(output.log.final.earth.TCore, 5006.543944)
-    assert np.isclose(output.log.final.earth.RIC, 1232306.0)
-    assert np.isclose(output.log.final.earth.RadPowerTotal, 24264970000000.0)
+    assert np.isclose(output.log.final.earth.RIC, 1232183.0)
+    assert np.isclose(output.log.final.earth.RadPowerTotal, 24265670000000.0)
     assert np.isclose(output.log.final.earth.MagMom, 0.995060)
 
 

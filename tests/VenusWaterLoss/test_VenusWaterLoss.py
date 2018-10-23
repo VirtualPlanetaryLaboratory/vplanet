@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_VenusWaterLoss():
     """Test the loss of water on Venus."""
+    # Remove old log file
+    subprocess.run(['rm', 'solarsystem.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

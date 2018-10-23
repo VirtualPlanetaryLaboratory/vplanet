@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_SteepCBP():
     """Test STEEP effect on a circumbinary planet."""
+    # Remove old log file
+    subprocess.run(['rm', 'bin_eq_st.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

@@ -20,14 +20,21 @@
 
 /*! Check to see if two decimals numbers are equal (1) or not (0) */
 int bFloatComparison(double x, double y) {
-  /*double bigger;
-  if (x>y) {
-    bigger = x;
+  double dBigger;
+  double dRel_Tol;
+  if (fabs(x)>fabs(y)) {
+    dBigger = fabs(x);
   } else {
-    bigger = y;
-  }*/
+    dBigger = fabs(y);
+  }
 
-  if (fabs(x - y) < 2.93873605221803725e-39) {
+  dRel_Tol = 5*dBigger*DBL_EPSILON;
+
+  if (dRel_Tol <= 10*dTINY) {
+    dRel_Tol = 10*dTINY;
+  }
+
+  if (fabs(x - y) <= dRel_Tol) {
     return 1;
   } else {
     return 0;
@@ -55,44 +62,52 @@ void OverwriteExit(char cName[],char cFile[]) {
 
 /* XXX Should these be iLine+1? */
 void DoubleLineExit(char cFile1[],char cFile2[],int iLine1,int iLine2) {
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1+1);
+  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2+1);
   exit(EXIT_INPUT);
 }
 
 void VerifyOrbitExit(char cName1[],char cName2[],char cFile1[],char cFile2[],int iLine1,int iLine2,int iVerbose) {
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s.\n",cName1,cName2);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
-  fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+    fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile1,iLine1);
+    fprintf(stderr,"\tFile: %s, Line: %d.\n",cFile2,iLine2);
+  }
   exit(EXIT_INPUT);
 }
 
 void VerifyBodyExit(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2,int iVerbose) {
 
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set both %s and %s in same file.\n",cName1,cName2);
-  fprintf(stderr,"\tFile: %s, Lines: %d and %d\n",cFile,iLine1,iLine2);
+    fprintf(stderr,"\tFile: %s, Lines: %d and %d\n",cFile,iLine1,iLine2);
+  }
   exit(EXIT_INPUT);
 }
 
+/** Print three lines that are in conflict
+    Only called if iVerbose >= VERBERR
+*/
+
 void TripleLineExit(char cFile[],int iLine1,int iLine2,int iLine3) {
   fprintf(stderr,"\tFile: %s, Lines: %d, %d and %d.\n",cFile,iLine1,iLine2,iLine3);
-    exit(EXIT_INPUT);
+  exit(EXIT_INPUT);
 }
 
 /* Do we need both these? */
 void VerifyTripleExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Cannot set %s, %s, and %s simultaneously.\n",cName1,cName2,cName3);
-  TripleLineExit(cFile,iLine1,iLine2,iLine3);
+    TripleLineExit(cFile,iLine1,iLine2,iLine3);
+  }
 }
 
 void VerifyTwoOfThreeExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
 
-  if (iVerbose >= VERBERR)
+  if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Can only set 2 of %s, %s, and %s.\n",cName1,cName2,cName3);
-  TripleLineExit(cFile,iLine1,iLine2,iLine3);
+    TripleLineExit(cFile,iLine1,iLine2,iLine3);
+  }
 }
 
 void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
@@ -103,6 +118,31 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
         fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
     }
     body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
+  }
+}
+
+/**
+  Verify the user did not use the same name for two bodies.
+  */
+
+void VerifyNames(BODY *body,CONTROL *control,OPTIONS *options) {
+  int iBody,jBody;
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (strlen(body[iBody].cName) == 0) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"WARNING: No input to %s in file %s, defaulting to %d/\n",options[OPT_BODYNAME].cName,options[OPT_BODYNAME].cFile[iBody]+1,iBody);
+      }
+      sprintf(body[iBody].cName,"%d",iBody+1);
+    }
+    for (jBody = iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+      if (strcmp(body[iBody].cName,body[jBody].cName) == 0) {
+        if (control->Io.iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Two bodies have the same name.\n");
+          DoubleLineExit(options[OPT_BODYNAME].cFile[iBody+1],options[OPT_BODYNAME].cFile[jBody+1],options[OPT_BODYNAME].iLine[iBody+1],options[OPT_BODYNAME].iLine[jBody+1]);
+        }
+      }
+    }
   }
 }
 
@@ -539,6 +579,8 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
 void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
   int iBody,iModule;
 
+  VerifyNames(body,control,options);
+
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
 
@@ -554,7 +596,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     // If any body has an orbit related module initialized, we have orbiters!
-    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise) {
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
       control->bOrbiters = 1;
     }
 

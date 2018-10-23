@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_SSDistOrbDistRot():
     """Test the coupling between distorb and distrot."""
+    # Remove old log file
+    subprocess.run(['rm', 'solarsys.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

@@ -115,6 +115,16 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   	    }
   	  }
   	}
+    /* Equations that are integrated in the matrix but are NOT allowed to dictate
+       timestepping.  These are derived quantities, like lost energy, that must
+       be integrated as primary variables to keep track of them properly, i.e.
+       lost energy depends on changing radii, which are integrated.  But in this
+       case, since they are derived quantities, they should NOT participate in
+       timestep selection - dflemin3
+     */
+    else if(update[iBody].iaType[iVar][0] == 5) {
+      continue;
+    }
 
     /* Integration for binary, where parameters can be computed via derivatives,
        or as an explicit function of age */
@@ -213,7 +223,6 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   	      // The parameter is controlled by a time derivative
   	      update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
           if (!bFloatComparison(update[iBody].daDerivProc[iVar][iEqn],0.0) && !bFloatComparison(*(update[iBody].pdVar[iVar]),0.0)) {
-  	        //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) { // Obselete float comparison
   	      	dMinNow = fabs((*(update[iBody].pdVar[iVar]))/update[iBody].daDerivProc[iVar][iEqn]);
   		      if (dMinNow < dMin)
   		        dMin = dMinNow;
@@ -300,15 +309,20 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   */
 
   /* Derivatives at start */
-  *dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
+  //*dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
+  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
+  *dDt = fdGetTimeStep(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
+  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
+  //fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
      dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
      *dDt = AssignDt(*dDt,(dTimeOut - evolve->dTime),evolve->dEta);
-  } else
+  } else {
     *dDt = evolve->dTimeStep;
+  }
 
   evolve->dCurrentDt = *dDt;
 
@@ -494,6 +508,8 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
         control->fnForceBehaviorMulti[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
     }
 
+    fdGetUpdateInfo(body,control,system,update,fnUpdate);
+
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {
       /* Use dummy variable as dDt is used for the integration.
@@ -513,7 +529,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Time for Output? */
     if (control->Evolve.dTime >= dTimeOut) {
-      fdGetUpdateInfo(body,control,system,update,fnUpdate);
+      //fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
       control->Evolve.nSteps += nSteps;

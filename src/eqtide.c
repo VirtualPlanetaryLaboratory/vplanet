@@ -797,7 +797,7 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
 void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
 
   if(control->Evolve.iEqtideModel == CPL) {
-    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
     update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
@@ -805,7 +805,7 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
     update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
   }
   else if(control->Evolve.iEqtideModel == CTL) {
-    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
     update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;

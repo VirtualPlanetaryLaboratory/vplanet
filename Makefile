@@ -1,4 +1,6 @@
-.PHONY: docs test debug opt profile optprof
+# No files with these names in the top-level directory
+.PHONY: docs test debug opt profile optprof clean coverage sanitize
+
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 GCC_FLAGS1 = -fPIC -Wl,-Bsymbolic-functions -c
@@ -11,27 +13,31 @@ endif
 
 default:
 	-gcc -o vplanet src/*.c -lm -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
 
 debug:
 	-gcc -g -D DEBUG -o vplanet src/*.c -lm -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
+
+debug_no_AE:
+	-gcc -g -o vplanet src/*.c -lm -Wno-div-by-zero
+	@cd src && vplanet -h > /dev/null 2>&1
 
 opt:
 	-gcc -o vplanet src/*.c -lm -O3 -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
 
 profile:
 	-gcc -pg -o vplanet src/*.c -lm -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
 
 optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3 -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
 
 test:
 	-gcc -o vplanet src/*.c -lm -Wno-div-by-zero
-	@cd src && vplanet -h > /dev/null 2>&1 || echo "\033[0;31mPlease add the vplanet directory to your PATH variable.\033[0m"
+	@cd src && vplanet -h > /dev/null 2>&1
 	py.test
 
 coverage:

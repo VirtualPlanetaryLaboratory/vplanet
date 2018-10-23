@@ -4,7 +4,7 @@ Oxygen Buildup
 Overview
 --------
 
-.. todo:: **@rodluger**: This python script runs the trials, but then hangs.
+Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.
 
 ===================   ============
 **Date**              07/25/18
@@ -50,4 +50,3 @@ Expected output
    buildup of atmospheric oxygen (right). See :cite:`LugerBarnes2015`
    for more details.
 
-.. todo:: **@rodluger** Investigate the single outlier in the water loss plot of the `o2buildup` example.

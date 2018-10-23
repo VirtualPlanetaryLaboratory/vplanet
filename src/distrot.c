@@ -38,20 +38,22 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
 }
 
 void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
-  int iLine;
+  if (body[iBody].bReadOrbitData) {
+    int iLine;
 
-  control->Evolve.tmpBody[iBody].daSemiSeries = malloc(body[iBody].iNLines*sizeof(double));
-  control->Evolve.tmpBody[iBody].daHeccSeries = malloc(body[iBody].iNLines*sizeof(double));
-  control->Evolve.tmpBody[iBody].daKeccSeries = malloc(body[iBody].iNLines*sizeof(double));
-  control->Evolve.tmpBody[iBody].daPincSeries = malloc(body[iBody].iNLines*sizeof(double));
-  control->Evolve.tmpBody[iBody].daQincSeries = malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daSemiSeries = malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daHeccSeries = malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daKeccSeries = malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daPincSeries = malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daQincSeries = malloc(body[iBody].iNLines*sizeof(double));
 
-  for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
-    control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = body[iBody].daSemiSeries[iLine];
-    control->Evolve.tmpBody[iBody].daHeccSeries[iLine] = body[iBody].daHeccSeries[iLine];
-    control->Evolve.tmpBody[iBody].daKeccSeries[iLine] = body[iBody].daKeccSeries[iLine];
-    control->Evolve.tmpBody[iBody].daPincSeries[iLine] = body[iBody].daPincSeries[iLine];
-    control->Evolve.tmpBody[iBody].daQincSeries[iLine] = body[iBody].daQincSeries[iLine];
+    for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
+      control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = body[iBody].daSemiSeries[iLine];
+      control->Evolve.tmpBody[iBody].daHeccSeries[iLine] = body[iBody].daHeccSeries[iLine];
+      control->Evolve.tmpBody[iBody].daKeccSeries[iLine] = body[iBody].daKeccSeries[iLine];
+      control->Evolve.tmpBody[iBody].daPincSeries[iLine] = body[iBody].daPincSeries[iLine];
+      control->Evolve.tmpBody[iBody].daQincSeries[iLine] = body[iBody].daQincSeries[iLine];
+    }
   }
 }
 

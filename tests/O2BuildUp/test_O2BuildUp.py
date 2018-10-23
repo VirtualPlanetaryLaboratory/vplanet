@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_O2BuildUp():
     """Test oxygen build up, HZ limits."""
+    # Remove old log file
+    subprocess.run(['rm', 'trappist1.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

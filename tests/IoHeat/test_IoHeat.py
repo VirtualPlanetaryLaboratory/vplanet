@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_IoHeat():
     """Test module eqtide, and simulations with no integrations."""
+    # Remove old log file
+    subprocess.run(['rm', 'ioheat.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

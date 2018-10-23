@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_HEC():
     """Test Habitable Evaporated Core scenario."""
+    # Remove old log file
+    subprocess.run(['rm', 'proxima.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

@@ -1,6 +1,6 @@
 sName		comp		# Body's name
 
-saModules galhabit
+saModules galhabit 
 
 # Physical Properties
 dMass		0.12		# Mass, negative -> Earth masses

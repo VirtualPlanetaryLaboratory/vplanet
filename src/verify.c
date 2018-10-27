@@ -580,6 +580,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   int iBody,iModule;
 
   VerifyNames(body,control,options);
+  VerifyModuleCompatability(body,update,control,files,module,options,iBody);
 
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);

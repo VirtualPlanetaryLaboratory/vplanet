@@ -824,13 +824,14 @@ void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *
 
   // Default value
   body[iBody].bTideLock = 0;
+  body[iBody].dLockTime = -1;
 
   if (options[OPT_FORCEEQSPIN].iLine[iBody+1] >= 0) {
 
-    if(iBody > 0)
-    {
+    if(iBody > 0) {
       // If ForceEqSpin, tidally locked to begin the simulation
       body[iBody].bTideLock = 1;
+      body[iBody].dLockTime = 0.0;
     }
 
     if (body[iBody].iTidePerts > 1) {
@@ -1759,6 +1760,17 @@ void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
 }
 
+void WriteLockTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dLockTime;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime,cUnit);
+  }
+}
+
 void WriteTidalRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dTidalRadius;
@@ -2659,6 +2671,15 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDELOCK].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDELOCK] = &WriteTideLock;
 
+  sprintf(output[OUT_LOCKTIME].cName,"LockTime");
+  sprintf(output[OUT_LOCKTIME].cDescr,"Time when body tidally locked.");
+  sprintf(output[OUT_LOCKTIME].cNeg,"Myr");
+  output[OUT_LOCKTIME].bNeg = 1;
+  output[OUT_LOCKTIME].dNeg = 1./(YEARSEC*1e6);
+  output[OUT_LOCKTIME].iNum = 1;
+  output[OUT_LOCKTIME].iModuleBit = EQTIDE;
+  fnWrite[OUT_LOCKTIME] = &WriteLockTime;
+
 }
 
 /************ EQTIDE Logging Functions **************/
@@ -2772,6 +2793,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
   if (dDiff < evolve->dMaxLockDiff[iBody]) {
     // Tidally locked!
     body[iBody].bTideLock = 1;
+
+    // Save time when body locked
+    body[iBody].dLockTime = evolve->dTime;
 
     if (io->iVerbose >= VERBPROG) {
       printf("%s spin locked at ",body[iBody].cName);

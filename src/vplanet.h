@@ -401,7 +401,8 @@ struct BODY {
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
-  int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
+	double dLockTime;			 /**< Time when body tidally-locked */
+	int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
   int bEnvTides;         /**< Have Q contribution from the envelope as well? */
   int bUseTidalRadius;      /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */

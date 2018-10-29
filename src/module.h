@@ -29,7 +29,7 @@ double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);
 void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
 
-void  VerifyModuleCompatability(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
+void VerifyModuleCompatability(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
 void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);

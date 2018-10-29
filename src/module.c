@@ -479,40 +479,40 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 
       if (memcmp(sLower(saTmp[iModule]),"eqtide",6) == 0) {
         body[iFile-1].bEqtide = 1;
-	module->iBitSum[iFile-1] += EQTIDE;
+	      module->iBitSum[iFile-1] += EQTIDE;
       } else if (memcmp(sLower(saTmp[iModule]),"radheat",7) == 0) {
         body[iFile-1].bRadheat = 1;
-	module->iBitSum[iFile-1] += RADHEAT;
+	      module->iBitSum[iFile-1] += RADHEAT;
       } else if (memcmp(sLower(saTmp[iModule]),"distorb",8) == 0) {
         body[iFile-1].bDistOrb = 1;
-	module->iBitSum[iFile-1] += DISTORB;
+	      module->iBitSum[iFile-1] += DISTORB;
       } else if (memcmp(sLower(saTmp[iModule]),"distrot",7) == 0) {
         body[iFile-1].bDistRot = 1;
-	module->iBitSum[iFile-1] += DISTROT;
+	      module->iBitSum[iFile-1] += DISTROT;
       } else if (memcmp(sLower(saTmp[iModule]),"thermint",8) == 0) {
-	body[iFile-1].bThermint = 1;
-	module->iBitSum[iFile-1] += THERMINT;
+	      body[iFile-1].bThermint = 1;
+	      module->iBitSum[iFile-1] += THERMINT;
       } else if (memcmp(sLower(saTmp[iModule]),"atmesc",6) == 0) {
         body[iFile-1].bAtmEsc = 1;
-	module->iBitSum[iFile-1] += ATMESC;
+	      module->iBitSum[iFile-1] += ATMESC;
       } else if (memcmp(sLower(saTmp[iModule]),"stellar",7) == 0) {
-	body[iFile-1].bStellar = 1;
-	module->iBitSum[iFile-1] += STELLAR;
+	      body[iFile-1].bStellar = 1;
+	      module->iBitSum[iFile-1] += STELLAR;
       } else if (memcmp(sLower(saTmp[iModule]),"poise",5) == 0) {
-	body[iFile-1].bPoise = 1;
-	module->iBitSum[iFile-1] += POISE;
+	      body[iFile-1].bPoise = 1;
+	      module->iBitSum[iFile-1] += POISE;
       } else if (memcmp(sLower(saTmp[iModule]),"binary",6) == 0) {
         body[iFile-1].bBinary = 1;
-	module->iBitSum[iFile-1] += BINARY;
+	      module->iBitSum[iFile-1] += BINARY;
       } else if (memcmp(sLower(saTmp[iModule]),"flare",5) == 0) {
-	body[iFile-1].bFlare = 1;
-	module->iBitSum[iFile-1] += FLARE;
+	      body[iFile-1].bFlare = 1;
+	      module->iBitSum[iFile-1] += FLARE;
       } else if (memcmp(sLower(saTmp[iModule]),"galhabit",8) == 0) {
-	body[iFile-1].bGalHabit = 1;
-	module->iBitSum[iFile-1] += GALHABIT;
+	      body[iFile-1].bGalHabit = 1;
+	      module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
-  body[iFile-1].bSpiNBody = 1;
-  module->iBitSum[iFile-1] += SPINBODY;
+        body[iFile-1].bSpiNBody = 1;
+        module->iBitSum[iFile-1] += SPINBODY;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -1208,14 +1208,44 @@ void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control
 
 /** Verify that selected modules are compatable */
 
-void  VerifyModuleCompatability(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
+void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
 
+  // Binary
+  if (body[iBody].bBinary) {
+    if (body[iBody].bSpiNBody) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules Binary and SpiNbody cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+    if (body[iBody].bEqtide) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules Binary and EqTide cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+    if (body[iBody].bPoise) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules Binary and Poise cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
+  // Distorb
+  if (body[iBody].bDistOrb) {
+    if (body[iBody].bSpiNBody) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules DistOrb and SpiNbody cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
+  // Galhabit
   if (body[iBody].bGalHabit && module->iNumModules[iBody] > 1) {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: No other modules are permitted with GalHabit.\n");
     LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
   }
 
+  // Stellar
   if (body[iBody].bStellar) {
     if (body[iBody].bAtmEsc) {
       if (control->Io.iVerbose >= VERBERR)
@@ -1254,20 +1284,11 @@ void  VerifyModuleCompatability(BODY *body,UPDATE *update,CONTROL *control,FILES
     }
   }
 
-  if (body[iBody].bDistOrb) {
-    if (body[iBody].bSpiNBody) {
-      if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"ERROR: Modules DistOrb and SpiNbody cannot be applied to the same body.\n");
-      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-    }
-  }
 }
 
 void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
 
   int iNumMultiProps=0,iNumMultiForce=0;
-
-  VerifyModuleCompatability(body,update,control,files,module,options,iBody);
 
   if (module->iNumModules[iBody] > 0) {
     /* XXX Note that the number of elements here is really a permutation,

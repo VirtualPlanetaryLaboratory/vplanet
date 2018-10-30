@@ -26,8 +26,7 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime)
-      ;
+    *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime,cUnit);
   }
 }
@@ -44,7 +43,7 @@ void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0 && control->Evolve.nSteps > 0)
+  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0)
     *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
   else
     *dTmp = 0;
@@ -546,40 +545,45 @@ void WriteRotVel(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   }
 }
 
+/** SurfaceEnergyFluc is complicated as it can be determined by thermint, radheat,
+and/or eqtide. Furthermore, eqtide is complicated by heat sources in the solid
+interior, ocean, and/envelope. */
+
 void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   /* Surface Energy Flux is complicated because it either all comes
      through thermint, or it can be from eqtide and/or radheat. */
   *dTmp=0;
 
-  int bOcean = 0;
-  int bEnv = 0;
+  // First check if an ocean or envelope is present, and add ocean/envelope flux
+  if (body[iBody].bEqtide) {
+    int bOcean = 0;
+    int bEnv = 0;
 
-  // From initial conditions, did we want to model ocean tidal effects?
-  if(body[iBody].dTidalQOcean < 0)
-    bOcean = 0;
-  else
-    bOcean = 1;
+    // From initial conditions, did we want to model ocean tidal effects?
+    if(body[iBody].dTidalQOcean < 0)
+      bOcean = 0;
+    else
+      bOcean = 1;
 
-  // Same as ocean, but for envelope
-  if(body[iBody].dTidalQEnv < 0)
-    bEnv = 0;
-  else
-    bEnv = 1;
+    // Same as ocean, but for envelope
+    if(body[iBody].dTidalQEnv < 0)
+      bEnv = 0;
+    else
+      bEnv = 1;
+
+    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv)) {
+      *dTmp += fdSurfEnFluxOcean(body,iBody);
+    }
+  }
 
   if (body[iBody].bThermint) {
     *dTmp += fdHfluxSurf(body,iBody);
-
-    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv))
-    {
-       *dTmp += fdSurfEnFluxOcean(body,iBody);
-    }
-
   } else {
-  if (body[iBody].bEqtide)
-    *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
-  if (body[iBody].bRadheat)
-    *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
+    if (body[iBody].bEqtide)
+      *dTmp += fdSurfEnFluxEqtide(body,system,update,iBody,control->Evolve.iEqtideModel);
+    if (body[iBody].bRadheat)
+      *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
 
   /* This is the old way
@@ -1021,7 +1025,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MEANL].iNum = 1;
   output[OUT_MEANL].bNeg = 1;
   output[OUT_MEANL].dNeg = 1/DEGRAD;
-  output[OUT_MEANL].iModuleBit = SPINBODY;
+  output[OUT_MEANL].iModuleBit = SPINBODY + DISTORB;
   fnWrite[OUT_MEANL] = &WriteMeanLongitude;
 
   sprintf(output[OUT_ORBEN].cName,"OrbEnergy");
@@ -1604,10 +1608,10 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
 
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
-    fprintf(fp,"\nRuntime = %f s\n", dTotTime);
+    fprintf(fp,"\nRuntime = %d s\n", (int)dTotTime);
     fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
     if (control->Io.iVerbose >= VERBPROG)
-      printf("Runtime = %f s\n", dTotTime);
+      printf("Runtime = %d s\n", (int)dTotTime);
   }
 
   fclose(fp);
@@ -1642,8 +1646,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
-	    free(dTmp);
-	    dTmp = NULL;
+	          free(dTmp);
+	          dTmp = NULL;
           }
         }
       }
@@ -1653,13 +1657,12 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
-	fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
-	fprintf(fp," ");
+	       fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
+	       fprintf(fp," ");
       }
       fprintf(fp,"\n");
       fclose(fp);
     }
-    // XXX Pizza should NOT be present in this file
 
     /* Grid outputs, currently only set up for POISE */
     if (body[iBody].bPoise) {
@@ -1685,9 +1688,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	    WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	                WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-
+	          WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+	          WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             if (body[iBody].dSeasOutputTime != 0) {
               body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;
@@ -1701,10 +1703,10 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
         if (body[iBody].dSeasOutputTime != 0) {
           if (control->Evolve.dTime >= body[iBody].dSeasNextOutput && iLat == 0) {
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-              WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-              WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-                          WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	                WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+	          WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
           }

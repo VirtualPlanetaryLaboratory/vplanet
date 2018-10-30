@@ -13,8 +13,10 @@
 #define SK72CONST                     5.0e-25           /**< dJ/dt constant from Skumanich 1972 (Repetto+2014) */
 #define MATT15T0                      9.5e23            /**< Matt+2015 T0 constant in Joules */
 #define MATT15X                       10.0              /**< Matt+2015 saturation ratio threshold */
+#define MATT15R0SUN                   2.168             /**< Matt+2015 solar Rossby number */
 #define MATT15TAUCZ                   1.115e6           /**< Matt+2015 solar TauCZ value in s */
-#define MATT15OMEGASUN                2.6e-6            /**< Matt+2015 solar rotation rate in s^-1 */
+#define MATT15OMEGASUN                2.6e-6            /**< Matt+2015 solar angular rotation frequency in s^-1 */
+#define ROSSBYCRIT                    2.08              /**< Critical Rossby number above which magnetic braking shuts off according to van Saders+2018 */
 #define STELLAR_MODEL_NONE            0
 #define STELLAR_MODEL_BARAFFE         1
 #define STELLAR_MODEL_REINERS         2
@@ -43,6 +45,7 @@
 #define OPT_HALTENDBARAFFEFGRID 1516 /**< Halt when we reach the end of the Baraffe grid? */
 #define OPT_SATXUVTIME          1517 /**< XUV saturation time */
 #define OPT_XUVBETA             1518 /**< XUV power law decay exponent */
+#define OPT_ROSSBYCUT           1519 /** Whether or not to apply Rossby cut to dJ/dt */
 
 #define OPT_HZMODEL             1520 /**< Habitable zone model */
 #define OPT_MAGBRAKINGMODEL     1521 /**< Magnetic braking model */
@@ -62,6 +65,7 @@
 #define OUT_LXUV	              1511
 #define OUT_TEMPERATURE	        1512
 #define OUT_LXUVFRAC            1513
+#define OUT_ROSSBYNUMBER        1514
 
 #define OUT_HZLIMRECVENUS       1520 /**< Recent Venus HZ Limit */
 #define OUT_HZLIMRUNAWAY        1522 /**< Recent Venus HZ Limit */
@@ -111,6 +115,7 @@ void WriteLuminosity(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUVFrac(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRossbyNumber(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL*,FILE*);

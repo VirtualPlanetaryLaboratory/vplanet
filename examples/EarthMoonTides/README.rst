@@ -7,6 +7,9 @@ Overview
 A backward integration of the Earth-Moon system according to the constant-phase-lag
 equilibrium tidal model.
 
+Backward integrations are still unstable, and the eccentricity evolution in this
+case appears suspect. Forward integrations with eqtide are stable.
+
 ===================   ============
 **Date**              08/27/18
 **Author**            Rory Barnes

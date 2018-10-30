@@ -1,4 +1,4 @@
-❌ spinbody
+spinbody
 ============
 
 
@@ -30,7 +30,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: SpiNBody_Comparison.png
+.. figure:: SpiNBody_Earth.png
    :width: 600px
    :align: center
 

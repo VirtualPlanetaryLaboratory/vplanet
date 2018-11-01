@@ -22,4 +22,4 @@ bVarDt                    0               # Use variable timestepping?
 #dEta                      .1
 dTimeStep                 0.0005           # Timestep in years
 dStopTime                 1000            # Stop time for evolution
-dOutputTime               990.1234          # Output timesteps (assuming in body files)
+dOutputTime               0.1234          # Output timesteps (assuming in body files)

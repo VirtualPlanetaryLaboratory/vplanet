@@ -2784,18 +2784,43 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 }
 
 int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
-  double dEqRate,dDiff;
+  double dEqRate,dDiff,dWDTEqtide, dWDTStellar;
+  int iPert;
 
   dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
   dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
 
   if (dDiff < evolve->dMaxLockDiff[iBody]) {
-    // Tidally locked!
-    body[iBody].bTideLock = 1;
+    // If body is a star, ensure that rotation rate is close to equilibrium
+    // rate AND |dw/dt_eqtide| > |dw_dt_stellar| to ensure tidal torques dominate
+    if(body[iBody].bStellar) {
 
-    // Save time when body locked
-    body[iBody].dLockTime = evolve->dTime;
+      // dw/dt due to eqtide
+      dWDTEqtide = 0.0;
+      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++)
+        dWDTEqtide += *(update[iBody].padDrotDtEqtide[iPert]);
+
+        // dw/dt due to stellar
+        dWDTStellar = *(update[iBody].pdRotRateStellar);
+
+        if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
+          // Tidally locked!
+          fprintf(stderr,"EQTIDE: %e, STELLAR: %e\n",dWDTEqtide,dWDTStellar);
+          body[iBody].bTideLock = 1;
+        }
+    }
+    // If it's just a planet, this criterion is sufficient
+    else {
+      // Tidally locked!
+      body[iBody].bTideLock = 1;
+    }
+  }
+
+    // Ok, so is it tidally locked?
+    if(body[iBody].bTideLock) {
+      // Save time when body locked
+      body[iBody].dLockTime = evolve->dTime;
 
     if (io->iVerbose >= VERBPROG) {
       printf("%s spin locked at ",body[iBody].cName);
@@ -2804,8 +2829,10 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
     }
     return 1; /* Tidally locked */
   }
-  /* Not tidally locked */
-  return 0;
+  else {
+    /* Not tidally locked */
+    return 0;
+  }
 }
 
 /* Auxiliary properties required for the CPL calculations. N.B.: These

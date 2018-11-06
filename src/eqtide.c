@@ -2786,7 +2786,7 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
   double dEqRate,dDiff,dWDTEqtide, dWDTStellar;
   double dOldRotRate, dPerRotRate;
-  int iPert;
+  int iPert, iEqn, iVar;
   int iaBody[2] = {0, 0};
   SYSTEM * system; // Dummy system struct
 
@@ -2809,12 +2809,13 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
     // If Peq(1-eps) < Prot < Peq(1+eps), it's locked!
     dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
 
+    // Is RotRate close enough to equilibrium RotRate?
     if (dDiff < evolve->dMaxLockDiff[iBody]) {
       // But if it's a star, we need to make sure the gradient points toward tidally locked state
       if(body[iBody].bStellar) {
 
-        // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + 2eps)
-        body[iBody].dRotRate = (1.0 + 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
+        // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + eps)
+        body[iBody].dRotRate = (1.0 + evolve->dMaxLockDiff[iBody])*dEqRate;
 
         // dw/dt due to eqtide
         if(evolve->iEqtideModel == CTL)
@@ -2824,10 +2825,11 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
           // dw/dt due to stellar
           dWDTStellar = fdDRotRateDt(body,system,iaBody);
+
         // Is upper gradient pointing towards tidally locked state?
-        if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
-          // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - 2eps)
-          body[iBody].dRotRate = (1.0 - 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
+        if(dWDTEqtide + dWDTStellar < 0.0) {
+          // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - eps)
+          body[iBody].dRotRate = (1.0 - evolve->dMaxLockDiff[iBody])*dEqRate;
 
           // dw/dt due to eqtide
           if(evolve->iEqtideModel == CTL)
@@ -2837,14 +2839,15 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
             // dw/dt due to stellar
             dWDTStellar = fdDRotRateDt(body,system,iaBody);
-            if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
+
+            if(dWDTEqtide + dWDTStellar > 0.0) {
               // Gradient points toward tidally locked state -> Tidally locked!
               body[iBody].bTideLock = 1;
             }
-          // Not tidally locked
-          else {
-            body[iBody].bTideLock = 0;
-          }
+            // Not tidally locked
+            else {
+              body[iBody].bTideLock = 0;
+            }
         }
         // Not tidally locked
         else {
@@ -2859,6 +2862,14 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
         body[iBody].bTideLock = 1;
       }
     }
+    // Not tidally locked
+    else {
+      body[iBody].bTideLock = 0;
+    }
+  }
+  // Is tidally locked, but will it unlock?
+  else {
+    // TODO check to see if it tidally unlocks
   }
 
 
@@ -3036,6 +3047,17 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
         iOrbiter = iBody;
       else
         iOrbiter = body[iBody].iaTidePerts[0];
+
+    // Is the star tidally locked now?
+    /*
+    body[iBody].bTideLock = fbTidalLock(body,evolve,io,iBody,iOrbiter,update);
+    if(body[iBody].bTideLock) {
+      evolve->bForceEqSpin[iBody] = 1;
+    }
+    else {
+      evolve->bForceEqSpin[iBody] = 0;
+    }
+    */
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody]) {

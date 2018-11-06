@@ -2783,25 +2783,13 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
   body[iBody].dTidalChi[iPert] = body[iBody].dRadGyra*body[iBody].dRadGyra*body[iBody].dTidalRadius*body[iBody].dTidalRadius*body[iBody].dRotRate*dSemi*dMeanMotion/(BIGG*body[iPert].dMass);
 }
 
-int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
-  double dEqRate,dDiff,dWDTEqtide, dWDTStellar;
-  double dOldRotRate, dPerRotRate;
+int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update, fnUpdateVariable ***fnUpdate, SYSTEM *system) {
+  double dEqRate, dDiff;
+  double dOldRotRate, dTmpDeriv;
   int iPert, iEqn, iVar;
-  int iaBody[2] = {0, 0};
-  SYSTEM * system; // Dummy system struct
 
-  if (iBody > 0) {
-    iaBody[0] = iBody;
-    iaBody[1] = 0;
-  }
-  else {
-    iOrbiter = body[iBody].iaTidePerts[0];
-    iaBody[0] = iBody;
-    iaBody[1] = iOrbiter;
-  }
-
+  // Compute current equilibrium rotation rate
   dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
-  dOldRotRate = body[iBody].dRotRate;
 
   // Body wasn't tidally locked, but is it now?
   if(!body[iBody].bTideLock) {
@@ -2811,55 +2799,77 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
     // Is RotRate close enough to equilibrium RotRate?
     if (dDiff < evolve->dMaxLockDiff[iBody]) {
-      // But if it's a star, we need to make sure the gradient points toward tidally locked state
-      if(body[iBody].bStellar) {
 
-        // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + eps)
-        body[iBody].dRotRate = (1.0 + evolve->dMaxLockDiff[iBody])*dEqRate;
+      // Only tidally lock if dw/dt points to tidally locked states on both
+      // sides of equilibrium rotation rate
 
-        // dw/dt due to eqtide
-        if(evolve->iEqtideModel == CTL)
-          dWDTEqtide = fdCTLDrotrateDt(body,system,iaBody);
-        else
-          dWDTEqtide = fdCPLDrotrateDt(body,system,iaBody);
+      // Consider all variables that could impact rotation rates
+      iVar = update[iBody].iRot;
 
-          // dw/dt due to stellar
-          dWDTStellar = fdDRotRateDt(body,system,iaBody);
+      // Cache current dRotRate
+      dOldRotRate = body[iBody].dRotRate;
 
-        // Is upper gradient pointing towards tidally locked state?
-        if(dWDTEqtide + dWDTStellar < 0.0) {
-          // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - eps)
-          body[iBody].dRotRate = (1.0 - evolve->dMaxLockDiff[iBody])*dEqRate;
+      // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + eps)
+      body[iBody].dRotRate = (1.0 + evolve->dMaxLockDiff[iBody])*dEqRate;
 
-          // dw/dt due to eqtide
-          if(evolve->iEqtideModel == CTL)
-            dWDTEqtide = fdCTLDrotrateDt(body,system,iaBody);
-          else
-            dWDTEqtide = fdCPLDrotrateDt(body,system,iaBody);
+      // Update PropsAux
+      if (evolve->iEqtideModel == CPL)
+        PropsAuxCPL(body,evolve,update,iBody);
+      else
+        PropsAuxCTL(body,evolve,update,iBody);
 
-            // dw/dt due to stellar
-            dWDTStellar = fdDRotRateDt(body,system,iaBody);
-
-            if(dWDTEqtide + dWDTStellar > 0.0) {
-              // Gradient points toward tidally locked state -> Tidally locked!
-              body[iBody].bTideLock = 1;
-            }
-            // Not tidally locked
-            else {
-              body[iBody].bTideLock = 0;
-            }
-        }
-        // Not tidally locked
-        else {
-          body[iBody].bTideLock = 0;
-        }
-
-        // Reset dRotRate
-        body[iBody].dRotRate = dOldRotRate;
+      // Recompute, sum up new derivatives using perturbed dRotRate
+      dTmpDeriv = 0.0;
+      for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
+        update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+        dTmpDeriv += update[iBody].daDerivProc[iVar][iEqn];
       }
+
+      // Is upper gradient pointing towards tidally locked state?
+      if(dTmpDeriv < 0.0) {
+        // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - eps)
+        body[iBody].dRotRate = (1.0 - evolve->dMaxLockDiff[iBody])*dEqRate;
+
+        // Update PropsAux
+        if (evolve->iEqtideModel == CPL)
+          PropsAuxCPL(body,evolve,update,iBody);
+        else
+          PropsAuxCTL(body,evolve,update,iBody);
+
+        // Recompute, sum up new derivatives using perturbed dRotRate
+        dTmpDeriv = 0.0;
+        for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
+          update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+          dTmpDeriv += update[iBody].daDerivProc[iVar][iEqn];
+        }
+
+          if(dTmpDeriv > 0.0) {
+            // Gradient points toward tidally locked state -> Tidally locked!
+            body[iBody].bTideLock = 1;
+          }
+          // Not tidally locked
+          else {
+            body[iBody].bTideLock = 0;
+          }
+      }
+      // Not tidally locked
       else {
-        // Tidally locked!
-        body[iBody].bTideLock = 1;
+        body[iBody].bTideLock = 0;
+      }
+
+      // Reset dRotRate
+      body[iBody].dRotRate = dOldRotRate;
+
+      // Update PropsAux
+      if (evolve->iEqtideModel == CPL)
+        PropsAuxCPL(body,evolve,update,iBody);
+      else
+        PropsAuxCTL(body,evolve,update,iBody);
+
+      // Reset derivatives
+      dTmpDeriv = 0.0;
+      for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++){
+        update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
       }
     }
     // Not tidally locked
@@ -3066,7 +3076,7 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
     /* Tidally Locked? */
     else {
       // Is the body now tidally locked?
-      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update);
+      evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update,fnUpdate,system);
       // If so, reset the function pointer to return dTINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
 	 if there is one tidal perturber */

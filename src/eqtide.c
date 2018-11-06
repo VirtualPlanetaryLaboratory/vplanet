@@ -2785,54 +2785,100 @@ void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
 int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE *update) {
   double dEqRate,dDiff,dWDTEqtide, dWDTStellar;
+  double dOldRotRate, dPerRotRate;
   int iPert;
+  int iaBody[2] = {0, 0};
+  SYSTEM * system; // Dummy system struct
 
-  dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
-
-  dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
-
-  if (dDiff < evolve->dMaxLockDiff[iBody]) {
-    // If body is a star, ensure that rotation rate is close to equilibrium
-    // rate AND |dw/dt_eqtide| > |dw_dt_stellar| to ensure tidal torques dominate
-    if(body[iBody].bStellar) {
-
-      // dw/dt due to eqtide
-      dWDTEqtide = 0.0;
-      for (iPert=0;iPert<body[iBody].iTidePerts;iPert++)
-        dWDTEqtide += *(update[iBody].padDrotDtEqtide[iPert]);
-
-        // dw/dt due to stellar
-        dWDTStellar = *(update[iBody].pdRotRateStellar);
-
-        if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
-          // Tidally locked!
-          fprintf(stderr,"EQTIDE: %e, STELLAR: %e\n",dWDTEqtide,dWDTStellar);
-          body[iBody].bTideLock = 1;
-        }
-    }
-    // If it's just a planet, this criterion is sufficient
-    else {
-      // Tidally locked!
-      body[iBody].bTideLock = 1;
-    }
-  }
-
-    // Ok, so is it tidally locked?
-    if(body[iBody].bTideLock) {
-      // Save time when body locked
-      body[iBody].dLockTime = evolve->dTime;
-
-    if (io->iVerbose >= VERBPROG) {
-      printf("%s spin locked at ",body[iBody].cName);
-      fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
-      printf(" years.\n");
-    }
-    return 1; /* Tidally locked */
+  if (iBody > 0) {
+    iaBody[0] = iBody;
+    iaBody[1] = 0;
   }
   else {
-    /* Not tidally locked */
-    return 0;
+    iOrbiter = body[iBody].iaTidePerts[0];
+    iaBody[0] = iBody;
+    iaBody[1] = iOrbiter;
   }
+
+  dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
+  dOldRotRate = body[iBody].dRotRate;
+
+  // Body wasn't tidally locked, but is it now?
+  if(!body[iBody].bTideLock) {
+
+    // If Peq(1-eps) < Prot < Peq(1+eps), it's locked!
+    dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
+
+    if (dDiff < evolve->dMaxLockDiff[iBody]) {
+      // But if it's a star, we need to make sure the gradient points toward tidally locked state
+      if(body[iBody].bStellar) {
+
+        // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + 2eps)
+        body[iBody].dRotRate = (1.0 + 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
+
+        // dw/dt due to eqtide
+        if(evolve->iEqtideModel == CTL)
+          dWDTEqtide = fdCTLDrotrateDt(body,system,iaBody);
+        else
+          dWDTEqtide = fdCPLDrotrateDt(body,system,iaBody);
+
+          // dw/dt due to stellar
+          dWDTStellar = fdDRotRateDt(body,system,iaBody);
+        // Is upper gradient pointing towards tidally locked state?
+        if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
+          // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - 2eps)
+          body[iBody].dRotRate = (1.0 - 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
+
+          // dw/dt due to eqtide
+          if(evolve->iEqtideModel == CTL)
+            dWDTEqtide = fdCTLDrotrateDt(body,system,iaBody);
+          else
+            dWDTEqtide = fdCPLDrotrateDt(body,system,iaBody);
+
+            // dw/dt due to stellar
+            dWDTStellar = fdDRotRateDt(body,system,iaBody);
+            if(fabs(dWDTEqtide) > fabs(dWDTStellar)) {
+              // Gradient points toward tidally locked state -> Tidally locked!
+              body[iBody].bTideLock = 1;
+            }
+          // Not tidally locked
+          else {
+            body[iBody].bTideLock = 0;
+          }
+        }
+        // Not tidally locked
+        else {
+          body[iBody].bTideLock = 0;
+        }
+
+        // Reset dRotRate
+        body[iBody].dRotRate = dOldRotRate;
+      }
+      else {
+        // Tidally locked!
+        body[iBody].bTideLock = 1;
+      }
+    }
+  }
+
+
+  // Ok, so is it tidally locked?
+  if(body[iBody].bTideLock) {
+    // Save time when body locked
+    body[iBody].dLockTime = evolve->dTime;
+
+  if (io->iVerbose >= VERBPROG) {
+    printf("%s spin locked at ",body[iBody].cName);
+    fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
+    printf(" years.\n");
+  }
+  return 1; /* Tidally locked */
+}
+else {
+  /* Not tidally locked */
+  return 0;
+  }
+
 }
 
 /* Auxiliary properties required for the CPL calculations. N.B.: These

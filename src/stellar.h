@@ -66,6 +66,7 @@
 #define OUT_TEMPERATURE	        1512
 #define OUT_LXUVFRAC            1513
 #define OUT_ROSSBYNUMBER        1514
+#define OUT_DROTPERDTSTELLAR    1515
 
 #define OUT_HZLIMRECVENUS       1520 /**< Recent Venus HZ Limit */
 #define OUT_HZLIMRUNAWAY        1522 /**< Recent Venus HZ Limit */
@@ -116,6 +117,7 @@ void WriteTemperature(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void WriteLXUV(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteLXUVFrac(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRossbyNumber(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteDRotPerDtStellar(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL*,FILE*);

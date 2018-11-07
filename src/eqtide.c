@@ -2809,8 +2809,8 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
       // Cache current dRotRate
       dOldRotRate = body[iBody].dRotRate;
 
-      // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + eps)
-      body[iBody].dRotRate = (1.0 + evolve->dMaxLockDiff[iBody])*dEqRate;
+      // Case 1 w >= w_eq: -> Perturb Prot to w = w * (1 + 2eps)
+      body[iBody].dRotRate = (1.0 + 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL)
@@ -2827,8 +2827,8 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Is upper gradient pointing towards tidally locked state?
       if(dTmpDeriv < 0.0) {
-        // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - eps)
-        body[iBody].dRotRate = (1.0 - evolve->dMaxLockDiff[iBody])*dEqRate;
+        // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - 2eps)
+        body[iBody].dRotRate = (1.0 - 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
 
         // Update PropsAux
         if (evolve->iEqtideModel == CPL)

@@ -1217,11 +1217,6 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
         fprintf(stderr,"ERROR: Modules Binary and SpiNbody cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     }
-    if (body[iBody].bEqtide) {
-      if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"ERROR: Modules Binary and EqTide cannot be applied to the same body.\n");
-      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-    }
     if (body[iBody].bPoise) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Modules Binary and Poise cannot be applied to the same body.\n");

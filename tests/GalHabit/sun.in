@@ -1,5 +1,5 @@
 sName		sun		# Body's name
-#saModules       galhabit
+#saModules       galhabit poise
 
 # Physical Parameters
 dMass		1		# Mass, negative -> Earth masses

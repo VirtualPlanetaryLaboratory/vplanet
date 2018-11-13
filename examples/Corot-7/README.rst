@@ -4,6 +4,9 @@ Orbital Damping in the CoRoT-7 System
 Overview
 --------
 
+Orbital damping into the "fixed-point solution" in which two planets' major axes
+circulate with the same frequency.
+
 ===================   ============
 **Date**              9/12/18
 **Author**            David Fleming
@@ -14,8 +17,10 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/corot7>`_
 ===================   ============
 
-Using vplanet's distorb, eqtide, and stellar modules to simulate the tidal damping
-and apsidal locking of CoRoT-7 b and c examined by :cite::Rodriguez11.
+In a planetary system consisting of two or more planets and in which at least one
+experiences damping, the orbits will evolve such that the eccentricity cycles stop
+and the major axes evolve in lock stop. This "fixed point solution" :cite::`WuGoldreich02`
+is reproduced below for the case of CoRoT-7 b and c as examined by :cite::Rodriguez11.
 
 To run this example
 -------------------

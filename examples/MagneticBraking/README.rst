@@ -4,6 +4,8 @@ Magnetic Braking
 Overview
 --------
 
+Rotational evolution of stars due to magnetic effects.
+
 ===================   ============
 **Date**              10/21/18
 **Author**            David Fleming

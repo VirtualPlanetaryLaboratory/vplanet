@@ -4,7 +4,7 @@ Cassini States
 Overview
 --------
 
-.. todo:: **@deitrr**: This example is broken. The same figure is produced twice.
+A planetary system can damping into a Cassini state.
 
 ===================   ============
 **Date**              07/25/18
@@ -16,10 +16,14 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cassini>`_
 ===================   ============
 
-This example shows how a planetary system can damp into a Cassini state, in which
+A damped orbital-rotational system can enter a "Cassini state," in which
 a planet's rotational axis, orbital axis, and the local total angular momentum
-vector are all coplanar.
-
+vector are all coplanar. In this case, we consider a system in which tides from the
+star damp the rotation rate, obliquity, semi-major axis and orbital eccentricity.
+Tides tend to damp the rotational axis so that it is perpendicular to the orbital
+plane, but perturbations from other planets drive the obliquity to higher values.
+Over time, the systems settles in a damped-drived state in which the obliquity is
+non-zero, but also not oscillating. This example is modeled after Winn & Holman (2005).
 
 To run this example
 -------------------

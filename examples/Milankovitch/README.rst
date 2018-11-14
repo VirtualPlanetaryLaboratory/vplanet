@@ -4,6 +4,8 @@ Seasonal and Milankovitch Climate Cycles
 Overview
 --------
 
+Annual and Milankovitch climate cycles on Earth.
+
 ===================   ============
 **Date**              07/25/18
 **Author**            Russell Deitrick
@@ -14,10 +16,13 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/Milankovitch>`_
 ===================   ============
 
-
-Validation of **VPLANET**'s 1-D climate model with dynamic ice sheets over seasonal
-and Myr timescales.
-
+This example validates **VPLANET**'s 1-D climate model with dynamic ice sheets over annual
+and Myr timescales. On annual timescales, the seasons cycle back and forth on the
+northern and southern hemispheres. On longer timescales, ice sheets grow and retreat
+due to changes in eccentricity and obliquity, which are caused by perturbations
+from other bodies. Note that we assume every latitude grid is 75% water, 25% land
+so the latitudinal extent of the ice sheets does not exactly match the geologic
+record, but the frequencies and intensities do (Huybers & Tzipermann 2008).
 
 To run this example
 -------------------

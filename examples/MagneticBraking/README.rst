@@ -1,20 +1,23 @@
-Stellar evolution
+Magnetic Braking
 =================
 
 Overview
 --------
 
-.. todo:: Change ranges to [0.075, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 2]??
+Rotational evolution of stars due to magnetic effects.
 
 ===================   ============
-**Date**              07/25/18
-**Author**            Rodrigo Luger
+**Date**              10/21/18
+**Author**            David Fleming
 **Modules**           stellar
 **Approx. runtime**   2 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/stellar>`_
+**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/MagneticBraking>`_
 ===================   ============
 
-Stellar evolution for stars between 0.1 and 1.0 solar masses.
+Rotation period evolution for 0.1 and 1.0 Msun stars due to stellar
+evolution and magnetic braking.  We compare the how our different available
+magnetic braking laws (Reiners & Mohanty (2012), Repetto & Nelemans (2014),
+and Matt et al. (2015)) impact the rotation period evolution.
 
 
 To run this example
@@ -28,10 +31,9 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: MainSequence.png
+.. figure:: MagneticBraking.png
    :width: 600px
    :align: center
 
-   Evolution of the radius, luminosity, temperature, and period of stars
-   of different masses according to the Baraffe (2015) :cite:`Baraffe15`
-   stellar evolution tracks.
+   Rotation period evolution for a 0.1 and 1 Msun star due to stellar evolution
+   (Baraffe et al. (2015)) and one of the 3 available magnetic braking laws.

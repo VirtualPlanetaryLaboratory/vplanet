@@ -2,8 +2,7 @@
 sSystemName               system
 iVerbose                  5
 bOverwrite                1
-saBodyFiles               a_matt.in a_sk.in a_reiners.in $
-                          b_matt.in b_sk.in b_reiners.in
+saBodyFiles               matt.in sk.in reiners.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
@@ -14,6 +13,5 @@ dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
 dEta                      0.01
-dStopTime                 5e9
-dOutputTime               1e6
-
+dStopTime                 5e7
+dOutputTime               5e7

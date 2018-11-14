@@ -2,6 +2,7 @@
 sName	                  a_sk
 saModules	          stellar
 dMass                     0.1
+dAge                      5.0e6
 sStellarModel             baraffe
 sMagBrakingModel          skumanich
 bHaltEndBaraffeGrid       1 

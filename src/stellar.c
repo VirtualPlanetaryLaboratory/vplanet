@@ -921,6 +921,23 @@ void WriteRossbyNumber(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   strcpy(cUnit,"");
 }
 
+void WriteDRotPerDtStellar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double dDeriv;
+  int iPert;
+
+  int iaBody[1] = {iBody};
+  dDeriv = fdDRotRateDt(body, system, iaBody);
+
+  /* Multiply by dP/domega to get dP/dt */
+  *dTmp = dDeriv * (-2*PI/(body[iBody].dRotRate*body[iBody].dRotRate));
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  }  else {
+    strcpy(cUnit,"");
+  }
+}
+
 void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
@@ -1007,6 +1024,15 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ROSSBYNUMBER].iNum = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER] = &WriteRossbyNumber;
+
+  sprintf(output[OUT_DROTPERDTSTELLAR].cName,"DRotPerDtStellar");
+  sprintf(output[OUT_DROTPERDTSTELLAR].cDescr,"Time Rate of Change of Rotation Period in STELLAR");
+  sprintf(output[OUT_DROTPERDTSTELLAR].cNeg,"days/Myr");
+  output[OUT_DROTPERDTSTELLAR].bNeg = 1;
+  output[OUT_DROTPERDTSTELLAR].dNeg = DAYSEC/(YEARSEC*1e6);
+  output[OUT_DROTPERDTSTELLAR].iNum = 1;
+  output[OUT_DROTPERDTSTELLAR].iModuleBit = STELLAR;
+  fnWrite[OUT_DROTPERDTSTELLAR] = &WriteDRotPerDtStellar;
 }
 
 /************ STELLAR Logging Functions **************/

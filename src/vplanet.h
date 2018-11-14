@@ -1094,7 +1094,7 @@ struct UPDATE {
   int **iNumBodies;     /**< Number of Bodies Affecting a Process */
 
   /* These keep track of the variable and modules */
-  int iNumModules;      /**< Number of Modules Affecting a Body */
+  int iNumModules;      /**< Number of Modules Affecting a Body XXX Obsolete?*/
   int *iNumEqns;        /**< Number of Equations That Modify a Primary Variable */
   int *iaVar;           /**< Primary variable number */
   /*! The Module number responsible for a given process. The first dimension

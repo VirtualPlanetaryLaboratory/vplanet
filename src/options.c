@@ -1065,7 +1065,10 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
     FinalizeModule(*body,module,iBody);
 
-  /* XXX Should check this file here */
+  /* Check that selected modules are compatable */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    VerifyModuleCompatability(*body,control,files,module,options,iBody);
+  }
 
   free(input.bLineOK);
 

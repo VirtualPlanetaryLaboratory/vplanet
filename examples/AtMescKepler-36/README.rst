@@ -4,6 +4,8 @@ Kepler-36 Atmospheric Escape
 Overview
 --------
 
+Loss of a hydrogen envelope due to stellar XUV stripping.
+
 ===================   ============
 **Date**              06/28/18
 **Author**            Rodrigo Luger
@@ -13,9 +15,13 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/kepler36>`_
 ===================   ============
 
-A reproduction of Figure 3 in Lopez and Fortney (2013) :cite:`LopezFortney2013`
-using **VPLANET**.
-
+Hydrogen-rich planets that are close to their host star can lose significant mass
+as the XUV radiation from the host star imparts enough energy for individual atoms
+to acheive escape velocity. In this example, **VPLANET** simulates atmmospheric loss
+for the case of Kepler-36 b, which is considerably smaller in radius than its very
+nearby companions, Kepler-36 c. :cite:`LopezFortney2013` argue that this extreme
+radius dichotomy can be explained by XUV winds, and **VPLANET** reproduces that
+result, see Figure 3 in Lopez and Fortney (2013).
 
 To run this example
 -------------------

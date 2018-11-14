@@ -103,7 +103,7 @@ y2 = -np.sin(obl2)
 obl1 = np.arctan2(np.sin(inc),1-alpha/g)
 y1 = -np.sin(obl1)
 
-plt.figure(figsize=(8,8))
+fig=plt.figure(figsize=(8,8))
 plt.contour(Y,X,H.T,50,colors='0.5')
 plt.contour(Y,X,H.T,levels=[1.00005*H4],colors='k')
 plt.plot(xc,yc,'-',color='0.5')

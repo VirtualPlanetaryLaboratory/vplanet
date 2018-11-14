@@ -98,28 +98,35 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double daOrbTot[] = {0.0,0.0,0.0};
   double *pdaTmp;
   int iBody, i;
+  int bUsingSpiNBody=0;
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    if (body[iBody].bSpiNBody) {
+      bUsingSpiNBody=1;
+    }
+  }
 
   // Add all rotational, orbital angular momentum, angular momentum lost
     //SpiNBody has direct x,y,z components for position and velocity
-  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++){
-    if (body[iBody].bSpiNBody){
+  if (bUsingSpiNBody){
+    for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
       pdaTmp = fdOrbAngMom(body,control,iBody);
-      for (i=0; i<3; i++){
-        daOrbTot[i] += *(pdaTmp+i);
+      for (i=0; i<3; i++) {
+        daOrbTot[i] += pdaTmp[i];
       }
-      dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
       //dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
       //dTot += body[iBody].dLostAngMom;
-      free(pdaTmp);
     }
-    else {
-      for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-        pdaTmp = fdOrbAngMom(body,control,iBody);
-        dTot += *pdaTmp;
-        dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-        dTot += body[iBody].dLostAngMom;
-        free(pdaTmp);
-      }
+    dTot += sqrt(daOrbTot[0]*daOrbTot[0]+daOrbTot[1]*daOrbTot[1]+daOrbTot[2]*daOrbTot[2]);
+    free(pdaTmp);
+  }
+  else {
+    for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+      pdaTmp = fdOrbAngMom(body,control,iBody);
+      dTot += *pdaTmp;
+      dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+      dTot += body[iBody].dLostAngMom;
+      free(pdaTmp);
     }
   }
 
@@ -136,18 +143,16 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass; // Mass of central body or bodies if using binary and not secondary star
   int i;
+  double PotEnergy = 0;
+  double Distance = dHUGE;
 
-  if (body[iBody].bSpiNBody && iBody>0){
-    double PotEnergy = 0;
-    //For SpiNBody, find the heliocentric distance then return the potential.
-    //This ignores planet-planet potential.
-    for (i = 0; i < control->Evolve.iNumBodies; i++) {
-      if (i!=iBody){
-        double Distance = sqrt((body[iBody].dPositionX-body[i].dPositionX)*(body[iBody].dPositionX-body[i].dPositionX)
-            +(body[iBody].dPositionY-body[i].dPositionY)*(body[iBody].dPositionY-body[i].dPositionY)
-            +(body[iBody].dPositionZ-body[i].dPositionZ)*(body[iBody].dPositionZ-body[i].dPositionZ));
-        PotEnergy += -BIGG*body[i].dMass*body[iBody].dMass/Distance;
-      }
+  if (body[iBody].bSpiNBody) {
+    //For SpiNBody, find the body-body distance then return the potential.
+    for (i = iBody+1; i < control->Evolve.iNumBodies; i++) {
+      Distance = sqrt((body[iBody].dPositionX-body[i].dPositionX)*(body[iBody].dPositionX-body[i].dPositionX)
+          +(body[iBody].dPositionY-body[i].dPositionY)*(body[iBody].dPositionY-body[i].dPositionY)
+          +(body[iBody].dPositionZ-body[i].dPositionZ)*(body[iBody].dPositionZ-body[i].dPositionZ));
+      PotEnergy += -BIGG*body[i].dMass*body[iBody].dMass/Distance;
     }
     return(PotEnergy);
   }
@@ -180,13 +185,15 @@ double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 /*! Compute orbital kinetic energy of a body */
 double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dMass;
+  double dOrbKinEnergy;
 
-  if (body[iBody].bSpiNBody && iBody>0){
-    //Energy is calculated in a heliocentric reference frame.
+  if (body[iBody].bSpiNBody) {
+    //Energy is calculated in a barycentric reference frame.
     double Velocity2 = (body[iBody].dVelX)*(body[iBody].dVelX)
         +(body[iBody].dVelY)*(body[iBody].dVelY)
         +(body[iBody].dVelZ)*(body[iBody].dVelZ);
-    return 0.5*body[iBody].dMass*Velocity2;
+    dOrbKinEnergy = .5*body[iBody].dMass*Velocity2;
+    return(dOrbKinEnergy);
   }
   // Ignore for central body or if there's no orbiting bodies
   if(iBody < 1 || !control->bOrbiters) {
@@ -216,8 +223,9 @@ double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
 
 /*! Compute total orbital energy for a given body */
 double fdOrbEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
-
-  return fdOrbKinEnergy(body,control,system,iBody) + fdOrbPotEnergy(body,control,system,iBody);
+  double dOrbEnergy;
+  dOrbEnergy = fdOrbKinEnergy(body,control,system,iBody) + fdOrbPotEnergy(body,control,system,iBody);
+  return (dOrbEnergy);
 }
 
 /*! Compute total non-orbital kinetic energy of a body  */

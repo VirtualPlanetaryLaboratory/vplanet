@@ -4,6 +4,8 @@ Water Loss on Venus
 Overview
 --------
 
+Water loss on Venus from thermal escape processes.
+
 ===================   ============
 **Date**              07/25/18
 **Author**            Rodrigo Luger
@@ -13,8 +15,11 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/VenusWaterLoss>`_
 ===================   ============
 
-Water loss on Venus from thermal processes.
-
+The Sun's XUV radiation likely removed water from Venus early in the history of the
+Solar System. If Venus was in a runaway greenhouse, then water would be in the
+stratosphere where it can be photolyzed and the hydrogen can escape. Watson et al.
+(1981) estimated 280 Myr, but did not account for early activity. Including that effect,
+**VPLANET** predicts a desiccation timescale of about 100 Myr.
 
 
 To run this example

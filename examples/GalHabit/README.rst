@@ -4,7 +4,8 @@ Galactic Evolution
 Overview
 --------
 
-.. todo:: **@deitrr**: Change system names in vpl.in.
+Orbital evolution of objects in wide (>10,000 AU) orbits due to galactic migration,
+the galactic tide, and passing field stars.
 
 ===================   ============
 **Date**              07/25/18
@@ -14,7 +15,10 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/galhabit>`_
 ===================   ============
 
-An example of galactic migration and perturbations from passing stars.
+Wide orbits are subject to torques from the galactic tide, as well as impulses from
+passing stars. Complicating the evolution is the possibility of migration, in which
+stars can migrate multiple kpc from their birth location. This example shows that
+evolution for an M dwarf orbiting a Sun-like star.
 
 To run this example
 -------------------

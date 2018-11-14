@@ -1,11 +1,11 @@
 Evolution of Tight Stellar Binaries
-=====================
-
-.. todo:: **@dflemin3**: This example is broken as it does not match ZB89. This is issue #54.
-
+===================================
 
 Overview
 --------
+
+Orbital circularization of short-period binary stars due to radial contraction on
+the pre-main sequence and tidal torques.
 
 ===================   ============
 **Date**              07/25/18
@@ -16,8 +16,12 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/zahn>`_
 ===================   ============
 
-This script produces a reproduction of Figure 1 of Zahn and Bouchet (1989)
-:cite:`ZahnBouchet89` using a coupled **EQTIDE** and **STELLAR** **VPLANET** run.
+As stars form, they contract onto the main sequence, and those in binary star systems
+can also experience tidal torques on the rotation and orbit. As tidal torques scale
+with stellar radius to the 5th power, the torques can be very strong early on. This
+early tidal evolution circularizes binary star orbits for orbital periods less than
+~8 days, which is observed :cite::Meibom05. This example reproduce Figure 1 of
+Zahn and Bouchet (1989) :cite:`ZahnBouchet89` using **EQTIDE** and **STELLAR**.
 
 To run this example
 -------------------

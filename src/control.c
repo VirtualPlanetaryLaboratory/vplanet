@@ -174,7 +174,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
         // ** Short help **
 
-        if (options->bNeg == 1)
+        if (options->dNeg != 0)
           printf("%c[1m[-]%c[0m",ESC,ESC);
         printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
 
@@ -191,7 +191,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
           printf("Array");
         printf(") -- %s ",options->cDescr);
 
-        if (options->bNeg == 1)
+        if (options->dNeg != 0)
           printf(" [Negative = %s] ",options->cNeg);
 
         // allowed modules

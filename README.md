@@ -18,12 +18,12 @@ escape, oxygen escape, and oxygen build-up.
 of resonance.
 
 **DistRot**: Evolution of a world's rotational axis due to orbital evolution and
-the stellar torque, including shape evolution as a function of rotational frequency.
+the stellar torque (includes shape evolution as a function of rotational frequency).
 
 **EqTide**: Tidal evolution in the equilibrium tide framework.
 
 **GalHabit**: Evolution of a wide orbit due to the galactic tide and impulses from
-passing stars, including radial migration.
+passing stars (includes radial migration).
 
 **POISE**: Energy balance climate model including dynamic ice sheets and lithospheric
 compression/rebound.

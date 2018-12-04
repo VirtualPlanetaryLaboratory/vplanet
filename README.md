@@ -6,6 +6,37 @@
 
 `vplanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the source code, extensive documentation, and the scripts and files to generate published figures and validate the current release. We can't claim we found aliens with closed source software!
 
+`vplanet` currently consists of 11 functioning "modules," which are a set of equations
+that model a specifc physical process:
+
+**AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
+escape, oxygen escape, and oxygen build-up.
+
+**Binary**: Orbital evolution of a circumbinary planet.
+
+**DistOrb**: 2nd and 4th order semi-analytic models of orbital evolution outside
+of resonance.
+
+**DistRot**: Evolution of a world's rotational axis due to orbital evolution and
+the stellar torque, including shape evolution as a function of rotational frequency.
+
+**EqTide**: Tidal evolution in the equilibrium tide framework.
+
+**GalHabit**: Evolution of a wide orbit due to the galactic tide and impulses from
+passing stars, including radial migration.
+
+**POISE**: Energy balance climate model including dynamic ice sheets and lithospheric
+compression/rebound.
+
+**RadHeat**: Radiogenic heating of a world's interior.
+
+**SpiNBody**: N-body integrator.
+
+**Stellar**: Stellar luminosity, temperature, radius, and mass concentration.
+
+**ThermInt**: Thermal interior evolution, including magnetic fields, for planets
+undergoing plate tectonics or stagnant lid evolution.
+
 To get started, ensure you have clang/gcc installed and follow the [QuickStart Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html).
 
 `vplanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the dev branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.

@@ -30,7 +30,7 @@ compression/rebound.
 
 **RadHeat**: Radiogenic heating of a world's interior.
 
-**SpiNBody**: N-body integrator.
+**SpiNBody**: N-body integrator for the evolution of a system of massice particles.
 
 **Stellar**: Stellar luminosity, temperature, radius, and mass concentration.
 

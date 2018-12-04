@@ -2,6 +2,7 @@
 sName	                  b_matt
 saModules	          stellar
 dMass                     1.0
+dAge                      5.0e6
 sStellarModel             baraffe
 sMagBrakingModel          matt
 bHaltEndBaraffeGrid       1 

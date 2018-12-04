@@ -6,8 +6,8 @@
 
 `vplanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the source code, extensive documentation, and the scripts and files to generate published figures and validate the current release. We can't claim we found aliens with closed source software!
 
-`vplanet` currently consists of 11 functioning "modules," which are a set of equations
-that model a specifc physical process:
+`vplanet` currently consists of 11 functioning "modules," each containing a set of equations
+that models a specifc physical process:
 
 **AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
 escape, oxygen escape, and oxygen build-up.

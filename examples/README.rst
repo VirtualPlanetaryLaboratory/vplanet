@@ -8,7 +8,7 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 **Atmospheres**
 ===============
 
-`AtmEscKepler-36 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, Stellar]
+`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, Stellar]
 
 `Milankovitch <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/Milankovitch>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings. [DistOrb, DistRot, POISE]
 

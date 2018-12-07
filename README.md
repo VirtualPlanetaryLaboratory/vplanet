@@ -39,7 +39,7 @@ compression/rebound.
 **ThermInt**: Thermal interior evolution, including magnetic fields, for planets
 undergoing plate tectonics or stagnant lid evolution.
 
-`vplanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the **dev** branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
+`vplanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
 
 The [examples/](https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples) directory contains input files and scripts for generating the figures in Barnes et al. (2018) and all subsequent module descriptions. The Manual/ directory contains the source code to generate a pdf of Barnes et al. (2018) plus methods sections from subsequent modules. This pdf describes the physics of each module, validates each module against observations or past results, and uses figures from the [examples/](https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples) directory. {Soon!}
 

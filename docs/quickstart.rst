@@ -43,8 +43,8 @@ A simple example
 Let's go over how to use :code:`VPLANET` to simulate the evolution of
 a hypothetical ocean on the surface of early Venus. Isotopic evidence
 suggests Venus may have had a similar amount of water to Earth in the
-past, but because of vigorous hydrodynamic escape it probably lost all
-of it in the first few hundred Myr. Here we're going to use the :doc:`stellar </src/stellar>`
+past :cite:`Donahue1982`, but because of vigorous hydrodynamic escape it probably lost all
+of it in the first few hundred Myr :cite:`Hunten1973`. Here we're going to use the :doc:`stellar </src/stellar>`
 and :doc:`atmesc </src/atmesc>` modules of :code:`VPLANET` to jointly model the evolution
 of the Sun and Venus. This guide shows how to interpret the :doc:`VenusWaterLoss </examples/VenusWaterLoss>`
 example, but here we will only use one planet, whereas the example uses three.
@@ -221,7 +221,7 @@ and radius.
 Finally, we set some :code:`atmesc`-specific parameters. We told the code
 to initialize the planet with one Earth ocean (the minus sign, again, indicates
 custom units) and to compute the water loss using the :code:`lbexact` model
-from Luger and Barnes (2015) :cite:`LugerBarnes2015`. Oxygen will be absorbed
+from Luger and Barnes (2015) :cite:`LugerBarnes15`. Oxygen will be absorbed
 at the surface instantly, and the XUV absorption efficiency will be calculated
 from the Bolmont et al. (2016) :cite:`Bolmont16` model.
 

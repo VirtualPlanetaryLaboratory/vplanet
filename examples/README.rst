@@ -8,7 +8,7 @@ plots, and more description of the physics.
 **ATMOSPHERES**
 ===============
 
-_`AtmEscKepler-36 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux.
+`AtmEscKepler-36 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux.
 
 **BinaryTides**: Coupled stellar and tidal evolution of short-period binary stars.
 

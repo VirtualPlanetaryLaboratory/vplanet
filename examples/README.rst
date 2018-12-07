@@ -2,10 +2,13 @@ VPLANET Examples
 ================
 
 This subdirectory contains examples of numerous ways to use `vplanet`. A brief
-description of each is provided below. Click on the directory above to see scripts,
+description of each is provided below, arranged by topic (with modules listed in brackets). Click on the directory above to see scripts,
 plots, and more description of the physics.
 
-**AtMescKepler-36**: The loss of a hydrogen envelope due to stellar XUV flux.
+**ATMOSPHERES**
+===============
+
+[**AtmEscKepler-36**](https://github.com/VirtualPlanetaryLaboratory/vplanet/edit/master/examples/AtmEscKepler-36): The loss of a hydrogen envelope due to stellar XUV flux.
 
 **BinaryTides**: Coupled stellar and tidal evolution of short-period binary stars.
 

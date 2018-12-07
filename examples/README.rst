@@ -3,7 +3,7 @@ VPLANET Examples
 
 This subdirectory contains examples of numerous ways to use `vplanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory above to see scripts,
-plots, and more description of the physics.
+plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research.
 
 **Atmospheres**
 ===============

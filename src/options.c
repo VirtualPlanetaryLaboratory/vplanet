@@ -1065,7 +1065,10 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
     FinalizeModule(*body,module,iBody);
 
-  /* XXX Should check this file here */
+  /* Check that selected modules are compatable */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    VerifyModuleCompatability(*body,control,files,module,options,iBody);
+  }
 
   free(input.bLineOK);
 
@@ -1210,6 +1213,8 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
     control->Evolve.bDoBackward = bTmp;
+    fprintf(stderr,"\nWARNING: Backward integrations have not been validated and may be unstable!\n");
+    fprintf(stderr,"Use at your own risk.\n\n");
   } else
     AssignDefaultInt(options,&control->Evolve.bDoBackward,files->iNumInputs);
 }

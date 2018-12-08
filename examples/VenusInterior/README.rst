@@ -1,9 +1,10 @@
-EarthInterior
+VenusInterior
 ==========
-
 
 Overview
 --------
+
+Internal evolution of Venus.
 
 ===================   ============
 **Date**              10/15/18
@@ -13,7 +14,9 @@ Overview
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/VenusInterior>`_
 ===================   ============
 
-
+This example uses the stagnant lid model of Venus to estimate its thermal and magnetic
+evolution. Without much data on its interior, this problem is underconstrained, but
+**VPLANET** does reproduce the available observations.
 
 To run this example
 -------------------
@@ -22,7 +25,6 @@ To run this example
 
    vplanet vpl.in
    python makeplot.py <pdf | png>
-
 
 Expected output
 ---------------

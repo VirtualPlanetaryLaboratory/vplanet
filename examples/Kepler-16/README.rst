@@ -1,8 +1,10 @@
-Circumbinary planet
-===================
+Kepler-16
+=========
 
 Overview
 --------
+
+Orbital evolution of circumbinary planet Kepler-16 b.
 
 ===================   ============
 **Date**              07/24/18
@@ -13,7 +15,9 @@ Overview
 ===================   ============
 
 
-An example of the orbital evolution of circumbinary planet Kepler-16 b.
+The orbital evolution of Kepler-16 b, a circumbinary planet, ir shown in this example
+using the semi-analytic model of Leeung & Lee (2013). The orbit is non-Keplerian
+due to the changing positions of the host stars.
 
 
 To run this example

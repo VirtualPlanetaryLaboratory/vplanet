@@ -1,0 +1,19 @@
+#
+sSystemName               system
+iVerbose                  5
+bOverwrite                1
+saBodyFiles               a_matt.in a_sk.in a_reiners.in $
+                          b_matt.in b_sk.in b_reiners.in
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+bDoLog                    1
+iDigits                   6
+dMinValue                 1e-10
+bDoForward                1
+bVarDt                    1
+dEta                      0.01
+dStopTime                 5e9
+dOutputTime               1e6
+

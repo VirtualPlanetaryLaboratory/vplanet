@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_EarthInterior():
     """Test the coupling between radheat and thermint."""
+    # Remove old log file
+    subprocess.run(['rm', 'earth.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
@@ -14,11 +16,11 @@ def test_EarthInterior():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.earth.TMan, 2256.180402)
-    assert np.isclose(output.log.final.earth.TCore, 5009.842462)
-    assert np.isclose(output.log.final.earth.RIC, 1202998.0)
-    assert np.isclose(output.log.final.earth.RadPowerTotal, 2.426301e+13)
-    assert np.isclose(output.log.final.earth.MagMom, 0.994634)
+    assert np.isclose(output.log.final.earth.TMan, 2256.001803)
+    assert np.isclose(output.log.final.earth.TCore, 5006.543944)
+    assert np.isclose(output.log.final.earth.RIC, 1232183.0)
+    assert np.isclose(output.log.final.earth.RadPowerTotal, 24265670000000.0)
+    assert np.isclose(output.log.final.earth.MagMom, 0.995060)
 
 
 if __name__ == "__main__":

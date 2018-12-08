@@ -7,6 +7,8 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 def test_EarthMoonTides():
     """Test module Eqtide and backward integrations."""
+    # Remove old log file
+    subprocess.run(['rm', 'earthmoon.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
@@ -14,10 +16,10 @@ def test_EarthMoonTides():
     output = GetOutput(path=cwd)
 
     # Run our comparisons
-    assert np.isclose(output.log.final.moon.Eccentricity, 0.0077708405172700)
-    assert np.isclose(output.log.final.moon.SemiMajorAxis, -8.9493380478454471e+07)
-    assert np.isclose(output.log.final.earth.RotPer, 158.5020751480991521)
-    assert np.isclose(output.log.final.earth.Obliquity, 0.0483032126773969)
+    assert np.isclose(output.log.final.moon.Eccentricity, 0.0001839441662174)
+    assert np.isclose(output.log.final.moon.SemiMajorAxis, 8.0848150930770254e+06)
+    assert np.isclose(output.log.final.earth.RotPer, 204.2777256761116860)
+    assert np.isclose(output.log.final.earth.Obliquity, 0.0552580400961436)
 
 if __name__ == "__main__":
     test_EarthMoonTides()

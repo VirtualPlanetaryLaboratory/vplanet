@@ -6,7 +6,7 @@ checks.
 
 **DO NOT MODIFY THESE FILES UNLESS YOU KNOW WHAT YOU ARE DOING!!**
 
-Every time somebody issues a pull request to the master branch, a `[TRAVIS CI] <https://travis-ci.org/>`_
+Every time somebody issues a pull request to the master branch, a `TRAVIS CI <https://travis-ci.org/>`_
 check is automatically triggered. Briefly, this check compiles and runs vplanet
 on all the subdirectories listed here and compares the results to the expected
 behavior. This quality control ensures that as changes are made to the code base,

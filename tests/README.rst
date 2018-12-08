@@ -14,4 +14,4 @@ the outcomes of the simulations match expectations. Each check here corresponds
 to a figure in the [examples](../examples) directory or the following public
 repositories:
 
-[ProximaHistory](https://github.com/VirtualPlanetaryLaboratory/ProximaHistory)
+`ProximaHistory <https://github.com/VirtualPlanetaryLaboratory/ProximaHistory>_

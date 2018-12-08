@@ -3,7 +3,7 @@ VPLANET Examples
 
 This subdirectory contains examples of numerous ways to use `vplanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory above to see scripts,
-plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions.
+plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not currently shown? E-mail Rory Barnes, rory@astro.washington.edu, to find out if that functionality is available and validated.
 
 **Atmospheres**
 ===============

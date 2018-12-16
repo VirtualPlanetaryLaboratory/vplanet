@@ -2,7 +2,11 @@ VPLANET Tests
 -----
 
 This directory contains the testing information for the continuous integration (CI)
-checks.
+checks. You can run the checks locally with the command
+
+make test
+
+but you must have `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>` installed and in your PATH.
 
 **DO NOT MODIFY THESE FILES UNLESS YOU KNOW WHAT YOU ARE DOING!!**
 

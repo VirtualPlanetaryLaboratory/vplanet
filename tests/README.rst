@@ -6,7 +6,7 @@ checks. You can run the checks locally with the command
 
 make test
 
-but you must have `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>` installed and in your PATH.
+but you must have `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_ installed and in your PATH.
 
 **DO NOT MODIFY THESE FILES UNLESS YOU KNOW WHAT YOU ARE DOING!!**
 

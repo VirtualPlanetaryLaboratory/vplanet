@@ -4,3 +4,4 @@
 # made in the PUBLIC repo, do it manually.
 README.md               merge=ours
 docs/developers.rst     merge=ours
+.gitattributes	        merge=ours

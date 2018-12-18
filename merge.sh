@@ -1,5 +1,5 @@
 BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
-if [ $BRANCH == "test" ]
+if [ $BRANCH == "dev" ]
 then
     git pull --no-commit --no-ff private master && \
     git checkout $BRANCH README.md && \

@@ -8,8 +8,7 @@
 
 To get started, ensure you have clang/gcc installed and follow the [QuickStart Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html).
 
-`vplanet` currently consists of 11 functioning "modules," each containing a set of equations
-that models a specific physical process:
+`vplanet` currently consists of 11 functioning "modules," each containing a set of equations that models a specific physical process:
 
 **AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
 escape, oxygen escape, and oxygen build-up.

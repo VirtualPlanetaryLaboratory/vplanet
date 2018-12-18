@@ -1,5 +1,5 @@
 /**
-    @file atmesc.c
+    @file atmesc.c 
     @brief Subroutines that control the integration of the
     atmospheric escape model.
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))

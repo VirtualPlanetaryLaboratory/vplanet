@@ -9,4 +9,4 @@ Information for **vplanet** developers.
    Style Guide <StyleGuide>
    Bugs and Issues <bugs>
    To Do List <todo>
-   Writing Tests, Bug Reports, and Examples <tests>
+   Writing Tests, Bug Reports, and Examples <tests> 

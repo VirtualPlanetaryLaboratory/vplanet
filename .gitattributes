@@ -1,0 +1,6 @@
+# These are files in the PRIVATE repo that should
+# never be changed via merges from the PUBLIC repo.
+# If you really want to update them based on changes
+# made in the PUBLIC repo, do it manually.
+README.md               merge=ours
+docs/developers.rst     merge=ours

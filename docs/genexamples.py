@@ -64,6 +64,6 @@ with open('examples.rst', 'w') as index:
         for image in images:
             shutil.copy(image, '.build/html/examples/examples/')
 
-     print("", file=index)	
-     print("", file=index)	
-     print(brokentext, file=index)
+    print("", file=index)	
+    print("", file=index)	
+    print(brokentext, file=index)

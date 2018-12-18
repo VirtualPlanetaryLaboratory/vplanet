@@ -1,4 +1,4 @@
-# No files with these names in the top-level directory
+# No files with these names in top-level directory
 .PHONY: docs test debug opt profile optprof clean coverage sanitize
 
 UNAME_S := $(shell uname -s)

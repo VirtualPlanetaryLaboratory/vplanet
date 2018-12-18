@@ -55,8 +55,8 @@ with open('examples.rst', 'w') as index:
         with open('../examples/%s/README.rst' % shortname, 'r') as f:
             line = f.readline()
         if "❌" in line:
-             brokentext = brokentext + '   examples/%s\n' % shortname	
-         else:
+            brokentext = brokentext + '   examples/%s\n' % shortname	
+        else:
             print('   examples/%s' % shortname, file=index)
 
         # Copy any output images over to the build directory

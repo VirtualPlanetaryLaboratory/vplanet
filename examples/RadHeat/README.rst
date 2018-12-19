@@ -1,4 +1,4 @@
-RadHeat
+Radiogenic Heating of Earth
 ==========
 
 Overview

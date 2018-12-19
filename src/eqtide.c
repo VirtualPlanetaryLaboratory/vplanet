@@ -22,12 +22,10 @@ void InitializeControlEqtide(CONTROL *control,int iBody) {
   /* We only want to initialize these values once, but if the user fails to instantiate
      eqtide for body 0, then the code segaults and fixing this is hard. So we just re-malloc.
      */
-//  if (iBody==0) {
     control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
     control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
     control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));
     control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
-//  }
 }
 
 /* All the auxiliary properties for EQTIDE calculations need to be included
@@ -1812,14 +1810,20 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  if (body[iBody].dImK2Ocean > 0)
+    *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  else
+    *dTmp = -1;
 
   strcpy(cUnit,"");
 }
 
 void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+  if (body[iBody].dImK2Env > 0)
+    *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+  else
+    *dTmp = -1;
 
   strcpy(cUnit,"");
 }

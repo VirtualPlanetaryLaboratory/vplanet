@@ -3,17 +3,17 @@ sName		tidalearth			# Body's name
 saModules 	radheat thermint eqtide
 
 # Physical Properties
-dMass		-1.0  			# Mass, negative -> Earth masses
-dRadius		-1.0  			# Radius, negative -> Earth radii
-dRotPeriod	-1.0  			# Rotation period, negative -> days
-dObliquity	23.5
-dRadGyra	0.5
+dMass		     -1.0  			# Mass, negative -> Earth masses
+dRadius		   -1.0  			# Radius, negative -> Earth radii
+bForceEqSpin  1
+dObliquity	  0
+dRadGyra	   0.5
 # Orbital Properties
-dEcc            0.0167		# Eccentricity
-dSemi           -1		# Semi-major axis, negative -> AU
+dEcc            0.1		# Eccentricity
+dSemi           -0.05		# Semi-major axis, negative -> AU
 
 # EQTIDE Parameters
-dTidalQ     12     # Tidal Q
+dTidalQ     100     # Tidal Q
 dK2         0.299   # Love number of degree 2 (Yoder 1995)
 saTidePerts sun    # Names of perturbing bodies (only central body may have >1)
 

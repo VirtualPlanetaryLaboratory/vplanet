@@ -1,6 +1,6 @@
 # Earthlike parameters
-sName		earth			# Body's name
-saModules 	radheat thermint
+sName		tidalearth			# Body's name
+saModules 	radheat thermint eqtide
 
 # Physical Properties
 dMass		-1.0  			# Mass, negative -> Earth masses
@@ -12,6 +12,10 @@ dRadGyra	0.5
 dEcc            0.0167		# Eccentricity
 dSemi           -1		# Semi-major axis, negative -> AU
 
+# EQTIDE Parameters
+dTidalQ     12     # Tidal Q
+dK2         0.299   # Love number of degree 2 (Yoder 1995)
+saTidePerts sun    # Names of perturbing bodies (only central body may have >1)
 
 # RADHEAT Parameters
 # *Num* are in numbers of atoms, negative -> Earth vals
@@ -51,8 +55,3 @@ saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
     -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
     -40KPowerCrust -40KNumCrust -40KMassCrust
-
-
-#saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore -HflowUMan -HflowMeltMan -HflowCMB -TJumpLMan -TJumpUMan $
-#              -TDotMan -TDotCore -HflowSecMan -RIC -RadPowerTotal -RayleighMan -ViscUMan -MeltMassFluxMan -FMeltUMan $
-#              -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad

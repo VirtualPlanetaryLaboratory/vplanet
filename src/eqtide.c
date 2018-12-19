@@ -1810,6 +1810,7 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  /* Return -1 if dImK2Ocean is 0. There may be a better way to do this. XXX */
   if (body[iBody].dImK2Ocean > 0)
     *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
   else
@@ -1820,6 +1821,7 @@ void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
 void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  /* Return -1 if dImK2Env is 0. There may be a better way to do this. XXX */
   if (body[iBody].dImK2Env > 0)
     *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
   else

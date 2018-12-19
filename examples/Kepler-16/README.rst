@@ -1,4 +1,4 @@
-Kepler-16
+Orbital Evolution of the Circumbinary Planet Kepler-16 b
 =========
 
 Overview

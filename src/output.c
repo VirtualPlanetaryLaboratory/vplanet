@@ -127,6 +127,8 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  void WriteInstellation(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
    // Should have special case if bBinary=1
+   if (body[iBody].bSpiNBody)
+    //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
    *dTmp = fdInstellation(body,iBody);
 

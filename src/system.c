@@ -298,7 +298,10 @@ void CalcPQ(BODY *body, int iBody) {
 /* Instellation */
 double fdInstellation(BODY *body,int iBody) {
 
-  return body[0].dLuminosity/(4*PI*body[iBody].dSemi*body[iBody].dSemi*sqrt(1-body[iBody].dEcc*body[iBody].dEcc);
+  if (iBody > 0)
+    return body[0].dLuminosity/(4*PI*body[iBody].dSemi*body[iBody].dSemi*sqrt(1-body[iBody].dEcc*body[iBody].dEcc));
+  else // Central body can't have instellation (for now) XXX
+  return -1;
 }
 
 /*

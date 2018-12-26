@@ -21,6 +21,8 @@
 #define BINARY        1024
 #define GALHABIT      2048
 #define SPINBODY      4096
+#define DISTRES       8192
+#define MAGMOC        16384
 
 /********************
  * ADJUST AS NEEDED *       XXX And fix sometime!
@@ -43,6 +45,7 @@
  * FLARE: 2000 - 2100
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
+ * MAGMOC: 2300 - 2400
  */
 #define MODULEOPTEND        2400
 #define MODULEOUTEND        2400
@@ -78,6 +81,7 @@
 #define YEARDAY       365.25      // Days per year (more precise??)
 #define MSAT          5.6851e26   // Saturns' Mass (ref?)
 #define DEGRAD        0.017453292519444445 // Degrees per radian
+#define TOMASS        1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS      1.660538921e-27 // Atomic Mass
 #define SIGMA         5.670367e-8 // Stefan-Boltzmann Constant
 #define LFICE         3.34e5      // ???
@@ -226,6 +230,17 @@
 #define VANGMX          2204
 #define VANGMY          2205
 #define VANGMZ          2206
+
+//DISTRES
+#define VMEANL          2301
+
+//MAGMOC
+#define VWATERMASSMOATM 2310
+#define VWATERMASSSOL   2311
+#define VSURFTEMP       2312
+#define VPOTTEMP        2313
+#define VSOLIDRADIUS    2314
+
 
 /* Now define the structs */
 
@@ -957,6 +972,20 @@ struct BODY {
 
   double dMeanL;            /**< Body's mean longitude */
 
+  //MAGMOC
+  int bMagmOc;              /**< Use magmoc model */
+  double dFeO;              /**< FeO in the magma ocean */
+  double dWaterMassAtm;     /**< Water mass in the atmosphere */
+  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
+  double dSurfTemp;         /**< Surface Temp of the planet */
+  double dManMeltDensity;   /**< Density of the molten mantle */
+  double dPotTemp;          /**< Potential Temp of the mantle */
+  double dWaterMassSol;     /**< Water mass in the solidified mantle */
+  double dSolidRadius;      /**< Solidification radius of the mantle */
+  double dPrefactorA;       /**< Prefactor for linear solidus */
+  double dPrefactorB;       /**< Prefactor for linear solidus */
+  double dMeltFraction;     /**< Melt fraction of the mantle */
+  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1122,6 +1151,30 @@ struct UPDATE {
   int iMass;
 
   /* Next comes the identifiers for the module that modifies a variable */
+
+  /* MAGMOC parameters */
+  int iWaterMassMOAtm;
+  int iNumWaterMassMOAtm;
+  int iWaterMassSol;
+  int iNumWaterMassSol;
+  int iSurfTemp;
+  int iNumSurfTemp;
+  int iPotTemp;
+  int iNumPotTemp;
+  int iSolidRadius;
+  int iNumSolidRadius;
+
+  double dWaterMassMOAtm;
+  double dWaterMassSol;
+  double dSurfTemp;
+  double dPotTemp;
+  double dSolidRadius;
+
+  double *pdDWaterMassMOAtm;
+  double *pdDWaterMassSol;
+  double *pdDSurfTemp;
+  double *pdDPotTemp;
+  double *pdDSolidRadius;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1814,6 +1867,11 @@ typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -1842,6 +1900,7 @@ struct MODULE {
   int *iaFlare;
   int *iaGalHabit;
   int *iaSpiNBody;
+  int *iaMagmOc;
   int *iaEqtideStellar;
 
   /*! These functions count the number of applicable halts for each body. */
@@ -1986,6 +2045,13 @@ struct MODULE {
 
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
+  /*! Function pointers to finalize magmoc functions */
+  fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
+  fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
+  fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
+  fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
+  fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
+
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;
 
@@ -2040,3 +2106,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "magmoc.h"

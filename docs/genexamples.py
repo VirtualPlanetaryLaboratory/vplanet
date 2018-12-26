@@ -54,10 +54,16 @@ with open('examples.rst', 'w') as index:
         # Check if the example is broken
         with open('../examples/%s/README.rst' % shortname, 'r') as f:
             line = f.readline()
-        if "❌" not in line:
+        if "❌" in line:
+            brokentext = brokentext + '   examples/%s\n' % shortname	
+        else:
             print('   examples/%s' % shortname, file=index)
 
         # Copy any output images over to the build directory
         images = glob.glob(os.path.join(os.path.dirname(filename), '*.png'))
         for image in images:
             shutil.copy(image, '.build/html/examples/examples/')
+
+    print("", file=index)	
+    print("", file=index)	
+    print(brokentext, file=index)

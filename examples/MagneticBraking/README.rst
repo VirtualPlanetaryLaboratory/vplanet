@@ -1,4 +1,4 @@
-Magnetic Braking
+Stellar Magnetic Braking
 =================
 
 Overview

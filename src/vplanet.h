@@ -70,6 +70,10 @@
 #define DAYSEC        86400       // Seconds per day
 #define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
 #define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
+#define RNEP          2.4764e7    // Neptune's Radius (ref?)
+#define MNEP          1.0244e26   // Neptune's Mass (ref?)
+#define RHOEARTH      5515        // Earth's Density
+#define eEARTH        0.016710219 // Earth's Eccentricity
 #define MJUP          1.898130e27 // Prsa et al. 2016
 #define YEARDAY       365.25      // Days per year (more precise??)
 #define MSAT          5.6851e26   // Saturns' Mass (ref?)

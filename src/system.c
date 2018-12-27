@@ -295,6 +295,15 @@ void CalcPQ(BODY *body, int iBody) {
   body[iBody].dQinc = body[iBody].dSinc*cos(body[iBody].dLongA);
 }
 
+/* Instellation */
+double fdInstellation(BODY *body,int iBody) {
+
+  if (iBody > 0)
+    return body[0].dLuminosity/(4*PI*body[iBody].dSemi*body[iBody].dSemi*sqrt(1-body[iBody].dEcc*body[iBody].dEcc));
+  else // Central body can't have instellation (for now) XXX
+  return -1;
+}
+
 /*
  *
  * Multi-body matrix equations

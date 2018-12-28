@@ -55,6 +55,6 @@ Additional `VPLanet` examples can be found at:
 
 If you'd like to stay up to date on vplanet by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu.
 
-`vplanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
+`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
 
 Enjoy!

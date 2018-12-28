@@ -49,9 +49,9 @@ Behind the scenes, the vplanet team maintains code integrity through continuous 
 
 Additional VPLanet examples can be found at:
 
-[Rory Barnes GitHub](https://github.com/RoryBarnes>)
+[Rory Barnes' GitHub Page](https://github.com/RoryBarnes)
 
-[Virtual Planetary Laboratory](https://github.com/VirtualPlanetaryLaboratory>)
+[Virtual Planetary Laboratory GitHub Page](https://github.com/VirtualPlanetaryLaboratory)
 
 If you'd like to stay up to date on vplanet by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu.
 

@@ -4,11 +4,11 @@
 
 © 2018 The VPLANET Team.
 
-`vplanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the [source code](src), [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), [the scripts and files to generate published figures](examples), and [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
+`VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the [source code](src), [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), [the scripts and files to generate published figures](examples), and [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
 
 To get started, ensure you have clang/gcc installed and follow the [QuickStart Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html).
 
-`vplanet` currently consists of 11 functioning "modules," each containing a set of equations
+`VPLanet` currently consists of 11 functioning "modules," each containing a set of equations
 that models a specifc physical process:
 
 **AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
@@ -39,7 +39,7 @@ compression/rebound.
 **ThermInt**: Thermal interior evolution, including magnetic fields, for planets
 undergoing plate tectonics or stagnant lid evolution.
 
-`vplanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
+`VPLanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
 
 The [examples/](examples) directory contains input files and scripts for generating the figures in Barnes et al. (2018) and all subsequent module descriptions. The Manual/ directory contains the source code to generate a pdf of Barnes et al. (2018) plus methods sections from subsequent modules. This pdf describes the physics of each module, validates each module against observations or past results, and uses figures from the [examples/](examples) directory. {Soon!}
 
@@ -47,7 +47,7 @@ An ecosystem of support software is also publicly available. In this repo, [vspa
 
 Behind the scenes, the vplanet team maintains code integrity through continuous integration, in which numerous scientific and numerical tests are validated at every commit. See the [tests/](tests) directory for the validation checks that the current build passes. Additionally, we use valgrind and addresssanitizer to periodically search for memory issues like leaks, accessing memory beyond array bounds, etc. We are committed to maintaining a stable tool that planetary scientists can rely on for fast analyses of the Solar System and beyond.  
 
-Additional VPLanet examples can be found at:
+Additional `VPLanet` examples can be found at:
 
 [Rory Barnes' GitHub Page](https://github.com/RoryBarnes)
 

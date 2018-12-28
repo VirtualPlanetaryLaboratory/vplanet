@@ -52,7 +52,7 @@ Additional `VPLanet` examples can be found at:
 [Rory Barnes' GitHub Page](https://github.com/RoryBarnes) <br />
 [Virtual Planetary Laboratory GitHub Page](https://github.com/VirtualPlanetaryLaboratory)
 
-If you'd like to stay up to date on vplanet by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu.
+If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu.
 
 `VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
 

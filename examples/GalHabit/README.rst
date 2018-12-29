@@ -1,4 +1,4 @@
-Galactic Evolution
+Evolution of a Wide Stellar Binary due to Galactic Effects
 ================
 
 Overview

@@ -1,4 +1,4 @@
-Solar System Orbital Dynamics
+Solar System Orbital Dynamics from Secular Theory
 =====================
 
 Overview

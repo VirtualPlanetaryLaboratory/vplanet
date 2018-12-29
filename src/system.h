@@ -29,6 +29,8 @@ int bPrimary(BODY*,int);
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
+double fdInstellation(BODY*,int);
+
 /* Multi-body derivative equations */
 double fdSemiDtEqSt(BODY*,SYSTEM*,int*);
 double fdJStarDt(BODY*,int);

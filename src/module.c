@@ -1267,11 +1267,13 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
         fprintf(stderr,"ERROR: Modules Stellar and RadHeat cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     }
+    /* This combo seems OK, and is necessary to calculate instellation. I'll leave it
+        commented for now.
     if (body[iBody].bSpiNBody) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Modules Stellar and SpiNBody cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-    }
+    } */
     if (body[iBody].bThermint) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Modules Stellar and ThermInt cannot be applied to the same body.\n");

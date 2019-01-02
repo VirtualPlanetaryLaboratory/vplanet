@@ -74,8 +74,8 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5                    /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN      2e5                    /**< [J/mol] Mantle shear modulus activation energy */
-#define STIFFNESS        1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define SHMODREF         6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
+#define STIFFNESS        1.7169e13  //1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define SHMODREF         6.24e4    //6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
 #define VISCREF          5e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
 #define VISCJUMPMAN      2.7                    /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */

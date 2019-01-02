@@ -1403,8 +1403,8 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMeltMassFluxMan=fdMeltMassFluxMan(body,iBody);
   body[iBody].dViscMMan=fdViscMMan(body,iBody);
   body[iBody].dRayleighMan=fdRayleighMan(body,iBody);
-  //body[iBody].dK2Man=fdK2Man(body,iBody);
-  //body[iBody].dImk2Man=fdImk2Man(body,iBody);
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
   /* Heat Flows */
   /* Mantle */
@@ -1418,7 +1418,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
-  //body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
   /* Core */
   /* Iterate on Core chemistry before R_ICB */

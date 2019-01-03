@@ -274,6 +274,7 @@ void VerifyWaterMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double d
 // assign a derivativ to the primary variable
 void AssignMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0] = &fdDWaterMassMOAtm;
+  /* HERE all derivatives*/
 }
 
 // derivative for minimal change??
@@ -407,11 +408,12 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
   module->fnInitializeOutput[iBody][iModule]            = &InitializeOutputMagmOc;
 
   module->fnFinalizeUpdateWaterMassMOAtm[iBody][iModule] = &FinalizeUpdateWaterMassMOAtm;
+  /* HERE */
 
 }
 
 /************* MAGMOC Functions ************/
 // real physic is happening here: calculation of the derivatives of the primary variable!
-double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
-  return 1;
+double fdDWaterMassMOAtm(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+  return 1e3 * sin(1e-4 * control->Evolve.dTime);
 }

@@ -52,6 +52,13 @@ int main(int argc,char *argv[]) {
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
+  /* Hard code parameters for spring equation HERE*/
+  /* double omega_spring;
+  double amplitude_spring;
+
+  #define omega_spring     1e-4;
+  #define amplitude_spring 1e3; */
+
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
      help screen as well as checks during ReadOptions. This

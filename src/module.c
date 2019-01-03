@@ -538,11 +538,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 	      body[iFile-1].bGalHabit = 1;
 	      module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
-  body[iFile-1].bSpiNBody = 1;
-  module->iBitSum[iFile-1] += SPINBODY;
+        body[iFile-1].bSpiNBody = 1;
+        module->iBitSum[iFile-1] += SPINBODY;
       } else if (memcmp(sLower(saTmp[iModule]),"magmoc",6) == 0) {
-  body[iFile-1].bMagmOc = 1;
-  module->iBitSum[iFile-1] += MAGMOC;
+        body[iFile-1].bMagmOc = 1;
+        module->iBitSum[iFile-1] += MAGMOC;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);

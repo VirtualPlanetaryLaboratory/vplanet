@@ -131,11 +131,16 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumVelX = 0;
     update[iBody].iNumVelY = 0;
     update[iBody].iNumVelZ = 0;
+
+    /* HERE
+     * set update of primary variables pointer to 0 ??
+     */
     update[iBody].iNumWaterMassMOAtm = 0;
     update[iBody].iNumWaterMassSol = 0;
     update[iBody].iNumSurfTemp = 0;
     update[iBody].iNumPotTemp = 0;
     update[iBody].iNumSolidRadius = 0;
+
     update[iBody].iNumLostAngMom=0;
     update[iBody].iNumLostEng=0;
     update[iBody].iNumVars=0;
@@ -354,7 +359,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-
+    /* HERE
+     * copy that for every primary variable
+     */
     update[iBody].iWaterMassMOAtm = -1;
     if (update[iBody].iNumWaterMassMOAtm) {
       update[iBody].iWaterMassMOAtm = iVar;
@@ -383,7 +390,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-
+    /* until HERE */
     update[iBody].iWaterMassSol = -1;
     if (update[iBody].iNumWaterMassSol) {
       update[iBody].iWaterMassSol = iVar;
@@ -499,6 +506,9 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
+    /* HERE
+     * End of MagmOc variables
+     */
 
     /* 26Al Core */
     update[iBody].i26AlCore = -1;

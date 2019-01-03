@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         venus1                      # Body's name
-saModules     atmesc                      # Modules to apply, exact spelling required
+saModules     atmesc, magmoc                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
@@ -27,4 +27,4 @@ dSemi         -0.723                      # Semi-major axis, negative -> AU
 dEcc          0.006772                    # Eccentricity
 
 # Output
-saOutputOrder Time -SurfWaterMass -RGLimit -OxygenMantleMass
+saOutputOrder Time -SurfWaterMass -RGLimit -OxygenMantleMass -WaterMassMOAtm

@@ -103,4 +103,4 @@ void LogBodyMagmOc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* MagmOc functions */
 void fnForceBehaviorMagmOc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
-double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);
+double fdDWaterMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*);

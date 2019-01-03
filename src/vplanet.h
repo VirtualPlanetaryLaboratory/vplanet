@@ -235,6 +235,10 @@
 #define VMEANL          2301
 
 //MAGMOC
+/* HERE
+ * define primary variables
+ * give them a number
+ */
 #define VWATERMASSMOATM 2310
 #define VWATERMASSSOL   2311
 #define VSURFTEMP       2312
@@ -973,6 +977,10 @@ struct BODY {
   double dMeanL;            /**< Body's mean longitude */
 
   //MAGMOC
+	/* HERE
+	 * declare all variables used
+	 * which type?
+	 */
   int bMagmOc;              /**< Use magmoc model */
   double dFeO;              /**< FeO in the magma ocean */
   double dWaterMassAtm;     /**< Water mass in the atmosphere */
@@ -1153,6 +1161,9 @@ struct UPDATE {
   /* Next comes the identifiers for the module that modifies a variable */
 
   /* MAGMOC parameters */
+	/* HERE
+	 * again for primary variables
+	 */
   int iWaterMassMOAtm;
   int iNumWaterMassMOAtm;
   int iWaterMassSol;
@@ -1867,11 +1878,14 @@ typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
+/* HERE
+ * declare Finalize Update for primary parameters
+ */
 typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);/*HERE*/
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2046,6 +2060,9 @@ struct MODULE {
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
   /*! Function pointers to finalize magmoc functions */
+	/* HERE
+	 * Finalize Update for primary variables
+	 */
   fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
   fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
   fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;

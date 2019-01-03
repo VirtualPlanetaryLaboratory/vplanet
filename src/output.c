@@ -387,18 +387,16 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   if(body[iBody].bBinary == 0) { // Not doing binary
-  if (iBody > 0)
-    *dTmp = body[iBody].dMeanMotion;
-  else
-    *dTmp = -1;
-  }
-  else { // doing binary
-  if(iBody > 0)
-  {
-    *dTmp = body[iBody].dMeanMotion;
-  }
-  else
-    *dTmp = -1;
+    if (iBody > 0)
+      *dTmp = body[iBody].dMeanMotion;
+    else
+      *dTmp = -1;
+  } else { // doing binary
+    if(iBody > 0) {
+      *dTmp = body[iBody].dMeanMotion;
+    } else
+      *dTmp = -1;
+    }
   }
 
   if (output->bDoNeg[iBody]) {

@@ -108,7 +108,7 @@ scripts!
     </div>
     <br/><br/>
 
-    <script type="text/javascript" src="https://cdn.rawgit.com/chrisveness/crypto/master/sha1.js"></script>
+    <script type="text/javascript" src="https://rawcdn.githack.com/chrisveness/crypto/7067ee62f18c76dd4a9d372a00e647205460b62b/sha1.js"></script>
     <script type="text/javascript">
         "use strict"
         var button = document.querySelectorAll('[data-id="button"]')

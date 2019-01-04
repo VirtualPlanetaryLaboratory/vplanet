@@ -1,4 +1,4 @@
-VenusInterior
+Thermal and Magnetic Evolution of Venus
 ==========
 
 Overview

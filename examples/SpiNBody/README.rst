@@ -1,4 +1,4 @@
-spinbody
+N-body Orbital Evolution of the Solar System
 ============
 
 Overview

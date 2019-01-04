@@ -1,4 +1,4 @@
-IoHeat
+Tidal Heating of Io
 ==========
 
 Overview

@@ -1,4 +1,4 @@
-Stellar evolution
+(Pre-)Main Sequence Stellar Evolution
 =================
 
 Overview

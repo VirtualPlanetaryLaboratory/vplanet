@@ -62,6 +62,8 @@
 #define OUT_HECC                600
 #define OUT_HZLIMITDRYRUNAWAY   602
 
+#define OUT_INSTELLATION        604
+
 #define OUT_KECC                605
 #define OUT_ORBECC		          610
 #define OUT_ORBEN		            620

@@ -17,6 +17,8 @@
 *.Inc.Eigen
 
 # Aux files / build info / garbage
+merge-from-public.sh
+merge-from-private.sh
 *.pyc
 */__pycache__
 *.dSYM

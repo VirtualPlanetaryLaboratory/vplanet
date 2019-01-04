@@ -93,7 +93,6 @@
 #define OPT_PRILUM	        615
 #define OPT_SPECMOMINERTIA       616
 
-
 #define OPT_VISCUMAN            630   //Viscosity UMTBL
 
 #define OPT_RADIUS              650

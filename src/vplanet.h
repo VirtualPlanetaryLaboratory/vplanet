@@ -131,7 +131,7 @@
 #define OUTLONDESCR   2048  /* Number of characters in output long description */
 #define NAMELEN       100
 
-#define MAXFILES      24    /* Maximum number of input files */
+#define MAXFILES      128    /* Maximum number of input files */
 #define MAXARRAY      128    /* Maximum number of options in
 			     * an option array */
 #define NUMOPT	      1000  /* Number of options that could be

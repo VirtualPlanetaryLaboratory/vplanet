@@ -986,6 +986,10 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       LineExit(infile->cIn,lTmp[0]);
     }
     files->iNumInputs=iNumIndices+1;
+    if (files->iNumInputs >= MAXFILES) {
+      fprintf(stderr,"ERROR: Number of input files (%d) exceeds MAXFILES (%d)",files->iNumInputs,MAXFILES);
+      LineExit(infile->cIn,lTmp[0]);
+    }
   } else {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);

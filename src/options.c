@@ -988,7 +988,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
     files->iNumInputs=iNumIndices+1;
     if (files->iNumInputs >= MAXFILES) {
       fprintf(stderr,"ERROR: Number of input files (%d) exceeds MAXFILES (%d).\n",files->iNumInputs,MAXFILES);
-      fprintf(stderr,"Either use less body files, or increase MAXFILES in vplanet.h.\n")
+      fprintf(stderr,"Either use less body files, or increase MAXFILES in vplanet.h.\n");
       LineExit(infile->cIn,lTmp[0]);
     }
   } else {

@@ -986,6 +986,11 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       LineExit(infile->cIn,lTmp[0]);
     }
     files->iNumInputs=iNumIndices+1;
+    if (files->iNumInputs >= MAXFILES) {
+      fprintf(stderr,"ERROR: Number of input files (%d) exceeds MAXFILES (%d).\n",files->iNumInputs,MAXFILES);
+      fprintf(stderr,"Either use less body files, or increase MAXFILES in vplanet.h.\n");
+      LineExit(infile->cIn,lTmp[0]);
+    }
   } else {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
@@ -3639,4 +3644,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
   InitializeOptionsSpiNBody(options,fnRead);
+  InitializeOptionsMagmOc(options,fnRead);
 }

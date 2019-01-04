@@ -73,6 +73,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->iaFlare           = malloc(iNumBodies*sizeof(int));
   module->iaGalHabit        = malloc(iNumBodies*sizeof(int));
   module->iaSpiNBody        = malloc(iNumBodies*sizeof(int));
+  module->iaMagmOc          = malloc(iNumBodies*sizeof(int));
   module->iaEqtideStellar   = malloc(iNumBodies*sizeof(int));
 
   // Initialize some of the recently malloc'd values in module
@@ -93,6 +94,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
     module->iaFlare[iBody]          = -1;
     module->iaGalHabit[iBody]       = -1;
     module->iaSpiNBody[iBody]       = -1;
+    module->iaMagmOc[iBody]         = -1;
     module->iaEqtideStellar[iBody]  = -1;
   }
 
@@ -165,6 +167,12 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateVelY          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelYModule));
   module->fnFinalizeUpdateVelZ          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelZModule));
 
+  module->fnFinalizeUpdateWaterMassMOAtm = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassMOAtmModule));
+  module->fnFinalizeUpdateWaterMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassSolModule));
+  module->fnFinalizeUpdateSurfTemp       = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfTempModule));
+  module->fnFinalizeUpdatePotTemp        = malloc(iNumBodies*sizeof(fnFinalizeUpdatePotTempModule));
+  module->fnFinalizeUpdateSolidRadius    = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
+
   // Function Pointer Matrices
   module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
   module->fnInitializeBody          = malloc(iNumBodies*sizeof(fnInitializeBodyModule*));
@@ -214,6 +222,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   if (body[iBody].bGalHabit)
     iNumModules++;
   if (body[iBody].bSpiNBody)
+    iNumModules++;
+  if (body[iBody].bMagmOc)
     iNumModules++;
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     iNumModuleMulti++;
@@ -301,6 +311,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateVelY[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateVelYModule));
   module->fnFinalizeUpdateVelZ[iBody]             = malloc(iNumModules*sizeof(fnFinalizeUpdateVelZModule));
 
+  module->fnFinalizeUpdateWaterMassMOAtm[iBody]   = malloc(iNumModules*sizeof(fnFinalizeUpdateWaterMassMOAtmModule));
+  module->fnFinalizeUpdateWaterMassSol[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdateWaterMassSolModule));
+  module->fnFinalizeUpdateSurfTemp[iBody]         = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfTempModule));
+  module->fnFinalizeUpdatePotTemp[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdatePotTempModule));
+  module->fnFinalizeUpdateSolidRadius[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateSolidRadiusModule));
+
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
        NULL function. The modules that need actual function will replace them
@@ -371,6 +387,12 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateVelX[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateVelY[iBody][iModule]             = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateVelZ[iBody][iModule]             = &FinalizeUpdateNULL;
+
+    module->fnFinalizeUpdateWaterMassMOAtm[iBody][iModule]   = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateWaterMassSol[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSurfTemp[iBody][iModule]         = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdatePotTemp[iBody][iModule]          = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateSolidRadius[iBody][iModule]      = &FinalizeUpdateNULL;
   }
 
   /************************
@@ -437,6 +459,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     AddModuleSpiNBody(module,iBody,iModule);
     module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
+  }
+  if (body[iBody].bMagmOc) {
+    AddModuleMagmOc(module,iBody,iModule);
+    module->iaMagmOc[iBody] = iModule;
+    module->iaModule[iBody][iModule++] = MAGMOC;
   }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     module->fnAssignDerivatives[iBody][iModule] = &AssignEqtideStellarDerivatives;
@@ -511,8 +538,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 	      body[iFile-1].bGalHabit = 1;
 	      module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
-        body[iFile-1].bSpiNBody = 1;
-        module->iBitSum[iFile-1] += SPINBODY;
+  body[iFile-1].bSpiNBody = 1;
+  module->iBitSum[iFile-1] += SPINBODY;
+      } else if (memcmp(sLower(saTmp[iModule]),"magmoc",6) == 0) {
+  body[iFile-1].bMagmOc = 1;
+  module->iBitSum[iFile-1] += MAGMOC;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -565,6 +595,11 @@ void PrintModuleList(FILE *file,int iBitSum) {
     space = 1;
     fprintf(file,"GALHABIT");
   }
+  if (iBitSum & MAGMOC) {
+    if (space) fprintf(file," ");
+    space = 1;
+    fprintf(file,"MAGMOC");
+  }
   if (iBitSum & POISE) {
     if (space) fprintf(file," ");
     space = 1;
@@ -608,6 +643,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
       (*body)[iBody].bStellar  = 0;
       (*body)[iBody].bThermint = 0;
       (*body)[iBody].bSpiNBody = 0;
+      (*body)[iBody].bMagmOc   = 0;
   }
 }
 

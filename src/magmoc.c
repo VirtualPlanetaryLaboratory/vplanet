@@ -261,6 +261,26 @@ void MagmOcExit(FILES *files,char cSpecies[16],int iFile) {
 }
 
 // ??
+void VerifyPotTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
+  update[iBody].iaType[update[iBody].iPotTemp][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iPotTemp][0] = 1;
+  update[iBody].iaBody[update[iBody].iPotTemp][0] = malloc(update[iBody].iNumBodies[update[iBody].iPotTemp][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iPotTemp][0][0] = iBody;
+
+  update[iBody].pdDPotTemp = &update[iBody].daDerivProc[update[iBody].iPotTemp][0];
+
+}
+
+void VerifySurfTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
+  update[iBody].iaType[update[iBody].iSurfTemp][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iSurfTemp][0] = 1;
+  update[iBody].iaBody[update[iBody].iSurfTemp][0] = malloc(update[iBody].iNumBodies[update[iBody].iSurfTemp][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iSurfTemp][0][0] = iBody;
+
+  update[iBody].pdDSurfTemp = &update[iBody].daDerivProc[update[iBody].iSurfTemp][0];
+
+}
+
 void VerifyWaterMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
   update[iBody].iaType[update[iBody].iWaterMassMOAtm][0] = 1;
   update[iBody].iNumBodies[update[iBody].iWaterMassMOAtm][0] = 1;
@@ -271,20 +291,39 @@ void VerifyWaterMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double d
 
 }
 
+void VerifyWaterMassSol(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
+  update[iBody].iaType[update[iBody].iWaterMassSol][0] = 1;
+  update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] = 1;
+  update[iBody].iaBody[update[iBody].iWaterMassSol][0] = malloc(update[iBody].iNumBodies[update[iBody].iWaterMassSol][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iWaterMassSol][0][0] = iBody;
+
+  update[iBody].pdDWaterMassSol = &update[iBody].daDerivProc[update[iBody].iWaterMassSol][0];
+
+}
+
 // assign a derivativ to the primary variable
 void AssignMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPotTemp][0] = &fdDPotTemp;
+  fnUpdate[iBody][update[iBody].iSurfTemp][0] = &fdDSurfTemp;
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0] = &fdDWaterMassMOAtm;
+  fnUpdate[iBody][update[iBody].iWaterMassSol][0] = &fdDWaterMassSol;
   /* HERE all derivatives*/
 }
 
 // derivative for minimal change??
 void NullMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+  fnUpdate[iBody][update[iBody].iPotTemp][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iSurfTemp][0] = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iWaterMassSol][0] = &fndUpdateFunctionTiny;
 }
 
 // call steps to execute next time step??
 void VerifyMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+  VerifyPotTemp(body, options, update, body[iBody].dAge, iBody);
+  VerifySurfTemp(body, options, update, body[iBody].dAge, iBody);
   VerifyWaterMassMOAtm(body, options, update, body[iBody].dAge, iBody);
+  VerifyWaterMassSol(body, options, update, body[iBody].dAge, iBody);
 
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorMagmOc;
   control->fnPropsAux[iBody][iModule]        = &PropsAuxMagmOc;
@@ -296,9 +335,21 @@ void VerifyMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 // ??
 void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
   if (iBody >= 0) {
+    if (update[iBody].iNumPotTemp == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumPotTemp++;
+
+    if (update[iBody].iNumSurfTemp == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumSurfTemp++;
+
     if (update[iBody].iNumWaterMassMOAtm == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumWaterMassMOAtm++;
+    /* may use different condition for WaterMassSol*/
+    if (update[iBody].iNumWaterMassSol == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumWaterMassSol++;
   }
 }
 
@@ -333,10 +384,49 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
  //   }
  // }
 
+ void WritePotTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   /* Get total power from 26Al
+   *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
+   *dTmp = body[iBody].dPotTemp;
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsTemp(units->iTemp, 1, 0);
+     fsUnitsTemp(units->iTemp,cUnit);
+   }
+ }
+
+ void WriteSurfTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   /* Get total power from 26Al
+   *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
+   *dTmp = body[iBody].dSurfTemp;
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsTemp(units->iTemp, 1, 0);
+     fsUnitsTemp(units->iTemp,cUnit);
+   }
+ }
+
  void WriteWaterMassMOAtm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    /* Get total power from 26Al
    *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
    *dTmp = body[iBody].dWaterMassMOAtm;
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsMass(units->iMass);
+     fsUnitsMass(units->iMass,cUnit);
+   }
+ }
+
+ void WriteWaterMassSol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+   /* Get total power from 26Al
+   *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
+   *dTmp = body[iBody].dWaterMassSol;
    if (output->bDoNeg[iBody]) {
      *dTmp *= output->dNeg;
      strcpy(cUnit,output->cNeg);
@@ -358,6 +448,24 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   // output[OUT_FE2O3].iModuleBit = MAGMOC;
   // fnWrite[OUT_FE2O3] = &WriteFe2O3;
 
+  sprintf(output[OUT_POTTEMP].cName,"PotTemp");
+  sprintf(output[OUT_POTTEMP].cDescr,"Potential temperature magma ocean");
+  sprintf(output[OUT_POTTEMP].cNeg,"Kelvin");
+  output[OUT_POTTEMP].bNeg = 1;
+  output[OUT_POTTEMP].dNeg = 1; // division factor to get from SI to desired unit
+  output[OUT_POTTEMP].iNum = 1;
+  output[OUT_POTTEMP].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_POTTEMP] = &WritePotTemp;
+
+  sprintf(output[OUT_SURFTEMP].cName,"SurfTemp");
+  sprintf(output[OUT_SURFTEMP].cDescr,"Surface temperature magma ocean");
+  sprintf(output[OUT_SURFTEMP].cNeg,"Kelvin");
+  output[OUT_SURFTEMP].bNeg = 1;
+  output[OUT_SURFTEMP].dNeg = 1; // division factor to get from SI to desired unit
+  output[OUT_SURFTEMP].iNum = 1;
+  output[OUT_SURFTEMP].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_SURFTEMP] = &WriteSurfTemp;
+
   sprintf(output[OUT_WATERMASSMOATM].cName,"WaterMassMOAtm");
   sprintf(output[OUT_WATERMASSMOATM].cDescr,"Watermass in magma ocean and atmosphere");
   sprintf(output[OUT_WATERMASSMOATM].cNeg,"Terrestrial Oceans");
@@ -367,13 +475,37 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_WATERMASSMOATM].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_WATERMASSMOATM] = &WriteWaterMassMOAtm;
 
+  sprintf(output[OUT_WATERMASSSOL].cName,"WaterMassSol");
+  sprintf(output[OUT_WATERMASSSOL].cDescr,"Watermass in solidified mantle");
+  sprintf(output[OUT_WATERMASSSOL].cNeg,"Terrestrial Oceans");
+  output[OUT_WATERMASSSOL].bNeg = 1;
+  output[OUT_WATERMASSSOL].dNeg = 1/TOMASS; // division factor to get from SI to desired unit
+  output[OUT_WATERMASSSOL].iNum = 1;
+  output[OUT_WATERMASSSOL].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_WATERMASSSOL] = &WriteWaterMassSol;
+
 }
 
 //========================= Finalize Variable Functions ========================
 // ??
+void FinalizeUpdatePotTemp(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
+  update[iBody].iNumPotTemp = (*iEqn)++;
+}
+
+void FinalizeUpdateSurfTemp(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
+  update[iBody].iNumSurfTemp = (*iEqn)++;
+}
+
 void FinalizeUpdateWaterMassMOAtm(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
   update[iBody].iNumWaterMassMOAtm = (*iEqn)++;
+}
+
+void FinalizeUpdateWaterMassSol(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
+  update[iBody].iNumWaterMassSol = (*iEqn)++;
 }
 
 /************ MAGMOC Logging Functions **************/
@@ -407,13 +539,28 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
   module->fnInitializeBody[iBody][iModule]              = &InitializeBodyMagmOc;
   module->fnInitializeOutput[iBody][iModule]            = &InitializeOutputMagmOc;
 
+  module->fnFinalizeUpdatePotTemp[iBody][iModule] = &FinalizeUpdatePotTemp;
+  module->fnFinalizeUpdateSurfTemp[iBody][iModule] = &FinalizeUpdateSurfTemp;
   module->fnFinalizeUpdateWaterMassMOAtm[iBody][iModule] = &FinalizeUpdateWaterMassMOAtm;
+  module->fnFinalizeUpdateWaterMassSol[iBody][iModule] = &FinalizeUpdateWaterMassSol;
   /* HERE */
 
 }
 
 /************* MAGMOC Functions ************/
 // real physic is happening here: calculation of the derivatives of the primary variable!
+double fdDPotTemp(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+  return -10; /* * sin(1e-8 * control->Evolve.dTime); */
+}
+
+double fdDSurfTemp(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+  return -15; /* * sin(1e-8 * control->Evolve.dTime); */
+}
+
 double fdDWaterMassMOAtm(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
-  return 1e3 * sin(1e-4 * control->Evolve.dTime);
+  return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
+}
+
+double fdDWaterMassSol(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+  return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
 }

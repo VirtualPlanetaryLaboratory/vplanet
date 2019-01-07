@@ -171,7 +171,6 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateWaterMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassSolModule));
   module->fnFinalizeUpdateSurfTemp       = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfTempModule));
   module->fnFinalizeUpdatePotTemp        = malloc(iNumBodies*sizeof(fnFinalizeUpdatePotTempModule));
-  module->fnFinalizeUpdateSolidRadius    = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
 
   // Function Pointer Matrices
   module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -315,7 +314,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateWaterMassSol[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdateWaterMassSolModule));
   module->fnFinalizeUpdateSurfTemp[iBody]         = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfTempModule));
   module->fnFinalizeUpdatePotTemp[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdatePotTempModule));
-  module->fnFinalizeUpdateSolidRadius[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateSolidRadiusModule));
 
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -392,7 +390,6 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateWaterMassSol[iBody][iModule]     = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSurfTemp[iBody][iModule]         = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePotTemp[iBody][iModule]          = &FinalizeUpdateNULL;
-    module->fnFinalizeUpdateSolidRadius[iBody][iModule]      = &FinalizeUpdateNULL;
   }
 
   /************************

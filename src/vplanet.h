@@ -243,8 +243,6 @@
 #define VWATERMASSSOL   2311
 #define VSURFTEMP       2312
 #define VPOTTEMP        2313
-#define VSOLIDRADIUS    2314
-
 
 /* Now define the structs */
 
@@ -1172,20 +1170,16 @@ struct UPDATE {
   int iNumSurfTemp;
   int iPotTemp;
   int iNumPotTemp;
-  int iSolidRadius;
-  int iNumSolidRadius;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
   double dSurfTemp;
   double dPotTemp;
-  double dSolidRadius;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
   double *pdDSurfTemp;
   double *pdDPotTemp;
-  double *pdDSolidRadius;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1885,7 +1879,6 @@ typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,
 typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
-typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);/*HERE*/
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2067,7 +2060,6 @@ struct MODULE {
   fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
   fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
   fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
-  fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

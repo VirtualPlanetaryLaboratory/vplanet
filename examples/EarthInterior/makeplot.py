@@ -110,6 +110,14 @@ plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.MagPauseRad)
 plt.ylabel(r'Magnetopause Radius (E. Units)')
 plt.xlabel('Time (Gyr)')
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.plot(out.earth.Time,out.earth.ChiOC,label='ChiOC')
+plt.plot(out.earth.Time,out.earth.ChiIC,label='ChiIC')
+plt.ylim(0,0.2)
+plt.ylabel(r'Core Light Element Concentration')
+plt.xlabel('Time (Gyr)')
+plt.legend(loc='best',frameon=False)
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):

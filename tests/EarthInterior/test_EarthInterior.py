@@ -16,11 +16,11 @@ def test_EarthInterior():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.earth.TMan, 2256.001803)
-    assert np.isclose(output.log.final.earth.TCore, 5006.543944)
-    assert np.isclose(output.log.final.earth.RIC, 1232183.0)
-    assert np.isclose(output.log.final.earth.RadPowerTotal, 24265670000000.0)
-    assert np.isclose(output.log.final.earth.MagMom, 0.995060)
+    assert np.isclose(output.log.final.earth.TMan, 2268.3090)
+    assert np.isclose(output.log.final.earth.TCore, 5016.8128)
+    assert np.isclose(output.log.final.earth.RIC, 1214408.4939)
+    assert np.isclose(output.log.final.earth.RadPowerTotal, 24382973000000.0)
+    assert np.isclose(output.log.final.earth.MagMom, 0.9919)
 
 
 if __name__ == "__main__":

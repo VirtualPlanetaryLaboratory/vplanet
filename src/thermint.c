@@ -4100,7 +4100,7 @@ double fdChiOC(BODY *body, int iBody) {
 double fdChiIC(BODY *body, int iBody) {
   if (body[iBody].dRIC>0.) {
     //    return body[iBody].dMassChiIC/body[iBody].dMassIC;
-    return body[iBody].dChiOC/PARTITION_CHI_CORE;
+    return body[iBody].dChiOC/(PARTITION_CHI_CORE);
   } else {
     return 0.;
   }

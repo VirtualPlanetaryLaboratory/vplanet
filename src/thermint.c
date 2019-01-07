@@ -4041,8 +4041,13 @@ double fdDynamicViscosity(BODY *body,int iBody) {
 */
 double fdImk2Man(BODY *body,int iBody) {
   double viscdyn=fdDynamicViscosity(body,iBody);
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  double tidal_q = viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  double denom2 = pow(3./2*tidal_q/body[iBody].dK2,2.);
   double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
+  //  double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*meanmotion/body[iBody].dShmodUMan),2.);
+  //  double imk2=(57./4)*viscdyn*meanmotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
   return imk2;
 }
 
@@ -4296,7 +4301,9 @@ double fdMagPauseRad(BODY *body, int iBody) {
 double fdTidalPowMan(BODY *body,int iBody) {
   // dflemin3: dRadius -> dTidalRadius
   // PD: Should this use dTidalRadius or dRadius??
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+  //  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+    double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+    return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
 }
 
 /* Heat Fluxes/flows */
@@ -4618,12 +4625,12 @@ double cubicroot(int type,BODY *body,int iBody) {
     }
     double delta0=pow(b,2.0)-3.0*a*c;                                             //cubic root component (wikip)
     double delta1=2.0*cube(b)-9.0*a*b*c+27.0*pow(a,2.0)*d;                        //cubic root component (wikip)
-    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
-    if (pow(delta1,2.0)-4.0*cube(delta0) < 0) {
+    if ((pow(delta1,2.0)-4.0*cube(delta0)) < 0) {
       //        printf("imaginary cubic root!\n");
       //        exit(1);
       return 0;       //imaginary root implies no intersection, no melt layer?
     }
+    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
     double root=-1.0/(3.0*a)*(b+croot+delta0/croot);                              //real cubic root, radius of layer.
     return ERMAN-root;                                                            //Return depth.
 }

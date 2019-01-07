@@ -4147,6 +4147,9 @@ double fdRIC(BODY *body,int iBody) {
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
   double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi); //Liquidus@CMB
   double numerator=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
+  if ((T_fe_cmb/T_fe_cen)<0){
+    return 0;   //for debugging only!
+  }
   double denom=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
     dRIC = (ERCORE)*sqrt(numerator/denom);

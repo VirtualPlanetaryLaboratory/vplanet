@@ -394,7 +394,7 @@ void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { // doing binary
     if(iBody > 0) {
       *dTmp = body[iBody].dMeanMotion;
-    } else
+    } else {
       *dTmp = -1;
     }
   }

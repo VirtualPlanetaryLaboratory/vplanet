@@ -1425,10 +1425,12 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // The order matters here!
   body[iBody].dMassIC=fdMassIC(body,iBody);
   body[iBody].dMassOC=fdMassOC(body,iBody);
-  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
-  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
+//  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
+//  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dChiOC=fdChiOC(body,iBody);
   body[iBody].dChiIC=fdChiIC(body,iBody);
+  body[iBody].dMassChiOC=fdMassChiOC(body,iBody); 
+  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dDTChi=fdDTChi(body,iBody);
   body[iBody].dRIC=fdRIC(body,iBody);
   body[iBody].dDRICDTCMB=fdDRICDTCMB(body,iBody);
@@ -4074,28 +4076,7 @@ double fdMassIC(BODY *body, int iBody) {
 double fdMassOC(BODY *body, int iBody) {
   return EMASSCORE-body[iBody].dMassIC;
 }
-/**
-  Function compute light element mass in outer core
 
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in outer core
-*/
-double fdMassChiOC(BODY *body, int iBody) {
-  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
-}
-/**
-  Function compute light element mass in inner core
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in inner core
-*/
-double fdMassChiIC(BODY *body, int iBody) {
-  return EMASSCORE_CHI-body[iBody].dMassChiOC;
-}
 /**
   Function compute light element concentration in outer core
 
@@ -4105,7 +4086,8 @@ double fdMassChiIC(BODY *body, int iBody) {
   @return Light element concentration in outer core
 */
 double fdChiOC(BODY *body, int iBody) {
-  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  //  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  return (EMASSCORE_CHI)/(body[iBody].dMassOC+body[iBody].dMassIC/(PARTITION_CHI_CORE)) ;
 }
 /**
   Function compute light element concentration in inner core
@@ -4117,11 +4099,39 @@ double fdChiOC(BODY *body, int iBody) {
 */
 double fdChiIC(BODY *body, int iBody) {
   if (body[iBody].dRIC>0.) {
-    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    //    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    return body[iBody].dChiOC/PARTITION_CHI_CORE;
   } else {
     return 0.;
   }
 }
+
+/**
+  Function compute light element mass in outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in outer core
+*/
+double fdMassChiOC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
+  return body[iBody].dMassOC*body[iBody].dChiOC;
+}
+/**
+  Function compute light element mass in inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in inner core
+*/
+double fdMassChiIC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI-body[iBody].dMassChiOC;
+  return body[iBody].dChiIC*body[iBody].dMassIC;
+}
+
+
 /**
   Function compute core liquidus depression due to light element concentration
 

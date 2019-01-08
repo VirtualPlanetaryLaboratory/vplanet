@@ -558,7 +558,11 @@ double fdDSurfTemp(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
 }
 
 double fdDWaterMassMOAtm(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
-  return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
+  int iBody = iaBody[0];
+  printf("dAge %lf \n", body[iBody].dAge/YEARSEC);
+  double dTime = body[iBody].dAge/YEARSEC;
+  printf("dTime %lf \n", dTime);
+  return TOMASS * sin(1e-8 * dTime);
 }
 
 double fdDWaterMassSol(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {

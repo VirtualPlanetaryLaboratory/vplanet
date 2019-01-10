@@ -2854,7 +2854,7 @@ void fvWriteHflowSecMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { }
 }
 
-/* All tidal phenomena should live in eqtide.c
+///* All tidal phenomena should live in eqtide.c
 void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTidalPowMan;
   if (output->bDoNeg[iBody]) {
@@ -2862,7 +2862,9 @@ void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-*/
+//*/
+
+
 /**
   Write latent heat flow from ICB output
 
@@ -3499,7 +3501,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWMELTMAN].iNum = 1;
   output[OUT_HFLOWMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWMELTMAN] = &fvWriteHflowMeltMan;
-  /* TidalPowMan
+  /* TidalPowMan */
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
@@ -3507,7 +3509,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWMAN].dNeg = 1e-12;
   output[OUT_TIDALPOWMAN].iNum = 1;
   output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
-  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan; */
+  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan; 
   /* HFlowSecMan */
   sprintf(output[OUT_HFLOWSECMAN].cName,"HflowSecMan");
   sprintf(output[OUT_HFLOWSECMAN].cDescr,"Mantle Secular Heat Flow");

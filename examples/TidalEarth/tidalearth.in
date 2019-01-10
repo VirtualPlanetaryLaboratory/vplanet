@@ -9,7 +9,7 @@ bForceEqSpin  1
 dObliquity	  0
 dRadGyra	   0.5
 # Orbital Properties
-dEcc            0.5		# Eccentricity
+dEcc            1e-3		# Eccentricity
 dSemi           -0.05		# Semi-major axis, negative -> AU
 
 # EQTIDE Parameters
@@ -45,18 +45,10 @@ saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
     -HflowCMB -HflowSecMan $
     -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
-    -MeltMassFluxMan -FMeltUMan $
+    -MeltMassFluxMan FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
-#    -BLUMan -BLLMan
     -BLUMan -BLLMan $
-    -PowerEqtide K2 ImK2 SemiMajorAxis Eccentricity ShmodUMan
-#    -TidalPowMan -K2Man -Imk2Man
+     PowerEqtide K2 ImK2 SemiMajorAxis Eccentricity ShmodUMan MeanMotion ViscUManArr $
+     ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
+    -RadPowerTotal SurfEnFluxEqtide TidalPowMan
     
-#    -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
-#    -238UPowerCrust -238UNumCrust -238UMassCrust $
-#    -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $
-#    -235UPowerCrust -235UNumCrust -235UMassCrust $
-#    -232ThPowerMan -232ThNumMan -232ThMassMan -232ThPowerCore -232ThNumCore -232ThMassCore $
-#    -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
-#    -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
-#    -40KPowerCrust -40KNumCrust -40KMassCrust

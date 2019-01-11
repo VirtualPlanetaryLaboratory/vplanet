@@ -4314,11 +4314,10 @@ double fdMagPauseRad(BODY *body, int iBody) {
   @return Tidal power in solid mantle
 */
 double fdTidalPowMan(BODY *body,int iBody) {
-  // dflemin3: dRadius -> dTidalRadius
-  // PD: Should this use dTidalRadius or dRadius??
-  //  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
     double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
-    return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
+    double TidalPowMan = (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
+    body[iBody].dPowerEqtide = TidalPowMan; //reset this tidal power, which is used in the orb evo.
+    return TidalPowMan;
 }
 
 /* Heat Fluxes/flows */

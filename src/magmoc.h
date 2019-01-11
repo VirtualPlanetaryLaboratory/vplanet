@@ -86,7 +86,9 @@ void FinalizeUpdateEccMagmOc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_POTTEMP            2312
 #define OUT_SURFTEMP           2313
 #define OUT_WATERMASSSOL       2314
-
+#define OUT_SOLIDRADIUS        2315
+#define OUT_OXYGENMASSMOATM    2316
+#define OUT_OXYGENMASSSOL      2317
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -105,5 +107,8 @@ void LogBodyMagmOc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 void fnForceBehaviorMagmOc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 double fdDPotTemp(BODY*, CONTROL*, SYSTEM*, int*);
 double fdDSurfTemp(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDWaterMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDSolidRadius(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDWaterMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*, int, double);
 double fdDWaterMassSol(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDOxygenMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDOxygenMassSol(BODY*, CONTROL*, SYSTEM*, int*);

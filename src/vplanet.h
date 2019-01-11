@@ -239,10 +239,13 @@
  * define primary variables
  * give them a number
  */
-#define VWATERMASSMOATM 2310
-#define VWATERMASSSOL   2311
-#define VSURFTEMP       2312
-#define VPOTTEMP        2313
+#define VWATERMASSMOATM  2310
+#define VWATERMASSSOL    2311
+#define VSURFTEMP        2312
+#define VPOTTEMP         2313
+#define VSOLIDRADIUS     2314
+#define VOXYGENMASSMOATM 2315
+#define VOXYGENMASSSOL   2316
 
 /* Now define the structs */
 
@@ -988,6 +991,8 @@ struct BODY {
   double dPotTemp;          /**< Potential Temp of the mantle */
   double dWaterMassSol;     /**< Water mass in the solidified mantle */
   double dSolidRadius;      /**< Solidification radius of the mantle */
+	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere */
+	double dOxygenMassSol;    /**< Water mass in the solidified mantle */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
@@ -1170,16 +1175,28 @@ struct UPDATE {
   int iNumSurfTemp;
   int iPotTemp;
   int iNumPotTemp;
+	int iSolidRadius;
+  int iNumSolidRadius;
+	int iOxygenMassMOAtm;
+  int iNumOxygenMassMOAtm;
+  int iOxygenMassSol;
+  int iNumOxygenMassSol;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
   double dSurfTemp;
   double dPotTemp;
+	double dSolidRadius;
+	double dOxygenMassMOAtm;
+  double dOxygenMassSol;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
   double *pdDSurfTemp;
   double *pdDPotTemp;
+	double *pdDSolidRadius;
+	double *pdDOxygenMassMOAtm;
+  double *pdDOxygenMassSol;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1879,6 +1896,9 @@ typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,
 typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2060,6 +2080,9 @@ struct MODULE {
   fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
   fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
   fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
+	fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
+	fnFinalizeUpdateOxygenMassMOAtmModule **fnFinalizeUpdateOxygenMassMOAtm;
+  fnFinalizeUpdateOxygenMassSolModule **fnFinalizeUpdateOxygenMassSol;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

@@ -16,7 +16,7 @@ default:
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
-	@echo '( You can see your shell by typing: echo $0 )'
+	@echo '( You can see your shell by typing: echo $$0 )'
 	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
 	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
 	@echo 'csh :    set path=($$path /path/to/vplanet/)'
@@ -35,7 +35,7 @@ opt:
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
-	@echo '( You can see your shell by typing: echo $0 )'
+	@echo '( You can see your shell by typing: echo $$0 )'
 	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
 	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
 	@echo 'csh :    set path=($$path /path/to/vplanet/)'
@@ -51,16 +51,6 @@ optprof:
 
 test:
 	-gcc -o vplanet src/*.c -lm
-	@echo ""
-	@echo "=========================================================================================================="
-	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
-	@echo '( You can see your shell by typing: echo $0 )'
-	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
-	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
-	@echo 'csh :    set path=($$path /path/to/vplanet/)'
-	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
-	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
-	@echo "=========================================================================================================="
 	py.test
 
 coverage:

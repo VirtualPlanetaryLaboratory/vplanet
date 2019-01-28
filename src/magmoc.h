@@ -108,7 +108,7 @@ void fnForceBehaviorMagmOc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVar
 double fdDPotTemp(BODY*, CONTROL*, SYSTEM*, int*);
 double fdDSurfTemp(BODY*, CONTROL*, SYSTEM*, int*);
 double fdDSolidRadius(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDWaterMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*, int, double);
+double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);
 double fdDWaterMassSol(BODY*, CONTROL*, SYSTEM*, int*);
 double fdDOxygenMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*);
 double fdDOxygenMassSol(BODY*, CONTROL*, SYSTEM*, int*);

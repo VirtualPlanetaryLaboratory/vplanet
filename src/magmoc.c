@@ -679,12 +679,8 @@ double fdDSolidRadius(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) 
   return -15; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
-double fdDWaterMassMOAtm(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody, int iBody, double dTime) {
-  iBody = 1;
-  // printf("dAge %lf \n", body[iBody].dAge/YEARSEC);
-  dTime = body[iBody].dAge/YEARSEC;
-  // printf("dTime %lf \n", dTime);
-  return -1 * sin(1e-7 * body[iBody].dAge/YEARSEC);
+double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
+  return -1 * sin(1e-7 * body[iaBody[0]].dAge/YEARSEC);
 }
 
 double fdDWaterMassSol(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {

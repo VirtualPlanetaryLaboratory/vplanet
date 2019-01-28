@@ -13,31 +13,44 @@ endif
 
 default:
 	-gcc -o vplanet src/*.c -lm
-	@cd src && vplanet -h > /dev/null 2>&1
+	@echo ""
+	@echo "=========================================================================================================="
+	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
+	@echo '( You can see your shell by typing: echo $$0 )'
+	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
+	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
+	@echo 'csh :    set path=($$path /path/to/vplanet/)'
+	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo "=========================================================================================================="
 
 debug:
 	-gcc -g -D DEBUG -o vplanet src/*.c -lm
-	@cd src && vplanet -h > /dev/null 2>&1
 
 debug_no_AE:
 	-gcc -g -o vplanet src/*.c -lm
-	@cd src && vplanet -h > /dev/null 2>&1
 
 opt:
 	-gcc -o vplanet src/*.c -lm -O3
-	@cd src && vplanet -h > /dev/null 2>&1
+	@echo ""
+	@echo "=========================================================================================================="
+	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
+	@echo '( You can see your shell by typing: echo $$0 )'
+	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
+	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
+	@echo 'csh :    set path=($$path /path/to/vplanet/)'
+	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo "=========================================================================================================="
 
 profile:
 	-gcc -pg -o vplanet src/*.c -lm
-	@cd src && vplanet -h > /dev/null 2>&1
 
 optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3
-	@cd src && vplanet -h > /dev/null 2>&1
 
 test:
 	-gcc -o vplanet src/*.c -lm
-	@cd src && vplanet -h > /dev/null 2>&1
 	py.test
 
 coverage:
